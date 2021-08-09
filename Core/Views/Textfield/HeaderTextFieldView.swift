@@ -1,0 +1,236 @@
+import UIKit
+
+class HeaderTextFieldView: NibView {
+
+    @IBOutlet weak var headerPlaceholderLabel: UILabel!
+
+    @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var textField: UITextField!
+
+    @IBOutlet weak var bottomLineView: UIView!
+    @IBOutlet weak var tipLabel: UILabel!
+
+    @IBOutlet weak var showPassImageView: UIImageView!
+    @IBOutlet weak var showStateImageView: UIImageView!
+
+    @IBOutlet weak var centerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet weak var centerTopConstraint: NSLayoutConstraint!
+
+    private var isSecureField = false {
+        didSet {
+
+            self.textField.isSecureTextEntry = self.isSecureField
+
+            if self.isSecureField {
+                self.showPassImageView.isHidden = false
+            }
+
+            self.showPassImageView.image = UIImage(named: "view_password_icon")
+        }
+    }
+
+    var shouldShowPassword = false {
+        didSet {
+            if self.shouldShowPassword {
+                self.textField.isSecureTextEntry = false
+                self.showPassImageView.image = UIImage(named: "hide_password_icon")
+            } else {
+                self.textField.isSecureTextEntry = true
+                self.showPassImageView.image = UIImage(named: "view_password_icon")
+            }
+        }
+    }
+
+    enum FieldState {
+        case ok
+        case error
+        case hidden
+    }
+
+    var fieldState: FieldState = .hidden {
+        didSet {
+            switch self.fieldState {
+            case .ok:
+                showStateImageView.isHidden = false
+                showStateImageView.image = UIImage(named: "form_ok_icon")
+            case .error:
+                showStateImageView.isHidden = false
+                showStateImageView.image = UIImage(named: "form_not_ok_icon")
+            case .hidden:
+                showStateImageView.isHidden = true
+                showStateImageView.image = nil
+            }
+        }
+    }
+
+    var highlightColor = UIColor.systemGreen {
+        didSet {
+
+            if self.isActive {
+                self.bottomLineView.backgroundColor = self.highlightColor
+            }
+
+        }
+    }
+
+    private var isActive: Bool = false
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        self.setup()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+
+        self.setup()
+    }
+
+    func setup() {
+
+//        #if DEBUG
+//        self.layer.borderWidth = 1.0
+//        self.layer.borderColor = UIColor.red.cgColor
+//        #endif
+
+        self.showPassImageView.isUserInteractionEnabled = true
+        self.showStateImageView.isUserInteractionEnabled = true
+
+        self.showStateImageView.isHidden = true
+        self.showPassImageView.isHidden = true
+
+        self.fieldState = .hidden
+
+        self.tipLabel.alpha = 0.0
+
+        self.headerLabel.alpha = 0.7
+        self.headerPlaceholderLabel.alpha = 0.0
+        self.textField.delegate = self
+
+        self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        self.bottomLineView.alpha = 1.0
+
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapShowPassword))
+        self.showPassImageView.addGestureRecognizer(tapGestureRecognizer)
+
+    }
+
+    func shouldSlideDown() -> Bool {
+        if let text = textField.text, !text.isEmpty {
+            return false
+        }
+        return true
+    }
+
+    func slideUp() {
+
+        self.centerBottomConstraint.isActive = false
+        self.centerTopConstraint.isActive = true
+
+        self.headerLabel.alpha = 1.0
+
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
+            self.layoutIfNeeded()
+        } completion: { _ in
+
+        }
+    }
+
+    func slideDown() {
+
+        self.centerBottomConstraint.isActive = true
+        self.centerTopConstraint.isActive = false
+
+        self.headerLabel.alpha = 0.7
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
+            self.layoutIfNeeded()
+        } completion: { _ in
+
+        }
+    }
+
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
+
+    override func resignFirstResponder() -> Bool {
+        super.resignFirstResponder()
+
+        self.textField.resignFirstResponder()
+        return true
+    }
+
+    func setPlaceholderText(_ placeholder: String) {
+        self.textField.placeholder = ""
+        self.headerLabel.text = placeholder
+    }
+
+    func setSecureField(_ isSecure: Bool) {
+        self.isSecureField = isSecure
+    }
+
+    func showErrorOnField(text: String, color: UIColor = .systemRed) {
+
+        self.tipLabel.text = text
+        self.tipLabel.textColor = color
+
+        self.fieldState = .error
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 1.0
+        }
+    }
+
+    func showTip(text: String, color: UIColor = .systemRed) {
+
+        tipLabel.text = text
+        tipLabel.textColor = color
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 1.0
+        }
+    }
+
+    func hideTipAndError() {
+
+        tipLabel.text = ""
+        tipLabel.textColor = .black
+
+        self.fieldState = .hidden
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 0.0
+        }
+    }
+
+    @objc func didTapShowPassword() {
+        self.shouldShowPassword.toggle()
+    }
+
+}
+
+extension HeaderTextFieldView: UITextFieldDelegate {
+
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        self.isActive = true
+        return true
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+
+        self.isActive = true
+        self.bottomLineView.backgroundColor = self.highlightColor
+
+        self.slideUp()
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if self.shouldSlideDown() {
+            self.slideDown()
+        }
+
+        self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+
+        self.isActive = false
+    }
+}

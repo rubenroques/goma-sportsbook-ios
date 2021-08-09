@@ -1,0 +1,84 @@
+//
+//  UIColor+Extensions.swift
+//  All Goals
+//
+//  Created by Ruben Roques on 19/09/2019.
+//  Copyright © 2019 GOMA Development. All rights reserved.
+//
+
+import UIKit
+
+extension UIColor {
+
+    convenience init(red: Int, green: Int, blue: Int) {
+        self.init(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: 1)
+    }
+
+    convenience init(hex: Int, alpha: Double = 1.0) {
+        let red = CGFloat((hex & 0xFF0000) >> 16) / 255.0
+        let green = CGFloat((hex & 0x00FF00) >> 8) / 255.0
+        let blue = CGFloat(hex & 0x0000FF) / 255.0
+        self.init(red: red, green: green, blue: blue, alpha: CGFloat(alpha))
+    }
+}
+
+
+extension UIColor {
+
+    func interpolate(with other: UIColor, percent: CGFloat) -> UIColor? {
+        return UIColor.interpolate(betweenColor: self, and: other, percent: percent)
+    }
+
+    static func interpolate(betweenColor colorA: UIColor,
+                            and colorB: UIColor,
+                            percent: CGFloat) -> UIColor? {
+        var redA: CGFloat = 0.0
+        var greenA: CGFloat = 0.0
+        var blueA: CGFloat = 0.0
+        var alphaA: CGFloat = 0.0
+        guard colorA.getRed(&redA, green: &greenA, blue: &blueA, alpha: &alphaA) else {
+            return nil
+        }
+
+        var redB: CGFloat = 0.0
+        var greenB: CGFloat = 0.0
+        var blueB: CGFloat = 0.0
+        var alphaB: CGFloat = 0.0
+        guard colorB.getRed(&redB, green: &greenB, blue: &blueB, alpha: &alphaB) else {
+            return nil
+        }
+
+        let iRed = CGFloat(redA + percent * (redB - redA))
+        let iBlue = CGFloat(blueA + percent * (blueB - blueA))
+        let iGreen = CGFloat(greenA + percent * (greenB - greenA))
+        let iAlpha = CGFloat(alphaA + percent * (alphaB - alphaA))
+
+        return UIColor(red: iRed, green: iGreen, blue: iBlue, alpha: iAlpha)
+    }
+}
+
+extension UIColor {
+
+    static func random() -> UIColor {
+        let randomRed: CGFloat = CGFloat(drand48())
+        let randomGreen: CGFloat = CGFloat(drand48())
+        let randomBlue: CGFloat = CGFloat(drand48())
+        return UIColor(red: randomRed, green: randomGreen, blue: randomBlue, alpha: 1.0)
+    }
+
+    static func randomGray() -> UIColor {
+        let randomTone: CGFloat = CGFloat(drand48())
+        return UIColor(red: randomTone, green: randomTone, blue: randomTone, alpha: 1.0)
+    }
+
+}
+
+
+extension UIColor {
+    func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {
+        return UIGraphicsImageRenderer(size: size).image { rendererContext in
+            self.setFill()
+            rendererContext.fill(CGRect(origin: .zero, size: size))
+        }
+    }
+}
