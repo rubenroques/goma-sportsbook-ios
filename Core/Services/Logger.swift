@@ -7,7 +7,7 @@
 
 import Foundation
 
-let Logger = LoggerService(destination: logsPath())
+let Logger = LoggerService(destination: logsPath()) // swiftlint:disable:this identifier_name
 
 func logsPath() -> URL {
     let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).last!
@@ -95,4 +95,3 @@ private extension LoggerService {
         }
     }
 }
-

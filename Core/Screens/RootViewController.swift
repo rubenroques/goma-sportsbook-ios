@@ -16,7 +16,7 @@ class RootViewController: UIViewController {
 
     init() {
         networkClient = Env.networkManager
-        
+
         super.init(nibName: "RootViewController", bundle: nil)
     }
 
@@ -25,7 +25,6 @@ class RootViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -46,12 +45,11 @@ class RootViewController: UIViewController {
         let endpoint = GomaGamingService.test
         networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
             .sink(receiveCompletion: {
-                    print ("Received completion: \($0).")
+                print("Received completion: \($0).")
             },
-                  receiveValue: {
-                    user in print ("Received user: \(user).")
-                  }
-            )
+            receiveValue: {
+                user in print("Received user: \(user).")
+            })
             .store(in: &cancellables)
 
     }
@@ -63,16 +61,13 @@ extension RootViewController {
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         super.motionEnded(motion, with: event)
 
-
         // Do any additional setup after loading the view.
         AnalyticsClient.logEvent(event: .login)
 
-
         let limit = TargetVariables.featureFlags.limitCheckoutItems
-        //print("Target config flags \(limit)")
+        // print("Target config flags \(limit)")
 
         Logger.log("Target config flags \(limit)")
-
 
         if showingDebug {
             return
@@ -97,5 +92,6 @@ extension RootViewController {
         }
 
     }
-    
 }
+
+

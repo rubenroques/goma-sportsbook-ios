@@ -8,7 +8,7 @@
 
 import Foundation
 
-// swiftlint:disable function_body_length
+// swiftlint:disable all
 struct CountryNameHelper {
 
     static func nameForCountryCode(_ code: String) -> String {
@@ -265,4 +265,4 @@ struct CountryNameHelper {
         }
     }
 }
-// swiftlint:enable function_body_length
+// swiftlint:enable all

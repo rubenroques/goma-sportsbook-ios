@@ -9,8 +9,10 @@
 import Foundation
 import UIKit
 
+// swiftlint:disable all
+
 extension UIImage {
-    
+
     @available(iOS 12.0, *)
     func getPixels() -> [UIColor] {
         guard let cgImage = self.cgImage else {
@@ -44,21 +46,21 @@ extension UIImage {
         }
         return result
     }
-    
+
     func getPixelColor(pos: CGPoint) -> UIColor? {
-        
+
         if
             let dataProvider = self.cgImage?.dataProvider,
             let data = dataProvider.data,
             let pointer = CFDataGetBytePtr(data)
         {
             let pixelInfo: Int = ((Int(self.size.width) * Int(pos.y)) + Int(pos.x)) * 4
-            
+
             let red: CGFloat = CGFloat(pointer[pixelInfo]) / CGFloat(255)
             let green: CGFloat = CGFloat(pointer[pixelInfo+1]) / CGFloat(255)
             let blue: CGFloat = CGFloat(pointer[pixelInfo+2]) / CGFloat(255)
             let alpha: CGFloat = CGFloat(pointer[pixelInfo+3]) / CGFloat(255)
-            
+
             return UIColor(red: red, green: green, blue: blue, alpha: alpha)
         }
         return nil
@@ -77,31 +79,34 @@ extension UIImage {
               let data = CFDataGetBytePtr(providerData) else {
             return nil
         }
-        
+
         let numberOfComponents = 4
         let pixelData = ((Int(size.width) * y) + x) * numberOfComponents
-        
+
         let r = CGFloat(data[pixelData]) / 255.0
         let g = CGFloat(data[pixelData + 1]) / 255.0
         let b = CGFloat(data[pixelData + 2]) / 255.0
         let a = CGFloat(data[pixelData + 3]) / 255.0
-        
+
         return UIColor(red: r, green: g, blue: b, alpha: a)
     }
-    
-    
+
+
     var averageColor: UIColor? {
         guard let inputImage = CIImage(image: self) else { return nil }
         let extentVector = CIVector(x: inputImage.extent.origin.x, y: inputImage.extent.origin.y, z: inputImage.extent.size.width, w: inputImage.extent.size.height)
-        
+
         guard let filter = CIFilter(name: "CIAreaAverage", parameters: [kCIInputImageKey: inputImage, kCIInputExtentKey: extentVector]) else { return nil }
         guard let outputImage = filter.outputImage else { return nil }
-        
+
         var bitmap = [UInt8](repeating: 0, count: 4)
         let context = CIContext(options: [.workingColorSpace: kCFNull!])
         context.render(outputImage, toBitmap: &bitmap, rowBytes: 4, bounds: CGRect(x: 0, y: 0, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
-        
+
         return UIColor(red: CGFloat(bitmap[0]) / 255, green: CGFloat(bitmap[1]) / 255, blue: CGFloat(bitmap[2]) / 255, alpha: CGFloat(bitmap[3]) / 255)
     }
-    
+
 }
+
+
+// swiftlint:enable all

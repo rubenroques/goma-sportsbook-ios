@@ -9,7 +9,6 @@ struct AppFont {
         case medium = "Medium"
         case bold = "Bold"
 
-
         private var familyName: String {
             "HelveticaNeue"
         }
@@ -31,7 +30,6 @@ struct AppFont {
         return type.instance(size)
     }
 
-
     static func printFonts() {
        for familyName in UIFont.familyNames {
            print("\n-- \(familyName)")
@@ -40,5 +38,4 @@ struct AppFont {
            }
        }
    }
-
 }

@@ -8,6 +8,8 @@
 
 import UIKit
 
+// swiftlint:disable all
+
 extension UIImageView {
     
     func setImageColor(color: UIColor) {
@@ -367,3 +369,5 @@ extension UIImage {
         )
     }
 }
+
+// swiftlint:enable all

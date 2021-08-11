@@ -112,3 +112,4 @@ struct ClientBar: Target {
 
 var fooLow = ClientFoo.flags.low
 fooLow
+

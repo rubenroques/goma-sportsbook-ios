@@ -10,7 +10,7 @@ import Foundation
 struct TargetVariables: SportsbookTarget {
 
     typealias Flags = TargetFeatureFlags
-    
+
     #if DEBUG
     static var environmentType: EnvironmentType = .dev
     #else
@@ -33,6 +33,7 @@ struct TargetVariables: SportsbookTarget {
     static var featureFlags: TargetFeatureFlags.Type { TargetFeatureFlags.self }
 
 }
+
 
 
 

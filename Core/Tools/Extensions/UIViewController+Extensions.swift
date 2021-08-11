@@ -30,7 +30,7 @@ extension UINavigationController {
 extension UIViewController {
 
     func addChildViewController(_ viewController: UIViewController, toView view: UIView) {
-        
+
         guard let subview = viewController.view  else {
             return
         }
@@ -60,3 +60,4 @@ extension UIViewController {
 
 
 }
+

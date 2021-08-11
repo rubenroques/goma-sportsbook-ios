@@ -61,7 +61,7 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
                 }
                 att.alpha = 1.0 - distanceToCenterPercentage
 
-                
+
                 let minimumScaleValue = CGFloat(minimumScale)
                 let reversedDistanceToCenterPercentage = 1.0 - distanceToCenterPercentage
                 let remainingValue = (1.0-minimumScaleValue) * reversedDistanceToCenterPercentage
@@ -88,9 +88,9 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
                         continue
                     }
                     if let candAttrs = candidateAttributes {
-                        let a = attributes.center.x - proposedContentOffsetCenterX
-                        let b = candAttrs.center.x - proposedContentOffsetCenterX
-                        if fabsf(Float(a)) < fabsf(Float(b)) {
+                        let aDiff = attributes.center.x - proposedContentOffsetCenterX
+                        let bDiff = candAttrs.center.x - proposedContentOffsetCenterX
+                        if fabsf(Float(aDiff)) < fabsf(Float(bDiff)) {
                             candidateAttributes = attributes;
                         }
                     }
@@ -107,3 +107,4 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
 
 
 }
+

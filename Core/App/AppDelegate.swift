@@ -11,23 +11,26 @@ import Firebase
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    // TODO: Inegrate fastlamne
+
+
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         Logger.log("App Started")
-        
+
         FirebaseApp.configure()
-        
-        //Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
-        
+
+        // Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
+
         Auth.auth().signInAnonymously { (authResult, _) in
             guard let user = authResult?.user else { return }
             let isAnonymous = user.isAnonymous  // true
             let uid = user.uid
             print("FirebaseCore Auth UID \(uid) [isAnonymous:\(isAnonymous)]")
         }
-        
+
         self.window = UIWindow()
 
         window?.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
@@ -39,5 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
+
 
 

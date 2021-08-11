@@ -27,20 +27,20 @@ class SnapCenterLayout: UICollectionViewFlowLayout {
 }
 
 class CenterCellCollectionViewFlowLayout: UICollectionViewFlowLayout {
-    
+
     var rightOffset: CGFloat
-    
+
     init(rightOffset: CGFloat = 0.0) {
         self.rightOffset = rightOffset
         super.init()
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
-        
+
         if let collectionView = self.collectionView {
             let cvBounds = collectionView.bounds
             let halfWidth = cvBounds.size.width * 0.5;
@@ -52,9 +52,9 @@ class CenterCellCollectionViewFlowLayout: UICollectionViewFlowLayout {
                         continue
                     }
                     if let candAttrs = candidateAttributes {
-                        let a = attributes.center.x - proposedContentOffsetCenterX
-                        let b = candAttrs.center.x - proposedContentOffsetCenterX
-                        if fabsf(Float(a)) < fabsf(Float(b)) {
+                        let aDiff = attributes.center.x - proposedContentOffsetCenterX
+                        let bDiff = candAttrs.center.x - proposedContentOffsetCenterX
+                        if fabsf(Float(aDiff)) < fabsf(Float(bDiff)) {
                             candidateAttributes = attributes;
                         }
                     }
@@ -69,4 +69,6 @@ class CenterCellCollectionViewFlowLayout: UICollectionViewFlowLayout {
         return super.targetContentOffset(forProposedContentOffset: proposedContentOffset)
     }
 }
+
+
 

@@ -14,18 +14,18 @@ enum AuthenticationError: Error {
 }
 
 class Authenticator {
-    
+
     private let session: NetworkSession
     private var currentToken: AuthToken?
     private let queue = DispatchQueue(label: "Autenticator.\(UUID().uuidString)")
-    
+
     //This publisher is shared amongst all calls that request a token refresh
     private var refreshPublisher: AnyPublisher<AuthToken, Error>?
-    
+
     init(session: NetworkSession = URLSession.shared) {
         self.session = session
     }
-    
+
     func validToken(deviceId: String, forceRefresh: Bool = false) -> AnyPublisher<AuthToken, Error> {
         return queue.sync { [weak self] in
 
@@ -58,7 +58,8 @@ class Authenticator {
                 "device_type": "ios",
                 "type": "anonymous"
             ]
-            let jsonData = try! JSONEncoder().encode(bodyJSON)
+
+            let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
             request.httpBody = jsonData
 
             let publisher = session.publisher(for: request, token: nil)
@@ -78,6 +79,7 @@ class Authenticator {
 
         }
     }
-    
+
 }
+
 

@@ -7,7 +7,7 @@
 
 import Foundation
 
-var Env = Environment()
+var Env = Environment() // swiftlint:disable:this identifier_name
 
 struct Environment {
 

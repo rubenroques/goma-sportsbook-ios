@@ -29,7 +29,7 @@ struct NetworkManager {
 
         return authenticator.validToken(deviceId: deviceId)
             .flatMap({ token -> AnyPublisher<Data, Error> in
-                //We can now use this token to authenticate the request
+                // We can now use this token to authenticate the request
                 print("flatMap1 token \(token)")
                 return session.publisher(for: request, token: token)
             })
@@ -47,7 +47,7 @@ struct NetworkManager {
                 return authenticator.validToken(deviceId: deviceId, forceRefresh: true)
                     .flatMap({ token -> AnyPublisher<Data, Error> in
                         print("flatMap1 token \(token)")
-                        //We can now use this new token to authenticate the second attempt at making this request
+                        // We can now use this new token to authenticate the second attempt at making this request
                         return session.publisher(for: request, token: token)
                     })
                     .eraseToAnyPublisher()
@@ -59,6 +59,5 @@ struct NetworkManager {
             .map(\.data)
             .eraseToAnyPublisher()
     }
-    
-}
 
+}
