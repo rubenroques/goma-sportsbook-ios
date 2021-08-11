@@ -18,7 +18,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WelcomeViewController" customModule="BetBrain" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WelcomeViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="contentBaseView" destination="afu-nM-0D3" id="3BZ-Pn-ZRo"/>
                 <outlet property="createAccountButton" destination="4Q3-Yr-TDI" id="3g2-pD-znB"/>
@@ -35,13 +35,13 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="812"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background_vertical" translatesAutoresizingMaskIntoConstraints="NO" id="60q-EH-0qo">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="60q-EH-0qo">
                     <rect key="frame" x="0.0" y="178.66666666666669" width="375" height="633.33333333333326"/>
                 </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1uw-M1-CNi">
                     <rect key="frame" x="67.666666666666686" y="92" width="240" height="40"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_horizontal" translatesAutoresizingMaskIntoConstraints="NO" id="0cQ-0i-2OV">
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0cQ-0i-2OV">
                             <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
                         </imageView>
                     </subviews>
@@ -67,9 +67,9 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0cC-yy-zZK">
                                             <rect key="frame" x="0.0" y="0.0" width="295" height="60"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPn-Gr-AQc" customClass="RoundButton" customModule="BetBrain" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qPn-Gr-AQc" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="5" width="295" height="50"/>
-                                                    <color key="backgroundColor" name="Color1"/>
+                                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="9XV-5s-o5y"/>
                                                     </constraints>
@@ -93,9 +93,9 @@
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9JI-Qs-Uu7">
                                             <rect key="frame" x="0.0" y="68" width="295" height="60"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Q3-Yr-TDI" customClass="RoundButton" customModule="BetBrain" customModuleProvider="target">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Q3-Yr-TDI" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="5" width="295" height="50"/>
-                                                    <color key="backgroundColor" name="TextColor1"/>
+                                                    <color key="backgroundColor" systemColor="systemOrangeColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="50" id="d4R-G3-FDT"/>
                                                     </constraints>
@@ -120,21 +120,21 @@
                                             <rect key="frame" x="0.0" y="136" width="295" height="40"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="or" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIq-i9-ub6">
-                                                    <rect key="frame" x="140" y="10" width="15.333333333333343" height="20"/>
+                                                    <rect key="frame" x="140.33333333333334" y="10.666666666666687" width="14.666666666666657" height="18.666666666666671"/>
                                                     <fontDescription key="fontDescription" name="CircularStd-Book" family="Circular Std" pointSize="15"/>
                                                     <color key="textColor" name="TextColor1"/>
                                                     <color key="shadowColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <size key="shadowOffset" width="1" height="1"/>
                                                 </label>
                                                 <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6a7-if-1j9">
-                                                    <rect key="frame" x="0.0" y="21.666666666666686" width="132" height="1"/>
+                                                    <rect key="frame" x="0.0" y="21.666666666666686" width="132.33333333333334" height="1"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="DYO-tN-mzQ"/>
                                                     </constraints>
                                                 </view>
                                                 <view alpha="0.20000000000000001" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="khy-6p-6Bb">
-                                                    <rect key="frame" x="163.33333333333337" y="21.666666666666686" width="131.66666666666663" height="1"/>
+                                                    <rect key="frame" x="163" y="21.666666666666686" width="132" height="1"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="1" id="xEc-mk-7oh"/>
@@ -160,7 +160,7 @@
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="hmP-nP-80K">
                                                     <rect key="frame" x="85.666666666666686" y="2" width="124" height="46"/>
                                                     <subviews>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rki-NS-Q67" customClass="RoundButton" customModule="BetBrain" customModuleProvider="target">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rki-NS-Q67" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
                                                             <rect key="frame" x="0.0" y="0.0" width="46" height="46"/>
                                                             <color key="backgroundColor" systemColor="systemBlueColor"/>
                                                             <constraints>
@@ -169,7 +169,7 @@
                                                             </constraints>
                                                             <state key="normal" title="F"/>
                                                         </button>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="daJ-TF-S3k" customClass="RoundButton" customModule="BetBrain" customModuleProvider="target">
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="daJ-TF-S3k" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
                                                             <rect key="frame" x="77.999999999999986" y="0.0" width="46" height="46"/>
                                                             <color key="backgroundColor" systemColor="systemRedColor"/>
                                                             <constraints>
@@ -202,9 +202,9 @@
                                 <constraint firstAttribute="trailing" secondItem="pKb-Nb-e9m" secondAttribute="trailing" id="cqn-eG-z1b"/>
                             </constraints>
                         </view>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="de8-LB-e6k" customClass="RoundButton" customModule="BetBrain" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="de8-LB-e6k" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
                             <rect key="frame" x="87.666666666666686" y="722" width="200" height="50"/>
-                            <color key="backgroundColor" name="Color1"/>
+                            <color key="backgroundColor" systemColor="systemOrangeColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="sfk-2i-UHq"/>
                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="wjr-2M-cCU"/>
@@ -247,11 +247,6 @@
         </view>
     </objects>
     <resources>
-        <image name="background_vertical" width="384" height="575"/>
-        <image name="logo_horizontal" width="255" height="40"/>
-        <namedColor name="Color1">
-            <color red="0.20392156862745098" green="0.6588235294117647" blue="0.32549019607843138" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
         <namedColor name="TextColor1">
             <color red="0.24313725490196078" green="0.29019607843137257" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
@@ -260,6 +255,9 @@
         </systemColor>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

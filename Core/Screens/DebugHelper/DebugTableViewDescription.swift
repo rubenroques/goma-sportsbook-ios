@@ -24,11 +24,11 @@ enum DebugTableViewDescription: TableViewDescriptor {
             ],
             [
                 .clearUserDefaults,
-                .logoutUser
+                .logoutUser,
             ],
             [
                 .networking,
-                .globalLogs
+                .globalLogs,
             ]
         ]
     }

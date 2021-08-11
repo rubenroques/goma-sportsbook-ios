@@ -1,10 +1,3 @@
-//
-//  TitleTextFieldView.swift
-//  BetBrain
-//
-//  Created by André Lascas on 14/04/2021.
-//  Copyright © 2021 Ruben Roques. All rights reserved.
-//
 
 import UIKit
 
@@ -12,11 +5,9 @@ class TitleTextFieldView: NibView {
 
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var textField: UITextField!
-    // Variables
+
     var regularBorderColor = UIColor.black
     var activeBorderColor = UIColor.black
-    var isSecure = false
-
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,7 +23,7 @@ class TitleTextFieldView: NibView {
         self.backgroundColor = .black
         self.titleLabel.text = "Title"
         self.titleLabel.font = AppFont.with(type: .bold, size: 20.0)
-        self.titleLabel.textColor = .black
+        self.titleLabel.textColor = .white
         self.textField.delegate = self
         self.textField.placeholder = "Placeholder"
         self.textField.backgroundColor = .black
@@ -55,17 +46,11 @@ class TitleTextFieldView: NibView {
     }
 
     func setSecureTextField(secure: Bool) {
-        if secure {
-            self.isSecure = secure
-            self.textField.isSecureTextEntry = secure
-        } else {
-            self.isSecure = secure
-            self.textField.isSecureTextEntry = secure
-        }
+        self.textField.isSecureTextEntry = secure
     }
 
-    func getTextValue() -> String {
-        return self.textField.text ?? ""
+    var text: String? {
+        return self.textField.text
     }
 
     override var intrinsicContentSize: CGSize {

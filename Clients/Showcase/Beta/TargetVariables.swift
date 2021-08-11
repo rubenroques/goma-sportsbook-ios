@@ -13,6 +13,14 @@ struct TargetVariables: SportsbookTarget {
 
     static var environmentType: EnvironmentType = .dev
 
+    static var gomaGamingHost: String {
+        return "http://34.141.102.89"
+    }
+
+    static var everyMatrixHost: String {
+        return ""
+    }
+
     struct TargetFeatureFlags: FeatureFlags {
         static var showNewCheckout: Bool { true }
         static var showNewLoginScreen: Bool { true }

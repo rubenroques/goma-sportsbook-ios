@@ -14,9 +14,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+        Logger.log("App Started")
         
         FirebaseApp.configure()
-
+        
         //Crashlytics.crashlytics().setCrashlyticsCollectionEnabled(true)
         
         Auth.auth().signInAnonymously { (authResult, _) in

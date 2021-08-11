@@ -31,4 +31,14 @@ struct AppFont {
         return type.instance(size)
     }
 
+
+    static func printFonts() {
+       for familyName in UIFont.familyNames {
+           print("\n-- \(familyName)")
+           for fontName in UIFont.fontNames(forFamilyName: familyName) {
+               print(fontName)
+           }
+       }
+   }
+
 }

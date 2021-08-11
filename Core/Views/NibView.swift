@@ -27,5 +27,4 @@ class NibView: UIView, NibLoadable {
     override func layoutSubviews() {
         super.layoutSubviews()
     }
-
 }

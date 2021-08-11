@@ -6,7 +6,6 @@
 //
 
 import XCTest
-@testable import Sportsbook
 
 class SportsbookTests: XCTestCase {
 

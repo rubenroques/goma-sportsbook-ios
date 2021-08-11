@@ -15,6 +15,8 @@ class DebugViewController: UIViewController {
     init() {
         super.init(nibName: "DebugViewController", bundle: nil)
         self.title = "Debug"
+
+        
     }
 
     @available(iOS, unavailable)
@@ -34,6 +36,8 @@ class DebugViewController: UIViewController {
             switch action {
             case .networking:
                 self?.openNetworkingLogs()
+            case .globalLogs:
+                self?.openAppLogs()
             default:
                 ()
             }
@@ -53,6 +57,10 @@ class DebugViewController: UIViewController {
 
     func openNetworkingLogs() {
 
+    }
+
+    func openAppLogs() {
+        self.navigationController?.pushViewController(LogViewerViewController(), animated: true)
     }
 
 }
