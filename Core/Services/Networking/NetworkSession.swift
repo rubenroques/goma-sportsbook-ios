@@ -24,7 +24,7 @@ extension URLSession: NetworkSession {
         var request = request
 
         if let token = token {
-            request.setValue("Bearer \(token.hash)", forHTTPHeaderField: " Authorization")
+            request.setValue("Bearer \(token.hash)", forHTTPHeaderField: "Authorization")
         }
 
         return dataTaskPublisher(for: request)
@@ -32,7 +32,7 @@ extension URLSession: NetworkSession {
             .tryMap({ result in
 
                 print("=====================")
-                print(request)
+                print(request, request.httpMethod, request.httpBody, request.allHTTPHeaderFields)
                 print(String(data:result.data, encoding: .utf8) ?? "")
 
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {

@@ -55,7 +55,7 @@ struct NetworkManager {
             .decode(type: NetworkResponse<ExampleModel>.self, decoder: JSONDecoder())
             .mapError({ error1 in
                         print("mapError error \(error1)")
-                        return NetworkErrorResponse(errors: [.invalidToken]) })
+                        return NetworkErrorResponse(errors: [.invalidResponse]) })
             .map(\.data)
             .eraseToAnyPublisher()
     }
