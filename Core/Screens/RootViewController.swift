@@ -38,6 +38,11 @@ class RootViewController: UIViewController {
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.Core.tint
+
+        //Example
+        let label1 = UILabel()
+        label1.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
+        
     }
 
     @IBAction func didTapAPITest() {
@@ -47,8 +52,8 @@ class RootViewController: UIViewController {
             .sink(receiveCompletion: {
                 print("Received completion: \($0).")
             },
-            receiveValue: {
-                user in print("Received user: \(user).")
+            receiveValue: { user in
+                print("Received Content - user: \(user).")
             })
             .store(in: &cancellables)
 
