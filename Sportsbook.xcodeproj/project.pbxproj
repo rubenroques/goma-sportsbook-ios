@@ -194,6 +194,10 @@
 		45A2898426C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
 		45A2898626C418F700BCD5DA /* NetworkErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */; };
 		45A2898726C418F700BCD5DA /* NetworkErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */; };
+		A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
+		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
+		A99DD54826C53A5F00ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */; };
+		A99DD54A26C53DF000ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54926C53DF000ACDB07 /* FirebaseDatabase */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -313,6 +317,7 @@
 		45A2897F26C3E74B00BCD5DA /* AuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
 		45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingService.swift; sourceTree = "<group>"; };
 		45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorResponse.swift; sourceTree = "<group>"; };
+		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -320,6 +325,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A99DD54A26C53DF000ACDB07 /* FirebaseDatabase in Frameworks */,
 				455A0D2E26BDF5E800EC572D /* FirebaseCrashlytics in Frameworks */,
 				4515637826BED19B00690896 /* Reachability in Frameworks */,
 				455A0D2A26BDF5E800EC572D /* FirebaseAnalytics in Frameworks */,
@@ -339,6 +345,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A99DD54826C53A5F00ACDB07 /* FirebaseDatabase in Frameworks */,
 				455A0D3526BDF61B00EC572D /* FirebaseCrashlytics in Frameworks */,
 				4515637D26BED58900690896 /* Reachability in Frameworks */,
 				455A0D3126BDF61200EC572D /* FirebaseAnalytics in Frameworks */,
@@ -535,6 +542,7 @@
 				455A0D1526BD9F4D00EC572D /* GeoLocationManager.swift */,
 				4515635E26BE032E00690896 /* AnalyticsClient.swift */,
 				456B342626C18257009D7D27 /* Logger.swift */,
+				A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */,
 				456B341226C13AE1009D7D27 /* Networking */,
 			);
 			path = Services;
@@ -780,6 +788,7 @@
 				455A0D2D26BDF5E800EC572D /* FirebaseCrashlytics */,
 				4515637726BED19B00690896 /* Reachability */,
 				4515637A26BED57400690896 /* Nuke */,
+				A99DD54926C53DF000ACDB07 /* FirebaseDatabase */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -824,6 +833,7 @@
 				455A0D3426BDF61B00EC572D /* FirebaseCrashlytics */,
 				4515637C26BED58900690896 /* Reachability */,
 				4515637E26BED58900690896 /* Nuke */,
+				A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -1031,6 +1041,7 @@
 				4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				4589F3FD26BF017A005DF543 /* RegisterViewController.swift in Sources */,
+				A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
 				455A0D0826BD9D9000EC572D /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				455A0CF626BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342726C18257009D7D27 /* Logger.swift in Sources */,
@@ -1115,6 +1126,7 @@
 				4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				4515636026BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				4589F3FE26BF017A005DF543 /* RegisterViewController.swift in Sources */,
+				A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
 				455A0D0926BD9D9000EC572D /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				455A0CF726BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342826C18257009D7D27 /* Logger.swift in Sources */,
@@ -1540,6 +1552,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 455A0D2826BDF5E800EC572D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCrashlytics;
+		};
+		A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 455A0D2826BDF5E800EC572D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		A99DD54926C53DF000ACDB07 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 455A0D2826BDF5E800EC572D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

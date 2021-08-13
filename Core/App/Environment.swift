@@ -15,5 +15,10 @@ struct Environment {
     var deviceId: String {
         "61F9A5CC2906"
     }
+    var maintenanceMode = 0
+    var maintenanceReason = ""
+    var iosRequiredVersion = 0.0
+    var iosCurrentVersion = 0.0
+    var lastSettingsUpdate = 0
 
 }

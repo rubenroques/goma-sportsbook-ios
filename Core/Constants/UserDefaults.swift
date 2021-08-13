@@ -18,3 +18,9 @@ extension NotificationCenter {
         self.post(name: name, object: nil)
     }
 }
+
+extension UserDefaults {
+    func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) != nil
+    }
+}
