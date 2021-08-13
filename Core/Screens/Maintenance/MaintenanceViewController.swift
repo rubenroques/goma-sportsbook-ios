@@ -20,7 +20,7 @@ class MaintenanceViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
-        timer = Timer.scheduledTimer(timeInterval: 2.0, target: self, selector: #selector(checkMaintenance), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(checkMaintenance), userInfo: nil, repeats: true)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -49,9 +49,7 @@ class MaintenanceViewController: UIViewController {
 
     @objc func checkMaintenance() {
         if !Env.isMaintenance {
-            self.dismiss(animated: false)
-            let rootVC = RootViewController()
-            self.present(rootVC, animated: true)
+            self.dismiss(animated: false, completion: nil)
             timer.invalidate()
         }
         print("Checked maintenance mode")

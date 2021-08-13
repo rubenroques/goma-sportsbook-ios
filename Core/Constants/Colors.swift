@@ -12,6 +12,7 @@ extension UIColor {
     // Colors file is localed on each Client "ThemeColors.xcassets" file
     struct Core {
         static let tint: UIColor = UIColor(named: "tintColor")! //This will read the tintColor on the Client ThemeColor.xcasset
+        static let headingMain: UIColor = UIColor.white // Placeholder
     }
 
 }

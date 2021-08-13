@@ -198,6 +198,10 @@
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54826C53A5F00ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */; };
 		A99DD54A26C53DF000ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54926C53DF000ACDB07 /* FirebaseDatabase */; };
+		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
+		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
+		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
+		A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -318,6 +322,8 @@
 		45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingService.swift; sourceTree = "<group>"; };
 		45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorResponse.swift; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
+		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
+		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -679,6 +685,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
 				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
 				4589F3EA26BF017A005DF543 /* Account */,
@@ -763,6 +770,15 @@
 				45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		A9A836AF26C6AC5D00508923 /* Maintenance */ = {
+			isa = PBXGroup;
+			children = (
+				A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */,
+				A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */,
+			);
+			path = Maintenance;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -896,6 +912,7 @@
 				455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
+				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
@@ -929,6 +946,7 @@
 				455A0C8A26BD904300EC572D /* LaunchScreen.storyboard in Resources */,
 				4589F3FA26BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
+				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
@@ -1031,6 +1049,7 @@
 				455A0D0C26BD9D9000EC572D /* CountryName.swift in Sources */,
 				4515636E26BE94F600690896 /* Theme.swift in Sources */,
 				4589F41926BF0243005DF543 /* NibView.swift in Sources */,
+				A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */,
 				4589F42226BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1926BDABA100EC572D /* Internationalization.swift in Sources */,
 				455A0CF226BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
@@ -1116,6 +1135,7 @@
 				455A0D0D26BD9D9000EC572D /* CountryName.swift in Sources */,
 				4515636F26BE94F600690896 /* Theme.swift in Sources */,
 				4589F41A26BF0243005DF543 /* NibView.swift in Sources */,
+				A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */,
 				4589F42326BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1A26BDABA100EC572D /* Internationalization.swift in Sources */,
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,

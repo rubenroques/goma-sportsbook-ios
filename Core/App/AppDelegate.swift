@@ -34,7 +34,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
 
+        let isMaintenance = realtimeClient.verifyMaintenanceMode()
+        if isMaintenance{
+            self.window!.rootViewController = MaintenanceViewController()
+        } else {
         self.window!.rootViewController = RootViewController()
+        }
+
         self.window!.makeKeyAndVisible()
 
         return true

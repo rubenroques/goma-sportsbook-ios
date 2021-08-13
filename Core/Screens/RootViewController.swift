@@ -13,10 +13,11 @@ class RootViewController: UIViewController {
     var showingDebug: Bool = false
     var networkClient: NetworkManager
     var cancellables = Set<AnyCancellable>()
+    var isMaintenance: Bool = Env.isMaintenance
+    var timer = Timer()
 
     init() {
         networkClient = Env.networkManager
-
         super.init(nibName: "RootViewController", bundle: nil)
     }
 
@@ -29,6 +30,8 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupWithTheme()
+
+        timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(checkMaintenance), userInfo: nil, repeats: true)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -57,6 +60,15 @@ class RootViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+    }
+
+    @objc func checkMaintenance() {
+        if Env.isMaintenance {
+            let maintenanceVC = MaintenanceViewController()
+            self.present(maintenanceVC, animated: true, completion: nil)
+            timer.invalidate()
+        }
+        print("Checked maintenance mode")
     }
 
 }

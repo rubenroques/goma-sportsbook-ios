@@ -22,12 +22,9 @@ class RealtimeSocketClient {
 
         //print("User Defaults: \(UserDefaults.standard.dictionaryRepresentation())")
         // Observers
-        observeChild(child: maintenanceReason)
-        observeChild(child: maintenanceMode)
-        observeChild(child: lastSettingsUpdate)
-        observeChild(child: iosCurrentVersion)
-        observeChild(child: iosRequiredVersion)
-
+        checkFirebaseDatabaseChildNodes {
+            print("Finished checking Firebase Realtime Child Nodes!")
+        }
     }
 
     ///      Sets an observer for a given child node on firebase
@@ -47,20 +44,37 @@ class RealtimeSocketClient {
                 } else {
                     print("No changes detected.")
                 }
+
+                if child == "maintenance_mode" {
+                    if childValue == "1"{
+                        Env.isMaintenance = true
+                    } else {
+                        Env.isMaintenance = false
+                    }
+                }
             }
 
-            if child == "maintenance_mode" {
-                self.verifyMaintenanceMode(child: child)
-            }
         })
 
     }
 
-    func verifyMaintenanceMode(child: String) {
-        let maintenanceMode = String(describing: UserDefaults.standard.object(forKey: child)!)
-        if maintenanceMode == "1"{
-            print("Maintenance in course. Reason: \(String(describing: UserDefaults.standard.object(forKey: "maintenance_reason")!))")
+    func checkFirebaseDatabaseChildNodes(finished: @escaping() -> Void) {
+
+        observeChild(child: maintenanceReason)
+        observeChild(child: maintenanceMode)
+        observeChild(child: lastSettingsUpdate)
+        observeChild(child: iosCurrentVersion)
+        observeChild(child: iosRequiredVersion)
+
+        finished()
+
+    }
+
+    func verifyMaintenanceMode() -> Bool {
+        if String(describing: UserDefaults.standard.object(forKey: "maintenance_mode")!) == "1" {
+            return true
         }
+        return false
     }
 
 }
