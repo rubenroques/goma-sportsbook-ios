@@ -28,18 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("FirebaseCore Auth UID \(uid) [isAnonymous:\(isAnonymous)]")
         }
 
-        let realtimeClient = RealtimeSocketClient()
-
         self.window = UIWindow()
 
         window?.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
 
-        let isMaintenance = realtimeClient.verifyMaintenanceMode()
-        if isMaintenance{
-            self.window!.rootViewController = MaintenanceViewController()
-        } else {
         self.window!.rootViewController = RootViewController()
-        }
 
         self.window!.makeKeyAndVisible()
 

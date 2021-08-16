@@ -16,5 +16,6 @@ struct Environment {
         "61F9A5CC2906"
     }
     var isMaintenance = false
+    var appUpdateType = ""
 
 }

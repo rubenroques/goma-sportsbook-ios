@@ -31,7 +31,32 @@ class RootViewController: UIViewController {
 
         self.setupWithTheme()
 
-        timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(checkMaintenance), userInfo: nil, repeats: true)
+        /*timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(checkMaintenance), userInfo: nil, repeats: true)*/
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        let realtimeClient = RealtimeSocketClient()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            //print("ENV: \(Env.appUpdateType)")
+            let isMaintenance = realtimeClient.verifyMaintenanceMode()
+            let appUpdateType = realtimeClient.verifyAppUpdateType()
+
+
+            if isMaintenance {
+                let vc = MaintenanceViewController()
+                let navigationController = UINavigationController(rootViewController: vc)
+                navigationController.modalPresentationStyle = .fullScreen
+
+                self.present(navigationController, animated: true, completion: nil)
+            }else if appUpdateType != "" {
+                let vc = VersionUpdateViewController()
+                let navigationController = UINavigationController(rootViewController: vc)
+                navigationController.modalPresentationStyle = .fullScreen
+
+                self.present(navigationController, animated: true, completion: nil)
+            }
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -45,13 +45,7 @@ class RealtimeSocketClient {
                     print("No changes detected.")
                 }
 
-                if child == "maintenance_mode" {
-                    if childValue == "1"{
-                        Env.isMaintenance = true
-                    } else {
-                        Env.isMaintenance = false
-                    }
-                }
+                self.verifyChildAction(child: child, childValue: childValue)
             }
 
         })
@@ -66,7 +60,9 @@ class RealtimeSocketClient {
         observeChild(child: iosCurrentVersion)
         observeChild(child: iosRequiredVersion)
 
-        finished()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            finished()
+        }
 
     }
 
@@ -75,6 +71,35 @@ class RealtimeSocketClient {
             return true
         }
         return false
+    }
+
+    func verifyAppUpdateType() -> String {
+        return Env.appUpdateType
+    }
+
+    func verifyChildAction(child: String, childValue: String) {
+        let appVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
+        let appVersion = appVersionString!.components(separatedBy: ".")
+
+        if child == "maintenance_mode" {
+            if childValue == "1"{
+                Env.isMaintenance = true
+            } else {
+                Env.isMaintenance = false
+            }
+        } else if child == "ios_current_version" {
+            let currentVersionString = String(describing: UserDefaults.standard.object(forKey: "ios_current_version")!)
+            print("App: \(appVersionString) - Current: \(currentVersionString)")
+            if currentVersionString != appVersionString {
+                Env.appUpdateType = "optional"
+            }
+        } else if child == "ios_required_version" {
+            let requiredVersionString = String(describing: UserDefaults.standard.object(forKey: "ios_required_version")!)
+            let requiredVersion = requiredVersionString.components(separatedBy: ".")
+            if requiredVersion[0] > appVersion[0] || requiredVersion[1] > appVersion[1] || requiredVersion[2] > appVersion[2]  {
+                Env.appUpdateType = "required"
+            }
+        }
     }
 
 }
