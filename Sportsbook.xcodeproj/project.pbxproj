@@ -206,6 +206,8 @@
 		A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
 		A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
 		A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
+		A9B8408126CFB49000269B05 /* DateUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408026CFB49000269B05 /* DateUserLocation.swift */; };
+		A9B8408226CFB49000269B05 /* DateUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408026CFB49000269B05 /* DateUserLocation.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -330,6 +332,7 @@
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
 		A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VersionUpdateViewController.xib; sourceTree = "<group>"; };
+		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -637,6 +640,7 @@
 				455A0CC426BD9D9000EC572D /* FunctionalUtils.swift */,
 				455A0CD526BD9D9000EC572D /* NibIdentifiable.swift */,
 				455A0CDA26BD9D9000EC572D /* CountryName.swift */,
+				A9B8408026CFB49000269B05 /* DateUserLocation.swift */,
 			);
 			path = MiscHelpers;
 			sourceTree = "<group>";
@@ -1039,6 +1043,7 @@
 				455A0CA826BD973C00EC572D /* TargetVariables.swift in Sources */,
 				455A0D1026BD9D9000EC572D /* Changeable.swift in Sources */,
 				45A2898326C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */,
+				A9B8408126CFB49000269B05 /* DateUserLocation.swift in Sources */,
 				455A0C5426BD902C00EC572D /* AppDelegate.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				455A0D0226BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
@@ -1126,6 +1131,7 @@
 				455A0C9726BD943900EC572D /* TargetVariables.swift in Sources */,
 				455A0D1126BD9D9000EC572D /* Changeable.swift in Sources */,
 				45A2898426C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */,
+				A9B8408226CFB49000269B05 /* DateUserLocation.swift in Sources */,
 				455A0CA326BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				455A0D0326BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,

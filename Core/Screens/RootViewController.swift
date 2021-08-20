@@ -15,6 +15,7 @@ class RootViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
     var isMaintenance: Bool = Env.isMaintenance
     var timer = Timer()
+    let locationManager = GeoLocationManager()
 
     init() {
         networkClient = Env.networkManager
@@ -32,16 +33,18 @@ class RootViewController: UIViewController {
         self.setupWithTheme()
 
         /*timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(checkMaintenance), userInfo: nil, repeats: true)*/
+
+        getLocationDateFormat()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         let realtimeClient = RealtimeSocketClient()
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        /*DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             //print("ENV: \(Env.appUpdateType)")
             let isMaintenance = realtimeClient.verifyMaintenanceMode()
             let appUpdateType = realtimeClient.verifyAppUpdateType()
 
+            print()
 
             if isMaintenance {
                 let vc = MaintenanceViewController()
@@ -56,7 +59,7 @@ class RootViewController: UIViewController {
 
                 self.present(navigationController, animated: true, completion: nil)
             }
-        }
+        }*/
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -71,6 +74,25 @@ class RootViewController: UIViewController {
         let label1 = UILabel()
         label1.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
         
+    }
+
+    func getLocationDateFormat(){
+        if locationManager.isLocationServicesEnabled(){
+            print("GEO ACTIVATED")
+        } else {
+            print("GEO NOT ACTIVATED")
+            locationManager.requestGeoLocationUpdates()
+        }
+        locationManager.startGeoLocationUpdates()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            let dateNow =  Date(timeIntervalSinceNow: 0)
+            print("LOCATION: \(self.locationManager.lastLocation)")
+            let location = self.locationManager.lastLocation
+            location.fetchCityAndCountry { city, country, error in
+                guard let city = city, let country = country, error == nil else { return }
+                print("Date: \(DateUserLocation().dateLocationFormat(country, dateNow))")
+            }
+        }
     }
 
     @IBAction func didTapAPITest() {
