@@ -208,6 +208,10 @@
 		A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
 		A9B8408126CFB49000269B05 /* DateUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408026CFB49000269B05 /* DateUserLocation.swift */; };
 		A9B8408226CFB49000269B05 /* DateUserLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408026CFB49000269B05 /* DateUserLocation.swift */; };
+		A9B8408626D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */; };
+		A9B8408726D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */; };
+		A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */; };
+		A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -333,6 +337,8 @@
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
 		A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VersionUpdateViewController.xib; sourceTree = "<group>"; };
 		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
+		A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForbiddenAccessViewController.swift; sourceTree = "<group>"; };
+		A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForbiddenAccessViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -695,6 +701,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A9B8408326D3E7F400269B05 /* Forbidden */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
@@ -799,6 +806,15 @@
 				A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */,
 			);
 			path = VersionUpdate;
+			sourceTree = "<group>";
+		};
+		A9B8408326D3E7F400269B05 /* Forbidden */ = {
+			isa = PBXGroup;
+			children = (
+				A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */,
+				A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */,
+			);
+			path = Forbidden;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -938,6 +954,7 @@
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
+				A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CA726BD973900EC572D /* Showcase-Assets.xcassets in Resources */,
 				456B343826C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
@@ -973,6 +990,7 @@
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
+				A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CAD26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				456B343926C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
@@ -1077,6 +1095,7 @@
 				4589F42226BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1926BDABA100EC572D /* Internationalization.swift in Sources */,
 				455A0CF226BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
+				A9B8408626D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
@@ -1165,6 +1184,7 @@
 				4589F42326BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1A26BDABA100EC572D /* Internationalization.swift in Sources */,
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
+				A9B8408726D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,

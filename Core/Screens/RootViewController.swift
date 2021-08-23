@@ -39,7 +39,7 @@ class RootViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         let realtimeClient = RealtimeSocketClient()
-        /*DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             //print("ENV: \(Env.appUpdateType)")
             let isMaintenance = realtimeClient.verifyMaintenanceMode()
             let appUpdateType = realtimeClient.verifyAppUpdateType()
@@ -59,7 +59,7 @@ class RootViewController: UIViewController {
 
                 self.present(navigationController, animated: true, completion: nil)
             }
-        }*/
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -88,6 +88,8 @@ class RootViewController: UIViewController {
             let dateNow =  Date(timeIntervalSinceNow: 0)
             print("LOCATION: \(self.locationManager.lastLocation)")
             let location = self.locationManager.lastLocation
+            Env.userLat = "\(location.coordinate.latitude)"
+            Env.userLong = "\(location.coordinate.longitude)"
             location.fetchCityAndCountry { city, country, error in
                 guard let city = city, let country = country, error == nil else { return }
                 print("Date: \(DateUserLocation().dateLocationFormat(country, dateNow))")
@@ -106,8 +108,37 @@ class RootViewController: UIViewController {
                 print("Received Content - user: \(user).")
             })
             .store(in: &cancellables)
-
     }
+
+    @IBAction func didTapGeolocationAPI() {
+        let endpoint = GomaGamingService.geolocation
+        networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("User not allowed!")
+                    DispatchQueue.main.async {
+                        let vc = ForbiddenAccessViewController()
+                        let navigationController = UINavigationController(rootViewController: vc)
+                        navigationController.modalPresentationStyle = .fullScreen
+
+                        self.present(navigationController, animated: true, completion: nil)
+                    }
+
+                case .finished:
+                    print("User allowed!")
+                }
+
+                print("Received completion: \(completion).")
+
+            },
+            receiveValue: { data in
+                print("Received Content - data: \(data).")
+            })
+            .store(in: &cancellables)
+    }
+
+
 
     @objc func checkMaintenance() {
         if Env.isMaintenance {

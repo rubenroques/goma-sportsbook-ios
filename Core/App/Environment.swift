@@ -17,5 +17,7 @@ struct Environment {
     }
     var isMaintenance = false
     var appUpdateType = ""
+    var userLat = ""
+    var userLong = ""
 
 }

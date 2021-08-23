@@ -34,13 +34,14 @@ extension URLSession: NetworkSession {
                 print("=====================")
                 print(request, request.httpMethod, request.httpBody, request.allHTTPHeaderFields)
                 print(String(data:result.data, encoding: .utf8) ?? "")
-
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     //Unauthorized
                     print("throw unauthorized")
                     throw NetworkErrorResponse(errors: [.unauthorized])
-                }
-                else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
+                } else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 403 {
+                    print("throw forbidden")
+                    throw NetworkErrorResponse(errors: [.forbidden])
+                } else if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode != 200 {
                     print("throw unknown")
                     throw NetworkErrorResponse(errors: [.unknown])
                 }

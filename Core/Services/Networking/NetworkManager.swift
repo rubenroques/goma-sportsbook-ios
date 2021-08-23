@@ -18,13 +18,13 @@ struct NetworkManager {
         self.authenticator = Authenticator(session: session)
     }
     
-    func requestEndpoint(deviceId: String, endpoint: Endpoint) -> AnyPublisher<ExampleModel, NetworkErrorResponse> {
+    func requestEndpoint(deviceId: String, endpoint: Endpoint) -> AnyPublisher<ExampleModel?, NetworkErrorResponse> {
 
         guard
             let request = endpoint.request()
         else {
             let error = NetworkErrorResponse.init(errors: [.invalidRequest])
-            return Fail.init(outputType: ExampleModel.self, failure: error).eraseToAnyPublisher()
+            return Fail.init(outputType: ExampleModel?.self, failure: error).eraseToAnyPublisher()
         }
 
         return authenticator.validToken(deviceId: deviceId)
