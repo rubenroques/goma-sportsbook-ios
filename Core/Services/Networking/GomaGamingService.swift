@@ -10,6 +10,7 @@ import Foundation
 enum GomaGamingService {
     case test
     case geolocation
+    case settings
     //case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
 }
 
@@ -28,6 +29,8 @@ extension GomaGamingService: Endpoint {
             return "/api/v1/me"
         case .geolocation:
             return "/api/v1/geolocation"
+        case .settings:
+            return "/api/v1/modules"
 //        case .xpto, .foo:
 //            return "/api/v1/abcd"
 //        default:
@@ -42,6 +45,8 @@ extension GomaGamingService: Endpoint {
         case .geolocation:
             return [URLQueryItem(name: "lat", value: Env.userLat),
                     URLQueryItem(name: "lng", value: Env.userLong)]
+        case .settings:
+            return nil
 //        case .getPredictionSubmit(let userId, let userName, let eventId, let prediction, let message):
 //            return [URLQueryItem(name: "userId", value: userId),
 //                    URLQueryItem(name: "userName", value: userName),
@@ -62,8 +67,9 @@ extension GomaGamingService: Endpoint {
 
         switch self {
         case .test: ()
-        case .geolocation:
-            () //We can add extra header according to the endpoint we are calling
+        case .geolocation: ()
+        case .settings: ()
+        //We can add extra header according to the endpoint we are calling
         }
 
         return defaultHeaders
@@ -82,6 +88,8 @@ extension GomaGamingService: Endpoint {
         case .test:
             return .get
         case .geolocation:
+            return .get
+        case .settings:
             return .get
 //        case .xpto, .foo, .bar:
 //            return .post
