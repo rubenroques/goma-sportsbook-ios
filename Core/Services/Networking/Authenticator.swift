@@ -48,7 +48,7 @@ class Authenticator {
             }
 
             // We need a new token
-            let endpointURL = URL(string: "http://34.141.102.89/api/auth")!
+            let endpointURL = URL(string: "http://34.141.102.89/api/v1/auth")!
 
             var request = URLRequest(url: endpointURL)
             request.httpMethod = "POST"

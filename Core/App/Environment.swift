@@ -20,4 +20,9 @@ struct Environment {
     var userLat = ""
     var userLong = ""
 
+    func getUserSettings() -> [ClientSettings]? {
+        let settingsData = UserDefaults.standard.data(forKey: "user_settings")
+        let settingsArray = try? JSONDecoder().decode([ClientSettings].self, from: settingsData!)
+        return settingsArray
+    }
 }

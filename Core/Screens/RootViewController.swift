@@ -44,8 +44,6 @@ class RootViewController: UIViewController {
             let isMaintenance = realtimeClient.verifyMaintenanceMode()
             let appUpdateType = realtimeClient.verifyAppUpdateType()
 
-            print()
-
             if isMaintenance {
                 let vc = MaintenanceViewController()
                 let navigationController = UINavigationController(rootViewController: vc)
@@ -137,6 +135,39 @@ class RootViewController: UIViewController {
             })
             .store(in: &cancellables)
     }
+
+    @IBAction func didTapUserSettings() {
+        let endpoint = GomaGamingService.settings
+        networkClient.requestEndpointArrayData(deviceId: Env.deviceId, endpoint: endpoint)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("User not allowed!")
+
+                case .finished:
+                    print("User allowed!")
+                }
+
+                print("Received completion: \(completion).")
+
+            },
+            receiveValue: { data in
+                print("Received Content - data: \(data!).")
+                var settingsArray = [ClientSettings]()
+                for value in data! {
+                    let setting = ClientSettings(id: value.id, category: value.category, name: value.name, type: value.type)
+                    settingsArray.append(setting)
+                }
+                let settingsData = try? JSONEncoder().encode(settingsArray)
+                        UserDefaults.standard.set(settingsData, forKey: "user_settings")
+
+                let settingsStored = Env.getUserSettings()
+                print("User settings: \(settingsStored)")
+                
+            })
+            .store(in: &cancellables)
+    }
+
 
 
 

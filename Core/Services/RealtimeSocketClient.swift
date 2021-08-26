@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseDatabase
+import Combine
 
 class RealtimeSocketClient {
 
@@ -16,10 +17,12 @@ class RealtimeSocketClient {
     var lastSettingsUpdate: String = "last_settings_update"
     var iosCurrentVersion: String = "ios_current_version"
     var iosRequiredVersion: String = "ios_required_version"
+    var networkClient: NetworkManager
+    var cancellables = Set<AnyCancellable>()
 
     init() {
         ref = Database.database().reference()
-
+        networkClient = Env.networkManager
         //print("User Defaults: \(UserDefaults.standard.dictionaryRepresentation())")
         // Observers
         checkFirebaseDatabaseChildNodes {
@@ -38,6 +41,10 @@ class RealtimeSocketClient {
                 let defaultValue = String(describing: UserDefaults.standard.object(forKey: child)!)
                 let childValue = String(describing: snapshot.value!)
                 if defaultValue != childValue {
+                    if child == "last_settings_update" {
+                        print("Need settings update!")
+                        self.updateUserSettings()
+                    }
                     print("User Default value: \(defaultValue)")
                     print("Snapshot value: \(childValue)")
                     UserDefaults.standard.set(childValue, forKey: child)
@@ -62,6 +69,8 @@ class RealtimeSocketClient {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             finished()
+            /*let userSettings = Env.getUserSettings()
+            print(userSettings)*/
         }
 
     }
@@ -89,7 +98,7 @@ class RealtimeSocketClient {
             }
         } else if child == "ios_current_version" {
             let currentVersionString = String(describing: UserDefaults.standard.object(forKey: "ios_current_version")!)
-            print("App: \(appVersionString) - Current: \(currentVersionString)")
+            //print("App: \(appVersionString) - Current: \(currentVersionString)")
             if currentVersionString != appVersionString {
                 Env.appUpdateType = "optional"
             }
@@ -100,6 +109,34 @@ class RealtimeSocketClient {
                 Env.appUpdateType = "required"
             }
         }
+    }
+
+    func updateUserSettings() {
+        let endpoint = GomaGamingService.settings
+        networkClient.requestEndpointArrayData(deviceId: Env.deviceId, endpoint: endpoint)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error in retrieving user settings!")
+
+                case .finished:
+                    print("User settings retrieved!")
+                }
+
+                print("Received completion: \(completion).")
+
+            },
+            receiveValue: { data in
+                print("Received Content - data: \(data!).")
+                var settingsArray = [ClientSettings]()
+                for value in data! {
+                    let setting = ClientSettings(id: value.id, category: value.category, name: value.name, type: value.type)
+                    settingsArray.append(setting)
+                }
+                let settingsData = try? JSONEncoder().encode(settingsArray)
+                        UserDefaults.standard.set(settingsData, forKey: "user_settings")
+            })
+            .store(in: &cancellables)
     }
 
 }

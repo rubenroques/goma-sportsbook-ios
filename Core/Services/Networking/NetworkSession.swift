@@ -45,7 +45,6 @@ extension URLSession: NetworkSession {
                     print("throw unknown")
                     throw NetworkErrorResponse(errors: [.unknown])
                 }
-
                 return result.data
             })
             .eraseToAnyPublisher()

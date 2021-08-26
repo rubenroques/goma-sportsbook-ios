@@ -37,14 +37,25 @@
                         <action selector="didTapGeolocationAPI" destination="-1" eventType="touchUpInside" id="Cua-wS-W7H"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LPr-wd-cUE">
+                    <rect key="frame" x="144" y="682" width="126" height="30"/>
+                    <state key="normal" title="Test User Settings">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="didTapUserSettings" destination="-1" eventType="touchUpInside" id="iWj-du-QlZ"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemGray3Color"/>
             <constraints>
+                <constraint firstItem="aMD-Cm-SRa" firstAttribute="top" secondItem="LPr-wd-cUE" secondAttribute="bottom" constant="20" id="Gb1-Yx-wFR"/>
                 <constraint firstItem="aMD-Cm-SRa" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="aAS-zF-bGJ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Q4V-oV-Dgk" secondAttribute="bottom" constant="50" id="g6l-WH-ImP"/>
                 <constraint firstItem="Q4V-oV-Dgk" firstAttribute="top" secondItem="aMD-Cm-SRa" secondAttribute="bottom" constant="20" id="j7B-GL-iYn"/>
                 <constraint firstItem="Q4V-oV-Dgk" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="kqu-mW-gC4"/>
+                <constraint firstItem="LPr-wd-cUE" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="tT5-V7-2ZF"/>
             </constraints>
             <point key="canvasLocation" x="137.68115942028987" y="133.92857142857142"/>
         </view>
