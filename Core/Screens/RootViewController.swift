@@ -82,7 +82,8 @@ class RootViewController: UIViewController {
             locationManager.requestGeoLocationUpdates()
         }
         locationManager.startGeoLocationUpdates()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // FIXME: .now() + 2 ?
             let dateNow =  Date(timeIntervalSinceNow: 0)
             print("LOCATION: \(self.locationManager.lastLocation)")
             let location = self.locationManager.lastLocation
@@ -97,9 +98,10 @@ class RootViewController: UIViewController {
 
     @IBAction func didTapAPITest() {
 
+
         let endpoint = GomaGamingService.test
-        networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
-            .sink(receiveCompletion: {
+        let request: AnyPublisher<ExampleModel?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
+        request.sink(receiveCompletion: {
                 print("Received completion: \($0).")
             },
             receiveValue: { user in
@@ -109,9 +111,10 @@ class RootViewController: UIViewController {
     }
 
     @IBAction func didTapGeolocationAPI() {
+
         let endpoint = GomaGamingService.geolocation
-        networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
-            .sink(receiveCompletion: { completion in
+        let request: AnyPublisher<ExampleModel?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
+        request.sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("User not allowed!")
@@ -137,9 +140,10 @@ class RootViewController: UIViewController {
     }
 
     @IBAction func didTapUserSettings() {
+
         let endpoint = GomaGamingService.settings
-        networkClient.requestEndpointArrayData(deviceId: Env.deviceId, endpoint: endpoint)
-            .sink(receiveCompletion: { completion in
+        let request: AnyPublisher<[ClientSettings]?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
+        request.sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("User not allowed!")
@@ -159,7 +163,8 @@ class RootViewController: UIViewController {
                     settingsArray.append(setting)
                 }
                 let settingsData = try? JSONEncoder().encode(settingsArray)
-                        UserDefaults.standard.set(settingsData, forKey: "user_settings")
+
+                UserDefaults.standard.set(settingsData, forKey: "user_settings")
 
                 let settingsStored = Env.getUserSettings()
                 print("User settings: \(settingsStored)")

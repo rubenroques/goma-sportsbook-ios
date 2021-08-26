@@ -112,9 +112,12 @@ class RealtimeSocketClient {
     }
 
     func updateUserSettings() {
+
         let endpoint = GomaGamingService.settings
-        networkClient.requestEndpointArrayData(deviceId: Env.deviceId, endpoint: endpoint)
-            .sink(receiveCompletion: { completion in
+        let request: AnyPublisher<[ClientSettings]?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
+
+        request.sink(receiveCompletion: { completion in
+
                 switch completion {
                 case .failure:
                     print("Error in retrieving user settings!")

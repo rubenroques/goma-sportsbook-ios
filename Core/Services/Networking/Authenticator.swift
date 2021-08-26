@@ -29,7 +29,6 @@ class Authenticator {
     func validToken(deviceId: String, forceRefresh: Bool = false) -> AnyPublisher<AuthToken, Error> {
         return queue.sync { [weak self] in
 
-
             var shouldForceRefresh = forceRefresh
 
             // We're already loading a new token
@@ -38,7 +37,7 @@ class Authenticator {
             }
 
             // We don't have a token so we override the forceRefresh
-            if let selfValue = self, let _ = selfValue.currentToken {
+            if let selfValue = self, selfValue.currentToken != nil {
                 shouldForceRefresh = true
             }
 

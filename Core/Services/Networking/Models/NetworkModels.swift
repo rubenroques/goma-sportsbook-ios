@@ -11,7 +11,7 @@ struct NetworkResponse<T: Decodable>: Decodable {
 
     let status: String
     let message: String
-    let data: [T]?
+    let data: T?
 
     enum CodingKeys: String, CodingKey {
         case status = "status"
@@ -20,7 +20,7 @@ struct NetworkResponse<T: Decodable>: Decodable {
     }
 }
 
-struct ExampleModel: Decodable {
+struct ExampleModel: Codable {
 
     let userId: Int
     let deviceId: String
