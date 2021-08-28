@@ -1,4 +1,3 @@
-
 import UIKit
 
 ///
@@ -18,9 +17,9 @@ enum LayoutAnchor {
                   constant: CGFloat)
 }
 
+// MARK: - Factory methods
+// MARK: -
 
-//MARK:-  Factory methods
-//MARK:-
 extension LayoutAnchor {
     static let leading = relative(attribute: .leading, relation: .equal, relatedTo: .leading)
     static let trailing = relative(attribute: .trailing, relation: .equal, relatedTo: .trailing)
@@ -54,9 +53,8 @@ extension LayoutAnchor {
     }
 }
 
-
-//MARK:-  Conveniences
-//MARK:-
+// MARK: - Conveniences
+// MARK: -
 
 extension UIView {
     func addSubview(_ subview: UIView, anchors: [LayoutAnchor]) {
@@ -100,4 +98,3 @@ extension NSLayoutConstraint {
         }
     }
 }
-

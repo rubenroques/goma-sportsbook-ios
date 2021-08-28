@@ -20,20 +20,20 @@ enum DebugTableViewDescription: TableViewDescriptor {
         return [
             [
                 .production,
-                .development,
+                .development
             ],
             [
                 .clearUserDefaults,
-                .logoutUser,
+                .logoutUser
             ],
             [
                 .networking,
-                .globalLogs,
+                .globalLogs
             ]
         ]
     }
 
-    static var sectionHeaders: [Int : String]? = [
+    static var sectionHeaders: [Int: String]? = [
         0: "Environment",
         1: "Utilities",
         2: "Logs"
@@ -43,7 +43,7 @@ enum DebugTableViewDescription: TableViewDescriptor {
     var style: UITableViewCell.CellStyle {
         return .subtitle
     }
-    
+
     var icon: UIImage? {
         return nil
     }
@@ -70,4 +70,3 @@ enum DebugTableViewDescription: TableViewDescriptor {
         }
     }
 }
-

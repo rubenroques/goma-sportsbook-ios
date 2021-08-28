@@ -19,7 +19,7 @@ struct RunningPlatform {
     }()
 }
 
-// swiftlint:disable identifier_name
+// swiftlint:disable all
 
 public enum Model : String {
 
@@ -244,5 +244,6 @@ public extension UIDevice {
     }
 
 }
+
 
 

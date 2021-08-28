@@ -1,4 +1,3 @@
-
 import UIKit
 
 class SnapCenterLayout: UICollectionViewFlowLayout {
@@ -13,10 +12,11 @@ class SnapCenterLayout: UICollectionViewFlowLayout {
 
     // Skip to the next cell, if there is residual scrolling velocity left.
     // This helps to prevent glitches
-    let vX = velocity.x
-    if vX > 0 {
+    let velocityX = velocity.x
+    if velocityX > 0 {
       currentItemIdx += 1
-    } else if vX < 0 {
+    }
+    else if velocityX < 0 {
       currentItemIdx -= 1
     }
 
@@ -43,10 +43,10 @@ class CenterCellCollectionViewFlowLayout: UICollectionViewFlowLayout {
 
         if let collectionView = self.collectionView {
             let cvBounds = collectionView.bounds
-            let halfWidth = cvBounds.size.width * 0.5;
-            let proposedContentOffsetCenterX = proposedContentOffset.x + halfWidth;
+            let halfWidth = cvBounds.size.width * 0.5
+            let proposedContentOffsetCenterX = proposedContentOffset.x + halfWidth
             if let attributesForVisibleCells = self.layoutAttributesForElements(in: cvBounds) {
-                var candidateAttributes : UICollectionViewLayoutAttributes?
+                var candidateAttributes: UICollectionViewLayoutAttributes?
                 for attributes in attributesForVisibleCells {
                     if attributes.representedElementCategory != UICollectionView.ElementCategory.cell {
                         continue
@@ -55,12 +55,12 @@ class CenterCellCollectionViewFlowLayout: UICollectionViewFlowLayout {
                         let aDiff = attributes.center.x - proposedContentOffsetCenterX
                         let bDiff = candAttrs.center.x - proposedContentOffsetCenterX
                         if fabsf(Float(aDiff)) < fabsf(Float(bDiff)) {
-                            candidateAttributes = attributes;
+                            candidateAttributes = attributes
                         }
                     }
                     else {
-                        candidateAttributes = attributes;
-                        continue;
+                        candidateAttributes = attributes
+                        continue
                     }
                 }
                 return CGPoint(x: rightOffset + round(candidateAttributes!.center.x - halfWidth), y: proposedContentOffset.y)
@@ -69,6 +69,3 @@ class CenterCellCollectionViewFlowLayout: UICollectionViewFlowLayout {
         return super.targetContentOffset(forProposedContentOffset: proposedContentOffset)
     }
 }
-
-
-

@@ -11,7 +11,7 @@ import Firebase
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    // TODO: Inegrate fastlamne
+    // TODO: Integrate fastlamne
 
     var window: UIWindow?
 
@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         FirebaseApp.configure()
 
-        Auth.auth().signInAnonymously { (authResult, _) in
+        Auth.auth().signInAnonymously { authResult, _ in
             guard let user = authResult?.user else { return }
             let isAnonymous = user.isAnonymous  // true
             let uid = user.uid
@@ -40,6 +40,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
-
-
-

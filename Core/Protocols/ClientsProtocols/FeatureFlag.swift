@@ -12,4 +12,3 @@ protocol FeatureFlags {
     static var showNewLoginScreen: Bool { get }
     static var limitCheckoutItems: Int { get }
 }
-

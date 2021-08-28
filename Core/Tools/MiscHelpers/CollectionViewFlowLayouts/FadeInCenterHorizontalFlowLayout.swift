@@ -1,9 +1,8 @@
-
 import UIKit
 
 class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
 
-    //If the cell is in between this middle position it will appear as a normal cell
+    // If the cell is in between this middle position it will appear as a normal cell
     var normalCellMiddleMarginMultiplier = 0.1
     var alpha = 0.6
     var minimumScale = 0.7
@@ -43,16 +42,14 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
         let leftOffsetPosition = offsetMiddle-middleNormalCellZone
         let rightOffsetPosition = offsetMiddle+middleNormalCellZone
 
-
         attributes.forEach { att in
 
-            //is between
+            // is between
             if leftOffsetPosition...rightOffsetPosition ~= att.center.x {
                 att.alpha = 1.0
                 att.transform = .identity
             }
             else {
-
                 let distanceToCenter = abs(att.center.x - offsetMiddle)-middleNormalCellZone
 
                 var distanceToCenterPercentage = distanceToCenter/maxdistance
@@ -60,7 +57,6 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
                     distanceToCenterPercentage = CGFloat(alpha)
                 }
                 att.alpha = 1.0 - distanceToCenterPercentage
-
 
                 let minimumScaleValue = CGFloat(minimumScale)
                 let reversedDistanceToCenterPercentage = 1.0 - distanceToCenterPercentage
@@ -74,15 +70,14 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
         return attributes
     }
 
-
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
 
         if let collectionView = self.collectionView {
             let cvBounds = collectionView.bounds
-            let halfWidth = cvBounds.size.width * 0.5;
-            let proposedContentOffsetCenterX = proposedContentOffset.x + halfWidth;
+            let halfWidth = cvBounds.size.width * 0.5
+            let proposedContentOffsetCenterX = proposedContentOffset.x + halfWidth
             if let attributesForVisibleCells = self.layoutAttributesForElements(in: cvBounds) {
-                var candidateAttributes : UICollectionViewLayoutAttributes?
+                var candidateAttributes: UICollectionViewLayoutAttributes?
                 for attributes in attributesForVisibleCells {
                     if attributes.representedElementCategory != UICollectionView.ElementCategory.cell {
                         continue
@@ -91,12 +86,12 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
                         let aDiff = attributes.center.x - proposedContentOffsetCenterX
                         let bDiff = candAttrs.center.x - proposedContentOffsetCenterX
                         if fabsf(Float(aDiff)) < fabsf(Float(bDiff)) {
-                            candidateAttributes = attributes;
+                            candidateAttributes = attributes
                         }
                     }
                     else {
-                        candidateAttributes = attributes;
-                        continue;
+                        candidateAttributes = attributes
+                        continue
                     }
                 }
                 return CGPoint(x: round(candidateAttributes!.center.x - halfWidth), y: proposedContentOffset.y)
@@ -105,6 +100,4 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
         return super.targetContentOffset(forProposedContentOffset: proposedContentOffset)
     }
 
-
 }
-

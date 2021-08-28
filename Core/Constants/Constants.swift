@@ -11,4 +11,3 @@ enum AnimationDuration {
     static let normal: TimeInterval = 0.30
     static let short: TimeInterval = 0.15
 }
-

@@ -10,11 +10,12 @@ import Foundation
 import UIKit
 
 extension UIAlertController {
+
     static func showSuccessMessage(message: String, on viewController: UIViewController, handler: (() -> Void)? = nil) {
         let alertViewController = UIAlertController(title: localized("string_success"), message: message, preferredStyle: UIAlertController.Style.alert)
-        let cancelAction = UIAlertAction(title: localized("string_ok"), style: .default, handler: { _ in
+        let cancelAction = UIAlertAction(title: localized("string_ok"), style: .default) { _ in
             if let handlerValue = handler { handlerValue() }
-        })
+        }
         alertViewController.addAction(cancelAction)
         viewController.present(alertViewController, animated: true, completion: nil)
     }
@@ -46,6 +47,5 @@ extension UIAlertController {
         alertViewController.addAction(cancelAction)
         viewController.present(alertViewController, animated: true, completion: nil)
     }
-
 
 }

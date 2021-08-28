@@ -48,7 +48,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
     func isLocationServicesEnabled() -> Bool {
         if CLLocationManager.locationServicesEnabled() {
-            switch(CLLocationManager.authorizationStatus()) {
+            switch CLLocationManager.authorizationStatus() {
             case .notDetermined, .restricted, .denied:
                 return false
             case .authorizedAlways, .authorizedWhenInUse:
@@ -74,8 +74,6 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
         print("User Location: \(location.latitude) - \(location.longitude)")
         self.locationSubject.send(locations)
         self.lastLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
-        //print("Last location: \(self.lastLocation)")
-
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

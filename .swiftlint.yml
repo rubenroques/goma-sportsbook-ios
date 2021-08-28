@@ -3,7 +3,14 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Carthage
   - Pods
 
-line_length: 200
+line_length:
+  warning: 300
+  # Some improbably large number because we don't want compile errors
+  # just because of style problems
+  error: 300
+  ignores_urls: true
+  ignores_comments: true
+
 
 #type_body_length:
 #  - 300 # warning
@@ -14,13 +21,47 @@ function_body_length:
   - 100 # error
 
 type_name:
-  min_length: 2 # only warning
-  max_length: # warning and error
-    warning: 60
-    error: 80
+  excluded: # excluded names
+    - ID
 
 identifier_name:
-  min_length: 2 # only warning
-  max_length: # warning and error
-    warning: 60
-    error: 80
+  excluded: # excluded names
+    - id
+    - ok
+    - i
+
+enum_case_associated_values_count: # Number of associated values in an enum case should be low
+  - 6 # warning - default: 5
+  - 7 # error - default: 6
+
+
+force_cast:
+  warning
+force_try:
+  warning
+
+statement_position:
+  statement_mode: uncuddled_else
+  
+disabled_rules:
+  - trailing_whitespace
+  - redundant_string_enum_value
+  - large_tuple
+  - todo
+
+opt_in_rules:
+  - private_outlet
+  - private_action
+  - void_return
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - empty_count
+  - discouraged_direct_init
+  - duplicate_imports
+  - empty_enum_arguments
+  - enum_case_associated_values_count
+  - redundant_optional_initialization
+  - prohibited_super_call
+  - overridden_super_call
+  - no_space_in_method_call
+  

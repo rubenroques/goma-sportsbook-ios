@@ -24,6 +24,10 @@
 		4515637F26BED58900690896 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 4515637E26BED58900690896 /* Nuke */; };
 		4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515638026BEDA6200690896 /* FeatureFlag.swift */; };
 		4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515638026BEDA6200690896 /* FeatureFlag.swift */; };
+		454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
+		454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
+		454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
+		454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
 		455A0C5426BD902C00EC572D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C5326BD902C00EC572D /* AppDelegate.swift */; };
 		455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455A0C5E26BD902F00EC572D /* LaunchScreen.storyboard */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
@@ -192,8 +196,8 @@
 		45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2897F26C3E74B00BCD5DA /* AuthToken.swift */; };
 		45A2898326C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
 		45A2898426C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
-		45A2898626C418F700BCD5DA /* NetworkErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */; };
-		45A2898726C418F700BCD5DA /* NetworkErrorResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */; };
+		45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkError.swift */; };
+		45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkError.swift */; };
 		A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54826C53A5F00ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */; };
@@ -239,6 +243,8 @@
 		4515637026BE968300690896 /* ThemeColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ThemeColors.xcassets; sourceTree = "<group>"; };
 		4515637326BE982000690896 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		4515638026BEDA6200690896 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
+		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
+		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
 		455A0C5026BD902C00EC572D /* ShowcaseProd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShowcaseProd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		455A0C5326BD902C00EC572D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		455A0C6126BD902F00EC572D /* ShowcaseProd-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ShowcaseProd-Info.plist"; sourceTree = "<group>"; };
@@ -330,7 +336,7 @@
 		45A2897926C3E57E00BCD5DA /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		45A2897F26C3E74B00BCD5DA /* AuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
 		45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingService.swift; sourceTree = "<group>"; };
-		45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorResponse.swift; sourceTree = "<group>"; };
+		45A2898526C418F700BCD5DA /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -378,6 +384,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		454A7A6126DA2FD600E6E74E /* Misc */ = {
+			isa = PBXGroup;
+			children = (
+				454A7A6226DA300900E6E74E /* .swiftlint.yml */,
+			);
+			path = Misc;
+			sourceTree = "<group>";
+		};
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
@@ -471,6 +485,7 @@
 		455A0C9E26BD958600EC572D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				454A7A6126DA2FD600E6E74E /* Misc */,
 				456B343126C2817F009D7D27 /* Fonts */,
 				455A0C9926BD946500EC572D /* Localization */,
 				455A0CB426BD987500EC572D /* LauchScreen */,
@@ -592,6 +607,7 @@
 			isa = PBXGroup;
 			children = (
 				45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */,
+				454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */,
 				45A2896F26C32E1C00BCD5DA /* NetworkManager.swift */,
 				45A2896926C32D7500BCD5DA /* NetworkSession.swift */,
 				45A2897226C32E8600BCD5DA /* Authenticator.swift */,
@@ -701,11 +717,11 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
+				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
 				A9B8408326D3E7F400269B05 /* Forbidden */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
-				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
-				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
 				4589F3EA26BF017A005DF543 /* Account */,
 				455A0D2226BDE7B900EC572D /* DebugHelper */,
 			);
@@ -785,7 +801,7 @@
 				45A2896626C32D3F00BCD5DA /* NetworkModels.swift */,
 				45A2897926C3E57E00BCD5DA /* Endpoint.swift */,
 				45A2897F26C3E74B00BCD5DA /* AuthToken.swift */,
-				45A2898526C418F700BCD5DA /* NetworkErrorResponse.swift */,
+				45A2898526C418F700BCD5DA /* NetworkError.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -960,6 +976,7 @@
 				456B343826C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
 				4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				455A0CAC26BD981900EC572D /* SharedAssets.xcassets in Resources */,
+				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 			);
@@ -996,6 +1013,7 @@
 				456B343926C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
 				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
+				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 			);
@@ -1055,6 +1073,7 @@
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
+				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				455A0CEE26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
 				4589F42526C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -1072,7 +1091,7 @@
 				455A0CE626BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
 				45A2897026C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
-				45A2898626C418F700BCD5DA /* NetworkErrorResponse.swift in Sources */,
+				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
@@ -1144,6 +1163,7 @@
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
+				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				455A0CEF26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
 				4589F42626C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -1161,7 +1181,7 @@
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
 				45A2897126C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
-				45A2898726C418F700BCD5DA /* NetworkErrorResponse.swift in Sources */,
+				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,

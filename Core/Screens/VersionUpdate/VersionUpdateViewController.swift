@@ -9,7 +9,6 @@ import UIKit
 
 class VersionUpdateViewController: UIViewController {
 
-
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
@@ -47,11 +46,11 @@ class VersionUpdateViewController: UIViewController {
     func commonInit() {
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 30)
         titleLabel.textColor = UIColor.white
-        titleLabel.text = "iOS Update"
+        titleLabel.text = "iOS Update" // FIXME: As strings não podem esar hardcoded, devem estar no ficheiro Localizable.strings como no exemplo abaixo
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 24)
         textLabel.textColor = UIColor.white
         textLabel.numberOfLines = 0
-        textLabel.text = "Update available"
+        textLabel.text = localized("string_update_available") // FIXME: Exemplo
         textLabel.sizeToFit()
         updateButton.layer.cornerRadius = 5
         updateButton.layer.borderWidth = 1
@@ -62,7 +61,8 @@ class VersionUpdateViewController: UIViewController {
             titleLabel.text = "iOS Update Available"
             textLabel.text = "There's a new version available (Version: \(String(describing: UserDefaults.standard.object(forKey: "ios_current_version")!))). Visit the App Store to update to the newest version."
             updateButton.setTitle("OK!", for: .normal)
-        } else if Env.appUpdateType == "required" {
+        }
+        else if Env.appUpdateType == "required" {
             titleLabel.text = "iOS Update Required"
             textLabel.text = "To proceed an app update is required. Required minimum version: \(String(describing: UserDefaults.standard.object(forKey: "ios_required_version")!))"
             updateButton.setTitle("Update", for: .normal)
@@ -70,12 +70,12 @@ class VersionUpdateViewController: UIViewController {
         }
     }
 
-
-    @IBAction func updateAction(_ sender: UIButton) {
+    @IBAction private func updateAction(_ sender: UIButton) {
         if Env.appUpdateType == "optional" {
             self.dismiss(animated: true, completion: nil)
-        } else{
-            UIApplication.shared.openURL(NSURL(string: "http://www.apple.com")! as URL)
+        }
+        else {
+            UIApplication.shared.openURL(NSURL(string: "http://www.apple.com")! as URL) // FIXME: Não podemos usar metodos/frameworks deprecated
         }
     }
 

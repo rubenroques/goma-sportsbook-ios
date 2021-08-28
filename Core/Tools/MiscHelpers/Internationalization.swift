@@ -48,7 +48,6 @@ struct Internationalization {
         }
     }
 
-
     static func format(number: Int, currency: Currency) -> String? {
         self.format(number: Double(number), currency: currency)
     }
@@ -61,8 +60,7 @@ struct Internationalization {
         let formatter = NumberFormatter()
         formatter.numberStyle = .currency
         formatter.currencyCode = currency.ISOCode
-        return formatter.string(from: NSNumber(value:number))
+        return formatter.string(from: NSNumber(value: number))
     }
 
 }
-

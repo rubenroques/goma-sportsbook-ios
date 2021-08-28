@@ -46,5 +46,4 @@ class ForbiddenAccessViewController: UIViewController {
 
     }
 
-
 }

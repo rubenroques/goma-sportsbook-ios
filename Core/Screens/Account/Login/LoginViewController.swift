@@ -1,4 +1,3 @@
-
 import UIKit
 
 class LoginViewController: UIViewController {
@@ -39,11 +38,11 @@ class LoginViewController: UIViewController {
         _ = self.passwordHeaderTextFieldView.resignFirstResponder()
     }
 
-    @IBAction func didTapLoginButton() {
+    @IBAction private func didTapLoginButton() {
         
     }
 
-    @IBAction func didTapRecoverPassword() {
+    @IBAction private func didTapRecoverPassword() {
         self.navigationController?.pushViewController(RecoverPasswordViewController(), animated: true)
     }
 }

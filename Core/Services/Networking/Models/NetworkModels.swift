@@ -35,6 +35,7 @@ struct ExampleModel: Codable {
 }
 
 struct ClientSettings: Codable {
+    
     let id: Int
     let category: String
     let name: String
@@ -47,4 +48,3 @@ struct ClientSettings: Codable {
         case type = "type"
     }
 }
-

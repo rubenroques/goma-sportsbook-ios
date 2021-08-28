@@ -18,7 +18,7 @@ struct AnalyticsClient {
     static func logEvent(event: Event) {
 
         var eventTypeKey = ""
-        var parameters: [String:String]?
+        var parameters: [String: String]?
 
         switch event {
         case .login:

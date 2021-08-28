@@ -11,14 +11,18 @@ import Combine
 class RootViewController: UIViewController {
 
     var showingDebug: Bool = false
+
     var networkClient: NetworkManager
-    var cancellables = Set<AnyCancellable>()
+    var gomaGamingAPIClient: GomaGamingServiceClient
+
     var isMaintenance: Bool = Env.isMaintenance
-    var timer = Timer()
     let locationManager = GeoLocationManager()
+
+    var cancellables = Set<AnyCancellable>()
 
     init() {
         networkClient = Env.networkManager
+        gomaGamingAPIClient = GomaGamingServiceClient(networkClient: networkClient)
         super.init(nibName: "RootViewController", bundle: nil)
     }
 
@@ -32,27 +36,30 @@ class RootViewController: UIViewController {
 
         self.setupWithTheme()
 
-        /*timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(checkMaintenance), userInfo: nil, repeats: true)*/
-
-        getLocationDateFormat()
+        self.getLocationDateFormat()
     }
 
     override func viewWillAppear(_ animated: Bool) {
+
+        super.viewWillAppear(animated)
+        
         let realtimeClient = RealtimeSocketClient()
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            //print("ENV: \(Env.appUpdateType)")
+
             let isMaintenance = realtimeClient.verifyMaintenanceMode()
             let appUpdateType = realtimeClient.verifyAppUpdateType()
 
             if isMaintenance {
-                let vc = MaintenanceViewController()
-                let navigationController = UINavigationController(rootViewController: vc)
+                let maintenanceViewController = MaintenanceViewController()
+                let navigationController = UINavigationController(rootViewController: maintenanceViewController)
                 navigationController.modalPresentationStyle = .fullScreen
 
                 self.present(navigationController, animated: true, completion: nil)
-            }else if appUpdateType != "" {
-                let vc = VersionUpdateViewController()
-                let navigationController = UINavigationController(rootViewController: vc)
+            }
+            else if appUpdateType != "" {
+                let versionUpdateViewController = VersionUpdateViewController()
+                let navigationController = UINavigationController(rootViewController: versionUpdateViewController)
                 navigationController.modalPresentationStyle = .fullScreen
 
                 self.present(navigationController, animated: true, completion: nil)
@@ -68,64 +75,68 @@ class RootViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.Core.tint
 
-        //Example
-        let label1 = UILabel()
-        label1.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
-        
+//        Example
+//        let label1 = UILabel()
+//        label1.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
+//        label1.textColor = UIColor.Core.headingMain
+
     }
 
-    func getLocationDateFormat(){
-        if locationManager.isLocationServicesEnabled(){
+    func getLocationDateFormat() {
+
+        if locationManager.isLocationServicesEnabled() {
             print("GEO ACTIVATED")
-        } else {
+        }
+        else {
             print("GEO NOT ACTIVATED")
             locationManager.requestGeoLocationUpdates()
         }
         locationManager.startGeoLocationUpdates()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // FIXME: .now() + 2 ?
-            let dateNow =  Date(timeIntervalSinceNow: 0)
-            print("LOCATION: \(self.locationManager.lastLocation)")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // FIXME:  .now() + 2 ? Não percebi este async after com 2 segundos
+
             let location = self.locationManager.lastLocation
-            Env.userLat = "\(location.coordinate.latitude)"
-            Env.userLong = "\(location.coordinate.longitude)"
+            Env.userLat = location.coordinate.latitude
+            Env.userLong = location.coordinate.longitude
+
             location.fetchCityAndCountry { city, country, error in
                 guard let city = city, let country = country, error == nil else { return }
-                print("Date: \(DateUserLocation().dateLocationFormat(country, dateNow))")
+                print("\(city) \(country)")
             }
+
         }
     }
 
-    @IBAction func didTapAPITest() {
+    @IBAction private func didTapAPITest() {
 
-
-        let endpoint = GomaGamingService.test
-        let request: AnyPublisher<ExampleModel?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
-        request.sink(receiveCompletion: {
+        gomaGamingAPIClient.requestTest(deviceId: Env.deviceId)
+            .sink(receiveCompletion: {
                 print("Received completion: \($0).")
             },
             receiveValue: { user in
-                print("Received Content - user: \(user).")
+                print("Received Content - user: \(String(describing: user)).")
             })
             .store(in: &cancellables)
+
     }
 
-    @IBAction func didTapGeolocationAPI() {
+    @IBAction private func didTapGeolocationAPI() {
 
-        let endpoint = GomaGamingService.geolocation
-        let request: AnyPublisher<ExampleModel?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
-        request.sink(receiveCompletion: { completion in
+        guard
+            let latitude = Env.userLat,
+            let longitude = Env.userLong
+        else {
+            return
+        }
+
+        gomaGamingAPIClient.requestGeoLocation(deviceId: Env.deviceId, latitude: latitude, longitude: longitude)
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("User not allowed!")
                     DispatchQueue.main.async {
-                        let vc = ForbiddenAccessViewController()
-                        let navigationController = UINavigationController(rootViewController: vc)
-                        navigationController.modalPresentationStyle = .fullScreen
-
-                        self.present(navigationController, animated: true, completion: nil)
+                        self.showForbiddenAccess()
                     }
-
                 case .finished:
                     print("User allowed!")
                 }
@@ -134,16 +145,15 @@ class RootViewController: UIViewController {
 
             },
             receiveValue: { data in
-                print("Received Content - data: \(data).")
+                print("Received Content - data: \(String(describing: data)).")
             })
             .store(in: &cancellables)
     }
 
-    @IBAction func didTapUserSettings() {
+    @IBAction private func didTapUserSettings() {
 
-        let endpoint = GomaGamingService.settings
-        let request: AnyPublisher<[ClientSettings]?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
-        request.sink(receiveCompletion: { completion in
+        gomaGamingAPIClient.requestSettings(deviceId: Env.deviceId)
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("User not allowed!")
@@ -167,22 +177,26 @@ class RootViewController: UIViewController {
                 UserDefaults.standard.set(settingsData, forKey: "user_settings")
 
                 let settingsStored = Env.getUserSettings()
-                print("User settings: \(settingsStored)")
-                
+                print("User settings: \(String(describing: settingsStored))")
+
             })
             .store(in: &cancellables)
     }
-
-
-
 
     @objc func checkMaintenance() {
         if Env.isMaintenance {
             let maintenanceVC = MaintenanceViewController()
             self.present(maintenanceVC, animated: true, completion: nil)
-            timer.invalidate()
         }
         print("Checked maintenance mode")
+    }
+
+    func showForbiddenAccess() {
+        let forbiddenAccessViewController = ForbiddenAccessViewController()
+        let navigationController = UINavigationController(rootViewController: forbiddenAccessViewController)
+        navigationController.modalPresentationStyle = .fullScreen
+
+        self.present(navigationController, animated: true, completion: nil)
     }
 
 }
@@ -224,5 +238,3 @@ extension RootViewController {
 
     }
 }
-
-

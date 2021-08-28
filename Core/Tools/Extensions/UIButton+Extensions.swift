@@ -8,7 +8,7 @@ extension UIButton {
             UIGraphicsEndImageContext()
         }
 
-        let rect = CGRect(x: 0, y: 0, width: 1, height:1)
+        let rect = CGRect(x: 0, y: 0, width: 1, height: 1)
         UIGraphicsBeginImageContext(rect.size)
         if let context = UIGraphicsGetCurrentContext() {
 
@@ -28,4 +28,3 @@ extension UIButton {
         }
     }
 }
-

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum NetworkErrorMessage: String, Decodable, Error {
+enum NetworkErrorCode: String, Decodable, Error {
     case invalidToken = "invalid_token"
     case invalidRequest = "invalid_request"
     case invalidResponse = "invalid_response"
@@ -16,6 +16,6 @@ enum NetworkErrorMessage: String, Decodable, Error {
     case unknown = "unknown"
 }
 
-struct NetworkErrorResponse: Decodable, Error {
-    let errors: [NetworkErrorMessage]
+struct NetworkError: Decodable, Error {
+    let errors: [NetworkErrorCode]
 }

@@ -39,7 +39,8 @@ class LoggerService {
             let fileHandle = try FileHandle(forWritingTo: self.destination)
             print("Successfully logging to: \(path)")
             return fileHandle
-        } catch let error as NSError {
+        }
+        catch let error as NSError {
             print("Serious error in logging: could not open path to log file. \(error).")
         }
 
@@ -90,7 +91,8 @@ private extension LoggerService {
     func printToDestination(_ logMessage: String) {
         if let data = logMessage.data(using: String.Encoding.utf8) {
             fileHandle?.write(data)
-        } else {
+        }
+        else {
             print("Serious error in logging: could not encode logged string into data.")
         }
     }

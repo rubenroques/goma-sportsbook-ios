@@ -41,4 +41,3 @@ open class StaticTableViewController<Descriptor: TableViewDescriptor>: UITableVi
     }
 
 }
-

@@ -20,9 +20,8 @@ extension UIViewController {
     }
 }
 
-
 extension UINavigationController {
-    var rootViewController : UIViewController? {
+    var rootViewController: UIViewController? {
         return self.viewControllers.first
     }
 }
@@ -45,12 +44,11 @@ extension UIViewController {
             view.leadingAnchor.constraint(equalTo: subview.leadingAnchor),
             view.trailingAnchor.constraint(equalTo: subview.trailingAnchor),
             view.topAnchor.constraint(equalTo: subview.topAnchor),
-            view.bottomAnchor.constraint(equalTo: subview.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: subview.bottomAnchor)
         ])
 
         viewController.didMove(toParent: self)
     }
-
 
     func removeChildViewController(_ viewController: UIViewController) {
         viewController.willMove(toParent: nil)
@@ -58,6 +56,4 @@ extension UIViewController {
         viewController.removeFromParent()
     }
 
-
 }
-

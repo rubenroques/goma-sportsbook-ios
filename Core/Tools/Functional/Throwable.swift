@@ -12,9 +12,9 @@ struct Throwable<T: Decodable>: Decodable {
     let result: Result<T, Error>
 
     init(from decoder: Decoder) throws {
-        result = Result(catching: { try T(from: decoder) })
+        result = Result { try T(from: decoder) }
     }
-    
+
     func value() -> T? {
         return try? result.get()
     }

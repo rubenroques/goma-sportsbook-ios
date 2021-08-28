@@ -11,52 +11,50 @@ import Combine
 
 class RealtimeSocketClient {
 
-    var ref: DatabaseReference!
+    var databaseReference: DatabaseReference!
+
     var maintenanceMode: String = "maintenance_mode"
     var maintenanceReason: String = "maintenance_reason"
     var lastSettingsUpdate: String = "last_settings_update"
     var iosCurrentVersion: String = "ios_current_version"
     var iosRequiredVersion: String = "ios_required_version"
+
     var networkClient: NetworkManager
     var cancellables = Set<AnyCancellable>()
 
     init() {
-        ref = Database.database().reference()
+        databaseReference = Database.database().reference()
         networkClient = Env.networkManager
-        //print("User Defaults: \(UserDefaults.standard.dictionaryRepresentation())")
+        // print("User Defaults: \(UserDefaults.standard.dictionaryRepresentation())")
         // Observers
         checkFirebaseDatabaseChildNodes {
             print("Finished checking Firebase Realtime Child Nodes!")
         }
     }
 
-    ///      Sets an observer for a given child node on firebase
+    // Sets an observer for a given child node on firebase
 
     func observeChild(child: String) {
-        ref.child(child).observe(.value, with: { snapshot in
+        databaseReference.child(child).observe(.value) { snapshot in
             if !UserDefaults.standard.isKeyPresentInUserDefaults(key: child) {
                 UserDefaults.standard.set(snapshot.value!, forKey: child)
-
-            } else {
+            }
+            else {
                 let defaultValue = String(describing: UserDefaults.standard.object(forKey: child)!)
                 let childValue = String(describing: snapshot.value!)
                 if defaultValue != childValue {
                     if child == "last_settings_update" {
-                        print("Need settings update!")
                         self.updateUserSettings()
                     }
-                    print("User Default value: \(defaultValue)")
-                    print("Snapshot value: \(childValue)")
                     UserDefaults.standard.set(childValue, forKey: child)
-                } else {
+                }
+                else {
                     print("No changes detected.")
                 }
 
                 self.verifyChildAction(child: child, childValue: childValue)
             }
-
-        })
-
+        }
     }
 
     func checkFirebaseDatabaseChildNodes(finished: @escaping() -> Void) {
@@ -93,19 +91,21 @@ class RealtimeSocketClient {
         if child == "maintenance_mode" {
             if childValue == "1"{
                 Env.isMaintenance = true
-            } else {
+            }
+            else {
                 Env.isMaintenance = false
             }
-        } else if child == "ios_current_version" {
+        }
+        else if child == "ios_current_version" {
             let currentVersionString = String(describing: UserDefaults.standard.object(forKey: "ios_current_version")!)
-            //print("App: \(appVersionString) - Current: \(currentVersionString)")
             if currentVersionString != appVersionString {
                 Env.appUpdateType = "optional"
             }
-        } else if child == "ios_required_version" {
+        }
+        else if child == "ios_required_version" {
             let requiredVersionString = String(describing: UserDefaults.standard.object(forKey: "ios_required_version")!)
             let requiredVersion = requiredVersionString.components(separatedBy: ".")
-            if requiredVersion[0] > appVersion[0] || requiredVersion[1] > appVersion[1] || requiredVersion[2] > appVersion[2]  {
+            if requiredVersion[0] > appVersion[0] || requiredVersion[1] > appVersion[1] || requiredVersion[2] > appVersion[2] {
                 Env.appUpdateType = "required"
             }
         }
@@ -114,20 +114,16 @@ class RealtimeSocketClient {
     func updateUserSettings() {
 
         let endpoint = GomaGamingService.settings
-        let request: AnyPublisher<[ClientSettings]?, NetworkErrorResponse> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
+        let request: AnyPublisher<[ClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: Env.deviceId, endpoint: endpoint)
 
         request.sink(receiveCompletion: { completion in
-
                 switch completion {
                 case .failure:
                     print("Error in retrieving user settings!")
-
                 case .finished:
                     print("User settings retrieved!")
                 }
-
                 print("Received completion: \(completion).")
-
             },
             receiveValue: { data in
                 print("Received Content - data: \(data!).")

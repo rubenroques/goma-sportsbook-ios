@@ -19,7 +19,7 @@ class Authenticator {
     private var currentToken: AuthToken?
     private let queue = DispatchQueue(label: "Autenticator.\(UUID().uuidString)")
 
-    //This publisher is shared amongst all calls that request a token refresh
+    // This publisher is shared amongst all calls that request a token refresh
     private var refreshPublisher: AnyPublisher<AuthToken, Error>?
 
     init(session: NetworkSession = URLSession.shared) {
@@ -80,5 +80,3 @@ class Authenticator {
     }
 
 }
-
-
