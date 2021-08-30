@@ -96,8 +96,8 @@ class RootViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // FIXME:  .now() + 2 ? Não percebi este async after com 2 segundos
 
             let location = self.locationManager.lastLocation
-            Env.userLat = location.coordinate.latitude
-            Env.userLong = location.coordinate.longitude
+            Env.userLatitutde = location.coordinate.latitude
+            Env.userLongitude = location.coordinate.longitude
 
             location.fetchCityAndCountry { city, country, error in
                 guard let city = city, let country = country, error == nil else { return }
@@ -123,8 +123,8 @@ class RootViewController: UIViewController {
     @IBAction private func didTapGeolocationAPI() {
 
         guard
-            let latitude = Env.userLat,
-            let longitude = Env.userLong
+            let latitude = Env.userLatitutde,
+            let longitude = Env.userLongitude
         else {
             return
         }
@@ -156,10 +156,10 @@ class RootViewController: UIViewController {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
-                    print("User not allowed!")
+                    print("Error retrieving user settings!")
 
                 case .finished:
-                    print("User allowed!")
+                    print("User settings retrieved!")
                 }
 
                 print("Received completion: \(completion).")

@@ -75,7 +75,7 @@ class VersionUpdateViewController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
         else {
-            UIApplication.shared.openURL(NSURL(string: "http://www.apple.com")! as URL) // FIXME: Não podemos usar metodos/frameworks deprecated
+            UIApplication.shared.open(NSURL(string: "http://www.apple.com")! as URL, options: [:], completionHandler: nil)
         }
     }
 

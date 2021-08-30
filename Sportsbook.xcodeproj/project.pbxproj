@@ -216,6 +216,12 @@
 		A9B8408726D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */; };
 		A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */; };
 		A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */; };
+		A9B8408E26DD1BCA00269B05 /* maintenance_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */; };
+		A9B8408F26DD1BCA00269B05 /* maintenance_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */; };
+		A9B8409026DD1BCA00269B05 /* update_required_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408C26DD1BC900269B05 /* update_required_logo.svg */; };
+		A9B8409126DD1BCA00269B05 /* update_required_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408C26DD1BC900269B05 /* update_required_logo.svg */; };
+		A9B8409226DD1BCA00269B05 /* update_available_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408D26DD1BC900269B05 /* update_available_logo.svg */; };
+		A9B8409326DD1BCA00269B05 /* update_available_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408D26DD1BC900269B05 /* update_available_logo.svg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -345,6 +351,9 @@
 		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
 		A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForbiddenAccessViewController.swift; sourceTree = "<group>"; };
 		A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForbiddenAccessViewController.xib; sourceTree = "<group>"; };
+		A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = maintenance_logo.svg; sourceTree = "<group>"; };
+		A9B8408C26DD1BC900269B05 /* update_required_logo.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = update_required_logo.svg; sourceTree = "<group>"; };
+		A9B8408D26DD1BC900269B05 /* update_available_logo.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = update_available_logo.svg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -485,6 +494,7 @@
 		455A0C9E26BD958600EC572D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A9B8408A26DD1B9200269B05 /* Logos */,
 				454A7A6126DA2FD600E6E74E /* Misc */,
 				456B343126C2817F009D7D27 /* Fonts */,
 				455A0C9926BD946500EC572D /* Localization */,
@@ -833,6 +843,16 @@
 			path = Forbidden;
 			sourceTree = "<group>";
 		};
+		A9B8408A26DD1B9200269B05 /* Logos */ = {
+			isa = PBXGroup;
+			children = (
+				A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */,
+				A9B8408D26DD1BC900269B05 /* update_available_logo.svg */,
+				A9B8408C26DD1BC900269B05 /* update_required_logo.svg */,
+			);
+			path = Logos;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -969,6 +989,7 @@
 				455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
+				A9B8408E26DD1BCA00269B05 /* maintenance_logo.svg in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
@@ -977,7 +998,9 @@
 				4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				455A0CAC26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
+				A9B8409226DD1BCA00269B05 /* update_available_logo.svg in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
+				A9B8409026DD1BCA00269B05 /* update_required_logo.svg in Resources */,
 				456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1006,6 +1029,7 @@
 				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
+				A9B8408F26DD1BCA00269B05 /* maintenance_logo.svg in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
@@ -1014,7 +1038,9 @@
 				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
+				A9B8409326DD1BCA00269B05 /* update_available_logo.svg in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
+				A9B8409126DD1BCA00269B05 /* update_required_logo.svg in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

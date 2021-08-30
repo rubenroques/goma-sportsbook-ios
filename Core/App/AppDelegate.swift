@@ -19,6 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Logger.log("App Started")
 
+        //Store device id
+        if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString
+            print("Device ID: \(deviceId as Any)")
+            UserDefaults.standard.set(deviceId!, forKey: "device_id")
+        }
+
+
         FirebaseApp.configure()
 
         Auth.auth().signInAnonymously { authResult, _ in
