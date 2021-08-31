@@ -65,7 +65,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
         authorizationSubject.send(status)
 
         if status == .authorizedWhenInUse {
-
+            print("Authorized in use")
         }
     }
 
@@ -74,6 +74,8 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
         print("User Location: \(location.latitude) - \(location.longitude)")
         self.locationSubject.send(locations)
         self.lastLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        Env.userLatitude = location.latitude
+        Env.userLongitude = location.longitude
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

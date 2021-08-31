@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="236px" height="236px" viewBox="0 0 236 236" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 3</title>
+    <defs>
+        <filter x="-22.9%" y="-27.6%" width="150.6%" height="150.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0156862745   0 0 0 0 0.490196078   0 0 0 0 1  0 0 0 0.433621066 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Maintenance" transform="translate(-73.000000, -172.000000)">
+            <g id="Group-3" transform="translate(102.000000, 209.000000)">
+                <g id="Group-2" transform="translate(40.000000, 33.000000)">
+                    <g id="hard-drives">
+                        <rect id="Rectangle" x="0" y="0" width="98" height="98.5952381"></rect>
+                        <rect id="Rectangle" stroke="#FFFFFF" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" x="15.3125" y="55.4598214" width="67.375" height="24.6488095" rx="3.072"></rect>
+                        <rect id="Rectangle" stroke="#FFFFFF" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round" x="15.3125" y="18.4866071" width="67.375" height="24.6488095" rx="3.072"></rect>
+                        <ellipse id="Oval" fill="#FFFFFF" fill-rule="nonzero" cx="68.90625" cy="30.8110119" rx="4.59375" ry="4.62165179"></ellipse>
+                        <ellipse id="Oval" fill="#FFFFFF" fill-rule="nonzero" cx="68.90625" cy="67.7842262" rx="4.59375" ry="4.62165179"></ellipse>
+                    </g>
+                    <g id="tool" transform="translate(1.593496, 64.126984)" fill="#232730" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="3.2">
+                        <path d="M22.5653868,8.35008703 C21.8303726,9.10450606 21.8303726,10.3118935 22.5653868,11.0663125 L25.6509034,14.1705701 C26.4007679,14.9100487 27.6008661,14.9100487 28.3507305,14.1705701 L35.6209792,6.85616304 C37.606513,11.2705406 36.6665689,16.4606673 33.2610958,19.8868247 C29.8556228,23.3129822 24.6968298,24.2586353 20.3091027,22.2610416 L6.98352766,35.6675544 C5.3859491,37.2748364 2.79576248,37.2748364 1.19818392,35.6675544 C-0.39939464,34.0602723 -0.39939464,31.4543533 1.19818392,29.8470713 L14.523759,16.4405585 C12.5382251,12.026181 13.4781692,6.8360543 16.8836423,3.40989685 C20.2891154,-0.0162606019 25.4479083,-0.961913771 29.8356354,1.03567995 L22.5846713,8.33068542 L22.5653868,8.35008703 Z" id="Path"></path>
+                    </g>
+                </g>
+                <g id="Group" filter="url(#filter-1)">
+                    <path d="M89,162 C133.735065,162 170,125.735065 170,81 C170,36.2649353 133.735065,0 89,0 C44.2649353,0 8,36.2649353 8,81" id="Oval" stroke="#047DFF" stroke-width="16"></path>
+                    <circle id="Oval" fill="#047DFF" cx="8" cy="81" r="8"></circle>
+                    <circle id="Oval" fill="#047DFF" cx="89" cy="162" r="8"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

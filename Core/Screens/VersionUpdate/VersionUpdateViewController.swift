@@ -10,9 +10,14 @@ import UIKit
 class VersionUpdateViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
+    @IBOutlet private var updateView: UIView!
+    @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var updateButton: UIButton!
+    @IBOutlet private var dismissButton: UIButton!
+    // Variables
+    var imageGradient: UIImage = UIImage()
 
     init() {
         super.init(nibName: "VersionUpdateViewController", bundle: nil)
@@ -25,7 +30,7 @@ class VersionUpdateViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
         setupWithTheme()
         commonInit()
     }
@@ -37,46 +42,57 @@ class VersionUpdateViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.Core.tint
-        containerView.backgroundColor = UIColor.Core.tint
+        self.view.backgroundColor = UIColor(patternImage: imageGradient)
+        containerView.backgroundColor = UIColor(patternImage: imageGradient)
+        updateView.backgroundColor = UIColor(patternImage: imageGradient)
         titleLabel.textColor = UIColor.Core.headingMain
         textLabel.textColor = UIColor.Core.headingMain
+        updateButton.setTitleColor(UIColor.white, for: .normal)
+        updateButton.layer.borderColor = UIColor.Core.buttonMain.cgColor
+        updateButton.layer.backgroundColor = UIColor.Core.buttonMain.cgColor
+        dismissButton.setTitleColor(UIColor.white, for: .normal)
+        dismissButton.layer.borderColor = .none
+        dismissButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
     }
 
     func commonInit() {
-        titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 30)
+        logoImageView.backgroundColor = UIColor(patternImage: imageGradient)
+        logoImageView.image = UIImage(named: "NewUpdate")
+        logoImageView.contentMode = .scaleAspectFill
+        titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 22)
         titleLabel.textColor = UIColor.white
-        titleLabel.text = "iOS Update" // FIXME: As strings não podem esar hardcoded, devem estar no ficheiro Localizable.strings como no exemplo abaixo
-        textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 24)
+        titleLabel.text = localized("string_update_available_title")
+        textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         textLabel.textColor = UIColor.white
         textLabel.numberOfLines = 0
-        textLabel.text = localized("string_update_available") // FIXME: Exemplo
+        textLabel.text = localized("string_update_available_text")
         textLabel.sizeToFit()
+        updateButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
         updateButton.layer.cornerRadius = 5
         updateButton.layer.borderWidth = 1
-        updateButton.layer.borderColor = UIColor.black.cgColor
-        updateButton.setTitleColor(UIColor.white, for: .normal)
+        updateButton.setTitle(localized("string_update_app"), for: .normal)
+        dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+        dismissButton.setTitle(localized("string_dismiss_title"), for: .normal)
 
         if Env.appUpdateType == "optional" {
-            titleLabel.text = "iOS Update Available"
-            textLabel.text = "There's a new version available (Version: \(String(describing: UserDefaults.standard.object(forKey: "ios_current_version")!))). Visit the App Store to update to the newest version."
-            updateButton.setTitle("OK!", for: .normal)
+            titleLabel.text = localized("string_update_available_title")
+            textLabel.text = localized("text")
+
         }
         else if Env.appUpdateType == "required" {
-            titleLabel.text = "iOS Update Required"
-            textLabel.text = "To proceed an app update is required. Required minimum version: \(String(describing: UserDefaults.standard.object(forKey: "ios_required_version")!))"
-            updateButton.setTitle("Update", for: .normal)
-
+            logoImageView.image = UIImage(named: "UpdateRequired")
+            titleLabel.text = localized("string_update_required_title")
+            textLabel.text = localized("string_update_required_text")
+            dismissButton.isHidden = true
         }
     }
 
     @IBAction private func updateAction(_ sender: UIButton) {
-        if Env.appUpdateType == "optional" {
-            self.dismiss(animated: true, completion: nil)
-        }
-        else {
-            UIApplication.shared.open(NSURL(string: "http://www.apple.com")! as URL, options: [:], completionHandler: nil)
-        }
+        UIApplication.shared.open(NSURL(string: "http://www.apple.com")! as URL, options: [:], completionHandler: nil)
+    }
+
+    @IBAction private func dismissAction() {
+        self.dismiss(animated: true, completion: nil)
     }
 
 }

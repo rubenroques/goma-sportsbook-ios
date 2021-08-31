@@ -96,7 +96,7 @@ class RootViewController: UIViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // FIXME:  .now() + 2 ? Não percebi este async after com 2 segundos
 
             let location = self.locationManager.lastLocation
-            Env.userLatitutde = location.coordinate.latitude
+            Env.userLatitude = location.coordinate.latitude
             Env.userLongitude = location.coordinate.longitude
 
             location.fetchCityAndCountry { city, country, error in
@@ -123,7 +123,7 @@ class RootViewController: UIViewController {
     @IBAction private func didTapGeolocationAPI() {
 
         guard
-            let latitude = Env.userLatitutde,
+            let latitude = Env.userLatitude,
             let longitude = Env.userLongitude
         else {
             return

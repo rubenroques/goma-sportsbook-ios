@@ -216,12 +216,18 @@
 		A9B8408726D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */; };
 		A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */; };
 		A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */; };
-		A9B8408E26DD1BCA00269B05 /* maintenance_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */; };
-		A9B8408F26DD1BCA00269B05 /* maintenance_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */; };
-		A9B8409026DD1BCA00269B05 /* update_required_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408C26DD1BC900269B05 /* update_required_logo.svg */; };
-		A9B8409126DD1BCA00269B05 /* update_required_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408C26DD1BC900269B05 /* update_required_logo.svg */; };
-		A9B8409226DD1BCA00269B05 /* update_available_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408D26DD1BC900269B05 /* update_available_logo.svg */; };
-		A9B8409326DD1BCA00269B05 /* update_available_logo.svg in Resources */ = {isa = PBXBuildFile; fileRef = A9B8408D26DD1BC900269B05 /* update_available_logo.svg */; };
+		A9B8409826DE65BF00269B05 /* RefusedAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8409626DE65BF00269B05 /* RefusedAccessViewController.swift */; };
+		A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8409726DE65BF00269B05 /* RefusedAccessViewController.xib */; };
+		A9B8409A26DE6ABB00269B05 /* RefusedAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8409626DE65BF00269B05 /* RefusedAccessViewController.swift */; };
+		A9B8409B26DE6AC200269B05 /* RefusedAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8409726DE65BF00269B05 /* RefusedAccessViewController.xib */; };
+		A9B8409F26DE712500269B05 /* EnabledAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8409D26DE712500269B05 /* EnabledAccessViewController.swift */; };
+		A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8409E26DE712500269B05 /* EnabledAccessViewController.xib */; };
+		A9B840A126DE749000269B05 /* EnabledAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8409D26DE712500269B05 /* EnabledAccessViewController.swift */; };
+		A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8409E26DE712500269B05 /* EnabledAccessViewController.xib */; };
+		A9B840A626DE831400269B05 /* PermissionAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840A426DE831400269B05 /* PermissionAccessViewController.swift */; };
+		A9B840A726DE831400269B05 /* PermissionAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B840A526DE831400269B05 /* PermissionAccessViewController.xib */; };
+		A9B840A826DE86B900269B05 /* PermissionAccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B840A526DE831400269B05 /* PermissionAccessViewController.xib */; };
+		A9B840A926DE86BE00269B05 /* PermissionAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840A426DE831400269B05 /* PermissionAccessViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -351,9 +357,12 @@
 		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
 		A9B8408426D3E84000269B05 /* ForbiddenAccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForbiddenAccessViewController.swift; sourceTree = "<group>"; };
 		A9B8408526D3E84000269B05 /* ForbiddenAccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ForbiddenAccessViewController.xib; sourceTree = "<group>"; };
-		A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = maintenance_logo.svg; sourceTree = "<group>"; };
-		A9B8408C26DD1BC900269B05 /* update_required_logo.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = update_required_logo.svg; sourceTree = "<group>"; };
-		A9B8408D26DD1BC900269B05 /* update_available_logo.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = update_available_logo.svg; sourceTree = "<group>"; };
+		A9B8409626DE65BF00269B05 /* RefusedAccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefusedAccessViewController.swift; sourceTree = "<group>"; };
+		A9B8409726DE65BF00269B05 /* RefusedAccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RefusedAccessViewController.xib; sourceTree = "<group>"; };
+		A9B8409D26DE712500269B05 /* EnabledAccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnabledAccessViewController.swift; sourceTree = "<group>"; };
+		A9B8409E26DE712500269B05 /* EnabledAccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EnabledAccessViewController.xib; sourceTree = "<group>"; };
+		A9B840A426DE831400269B05 /* PermissionAccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAccessViewController.swift; sourceTree = "<group>"; };
+		A9B840A526DE831400269B05 /* PermissionAccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PermissionAccessViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -494,7 +503,6 @@
 		455A0C9E26BD958600EC572D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				A9B8408A26DD1B9200269B05 /* Logos */,
 				454A7A6126DA2FD600E6E74E /* Misc */,
 				456B343126C2817F009D7D27 /* Fonts */,
 				455A0C9926BD946500EC572D /* Localization */,
@@ -727,9 +735,9 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A9B8409426DE44BF00269B05 /* LocationServices */,
 				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
 				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
-				A9B8408326D3E7F400269B05 /* Forbidden */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				4589F3EA26BF017A005DF543 /* Account */,
@@ -843,14 +851,42 @@
 			path = Forbidden;
 			sourceTree = "<group>";
 		};
-		A9B8408A26DD1B9200269B05 /* Logos */ = {
+		A9B8409426DE44BF00269B05 /* LocationServices */ = {
 			isa = PBXGroup;
 			children = (
-				A9B8408B26DD1BC900269B05 /* maintenance_logo.svg */,
-				A9B8408D26DD1BC900269B05 /* update_available_logo.svg */,
-				A9B8408C26DD1BC900269B05 /* update_required_logo.svg */,
+				A9B840A326DE82FE00269B05 /* Permission */,
+				A9B8409C26DE710C00269B05 /* Enabled */,
+				A9B8409526DE65A700269B05 /* Refused */,
+				A9B8408326D3E7F400269B05 /* Forbidden */,
 			);
-			path = Logos;
+			path = LocationServices;
+			sourceTree = "<group>";
+		};
+		A9B8409526DE65A700269B05 /* Refused */ = {
+			isa = PBXGroup;
+			children = (
+				A9B8409626DE65BF00269B05 /* RefusedAccessViewController.swift */,
+				A9B8409726DE65BF00269B05 /* RefusedAccessViewController.xib */,
+			);
+			path = Refused;
+			sourceTree = "<group>";
+		};
+		A9B8409C26DE710C00269B05 /* Enabled */ = {
+			isa = PBXGroup;
+			children = (
+				A9B8409D26DE712500269B05 /* EnabledAccessViewController.swift */,
+				A9B8409E26DE712500269B05 /* EnabledAccessViewController.xib */,
+			);
+			path = Enabled;
+			sourceTree = "<group>";
+		};
+		A9B840A326DE82FE00269B05 /* Permission */ = {
+			isa = PBXGroup;
+			children = (
+				A9B840A426DE831400269B05 /* PermissionAccessViewController.swift */,
+				A9B840A526DE831400269B05 /* PermissionAccessViewController.xib */,
+			);
+			path = Permission;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -978,29 +1014,29 @@
 			files = (
 				455A0D2026BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
+				A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */,
 				4589F3FB26BF017A005DF543 /* RegisterViewController.xib in Resources */,
 				A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */,
 				456B343A26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
 				4589F3FF26BF017A005DF543 /* LoginViewController.xib in Resources */,
 				455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */,
+				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
-				A9B8408E26DD1BCA00269B05 /* maintenance_logo.svg in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
+				A9B840A726DE831400269B05 /* PermissionAccessViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CA726BD973900EC572D /* Showcase-Assets.xcassets in Resources */,
 				456B343826C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
 				4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				455A0CAC26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
-				A9B8409226DD1BCA00269B05 /* update_available_logo.svg in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
-				A9B8409026DD1BCA00269B05 /* update_required_logo.svg in Resources */,
 				456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1018,29 +1054,29 @@
 			files = (
 				455A0D2126BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41326BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
+				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
 				4589F3FC26BF017A005DF543 /* RegisterViewController.xib in Resources */,
 				A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */,
 				456B343B26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
 				4589F40026BF017A005DF543 /* LoginViewController.xib in Resources */,
 				455A0C8A26BD904300EC572D /* LaunchScreen.storyboard in Resources */,
+				A9B8409B26DE6AC200269B05 /* RefusedAccessViewController.xib in Resources */,
 				4589F3FA26BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
-				A9B8408F26DD1BCA00269B05 /* maintenance_logo.svg in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
+				A9B840A826DE86B900269B05 /* PermissionAccessViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CAD26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				456B343926C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
 				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
-				A9B8409326DD1BCA00269B05 /* update_available_logo.svg in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
-				A9B8409126DD1BCA00269B05 /* update_required_logo.svg in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1101,6 +1137,7 @@
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
 				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				455A0CEE26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
+				A9B8409F26DE712500269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42526C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0CA826BD973C00EC572D /* TargetVariables.swift in Sources */,
@@ -1119,6 +1156,7 @@
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
+				A9B840A626DE831400269B05 /* PermissionAccessViewController.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
@@ -1146,6 +1184,7 @@
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */,
+				A9B8409826DE65BF00269B05 /* RefusedAccessViewController.swift in Sources */,
 				4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				4589F3FD26BF017A005DF543 /* RegisterViewController.swift in Sources */,
 				A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
@@ -1191,6 +1230,7 @@
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
 				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				455A0CEF26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
+				A9B840A126DE749000269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42626C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0C9726BD943900EC572D /* TargetVariables.swift in Sources */,
@@ -1209,6 +1249,7 @@
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
+				A9B840A926DE86BE00269B05 /* PermissionAccessViewController.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
@@ -1236,6 +1277,7 @@
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */,
+				A9B8409A26DE6ABB00269B05 /* RefusedAccessViewController.swift in Sources */,
 				4515636026BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				4589F3FE26BF017A005DF543 /* RegisterViewController.swift in Sources */,
 				A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,

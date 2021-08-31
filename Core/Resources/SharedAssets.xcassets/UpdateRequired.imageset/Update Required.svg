@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="182px" height="182px" viewBox="0 0 182 182" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 2</title>
+    <defs>
+        <filter x="-38.6%" y="-38.6%" width="177.2%" height="177.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 1   0 0 0 0 0.756862745   0 0 0 0 0  0 0 0 0.257402753 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Update-Required-(Modal)" transform="translate(-97.000000, -202.000000)">
+            <g id="Group-2" transform="translate(131.000000, 236.000000)">
+                <g id="Group" filter="url(#filter-1)" fill="#FFC100" stroke="#FFC100" stroke-width="10">
+                    <path d="M57,114 C88.4802307,114 114,88.4802307 114,57 C114,25.5197693 88.4802307,0 57,0 C25.5197693,0 0,25.5197693 0,57 C0,88.4802307 25.5197693,114 57,114 Z" id="Oval"></path>
+                </g>
+                <g id="warning-circle" transform="translate(9.000000, 9.000000)">
+                    <rect id="Rectangle" x="0" y="0" width="96" height="96"></rect>
+                    <circle id="Oval" stroke="#FFFFFF" stroke-width="7" cx="48" cy="48" r="36"></circle>
+                    <line x1="48" y1="30" x2="48" y2="51" id="Path" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></line>
+                    <circle id="Oval" fill="#FFFFFF" fill-rule="nonzero" cx="48" cy="64.5" r="4.5"></circle>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

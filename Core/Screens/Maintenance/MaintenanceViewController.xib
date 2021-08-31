@@ -12,6 +12,8 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MaintenanceViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="containerView" destination="yAT-z2-diq" id="Iyc-3Y-RtT"/>
+                <outlet property="logoImageView" destination="WUZ-bm-wxL" id="GVi-0x-k5a"/>
+                <outlet property="maintenanceView" destination="vAf-DP-KWk" id="ATL-wJ-Udn"/>
                 <outlet property="textLabel" destination="Sa4-vn-DMu" id="jSk-Ds-ok5"/>
                 <outlet property="titleLabel" destination="ooL-CA-23N" id="gtS-ML-Mge"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -25,30 +27,51 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yAT-z2-diq">
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ooL-CA-23N">
-                            <rect key="frame" x="16" y="396.5" width="380" height="25"/>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vAf-DP-KWk">
+                            <rect key="frame" x="16" y="243" width="382" height="332"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="maintenance_logo" translatesAutoresizingMaskIntoConstraints="NO" id="WUZ-bm-wxL">
+                                    <rect key="frame" x="116" y="16" width="150" height="150"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="150" id="Knj-SU-ugB"/>
+                                        <constraint firstAttribute="width" constant="150" id="oXD-3U-8Ba"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ooL-CA-23N">
+                                    <rect key="frame" x="19" y="206" width="344" height="20.5"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sa4-vn-DMu">
+                                    <rect key="frame" x="19" y="256.5" width="344" height="21"/>
+                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                    <nil key="textColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="25" id="nxd-VO-fyC"/>
+                                <constraint firstAttribute="trailing" secondItem="Sa4-vn-DMu" secondAttribute="trailing" constant="19" id="BSc-a6-Qwz"/>
+                                <constraint firstItem="Sa4-vn-DMu" firstAttribute="top" secondItem="ooL-CA-23N" secondAttribute="bottom" constant="30" id="DyT-a6-05B"/>
+                                <constraint firstItem="WUZ-bm-wxL" firstAttribute="centerX" secondItem="Sa4-vn-DMu" secondAttribute="centerX" id="OWV-sr-BmT"/>
+                                <constraint firstItem="ooL-CA-23N" firstAttribute="leading" secondItem="vAf-DP-KWk" secondAttribute="leading" constant="19" id="Sas-qb-chr"/>
+                                <constraint firstItem="WUZ-bm-wxL" firstAttribute="centerX" secondItem="vAf-DP-KWk" secondAttribute="centerX" id="eMP-ZY-Ene"/>
+                                <constraint firstItem="ooL-CA-23N" firstAttribute="top" secondItem="WUZ-bm-wxL" secondAttribute="bottom" constant="40" id="g14-yt-Qfa"/>
+                                <constraint firstItem="WUZ-bm-wxL" firstAttribute="top" secondItem="vAf-DP-KWk" secondAttribute="top" constant="16" id="idu-D0-dOM"/>
+                                <constraint firstItem="Sa4-vn-DMu" firstAttribute="leading" secondItem="vAf-DP-KWk" secondAttribute="leading" constant="19" id="pQf-3H-ukN"/>
+                                <constraint firstItem="WUZ-bm-wxL" firstAttribute="centerX" secondItem="ooL-CA-23N" secondAttribute="centerX" id="plQ-8g-o8F"/>
+                                <constraint firstAttribute="trailing" secondItem="ooL-CA-23N" secondAttribute="trailing" constant="19" id="pzv-Dv-Gx2"/>
                             </constraints>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sa4-vn-DMu">
-                            <rect key="frame" x="16" y="453.5" width="382" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="ooL-CA-23N" secondAttribute="trailing" constant="18" id="7qs-uT-iiG"/>
-                        <constraint firstItem="ooL-CA-23N" firstAttribute="centerY" secondItem="yAT-z2-diq" secondAttribute="centerY" id="D9r-cW-hc6"/>
-                        <constraint firstItem="Sa4-vn-DMu" firstAttribute="leading" secondItem="yAT-z2-diq" secondAttribute="leading" constant="16" id="DsM-0W-aIs"/>
-                        <constraint firstItem="Sa4-vn-DMu" firstAttribute="top" secondItem="ooL-CA-23N" secondAttribute="bottom" constant="32" id="cwf-BE-trs"/>
-                        <constraint firstAttribute="trailing" secondItem="Sa4-vn-DMu" secondAttribute="trailing" constant="16" id="fup-0e-wRh"/>
-                        <constraint firstItem="ooL-CA-23N" firstAttribute="leading" secondItem="yAT-z2-diq" secondAttribute="leading" constant="16" id="wpP-XU-aIh"/>
+                        <constraint firstAttribute="trailing" secondItem="vAf-DP-KWk" secondAttribute="trailing" constant="16" id="85Z-Jc-vHe"/>
+                        <constraint firstItem="vAf-DP-KWk" firstAttribute="centerX" secondItem="yAT-z2-diq" secondAttribute="centerX" id="Dpx-Ml-1Z8"/>
+                        <constraint firstItem="vAf-DP-KWk" firstAttribute="centerY" secondItem="yAT-z2-diq" secondAttribute="centerY" id="QZE-nO-vZt"/>
+                        <constraint firstItem="vAf-DP-KWk" firstAttribute="top" secondItem="yAT-z2-diq" secondAttribute="top" constant="243" id="bYE-oY-K2W"/>
+                        <constraint firstItem="vAf-DP-KWk" firstAttribute="leading" secondItem="yAT-z2-diq" secondAttribute="leading" constant="16" id="mfG-T8-MxQ"/>
                     </constraints>
                 </view>
             </subviews>
@@ -60,10 +83,11 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="yAT-z2-diq" secondAttribute="bottom" id="ZKD-yk-fgP"/>
                 <constraint firstItem="yAT-z2-diq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="u8Z-kf-mYI"/>
             </constraints>
-            <point key="canvasLocation" x="75" y="60"/>
+            <point key="canvasLocation" x="73.913043478260875" y="59.598214285714285"/>
         </view>
     </objects>
     <resources>
+        <image name="maintenance_logo" width="100" height="100"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

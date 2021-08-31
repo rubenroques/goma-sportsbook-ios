@@ -30,7 +30,7 @@ struct GomaGamingServiceClient {
 
     func requestSettings(deviceId: String) -> AnyPublisher<[ClientSettings]?, NetworkError> {
         let endpoint = GomaGamingService.settings
-        //let requestPublisher: AnyPublisher<[ClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        // let requestPublisher: AnyPublisher<[ClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         let requestPublisher: AnyPublisher<[ClientSettings]?, NetworkError> = networkClient.requestEndpointArrayData(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }

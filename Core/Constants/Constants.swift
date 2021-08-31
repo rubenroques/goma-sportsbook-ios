@@ -6,8 +6,13 @@
 //
 
 import Foundation
+import UIKit
 
 enum AnimationDuration {
     static let normal: TimeInterval = 0.30
     static let short: TimeInterval = 0.15
+}
+
+enum BorderRadius {
+    static let modal: CGFloat = 11.0
 }

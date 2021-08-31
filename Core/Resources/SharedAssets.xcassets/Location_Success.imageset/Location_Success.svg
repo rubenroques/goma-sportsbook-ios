@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="150px" height="150px" viewBox="0 0 150 150" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 7</title>
+    <defs>
+        <filter x="-48.8%" y="-48.8%" width="197.7%" height="197.7%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.482352941   0 0 0 0 0.760784314   0 0 0 0 0.243137255  0 0 0 0.449109484 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Enable-Location-Services-#Apple" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Location-5-#iOS" transform="translate(-113.000000, -259.000000)">
+            <g id="Group-6" transform="translate(34.000000, 239.000000)">
+                <g id="Group-7" transform="translate(111.000000, 52.000000)">
+                    <g id="Group-5">
+                        <g id="Group" filter="url(#filter-1)" stroke="#7BC23E" stroke-width="6">
+                            <path d="M43,86 C66.7482442,86 86,66.7482442 86,43 C86,19.2517558 66.7482442,0 43,0 C19.2517558,0 0,19.2517558 0,43 C0,66.7482442 19.2517558,86 43,86 Z" id="Oval"></path>
+                        </g>
+                        <g id="check-circle-(1)" transform="translate(66.000000, 0.000000)">
+                            <rect id="Rectangle" x="0" y="0" width="29" height="29"></rect>
+                            <circle id="Oval" stroke="#7BC23E" stroke-width="1.8" fill="#7BC23E" stroke-linecap="round" stroke-linejoin="round" cx="14.5" cy="14.5" r="10.875"></circle>
+                            <polyline id="Path" stroke="#FFFFFF" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" points="19.484375 11.78125 12.8385039 18.125 9.515625 14.953125"></polyline>
+                        </g>
+                    </g>
+                    <g id="Group-4" transform="translate(17.000000, 18.000000)" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+                        <g id="map-trifold" transform="translate(0.000000, 7.000000)" stroke-width="3.6">
+                            <polyline id="Path" points="14.3333333 32.7272727 0 36.3636364 0 3.63636364 14.3333333 0"></polyline>
+                            <polygon id="Path" points="28.6666667 40 14.3333333 32.7272727 14.3333333 0 28.6666667 7.27272727"></polygon>
+                            <polyline id="Path" points="28.6666667 7.27272727 43 3.63636364 43 36.3636364 28.6666667 40"></polyline>
+                        </g>
+                        <g id="map-pin" transform="translate(34.000000, 0.000000)">
+                            <path d="M19,9.61538462 C19,18.2692308 9.5,25 9.5,25 C9.5,25 0,18.2692308 0,9.61538462 C0,4.30495433 4.25329488,0 9.5,0 C14.7467051,0 19,4.30495433 19,9.61538462 Z" id="Path" stroke-width="2.3" fill="#313543"></path>
+                            <ellipse id="Oval" stroke-width="1.92" cx="9.5" cy="9.61538462" rx="3.8" ry="3.84615385"></ellipse>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

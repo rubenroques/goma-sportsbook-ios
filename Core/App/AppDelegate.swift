@@ -19,13 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Logger.log("App Started")
 
-        //Store device id
+        // Store device id
         if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
             let deviceId = UIDevice.current.identifierForVendor?.uuidString
             print("Device ID: \(deviceId as Any)")
             UserDefaults.standard.set(deviceId!, forKey: "device_id")
         }
-
 
         FirebaseApp.configure()
 
@@ -40,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
 
-        self.window!.rootViewController = RootViewController()
+        self.window!.rootViewController = PermissionAccessViewController()
 
         self.window!.makeKeyAndVisible()
 
