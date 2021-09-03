@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SwiftUI
 
 class RootViewController: UIViewController {
 
@@ -19,10 +20,12 @@ class RootViewController: UIViewController {
     let locationManager = GeoLocationManager()
 
     var cancellables = Set<AnyCancellable>()
+    var everyMatrixAPIClient: EveryMatrixAPIClient
 
     init() {
         networkClient = Env.networkManager
         gomaGamingAPIClient = GomaGamingServiceClient(networkClient: networkClient)
+        everyMatrixAPIClient = EveryMatrixAPIClient()
         super.init(nibName: "RootViewController", bundle: nil)
     }
 
@@ -35,7 +38,6 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupWithTheme()
-
         self.getLocationDateFormat()
     }
 
@@ -183,6 +185,11 @@ class RootViewController: UIViewController {
             .store(in: &cancellables)
     }
 
+    @IBAction private func testEveryMatrixAPI() {
+            everyMatrixAPIClient.getDisciplines()
+    }
+
+
     @objc func checkMaintenance() {
         if Env.isMaintenance {
             let maintenanceVC = MaintenanceViewController()
@@ -200,6 +207,7 @@ class RootViewController: UIViewController {
     }
 
 }
+
 
 extension RootViewController {
 
