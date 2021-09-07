@@ -186,7 +186,8 @@ class RootViewController: UIViewController {
     }
 
     @IBAction private func testEveryMatrixAPI() {
-            everyMatrixAPIClient.getDisciplines()
+        let payload = ["lang":"en", "liveStatus":"BOTH", "maxResults":"10"]
+        everyMatrixAPIClient.getMatches(payload: payload)
     }
 
 

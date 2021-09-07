@@ -314,6 +314,12 @@
 		A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */; };
 		A9B841A126E26BEE00269B05 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = A9B841A026E26BEE00269B05 /* Starscream */; };
 		A9B841A326E26C0B00269B05 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = A9B841A226E26C0B00269B05 /* Starscream */; };
+		A9B841A626E6557000269B05 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A526E6557000269B05 /* Location.swift */; };
+		A9B841A726E6557000269B05 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A526E6557000269B05 /* Location.swift */; };
+		A9B841AA26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
+		A9B841AB26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
+		A9B841AE26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		A9B841AF26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -490,6 +496,9 @@
 		A9B8414626E2351D00269B05 /* TSManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSManager.swift; sourceTree = "<group>"; };
 		A9B8419426E2369900269B05 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Notification.swift; path = ../Notification.swift; sourceTree = "<group>"; };
 		A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSessionIDModel.swift; sourceTree = "<group>"; };
+		A9B841A526E6557000269B05 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		A9B841A926E6597300269B05 /* Tournament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
+		A9B841AD26E674AA00269B05 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1034,6 +1043,9 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				A9B841AC26E6749900269B05 /* Matches */,
+				A9B841A826E6595E00269B05 /* Tournaments */,
+				A9B841A426E6556200269B05 /* Locations */,
 				A9B840C226E1271900269B05 /* Disciplines */,
 				A9B840C326E1275900269B05 /* RootData.swift */,
 				A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */,
@@ -1196,6 +1208,30 @@
 				A9B8414126E2351D00269B05 /* JSONSSWampSerializer.swift */,
 			);
 			path = Serialization;
+			sourceTree = "<group>";
+		};
+		A9B841A426E6556200269B05 /* Locations */ = {
+			isa = PBXGroup;
+			children = (
+				A9B841A526E6557000269B05 /* Location.swift */,
+			);
+			path = Locations;
+			sourceTree = "<group>";
+		};
+		A9B841A826E6595E00269B05 /* Tournaments */ = {
+			isa = PBXGroup;
+			children = (
+				A9B841A926E6597300269B05 /* Tournament.swift */,
+			);
+			path = Tournaments;
+			sourceTree = "<group>";
+		};
+		A9B841AC26E6749900269B05 /* Matches */ = {
+			isa = PBXGroup;
+			children = (
+				A9B841AD26E674AA00269B05 /* Match.swift */,
+			);
+			path = Matches;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1451,6 +1487,7 @@
 				A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
+				A9B841AE26E674AA00269B05 /* Match.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
 				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
@@ -1500,6 +1537,7 @@
 				4589F41F26BF03FE005DF543 /* Fonts.swift in Sources */,
 				455A0CE426BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
+				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
@@ -1522,6 +1560,7 @@
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
+				A9B841A626E6557000269B05 /* Location.swift in Sources */,
 				4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				A9B8416926E2351D00269B05 /* RegisterSSWampMessage.swift in Sources */,
 				A9B8409826DE65BF00269B05 /* RefusedAccessViewController.swift in Sources */,
@@ -1585,6 +1624,7 @@
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
+				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
 				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
@@ -1634,6 +1674,7 @@
 				4589F42026BF03FE005DF543 /* Fonts.swift in Sources */,
 				455A0CE526BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
+				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
@@ -1656,6 +1697,7 @@
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,
+				A9B841A726E6557000269B05 /* Location.swift in Sources */,
 				4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				A9B8416A26E2351D00269B05 /* RegisterSSWampMessage.swift in Sources */,
 				A9B8409A26DE6ABB00269B05 /* RefusedAccessViewController.swift in Sources */,
