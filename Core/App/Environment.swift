@@ -19,6 +19,7 @@ struct Environment {
     var appUpdateType = "" // FIXME: Esta variavel, se for para manter assim deveria ser um Enum e não uma string para evitar problemas futuros
     var userLatitude: Double?
     var userLongitude: Double?
+    var operatorId: Int = 2474  //EM GOMA Operator Id
 
     func getUserSettings() -> [ClientSettings]? {
         let settingsData = UserDefaults.standard.data(forKey: "user_settings")

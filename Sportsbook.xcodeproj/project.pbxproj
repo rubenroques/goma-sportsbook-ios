@@ -320,6 +320,18 @@
 		A9B841AB26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
 		A9B841AE26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
 		A9B841AF26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		A9B841B226E9054700269B05 /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B126E9054700269B05 /* Market.swift */; };
+		A9B841B326E9054700269B05 /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B126E9054700269B05 /* Market.swift */; };
+		A9B841B526E914FB00269B05 /* Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B426E914FB00269B05 /* Outcome.swift */; };
+		A9B841B626E914FB00269B05 /* Outcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B426E914FB00269B05 /* Outcome.swift */; };
+		A9B841B826E91BBC00269B05 /* BettingOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B726E91BBC00269B05 /* BettingOffer.swift */; };
+		A9B841B926E91BBC00269B05 /* BettingOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B726E91BBC00269B05 /* BettingOffer.swift */; };
+		A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841BA26EA1A7600269B05 /* MarketOutcomeRelation.swift */; };
+		A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841BA26EA1A7600269B05 /* MarketOutcomeRelation.swift */; };
+		A9B841BF26EA5A1000269B05 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841BE26EA5A1000269B05 /* Event.swift */; };
+		A9B841C026EA5A1000269B05 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841BE26EA5A1000269B05 /* Event.swift */; };
+		A9B841C226EB5D5900269B05 /* Odd.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841C126EB5D5900269B05 /* Odd.swift */; };
+		A9B841C326EB5D5900269B05 /* Odd.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841C126EB5D5900269B05 /* Odd.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -499,6 +511,12 @@
 		A9B841A526E6557000269B05 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		A9B841A926E6597300269B05 /* Tournament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
 		A9B841AD26E674AA00269B05 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		A9B841B126E9054700269B05 /* Market.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Market.swift; sourceTree = "<group>"; };
+		A9B841B426E914FB00269B05 /* Outcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Outcome.swift; sourceTree = "<group>"; };
+		A9B841B726E91BBC00269B05 /* BettingOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingOffer.swift; sourceTree = "<group>"; };
+		A9B841BA26EA1A7600269B05 /* MarketOutcomeRelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOutcomeRelation.swift; sourceTree = "<group>"; };
+		A9B841BE26EA5A1000269B05 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		A9B841C126EB5D5900269B05 /* Odd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Odd.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1043,6 +1061,8 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				A9B841BD26EA5A0100269B05 /* Events */,
+				A9B841B026E9053600269B05 /* Odds */,
 				A9B841AC26E6749900269B05 /* Matches */,
 				A9B841A826E6595E00269B05 /* Tournaments */,
 				A9B841A426E6556200269B05 /* Locations */,
@@ -1232,6 +1252,26 @@
 				A9B841AD26E674AA00269B05 /* Match.swift */,
 			);
 			path = Matches;
+			sourceTree = "<group>";
+		};
+		A9B841B026E9053600269B05 /* Odds */ = {
+			isa = PBXGroup;
+			children = (
+				A9B841B126E9054700269B05 /* Market.swift */,
+				A9B841B426E914FB00269B05 /* Outcome.swift */,
+				A9B841B726E91BBC00269B05 /* BettingOffer.swift */,
+				A9B841BA26EA1A7600269B05 /* MarketOutcomeRelation.swift */,
+				A9B841C126EB5D5900269B05 /* Odd.swift */,
+			);
+			path = Odds;
+			sourceTree = "<group>";
+		};
+		A9B841BD26EA5A0100269B05 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				A9B841BE26EA5A1000269B05 /* Event.swift */,
+			);
+			path = Events;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1492,6 +1532,7 @@
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
 				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				A9B8416526E2351D00269B05 /* RegisteredSSWampMessage.swift in Sources */,
+				A9B841B526E914FB00269B05 /* Outcome.swift in Sources */,
 				455A0CEE26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
 				A9B8415D26E2351D00269B05 /* SubscribedSSWampMessage.swift in Sources */,
 				A9B8409F26DE712500269B05 /* EnabledAccessViewController.swift in Sources */,
@@ -1526,6 +1567,7 @@
 				A9B840A626DE831400269B05 /* PermissionAccessViewController.swift in Sources */,
 				A9B8417F26E2351D00269B05 /* SSWampTransport.swift in Sources */,
 				A9B8418126E2351D00269B05 /* SSWampSerializer.swift in Sources */,
+				A9B841B226E9054700269B05 /* Market.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				A9B8419526E2369900269B05 /* Notification.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
@@ -1556,6 +1598,7 @@
 				A9B8417D26E2351D00269B05 /* WebSocketSSWampTransport.swift in Sources */,
 				A9B840C426E1275900269B05 /* RootData.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
+				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				A9B8417526E2351D00269B05 /* WelcomeSSWampMessage.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
@@ -1592,12 +1635,15 @@
 				A9B8415726E2351D00269B05 /* PublishedSSWampMessage.swift in Sources */,
 				A9B8416B26E2351D00269B05 /* InvocationSSWampMessage.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
+				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45A2897A26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				A9B8418B26E2351D00269B05 /* SSWampExtensions.swift in Sources */,
+				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
 				A9B8417326E2351D00269B05 /* ErrorSSWampMessage.swift in Sources */,
 				45A2896A26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				A9B8415F26E2351D00269B05 /* SubscribeSSWampMessage.swift in Sources */,
+				A9B841B826E91BBC00269B05 /* BettingOffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1629,6 +1675,7 @@
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
 				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				A9B8416626E2351D00269B05 /* RegisteredSSWampMessage.swift in Sources */,
+				A9B841B626E914FB00269B05 /* Outcome.swift in Sources */,
 				455A0CEF26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
 				A9B8415E26E2351D00269B05 /* SubscribedSSWampMessage.swift in Sources */,
 				A9B840A126DE749000269B05 /* EnabledAccessViewController.swift in Sources */,
@@ -1663,6 +1710,7 @@
 				A9B840A926DE86BE00269B05 /* PermissionAccessViewController.swift in Sources */,
 				A9B8418026E2351D00269B05 /* SSWampTransport.swift in Sources */,
 				A9B8418226E2351D00269B05 /* SSWampSerializer.swift in Sources */,
+				A9B841B326E9054700269B05 /* Market.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				A9B8419626E2369900269B05 /* Notification.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
@@ -1693,6 +1741,7 @@
 				A9B8417E26E2351D00269B05 /* WebSocketSSWampTransport.swift in Sources */,
 				A9B840C526E1275900269B05 /* RootData.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
+				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				A9B8417626E2351D00269B05 /* WelcomeSSWampMessage.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
@@ -1729,12 +1778,15 @@
 				A9B8415826E2351D00269B05 /* PublishedSSWampMessage.swift in Sources */,
 				A9B8416C26E2351D00269B05 /* InvocationSSWampMessage.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
+				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				A9B8418C26E2351D00269B05 /* SSWampExtensions.swift in Sources */,
+				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,
 				A9B8417426E2351D00269B05 /* ErrorSSWampMessage.swift in Sources */,
 				45A2896B26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				A9B8416026E2351D00269B05 /* SubscribeSSWampMessage.swift in Sources */,
+				A9B841B926E91BBC00269B05 /* BettingOffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

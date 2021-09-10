@@ -186,9 +186,22 @@ class RootViewController: UIViewController {
     }
 
     @IBAction private func testEveryMatrixAPI() {
-        let payload = ["lang":"en", "liveStatus":"BOTH", "maxResults":"10"]
-        everyMatrixAPIClient.getMatches(payload: payload)
+        //let payload = ["lang":"en", "maxResults":"10"]
+        //let payloadToday = ["lang":"en", "userTimezoneOffsetInMinutes":"0", "maxResults":"10"]
+        //let payloadNext = ["lang":"en", "hoursTillLive":"2", "maxResults":"10", "disciplineId":"1"]
+        let payloadOdd = ["lang":"en",
+                          "matchId":"148056830725115904",
+                          "tournamentId":nil,
+                          "bettingOfferId":nil,
+                          "bettingOfferIds":[],
+                          "eventIds":[]] as [String : Any?]
+        everyMatrixAPIClient.getOdds(payload: payloadOdd)
     }
+
+    @IBAction func testSubscription() {
+        everyMatrixAPIClient.subscribeOdd(payload: nil)
+    }
+
 
 
     @objc func checkMaintenance() {
