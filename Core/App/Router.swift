@@ -10,9 +10,7 @@ import UIKit
 
 struct Router {
 
-
 }
-
 
 extension Router {
 

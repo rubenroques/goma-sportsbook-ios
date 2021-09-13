@@ -1,18 +1,17 @@
-
 import UIKit
 
 class WelcomeViewController: UIViewController {
 
-    @IBOutlet weak var topImageView: UIImageView!
-    @IBOutlet weak var contentBaseView: UIView!
+    @IBOutlet private weak var topImageView: UIImageView!
+    @IBOutlet private weak var contentBaseView: UIView!
 
-    @IBOutlet weak var loginButton: RoundButton!
-    @IBOutlet weak var createAccountButton: RoundButton!
+    @IBOutlet private weak var loginButton: RoundButton!
+    @IBOutlet private weak var createAccountButton: RoundButton!
 
-    @IBOutlet weak var facebookButton: RoundButton!
-    @IBOutlet weak var googleButton: RoundButton!
+    @IBOutlet private weak var facebookButton: RoundButton!
+    @IBOutlet private weak var googleButton: RoundButton!
 
-    @IBOutlet weak var guestButton: RoundButton!
+    @IBOutlet private weak var guestButton: RoundButton!
 
     init() {
         super.init(nibName: "WelcomeViewController", bundle: nil)
@@ -56,22 +55,20 @@ class WelcomeViewController: UIViewController {
 
     }
 
-    @IBAction func goBack() {
+    @IBAction private func goBack() {
         self.navigationController?.popViewController(animated: false)
     }
 
-
-    @IBAction func didTapLoginButton() {
+    @IBAction private func didTapLoginButton() {
         self.navigationController?.pushViewController(LoginViewController(), animated: true)
     }
 
-
-    @IBAction func didTapCreateAccount() {
+    @IBAction private func didTapCreateAccount() {
         self.navigationController?.pushViewController(RegisterViewController(), animated: true)
     }
 
-    @IBAction func didTapContinueAsGuest() {
-        
+    @IBAction private func didTapContinueAsGuest() {
+        //
     }
 
 }

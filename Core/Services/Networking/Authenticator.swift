@@ -19,7 +19,7 @@ class Authenticator {
     private var currentToken: AuthToken?
     private let queue = DispatchQueue(label: "Autenticator.\(UUID().uuidString)")
 
-    //This publisher is shared amongst all calls that request a token refresh
+    // This publisher is shared amongst all calls that request a token refresh
     private var refreshPublisher: AnyPublisher<AuthToken, Error>?
 
     init(session: NetworkSession = URLSession.shared) {
@@ -29,7 +29,6 @@ class Authenticator {
     func validToken(deviceId: String, forceRefresh: Bool = false) -> AnyPublisher<AuthToken, Error> {
         return queue.sync { [weak self] in
 
-
             var shouldForceRefresh = forceRefresh
 
             // We're already loading a new token
@@ -38,7 +37,7 @@ class Authenticator {
             }
 
             // We don't have a token so we override the forceRefresh
-            if let selfValue = self, let _ = selfValue.currentToken {
+            if let selfValue = self, selfValue.currentToken != nil {
                 shouldForceRefresh = true
             }
 
@@ -48,7 +47,7 @@ class Authenticator {
             }
 
             // We need a new token
-            let endpointURL = URL(string: "http://34.141.102.89/api/auth")!
+            let endpointURL = URL(string: "http://34.141.102.89/api/v1/auth")!
 
             var request = URLRequest(url: endpointURL)
             request.httpMethod = "POST"
@@ -81,5 +80,3 @@ class Authenticator {
     }
 
 }
-
-

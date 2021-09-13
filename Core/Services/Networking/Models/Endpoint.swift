@@ -41,7 +41,6 @@ extension Endpoint {
     }
 }
 
-
 struct HTTP {
     enum Method {
         case get

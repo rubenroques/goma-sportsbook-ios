@@ -9,55 +9,90 @@ import Foundation
 import Combine
 
 struct NetworkManager {
-    
+
     private let session: NetworkSession
     private let authenticator: Authenticator
-    
+
     init(session: NetworkSession = URLSession.shared) {
         self.session = session
         self.authenticator = Authenticator(session: session)
     }
-    
-    func requestEndpoint(deviceId: String, endpoint: Endpoint) -> AnyPublisher<ExampleModel, NetworkErrorResponse> {
+
+    func requestEndpoint<T: Decodable>(deviceId: String, endpoint: Endpoint) -> AnyPublisher<T?, NetworkError> {
 
         guard
             let request = endpoint.request()
         else {
-            let error = NetworkErrorResponse.init(errors: [.invalidRequest])
-            return Fail.init(outputType: ExampleModel.self, failure: error).eraseToAnyPublisher()
+            let error = NetworkError.init(errors: [.invalidRequest])
+            return AnyPublisher(Fail<T?, NetworkError>(error: error))
         }
 
         return authenticator.validToken(deviceId: deviceId)
-            .flatMap({ token -> AnyPublisher<Data, Error> in
-                // We can now use this token to authenticate the request
-                print("flatMap1 token \(token)")
+            .flatMap { token -> AnyPublisher<Data, Error> in
                 return session.publisher(for: request, token: token)
-            })
-            .tryCatch({ error -> AnyPublisher<Data, Error> in
-
-                print("tryCatch error \(error)")
+            }
+            .tryCatch { error -> AnyPublisher<Data, Error> in
 
                 guard
-                    let serviceError = error as? NetworkErrorResponse,
+                    let serviceError = error as? NetworkError,
                     serviceError.errors.contains(.unauthorized)
                 else {
                     throw error
                 }
 
                 return authenticator.validToken(deviceId: deviceId, forceRefresh: true)
-                    .flatMap({ token -> AnyPublisher<Data, Error> in
-                        print("flatMap1 token \(token)")
+                    .flatMap { token -> AnyPublisher<Data, Error> in
                         // We can now use this new token to authenticate the second attempt at making this request
                         return session.publisher(for: request, token: token)
-                    })
+                    }
                     .eraseToAnyPublisher()
-            })
-            .decode(type: NetworkResponse<ExampleModel>.self, decoder: JSONDecoder())
-            .mapError({ error1 in
-                        print("mapError error \(error1)")
-                        return NetworkErrorResponse(errors: [.invalidResponse]) })
+            }
+            .decode(type: NetworkResponse<T>.self, decoder: JSONDecoder())
+            .mapError { _ in
+                        return NetworkError(errors: [.invalidResponse])
+            }
             .map(\.data)
             .eraseToAnyPublisher()
     }
 
+    func requestEndpointArrayData<T: Decodable>(deviceId: String, endpoint: Endpoint) -> AnyPublisher<T?, NetworkError> {
+
+            guard
+                let request = endpoint.request()
+            else {
+                let error = NetworkError.init(errors: [.invalidRequest])
+                return AnyPublisher(Fail<T?, NetworkError>(error: error))
+            }
+
+            return authenticator.validToken(deviceId: deviceId)
+                .flatMap({ token -> AnyPublisher<Data, Error> in
+                    // We can now use this token to authenticate the request
+                    print("flatMap1 token \(token)")
+                    return session.publisher(for: request, token: token)
+                })
+                .tryCatch({ error -> AnyPublisher<Data, Error> in
+
+                    print("tryCatch error \(error)")
+
+                    guard
+                        let serviceError = error as? NetworkError,
+                        serviceError.errors.contains(.unauthorized)
+                    else {
+                        throw error
+                    }
+
+                    return authenticator.validToken(deviceId: deviceId, forceRefresh: true)
+                        .flatMap({ token -> AnyPublisher<Data, Error> in
+                            print("flatMap1 token \(token)")
+                            // We can now use this new token to authenticate the second attempt at making this request
+                            return session.publisher(for: request, token: token)
+                        })
+                        .eraseToAnyPublisher()
+                })
+                .decode(type: T?.self, decoder: JSONDecoder())
+                .mapError({ error1 in
+                            print("mapError error \(error1)")
+                            return NetworkError(errors: [.invalidResponse]) })
+                .eraseToAnyPublisher()
+        }
 }

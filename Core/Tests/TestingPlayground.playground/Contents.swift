@@ -68,14 +68,12 @@ Internationalization.format(number: 125.50, currency: .dollar)
 Internationalization.format(number: 125.50, currency: .real)
 */
 
-
-
 var greeting = "Hello, playground"
 
 protocol FeatureFlags {
     static var low: Int { get }
     static var high: Int { get }
-    //static var mid: Int { get }
+    // static var mid: Int { get }
 }
 
 protocol Target {
@@ -84,13 +82,10 @@ protocol Target {
     static var flags: Flags.Type { get }
 }
 
-
-
 struct TargetFeaureFlags: FeatureFlags {
     static var low: Int = 10
     static var high: Int = 100
 }
-
 
 struct ClientFoo: Target {
     typealias Flags = TargetFeaureFlags
@@ -112,4 +107,3 @@ struct ClientBar: Target {
 
 var fooLow = ClientFoo.flags.low
 fooLow
-

@@ -1,4 +1,3 @@
-
 import UIKit
 
 class RegisterViewController: UIViewController {
@@ -38,10 +37,10 @@ class RegisterViewController: UIViewController {
         self.countryRectangularView.layer.borderWidth = 1.0
         self.countryRectangularView.layer.cornerRadius = 3
 
-        self.usernameHeaderTextFieldView.textField.autocorrectionType = .no
-        self.usernameHeaderTextFieldView.textField.keyboardType = .emailAddress
+        self.usernameHeaderTextFieldView.autocorrect = false
+        self.usernameHeaderTextFieldView.keyboardType = .emailAddress
         self.usernameHeaderTextFieldView.setPlaceholderText("Email Address")
-        
+
         self.passwordHeaderTextFieldView.setPlaceholderText("Type Password")
         self.passwordConfirmHeaderTextFieldView.setPlaceholderText("Re-type Password")
 
@@ -64,7 +63,7 @@ class RegisterViewController: UIViewController {
 
     func validateFields() -> Bool {
 
-        let username = self.usernameHeaderTextFieldView.textField.text ?? ""
+        let username = self.usernameHeaderTextFieldView.text
         if username.isEmpty {
             self.usernameHeaderTextFieldView.showErrorOnField(text: "Empty email", color: .red)
             return false
@@ -78,19 +77,17 @@ class RegisterViewController: UIViewController {
             return false
         }
 
-        if self.passwordHeaderTextFieldView.textField.text?.count ?? 0 < 6 {
+        if self.passwordHeaderTextFieldView.text.count < 6 {
             self.passwordHeaderTextFieldView.showErrorOnField(text: "Password must have a minimum of 6 characters", color: .red)
             return false
         }
 
-        if self.passwordConfirmHeaderTextFieldView.textField.text?.count ?? 0 < 6 {
+        if self.passwordConfirmHeaderTextFieldView.text.count < 6 {
             self.passwordConfirmHeaderTextFieldView.showErrorOnField(text: "Password must have a minimum of 6 characters", color: .red)
             return false
         }
 
-        if self.passwordHeaderTextFieldView.textField.text
-            != self.passwordConfirmHeaderTextFieldView.textField.text {
-
+        if self.passwordHeaderTextFieldView.text != self.passwordConfirmHeaderTextFieldView.text {
             self.passwordHeaderTextFieldView.showErrorOnField(text: "Passwords don't match", color: .red)
             self.passwordConfirmHeaderTextFieldView.showErrorOnField(text: "Passwords don't match", color: .red)
 
@@ -108,14 +105,12 @@ class RegisterViewController: UIViewController {
 
     }
 
-    @IBAction func didTapRegisterButton() {
+    @IBAction private func didTapRegisterButton() {
         self.resignFirstResponder()
-
 
         self.usernameHeaderTextFieldView.hideTipAndError()
         self.passwordHeaderTextFieldView.hideTipAndError()
         self.passwordConfirmHeaderTextFieldView.hideTipAndError()
-
 
         if !self.validateFields() {
             return
@@ -124,10 +119,6 @@ class RegisterViewController: UIViewController {
         _ = self.usernameHeaderTextFieldView.resignFirstResponder()
         _ = self.passwordHeaderTextFieldView.resignFirstResponder()
         _ = self.passwordConfirmHeaderTextFieldView.resignFirstResponder()
-
-        executeDelayed(1.0) {
-            
-        }
         
     }
 }

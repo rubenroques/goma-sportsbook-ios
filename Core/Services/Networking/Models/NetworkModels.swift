@@ -11,7 +11,7 @@ struct NetworkResponse<T: Decodable>: Decodable {
 
     let status: String
     let message: String
-    let data: T
+    let data: T?
 
     enum CodingKeys: String, CodingKey {
         case status = "status"
@@ -20,7 +20,7 @@ struct NetworkResponse<T: Decodable>: Decodable {
     }
 }
 
-struct ExampleModel: Decodable {
+struct ExampleModel: Codable {
 
     let userId: Int
     let deviceId: String
@@ -34,3 +34,17 @@ struct ExampleModel: Decodable {
 
 }
 
+struct ClientSettings: Codable {
+    
+    let id: Int
+    let category: String
+    let name: String
+    let type: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case category = "category"
+        case name = "name"
+        case type = "type"
+    }
+}

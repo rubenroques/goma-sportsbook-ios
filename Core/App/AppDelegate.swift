@@ -11,7 +11,7 @@ import Firebase
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    // TODO: Inegrate fastlamne
+    // TODO: Integrate fastlamne
 
     var window: UIWindow?
 
@@ -19,9 +19,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Logger.log("App Started")
 
+        // Store device id
+        if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
+            let deviceId = UIDevice.current.identifierForVendor?.uuidString
+            print("Device ID: \(deviceId as Any)")
+            UserDefaults.standard.set(deviceId!, forKey: "device_id")
+        }
+
         FirebaseApp.configure()
 
-        Auth.auth().signInAnonymously { (authResult, _) in
+        Auth.auth().signInAnonymously { authResult, _ in
             guard let user = authResult?.user else { return }
             let isAnonymous = user.isAnonymous  // true
             let uid = user.uid
@@ -32,13 +39,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         window?.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
 
-        self.window!.rootViewController = RootViewController()
+        self.window!.rootViewController = PermissionAccessViewController()
+
         self.window!.makeKeyAndVisible()
 
         return true
     }
 
 }
-
-
-

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="236px" height="236px" viewBox="0 0 236 236" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 2</title>
+    <defs>
+        <filter x="-22.9%" y="-27.6%" width="150.6%" height="150.6%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.0156862745   0 0 0 0 0.490196078   0 0 0 0 1  0 0 0 0.433621066 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Update-Available-(Modal)" transform="translate(-72.000000, -172.000000)">
+            <g id="Group-2" transform="translate(101.000000, 209.000000)">
+                <g id="Group" filter="url(#filter-1)">
+                    <path d="M89,162 C133.735065,162 170,125.735065 170,81 C170,36.2649353 133.735065,0 89,0 C44.2649353,0 8,36.2649353 8,81" id="Oval" stroke="#047DFF" stroke-width="16"></path>
+                    <circle id="Oval" fill="#047DFF" cx="8" cy="81" r="8"></circle>
+                    <circle id="Oval" fill="#047DFF" cx="89" cy="162" r="8"></circle>
+                </g>
+                <g id="Group" opacity="0.5" transform="translate(27.000000, 25.000000)">
+                    <path d="M62.3,113.4 C93.6145453,113.4 119,88.0145453 119,56.7 C119,25.3854547 93.6145453,0 62.3,0 C30.9854547,0 5.6,25.3854547 5.6,56.7" id="Oval" stroke="#047DFF" stroke-width="11.2"></path>
+                    <circle id="Oval" fill="#047DFF" cx="5.6" cy="56.7" r="5.6"></circle>
+                    <circle id="Oval" fill="#047DFF" cx="62.3" cy="113.4" r="5.6"></circle>
+                </g>
+                <g id="arrows-clockwise" transform="translate(60.000000, 52.000000)">
+                    <rect id="Rectangle" x="0" y="0" width="58" height="58"></rect>
+                    <polyline id="Path" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" points="39.9128359 22.5919063 50.7878359 22.5919063 50.7878359 11.7169062"></polyline>
+                    <path d="M14.9020578,14.9020578 C18.6410644,11.1630508 23.7122459,9.06249852 29,9.06249852 C34.2877541,9.06249852 39.3589356,11.1630508 43.0979422,14.9020578 L50.7877272,22.5918451" id="Path" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <polyline id="Path" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" points="18.0871641 35.4080937 7.21216406 35.4080937 7.21216406 46.2830938"></polyline>
+                    <path d="M43.0979422,43.0979422 C39.3589356,46.8369492 34.2877541,48.9375015 29,48.9375015 C23.7122459,48.9375015 18.6410644,46.8369492 14.9020578,43.0979422 L7.21227281,35.4081549" id="Path" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

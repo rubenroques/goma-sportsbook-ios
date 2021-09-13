@@ -1,4 +1,3 @@
-
 import Foundation
 
 func executeDelayed(_ delay: Double, closure:@escaping () -> Void) {

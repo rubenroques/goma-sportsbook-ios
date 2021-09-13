@@ -25,7 +25,7 @@ extension NibIdentifiable {
 
 extension UITableViewCell: NibIdentifiable { }
 
-//extension UICollectionViewCell: NibIdentifiable { } not needed because  UICollectionViewCell: UICollectionReusableView
+// extension UICollectionViewCell: NibIdentifiable { } not needed because  UICollectionViewCell: UICollectionReusableView
 extension UICollectionReusableView: NibIdentifiable { }
 
 extension UITableViewHeaderFooterView: NibIdentifiable { }

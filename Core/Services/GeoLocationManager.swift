@@ -17,6 +17,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
     let authorizationSubject = PassthroughSubject<CLAuthorizationStatus, Never>()
     let locationSubject = PassthroughSubject<[CLLocation], Never>()
+    var lastLocation: CLLocation = CLLocation()
 
     override init() {
         super.init()
@@ -26,6 +27,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
     func requestGeoLocationUpdates() {
         locationManager.requestWhenInUseAuthorization()
+        locationManager.requestAlwaysAuthorization()
     }
 
     func startGeoLocationUpdates() {
@@ -44,16 +46,36 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
         locationManager.stopUpdatingLocation()
     }
 
+    func isLocationServicesEnabled() -> Bool {
+        if CLLocationManager.locationServicesEnabled() {
+            switch CLLocationManager.authorizationStatus() {
+            case .notDetermined, .restricted, .denied:
+                return false
+            case .authorizedAlways, .authorizedWhenInUse:
+                return true
+            @unknown default:
+                return false
+            }
+        }
+
+        return false
+    }
+
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         authorizationSubject.send(status)
 
         if status == .authorizedWhenInUse {
-
+            print("Authorized in use")
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last?.coordinate else { return }
+        print("User Location: \(location.latitude) - \(location.longitude)")
         self.locationSubject.send(locations)
+        self.lastLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+        Env.userLatitude = location.latitude
+        Env.userLongitude = location.longitude
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {

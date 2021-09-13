@@ -15,15 +15,12 @@ class DebugViewController: UIViewController {
     init() {
         super.init(nibName: "DebugViewController", bundle: nil)
         self.title = "Debug"
-
-        
     }
 
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 
     override func viewDidLoad() {
         super.viewDidLoad()

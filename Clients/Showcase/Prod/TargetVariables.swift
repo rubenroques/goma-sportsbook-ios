@@ -33,9 +33,3 @@ struct TargetVariables: SportsbookTarget {
     static var featureFlags: TargetFeatureFlags.Type { TargetFeatureFlags.self }
 
 }
-
-
-
-
-
-

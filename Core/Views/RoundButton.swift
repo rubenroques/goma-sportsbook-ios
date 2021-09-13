@@ -19,7 +19,8 @@ class RoundButton: UIButton {
 
         if isCircular {
             self.layer.cornerRadius = self.frame.size.width/2
-        } else {
+        }
+        else {
             self.layer.cornerRadius = self.cornerRadius
         }
     }

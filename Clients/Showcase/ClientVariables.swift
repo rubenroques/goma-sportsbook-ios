@@ -8,6 +8,5 @@
 import Foundation
 
 struct ClientVariables: SportsbookClient {
- 
+    // Client variables (shared between enviroments)
 }
-

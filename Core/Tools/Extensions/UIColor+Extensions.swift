@@ -22,7 +22,6 @@ extension UIColor {
     }
 }
 
-
 extension UIColor {
 
     func interpolate(with other: UIColor, percent: CGFloat) -> UIColor? {
@@ -72,7 +71,6 @@ extension UIColor {
     }
 
 }
-
 
 extension UIColor {
     func image(_ size: CGSize = CGSize(width: 1, height: 1)) -> UIImage {

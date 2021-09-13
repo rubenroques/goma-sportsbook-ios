@@ -9,7 +9,7 @@ import UIKit
 
 class LogViewerViewController: UIViewController {
 
-    @IBOutlet weak var textView: UITextView!
+    @IBOutlet private weak var textView: UITextView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,4 +49,3 @@ class LogViewerViewController: UIViewController {
     }
 
 }
-

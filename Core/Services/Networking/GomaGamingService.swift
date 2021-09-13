@@ -9,7 +9,9 @@ import Foundation
 
 enum GomaGamingService {
     case test
-    //case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
+    case geolocation(latitude: String, longitude: String)
+    case settings
+    // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
 }
 
 extension GomaGamingService: Endpoint {
@@ -24,7 +26,11 @@ extension GomaGamingService: Endpoint {
 
         switch self {
         case .test:
-            return "/api/me"
+            return "/api/\(apiVersion)/me"
+        case .geolocation:
+            return "/api/\(apiVersion)/geolocation"
+        case .settings:
+            return "/api/\(apiVersion)/modules"
 //        case .xpto, .foo:
 //            return "/api/v1/abcd"
 //        default:
@@ -35,6 +41,11 @@ extension GomaGamingService: Endpoint {
     var query: [URLQueryItem]? {
         switch self {
         case .test:
+            return nil
+        case .geolocation(let latitude, let longitude):
+            return [URLQueryItem(name: "lat", value: latitude),
+                    URLQueryItem(name: "lng", value: longitude)]
+        case .settings:
             return nil
 //        case .getPredictionSubmit(let userId, let userName, let eventId, let prediction, let message):
 //            return [URLQueryItem(name: "userId", value: userId),
@@ -55,8 +66,10 @@ extension GomaGamingService: Endpoint {
         let defaultHeaders: HTTP.Headers = [:]
 
         switch self {
-        case .test:
-            () //We can add extra header according to the endpoint we are calling
+        case .test: ()
+        case .geolocation: ()
+        case .settings: ()
+            // TODO: We can add extra header according to the endpoint we are calling
         }
 
         return defaultHeaders
@@ -73,6 +86,10 @@ extension GomaGamingService: Endpoint {
     var method: HTTP.Method {
         switch self {
         case .test:
+            return .get
+        case .geolocation:
+            return .get
+        case .settings:
             return .get
 //        case .xpto, .foo, .bar:
 //            return .post

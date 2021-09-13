@@ -19,18 +19,18 @@
 	<key>STORAGE_BUCKET</key>
 	<string>goma-sportsbook.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/>
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/>
 	<key>GOOGLE_APP_ID</key>
 	<string>1:844144342615:ios:b80f1c4c02f8f9318a9512</string>
 	<key>DATABASE_URL</key>
-	<string>https://goma-sportsbook-default-rtdb.europe-west1.firebasedatabase.app</string>
+	<string>https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/</string>
 </dict>
 </plist>

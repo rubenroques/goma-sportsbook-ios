@@ -25,9 +25,9 @@ public class Debouncer {
 
     public func call() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false, block: { [weak self] (timer) in
+        timer = Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: false) { [weak self] timer in
             self?.timeIntervalDidFinish(for: timer)
-        })
+        }
     }
 
     @objc private func timeIntervalDidFinish(for timer: Timer) {
@@ -43,5 +43,3 @@ public class Debouncer {
     }
 
 }
-
-

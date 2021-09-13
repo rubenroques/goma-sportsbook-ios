@@ -1,12 +1,11 @@
 import Foundation
 
 protocol ObservableProtocol {
-    associatedtype T  //swiftlint:disable:this type_name
-    var value: T { get set }
-    func subscribe(on observer: AnyObject, initialTrigger: Bool, deliverQueue: DispatchQueue, block: @escaping (_ newValue: T) -> Void)
+    associatedtype ValueType
+    var value: ValueType { get set }
+    func subscribe(on observer: AnyObject, initialTrigger: Bool, deliverQueue: DispatchQueue, block: @escaping (_ newValue: ValueType) -> Void)
     func unsubscribe(observer: AnyObject)
 }
-
 
 final class Observable<T>: ObservableProtocol {
 

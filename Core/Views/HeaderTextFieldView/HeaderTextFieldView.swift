@@ -1,21 +1,20 @@
-
 import UIKit
 
 class HeaderTextFieldView: NibView {
 
-    @IBOutlet weak var headerPlaceholderLabel: UILabel!
+    @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
-    @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet private weak var headerLabel: UILabel!
+    @IBOutlet private weak var textField: UITextField!
 
-    @IBOutlet weak var bottomLineView: UIView!
-    @IBOutlet weak var tipLabel: UILabel!
+    @IBOutlet private weak var bottomLineView: UIView!
+    @IBOutlet private weak var tipLabel: UILabel!
 
-    @IBOutlet weak var showPassImageView: UIImageView!
-    @IBOutlet weak var showStateImageView: UIImageView!
+    @IBOutlet private weak var showPassImageView: UIImageView!
+    @IBOutlet private weak var showStateImageView: UIImageView!
 
-    @IBOutlet weak var centerBottomConstraint: NSLayoutConstraint!
-    @IBOutlet weak var centerTopConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var centerBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
 
     private var isSecureField = false {
         didSet {
@@ -30,18 +29,39 @@ class HeaderTextFieldView: NibView {
         }
     }
 
+    var autocorrect = false {
+        didSet {
+            self.textField.autocorrectionType = .no
+
+            if autocorrect {
+                self.textField.autocorrectionType = .yes
+            }
+        }
+    }
+
+    var keyboardType: UIKeyboardType = .default {
+        didSet {
+            self.textField.keyboardType = self.keyboardType
+        }
+    }
+
     var shouldShowPassword = false {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
                 self.showPassImageView.image = UIImage(named: "hide_password_icon")
-            } else {
+            }
+            else {
                 self.textField.isSecureTextEntry = true
                 self.showPassImageView.image = UIImage(named: "view_password_icon")
             }
         }
     }
 
+    var text: String {
+        return self.textField.text ?? ""
+    }
+    
     enum FieldState {
         case ok
         case error
@@ -94,6 +114,9 @@ class HeaderTextFieldView: NibView {
 //        self.layer.borderWidth = 1.0
 //        self.layer.borderColor = UIColor.red.cgColor
 //        #endif
+
+        self.textField.autocorrectionType = .no
+        self.textField.keyboardType = self.keyboardType
 
         self.showPassImageView.isUserInteractionEnabled = true
         self.showStateImageView.isUserInteractionEnabled = true

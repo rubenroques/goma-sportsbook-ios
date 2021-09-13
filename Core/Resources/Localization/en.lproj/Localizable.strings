@@ -7,3 +7,21 @@
 */
 
 "languange_code" = "en-us";
+
+"string_update_available" = "Update available";
+"string_maintenance_mode" = "Temporarily Down For Maintenance";
+"string_update_available_title" = "New Update Available";
+"string_update_available_text" = "Check out the latest Update and improve your experience in Sportsbook.";
+"string_update_app" = "Update App";
+"string_dismiss_title" = "Not Now";
+"string_update_required_title" = "New Update Required";
+"string_update_required_text" = "Please get the latest update to continue enjoying Sportsbook.";
+"string_access_forbidden" = "Seems like Betting is not allowed in your Country.";
+"string_refused_location" = "Unfortunately, we could not get access to your Location this time.";
+"string_refused_location_subtitle" = "At any moment, please enable this option at Settings > Sportsbook";
+"string_enable_location" = "Enable Location Services";
+"string_success_location" = "Location Services enabled successfuly!";
+"string_done" = "Done";
+"string_permission_location" = "Location Permission";
+"string_permission_location_text" = "We need to check if betting is allowed in your location.";
+"string_permission_location_subtitle" = "At any moment, you can disable this option at Settings > Sportsbook > Location";

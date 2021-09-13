@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="154px" height="154px" viewBox="0 0 154 154" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 7</title>
+    <defs>
+        <filter x="-46.7%" y="-46.7%" width="193.3%" height="193.3%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="0" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="10" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.882352941   0 0 0 0 0.141176471   0 0 0 0 0.231372549  0 0 0 0.463914991 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Enable-Location-Services-#Apple" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Location-6---Not-Allowed-#iOS" transform="translate(-109.000000, -285.000000)">
+            <g id="Group-6" transform="translate(53.000000, 317.000000)">
+                <g id="Group-7" transform="translate(88.000000, 0.000000)">
+                    <g id="Group-4" transform="translate(21.000000, 21.000000)" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round">
+                        <g id="map-trifold" transform="translate(0.000000, 7.000000)" stroke-width="3.6">
+                            <polyline id="Path" points="14.3333333 32.7272727 0 36.3636364 0 3.63636364 14.3333333 0"></polyline>
+                            <polygon id="Path" points="28.6666667 40 14.3333333 32.7272727 14.3333333 0 28.6666667 7.27272727"></polygon>
+                            <polyline id="Path" points="28.6666667 7.27272727 43 3.63636364 43 36.3636364 28.6666667 40"></polyline>
+                        </g>
+                        <g id="map-pin" transform="translate(34.000000, 0.000000)">
+                            <path d="M19,9.61538462 C19,18.2692308 9.5,25 9.5,25 C9.5,25 0,18.2692308 0,9.61538462 C0,4.30495433 4.25329488,0 9.5,0 C14.7467051,0 19,4.30495433 19,9.61538462 Z" id="Path" stroke-width="2.3" fill="#313543"></path>
+                            <ellipse id="Oval" stroke-width="1.92" cx="9.5" cy="9.61538462" rx="3.8" ry="3.84615385"></ellipse>
+                        </g>
+                    </g>
+                    <g id="Group-5">
+                        <g id="Group" filter="url(#filter-1)" stroke="#E1243B" stroke-width="6">
+                            <path d="M45,90 C69.8528137,90 90,69.8528137 90,45 C90,20.1471863 69.8528137,0 45,0 C20.1471863,0 0,20.1471863 0,45 C0,69.8528137 20.1471863,90 45,90 Z" id="Oval"></path>
+                        </g>
+                        <g id="check-circle-(1)" transform="translate(69.000000, 0.000000)">
+                            <rect id="Rectangle" x="0" y="0" width="30" height="30"></rect>
+                            <circle id="Oval" stroke="#E1243B" stroke-width="1.8" fill="#E1243B" stroke-linecap="round" stroke-linejoin="round" cx="15" cy="15" r="11.25"></circle>
+                        </g>
+                    </g>
+                    <g id="Group-4" transform="translate(79.100000, 10.100000)" fill="#FFFFFF" fill-rule="nonzero">
+                        <g id="times-solid" transform="translate(0.000000, -0.000000)">
+                            <path d="M7.10921364,5.155 L10.0402412,2.22397244 C10.3999196,1.86429403 10.3999196,1.28113466 10.0402412,0.921163352 L9.38883665,0.269758807 C9.02915824,-0.0899196023 8.44599886,-0.0899196023 8.08602756,0.269758807 L5.155,3.20078636 L2.22397244,0.269758807 C1.86429403,-0.0899196023 1.28113466,-0.0899196023 0.921163352,0.269758807 L0.269758807,0.921163352 C-0.0899196023,1.28084176 -0.0899196023,1.86400114 0.269758807,2.22397244 L3.20078636,5.155 L0.269758807,8.08602756 C-0.0899196023,8.44570597 -0.0899196023,9.02886534 0.269758807,9.38883665 L0.921163352,10.0402412 C1.28084176,10.3999196 1.86429403,10.3999196 2.22397244,10.0402412 L5.155,7.10921364 L8.08602756,10.0402412 C8.44570597,10.3999196 9.02915824,10.3999196 9.38883665,10.0402412 L10.0402412,9.38883665 C10.3999196,9.02915824 10.3999196,8.44599886 10.0402412,8.08602756 L7.10921364,5.155 Z" id="Path"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
