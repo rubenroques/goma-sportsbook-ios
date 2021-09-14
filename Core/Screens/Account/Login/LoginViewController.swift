@@ -64,20 +64,12 @@ class LoginViewController: UIViewController {
 
         loginLabel.textColor = .white
 
-        usernameHeaderTextFieldView.backgroundColor = UIColor.Core.backgroundDarkModal
         usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
         usernameHeaderTextFieldView.setTextFieldColor(.white)
-        usernameHeaderTextFieldView.layer.cornerRadius = BorderRadius.headerInput
-        usernameHeaderTextFieldView.layer.borderWidth = 1
-        usernameHeaderTextFieldView.layer.borderColor = UIColor.Core.backgroundDarkModal.withAlphaComponent(0).cgColor
         usernameHeaderTextFieldView.setSecureField(false)
 
-        passwordHeaderTextFieldView.backgroundColor = UIColor.Core.backgroundDarkModal
         passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
         passwordHeaderTextFieldView.setTextFieldColor(.white)
-        passwordHeaderTextFieldView.layer.cornerRadius = BorderRadius.headerInput
-        passwordHeaderTextFieldView.layer.borderWidth = 1
-        passwordHeaderTextFieldView.layer.borderColor = UIColor.Core.backgroundDarkModal.withAlphaComponent(0).cgColor
         passwordHeaderTextFieldView.setSecureField(true)
 
         rememberView.backgroundColor = UIColor(patternImage: imageGradient)
@@ -241,9 +233,10 @@ class LoginViewController: UIViewController {
     }
 
     @IBAction private func didTapLoginButton() {
+        // TEST
         let username = "andrelascas@hotmail.com"
         let input = self.usernameHeaderTextFieldView.text
-
+        print("CLICK")
         if (username != input) {
             self.usernameHeaderTextFieldView.showErrorOnField(text: "Error")
         }

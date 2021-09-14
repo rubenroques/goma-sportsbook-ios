@@ -2,6 +2,8 @@ import UIKit
 
 class HeaderTextFieldView: NibView {
 
+
+    @IBOutlet private var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
     @IBOutlet private weak var headerLabel: UILabel!
@@ -121,6 +123,10 @@ class HeaderTextFieldView: NibView {
 //        self.layer.borderWidth = 1.0
 //        self.layer.borderColor = UIColor.red.cgColor
 //        #endif
+        containerView.backgroundColor = UIColor.Core.backgroundDarkModal
+        containerView.layer.cornerRadius = BorderRadius.headerInput
+        containerView.layer.borderWidth = 1
+        containerView.layer.borderColor = UIColor.Core.backgroundDarkModal.withAlphaComponent(0).cgColor
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType
 
