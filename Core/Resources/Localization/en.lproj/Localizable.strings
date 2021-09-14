@@ -25,3 +25,16 @@
 "string_permission_location" = "Location Permission";
 "string_permission_location_text" = "We need to check if betting is allowed in your location.";
 "string_permission_location_subtitle" = "At any moment, you can disable this option at Settings > Sportsbook > Location";
+"string_skip" = "Skip";
+"string_login" = "Login";
+"string_forgot" = "Forgot Password?";
+"string_new_create_account" = "New here? Create a new account";
+"string_create_account" = "Create a new account";
+"string_agree_terms_conditions" = "By Signing up, you agree to our
+Terms of use, Privacy Policy and EULA";
+"string_terms" = "Terms of use";
+"string_privacy_policy" = "Privacy Policy";
+"string_eula" = "EULA";
+"string_show" = "Show";
+"string_hide" = "Hide";
+"string_remember" = "Remember";

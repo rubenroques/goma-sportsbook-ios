@@ -15,6 +15,10 @@ class HeaderTextFieldView: NibView {
 
     @IBOutlet private weak var centerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
+    @IBOutlet private var showLabel: UILabel!
+
+    @IBOutlet private var tipImageView: UIImageView!
+
 
     private var isSecureField = false {
         didSet {
@@ -23,6 +27,7 @@ class HeaderTextFieldView: NibView {
 
             if self.isSecureField {
                 self.showPassImageView.isHidden = false
+                self.showLabel.isHidden = false
             }
 
             self.showPassImageView.image = UIImage(named: "view_password_icon")
@@ -49,11 +54,13 @@ class HeaderTextFieldView: NibView {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
-                self.showPassImageView.image = UIImage(named: "hide_password_icon")
+                //self.showPassImageView.image = UIImage(named: "hide_password_icon")
+                self.showLabel.text = localized("string_hide")
             }
             else {
                 self.textField.isSecureTextEntry = true
-                self.showPassImageView.image = UIImage(named: "view_password_icon")
+                //self.showPassImageView.image = UIImage(named: "view_password_icon")
+                self.showLabel.text = localized("string_show")
             }
         }
     }
@@ -72,14 +79,14 @@ class HeaderTextFieldView: NibView {
         didSet {
             switch self.fieldState {
             case .ok:
-                showStateImageView.isHidden = false
-                showStateImageView.image = UIImage(named: "form_ok_icon")
+                tipImageView.isHidden = false
+                tipImageView.image = UIImage(named: "Active")
             case .error:
-                showStateImageView.isHidden = false
-                showStateImageView.image = UIImage(named: "form_not_ok_icon")
+                tipImageView.isHidden = false
+                tipImageView.image = UIImage(named: "Error_Input")
             case .hidden:
-                showStateImageView.isHidden = true
-                showStateImageView.image = nil
+                tipImageView.isHidden = true
+                tipImageView.image = nil
             }
         }
     }
@@ -88,7 +95,7 @@ class HeaderTextFieldView: NibView {
         didSet {
 
             if self.isActive {
-                self.bottomLineView.backgroundColor = self.highlightColor
+                //self.bottomLineView.backgroundColor = self.highlightColor
             }
 
         }
@@ -114,7 +121,6 @@ class HeaderTextFieldView: NibView {
 //        self.layer.borderWidth = 1.0
 //        self.layer.borderColor = UIColor.red.cgColor
 //        #endif
-
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType
 
@@ -128,16 +134,30 @@ class HeaderTextFieldView: NibView {
 
         self.tipLabel.alpha = 0.0
 
+        tipImageView.isHidden = true
+
         self.headerLabel.alpha = 0.7
         self.headerPlaceholderLabel.alpha = 0.0
         self.textField.delegate = self
 
-        self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-        self.bottomLineView.alpha = 1.0
+        //self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        //self.bottomLineView.alpha = 1.0
+        self.bottomLineView.isHidden = true
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapShowPassword))
         self.showPassImageView.addGestureRecognizer(tapGestureRecognizer)
 
+        showLabel.text = localized("string_show")
+        showLabel.font = AppFont.with(type: .regular, size: 14.0)
+        showLabel.textColor =  UIColor.white
+        let text = localized("string_show")
+        let underlineAttriString = NSMutableAttributedString(string: text)
+        let range = (text as NSString).range(of: localized("string_show"))
+        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
+        showLabel.attributedText = underlineAttriString
+        showLabel.isHidden = true
+        showLabel.isUserInteractionEnabled = true
+        showLabel.addGestureRecognizer(tapGestureRecognizer)
     }
 
     func shouldSlideDown() -> Bool {
@@ -194,6 +214,14 @@ class HeaderTextFieldView: NibView {
         self.isSecureField = isSecure
     }
 
+    func setHeaderLabelColor(_ color: UIColor) {
+        self.headerLabel.textColor = color
+    }
+
+    func setTextFieldColor(_ color: UIColor) {
+        self.textField.textColor = color
+    }
+
     func showErrorOnField(text: String, color: UIColor = .systemRed) {
 
         self.tipLabel.text = text
@@ -204,6 +232,8 @@ class HeaderTextFieldView: NibView {
         UIView.animate(withDuration: 0.1) {
             self.tipLabel.alpha = 1.0
         }
+
+        self.layer.borderColor = color.cgColor
     }
 
     func showTip(text: String, color: UIColor = .systemRed) {
@@ -243,7 +273,8 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
 
         self.isActive = true
-        self.bottomLineView.backgroundColor = self.highlightColor
+        //self.bottomLineView.backgroundColor = self.highlightColor
+        self.layer.borderColor = self.highlightColor.cgColor
 
         self.slideUp()
     }
@@ -253,7 +284,8 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             self.slideDown()
         }
 
-        self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        //self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
+        self.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
 
         self.isActive = false
     }

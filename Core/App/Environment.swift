@@ -20,7 +20,8 @@ struct Environment {
     var userLatitude: Double?
     var userLongitude: Double?
     var operatorId: Int = 2474  //EM GOMA Operator Id
-
+    var remember: Bool = false
+    
     func getUserSettings() -> [ClientSettings]? {
         let settingsData = UserDefaults.standard.data(forKey: "user_settings")
         let settingsArray = try? JSONDecoder().decode([ClientSettings].self, from: settingsData!)
