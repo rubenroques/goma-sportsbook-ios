@@ -84,6 +84,8 @@ class LoginViewController: UIViewController {
         forgotButton.setTitleColor(.white, for: .normal)
 
         loginButton.setTitleColor(.white, for: .normal)
+        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
+        //loginButton.backgroundColor = UIColor.Core.backgroundDarkModal
         loginButton.backgroundColor = UIColor.Core.buttonMain
         loginButton.cornerRadius = BorderRadius.button
 
@@ -201,6 +203,7 @@ class LoginViewController: UIViewController {
 
         loginButton.setTitle(localized("string_login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+        //loginButton.isEnabled = false
 
         self.passwordHeaderTextFieldView.setSecureField(true)
 
@@ -236,7 +239,7 @@ class LoginViewController: UIViewController {
         // TEST
         let username = "andrelascas@hotmail.com"
         let input = self.usernameHeaderTextFieldView.text
-        print("CLICK")
+        print(input)
         if (username != input) {
             self.usernameHeaderTextFieldView.showErrorOnField(text: "Error")
         }
@@ -245,4 +248,16 @@ class LoginViewController: UIViewController {
     @IBAction private func didTapRecoverPassword() {
         self.navigationController?.pushViewController(RecoverPasswordViewController(), animated: true)
     }
+
+    
+}
+
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(textField: UITextField) {
+        if ((self.usernameHeaderTextFieldView.text.isEmpty != nil) && (self.passwordHeaderTextFieldView.text.isEmpty != nil)){
+            self.loginButton.isEnabled = true
+            }else{
+                self.loginButton.isEnabled = false
+            }
+        }
 }

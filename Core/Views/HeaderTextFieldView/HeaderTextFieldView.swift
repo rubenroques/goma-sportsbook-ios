@@ -7,7 +7,7 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
     @IBOutlet private weak var headerLabel: UILabel!
-    @IBOutlet private weak var textField: UITextField!
+    @IBOutlet weak var textField: UITextField!
 
     @IBOutlet private weak var bottomLineView: UIView!
     @IBOutlet private weak var tipLabel: UILabel!
