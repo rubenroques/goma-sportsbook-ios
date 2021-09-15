@@ -334,6 +334,18 @@
 		A9B841C326EB5D5900269B05 /* Odd.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841C126EB5D5900269B05 /* Odd.swift */; };
 		A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F8A26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift */; };
 		A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F8A26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift */; };
+		A9C82F9026F1FF3300059DCD /* SmallRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F8E26F1FF3300059DCD /* SmallRegisterViewController.swift */; };
+		A9C82F9126F1FF3300059DCD /* SmallRegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F8E26F1FF3300059DCD /* SmallRegisterViewController.swift */; };
+		A9C82F9226F1FF3300059DCD /* SmallRegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82F8F26F1FF3300059DCD /* SmallRegisterViewController.xib */; };
+		A9C82F9326F1FF3300059DCD /* SmallRegisterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82F8F26F1FF3300059DCD /* SmallRegisterViewController.xib */; };
+		A9C82F9C26F211E600059DCD /* SmallRegisterStep2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F9A26F211E600059DCD /* SmallRegisterStep2ViewController.swift */; };
+		A9C82F9D26F211E600059DCD /* SmallRegisterStep2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F9A26F211E600059DCD /* SmallRegisterStep2ViewController.swift */; };
+		A9C82F9E26F211E600059DCD /* SmallRegisterStep2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82F9B26F211E600059DCD /* SmallRegisterStep2ViewController.xib */; };
+		A9C82F9F26F211E600059DCD /* SmallRegisterStep2ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82F9B26F211E600059DCD /* SmallRegisterStep2ViewController.xib */; };
+		A9C82FA226F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FA026F25B4300059DCD /* SmallRegisterStep3ViewController.swift */; };
+		A9C82FA326F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FA026F25B4300059DCD /* SmallRegisterStep3ViewController.swift */; };
+		A9C82FA426F25B4300059DCD /* SmallRegisterStep3ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FA126F25B4300059DCD /* SmallRegisterStep3ViewController.xib */; };
+		A9C82FA526F25B4300059DCD /* SmallRegisterStep3ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FA126F25B4300059DCD /* SmallRegisterStep3ViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -521,6 +533,12 @@
 		A9B841BE26EA5A1000269B05 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		A9B841C126EB5D5900269B05 /* Odd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Odd.swift; sourceTree = "<group>"; };
 		A9C82F8A26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITapGestureRecognizer+Extensions.swift"; sourceTree = "<group>"; };
+		A9C82F8E26F1FF3300059DCD /* SmallRegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallRegisterViewController.swift; sourceTree = "<group>"; };
+		A9C82F8F26F1FF3300059DCD /* SmallRegisterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SmallRegisterViewController.xib; sourceTree = "<group>"; };
+		A9C82F9A26F211E600059DCD /* SmallRegisterStep2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallRegisterStep2ViewController.swift; sourceTree = "<group>"; };
+		A9C82F9B26F211E600059DCD /* SmallRegisterStep2ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SmallRegisterStep2ViewController.xib; sourceTree = "<group>"; };
+		A9C82FA026F25B4300059DCD /* SmallRegisterStep3ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallRegisterStep3ViewController.swift; sourceTree = "<group>"; };
+		A9C82FA126F25B4300059DCD /* SmallRegisterStep3ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SmallRegisterStep3ViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1094,6 +1112,7 @@
 		4589F3EE26BF017A005DF543 /* Register */ = {
 			isa = PBXGroup;
 			children = (
+				A9C82F8D26F1FF1900059DCD /* SmallRegister */,
 				4589F3F026BF017A005DF543 /* RegisterViewController.swift */,
 				4589F3EF26BF017A005DF543 /* RegisterViewController.xib */,
 			);
@@ -1289,6 +1308,19 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		A9C82F8D26F1FF1900059DCD /* SmallRegister */ = {
+			isa = PBXGroup;
+			children = (
+				A9C82F8E26F1FF3300059DCD /* SmallRegisterViewController.swift */,
+				A9C82F8F26F1FF3300059DCD /* SmallRegisterViewController.xib */,
+				A9C82F9A26F211E600059DCD /* SmallRegisterStep2ViewController.swift */,
+				A9C82F9B26F211E600059DCD /* SmallRegisterStep2ViewController.xib */,
+				A9C82FA026F25B4300059DCD /* SmallRegisterStep3ViewController.swift */,
+				A9C82FA126F25B4300059DCD /* SmallRegisterStep3ViewController.xib */,
+			);
+			path = SmallRegister;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1418,6 +1450,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9C82F9E26F211E600059DCD /* SmallRegisterStep2ViewController.xib in Resources */,
 				455A0D2026BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */,
@@ -1429,12 +1462,14 @@
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
+				A9C82FA426F25B4300059DCD /* SmallRegisterStep3ViewController.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
+				A9C82F9226F1FF3300059DCD /* SmallRegisterViewController.xib in Resources */,
 				A9B840A726DE831400269B05 /* PermissionAccessViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CA726BD973900EC572D /* Showcase-Assets.xcassets in Resources */,
@@ -1458,6 +1493,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9C82F9F26F211E600059DCD /* SmallRegisterStep2ViewController.xib in Resources */,
 				455A0D2126BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41326BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
@@ -1469,12 +1505,14 @@
 				A9B8409B26DE6AC200269B05 /* RefusedAccessViewController.xib in Resources */,
 				4589F3FA26BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
+				A9C82FA526F25B4300059DCD /* SmallRegisterStep3ViewController.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
+				A9C82F9326F1FF3300059DCD /* SmallRegisterViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* PermissionAccessViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CAD26BD981900EC572D /* SharedAssets.xcassets in Resources */,
@@ -1536,6 +1574,7 @@
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
+				A9C82FA226F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */,
 				452036B226EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
 				4520369026EFA4DA000BCFA6 /* TSParams.swift in Sources */,
 				4589F41626BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
@@ -1596,6 +1635,7 @@
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
 				4520369626EFA4DA000BCFA6 /* SSWampMessage.swift in Sources */,
 				452036BC26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift in Sources */,
+				A9C82F9026F1FF3300059DCD /* SmallRegisterViewController.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
@@ -1656,6 +1696,7 @@
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45A2897A26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				452036C226EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */,
+				A9C82F9C26F211E600059DCD /* SmallRegisterStep2ViewController.swift in Sources */,
 				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896A26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				A9B841B826E91BBC00269B05 /* BettingOffer.swift in Sources */,
@@ -1680,6 +1721,7 @@
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
+				A9C82FA326F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */,
 				452036B326EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
 				4520369126EFA4DA000BCFA6 /* TSParams.swift in Sources */,
 				4589F41726BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
@@ -1740,6 +1782,7 @@
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
 				4520369726EFA4DA000BCFA6 /* SSWampMessage.swift in Sources */,
 				452036BD26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift in Sources */,
+				A9C82F9126F1FF3300059DCD /* SmallRegisterViewController.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
@@ -1800,6 +1843,7 @@
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				452036C326EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */,
+				A9C82F9D26F211E600059DCD /* SmallRegisterStep2ViewController.swift in Sources */,
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896B26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				A9B841B926E91BBC00269B05 /* BettingOffer.swift in Sources */,
