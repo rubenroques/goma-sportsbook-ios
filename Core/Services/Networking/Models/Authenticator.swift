@@ -18,12 +18,14 @@ class Authenticator {
     private let session: NetworkSession
     private var currentToken: AuthToken?
     private let queue = DispatchQueue(label: "Autenticator.\(UUID().uuidString)")
+    private let endpointURL: URL
 
     // This publisher is shared amongst all calls that request a token refresh
     private var refreshPublisher: AnyPublisher<AuthToken, Error>?
 
-    init(session: NetworkSession = URLSession.shared) {
+    init(session: NetworkSession = URLSession.shared, authEndpointURL: URL) {
         self.session = session
+        self.endpointURL = authEndpointURL
     }
 
     func validToken(deviceId: String, forceRefresh: Bool = false) -> AnyPublisher<AuthToken, Error> {
@@ -46,10 +48,10 @@ class Authenticator {
                 return Just(token).setFailureType(to: Error.self).eraseToAnyPublisher()
             }
 
-            // We need a new token
-            let endpointURL = URL(string: "http://34.141.102.89/api/v1/auth")!
+            guard let weakSelf = self else { return Fail(error: NetworkErrorCode.invalidRequest).eraseToAnyPublisher() }
 
-            var request = URLRequest(url: endpointURL)
+            // We need a new token
+            var request = URLRequest(url: weakSelf.endpointURL)
             request.httpMethod = "POST"
             request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
             let bodyJSON = [

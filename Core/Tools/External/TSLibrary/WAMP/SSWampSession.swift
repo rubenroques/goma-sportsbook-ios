@@ -197,6 +197,7 @@ open class SSWampSession: SSWampTransportDelegate {
             self.handleMessage(message)
         }
     }
+    
     // swiftlint:disable cyclomatic_complexity
     fileprivate func handleMessage(_ message: SSWampMessage) {
         switch message {

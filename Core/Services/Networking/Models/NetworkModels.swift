@@ -33,18 +33,3 @@ struct ExampleModel: Codable {
     }
 
 }
-
-struct ClientSettings: Codable {
-    
-    let id: Int
-    let category: String
-    let name: String
-    let type: Int
-
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case category = "category"
-        case name = "name"
-        case type = "type"
-    }
-}

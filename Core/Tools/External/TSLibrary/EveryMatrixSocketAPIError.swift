@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum APIError: Error {
+enum EveryMatrixSocketAPIError: Error {
     case decodingError
     case httpError(Int)
     case unknown

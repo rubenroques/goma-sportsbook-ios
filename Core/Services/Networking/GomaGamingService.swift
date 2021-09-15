@@ -11,6 +11,8 @@ enum GomaGamingService {
     case test
     case geolocation(latitude: String, longitude: String)
     case settings
+    case simpleRegister(username: String, email: String, phone: String, birthDate: String, userProviderId: String)
+
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
 }
 
@@ -31,6 +33,8 @@ extension GomaGamingService: Endpoint {
             return "/api/\(apiVersion)/geolocation"
         case .settings:
             return "/api/\(apiVersion)/modules"
+        case .simpleRegister:
+            return "/api/\(apiVersion)/register"
 //        case .xpto, .foo:
 //            return "/api/v1/abcd"
 //        default:
@@ -47,6 +51,9 @@ extension GomaGamingService: Endpoint {
                     URLQueryItem(name: "lng", value: longitude)]
         case .settings:
             return nil
+        case .simpleRegister:
+            return nil
+            
 //        case .getPredictionSubmit(let userId, let userName, let eventId, let prediction, let message):
 //            return [URLQueryItem(name: "userId", value: userId),
 //                    URLQueryItem(name: "userName", value: userName),
@@ -58,18 +65,16 @@ extension GomaGamingService: Endpoint {
 
     var headers: HTTP.Headers? {
 
-//        var defaultHeaders = [
-//            "Accept-Encoding": "gzip, deflate",
-//            "Content-Type": "application/json; charset=UTF-8"
-//        ]
-
-        let defaultHeaders: HTTP.Headers = [:]
+        let defaultHeaders = [
+            "Accept-Encoding": "gzip, deflate",
+            "Content-Type": "application/json; charset=UTF-8"
+        ]
 
         switch self {
         case .test: ()
         case .geolocation: ()
         case .settings: ()
-            // TODO: We can add extra header according to the endpoint we are calling
+        default: ()
         }
 
         return defaultHeaders
@@ -91,6 +96,8 @@ extension GomaGamingService: Endpoint {
             return .get
         case .settings:
             return .get
+        case .simpleRegister:
+            return .post
 //        case .xpto, .foo, .bar:
 //            return .post
 //        default:
@@ -99,7 +106,24 @@ extension GomaGamingService: Endpoint {
     }
 
     var body: Data? {
-        return nil
+
+        switch self {
+        case .simpleRegister(let username, let email, let phone, let birthDate, let userProviderId):
+            let body = """
+                       {
+                        \"type\": \"small_register\",
+                        \"email\": \"\(email)\",
+                        \"username\": \"\(username)\",
+                        \"phone_number\": \"\(phone)\",
+                        \"birthdate\": \"\(birthDate)\",
+                        \"user_provider_id\": \"\(userProviderId)\",
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        default:
+            return nil
+        }
     }
 
 }

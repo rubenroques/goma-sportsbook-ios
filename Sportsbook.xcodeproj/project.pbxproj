@@ -24,8 +24,8 @@
 		4515637F26BED58900690896 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 4515637E26BED58900690896 /* Nuke */; };
 		4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515638026BEDA6200690896 /* FeatureFlag.swift */; };
 		4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515638026BEDA6200690896 /* FeatureFlag.swift */; };
-		4520368E26EFA4DA000BCFA6 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365C26EFA4DA000BCFA6 /* APIError.swift */; };
-		4520368F26EFA4DA000BCFA6 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365C26EFA4DA000BCFA6 /* APIError.swift */; };
+		4520368E26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */; };
+		4520368F26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */; };
 		4520369026EFA4DA000BCFA6 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365D26EFA4DA000BCFA6 /* TSParams.swift */; };
 		4520369126EFA4DA000BCFA6 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365D26EFA4DA000BCFA6 /* TSParams.swift */; };
 		4520369226EFA4DA000BCFA6 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365E26EFA4DA000BCFA6 /* Notification.swift */; };
@@ -102,6 +102,10 @@
 		454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
 		454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
 		454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
+		4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
+		4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
+		455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455643A026F2634E00EE78FA /* GomaClientSettings.swift */; };
+		455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455643A026F2634E00EE78FA /* GomaClientSettings.swift */; };
 		455A0C5426BD902C00EC572D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C5326BD902C00EC572D /* AppDelegate.swift */; };
 		455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 455A0C5E26BD902F00EC572D /* LaunchScreen.storyboard */; };
 		455A0C6B26BD902F00EC572D /* SportsbookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0C6A26BD902F00EC572D /* SportsbookTests.swift */; };
@@ -193,6 +197,8 @@
 		455A0D3326BDF61B00EC572D /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 455A0D3226BDF61B00EC572D /* FirebaseAuth */; };
 		455A0D3526BDF61B00EC572D /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 455A0D3426BDF61B00EC572D /* FirebaseCrashlytics */; };
 		455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 455A0D3626BDF73F00EC572D /* GoogleService-Info.plist */; };
+		455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455F765026F0EFCE00B9B85D /* LoginAccount.swift */; };
+		455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455F765026F0EFCE00B9B85D /* LoginAccount.swift */; };
 		456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342026C17DF4009D7D27 /* Optional+Extensions.swift */; };
@@ -272,6 +278,28 @@
 		45A2898426C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
 		45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkError.swift */; };
 		45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkError.swift */; };
+		45DDBA9426F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8126F2146000A73E45 /* Gilroy-ExtraBold.ttf */; };
+		45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8126F2146000A73E45 /* Gilroy-ExtraBold.ttf */; };
+		45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */; };
+		45DDBA9726F2146100A73E45 /* Gilroy-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */; };
+		45DDBA9826F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
+		45DDBA9926F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
+		45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
+		45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
+		45DDBAA226F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */; };
+		45DDBAA326F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */; };
+		45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
+		45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
+		45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8B26F2146000A73E45 /* Gilroy-Bold.ttf */; };
+		45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8B26F2146000A73E45 /* Gilroy-Bold.ttf */; };
+		45DDBAAE26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
+		45DDBAAF26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */; };
+		45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */; };
+		45DDBAB126F2146100A73E45 /* Gilroy-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */; };
+		45DDBAB726F23F1A00A73E45 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB626F23F1A00A73E45 /* UserSession.swift */; };
+		45DDBAB826F23F1A00A73E45 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB626F23F1A00A73E45 /* UserSession.swift */; };
+		45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB926F2406100A73E45 /* UserSessionStore.swift */; };
+		45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB926F2406100A73E45 /* UserSessionStore.swift */; };
 		A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54826C53A5F00ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */; };
@@ -304,8 +332,8 @@
 		A9B840A926DE86BE00269B05 /* PermissionAccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840A426DE831400269B05 /* PermissionAccessViewController.swift */; };
 		A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840B026DF99B500269B05 /* EveryMatrixAPIClient.swift */; };
 		A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840B026DF99B500269B05 /* EveryMatrixAPIClient.swift */; };
-		A9B840C426E1275900269B05 /* RootData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840C326E1275900269B05 /* RootData.swift */; };
-		A9B840C526E1275900269B05 /* RootData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840C326E1275900269B05 /* RootData.swift */; };
+		A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840C326E1275900269B05 /* EveryMatrixSocketResponse.swift */; };
+		A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840C326E1275900269B05 /* EveryMatrixSocketResponse.swift */; };
 		A9B840C726E1285200269B05 /* Discipline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840C626E1285200269B05 /* Discipline.swift */; };
 		A9B840C826E1285200269B05 /* Discipline.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B840C626E1285200269B05 /* Discipline.swift */; };
 		A9B8419126E2359800269B05 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = A9B8419026E2359800269B05 /* DictionaryCoding */; };
@@ -360,7 +388,7 @@
 		4515637326BE982000690896 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		4515638026BEDA6200690896 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
 		4520365A26EF9B7F000BCFA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
-		4520365C26EFA4DA000BCFA6 /* APIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EveryMatrixSocketAPIError.swift; sourceTree = "<group>"; };
 		4520365D26EFA4DA000BCFA6 /* TSParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSParams.swift; sourceTree = "<group>"; };
 		4520365E26EFA4DA000BCFA6 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		4520365F26EFA4DA000BCFA6 /* TSRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSRouter.swift; sourceTree = "<group>"; };
@@ -399,6 +427,8 @@
 		4520368D26EFA4DA000BCFA6 /* TSManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSManager.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
 		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
+		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
+		455643A026F2634E00EE78FA /* GomaClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaClientSettings.swift; sourceTree = "<group>"; };
 		455A0C5026BD902C00EC572D /* ShowcaseProd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShowcaseProd.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		455A0C5326BD902C00EC572D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		455A0C6126BD902F00EC572D /* ShowcaseProd-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ShowcaseProd-Info.plist"; sourceTree = "<group>"; };
@@ -452,6 +482,7 @@
 		455A0D2326BDE88D00EC572D /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		455A0D2626BDF51A00EC572D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		455A0D3626BDF73F00EC572D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		455F765026F0EFCE00B9B85D /* LoginAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAccount.swift; sourceTree = "<group>"; };
 		456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
 		456B342026C17DF4009D7D27 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		456B342326C17E83009D7D27 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -491,6 +522,17 @@
 		45A2897F26C3E74B00BCD5DA /* AuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
 		45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingService.swift; sourceTree = "<group>"; };
 		45A2898526C418F700BCD5DA /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		45DDBA8126F2146000A73E45 /* Gilroy-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-ExtraBold.ttf"; sourceTree = "<group>"; };
+		45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Light.ttf"; sourceTree = "<group>"; };
+		45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Heavy.ttf"; sourceTree = "<group>"; };
+		45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Regular.ttf"; sourceTree = "<group>"; };
+		45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Semibold.ttf"; sourceTree = "<group>"; };
+		45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Medium.ttf"; sourceTree = "<group>"; };
+		45DDBA8B26F2146000A73E45 /* Gilroy-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Bold.ttf"; sourceTree = "<group>"; };
+		45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Thin.ttf"; sourceTree = "<group>"; };
+		45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Black.ttf"; sourceTree = "<group>"; };
+		45DDBAB626F23F1A00A73E45 /* UserSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserSession.swift; path = Core/Services/UserSession.swift; sourceTree = SOURCE_ROOT; };
+		45DDBAB926F2406100A73E45 /* UserSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionStore.swift; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -506,7 +548,7 @@
 		A9B840A426DE831400269B05 /* PermissionAccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAccessViewController.swift; sourceTree = "<group>"; };
 		A9B840A526DE831400269B05 /* PermissionAccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PermissionAccessViewController.xib; sourceTree = "<group>"; };
 		A9B840B026DF99B500269B05 /* EveryMatrixAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryMatrixAPIClient.swift; sourceTree = "<group>"; };
-		A9B840C326E1275900269B05 /* RootData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootData.swift; sourceTree = "<group>"; };
+		A9B840C326E1275900269B05 /* EveryMatrixSocketResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EveryMatrixSocketResponse.swift; sourceTree = "<group>"; };
 		A9B840C626E1285200269B05 /* Discipline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Discipline.swift; sourceTree = "<group>"; };
 		A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSessionIDModel.swift; sourceTree = "<group>"; };
 		A9B841A526E6557000269B05 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
@@ -573,12 +615,12 @@
 		4520365B26EFA4DA000BCFA6 /* TSLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				4520365C26EFA4DA000BCFA6 /* APIError.swift */,
-				4520365D26EFA4DA000BCFA6 /* TSParams.swift */,
-				4520365E26EFA4DA000BCFA6 /* Notification.swift */,
-				4520365F26EFA4DA000BCFA6 /* TSRouter.swift */,
-				4520366026EFA4DA000BCFA6 /* WAMP */,
 				4520368D26EFA4DA000BCFA6 /* TSManager.swift */,
+				4520365F26EFA4DA000BCFA6 /* TSRouter.swift */,
+				4520365D26EFA4DA000BCFA6 /* TSParams.swift */,
+				4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */,
+				4520365E26EFA4DA000BCFA6 /* Notification.swift */,
+				4520366026EFA4DA000BCFA6 /* WAMP */,
 			);
 			name = TSLibrary;
 			path = Core/Tools/External/TSLibrary;
@@ -717,6 +759,33 @@
 				4520368826EFA4DA000BCFA6 /* JSONSSWampSerializer.swift */,
 			);
 			path = Serialization;
+			sourceTree = "<group>";
+		};
+		452036D826F09B67000BCFA6 /* Inconsolata */ = {
+			isa = PBXGroup;
+			children = (
+				456B343226C2819D009D7D27 /* Inconsolata-Bold.ttf */,
+				456B343326C2819E009D7D27 /* Inconsolata-Light.ttf */,
+				456B343426C2819E009D7D27 /* Inconsolata-Medium.ttf */,
+				456B343526C2819E009D7D27 /* Inconsolata-Regular.ttf */,
+			);
+			path = Inconsolata;
+			sourceTree = "<group>";
+		};
+		452036D926F09D84000BCFA6 /* Gilroy */ = {
+			isa = PBXGroup;
+			children = (
+				45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */,
+				45DDBA8B26F2146000A73E45 /* Gilroy-Bold.ttf */,
+				45DDBA8126F2146000A73E45 /* Gilroy-ExtraBold.ttf */,
+				45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */,
+				45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */,
+				45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */,
+				45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */,
+				45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */,
+				45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */,
+			);
+			path = Gilroy;
 			sourceTree = "<group>";
 		};
 		454A7A6126DA2FD600E6E74E /* Misc */ = {
@@ -916,6 +985,7 @@
 				4515635E26BE032E00690896 /* AnalyticsClient.swift */,
 				456B342626C18257009D7D27 /* Logger.swift */,
 				A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */,
+				45DDBAB926F2406100A73E45 /* UserSessionStore.swift */,
 				456B341226C13AE1009D7D27 /* Networking */,
 			);
 			path = Services;
@@ -940,15 +1010,20 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		455F764F26F0EFAD00B9B85D /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				455F765026F0EFCE00B9B85D /* LoginAccount.swift */,
+			);
+			path = Account;
+			sourceTree = "<group>";
+		};
 		456B341226C13AE1009D7D27 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				A9B840AF26DF98C200269B05 /* EveryMatrix */,
 				45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */,
 				454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */,
-				45A2896F26C32E1C00BCD5DA /* NetworkManager.swift */,
-				45A2896926C32D7500BCD5DA /* NetworkSession.swift */,
-				45A2897226C32E8600BCD5DA /* Authenticator.swift */,
+				A9B840AF26DF98C200269B05 /* EveryMatrix */,
 				45A2897526C338F100BCD5DA /* Models */,
 			);
 			path = Networking;
@@ -957,6 +1032,9 @@
 		456B341326C13AEE009D7D27 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */,
+				455643A026F2634E00EE78FA /* GomaClientSettings.swift */,
+				45DDBAB626F23F1A00A73E45 /* UserSession.swift */,
 				A9B840C126E1270E00269B05 /* EveryMatrixAPI */,
 			);
 			path = Models;
@@ -1045,10 +1123,8 @@
 		456B343126C2817F009D7D27 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				456B343226C2819D009D7D27 /* Inconsolata-Bold.ttf */,
-				456B343326C2819E009D7D27 /* Inconsolata-Light.ttf */,
-				456B343426C2819E009D7D27 /* Inconsolata-Medium.ttf */,
-				456B343526C2819E009D7D27 /* Inconsolata-Regular.ttf */,
+				452036D926F09D84000BCFA6 /* Gilroy */,
+				452036D826F09B67000BCFA6 /* Inconsolata */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -1137,6 +1213,9 @@
 		45A2897526C338F100BCD5DA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				45A2896F26C32E1C00BCD5DA /* NetworkManager.swift */,
+				45A2896926C32D7500BCD5DA /* NetworkSession.swift */,
+				45A2897226C32E8600BCD5DA /* Authenticator.swift */,
 				45A2896626C32D3F00BCD5DA /* NetworkModels.swift */,
 				45A2897926C3E57E00BCD5DA /* Endpoint.swift */,
 				45A2897F26C3E74B00BCD5DA /* AuthToken.swift */,
@@ -1221,13 +1300,14 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				455F764F26F0EFAD00B9B85D /* Account */,
 				A9B841BD26EA5A0100269B05 /* Events */,
 				A9B841B026E9053600269B05 /* Odds */,
 				A9B841AC26E6749900269B05 /* Matches */,
 				A9B841A826E6595E00269B05 /* Tournaments */,
 				A9B841A426E6556200269B05 /* Locations */,
 				A9B840C226E1271900269B05 /* Disciplines */,
-				A9B840C326E1275900269B05 /* RootData.swift */,
+				A9B840C326E1275900269B05 /* EveryMatrixSocketResponse.swift */,
 				A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */,
 			);
 			path = EveryMatrixAPI;
@@ -1423,9 +1503,15 @@
 				4589F3FF26BF017A005DF543 /* LoginViewController.xib in Resources */,
 				455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
+				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
+				45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
+				45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
+				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
+				45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
+				45DDBAA226F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */,
 				455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
@@ -1435,8 +1521,11 @@
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CA726BD973900EC572D /* Showcase-Assets.xcassets in Resources */,
 				456B343826C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
+				45DDBAAE26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */,
 				4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
+				45DDBA9826F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
 				455A0CAC26BD981900EC572D /* SharedAssets.xcassets in Resources */,
+				45DDBA9426F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
 				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
@@ -1463,9 +1552,15 @@
 				4589F40026BF017A005DF543 /* LoginViewController.xib in Resources */,
 				455A0C8A26BD904300EC572D /* LaunchScreen.storyboard in Resources */,
 				A9B8409B26DE6AC200269B05 /* RefusedAccessViewController.xib in Resources */,
+				45DDBAB126F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
+				45DDBA9726F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
 				4589F3FA26BF017A005DF543 /* WelcomeViewController.xib in Resources */,
+				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
+				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
+				45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
+				45DDBAA326F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */,
 				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
@@ -1475,8 +1570,11 @@
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CAD26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				456B343926C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
+				45DDBAAF26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */,
 				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
+				45DDBA9926F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
+				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
@@ -1531,6 +1629,7 @@
 				452036D426EFA4DB000BCFA6 /* SSWampExtensions.swift in Sources */,
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
+				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				452036B226EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
 				4520369026EFA4DA000BCFA6 /* TSParams.swift in Sources */,
@@ -1538,6 +1637,7 @@
 				455A0D0A26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898026C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
+				45DDBAB726F23F1A00A73E45 /* UserSession.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				A9B841AE26E674AA00269B05 /* Match.swift in Sources */,
@@ -1575,6 +1675,7 @@
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
+				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A626DE831400269B05 /* PermissionAccessViewController.swift in Sources */,
 				A9B841B226E9054700269B05 /* Market.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
@@ -1584,6 +1685,7 @@
 				452036C026EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				452036AA26EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift in Sources */,
+				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F41F26BF03FE005DF543 /* Fonts.swift in Sources */,
 				452036C426EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift in Sources */,
@@ -1607,11 +1709,11 @@
 				A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */,
 				4589F42226BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1926BDABA100EC572D /* Internationalization.swift in Sources */,
-				4520368E26EFA4DA000BCFA6 /* APIError.swift in Sources */,
+				4520368E26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */,
 				455A0CF226BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				A9B8408626D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */,
 				452036A226EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift in Sources */,
-				A9B840C426E1275900269B05 /* RootData.swift in Sources */,
+				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				452036CA26EFA4DA000BCFA6 /* SSWampSerializer.swift in Sources */,
 				452036B026EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift in Sources */,
 				452036C626EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift in Sources */,
@@ -1649,6 +1751,7 @@
 				4520369A26EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
+				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897A26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				452036C226EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */,
 				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
@@ -1674,6 +1777,7 @@
 				452036D526EFA4DB000BCFA6 /* SSWampExtensions.swift in Sources */,
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
+				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				452036B326EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
 				4520369126EFA4DA000BCFA6 /* TSParams.swift in Sources */,
@@ -1681,6 +1785,7 @@
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
+				45DDBAB826F23F1A00A73E45 /* UserSession.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
@@ -1718,6 +1823,7 @@
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
+				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A926DE86BE00269B05 /* PermissionAccessViewController.swift in Sources */,
 				A9B841B326E9054700269B05 /* Market.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
@@ -1727,6 +1833,7 @@
 				452036C126EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				452036AB26EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift in Sources */,
+				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F42026BF03FE005DF543 /* Fonts.swift in Sources */,
 				452036C526EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift in Sources */,
@@ -1750,11 +1857,11 @@
 				A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */,
 				4589F42326BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1A26BDABA100EC572D /* Internationalization.swift in Sources */,
-				4520368F26EFA4DA000BCFA6 /* APIError.swift in Sources */,
+				4520368F26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */,
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */,
 				452036A326EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift in Sources */,
-				A9B840C526E1275900269B05 /* RootData.swift in Sources */,
+				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				452036CB26EFA4DA000BCFA6 /* SSWampSerializer.swift in Sources */,
 				452036B126EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift in Sources */,
 				452036C726EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift in Sources */,
@@ -1792,6 +1899,7 @@
 				4520369B26EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
+				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				452036C326EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */,
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,

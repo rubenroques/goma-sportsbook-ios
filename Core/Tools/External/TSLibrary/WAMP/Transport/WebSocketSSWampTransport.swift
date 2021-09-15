@@ -22,10 +22,12 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     fileprivate var disconnectionReason: String?
     
     public init(wsEndpoint: URL, userAgent: String, origin: String){
+
         var request = URLRequest(url: wsEndpoint)
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         request.addValue(origin, forHTTPHeaderField: "Origin")
         request.addValue("wamp.2.json", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+
         socket = WebSocket(request: request)
         socket?.callbackQueue = DispatchQueue(label: "com.tipico.games.SSWampQueue")
         mode = .text
@@ -66,6 +68,5 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
         delegate?.ssWampTransportReceivedData(data)
     }
-
 
 }

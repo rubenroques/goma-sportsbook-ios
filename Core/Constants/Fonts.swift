@@ -3,13 +3,15 @@ import UIKit
 struct AppFont {
 
     enum AppFontType: String {
+        case thin = "Thin"
         case light = "Light"
-        case regular = ""
+        case regular = "Regular"
         case medium = "Medium"
         case bold = "Bold"
+        case heavy = "Heavy"
 
         private var familyName: String {
-            "HelveticaNeue"
+            "Gilroy"
         }
 
         fileprivate var fullFontName: String {
@@ -25,7 +27,7 @@ struct AppFont {
 
     }
 
-    static func with(type: AppFontType, size: CGFloat = 17.0) -> UIFont {
+    static func with(type: AppFontType = .regular, size: CGFloat = 17.0) -> UIFont {
         return type.instance(size)
     }
 

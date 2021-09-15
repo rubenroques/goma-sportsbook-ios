@@ -14,8 +14,11 @@ struct NetworkManager {
     private let authenticator: Authenticator
 
     init(session: NetworkSession = URLSession.shared) {
+
+        let authEndpointURL = URL(string: TargetVariables.gomaGamingAuthEndpoint)!
+
         self.session = session
-        self.authenticator = Authenticator(session: session)
+        self.authenticator = Authenticator(session: session, authEndpointURL: authEndpointURL)
     }
 
     func requestEndpoint<T: Decodable>(deviceId: String, endpoint: Endpoint) -> AnyPublisher<T?, NetworkError> {

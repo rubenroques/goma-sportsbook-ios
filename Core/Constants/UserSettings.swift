@@ -9,9 +9,11 @@ import Foundation
 
 enum UserDefaultsKey: String {
     case theme = "appThemeKey"
+    case userSession = "userSession"
 }
 
 extension UserDefaults {
+
     var theme: Theme {
         get {
             register(defaults: [UserDefaultsKey.theme.rawValue: Theme.device.rawValue])
@@ -19,6 +21,18 @@ extension UserDefaults {
         }
         set {
             set(newValue.rawValue, forKey: UserDefaultsKey.theme.rawValue)
+        }
+    }
+
+    var userSession: UserSession? {
+        get {
+            if let session = self.value(forKey: UserDefaultsKey.userSession.rawValue) as? UserSession {
+                return session
+            }
+            return nil
+        }
+        set {
+            set(newValue, forKey: UserDefaultsKey.userSession.rawValue)
         }
     }
 }

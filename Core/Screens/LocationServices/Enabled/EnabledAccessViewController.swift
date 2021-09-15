@@ -51,6 +51,8 @@ class EnabledAccessViewController: UIViewController {
         dismissButton.setTitleColor(UIColor.white, for: .normal)
         dismissButton.layer.borderColor = UIColor.Core.buttonMain.cgColor
         dismissButton.layer.backgroundColor = UIColor.Core.buttonMain.cgColor
+
+        
     }
 
     func commonInit() {

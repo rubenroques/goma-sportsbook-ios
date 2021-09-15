@@ -8,6 +8,6 @@
 import Foundation
 
 extension Notification.Name {
-    static let tsConnected = Notification.Name("TSConnected")
-    static let tsDisconnected = Notification.Name("TSDisconnected")
+    static let wampSocketConnected = Notification.Name("TSConnected")
+    static let wampSocketDisconnected = Notification.Name("TSDisconnected")
 }

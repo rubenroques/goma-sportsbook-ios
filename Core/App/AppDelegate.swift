@@ -14,17 +14,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // TODO: Integrate fastlamne
 
     var window: UIWindow?
+    var router: Router!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
+        //AppFont.printFonts()
+        
         Logger.log("App Started")
-
+        
         // Store device id
         if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "device_id") {
             let deviceId = UIDevice.current.identifierForVendor?.uuidString
             print("Device ID: \(deviceId as Any)")
             UserDefaults.standard.set(deviceId!, forKey: "device_id")
         }
+
+        FirebaseConfiguration.shared.setLoggerLevel(.min)
 
         FirebaseApp.configure()
 
@@ -35,13 +40,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("FirebaseCore Auth UID \(uid) [isAnonymous:\(isAnonymous)]")
         }
 
+        
+
         self.window = UIWindow()
-
-        window?.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
-
-        self.window!.rootViewController = PermissionAccessViewController()
-
-        self.window!.makeKeyAndVisible()
+        self.router = Router(window: self.window!)
+        self.router.bootstrap()
 
         return true
     }

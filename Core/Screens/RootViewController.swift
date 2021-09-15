@@ -17,7 +17,7 @@ class RootViewController: UIViewController {
     var gomaGamingAPIClient: GomaGamingServiceClient
 
     var isMaintenance: Bool = Env.isMaintenance
-    let locationManager = GeoLocationManager()
+    
 
     var cancellables = Set<AnyCancellable>()
     var everyMatrixAPIClient: EveryMatrixAPIClient
@@ -44,29 +44,30 @@ class RootViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
 
         super.viewWillAppear(animated)
-        
-        let realtimeClient = RealtimeSocketClient()
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+        // ToDo: isto vai correr mal, a verificação deve ser asincrona, forçar um delay de 2 seg. alem de poder trazer problemas
+        // não nos garate que fique a funcionar be,.
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+//
+//            let isMaintenance = realtimeClient.verifyMaintenanceMode()
+//            let appUpdateType = realtimeClient.verifyAppUpdateType()
+//
+//            if isMaintenance {
+//                let maintenanceViewController = MaintenanceViewController()
+//                let navigationController = UINavigationController(rootViewController: maintenanceViewController)
+//                navigationController.modalPresentationStyle = .fullScreen
+//
+//                self.present(navigationController, animated: true, completion: nil)
+//            }
+//            else if appUpdateType != "" {
+//                let versionUpdateViewController = VersionUpdateViewController()
+//                let navigationController = UINavigationController(rootViewController: versionUpdateViewController)
+//                navigationController.modalPresentationStyle = .fullScreen
+//
+//                self.present(navigationController, animated: true, completion: nil)
+//            }
+//        }
 
-            let isMaintenance = realtimeClient.verifyMaintenanceMode()
-            let appUpdateType = realtimeClient.verifyAppUpdateType()
-
-            if isMaintenance {
-                let maintenanceViewController = MaintenanceViewController()
-                let navigationController = UINavigationController(rootViewController: maintenanceViewController)
-                navigationController.modalPresentationStyle = .fullScreen
-
-                self.present(navigationController, animated: true, completion: nil)
-            }
-            else if appUpdateType != "" {
-                let versionUpdateViewController = VersionUpdateViewController()
-                let navigationController = UINavigationController(rootViewController: versionUpdateViewController)
-                navigationController.modalPresentationStyle = .fullScreen
-
-                self.present(navigationController, animated: true, completion: nil)
-            }
-        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -76,28 +77,24 @@ class RootViewController: UIViewController {
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.Core.tint
-
-//        Example
-//        let label1 = UILabel()
-//        label1.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
-//        label1.textColor = UIColor.Core.headingMain
-
     }
 
     func getLocationDateFormat() {
 
-        if locationManager.isLocationServicesEnabled() {
+        if Env.locationManager.isLocationServicesEnabled() {
             print("GEO ACTIVATED")
         }
         else {
             print("GEO NOT ACTIVATED")
-            locationManager.requestGeoLocationUpdates()
+            Env.locationManager.requestGeoLocationUpdates()
         }
-        locationManager.startGeoLocationUpdates()
+
+        Env.locationManager.startGeoLocationUpdates()
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // FIXME:  .now() + 2 ? Não percebi este async after com 2 segundos
 
-            let location = self.locationManager.lastLocation
+            let location = Env.locationManager.lastLocation
+            
             Env.userLatitude = location.coordinate.latitude
             Env.userLongitude = location.coordinate.longitude
 
@@ -169,9 +166,9 @@ class RootViewController: UIViewController {
             },
             receiveValue: { data in
                 print("Received Content - data: \(data!).")
-                var settingsArray = [ClientSettings]()
+                var settingsArray = [GomaClientSettings]()
                 for value in data! {
-                    let setting = ClientSettings(id: value.id, category: value.category, name: value.name, type: value.type)
+                    let setting = GomaClientSettings(id: value.id, category: value.category, name: value.name, type: value.type)
                     settingsArray.append(setting)
                 }
                 let settingsData = try? JSONEncoder().encode(settingsArray)
@@ -186,20 +183,46 @@ class RootViewController: UIViewController {
     }
 
     @IBAction private func testEveryMatrixAPI() {
-        //let payload = ["lang":"en", "maxResults":"10"]
-        //let payloadToday = ["lang":"en", "userTimezoneOffsetInMinutes":"0", "maxResults":"10"]
-        //let payloadNext = ["lang":"en", "hoursTillLive":"2", "maxResults":"10", "disciplineId":"1"]
-        let payloadOdd = ["lang":"en",
-                          "matchId":"148056830725115904",
-                          "tournamentId":nil,
-                          "bettingOfferId":nil,
-                          "bettingOfferIds":[],
-                          "eventIds":[]] as [String : Any?]
+        // let payload = ["lang":"en", "maxResults":"10"]
+        // let payloadToday = ["lang":"en", "userTimezoneOffsetInMinutes":"0", "maxResults":"10"]
+        // let payloadNext = ["lang":"en", "hoursTillLive":"2", "maxResults":"10", "disciplineId":"1"]
+        let payloadOdd: [String: Any] = ["lang": "en",
+                          "matchId": "148056830725115904",
+                          "tournamentId": "",
+                          "bettingOfferId": "",
+                          "bettingOfferIds": [],
+                          "eventIds": []] //as [String : Any?]
+
         everyMatrixAPIClient.getOdds(payload: payloadOdd)
     }
 
     @IBAction func testSubscription() {
-        everyMatrixAPIClient.subscribeOdd(payload: nil)
+        // everyMatrixAPIClient.subscribeOdd(payload: nil)
+
+//        everyMatrixAPIClient.login(username: "test 11", password: "12345678")
+//            .map({ loggedUser in
+//                return everyMatrixAPIClient.getSessionInfo().map({ sessionInfo in
+//
+//                })
+//            })
+
+
+
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure:
+//                    print("Error retrieving data!")
+//
+//                case .finished:
+//                    print("Data retrieved!")
+//                }
+//                debugPrint("TSRequestCompleted")
+//            }, receiveValue: { value in
+//                debugPrint("TSRequest: \(String(describing: value.records))")
+//            })
+//            .store(in: &cancellables)
+
+
     }
 
 

@@ -18,6 +18,7 @@ enum BorderRadius {
 }
 
 enum EveryMatrixInfo {
-    static let url: String = "wss://api-phoenix-stage.everymatrix.com/v2"
+    static let version: String = "v2"
+    static let url: String = "wss://api-phoenix-stage.everymatrix.coeverymatrix.com"
     static let realm: String = "http://www.gomadevelopment.pt"
 }

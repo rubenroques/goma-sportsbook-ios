@@ -18,7 +18,11 @@ struct TargetVariables: SportsbookTarget {
     #endif
 
     static var gomaGamingHost: String {
-        return "http://34.141.102.89"
+        "http://34.141.102.89"
+    }
+
+    static var gomaGamingAuthEndpoint: String {
+        "http://34.141.102.89/api/auth/v1"
     }
 
     static var everyMatrixHost: String {

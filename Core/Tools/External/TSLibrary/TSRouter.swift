@@ -9,6 +9,9 @@
 import Foundation
 
 enum TSRouter {
+
+    case login(username: String, password: String)
+
     case registrationDismissed
     case getTransportSessionID
     case getClientIdentity
@@ -54,7 +57,10 @@ enum TSRouter {
 
     var procedure: String {
         switch self {
-        //EveryMatrix API
+        // EveryMatrix API
+        case .login:
+            return "/user#login"
+
         case .disciplines:
             return "/sports#disciplines"
         case .locations:
@@ -78,6 +84,8 @@ enum TSRouter {
         // EM Subscription
         case .oddsMatch(language: let language, matchId: let matchId):
             return "/sports/\(Env.operatorId)/\(language)/\(matchId)/match-odds"
+
+
         // Others
         case .registrationDismissed:
             return "/registrationDismissed"
@@ -118,10 +126,10 @@ enum TSRouter {
             return "/user/bonus#forfeit"
         case .getLimits:
             return "/user/limit#getLimits"
-        case .removeLimit(type: let tp):
-            return "/user/limit#remove\(tp)Limit"
-        case .setLimit(type: let tp, period: _, amount: _, currency: _):
-            return "/user/limit#set\(tp)Limit"
+        case .removeLimit(let type):
+            return "/user/limit#remove\(type)Limit"
+        case .setLimit(let type, _, _, _):
+            return "/user/limit#set\(type)Limit"
         case .realityCheckGetCfg:
             return "/user/realityCheck#getCfg"
         case .realityCheckGet:
@@ -145,8 +153,11 @@ enum TSRouter {
         return nil
     }
     
-    var kwargs: [String : Any]? {
+    var kwargs: [String: Any]? {
         switch self {
+        case .login(let username, let password):
+            return ["usernameOrEmail": username, "password": password]
+
         case .disciplines(payload: let payload):
             return payload
         case .locations(payload: let payload):

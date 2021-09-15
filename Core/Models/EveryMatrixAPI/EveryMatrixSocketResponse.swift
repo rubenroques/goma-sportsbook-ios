@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RootData<T: Decodable>: Decodable {
+struct EveryMatrixSocketResponse<T: Decodable>: Decodable {
 
     let version: String
     let format: String
