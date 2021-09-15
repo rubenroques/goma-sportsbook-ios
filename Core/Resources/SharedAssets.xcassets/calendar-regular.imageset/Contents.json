@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "SPORTSBOOK.png",
+      "filename" : "calendar-regular.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "SPORTSBOOK@2x.png",
+      "filename" : "calendar-regular@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "SPORTSBOOK@3x.png",
+      "filename" : "calendar-regular@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

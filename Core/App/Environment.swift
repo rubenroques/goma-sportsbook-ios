@@ -26,6 +26,8 @@ struct Environment {
     var userLongitude: Double?
     var operatorId: Int = 2474  // EM GOMA Operator Id
 
+    var remember: Bool = false
+    
     func getUserSettings() -> [GomaClientSettings]? {
         let settingsData = UserDefaults.standard.data(forKey: "user_settings")
         let settingsArray = try? JSONDecoder().decode([GomaClientSettings].self, from: settingsData!)

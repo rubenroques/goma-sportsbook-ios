@@ -17,6 +17,7 @@ extension UIColor {
         static let subtitleGray: UIColor = UIColor(red: 114/255, green: 118/255, blue: 141/255, alpha: 1.0)
         static let backgroundDarkFade: UIColor = UIColor(red: 29/255, green: 31/255, blue: 38/255, alpha: 0.95)
         static let backgroundDarkModal: UIColor = UIColor(red: 49/255, green: 53/255, blue: 67/255, alpha: 1.0)
+        static let headerTextFieldGray: UIColor = UIColor(red: 116/255, green: 126/255, blue: 143/255, alpha: 1.0)
 
         static let primaryButtonNormalColor = UIColor(named: "primaryButtonNormalColor")!
         static let primaryButtonPressedColor = UIColor(named: "primaryButtonPressedColor")!
