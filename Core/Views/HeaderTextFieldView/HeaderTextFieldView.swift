@@ -13,7 +13,7 @@ class HeaderTextFieldView: NibView {
 
     @IBOutlet private weak var showPassImageView: UIImageView!
     @IBOutlet private weak var showStateImageView: UIImageView!
-
+    @IBOutlet private weak var imageWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var centerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
     @IBOutlet private weak var showLabel: UILabel!
@@ -137,6 +137,10 @@ class HeaderTextFieldView: NibView {
     }
 
     func setup() {
+
+        if textField.text != "" {
+            self.slideUp()
+        }        
 
         containerView.backgroundColor = UIColor.App.backgroundDarkModal
         containerView.layer.cornerRadius = BorderRadius.headerInput
@@ -262,13 +266,19 @@ class HeaderTextFieldView: NibView {
         self.containerView.layer.borderColor = color.cgColor
     }
 
-    func setImageTextField(_ image: UIImage) {
+    func setImageTextField(_ image: UIImage, size: CGFloat = 30) {
         self.showStateImageView.image = image
         self.showStateImageView.isHidden = false
+        self.imageWidthConstraint.constant = size
     }
 
     func setTextFieldDefaultValue(_ value: String) {
         self.textField.text = value
+        self.slideUp()
+    }
+
+    func setTextFieldFont(_ font: UIFont) {
+        self.textField.font = font
     }
 
     func setKeyboardType(_ keyboard: UIKeyboardType) {
@@ -328,7 +338,7 @@ class HeaderTextFieldView: NibView {
     func dismissPickerView() {
        let toolBar = UIToolbar()
        toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: "string_done", style: .plain, target: self, action: #selector(pickerAction))
+        let button = UIBarButtonItem(title: localized("string_done"), style: .plain, target: self, action: #selector(pickerAction))
        //toolBar.setItems([button], animated: true)
         toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
        toolBar.isUserInteractionEnabled = true

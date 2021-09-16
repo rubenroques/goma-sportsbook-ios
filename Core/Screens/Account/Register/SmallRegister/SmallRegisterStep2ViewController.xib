@@ -61,13 +61,13 @@
                                     </constraints>
                                 </view>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RIb-7y-hMw">
-                                    <rect key="frame" x="16" y="58" width="382" height="20.5"/>
+                                    <rect key="frame" x="16" y="58" width="382" height="57"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uSA-WG-kVe">
-                                    <rect key="frame" x="16" y="98.5" width="382" height="300.5"/>
+                                    <rect key="frame" x="16" y="135" width="382" height="264"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ddC-qC-WR5" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="8" width="382" height="80"/>
@@ -87,15 +87,15 @@
                                             <rect key="frame" x="0.0" y="184" width="382" height="80"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fve-LG-60v" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                                    <rect key="frame" x="0.0" y="0.0" width="100" height="80"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="110" height="80"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="100" id="PNj-rZ-jVf"/>
+                                                        <constraint firstAttribute="width" constant="110" id="PNj-rZ-jVf"/>
                                                         <constraint firstAttribute="height" constant="80" id="ecb-Ot-DdZ"/>
                                                     </constraints>
                                                 </view>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0vx-bq-BHE" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                                    <rect key="frame" x="116" y="0.0" width="266" height="80"/>
+                                                    <rect key="frame" x="126" y="0.0" width="256" height="80"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="80" id="S5V-eR-Em6"/>
@@ -121,6 +121,7 @@
                                         <constraint firstItem="ddC-qC-WR5" firstAttribute="top" secondItem="uSA-WG-kVe" secondAttribute="top" constant="8" id="Vf5-iz-gLl"/>
                                         <constraint firstItem="n4c-hX-yA0" firstAttribute="leading" secondItem="uSA-WG-kVe" secondAttribute="leading" id="W4L-pA-qEz"/>
                                         <constraint firstAttribute="trailing" secondItem="ddC-qC-WR5" secondAttribute="trailing" id="gx2-7A-N7R"/>
+                                        <constraint firstAttribute="bottom" secondItem="n4c-hX-yA0" secondAttribute="bottom" id="n5D-PJ-Fnc"/>
                                         <constraint firstItem="ujG-ac-Ti5" firstAttribute="top" secondItem="ddC-qC-WR5" secondAttribute="bottom" constant="8" id="okV-7C-j2s"/>
                                         <constraint firstAttribute="trailing" secondItem="ujG-ac-Ti5" secondAttribute="trailing" id="pZv-mZ-IKY"/>
                                         <constraint firstItem="n4c-hX-yA0" firstAttribute="top" secondItem="ujG-ac-Ti5" secondAttribute="bottom" constant="8" id="t5C-Ki-K7h"/>

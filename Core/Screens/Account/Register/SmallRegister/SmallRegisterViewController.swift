@@ -40,6 +40,11 @@ class SmallRegisterViewController: UIViewController {
         commonInit()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+
+    }
+
     func setupWithTheme() {
         self.view.backgroundColor = UIColor(patternImage: imageGradient)
 
@@ -150,14 +155,26 @@ class SmallRegisterViewController: UIViewController {
     }
 
     @IBAction func registerAction() {
-        // TEST
-        let username = "andrelascas@hotmail.com"
+
         let input = self.emailHeadertextFieldView.text
-        print(input)
-        if (username != input) {
+
+        if (!input.isValidEmail()) {
             self.emailHeadertextFieldView.showErrorOnField(text: "Invalid Email Address")
+        } else {
+            let vc = SmallRegisterStep2ViewController()
+            vc.emailUser = input
+
+            self.navigationController?.pushViewController(vc, animated: true)
         }
+
     }
+
+    @IBAction func skipAction() {
+        let vc = RootViewController()
+        
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
 
 
 }
