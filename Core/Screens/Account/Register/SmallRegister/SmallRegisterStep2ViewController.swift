@@ -45,8 +45,7 @@ class SmallRegisterStep2ViewController: UIViewController {
         super.viewDidLoad()
 
         imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
-        // TEST
-        emailUser = "gomadev@gomadevelopment.pt"
+        
         setupWithTheme()
         commonInit()
 
@@ -129,7 +128,9 @@ class SmallRegisterStep2ViewController: UIViewController {
         dateHeaderTextView.setImageTextField(UIImage(named: "calendar-regular")!)
         dateHeaderTextView.setDatePicker()
 
-        indicativeHeaderTextView.setSelectionPicker(["+351", "+041"])
+        indicativeHeaderTextView.setSelectionPicker(["🇵🇹 +351", "🇨🇭 +041"])
+        indicativeHeaderTextView.setImageTextField(UIImage(named: "Arrow_Down")!, size: 10)
+        indicativeHeaderTextView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
         phoneHeaderTextView.setPlaceholderText(localized("string_phone_number"))
         phoneHeaderTextView.setKeyboardType(.numberPad)
@@ -142,6 +143,16 @@ class SmallRegisterStep2ViewController: UIViewController {
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapBackImageGestureRecognizer:)))
+            backImageView.isUserInteractionEnabled = true
+        backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
+    }
+
+    @objc func imageTapped(tapBackImageGestureRecognizer: UITapGestureRecognizer)
+    {
+
+        self.navigationController?.popViewController(animated: true)
     }
 
     func underlineTextLabel() {
@@ -201,6 +212,7 @@ class SmallRegisterStep2ViewController: UIViewController {
     }
 
     @IBAction func signUpAction() {
+        var validFields = true
         // TEST
         let username = usernameHeaderTextView.text
         let birthDate = dateHeaderTextView.text
@@ -209,11 +221,22 @@ class SmallRegisterStep2ViewController: UIViewController {
         let password = passwordHeaderTextView.text
         let confirmPassword = confirmPasswordHeaderTextView.text
 
+        //TO-DO: Username verification
+
         if password != confirmPassword {
             passwordHeaderTextView.showErrorOnField(text: localized("string_password_not_match"), color: .systemRed)
+            validFields = false
         }
         else if password.count < 8 {
             passwordHeaderTextView.showTip(text: localized("string_weak_password"))
+            validFields = false
+        }
+
+        if validFields {
+            let vc = SmallRegisterStep3ViewController()
+            vc.emailUser = email
+           
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 

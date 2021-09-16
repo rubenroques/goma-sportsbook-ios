@@ -22,6 +22,7 @@
                 <outlet property="containerView" destination="HAe-LW-y8Z" id="Q1m-4S-t4a"/>
                 <outlet property="headerLabel" destination="pdZ-7M-JBk" id="hDv-OX-CaS"/>
                 <outlet property="headerPlaceholderLabel" destination="Geb-tJ-VmJ" id="M1a-gu-zyI"/>
+                <outlet property="imageWidthConstraint" destination="LkK-Sf-wuu" id="aWG-eF-Yx2"/>
                 <outlet property="showLabel" destination="6ip-xz-zoH" id="VHI-Xl-FOA"/>
                 <outlet property="showPassImageView" destination="8PW-Vp-Av7" id="IFI-HT-rmj"/>
                 <outlet property="showStateImageView" destination="caT-Aa-aRl" id="mf1-Jg-vqe"/>
