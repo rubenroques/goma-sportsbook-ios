@@ -8,6 +8,7 @@ struct AppFont {
         case regular = "Regular"
         case medium = "Medium"
         case bold = "Bold"
+        case semibold = "Semibold"
         case heavy = "Heavy"
 
         private var familyName: String {

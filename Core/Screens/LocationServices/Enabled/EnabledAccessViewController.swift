@@ -44,13 +44,13 @@ class EnabledAccessViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.Core.backgroundDarkFade
-        containerView.backgroundColor = UIColor.Core.backgroundDarkFade
-        enabledView.backgroundColor = UIColor.Core.backgroundDarkModal
-        enabledLabel.textColor = UIColor.Core.headingMain
+        self.view.backgroundColor = UIColor.App.backgroundDarkFade
+        containerView.backgroundColor = UIColor.App.backgroundDarkFade
+        enabledView.backgroundColor = UIColor.App.backgroundDarkModal
+        enabledLabel.textColor = UIColor.App.headingMain
         dismissButton.setTitleColor(UIColor.white, for: .normal)
-        dismissButton.layer.borderColor = UIColor.Core.buttonMain.cgColor
-        dismissButton.layer.backgroundColor = UIColor.Core.buttonMain.cgColor
+        dismissButton.layer.borderColor = UIColor.App.buttonMain.cgColor
+        dismissButton.layer.backgroundColor = UIColor.App.buttonMain.cgColor
 
         
     }

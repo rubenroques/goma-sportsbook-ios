@@ -46,7 +46,7 @@ class RootViewController: UIViewController {
         super.viewWillAppear(animated)
 
         // ToDo: isto vai correr mal, a verificação deve ser asincrona, forçar um delay de 2 seg. alem de poder trazer problemas
-        // não nos garate que fique a funcionar be,.
+        // não nos garante que fique a funcionar bem.
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
 //
 //            let isMaintenance = realtimeClient.verifyMaintenanceMode()
@@ -76,7 +76,7 @@ class RootViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.Core.tint
+        self.view.backgroundColor = UIColor.App.mainTintColor
     }
 
     func getLocationDateFormat() {

@@ -42,16 +42,16 @@ enum TSRouter {
     case acceptTC
     case coolOff24h
     // GOMA EveryMatrix
-    case disciplines(payload: [String:Any]?)
-    case locations(payload: [String:Any]?)
-    case tournaments(payload: [String:Any]?)
-    case popularTournaments(payload: [String:Any]?)
-    case matches(payload: [String:Any]?)
-    case popularMatches(payload: [String:Any]?)
-    case todayMatches(payload: [String:Any]?)
-    case nextMatches(payload: [String:Any]?)
-    case events(payload: [String:Any]?)
-    case odds(payload: [String:Any]?)
+    case disciplines(payload: [String: Any]?)
+    case locations(payload: [String: Any]?)
+    case tournaments(payload: [String: Any]?)
+    case popularTournaments(payload: [String: Any]?)
+    case matches(payload: [String: Any]?)
+    case popularMatches(payload: [String: Any]?)
+    case todayMatches(payload: [String: Any]?)
+    case nextMatches(payload: [String: Any]?)
+    case events(payload: [String: Any]?)
+    case odds(payload: [String: Any]?)
     // GOMA EveryMatrix Subscriptions
     case oddsMatch(language: String, matchId: String)
 

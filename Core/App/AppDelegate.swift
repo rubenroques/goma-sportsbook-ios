@@ -14,12 +14,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // TODO: Integrate fastlamne
 
     var window: UIWindow?
-    var router: Router!
+
+    var bootstrap: Bootstrap!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
-        //AppFont.printFonts()
-        
         Logger.log("App Started")
         
         // Store device id
@@ -40,11 +39,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("FirebaseCore Auth UID \(uid) [isAnonymous:\(isAnonymous)]")
         }
 
-        
-
         self.window = UIWindow()
-        self.router = Router(window: self.window!)
-        self.router.bootstrap()
+
+        self.bootstrap = Bootstrap(router: Router(window: self.window!))
+
+        self.bootstrap.boot()
 
         return true
     }

@@ -24,80 +24,84 @@
 		4515637F26BED58900690896 /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = 4515637E26BED58900690896 /* Nuke */; };
 		4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515638026BEDA6200690896 /* FeatureFlag.swift */; };
 		4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4515638026BEDA6200690896 /* FeatureFlag.swift */; };
-		4520368E26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */; };
-		4520368F26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */; };
-		4520369026EFA4DA000BCFA6 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365D26EFA4DA000BCFA6 /* TSParams.swift */; };
-		4520369126EFA4DA000BCFA6 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365D26EFA4DA000BCFA6 /* TSParams.swift */; };
-		4520369226EFA4DA000BCFA6 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365E26EFA4DA000BCFA6 /* Notification.swift */; };
-		4520369326EFA4DA000BCFA6 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365E26EFA4DA000BCFA6 /* Notification.swift */; };
-		4520369426EFA4DA000BCFA6 /* TSRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365F26EFA4DA000BCFA6 /* TSRouter.swift */; };
-		4520369526EFA4DA000BCFA6 /* TSRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520365F26EFA4DA000BCFA6 /* TSRouter.swift */; };
-		4520369626EFA4DA000BCFA6 /* SSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366226EFA4DA000BCFA6 /* SSWampMessage.swift */; };
-		4520369726EFA4DA000BCFA6 /* SSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366226EFA4DA000BCFA6 /* SSWampMessage.swift */; };
-		4520369826EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366426EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift */; };
-		4520369926EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366426EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift */; };
-		4520369A26EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366526EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift */; };
-		4520369B26EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366526EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift */; };
-		4520369C26EFA4DA000BCFA6 /* SSWampMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366626EFA4DA000BCFA6 /* SSWampMessages.swift */; };
-		4520369D26EFA4DA000BCFA6 /* SSWampMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366626EFA4DA000BCFA6 /* SSWampMessages.swift */; };
-		4520369E26EFA4DA000BCFA6 /* PublishSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366926EFA4DA000BCFA6 /* PublishSSWampMessage.swift */; };
-		4520369F26EFA4DA000BCFA6 /* PublishSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366926EFA4DA000BCFA6 /* PublishSSWampMessage.swift */; };
-		452036A026EFA4DA000BCFA6 /* PublishedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366A26EFA4DA000BCFA6 /* PublishedSSWampMessage.swift */; };
-		452036A126EFA4DA000BCFA6 /* PublishedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366A26EFA4DA000BCFA6 /* PublishedSSWampMessage.swift */; };
-		452036A226EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366C26EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift */; };
-		452036A326EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366C26EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift */; };
-		452036A426EFA4DA000BCFA6 /* EventSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366D26EFA4DA000BCFA6 /* EventSSWampMessage.swift */; };
-		452036A526EFA4DA000BCFA6 /* EventSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366D26EFA4DA000BCFA6 /* EventSSWampMessage.swift */; };
-		452036A626EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366E26EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift */; };
-		452036A726EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366E26EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift */; };
-		452036A826EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366F26EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift */; };
-		452036A926EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520366F26EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift */; };
-		452036AA26EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367026EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift */; };
-		452036AB26EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367026EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift */; };
-		452036AC26EFA4DA000BCFA6 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367326EFA4DA000BCFA6 /* YieldSSWampMessage.swift */; };
-		452036AD26EFA4DA000BCFA6 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367326EFA4DA000BCFA6 /* YieldSSWampMessage.swift */; };
-		452036AE26EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367426EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift */; };
-		452036AF26EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367426EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift */; };
-		452036B026EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367526EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift */; };
-		452036B126EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367526EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift */; };
-		452036B226EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367626EFA4DA000BCFA6 /* RegisterSSWampMessage.swift */; };
-		452036B326EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367626EFA4DA000BCFA6 /* RegisterSSWampMessage.swift */; };
-		452036B426EFA4DA000BCFA6 /* InvocationSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367726EFA4DA000BCFA6 /* InvocationSSWampMessage.swift */; };
-		452036B526EFA4DA000BCFA6 /* InvocationSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367726EFA4DA000BCFA6 /* InvocationSSWampMessage.swift */; };
-		452036B626EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367826EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift */; };
-		452036B726EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367826EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift */; };
-		452036B826EFA4DA000BCFA6 /* ResultSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367A26EFA4DA000BCFA6 /* ResultSSWampMessage.swift */; };
-		452036B926EFA4DA000BCFA6 /* ResultSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367A26EFA4DA000BCFA6 /* ResultSSWampMessage.swift */; };
-		452036BA26EFA4DA000BCFA6 /* CallSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367B26EFA4DA000BCFA6 /* CallSSWampMessage.swift */; };
-		452036BB26EFA4DA000BCFA6 /* CallSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367B26EFA4DA000BCFA6 /* CallSSWampMessage.swift */; };
-		452036BC26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367D26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift */; };
-		452036BD26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367D26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift */; };
-		452036BE26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367F26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift */; };
-		452036BF26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520367F26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift */; };
-		452036C026EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368026EFA4DA000BCFA6 /* HelloSSWampMessage.swift */; };
-		452036C126EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368026EFA4DA000BCFA6 /* HelloSSWampMessage.swift */; };
-		452036C226EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368126EFA4DA000BCFA6 /* AbortSSWampMessage.swift */; };
-		452036C326EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368126EFA4DA000BCFA6 /* AbortSSWampMessage.swift */; };
-		452036C426EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368226EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift */; };
-		452036C526EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368226EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift */; };
-		452036C626EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368426EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift */; };
-		452036C726EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368426EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift */; };
-		452036C826EFA4DA000BCFA6 /* SSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368526EFA4DA000BCFA6 /* SSWampTransport.swift */; };
-		452036C926EFA4DA000BCFA6 /* SSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368526EFA4DA000BCFA6 /* SSWampTransport.swift */; };
-		452036CA26EFA4DA000BCFA6 /* SSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368726EFA4DA000BCFA6 /* SSWampSerializer.swift */; };
-		452036CB26EFA4DA000BCFA6 /* SSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368726EFA4DA000BCFA6 /* SSWampSerializer.swift */; };
-		452036CC26EFA4DA000BCFA6 /* JSONSSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368826EFA4DA000BCFA6 /* JSONSSWampSerializer.swift */; };
-		452036CD26EFA4DA000BCFA6 /* JSONSSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368826EFA4DA000BCFA6 /* JSONSSWampSerializer.swift */; };
-		452036CE26EFA4DA000BCFA6 /* SSWampError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368926EFA4DA000BCFA6 /* SSWampError.swift */; };
-		452036CF26EFA4DA000BCFA6 /* SSWampError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368926EFA4DA000BCFA6 /* SSWampError.swift */; };
-		452036D026EFA4DA000BCFA6 /* SSWampSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368A26EFA4DA000BCFA6 /* SSWampSession.swift */; };
-		452036D126EFA4DA000BCFA6 /* SSWampSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368A26EFA4DA000BCFA6 /* SSWampSession.swift */; };
-		452036D226EFA4DA000BCFA6 /* SSWampRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368B26EFA4DA000BCFA6 /* SSWampRole.swift */; };
-		452036D326EFA4DB000BCFA6 /* SSWampRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368B26EFA4DA000BCFA6 /* SSWampRole.swift */; };
-		452036D426EFA4DB000BCFA6 /* SSWampExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368C26EFA4DA000BCFA6 /* SSWampExtensions.swift */; };
-		452036D526EFA4DB000BCFA6 /* SSWampExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368C26EFA4DA000BCFA6 /* SSWampExtensions.swift */; };
-		452036D626EFA4DB000BCFA6 /* TSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368D26EFA4DA000BCFA6 /* TSManager.swift */; };
-		452036D726EFA4DB000BCFA6 /* TSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4520368D26EFA4DA000BCFA6 /* TSManager.swift */; };
+		45166CA626F28D2E00E69D65 /* Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CA526F28D2E00E69D65 /* Bootstrap.swift */; };
+		45166CA726F28D2E00E69D65 /* Bootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CA526F28D2E00E69D65 /* Bootstrap.swift */; };
+		45166CDD26F3548D00E69D65 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
+		45166CDE26F3548D00E69D65 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
+		45166CDF26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */; };
+		45166CE026F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */; };
+		45166CE126F3548D00E69D65 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAD26F3548D00E69D65 /* Notification.swift */; };
+		45166CE226F3548D00E69D65 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAD26F3548D00E69D65 /* Notification.swift */; };
+		45166CE326F3548D00E69D65 /* TSRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAE26F3548D00E69D65 /* TSRouter.swift */; };
+		45166CE426F3548D00E69D65 /* TSRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAE26F3548D00E69D65 /* TSRouter.swift */; };
+		45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB126F3548D00E69D65 /* SSWampMessage.swift */; };
+		45166CE626F3548D00E69D65 /* SSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB126F3548D00E69D65 /* SSWampMessage.swift */; };
+		45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB326F3548D00E69D65 /* AuthenticateSSWampMessage.swift */; };
+		45166CE826F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB326F3548D00E69D65 /* AuthenticateSSWampMessage.swift */; };
+		45166CE926F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
+		45166CEA26F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */; };
+		45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB526F3548D00E69D65 /* SSWampMessages.swift */; };
+		45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB526F3548D00E69D65 /* SSWampMessages.swift */; };
+		45166CED26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB826F3548D00E69D65 /* PublishSSWampMessage.swift */; };
+		45166CEE26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB826F3548D00E69D65 /* PublishSSWampMessage.swift */; };
+		45166CEF26F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB926F3548D00E69D65 /* PublishedSSWampMessage.swift */; };
+		45166CF026F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB926F3548D00E69D65 /* PublishedSSWampMessage.swift */; };
+		45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBB26F3548D00E69D65 /* UnsubscribeSSWampMessage.swift */; };
+		45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBB26F3548D00E69D65 /* UnsubscribeSSWampMessage.swift */; };
+		45166CF326F3548D00E69D65 /* EventSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBC26F3548D00E69D65 /* EventSSWampMessage.swift */; };
+		45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBC26F3548D00E69D65 /* EventSSWampMessage.swift */; };
+		45166CF526F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBD26F3548D00E69D65 /* SubscribedSSWampMessage.swift */; };
+		45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBD26F3548D00E69D65 /* SubscribedSSWampMessage.swift */; };
+		45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBE26F3548D00E69D65 /* SubscribeSSWampMessage.swift */; };
+		45166CF826F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBE26F3548D00E69D65 /* SubscribeSSWampMessage.swift */; };
+		45166CF926F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBF26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift */; };
+		45166CFA26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CBF26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift */; };
+		45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
+		45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */; };
+		45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC326F3548D00E69D65 /* RegisteredSSWampMessage.swift */; };
+		45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC326F3548D00E69D65 /* RegisteredSSWampMessage.swift */; };
+		45166CFF26F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC426F3548D00E69D65 /* UnregisterSSWampMessage.swift */; };
+		45166D0026F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC426F3548D00E69D65 /* UnregisterSSWampMessage.swift */; };
+		45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC526F3548D00E69D65 /* RegisterSSWampMessage.swift */; };
+		45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC526F3548D00E69D65 /* RegisterSSWampMessage.swift */; };
+		45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC626F3548D00E69D65 /* InvocationSSWampMessage.swift */; };
+		45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC626F3548D00E69D65 /* InvocationSSWampMessage.swift */; };
+		45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC726F3548D00E69D65 /* UnregisteredSSWampMessage.swift */; };
+		45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC726F3548D00E69D65 /* UnregisteredSSWampMessage.swift */; };
+		45166D0726F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC926F3548D00E69D65 /* ResultSSWampMessage.swift */; };
+		45166D0826F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CC926F3548D00E69D65 /* ResultSSWampMessage.swift */; };
+		45166D0926F3548D00E69D65 /* CallSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCA26F3548D00E69D65 /* CallSSWampMessage.swift */; };
+		45166D0A26F3548D00E69D65 /* CallSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCA26F3548D00E69D65 /* CallSSWampMessage.swift */; };
+		45166D0B26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCC26F3548D00E69D65 /* ErrorSSWampMessage.swift */; };
+		45166D0C26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCC26F3548D00E69D65 /* ErrorSSWampMessage.swift */; };
+		45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCE26F3548D00E69D65 /* WelcomeSSWampMessage.swift */; };
+		45166D0E26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCE26F3548D00E69D65 /* WelcomeSSWampMessage.swift */; };
+		45166D0F26F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCF26F3548D00E69D65 /* HelloSSWampMessage.swift */; };
+		45166D1026F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CCF26F3548D00E69D65 /* HelloSSWampMessage.swift */; };
+		45166D1126F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD026F3548D00E69D65 /* AbortSSWampMessage.swift */; };
+		45166D1226F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD026F3548D00E69D65 /* AbortSSWampMessage.swift */; };
+		45166D1326F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD126F3548D00E69D65 /* GoodbyeSSWampMessage.swift */; };
+		45166D1426F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD126F3548D00E69D65 /* GoodbyeSSWampMessage.swift */; };
+		45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD326F3548D00E69D65 /* WebSocketSSWampTransport.swift */; };
+		45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD326F3548D00E69D65 /* WebSocketSSWampTransport.swift */; };
+		45166D1726F3548D00E69D65 /* SSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD426F3548D00E69D65 /* SSWampTransport.swift */; };
+		45166D1826F3548D00E69D65 /* SSWampTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD426F3548D00E69D65 /* SSWampTransport.swift */; };
+		45166D1926F3548D00E69D65 /* SSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD626F3548D00E69D65 /* SSWampSerializer.swift */; };
+		45166D1A26F3548D00E69D65 /* SSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD626F3548D00E69D65 /* SSWampSerializer.swift */; };
+		45166D1B26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD726F3548D00E69D65 /* JSONSSWampSerializer.swift */; };
+		45166D1C26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD726F3548D00E69D65 /* JSONSSWampSerializer.swift */; };
+		45166D1D26F3548D00E69D65 /* SSWampError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD826F3548D00E69D65 /* SSWampError.swift */; };
+		45166D1E26F3548D00E69D65 /* SSWampError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD826F3548D00E69D65 /* SSWampError.swift */; };
+		45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD926F3548D00E69D65 /* SSWampSession.swift */; };
+		45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CD926F3548D00E69D65 /* SSWampSession.swift */; };
+		45166D2126F3548D00E69D65 /* SSWampRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CDA26F3548D00E69D65 /* SSWampRole.swift */; };
+		45166D2226F3548D00E69D65 /* SSWampRole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CDA26F3548D00E69D65 /* SSWampRole.swift */; };
+		45166D2326F3548D00E69D65 /* SSWampExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CDB26F3548D00E69D65 /* SSWampExtensions.swift */; };
+		45166D2426F3548D00E69D65 /* SSWampExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CDB26F3548D00E69D65 /* SSWampExtensions.swift */; };
+		45166D2526F3548D00E69D65 /* TSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CDC26F3548D00E69D65 /* TSManager.swift */; };
+		45166D2626F3548D00E69D65 /* TSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CDC26F3548D00E69D65 /* TSManager.swift */; };
+		45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */; };
+		45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */; };
 		454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
 		454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
 		454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
@@ -286,8 +290,8 @@
 		45DDBA9926F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */; };
 		45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
 		45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */; };
-		45DDBAA226F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */; };
-		45DDBAA326F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */; };
+		45DDBAA226F2146100A73E45 /* Gilroy-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8826F2146000A73E45 /* Gilroy-SemiBold.ttf */; };
+		45DDBAA326F2146100A73E45 /* Gilroy-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8826F2146000A73E45 /* Gilroy-SemiBold.ttf */; };
 		45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
 		45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */; };
 		45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8B26F2146000A73E45 /* Gilroy-Bold.ttf */; };
@@ -401,44 +405,46 @@
 		4515637026BE968300690896 /* ThemeColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = ThemeColors.xcassets; sourceTree = "<group>"; };
 		4515637326BE982000690896 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		4515638026BEDA6200690896 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
+		45166CA526F28D2E00E69D65 /* Bootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bootstrap.swift; sourceTree = "<group>"; };
+		45166CAB26F3548D00E69D65 /* TSParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSParams.swift; sourceTree = "<group>"; };
+		45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EveryMatrixSocketAPIError.swift; sourceTree = "<group>"; };
+		45166CAD26F3548D00E69D65 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		45166CAE26F3548D00E69D65 /* TSRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSRouter.swift; sourceTree = "<group>"; };
+		45166CB126F3548D00E69D65 /* SSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampMessage.swift; sourceTree = "<group>"; };
+		45166CB326F3548D00E69D65 /* AuthenticateSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CB526F3548D00E69D65 /* SSWampMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampMessages.swift; sourceTree = "<group>"; };
+		45166CB826F3548D00E69D65 /* PublishSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CB926F3548D00E69D65 /* PublishedSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishedSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CBB26F3548D00E69D65 /* UnsubscribeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsubscribeSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CBC26F3548D00E69D65 /* EventSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CBD26F3548D00E69D65 /* SubscribedSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscribedSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CBE26F3548D00E69D65 /* SubscribeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscribeSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CBF26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsubscribedSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YieldSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CC326F3548D00E69D65 /* RegisteredSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisteredSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CC426F3548D00E69D65 /* UnregisterSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnregisterSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CC526F3548D00E69D65 /* RegisterSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CC626F3548D00E69D65 /* InvocationSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvocationSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CC726F3548D00E69D65 /* UnregisteredSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnregisteredSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CC926F3548D00E69D65 /* ResultSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CCA26F3548D00E69D65 /* CallSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CCC26F3548D00E69D65 /* ErrorSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CCE26F3548D00E69D65 /* WelcomeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CCF26F3548D00E69D65 /* HelloSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelloSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CD026F3548D00E69D65 /* AbortSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbortSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CD126F3548D00E69D65 /* GoodbyeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoodbyeSSWampMessage.swift; sourceTree = "<group>"; };
+		45166CD326F3548D00E69D65 /* WebSocketSSWampTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketSSWampTransport.swift; sourceTree = "<group>"; };
+		45166CD426F3548D00E69D65 /* SSWampTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampTransport.swift; sourceTree = "<group>"; };
+		45166CD626F3548D00E69D65 /* SSWampSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampSerializer.swift; sourceTree = "<group>"; };
+		45166CD726F3548D00E69D65 /* JSONSSWampSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONSSWampSerializer.swift; sourceTree = "<group>"; };
+		45166CD826F3548D00E69D65 /* SSWampError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampError.swift; sourceTree = "<group>"; };
+		45166CD926F3548D00E69D65 /* SSWampSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampSession.swift; sourceTree = "<group>"; };
+		45166CDA26F3548D00E69D65 /* SSWampRole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampRole.swift; sourceTree = "<group>"; };
+		45166CDB26F3548D00E69D65 /* SSWampExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampExtensions.swift; sourceTree = "<group>"; };
+		45166CDC26F3548D00E69D65 /* TSManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSManager.swift; sourceTree = "<group>"; };
+		45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		4520365A26EF9B7F000BCFA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
-		4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EveryMatrixSocketAPIError.swift; sourceTree = "<group>"; };
-		4520365D26EFA4DA000BCFA6 /* TSParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSParams.swift; sourceTree = "<group>"; };
-		4520365E26EFA4DA000BCFA6 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
-		4520365F26EFA4DA000BCFA6 /* TSRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSRouter.swift; sourceTree = "<group>"; };
-		4520366226EFA4DA000BCFA6 /* SSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampMessage.swift; sourceTree = "<group>"; };
-		4520366426EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateSSWampMessage.swift; sourceTree = "<group>"; };
-		4520366526EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeSSWampMessage.swift; sourceTree = "<group>"; };
-		4520366626EFA4DA000BCFA6 /* SSWampMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampMessages.swift; sourceTree = "<group>"; };
-		4520366926EFA4DA000BCFA6 /* PublishSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishSSWampMessage.swift; sourceTree = "<group>"; };
-		4520366A26EFA4DA000BCFA6 /* PublishedSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishedSSWampMessage.swift; sourceTree = "<group>"; };
-		4520366C26EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsubscribeSSWampMessage.swift; sourceTree = "<group>"; };
-		4520366D26EFA4DA000BCFA6 /* EventSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSSWampMessage.swift; sourceTree = "<group>"; };
-		4520366E26EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscribedSSWampMessage.swift; sourceTree = "<group>"; };
-		4520366F26EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubscribeSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367026EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsubscribedSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367326EFA4DA000BCFA6 /* YieldSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YieldSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367426EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisteredSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367526EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnregisterSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367626EFA4DA000BCFA6 /* RegisterSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367726EFA4DA000BCFA6 /* InvocationSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InvocationSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367826EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnregisteredSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367A26EFA4DA000BCFA6 /* ResultSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367B26EFA4DA000BCFA6 /* CallSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367D26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorSSWampMessage.swift; sourceTree = "<group>"; };
-		4520367F26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeSSWampMessage.swift; sourceTree = "<group>"; };
-		4520368026EFA4DA000BCFA6 /* HelloSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelloSSWampMessage.swift; sourceTree = "<group>"; };
-		4520368126EFA4DA000BCFA6 /* AbortSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AbortSSWampMessage.swift; sourceTree = "<group>"; };
-		4520368226EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GoodbyeSSWampMessage.swift; sourceTree = "<group>"; };
-		4520368426EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocketSSWampTransport.swift; sourceTree = "<group>"; };
-		4520368526EFA4DA000BCFA6 /* SSWampTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampTransport.swift; sourceTree = "<group>"; };
-		4520368726EFA4DA000BCFA6 /* SSWampSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampSerializer.swift; sourceTree = "<group>"; };
-		4520368826EFA4DA000BCFA6 /* JSONSSWampSerializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSONSSWampSerializer.swift; sourceTree = "<group>"; };
-		4520368926EFA4DA000BCFA6 /* SSWampError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampError.swift; sourceTree = "<group>"; };
-		4520368A26EFA4DA000BCFA6 /* SSWampSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampSession.swift; sourceTree = "<group>"; };
-		4520368B26EFA4DA000BCFA6 /* SSWampRole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampRole.swift; sourceTree = "<group>"; };
-		4520368C26EFA4DA000BCFA6 /* SSWampExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampExtensions.swift; sourceTree = "<group>"; };
-		4520368D26EFA4DA000BCFA6 /* TSManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSManager.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
 		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
@@ -540,7 +546,7 @@
 		45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Light.ttf"; sourceTree = "<group>"; };
 		45DDBA8326F2146000A73E45 /* Gilroy-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Heavy.ttf"; sourceTree = "<group>"; };
 		45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Regular.ttf"; sourceTree = "<group>"; };
-		45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Semibold.ttf"; sourceTree = "<group>"; };
+		45DDBA8826F2146000A73E45 /* Gilroy-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-SemiBold.ttf"; sourceTree = "<group>"; };
 		45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Medium.ttf"; sourceTree = "<group>"; };
 		45DDBA8B26F2146000A73E45 /* Gilroy-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Bold.ttf"; sourceTree = "<group>"; };
 		45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Thin.ttf"; sourceTree = "<group>"; };
@@ -624,160 +630,158 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		452035DC26EF9A50000BCFA6 /* External */ = {
+		45166CA926F3548D00E69D65 /* ExternalLibs */ = {
 			isa = PBXGroup;
 			children = (
-				4520365B26EFA4DA000BCFA6 /* TSLibrary */,
+				45166CAA26F3548D00E69D65 /* TSLibrary */,
 			);
-			name = External;
-			path = ../../../../../../Documents/External;
+			path = ExternalLibs;
 			sourceTree = "<group>";
 		};
-		4520365B26EFA4DA000BCFA6 /* TSLibrary */ = {
+		45166CAA26F3548D00E69D65 /* TSLibrary */ = {
 			isa = PBXGroup;
 			children = (
-				4520368D26EFA4DA000BCFA6 /* TSManager.swift */,
-				4520365F26EFA4DA000BCFA6 /* TSRouter.swift */,
-				4520365D26EFA4DA000BCFA6 /* TSParams.swift */,
-				4520365C26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift */,
-				4520365E26EFA4DA000BCFA6 /* Notification.swift */,
-				4520366026EFA4DA000BCFA6 /* WAMP */,
+				45166CAB26F3548D00E69D65 /* TSParams.swift */,
+				45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */,
+				45166CAD26F3548D00E69D65 /* Notification.swift */,
+				45166CAE26F3548D00E69D65 /* TSRouter.swift */,
+				45166CAF26F3548D00E69D65 /* WAMP */,
+				45166CDC26F3548D00E69D65 /* TSManager.swift */,
 			);
-			name = TSLibrary;
-			path = Core/Tools/External/TSLibrary;
-			sourceTree = SOURCE_ROOT;
+			path = TSLibrary;
+			sourceTree = "<group>";
 		};
-		4520366026EFA4DA000BCFA6 /* WAMP */ = {
+		45166CAF26F3548D00E69D65 /* WAMP */ = {
 			isa = PBXGroup;
 			children = (
-				4520366126EFA4DA000BCFA6 /* Messages */,
-				4520368326EFA4DA000BCFA6 /* Transport */,
-				4520368626EFA4DA000BCFA6 /* Serialization */,
-				4520368926EFA4DA000BCFA6 /* SSWampError.swift */,
-				4520368A26EFA4DA000BCFA6 /* SSWampSession.swift */,
-				4520368B26EFA4DA000BCFA6 /* SSWampRole.swift */,
-				4520368C26EFA4DA000BCFA6 /* SSWampExtensions.swift */,
+				45166CB026F3548D00E69D65 /* Messages */,
+				45166CD226F3548D00E69D65 /* Transport */,
+				45166CD526F3548D00E69D65 /* Serialization */,
+				45166CD826F3548D00E69D65 /* SSWampError.swift */,
+				45166CD926F3548D00E69D65 /* SSWampSession.swift */,
+				45166CDA26F3548D00E69D65 /* SSWampRole.swift */,
+				45166CDB26F3548D00E69D65 /* SSWampExtensions.swift */,
 			);
 			path = WAMP;
 			sourceTree = "<group>";
 		};
-		4520366126EFA4DA000BCFA6 /* Messages */ = {
+		45166CB026F3548D00E69D65 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				4520366226EFA4DA000BCFA6 /* SSWampMessage.swift */,
-				4520366326EFA4DA000BCFA6 /* Auth */,
-				4520366626EFA4DA000BCFA6 /* SSWampMessages.swift */,
-				4520366726EFA4DA000BCFA6 /* PubSub */,
-				4520367126EFA4DA000BCFA6 /* RPC */,
-				4520367C26EFA4DA000BCFA6 /* Error */,
-				4520367E26EFA4DA000BCFA6 /* Session */,
+				45166CB126F3548D00E69D65 /* SSWampMessage.swift */,
+				45166CB226F3548D00E69D65 /* Auth */,
+				45166CB526F3548D00E69D65 /* SSWampMessages.swift */,
+				45166CB626F3548D00E69D65 /* PubSub */,
+				45166CC026F3548D00E69D65 /* RPC */,
+				45166CCB26F3548D00E69D65 /* Error */,
+				45166CCD26F3548D00E69D65 /* Session */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
 		};
-		4520366326EFA4DA000BCFA6 /* Auth */ = {
+		45166CB226F3548D00E69D65 /* Auth */ = {
 			isa = PBXGroup;
 			children = (
-				4520366426EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift */,
-				4520366526EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift */,
+				45166CB326F3548D00E69D65 /* AuthenticateSSWampMessage.swift */,
+				45166CB426F3548D00E69D65 /* ChallengeSSWampMessage.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
 		};
-		4520366726EFA4DA000BCFA6 /* PubSub */ = {
+		45166CB626F3548D00E69D65 /* PubSub */ = {
 			isa = PBXGroup;
 			children = (
-				4520366826EFA4DA000BCFA6 /* Publisher */,
-				4520366B26EFA4DA000BCFA6 /* Subscriber */,
+				45166CB726F3548D00E69D65 /* Publisher */,
+				45166CBA26F3548D00E69D65 /* Subscriber */,
 			);
 			path = PubSub;
 			sourceTree = "<group>";
 		};
-		4520366826EFA4DA000BCFA6 /* Publisher */ = {
+		45166CB726F3548D00E69D65 /* Publisher */ = {
 			isa = PBXGroup;
 			children = (
-				4520366926EFA4DA000BCFA6 /* PublishSSWampMessage.swift */,
-				4520366A26EFA4DA000BCFA6 /* PublishedSSWampMessage.swift */,
+				45166CB826F3548D00E69D65 /* PublishSSWampMessage.swift */,
+				45166CB926F3548D00E69D65 /* PublishedSSWampMessage.swift */,
 			);
 			path = Publisher;
 			sourceTree = "<group>";
 		};
-		4520366B26EFA4DA000BCFA6 /* Subscriber */ = {
+		45166CBA26F3548D00E69D65 /* Subscriber */ = {
 			isa = PBXGroup;
 			children = (
-				4520366C26EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift */,
-				4520366D26EFA4DA000BCFA6 /* EventSSWampMessage.swift */,
-				4520366E26EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift */,
-				4520366F26EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift */,
-				4520367026EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift */,
+				45166CBB26F3548D00E69D65 /* UnsubscribeSSWampMessage.swift */,
+				45166CBC26F3548D00E69D65 /* EventSSWampMessage.swift */,
+				45166CBD26F3548D00E69D65 /* SubscribedSSWampMessage.swift */,
+				45166CBE26F3548D00E69D65 /* SubscribeSSWampMessage.swift */,
+				45166CBF26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift */,
 			);
 			path = Subscriber;
 			sourceTree = "<group>";
 		};
-		4520367126EFA4DA000BCFA6 /* RPC */ = {
+		45166CC026F3548D00E69D65 /* RPC */ = {
 			isa = PBXGroup;
 			children = (
-				4520367226EFA4DA000BCFA6 /* Callee */,
-				4520367926EFA4DA000BCFA6 /* Caller */,
+				45166CC126F3548D00E69D65 /* Callee */,
+				45166CC826F3548D00E69D65 /* Caller */,
 			);
 			path = RPC;
 			sourceTree = "<group>";
 		};
-		4520367226EFA4DA000BCFA6 /* Callee */ = {
+		45166CC126F3548D00E69D65 /* Callee */ = {
 			isa = PBXGroup;
 			children = (
-				4520367326EFA4DA000BCFA6 /* YieldSSWampMessage.swift */,
-				4520367426EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift */,
-				4520367526EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift */,
-				4520367626EFA4DA000BCFA6 /* RegisterSSWampMessage.swift */,
-				4520367726EFA4DA000BCFA6 /* InvocationSSWampMessage.swift */,
-				4520367826EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift */,
+				45166CC226F3548D00E69D65 /* YieldSSWampMessage.swift */,
+				45166CC326F3548D00E69D65 /* RegisteredSSWampMessage.swift */,
+				45166CC426F3548D00E69D65 /* UnregisterSSWampMessage.swift */,
+				45166CC526F3548D00E69D65 /* RegisterSSWampMessage.swift */,
+				45166CC626F3548D00E69D65 /* InvocationSSWampMessage.swift */,
+				45166CC726F3548D00E69D65 /* UnregisteredSSWampMessage.swift */,
 			);
 			path = Callee;
 			sourceTree = "<group>";
 		};
-		4520367926EFA4DA000BCFA6 /* Caller */ = {
+		45166CC826F3548D00E69D65 /* Caller */ = {
 			isa = PBXGroup;
 			children = (
-				4520367A26EFA4DA000BCFA6 /* ResultSSWampMessage.swift */,
-				4520367B26EFA4DA000BCFA6 /* CallSSWampMessage.swift */,
+				45166CC926F3548D00E69D65 /* ResultSSWampMessage.swift */,
+				45166CCA26F3548D00E69D65 /* CallSSWampMessage.swift */,
 			);
 			path = Caller;
 			sourceTree = "<group>";
 		};
-		4520367C26EFA4DA000BCFA6 /* Error */ = {
+		45166CCB26F3548D00E69D65 /* Error */ = {
 			isa = PBXGroup;
 			children = (
-				4520367D26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift */,
+				45166CCC26F3548D00E69D65 /* ErrorSSWampMessage.swift */,
 			);
 			path = Error;
 			sourceTree = "<group>";
 		};
-		4520367E26EFA4DA000BCFA6 /* Session */ = {
+		45166CCD26F3548D00E69D65 /* Session */ = {
 			isa = PBXGroup;
 			children = (
-				4520367F26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift */,
-				4520368026EFA4DA000BCFA6 /* HelloSSWampMessage.swift */,
-				4520368126EFA4DA000BCFA6 /* AbortSSWampMessage.swift */,
-				4520368226EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift */,
+				45166CCE26F3548D00E69D65 /* WelcomeSSWampMessage.swift */,
+				45166CCF26F3548D00E69D65 /* HelloSSWampMessage.swift */,
+				45166CD026F3548D00E69D65 /* AbortSSWampMessage.swift */,
+				45166CD126F3548D00E69D65 /* GoodbyeSSWampMessage.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
 		};
-		4520368326EFA4DA000BCFA6 /* Transport */ = {
+		45166CD226F3548D00E69D65 /* Transport */ = {
 			isa = PBXGroup;
 			children = (
-				4520368426EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift */,
-				4520368526EFA4DA000BCFA6 /* SSWampTransport.swift */,
+				45166CD326F3548D00E69D65 /* WebSocketSSWampTransport.swift */,
+				45166CD426F3548D00E69D65 /* SSWampTransport.swift */,
 			);
 			path = Transport;
 			sourceTree = "<group>";
 		};
-		4520368626EFA4DA000BCFA6 /* Serialization */ = {
+		45166CD526F3548D00E69D65 /* Serialization */ = {
 			isa = PBXGroup;
 			children = (
-				4520368726EFA4DA000BCFA6 /* SSWampSerializer.swift */,
-				4520368826EFA4DA000BCFA6 /* JSONSSWampSerializer.swift */,
+				45166CD626F3548D00E69D65 /* SSWampSerializer.swift */,
+				45166CD726F3548D00E69D65 /* JSONSSWampSerializer.swift */,
 			);
 			path = Serialization;
 			sourceTree = "<group>";
@@ -803,7 +807,7 @@
 				45DDBA8226F2146000A73E45 /* Gilroy-Light.ttf */,
 				45DDBA8A26F2146000A73E45 /* Gilroy-Medium.ttf */,
 				45DDBA8426F2146000A73E45 /* Gilroy-Regular.ttf */,
-				45DDBA8826F2146000A73E45 /* Gilroy-Semibold.ttf */,
+				45DDBA8826F2146000A73E45 /* Gilroy-SemiBold.ttf */,
 				45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */,
 			);
 			path = Gilroy;
@@ -953,7 +957,7 @@
 		455A0CBF26BD9D9000EC572D /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				452035DC26EF9A50000BCFA6 /* External */,
+				45166CA926F3548D00E69D65 /* ExternalLibs */,
 				456B341926C179A8009D7D27 /* Functional */,
 				455A0CC826BD9D9000EC572D /* Extensions */,
 				456B341A26C17A0C009D7D27 /* MiscHelpers */,
@@ -987,6 +991,7 @@
 				455A0CD426BD9D9000EC572D /* UILabel+Extensions.swift */,
 				456B342026C17DF4009D7D27 /* Optional+Extensions.swift */,
 				A9C82F8A26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift */,
+				45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1120,6 +1125,7 @@
 				455A0C5326BD902C00EC572D /* AppDelegate.swift */,
 				45A2897626C33C7800BCD5DA /* Environment.swift */,
 				455A0D2326BDE88D00EC572D /* Router.swift */,
+				45166CA526F28D2E00E69D65 /* Bootstrap.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1549,7 +1555,7 @@
 				A9C82FA426F25B4300059DCD /* SmallRegisterStep3ViewController.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
-				45DDBAA226F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */,
+				45DDBAA226F2146100A73E45 /* Gilroy-SemiBold.ttf in Resources */,
 				455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
@@ -1601,7 +1607,7 @@
 				A9C82FA526F25B4300059DCD /* SmallRegisterStep3ViewController.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
-				45DDBAA326F2146100A73E45 /* Gilroy-Semibold.ttf in Resources */,
+				45DDBAA326F2146100A73E45 /* Gilroy-SemiBold.ttf in Resources */,
 				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
@@ -1667,143 +1673,145 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				452036D226EFA4DA000BCFA6 /* SSWampRole.swift in Sources */,
-				452036D426EFA4DB000BCFA6 /* SSWampExtensions.swift in Sources */,
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
+				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
+				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
+				45166D1D26F3548D00E69D65 /* SSWampError.swift in Sources */,
 				A9C82FA226F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */,
-				452036B226EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
-				4520369026EFA4DA000BCFA6 /* TSParams.swift in Sources */,
 				4589F41626BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
 				455A0D0A26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898026C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				45DDBAB726F23F1A00A73E45 /* UserSession.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
+				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				A9B841AE26E674AA00269B05 /* Match.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
+				45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
-				4520369C26EFA4DA000BCFA6 /* SSWampMessages.swift in Sources */,
 				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
-				452036A026EFA4DA000BCFA6 /* PublishedSSWampMessage.swift in Sources */,
+				45166D1326F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
 				A9B841B526E914FB00269B05 /* Outcome.swift in Sources */,
 				455A0CEE26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
-				452036A426EFA4DA000BCFA6 /* EventSSWampMessage.swift in Sources */,
-				452036A826EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift in Sources */,
 				A9B8409F26DE712500269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42526C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
+				45166CE126F3548D00E69D65 /* Notification.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0CA826BD973C00EC572D /* TargetVariables.swift in Sources */,
-				452036CE26EFA4DA000BCFA6 /* SSWampError.swift in Sources */,
 				455A0D1026BD9D9000EC572D /* Changeable.swift in Sources */,
+				45166CA626F28D2E00E69D65 /* Bootstrap.swift in Sources */,
+				45166D1B26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */,
 				45A2898326C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */,
 				A9B8408126CFB49000269B05 /* DateUserLocation.swift in Sources */,
 				455A0C5426BD902C00EC572D /* AppDelegate.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				45166CE326F3548D00E69D65 /* TSRouter.swift in Sources */,
 				455A0D0226BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
-				452036C826EFA4DA000BCFA6 /* SSWampTransport.swift in Sources */,
 				4589F3F726BF017A005DF543 /* WelcomeViewController.swift in Sources */,
+				45166CDD26F3548D00E69D65 /* TSParams.swift in Sources */,
 				4515636B26BE949300690896 /* UserSettings.swift in Sources */,
-				452036AC26EFA4DA000BCFA6 /* YieldSSWampMessage.swift in Sources */,
 				4589F40326BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				4589F42926C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
-				452036BA26EFA4DA000BCFA6 /* CallSSWampMessage.swift in Sources */,
-				452036BE26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CE626BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
-				4520369E26EFA4DA000BCFA6 /* PublishSSWampMessage.swift in Sources */,
 				45A2897026C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
+				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
+				45166D0726F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
+				45166D2126F3548D00E69D65 /* SSWampRole.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
 				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A626DE831400269B05 /* PermissionAccessViewController.swift in Sources */,
 				A9B841B226E9054700269B05 /* Market.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
+				45166CFF26F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
+				45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				4589F42C26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
-				452036C026EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */,
+				45166CF526F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
-				452036AA26EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F41F26BF03FE005DF543 /* Fonts.swift in Sources */,
-				452036C426EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift in Sources */,
-				452036CC26EFA4DA000BCFA6 /* JSONSSWampSerializer.swift in Sources */,
+				45166CDF26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
+				45166D0B26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */,
 				455A0CE426BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
-				4520369626EFA4DA000BCFA6 /* SSWampMessage.swift in Sources */,
-				452036BC26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift in Sources */,
 				A9C82F9026F1FF3300059DCD /* SmallRegisterViewController.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
+				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
+				45166CE926F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
+				45166CED26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
 				455A0CFE26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
 				4589F40126BF017A005DF543 /* LoginViewController.swift in Sources */,
-				4520369226EFA4DA000BCFA6 /* Notification.swift in Sources */,
-				452036B826EFA4DA000BCFA6 /* ResultSSWampMessage.swift in Sources */,
+				45166D0F26F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0C26BD9D9000EC572D /* CountryName.swift in Sources */,
+				45166D2326F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636E26BE94F600690896 /* Theme.swift in Sources */,
+				45166CF326F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				4589F41926BF0243005DF543 /* NibView.swift in Sources */,
-				452036D626EFA4DB000BCFA6 /* TSManager.swift in Sources */,
 				A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */,
+				45166D0926F3548D00E69D65 /* CallSSWampMessage.swift in Sources */,
 				4589F42226BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1926BDABA100EC572D /* Internationalization.swift in Sources */,
-				4520368E26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */,
 				455A0CF226BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				A9B8408626D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */,
-				452036A226EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
-				452036CA26EFA4DA000BCFA6 /* SSWampSerializer.swift in Sources */,
-				452036B026EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift in Sources */,
-				452036C626EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
-				4520369826EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift in Sources */,
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
+				45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
+				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				A9B841A626E6557000269B05 /* Location.swift in Sources */,
-				452036B426EFA4DA000BCFA6 /* InvocationSSWampMessage.swift in Sources */,
+				45166D1726F3548D00E69D65 /* SSWampTransport.swift in Sources */,
 				4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				A9B8409826DE65BF00269B05 /* RefusedAccessViewController.swift in Sources */,
-				452036A626EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift in Sources */,
+				45166CEF26F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
+				45166CF926F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
 				4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				4589F3FD26BF017A005DF543 /* RegisterViewController.swift in Sources */,
 				A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
 				A9B840C726E1285200269B05 /* Discipline.swift in Sources */,
-				452036AE26EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift in Sources */,
 				455A0D0826BD9D9000EC572D /* CenterCellCollectionViewFlowLayout.swift in Sources */,
-				452036B626EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift in Sources */,
+				45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF626BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342726C18257009D7D27 /* Logger.swift in Sources */,
+				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896726C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
+				45166D1126F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
+				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
+				45166D2526F3548D00E69D65 /* TSManager.swift in Sources */,
 				455A0D1E26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
 				455A0CF026BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
 				455A0CA226BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				456B342D26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				455A0CEA26BD9D9000EC572D /* Throwable.swift in Sources */,
+				45166D1926F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				4589F41426BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
-				452036D026EFA4DA000BCFA6 /* SSWampSession.swift in Sources */,
-				4520369A26EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift in Sources */,
+				45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
+				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897A26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
-				452036C226EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */,
 				A9C82F9C26F211E600059DCD /* SmallRegisterStep2ViewController.swift in Sources */,
 				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896A26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				A9B841B826E91BBC00269B05 /* BettingOffer.swift in Sources */,
-				4520369426EFA4DA000BCFA6 /* TSRouter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1819,143 +1827,145 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				452036D326EFA4DB000BCFA6 /* SSWampRole.swift in Sources */,
-				452036D526EFA4DB000BCFA6 /* SSWampExtensions.swift in Sources */,
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
+				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
+				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
+				45166D1E26F3548D00E69D65 /* SSWampError.swift in Sources */,
 				A9C82FA326F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */,
-				452036B326EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
-				4520369126EFA4DA000BCFA6 /* TSParams.swift in Sources */,
 				4589F41726BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				45DDBAB826F23F1A00A73E45 /* UserSession.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
+				45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
+				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
-				4520369D26EFA4DA000BCFA6 /* SSWampMessages.swift in Sources */,
 				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
-				452036A126EFA4DA000BCFA6 /* PublishedSSWampMessage.swift in Sources */,
+				45166D1426F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
 				A9B841B626E914FB00269B05 /* Outcome.swift in Sources */,
 				455A0CEF26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
-				452036A526EFA4DA000BCFA6 /* EventSSWampMessage.swift in Sources */,
-				452036A926EFA4DA000BCFA6 /* SubscribeSSWampMessage.swift in Sources */,
 				A9B840A126DE749000269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42626C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
+				45166CE226F3548D00E69D65 /* Notification.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0C9726BD943900EC572D /* TargetVariables.swift in Sources */,
-				452036CF26EFA4DA000BCFA6 /* SSWampError.swift in Sources */,
 				455A0D1126BD9D9000EC572D /* Changeable.swift in Sources */,
+				45166CA726F28D2E00E69D65 /* Bootstrap.swift in Sources */,
+				45166D1C26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */,
 				45A2898426C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */,
 				A9B8408226CFB49000269B05 /* DateUserLocation.swift in Sources */,
 				455A0CA326BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				45166CE426F3548D00E69D65 /* TSRouter.swift in Sources */,
 				455A0D0326BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
-				452036C926EFA4DA000BCFA6 /* SSWampTransport.swift in Sources */,
 				4589F3F826BF017A005DF543 /* WelcomeViewController.swift in Sources */,
+				45166CDE26F3548D00E69D65 /* TSParams.swift in Sources */,
 				4515636C26BE949300690896 /* UserSettings.swift in Sources */,
-				452036AD26EFA4DA000BCFA6 /* YieldSSWampMessage.swift in Sources */,
 				4589F40426BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
-				452036BB26EFA4DA000BCFA6 /* CallSSWampMessage.swift in Sources */,
-				452036BF26EFA4DA000BCFA6 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
-				4520369F26EFA4DA000BCFA6 /* PublishSSWampMessage.swift in Sources */,
 				45A2897126C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
+				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
+				45166D0826F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
+				45166D2226F3548D00E69D65 /* SSWampRole.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
 				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A926DE86BE00269B05 /* PermissionAccessViewController.swift in Sources */,
 				A9B841B326E9054700269B05 /* Market.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
+				45166D0026F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
+				45166CF826F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				4589F42D26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
-				452036C126EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */,
+				45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
-				452036AB26EFA4DA000BCFA6 /* UnsubscribedSSWampMessage.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F42026BF03FE005DF543 /* Fonts.swift in Sources */,
-				452036C526EFA4DA000BCFA6 /* GoodbyeSSWampMessage.swift in Sources */,
-				452036CD26EFA4DA000BCFA6 /* JSONSSWampSerializer.swift in Sources */,
+				45166CE026F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
+				45166D0C26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */,
 				455A0CE526BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
-				4520369726EFA4DA000BCFA6 /* SSWampMessage.swift in Sources */,
-				452036BD26EFA4DA000BCFA6 /* ErrorSSWampMessage.swift in Sources */,
 				A9C82F9126F1FF3300059DCD /* SmallRegisterViewController.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
+				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
+				45166CEA26F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
+				45166CEE26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
 				455A0CFF26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
 				4589F40226BF017A005DF543 /* LoginViewController.swift in Sources */,
-				4520369326EFA4DA000BCFA6 /* Notification.swift in Sources */,
-				452036B926EFA4DA000BCFA6 /* ResultSSWampMessage.swift in Sources */,
+				45166D1026F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0D26BD9D9000EC572D /* CountryName.swift in Sources */,
+				45166D2426F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636F26BE94F600690896 /* Theme.swift in Sources */,
+				45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				4589F41A26BF0243005DF543 /* NibView.swift in Sources */,
-				452036D726EFA4DB000BCFA6 /* TSManager.swift in Sources */,
 				A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */,
+				45166D0A26F3548D00E69D65 /* CallSSWampMessage.swift in Sources */,
 				4589F42326BF395E005DF543 /* UserDefaults.swift in Sources */,
 				455A0D1A26BDABA100EC572D /* Internationalization.swift in Sources */,
-				4520368F26EFA4DA000BCFA6 /* EveryMatrixSocketAPIError.swift in Sources */,
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenAccessViewController.swift in Sources */,
-				452036A326EFA4DA000BCFA6 /* UnsubscribeSSWampMessage.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
-				452036CB26EFA4DA000BCFA6 /* SSWampSerializer.swift in Sources */,
-				452036B126EFA4DA000BCFA6 /* UnregisterSSWampMessage.swift in Sources */,
-				452036C726EFA4DA000BCFA6 /* WebSocketSSWampTransport.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
-				4520369926EFA4DA000BCFA6 /* AuthenticateSSWampMessage.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
+				45166D0E26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,
+				45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
-				452036B526EFA4DA000BCFA6 /* InvocationSSWampMessage.swift in Sources */,
+				45166D1826F3548D00E69D65 /* SSWampTransport.swift in Sources */,
 				4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				A9B8409A26DE6ABB00269B05 /* RefusedAccessViewController.swift in Sources */,
-				452036A726EFA4DA000BCFA6 /* SubscribedSSWampMessage.swift in Sources */,
+				45166CF026F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
+				45166CFA26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
 				4515636026BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				4589F3FE26BF017A005DF543 /* RegisterViewController.swift in Sources */,
 				A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
 				A9B840C826E1285200269B05 /* Discipline.swift in Sources */,
-				452036AF26EFA4DA000BCFA6 /* RegisteredSSWampMessage.swift in Sources */,
 				455A0D0926BD9D9000EC572D /* CenterCellCollectionViewFlowLayout.swift in Sources */,
-				452036B726EFA4DA000BCFA6 /* UnregisteredSSWampMessage.swift in Sources */,
+				45166CE626F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF726BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342826C18257009D7D27 /* Logger.swift in Sources */,
+				45166CE826F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896826C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
+				45166D1226F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
+				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
+				45166D2626F3548D00E69D65 /* TSManager.swift in Sources */,
 				455A0D1F26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
 				455A0CF126BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
 				455A0C8626BD904300EC572D /* AppDelegate.swift in Sources */,
 				456B342E26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				455A0CEB26BD9D9000EC572D /* Throwable.swift in Sources */,
+				45166D1A26F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				4589F41526BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
-				452036D126EFA4DA000BCFA6 /* SSWampSession.swift in Sources */,
-				4520369B26EFA4DA000BCFA6 /* ChallengeSSWampMessage.swift in Sources */,
+				45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
+				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
-				452036C326EFA4DA000BCFA6 /* AbortSSWampMessage.swift in Sources */,
 				A9C82F9D26F211E600059DCD /* SmallRegisterStep2ViewController.swift in Sources */,
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896B26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				A9B841B926E91BBC00269B05 /* BettingOffer.swift in Sources */,
-				4520369526EFA4DA000BCFA6 /* TSRouter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

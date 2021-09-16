@@ -54,14 +54,14 @@ class SmallRegisterViewController: UIViewController {
         registerTitleLabel.textColor = .white
 
         emailHeadertextFieldView.backgroundColor = UIColor(patternImage: imageGradient)
-        emailHeadertextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         emailHeadertextFieldView.setTextFieldColor(.white)
         emailHeadertextFieldView.setSecureField(false)
 
         registerButton.setTitleColor(.white, for: .normal)
         registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
         //loginButton.backgroundColor = UIColor.Core.backgroundDarkModal
-        registerButton.backgroundColor = UIColor.Core.buttonMain
+        registerButton.backgroundColor = UIColor.App.buttonMain
         registerButton.cornerRadius = BorderRadius.button
 
         underlineTextLabel()
@@ -108,9 +108,9 @@ class SmallRegisterViewController: UIViewController {
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range1)
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range2)
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range3)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range2)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range3)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)

@@ -25,6 +25,14 @@ struct TargetVariables: SportsbookTarget {
         "http://34.141.102.89/api/auth/v1"
     }
 
+    static var firebaseDatabaseURL: String {
+        #if DEBUG
+        "https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/"
+        #else
+        "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
+        #endif
+    }
+
     static var everyMatrixHost: String {
         return ""
     }

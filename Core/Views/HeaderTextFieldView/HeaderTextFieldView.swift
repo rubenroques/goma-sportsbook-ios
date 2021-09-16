@@ -2,12 +2,11 @@ import UIKit
 
 class HeaderTextFieldView: NibView {
 
-
     @IBOutlet private var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
-    @IBOutlet private weak var headerLabel: UILabel!
-    @IBOutlet private weak var textField: UITextField!
+    @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var textField: UITextField!
 
     @IBOutlet private weak var bottomLineView: UIView!
     @IBOutlet private weak var tipLabel: UILabel!
@@ -17,15 +16,18 @@ class HeaderTextFieldView: NibView {
 
     @IBOutlet private weak var centerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
-    @IBOutlet private var showLabel: UILabel!
+    @IBOutlet private weak var showLabel: UILabel!
 
+    @IBOutlet private weak var tipImageView: UIImageView!
 
-    @IBOutlet private var tipImageView: UIImageView!
+    var didTapReturn: (() -> ())?
+
     // Variables
     let datePicker = UIDatePicker()
     let pickerView = UIPickerView()
     var selectionArray: [String] = []
 
+    var shouldScalePlaceholder = true
 
     private var isSecureField = false {
         didSet {
@@ -61,12 +63,12 @@ class HeaderTextFieldView: NibView {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
-                //self.showPassImageView.image = UIImage(named: "hide_password_icon")
+                // self.showPassImageView.image = UIImage(named: "hide_password_icon")
                 self.showLabel.text = localized("string_hide")
             }
             else {
                 self.textField.isSecureTextEntry = true
-                //self.showPassImageView.image = UIImage(named: "view_password_icon")
+                // self.showPassImageView.image = UIImage(named: "view_password_icon")
                 self.showLabel.text = localized("string_show")
             }
         }
@@ -90,7 +92,7 @@ class HeaderTextFieldView: NibView {
                 tipImageView.image = UIImage(named: "Active")
             case .error:
                 tipImageView.isHidden = false
-                tipImageView.image = UIImage(named: "Error_Input")
+                tipImageView.image = UIImage(named: "error_input_icon")
             case .hidden:
                 tipImageView.isHidden = true
                 tipImageView.image = nil
@@ -98,14 +100,11 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var highlightColor = UIColor.Core
-    .buttonMain{
+    var highlightColor = UIColor.App.buttonMain{
         didSet {
-
             if self.isActive {
-                //self.bottomLineView.backgroundColor = self.highlightColor
+                // self.bottomLineView.backgroundColor = self.highlightColor
             }
-
         }
     }
 
@@ -139,14 +138,11 @@ class HeaderTextFieldView: NibView {
 
     func setup() {
 
-//        #if DEBUG
-//        self.layer.borderWidth = 1.0
-//        self.layer.borderColor = UIColor.red.cgColor
-//        #endif
-        containerView.backgroundColor = UIColor.Core.backgroundDarkModal
+        containerView.backgroundColor = UIColor.App.backgroundDarkModal
         containerView.layer.cornerRadius = BorderRadius.headerInput
         containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.Core.backgroundDarkModal.withAlphaComponent(0).cgColor
+        containerView.layer.borderColor = UIColor.App.backgroundDarkModal.withAlphaComponent(0).cgColor
+        
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType
 
@@ -162,7 +158,6 @@ class HeaderTextFieldView: NibView {
 
         tipImageView.isHidden = true
 
-        self.headerLabel.alpha = 0.7
         self.headerPlaceholderLabel.alpha = 0.0
         self.textField.delegate = self
 
@@ -176,6 +171,7 @@ class HeaderTextFieldView: NibView {
         showLabel.text = localized("string_show")
         showLabel.font = AppFont.with(type: .regular, size: 14.0)
         showLabel.textColor =  UIColor.white
+
         let text = localized("string_show")
         let underlineAttriString = NSMutableAttributedString(string: text)
         let range = (text as NSString).range(of: localized("string_show"))
@@ -184,6 +180,9 @@ class HeaderTextFieldView: NibView {
         showLabel.isHidden = true
         showLabel.isUserInteractionEnabled = true
         showLabel.addGestureRecognizer(tapGestureRecognizer)
+
+        tipLabel.font = AppFont.with(type: .semibold, size: 12)
+
     }
 
     func shouldSlideDown() -> Bool {
@@ -198,10 +197,15 @@ class HeaderTextFieldView: NibView {
         self.centerBottomConstraint.isActive = false
         self.centerTopConstraint.isActive = true
 
-        self.headerLabel.alpha = 1.0
 
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
+
+            if self.shouldScalePlaceholder {
+                let movingWidthDiff = (self.headerLabel.frame.size.width - (self.headerLabel.frame.size.width * 0.8)) / 2
+                self.headerLabel.transform = CGAffineTransform(scaleX: 0.8, y: 0.8).concatenating(CGAffineTransform(translationX: -movingWidthDiff, y: 0))
+            }
+            self.shouldScalePlaceholder = false
         } completion: { _ in
 
         }
@@ -212,9 +216,11 @@ class HeaderTextFieldView: NibView {
         self.centerBottomConstraint.isActive = true
         self.centerTopConstraint.isActive = false
 
-        self.headerLabel.alpha = 0.7
+
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
+            self.headerLabel.transform = CGAffineTransform.identity
+            self.shouldScalePlaceholder = true
         } completion: { _ in
 
         }
@@ -281,7 +287,6 @@ class HeaderTextFieldView: NibView {
 
         textField.inputAccessoryView = toolBar
         textField.inputView = datePicker
-
     }
 
     @objc func datePickerDone() {
@@ -404,6 +409,11 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         }
 
         self.isActive = false
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.didTapReturn?()
+        return true
     }
 }
 

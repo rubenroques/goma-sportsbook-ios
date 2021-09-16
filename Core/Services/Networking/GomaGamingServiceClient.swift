@@ -36,13 +36,11 @@ struct GomaGamingServiceClient {
     }
 
     func requestUserRegister(deviceId: String, username: String, email: String, phone: String, birthDate: String, userProviderId: String)
-    -> AnyPublisher<[GomaClientSettings]?, NetworkError> {
+    -> AnyPublisher<String?, NetworkError> {
         let endpoint = GomaGamingService.simpleRegister(username: username, email: email, phone: phone, birthDate: birthDate, userProviderId: userProviderId)
         // let requestPublisher: AnyPublisher<[ClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-        let requestPublisher: AnyPublisher<[GomaClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<String?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
-
-
 
 }

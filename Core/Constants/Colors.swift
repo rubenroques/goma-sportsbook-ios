@@ -10,9 +10,11 @@ import UIKit
 extension UIColor {
 
     // Colors file is localed on each Client "ThemeColors.xcassets" file
-    struct Core {
-        static let tint: UIColor = UIColor(named: "tintColor")! // This will read the tintColor on the Client ThemeColor.xcasset
+    struct App {
+        static let mainTintColor: UIColor = UIColor(named: "mainTintColor")! // This will read the tintColor on the Client ThemeColor.xcasset
+
         static let headingMain: UIColor = UIColor.white // Placeholder
+
         static let buttonMain: UIColor = UIColor(red: 4/255, green: 125/255, blue: 255/255, alpha: 1.0)
         static let subtitleGray: UIColor = UIColor(red: 114/255, green: 118/255, blue: 141/255, alpha: 1.0)
         static let backgroundDarkFade: UIColor = UIColor(red: 29/255, green: 31/255, blue: 38/255, alpha: 0.95)
@@ -21,6 +23,9 @@ extension UIColor {
 
         static let primaryButtonNormalColor = UIColor(named: "primaryButtonNormalColor")!
         static let primaryButtonPressedColor = UIColor(named: "primaryButtonPressedColor")!
+
+        static let alertError: UIColor = UIColor(red: 0.88, green: 0.14, blue: 0.23, alpha: 1)
+
     }
 
 }

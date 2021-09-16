@@ -15,15 +15,18 @@ class LoginViewController: UIViewController {
     @IBOutlet private weak var passwordHeaderTextFieldView: HeaderTextFieldView!
 
     @IBOutlet private var rememberView: UIView!
+    @IBOutlet private var rememberToggleView: UIView!
     @IBOutlet private var rememberImageView: UIImageView!
     @IBOutlet private var rememberLabel: UILabel!
+
     @IBOutlet private var forgotView: UIView!
     @IBOutlet private var forgotButton: UIButton!
-    @IBOutlet private var loginButton: RoundButton!
+    @IBOutlet private var loginButton: UIButton!
     @IBOutlet private var registerLabel: UILabel!
     @IBOutlet private var termsLabel: UILabel!
 
     // Variables
+    var shouldRememberUser: Bool = true
     var imageGradient: UIImage = UIImage()
 
     init() {
@@ -42,15 +45,82 @@ class LoginViewController: UIViewController {
 
         imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
 
-        setupWithTheme()
         commonInit()
-
+        setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         setupWithTheme()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+
+    func commonInit() {
+
+        usernameHeaderTextFieldView.setSecureField(false)
+        usernameHeaderTextFieldView.setKeyboardType(.emailAddress)
+
+        passwordHeaderTextFieldView.setSecureField(true)
+        passwordHeaderTextFieldView.setKeyboardType(.default)
+
+        usernameHeaderTextFieldView.headerLabel.font = AppFont.with(type: .semibold, size: 16)
+        passwordHeaderTextFieldView.headerLabel.font = AppFont.with(type: .semibold, size: 16)
+
+        usernameHeaderTextFieldView.textField.returnKeyType = .next
+        passwordHeaderTextFieldView.textField.returnKeyType = .go
+
+        usernameHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.passwordHeaderTextFieldView.textField.becomeFirstResponder()
+        }
+
+        passwordHeaderTextFieldView.didTapReturn = { [weak self] in
+            self?.passwordHeaderTextFieldView.textField.resignFirstResponder()
+            self?.didTapLoginButton()
+        }
+
+
+        skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 18)
+        skipButton.setTitle(localized("string_skip"), for: .normal)
+
+        logoImageView.image = UIImage(named: "SPORTSBOOK")
+        logoImageView.sizeToFit()
+
+        loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
+        loginLabel.text = localized("string_login")
+
+        self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
+        self.passwordHeaderTextFieldView.setPlaceholderText("Password")
+
+        self.usernameHeaderTextFieldView.highlightColor = .white
+        self.passwordHeaderTextFieldView.highlightColor = .white
+
+        rememberLabel.text = localized("string_remember")
+        rememberLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 12)
+        rememberToggleView.layer.cornerRadius = BorderRadius.checkBox
+        rememberImageView.backgroundColor = .clear
+        rememberImageView.contentMode = .scaleAspectFit
+
+        self.enableRememberUser()
+
+        forgotButton.setTitle(localized("string_forgot"), for: .normal)
+        forgotButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 14)
+
+        loginButton.setTitle(localized("string_login"), for: .normal)
+        loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
+
+        self.passwordHeaderTextFieldView.setSecureField(true)
+
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        let tapImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(rememberUserOptionTapped))
+        rememberView.isUserInteractionEnabled = true
+        rememberView.addGestureRecognizer(tapImageGestureRecognizer)
     }
 
     func setupWithTheme() {
@@ -64,30 +134,43 @@ class LoginViewController: UIViewController {
 
         loginLabel.textColor = .white
 
-        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         usernameHeaderTextFieldView.setTextFieldColor(.white)
-        usernameHeaderTextFieldView.setSecureField(false)
 
-        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         passwordHeaderTextFieldView.setTextFieldColor(.white)
-        passwordHeaderTextFieldView.setSecureField(true)
 
-        rememberView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        rememberImageView.backgroundColor =  UIColor.Core.headerTextFieldGray
-        rememberImageView.layer.cornerRadius = BorderRadius.checkBox
-        rememberImageView.layer.borderWidth = 1
-        rememberImageView.layer.borderColor = UIColor.Core.backgroundDarkModal.withAlphaComponent(0).cgColor
-
+        rememberView.backgroundColor = .clear
         rememberLabel.textColor = .white
+        if self.shouldRememberUser {
+            rememberToggleView.backgroundColor =  UIColor.App.mainTintColor
+        }
+        else {
+            rememberToggleView.backgroundColor =  UIColor.App.backgroundDarkModal
+        }
 
         forgotButton.setTitleColor(.white, for: .normal)
 
         loginButton.setTitleColor(.white, for: .normal)
-        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
-        //loginButton.backgroundColor = UIColor.Core.backgroundDarkModal
-        loginButton.backgroundColor = UIColor.Core.buttonMain
-        loginButton.cornerRadius = BorderRadius.button
+        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
+        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+
+        loginButton.backgroundColor = .clear
+        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
+        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+
+
+        loginButton.layer.cornerRadius = BorderRadius.button
+        loginButton.layer.masksToBounds = true
+
+        /*
+         loginButton.backgroundColor = UIColor.App.primaryButtonNormalColor
+         loginButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
+         loginButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .selected)
+
+         loginButton.layer.masksToBounds = true
+         loginButton.layer.cornerRadius = BorderRadius.button
+         */
 
         // Label with highlighted text area
         highlightTextLabel()
@@ -98,13 +181,15 @@ class LoginViewController: UIViewController {
 
     func highlightTextLabel() {
         let accountText = localized("string_new_create_account")
+
         registerLabel.text = accountText
-        registerLabel.font = AppFont.with(type: .regular, size: 14.0)
+        registerLabel.font = AppFont.with(type: .bold, size: 14.0)
+
         self.registerLabel.textColor =  UIColor.white
         let highlightAttriString = NSMutableAttributedString(string: accountText)
         let range1 = (accountText as NSString).range(of: localized("string_create_account"))
-        highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range1)
-        highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range1)
+        highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .bold, size: 14), range: range1)
+        highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
         registerLabel.attributedText = highlightAttriString
         registerLabel.isUserInteractionEnabled = true
         registerLabel.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapLabel(gesture:))))
@@ -113,9 +198,10 @@ class LoginViewController: UIViewController {
     func underlineTextLabel() {
         let termsText = localized("string_agree_terms_conditions")
 
+        let font = AppFont.with(type: .semibold, size: 11.0)
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
-        termsLabel.font = AppFont.with(type: .regular, size: 14.0)
+        termsLabel.font = font
         self.termsLabel.textColor =  UIColor.white
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
@@ -129,12 +215,12 @@ class LoginViewController: UIViewController {
         paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
         paragraphStyle.alignment = .center
 
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range3)
+        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: font, range: range1)
+        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: font, range: range2)
+        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: font, range: range3)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range2)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range3)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
@@ -158,7 +244,7 @@ class LoginViewController: UIViewController {
         }
     }
 
-    @IBAction func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
+    @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = localized("string_agree_terms_conditions")
 
         let termsRange = (text as NSString).range(of: localized("string_terms"))
@@ -168,10 +254,12 @@ class LoginViewController: UIViewController {
         if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
             print("Tapped Terms")
             // TO-DO: Call VC to register
-        } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
+        }
+        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
             print("Tapped Privacy")
             // TO-DO: Call VC to register
-        } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
+        }
+        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
             print("Tapped EULA")
             // TO-DO: Call VC to register
         } else {
@@ -179,60 +267,35 @@ class LoginViewController: UIViewController {
         }
     }
 
-    func commonInit() {
-
-        skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
-        skipButton.setTitle(localized("string_skip"), for: .normal)
-
-        logoImageView.image = UIImage(named: "SPORTSBOOK")
-        logoImageView.sizeToFit()
-
-        loginLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
-        loginLabel.text = localized("string_login")
-
-        self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
-        self.passwordHeaderTextFieldView.setPlaceholderText("Password")
-
-        self.usernameHeaderTextFieldView.highlightColor = .white
-            self.passwordHeaderTextFieldView.highlightColor = .white
-
-        rememberLabel.text = localized("string_remember")
-        rememberLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 12)
-        forgotButton.setTitle(localized("string_forgot"), for: .normal)
-        forgotButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
-
-        loginButton.setTitle(localized("string_login"), for: .normal)
-        loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
-        //loginButton.isEnabled = false
-
-        self.passwordHeaderTextFieldView.setSecureField(true)
-
-        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
-        self.view.addGestureRecognizer(tapGestureRecognizer)
-
-        let tapImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapImageGestureRecognizer:)))
-        rememberImageView.isUserInteractionEnabled = true
-        rememberImageView.addGestureRecognizer(tapImageGestureRecognizer)
-    }
-
-    @objc func imageTapped(tapImageGestureRecognizer: UITapGestureRecognizer)
-    {
-        let tappedImage = tapImageGestureRecognizer.view as! UIImageView
-
-        if !Env.remember {
-            tappedImage.image = UIImage(named: "Active")
-            Env.remember = true
-        } else {
-            tappedImage.image = nil
-            Env.remember = false
+    @objc func rememberUserOptionTapped() {
+        if self.shouldRememberUser {
+            self.disableRememberUser()
+            self.shouldRememberUser = false
+        }
+        else {
+            self.enableRememberUser()
+            self.shouldRememberUser = true
         }
     }
+
+    private func enableRememberUser() {
+        rememberImageView.image = UIImage(named: "active_toggle_icon")
+        rememberToggleView.backgroundColor = UIColor.App.mainTintColor
+        Env.remember = true
+    }
+
+    private func disableRememberUser() {
+        rememberImageView.image = nil
+        rememberToggleView.backgroundColor = UIColor.App.backgroundDarkModal
+        Env.remember = false
+    }
+
 
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        _ = self.usernameHeaderTextFieldView.resignFirstResponder()
-        _ = self.passwordHeaderTextFieldView.resignFirstResponder()
+        self.usernameHeaderTextFieldView.resignFirstResponder()
+        self.passwordHeaderTextFieldView.resignFirstResponder()
     }
 
     @IBAction private func didTapLoginButton() {
@@ -241,7 +304,7 @@ class LoginViewController: UIViewController {
         let input = self.usernameHeaderTextFieldView.text
         print(input)
         if (username != input) {
-            self.usernameHeaderTextFieldView.showErrorOnField(text: "Error")
+            self.usernameHeaderTextFieldView.showErrorOnField(text: "Error", color: UIColor.App.alertError)
         }
     }
 
@@ -249,7 +312,9 @@ class LoginViewController: UIViewController {
         self.navigationController?.pushViewController(RecoverPasswordViewController(), animated: true)
     }
 
-    
+    @IBAction private func didTapSkipButton() {
+        
+    }
 }
 
 extension LoginViewController: UITextFieldDelegate {

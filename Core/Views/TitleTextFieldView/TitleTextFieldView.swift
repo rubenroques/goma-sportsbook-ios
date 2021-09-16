@@ -20,9 +20,11 @@ class TitleTextFieldView: NibView {
 
     override func commonInit() {
         self.backgroundColor = .black
+
         self.titleLabel.text = "Title"
         self.titleLabel.font = AppFont.with(type: .bold, size: 20.0)
         self.titleLabel.textColor = .white
+
         self.textField.delegate = self
         self.textField.placeholder = "Placeholder"
         self.textField.backgroundColor = .black

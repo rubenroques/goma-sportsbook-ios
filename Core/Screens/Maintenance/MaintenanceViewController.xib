@@ -28,9 +28,9 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vAf-DP-KWk">
-                            <rect key="frame" x="16" y="243" width="382" height="332"/>
+                            <rect key="frame" x="16" y="203" width="382" height="293.5"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="maintenance_logo" translatesAutoresizingMaskIntoConstraints="NO" id="WUZ-bm-wxL">
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="maintenance_icon" translatesAutoresizingMaskIntoConstraints="NO" id="WUZ-bm-wxL">
                                     <rect key="frame" x="116" y="16" width="150" height="150"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="150" id="Knj-SU-ugB"/>
@@ -56,6 +56,7 @@
                                 <constraint firstItem="Sa4-vn-DMu" firstAttribute="top" secondItem="ooL-CA-23N" secondAttribute="bottom" constant="30" id="DyT-a6-05B"/>
                                 <constraint firstItem="WUZ-bm-wxL" firstAttribute="centerX" secondItem="Sa4-vn-DMu" secondAttribute="centerX" id="OWV-sr-BmT"/>
                                 <constraint firstItem="ooL-CA-23N" firstAttribute="leading" secondItem="vAf-DP-KWk" secondAttribute="leading" constant="19" id="Sas-qb-chr"/>
+                                <constraint firstAttribute="bottom" secondItem="Sa4-vn-DMu" secondAttribute="bottom" constant="16" id="YMF-Gy-sia"/>
                                 <constraint firstItem="WUZ-bm-wxL" firstAttribute="centerX" secondItem="vAf-DP-KWk" secondAttribute="centerX" id="eMP-ZY-Ene"/>
                                 <constraint firstItem="ooL-CA-23N" firstAttribute="top" secondItem="WUZ-bm-wxL" secondAttribute="bottom" constant="40" id="g14-yt-Qfa"/>
                                 <constraint firstItem="WUZ-bm-wxL" firstAttribute="top" secondItem="vAf-DP-KWk" secondAttribute="top" constant="16" id="idu-D0-dOM"/>
@@ -69,8 +70,7 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="vAf-DP-KWk" secondAttribute="trailing" constant="16" id="85Z-Jc-vHe"/>
                         <constraint firstItem="vAf-DP-KWk" firstAttribute="centerX" secondItem="yAT-z2-diq" secondAttribute="centerX" id="Dpx-Ml-1Z8"/>
-                        <constraint firstItem="vAf-DP-KWk" firstAttribute="centerY" secondItem="yAT-z2-diq" secondAttribute="centerY" id="QZE-nO-vZt"/>
-                        <constraint firstItem="vAf-DP-KWk" firstAttribute="top" secondItem="yAT-z2-diq" secondAttribute="top" constant="243" id="bYE-oY-K2W"/>
+                        <constraint firstItem="ooL-CA-23N" firstAttribute="top" secondItem="yAT-z2-diq" secondAttribute="centerY" id="Sa9-iB-4AE"/>
                         <constraint firstItem="vAf-DP-KWk" firstAttribute="leading" secondItem="yAT-z2-diq" secondAttribute="leading" constant="16" id="mfG-T8-MxQ"/>
                     </constraints>
                 </view>
@@ -87,7 +87,7 @@
         </view>
     </objects>
     <resources>
-        <image name="maintenance_logo" width="100" height="100"/>
+        <image name="maintenance_icon" width="236" height="236"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

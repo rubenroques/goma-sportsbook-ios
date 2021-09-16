@@ -37,11 +37,11 @@ class RefusedAccessViewController: UIViewController {
         self.view.backgroundColor = UIColor(patternImage: imageGradient)
         containerView.backgroundColor = UIColor(patternImage: imageGradient)
         refusedView.backgroundColor = UIColor(patternImage: imageGradient)
-        refusedTitleLabel.textColor = UIColor.Core.headingMain
-        refusedSubtitleLabel.textColor = UIColor.Core.subtitleGray
+        refusedTitleLabel.textColor = UIColor.App.headingMain
+        refusedSubtitleLabel.textColor = UIColor.App.subtitleGray
         locationButton.setTitleColor(UIColor.white, for: .normal)
-        locationButton.layer.borderColor = UIColor.Core.buttonMain.cgColor
-        locationButton.layer.backgroundColor = UIColor.Core.buttonMain.cgColor
+        locationButton.layer.borderColor = UIColor.App.buttonMain.cgColor
+        locationButton.layer.backgroundColor = UIColor.App.buttonMain.cgColor
     }
 
     func commonInit() {

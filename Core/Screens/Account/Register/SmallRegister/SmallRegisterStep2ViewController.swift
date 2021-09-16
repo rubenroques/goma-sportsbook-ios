@@ -68,12 +68,12 @@ class SmallRegisterStep2ViewController: UIViewController {
         topSignUpView.backgroundColor = UIColor(patternImage: imageGradient)
 
         usernameHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        usernameHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         usernameHeaderTextView.setTextFieldColor(.white)
         usernameHeaderTextView.setSecureField(false)
 
         dateHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        dateHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        dateHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         dateHeaderTextView.setTextFieldColor(.white)
         dateHeaderTextView.setSecureField(false)
 
@@ -82,36 +82,36 @@ class SmallRegisterStep2ViewController: UIViewController {
         indicativeHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
         indicativeHeaderTextView.setTextFieldColor(.white)
         indicativeHeaderTextView.setViewColor(UIColor(patternImage: imageGradient))
-        indicativeHeaderTextView.setViewBorderColor(UIColor.Core.headerTextFieldGray)
+        indicativeHeaderTextView.setViewBorderColor(UIColor.App.headerTextFieldGray)
         indicativeHeaderTextView.setSecureField(false)
 
         phoneHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        phoneHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         phoneHeaderTextView.setTextFieldColor(.white)
         phoneHeaderTextView.setSecureField(false)
 
-        lineView.backgroundColor = UIColor.Core.headerTextFieldGray.withAlphaComponent(0.2)
+        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
 
         emailHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        emailHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        emailHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         emailHeaderTextView.setTextFieldColor(.white)
         emailHeaderTextView.setSecureField(false)
         emailHeaderTextView.setTextFieldDefaultValue(emailUser)
         emailHeaderTextView.isDisabled = true
 
         passwordHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        passwordHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         passwordHeaderTextView.setTextFieldColor(.white)
         passwordHeaderTextView.setSecureField(true)
 
         confirmPasswordHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
+        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         confirmPasswordHeaderTextView.setTextFieldColor(.white)
         confirmPasswordHeaderTextView.setSecureField(true)
 
         underlineTextLabel()
 
-        signUpButton.backgroundColor = UIColor.Core.buttonMain
+        signUpButton.backgroundColor = UIColor.App.buttonMain
         signUpButton.cornerRadius = BorderRadius.button
 
     }
@@ -166,9 +166,9 @@ class SmallRegisterStep2ViewController: UIViewController {
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range1)
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range2)
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.Core.buttonMain, range: range3)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range2)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range3)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)

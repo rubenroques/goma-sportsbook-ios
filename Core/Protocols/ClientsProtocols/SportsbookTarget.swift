@@ -18,6 +18,9 @@ protocol SportsbookTarget {
 
     static var gomaGamingHost: String { get }
     static var gomaGamingAuthEndpoint: String { get }
+
+    static var firebaseDatabaseURL: String { get }
+
     static var everyMatrixHost: String { get }
 
     static var featureFlags: Flags.Type { get }

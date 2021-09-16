@@ -66,16 +66,17 @@ extension UIImage {
         return nil
     }
 
-    func getGradientColorImage(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat, bounds:CGRect) -> UIImage
-    {
+    func getGradientColorImage(red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat, bounds:CGRect) -> UIImage {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [UIColor(red: (red / 255.0), green: (green / 255.0), blue: (blue / 255.0), alpha: alpha).cgColor, UIColor(red: (red / 255.0), green: (green / 255.0), blue: (blue / 255.0), alpha: alpha).cgColor]
         gradientLayer.bounds = bounds
+
         UIGraphicsBeginImageContextWithOptions(gradientLayer.bounds.size, true, 0.0)
         let context = UIGraphicsGetCurrentContext()
         gradientLayer.render(in: context!)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
+
         return image!
     }
 }

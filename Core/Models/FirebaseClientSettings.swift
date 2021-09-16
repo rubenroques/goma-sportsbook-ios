@@ -18,13 +18,13 @@ struct FirebaseClientSettings: Codable {
     let isOnMaintenance: Bool
     let maintenanceReason: String
 
-    let locale: Locale
+    let locale: Locale?
 
     struct Locale: Codable {
         var currency: String
         var language: String
 
-        enum CodingKeys: String, CodingKey {
+        enum CodingKeys: String, CodingKey { // swiftlint:disable:this nesting
             case currency = "currency"
             case language = "lang"
         }
@@ -39,5 +39,23 @@ struct FirebaseClientSettings: Codable {
         case maintenanceReason = "maintenance_reason"
         case locale = "locale"
     }
-}
 
+    init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        let showInformationPopUpInt = try container.decode(Int.self, forKey: .showInformationPopUp)
+        self.showInformationPopUp = showInformationPopUpInt == 1 ? true : false
+
+        let isOnMaintenanceInt = try container.decode(Int.self, forKey: .isOnMaintenance)
+        self.isOnMaintenance = isOnMaintenanceInt == 1 ? true : false
+
+        self.currentAppVersion = try container.decode(String.self, forKey: .currentAppVersion)
+        self.requiredAppVersion = try container.decode(String.self, forKey: .requiredAppVersion)
+        self.lastUpdate = try container.decode(TimeInterval.self, forKey: .lastUpdate)
+
+        self.maintenanceReason = (try? container.decode(String.self, forKey: .maintenanceReason)) ?? ""
+        self.locale = try? container.decode(Locale.self, forKey: .locale)
+
+    }
+}

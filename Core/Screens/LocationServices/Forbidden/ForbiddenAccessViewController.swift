@@ -35,7 +35,7 @@ class ForbiddenAccessViewController: UIViewController {
         self.view.backgroundColor = UIColor(patternImage: imageGradient)
         containerView.backgroundColor = UIColor(patternImage: imageGradient)
         forbiddenView.backgroundColor = UIColor(patternImage: imageGradient)
-        textLabel.textColor = UIColor.Core.headingMain
+        textLabel.textColor = UIColor.App.headingMain
     }
 
     func commonInit() {

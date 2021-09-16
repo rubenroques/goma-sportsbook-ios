@@ -9,7 +9,7 @@ import Foundation
 
 struct UserSessionStore {
 
-    static func userLogged() -> UserSession? {
+    static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
     }
 
@@ -17,4 +17,13 @@ struct UserSessionStore {
         return UserDefaults.standard.userSession != nil
     }
 
+    func cacheUserSession(userSession: UserSession) {
+        UserDefaults.standard.userSession = userSession
+    }
+
+    func logout() {
+        UserDefaults.standard.userSession = nil
+    }
+
+    
 }

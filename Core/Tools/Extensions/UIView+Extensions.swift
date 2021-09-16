@@ -24,19 +24,13 @@ extension NibLoadable where Self: UIView {
     }
 
     func loadFromNib() {
-
-        // let bundle = Bundle(for: Self.self)
-        // UINib(nibName: nibFileName, bundle: nil).instantiate(withOwner: nil, options: nil)
-
         guard let view = Bundle.main.loadNibNamed(nibFileName, owner: self, options: nil)?.first as? UIView else {
             print("Could not load nib with name: \(nibFileName)")
             return
         }
-
         view.autoresizingMask = [UIView.AutoresizingMask.flexibleWidth, UIView.AutoresizingMask.flexibleHeight]
         view.frame = bounds
         view.backgroundColor = .clear
-
         self.addSubview(view)
         self.translatesAutoresizingMaskIntoConstraints = false
     }

@@ -33,15 +33,15 @@ class PermissionAccessViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.Core.backgroundDarkFade
-        containerView.backgroundColor = UIColor.Core.backgroundDarkFade
-        permissionView.backgroundColor = UIColor.Core.backgroundDarkModal
-        permissionTitleLabel.textColor = UIColor.Core.headingMain
-        permissionTextLabel.textColor = UIColor.Core.headingMain
-        permissionSubtitleLabel.textColor = UIColor.Core.subtitleGray
+        self.view.backgroundColor = UIColor.App.backgroundDarkFade
+        containerView.backgroundColor = UIColor.App.backgroundDarkFade
+        permissionView.backgroundColor = UIColor.App.backgroundDarkModal
+        permissionTitleLabel.textColor = UIColor.App.headingMain
+        permissionTextLabel.textColor = UIColor.App.headingMain
+        permissionSubtitleLabel.textColor = UIColor.App.subtitleGray
         locationButton.setTitleColor(UIColor.white, for: .normal)
-        locationButton.layer.borderColor = UIColor.Core.buttonMain.cgColor
-        locationButton.layer.backgroundColor = UIColor.Core.buttonMain.cgColor
+        locationButton.layer.borderColor = UIColor.App.buttonMain.cgColor
+        locationButton.layer.backgroundColor = UIColor.App.buttonMain.cgColor
     }
 
     func commonInit() {
