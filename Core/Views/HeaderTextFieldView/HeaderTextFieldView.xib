@@ -29,6 +29,8 @@
                 <outlet property="textField" destination="Nwd-z2-2mz" id="Anu-7p-bbG"/>
                 <outlet property="tipImageView" destination="Ie6-5o-AJy" id="lvO-49-HSZ"/>
                 <outlet property="tipLabel" destination="G5t-DZ-vnS" id="IgQ-0D-TB2"/>
+                <outlet property="usernameIconConstraint" destination="9El-TV-qrz" id="hEf-HL-4CF"/>
+                <outlet property="usernameLeadingConstraint" destination="FcF-82-RMF" id="pfi-Cs-91U"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -149,6 +151,7 @@
             <constraints>
                 <constraint firstItem="Ie6-5o-AJy" firstAttribute="top" secondItem="G5t-DZ-vnS" secondAttribute="top" id="63v-ZX-nif"/>
                 <constraint firstItem="G5t-DZ-vnS" firstAttribute="leading" secondItem="Ie6-5o-AJy" secondAttribute="trailing" constant="8" id="9El-TV-qrz"/>
+                <constraint firstItem="G5t-DZ-vnS" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="FcF-82-RMF"/>
                 <constraint firstAttribute="bottom" secondItem="G5t-DZ-vnS" secondAttribute="bottom" constant="2" id="K67-FC-wSS"/>
                 <constraint firstAttribute="bottom" secondItem="HAe-LW-y8Z" secondAttribute="bottom" constant="20" id="Xrs-BN-46g"/>
                 <constraint firstItem="Ie6-5o-AJy" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Ym4-e2-KJh"/>
@@ -157,6 +160,11 @@
                 <constraint firstAttribute="trailing" secondItem="HAe-LW-y8Z" secondAttribute="trailing" id="z6t-yX-TYd"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="FcF-82-RMF"/>
+                </mask>
+            </variation>
             <point key="canvasLocation" x="-476.08695652173918" y="107.14285714285714"/>
         </view>
     </objects>

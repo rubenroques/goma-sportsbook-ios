@@ -2,7 +2,6 @@ import UIKit
 
 class HeaderTextFieldView: NibView {
 
-
     @IBOutlet private var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
@@ -18,14 +17,15 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var centerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
     @IBOutlet private var showLabel: UILabel!
-
+    @IBOutlet private var usernameLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private var usernameIconConstraint: NSLayoutConstraint!
 
     @IBOutlet private var tipImageView: UIImageView!
     // Variables
     let datePicker = UIDatePicker()
     let pickerView = UIPickerView()
     var selectionArray: [String] = []
-
+    var isSelect: Bool = false
 
     private var isSecureField = false {
         didSet {
@@ -61,12 +61,10 @@ class HeaderTextFieldView: NibView {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
-                //self.showPassImageView.image = UIImage(named: "hide_password_icon")
                 self.showLabel.text = localized("string_hide")
             }
             else {
                 self.textField.isSecureTextEntry = true
-                //self.showPassImageView.image = UIImage(named: "view_password_icon")
                 self.showLabel.text = localized("string_show")
             }
         }
@@ -99,11 +97,10 @@ class HeaderTextFieldView: NibView {
     }
 
     var highlightColor = UIColor.Core
-    .buttonMain{
+    .buttonMain {
         didSet {
 
             if self.isActive {
-                //self.bottomLineView.backgroundColor = self.highlightColor
             }
 
         }
@@ -114,12 +111,11 @@ class HeaderTextFieldView: NibView {
     var isDisabled: Bool = false {
         didSet {
             if self.isDisabled {
-                self.headerLabel.isHidden = true
-                self.textField.textColor = .white.withAlphaComponent(0.3)
+                self.textField.textColor = UIColor.Core.headingMain.withAlphaComponent(0.3)
                 self.textField.isUserInteractionEnabled = false
-            } else {
-                self.headerLabel.isHidden = false
-                self.textField.textColor = .white
+            }
+            else {
+                self.textField.textColor = UIColor.Core.headingMain
                 self.textField.isUserInteractionEnabled = true
             }
         }
@@ -169,8 +165,6 @@ class HeaderTextFieldView: NibView {
         self.headerPlaceholderLabel.alpha = 0.0
         self.textField.delegate = self
 
-        //self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-        //self.bottomLineView.alpha = 1.0
         self.bottomLineView.isHidden = true
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapShowPassword))
@@ -178,7 +172,7 @@ class HeaderTextFieldView: NibView {
 
         showLabel.text = localized("string_show")
         showLabel.font = AppFont.with(type: .regular, size: 14.0)
-        showLabel.textColor =  UIColor.white
+        showLabel.textColor =  UIColor.Core.headingMain
         let text = localized("string_show")
         let underlineAttriString = NSMutableAttributedString(string: text)
         let range = (text as NSString).range(of: localized("string_show"))
@@ -279,6 +273,7 @@ class HeaderTextFieldView: NibView {
     }
 
     func setDatePicker() {
+        isSelect = true
         datePicker.datePickerMode = .date
         datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
 
@@ -304,15 +299,20 @@ class HeaderTextFieldView: NibView {
         textField.text = "\(selectedDate)"
     }
 
-    func setSelectionPicker(_ array: [String]) {
+    func setSelectionPicker(_ array: [String], headerVisible: Bool = false) {
+        isSelect = true
         selectionArray = array
         pickerView.delegate = self
         pickerView.selectRow(0, inComponent: 0, animated: true)
 
-        headerLabel.isHidden = true
+        if !headerVisible {
+            headerLabel.isHidden = true
+        }
+        else {
+            slideUp()
+        }
 
         textField.inputView = pickerView
-        //textField.setCustomTextFieldBorders(color: TargetColor.grayMedium, width: 1.0, radius: 5.0)
         textField.text = selectionArray[0]
         // Set arrow image
         let arrowDropdownImageView = UIImageView()
@@ -333,7 +333,6 @@ class HeaderTextFieldView: NibView {
        let toolBar = UIToolbar()
        toolBar.sizeToFit()
         let button = UIBarButtonItem(title: localized("string_done"), style: .plain, target: self, action: #selector(pickerAction))
-       //toolBar.setItems([button], animated: true)
         toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
        toolBar.isUserInteractionEnabled = true
         textField.inputAccessoryView = toolBar
@@ -367,6 +366,20 @@ class HeaderTextFieldView: NibView {
         }
     }
 
+    func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
+
+        tipLabel.text = text
+        tipLabel.textColor = color
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 1.0
+        }
+
+        tipImageView.isHidden = true
+        usernameIconConstraint.isActive = false
+        usernameLeadingConstraint.isActive = true
+    }
+
     func hideTipAndError() {
 
         tipLabel.text = ""
@@ -394,8 +407,8 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
 
         self.isActive = true
-        //self.bottomLineView.backgroundColor = self.highlightColor
-        self.highlightColor = .white
+
+        self.highlightColor = UIColor.Core.headingMain
         self.containerView.layer.borderColor = self.highlightColor.cgColor
 
         self.slideUp()
@@ -406,13 +419,18 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             self.slideDown()
         }
 
-        //self.bottomLineView.backgroundColor = UIColor.black.withAlphaComponent(0.1)
-        //print(self.textField.text)
         if self.textField.text == "" {
             self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
         }
 
         self.isActive = false
+    }
+
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if self.isSelect {
+            return false
+        }
+        return true
     }
 }
 

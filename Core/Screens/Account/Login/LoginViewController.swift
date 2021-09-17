@@ -58,18 +58,18 @@ class LoginViewController: UIViewController {
 
         skipView.backgroundColor = UIColor(patternImage: imageGradient)
 
-        skipButton.setTitleColor(UIColor.white, for: .normal)
+        skipButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
         skipButton.layer.borderColor = .none
-        skipButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
+        skipButton.layer.backgroundColor = UIColor.Core.headingMain.withAlphaComponent(0).cgColor
 
-        loginLabel.textColor = .white
+        loginLabel.textColor = UIColor.Core.headingMain
 
         usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        usernameHeaderTextFieldView.setTextFieldColor(.white)
+        usernameHeaderTextFieldView.setTextFieldColor(UIColor.Core.headingMain)
         usernameHeaderTextFieldView.setSecureField(false)
 
         passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        passwordHeaderTextFieldView.setTextFieldColor(.white)
+        passwordHeaderTextFieldView.setTextFieldColor(UIColor.Core.headingMain)
         passwordHeaderTextFieldView.setSecureField(true)
 
         rememberView.backgroundColor = UIColor(patternImage: imageGradient)
@@ -79,12 +79,12 @@ class LoginViewController: UIViewController {
         rememberImageView.layer.borderWidth = 1
         rememberImageView.layer.borderColor = UIColor.Core.backgroundDarkModal.withAlphaComponent(0).cgColor
 
-        rememberLabel.textColor = .white
+        rememberLabel.textColor = UIColor.Core.headingMain
 
-        forgotButton.setTitleColor(.white, for: .normal)
+        forgotButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
 
-        loginButton.setTitleColor(.white, for: .normal)
-        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
+        loginButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
+        loginButton.setTitleColor(UIColor.Core.headingMain.withAlphaComponent(0.1), for: .disabled)
         //loginButton.backgroundColor = UIColor.Core.backgroundDarkModal
         loginButton.backgroundColor = UIColor.Core.buttonMain
         loginButton.cornerRadius = BorderRadius.button
@@ -100,7 +100,7 @@ class LoginViewController: UIViewController {
         let accountText = localized("string_new_create_account")
         registerLabel.text = accountText
         registerLabel.font = AppFont.with(type: .regular, size: 14.0)
-        self.registerLabel.textColor =  UIColor.white
+        self.registerLabel.textColor = UIColor.Core.headingMain
         let highlightAttriString = NSMutableAttributedString(string: accountText)
         let range1 = (accountText as NSString).range(of: localized("string_create_account"))
         highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range1)
@@ -116,7 +116,7 @@ class LoginViewController: UIViewController {
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
         termsLabel.font = AppFont.with(type: .regular, size: 14.0)
-        self.termsLabel.textColor =  UIColor.white
+        self.termsLabel.textColor = UIColor.Core.headingMain
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
@@ -193,8 +193,8 @@ class LoginViewController: UIViewController {
         self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
         self.passwordHeaderTextFieldView.setPlaceholderText("Password")
 
-        self.usernameHeaderTextFieldView.highlightColor = .white
-            self.passwordHeaderTextFieldView.highlightColor = .white
+        self.usernameHeaderTextFieldView.highlightColor = UIColor.Core.headingMain
+            self.passwordHeaderTextFieldView.highlightColor = UIColor.Core.headingMain
 
         rememberLabel.text = localized("string_remember")
         rememberLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 12)

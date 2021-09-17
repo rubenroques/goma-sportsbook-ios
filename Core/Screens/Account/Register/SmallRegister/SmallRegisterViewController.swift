@@ -52,19 +52,19 @@ class SmallRegisterViewController: UIViewController {
 
         skipView.backgroundColor = UIColor(patternImage: imageGradient)
 
-        skipButton.setTitleColor(UIColor.white, for: .normal)
+        skipButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
         skipButton.layer.borderColor = .none
-        skipButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
+        skipButton.layer.backgroundColor = UIColor.Core.headingMain.withAlphaComponent(0).cgColor
 
-        registerTitleLabel.textColor = .white
+        registerTitleLabel.textColor = UIColor.Core.headingMain
 
         emailHeadertextFieldView.backgroundColor = UIColor(patternImage: imageGradient)
         emailHeadertextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        emailHeadertextFieldView.setTextFieldColor(.white)
+        emailHeadertextFieldView.setTextFieldColor(UIColor.Core.headingMain)
         emailHeadertextFieldView.setSecureField(false)
 
-        registerButton.setTitleColor(.white, for: .normal)
-        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
+        registerButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
+        registerButton.setTitleColor(UIColor.Core.headingMain.withAlphaComponent(0.1), for: .disabled)
         //loginButton.backgroundColor = UIColor.Core.backgroundDarkModal
         registerButton.backgroundColor = UIColor.Core.buttonMain
         registerButton.cornerRadius = BorderRadius.button
@@ -97,7 +97,7 @@ class SmallRegisterViewController: UIViewController {
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
         termsLabel.font = AppFont.with(type: .regular, size: 14.0)
-        self.termsLabel.textColor =  UIColor.white
+        self.termsLabel.textColor =  UIColor.Core.headingMain
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
@@ -126,7 +126,7 @@ class SmallRegisterViewController: UIViewController {
         termsLabel.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapUnderlineLabel(gesture:))))
     }
 
-    @IBAction func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
+    @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = localized("string_agree_terms_conditions")
 
         let termsRange = (text as NSString).range(of: localized("string_terms"))
@@ -154,7 +154,7 @@ class SmallRegisterViewController: UIViewController {
 
     }
 
-    @IBAction func registerAction() {
+    @IBAction private func registerAction() {
 
         let input = self.emailHeadertextFieldView.text
 
@@ -169,12 +169,10 @@ class SmallRegisterViewController: UIViewController {
 
     }
 
-    @IBAction func skipAction() {
+    @IBAction private func skipAction() {
         let vc = RootViewController()
         
         self.navigationController?.pushViewController(vc, animated: true)
     }
-
-
 
 }

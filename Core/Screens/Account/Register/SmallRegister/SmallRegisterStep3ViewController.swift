@@ -12,7 +12,7 @@ class SmallRegisterStep3ViewController: UIViewController {
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
-    @IBOutlet private var backImageView: UIImageView!
+    @IBOutlet private var backButton: UIButton!
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
@@ -50,22 +50,26 @@ class SmallRegisterStep3ViewController: UIViewController {
 
         backView.backgroundColor = UIColor(patternImage: imageGradient)
 
-        titleLabel.textColor = .white
+        backButton.backgroundColor = UIColor.Core.backgroundDarkProfile
+        backButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
+        backButton.setTitle("", for: .normal)
+        backButton.tintColor = UIColor.Core.headingMain
 
-        textLabel.textColor = .white
+        titleLabel.textColor = UIColor.Core.headingMain
 
-        openEmailButton.setTitleColor(.white, for: .normal)
+        textLabel.textColor = UIColor.Core.headingMain
+
+        openEmailButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
         openEmailButton.backgroundColor = UIColor.Core.buttonMain
         openEmailButton.cornerRadius = BorderRadius.button
 
-        resendEmailButton.setTitleColor(.white, for: .normal)
+        resendEmailButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
         resendEmailButton.backgroundColor = UIColor(patternImage: imageGradient)
     }
 
     func commonInit() {
 
-        backImageView.image = UIImage(named: "caret-left")
-        backImageView.sizeToFit()
+        backButton.setImage(UIImage(named: "caret-left"), for: .normal)
 
         logoImageView.image = UIImage(named: "Check_Email")
         logoImageView.sizeToFit()
@@ -83,17 +87,13 @@ class SmallRegisterStep3ViewController: UIViewController {
         resendEmailButton.setTitle(localized("string_resend_email"), for: .normal)
         resendEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
 
-        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapBackImageGestureRecognizer:)))
-            backImageView.isUserInteractionEnabled = true
-        backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
     }
 
-    @objc func imageTapped(tapBackImageGestureRecognizer: UITapGestureRecognizer)
-    {
+    @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func openEmailAppAction() {
+    @IBAction private func openEmailAppAction() {
 
         let mailURL = URL(string: "message://")!
 
@@ -106,9 +106,8 @@ class SmallRegisterStep3ViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    @IBAction func resendEmailAction() {
+    @IBAction private func resendEmailAction() {
         // TO-DO: Resend email
     }
-
 
 }

@@ -352,6 +352,14 @@
 		A9C82FAB26F358A800059DCD /* SmallRegisterStep4ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FA726F358A800059DCD /* SmallRegisterStep4ViewController.xib */; };
 		A9C82FB026F3A37F00059DCD /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FAF26F3A37F00059DCD /* String+Extensions.swift */; };
 		A9C82FB126F3A37F00059DCD /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FAF26F3A37F00059DCD /* String+Extensions.swift */; };
+		A9C82FB526F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FB326F3AFB400059DCD /* PersonalInfoViewController.swift */; };
+		A9C82FB626F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FB326F3AFB400059DCD /* PersonalInfoViewController.swift */; };
+		A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FB426F3AFB400059DCD /* PersonalInfoViewController.xib */; };
+		A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FB426F3AFB400059DCD /* PersonalInfoViewController.xib */; };
+		A9C82FBB26F4E50D00059DCD /* EditAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FBA26F4E50D00059DCD /* EditAlertView.swift */; };
+		A9C82FBC26F4E50D00059DCD /* EditAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FBA26F4E50D00059DCD /* EditAlertView.swift */; };
+		A9C82FBE26F4E55000059DCD /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
+		A9C82FBF26F4E55000059DCD /* EditAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FBD26F4E55000059DCD /* EditAlertView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -548,6 +556,10 @@
 		A9C82FA626F358A800059DCD /* SmallRegisterStep4ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallRegisterStep4ViewController.swift; sourceTree = "<group>"; };
 		A9C82FA726F358A800059DCD /* SmallRegisterStep4ViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SmallRegisterStep4ViewController.xib; sourceTree = "<group>"; };
 		A9C82FAF26F3A37F00059DCD /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		A9C82FB326F3AFB400059DCD /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
+		A9C82FB426F3AFB400059DCD /* PersonalInfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PersonalInfoViewController.xib; sourceTree = "<group>"; };
+		A9C82FBA26F4E50D00059DCD /* EditAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditAlertView.swift; sourceTree = "<group>"; };
+		A9C82FBD26F4E55000059DCD /* EditAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditAlertView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1102,6 +1114,7 @@
 		4589F3EA26BF017A005DF543 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				A9C82FB226F3AB3400059DCD /* Profile */,
 				4589F3EB26BF017A005DF543 /* Welcome */,
 				4589F3EE26BF017A005DF543 /* Register */,
 				4589F3F126BF017A005DF543 /* Login */,
@@ -1150,6 +1163,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A9C82FB926F4E4D700059DCD /* EditAlertView */,
 				4589F41826BF0243005DF543 /* NibView.swift */,
 				4589F40826BF0203005DF543 /* RoundButton.swift */,
 				456B342926C18BB8009D7D27 /* TitleTextFieldView */,
@@ -1333,6 +1347,24 @@
 			path = SmallRegister;
 			sourceTree = "<group>";
 		};
+		A9C82FB226F3AB3400059DCD /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				A9C82FB326F3AFB400059DCD /* PersonalInfoViewController.swift */,
+				A9C82FB426F3AFB400059DCD /* PersonalInfoViewController.xib */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		A9C82FB926F4E4D700059DCD /* EditAlertView */ = {
+			isa = PBXGroup;
+			children = (
+				A9C82FBA26F4E50D00059DCD /* EditAlertView.swift */,
+				A9C82FBD26F4E55000059DCD /* EditAlertView.xib */,
+			);
+			path = EditAlertView;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1482,12 +1514,14 @@
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
+				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A9C82F9226F1FF3300059DCD /* SmallRegisterViewController.xib in Resources */,
 				A9B840A726DE831400269B05 /* PermissionAccessViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CA726BD973900EC572D /* Showcase-Assets.xcassets in Resources */,
 				456B343826C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
 				4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
+				A9C82FBE26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				455A0CAC26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
@@ -1526,12 +1560,14 @@
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenAccessViewController.xib in Resources */,
+				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A9C82F9326F1FF3300059DCD /* SmallRegisterViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* PermissionAccessViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				455A0CAD26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				456B343926C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
 				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
+				A9C82FBF26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
@@ -1590,6 +1626,7 @@
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				A9C82FA226F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */,
 				452036B226EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
+				A9C82FB526F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */,
 				4520369026EFA4DA000BCFA6 /* TSParams.swift in Sources */,
 				4589F41626BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
 				455A0D0A26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
@@ -1637,6 +1674,7 @@
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
+				A9C82FBB26F4E50D00059DCD /* EditAlertView.swift in Sources */,
 				4589F42C26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
 				452036C026EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
@@ -1739,6 +1777,7 @@
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				A9C82FA326F25B4300059DCD /* SmallRegisterStep3ViewController.swift in Sources */,
 				452036B326EFA4DA000BCFA6 /* RegisterSSWampMessage.swift in Sources */,
+				A9C82FB626F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */,
 				4520369126EFA4DA000BCFA6 /* TSParams.swift in Sources */,
 				4589F41726BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
@@ -1786,6 +1825,7 @@
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
+				A9C82FBC26F4E50D00059DCD /* EditAlertView.swift in Sources */,
 				4589F42D26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
 				452036C126EFA4DA000BCFA6 /* HelloSSWampMessage.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,

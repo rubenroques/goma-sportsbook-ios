@@ -18,6 +18,9 @@ extension UIColor {
         static let backgroundDarkFade: UIColor = UIColor(red: 29/255, green: 31/255, blue: 38/255, alpha: 0.95)
         static let backgroundDarkModal: UIColor = UIColor(red: 49/255, green: 53/255, blue: 67/255, alpha: 1.0)
         static let headerTextFieldGray: UIColor = UIColor(red: 116/255, green: 126/255, blue: 143/255, alpha: 1.0)
+        static let backgroundDarkProfile: UIColor = UIColor(red: 36/255, green: 39/255, blue: 49/255, alpha: 1.0)
+        static let error: UIColor = UIColor(red: 225/255, green: 36/255, blue: 59/255, alpha: 1.0)
+        static let success: UIColor = UIColor(red: 123/255, green: 194/255, blue: 62/255, alpha: 1.0)
     }
 
 }

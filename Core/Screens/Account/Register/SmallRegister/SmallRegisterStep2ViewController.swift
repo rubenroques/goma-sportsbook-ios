@@ -12,7 +12,7 @@ class SmallRegisterStep2ViewController: UIViewController {
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
-    @IBOutlet private var backImageView: UIImageView!
+    @IBOutlet private var backButton: UIButton!
     @IBOutlet private var registerTitleLabel: UILabel!
     @IBOutlet private var topSignUpView: UIView!
     @IBOutlet private var usernameHeaderTextView: HeaderTextFieldView!
@@ -62,50 +62,56 @@ class SmallRegisterStep2ViewController: UIViewController {
 
         backView.backgroundColor = UIColor(patternImage: imageGradient)
 
-        registerTitleLabel.textColor = .white
+        backButton.backgroundColor = UIColor.Core.backgroundDarkProfile
+        backButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
+        backButton.setTitle("", for: .normal)
+        backButton.tintColor = UIColor.Core.headingMain
+
+        registerTitleLabel.textColor = UIColor.Core.headingMain
 
         topSignUpView.backgroundColor = UIColor(patternImage: imageGradient)
 
         usernameHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
         usernameHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        usernameHeaderTextView.setTextFieldColor(.white)
+        usernameHeaderTextView.setTextFieldColor(UIColor.Core.headingMain)
         usernameHeaderTextView.setSecureField(false)
 
         dateHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
         dateHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        dateHeaderTextView.setTextFieldColor(.white)
+        dateHeaderTextView.setTextFieldColor(UIColor.Core.headingMain)
         dateHeaderTextView.setSecureField(false)
 
         phoneView.backgroundColor = UIColor(patternImage: imageGradient)
 
         indicativeHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        indicativeHeaderTextView.setTextFieldColor(.white)
+        indicativeHeaderTextView.setTextFieldColor(UIColor.Core.headingMain)
         indicativeHeaderTextView.setViewColor(UIColor(patternImage: imageGradient))
         indicativeHeaderTextView.setViewBorderColor(UIColor.Core.headerTextFieldGray)
         indicativeHeaderTextView.setSecureField(false)
+        indicativeHeaderTextView.isSelect = true
 
         phoneHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
         phoneHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        phoneHeaderTextView.setTextFieldColor(.white)
+        phoneHeaderTextView.setTextFieldColor(UIColor.Core.headingMain)
         phoneHeaderTextView.setSecureField(false)
 
         lineView.backgroundColor = UIColor.Core.headerTextFieldGray.withAlphaComponent(0.2)
 
         emailHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
         emailHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        emailHeaderTextView.setTextFieldColor(.white)
+        emailHeaderTextView.setTextFieldColor(UIColor.Core.headingMain)
         emailHeaderTextView.setSecureField(false)
         emailHeaderTextView.setTextFieldDefaultValue(emailUser)
         emailHeaderTextView.isDisabled = true
 
         passwordHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
         passwordHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        passwordHeaderTextView.setTextFieldColor(.white)
+        passwordHeaderTextView.setTextFieldColor(UIColor.Core.headingMain)
         passwordHeaderTextView.setSecureField(true)
 
         confirmPasswordHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
         confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        confirmPasswordHeaderTextView.setTextFieldColor(.white)
+        confirmPasswordHeaderTextView.setTextFieldColor(UIColor.Core.headingMain)
         confirmPasswordHeaderTextView.setSecureField(true)
 
         underlineTextLabel()
@@ -116,8 +122,7 @@ class SmallRegisterStep2ViewController: UIViewController {
     }
 
     func commonInit() {
-        backImageView.image = UIImage(named: "caret-left")
-        backImageView.sizeToFit()
+        backButton.setImage(UIImage(named: "caret-left"), for: .normal)
 
         registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
         registerTitleLabel.text = localized("string_signup")
@@ -144,14 +149,9 @@ class SmallRegisterStep2ViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapBackImageGestureRecognizer:)))
-            backImageView.isUserInteractionEnabled = true
-        backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
     }
 
-    @objc func imageTapped(tapBackImageGestureRecognizer: UITapGestureRecognizer)
-    {
-
+    @IBAction func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -161,7 +161,7 @@ class SmallRegisterStep2ViewController: UIViewController {
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
         termsLabel.font = AppFont.with(type: .regular, size: 14.0)
-        self.termsLabel.textColor =  UIColor.white
+        self.termsLabel.textColor =  UIColor.Core.headingMain
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 

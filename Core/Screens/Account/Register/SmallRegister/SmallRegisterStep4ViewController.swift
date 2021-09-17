@@ -11,7 +11,7 @@ class SmallRegisterStep4ViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
-    @IBOutlet private var backImageView: UIImageView!
+    @IBOutlet private var backButton: UIButton!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var codeHeaderTextFieldView: HeaderTextFieldView!
@@ -46,26 +46,25 @@ class SmallRegisterStep4ViewController: UIViewController {
 
         backView.backgroundColor = UIColor(patternImage: imageGradient)
 
-        titleLabel.textColor = .white
+        titleLabel.textColor = UIColor.Core.headingMain
 
-        textLabel.textColor = .white
+        textLabel.textColor = UIColor.Core.headingMain
 
         codeHeaderTextFieldView.backgroundColor = UIColor(patternImage: imageGradient)
         codeHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        codeHeaderTextFieldView.setTextFieldColor(.white)
+        codeHeaderTextFieldView.setTextFieldColor(UIColor.Core.headingMain)
         codeHeaderTextFieldView.setSecureField(false)
 
-        doneButton.setTitleColor(.white, for: .normal)
+        doneButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
         doneButton.backgroundColor = UIColor.Core.buttonMain
         doneButton.cornerRadius = BorderRadius.button
 
-        pasteClipboardButton.setTitleColor(.white, for: .normal)
+        pasteClipboardButton.setTitleColor(UIColor.Core.headingMain, for: .normal)
         pasteClipboardButton.backgroundColor = UIColor(patternImage: imageGradient)
     }
 
     func commonInit() {
-        backImageView.image = UIImage(named: "caret-left")
-        backImageView.sizeToFit()
+
 
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
         titleLabel.text = localized("string_enter_code")
@@ -84,22 +83,17 @@ class SmallRegisterStep4ViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapBackImageGestureRecognizer:)))
-            backImageView.isUserInteractionEnabled = true
-        backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
     }
 
-    @objc func imageTapped(tapBackImageGestureRecognizer: UITapGestureRecognizer)
-    {
+    @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func doneAction() {
+    @IBAction private func doneAction() {
         // Finish
     }
 
-
-    @IBAction func pasteClipboardAction() {
+    @IBAction private func pasteClipboardAction() {
         let pb = UIPasteboard.general;
         codeHeaderTextFieldView.setTextFieldDefaultValue(pb.string ?? "")
     }
