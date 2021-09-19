@@ -1,5 +1,5 @@
 //
-//  SmallRegisterStep4ViewController.swift
+//  SimpleRegisterSendEmailCodeViewController.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 16/09/2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SmallRegisterStep4ViewController: UIViewController {
+class SimpleRegisterSendEmailCodeViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
@@ -17,11 +17,9 @@ class SmallRegisterStep4ViewController: UIViewController {
     @IBOutlet private var codeHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var doneButton: RoundButton!
     @IBOutlet private var pasteClipboardButton: UIButton!
-    // Variables
-    var imageGradient: UIImage = UIImage()
 
     init() {
-        super.init(nibName: "SmallRegisterStep4ViewController", bundle: nil)
+        super.init(nibName: "SimpleRegisterSendEmailCodeViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -32,35 +30,33 @@ class SmallRegisterStep4ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
-
         setupWithTheme()
         commonInit()
     }
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
 
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
 
-        backView.backgroundColor = UIColor(patternImage: imageGradient)
+        backView.backgroundColor = UIColor.App.mainBackgroundColor
 
-        titleLabel.textColor = .white
+        titleLabel.textColor = UIColor.App.headingMain
 
-        textLabel.textColor = .white
+        textLabel.textColor = UIColor.App.headingMain
 
-        codeHeaderTextFieldView.backgroundColor = UIColor(patternImage: imageGradient)
-        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.Core.headerTextFieldGray)
-        codeHeaderTextFieldView.setTextFieldColor(.white)
+        codeHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
+        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        codeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         codeHeaderTextFieldView.setSecureField(false)
 
-        doneButton.setTitleColor(.white, for: .normal)
-        doneButton.backgroundColor = UIColor.Core.buttonMain
+        doneButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        doneButton.backgroundColor = UIColor.App.primaryButtonNormalColor
         doneButton.cornerRadius = BorderRadius.button
 
-        pasteClipboardButton.setTitleColor(.white, for: .normal)
-        pasteClipboardButton.backgroundColor = UIColor(patternImage: imageGradient)
+        pasteClipboardButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        pasteClipboardButton.backgroundColor = UIColor.App.mainBackgroundColor
     }
 
     func commonInit() {

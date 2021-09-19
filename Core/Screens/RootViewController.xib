@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RootViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="openProfileButton" destination="AhL-zc-QDX" id="Ie0-ET-N6e"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -20,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Q4V-oV-Dgk">
-                    <rect key="frame" x="148.5" y="782" width="117" height="30"/>
+                    <rect key="frame" x="148.5" y="802" width="117" height="30"/>
                     <state key="normal" title="Test API Request">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
@@ -29,16 +30,13 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aMD-Cm-SRa">
-                    <rect key="frame" x="136" y="732" width="142" height="30"/>
+                    <rect key="frame" x="136" y="752" width="142" height="30"/>
                     <state key="normal" title="Test Geolocation API">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
-                    <connections>
-                        <action selector="didTapGeolocationAPI" destination="-1" eventType="touchUpInside" id="Cua-wS-W7H"/>
-                    </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LPr-wd-cUE">
-                    <rect key="frame" x="144" y="682" width="126" height="30"/>
+                    <rect key="frame" x="144" y="702" width="126" height="30"/>
                     <state key="normal" title="Test User Settings">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
@@ -47,7 +45,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RMP-kZ-il1">
-                    <rect key="frame" x="16" y="632" width="382" height="30"/>
+                    <rect key="frame" x="16" y="652" width="382" height="30"/>
                     <state key="normal" title="EveryMatrix - Sports">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
@@ -56,12 +54,30 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vtq-cE-d9o">
-                    <rect key="frame" x="16" y="582" width="382" height="30"/>
+                    <rect key="frame" x="16" y="602" width="382" height="30"/>
                     <state key="normal" title="EM - Subscribe Test">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                     <connections>
                         <action selector="testSubscription" destination="-1" eventType="touchUpInside" id="okO-pa-ej2"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AhL-zc-QDX">
+                    <rect key="frame" x="16" y="44" width="44" height="30"/>
+                    <state key="normal" title="Profile">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="didTapOpenProfileButton" destination="-1" eventType="primaryActionTriggered" id="nNd-kc-RAm"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQV-YM-CvT">
+                    <rect key="frame" x="16" y="82" width="38" height="30"/>
+                    <state key="normal" title="Login">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="didTapLoginProfileButton" destination="-1" eventType="primaryActionTriggered" id="hES-PM-fYO"/>
                     </connections>
                 </button>
             </subviews>
@@ -70,18 +86,22 @@
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Vtq-cE-d9o" secondAttribute="trailing" constant="16" id="0VF-p4-6xG"/>
                 <constraint firstItem="aMD-Cm-SRa" firstAttribute="top" secondItem="LPr-wd-cUE" secondAttribute="bottom" constant="20" id="Gb1-Yx-wFR"/>
+                <constraint firstItem="AhL-zc-QDX" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="HBB-mi-Jqx"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="RMP-kZ-il1" secondAttribute="trailing" constant="16" id="Jke-82-4ms"/>
+                <constraint firstItem="AQV-YM-CvT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="Onn-ax-4sY"/>
                 <constraint firstItem="aMD-Cm-SRa" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="aAS-zF-bGJ"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Q4V-oV-Dgk" secondAttribute="bottom" constant="50" id="g6l-WH-ImP"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Q4V-oV-Dgk" secondAttribute="bottom" constant="30" id="g6l-WH-ImP"/>
                 <constraint firstItem="Q4V-oV-Dgk" firstAttribute="top" secondItem="aMD-Cm-SRa" secondAttribute="bottom" constant="20" id="j7B-GL-iYn"/>
                 <constraint firstItem="Q4V-oV-Dgk" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="kqu-mW-gC4"/>
                 <constraint firstItem="Vtq-cE-d9o" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="mj7-TG-clw"/>
                 <constraint firstItem="RMP-kZ-il1" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="ove-6T-khi"/>
                 <constraint firstItem="LPr-wd-cUE" firstAttribute="top" secondItem="RMP-kZ-il1" secondAttribute="bottom" constant="20" id="pMB-Fs-l5q"/>
+                <constraint firstItem="AhL-zc-QDX" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="tSE-M7-gEk"/>
                 <constraint firstItem="LPr-wd-cUE" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="tT5-V7-2ZF"/>
                 <constraint firstItem="RMP-kZ-il1" firstAttribute="top" secondItem="Vtq-cE-d9o" secondAttribute="bottom" constant="20" id="zIH-ah-yza"/>
+                <constraint firstItem="AQV-YM-CvT" firstAttribute="top" secondItem="AhL-zc-QDX" secondAttribute="bottom" constant="8" symbolic="YES" id="zfG-q4-hnN"/>
             </constraints>
-            <point key="canvasLocation" x="137.68115942028987" y="133.92857142857142"/>
+            <point key="canvasLocation" x="-4" y="101"/>
         </view>
     </objects>
     <resources>

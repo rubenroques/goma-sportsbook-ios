@@ -11,7 +11,9 @@ var Env = Environment() // swiftlint:disable:this identifier_name
 
 struct Environment {
 
-    let networkManager = NetworkManager()
+    let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager())
+    let everyMatrixAPIClient = EveryMatrixAPIClient()
+
     let userSessionStore = UserSessionStore()
     let clientSettingsSocket = RealtimeSocketClient()
     let locationManager = GeoLocationManager()
@@ -20,10 +22,7 @@ struct Environment {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    var isMaintenance = false
     var appUpdateType = "" // FIXME: Esta variavel, se for para manter assim deveria ser um Enum e não uma string para evitar problemas futuros
-    var userLatitude: Double?
-    var userLongitude: Double?
     var operatorId: Int = 2474  // EM GOMA Operator Id
 
     var remember: Bool = false

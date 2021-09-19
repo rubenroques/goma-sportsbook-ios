@@ -1,5 +1,5 @@
 //
-//  SmallRegisterStep2ViewController.swift
+//  SimpleRegisterDetailsViewController.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 15/09/2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SmallRegisterStep2ViewController: UIViewController {
+class SimpleRegisterDetailsViewController: UIViewController {
 
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
@@ -27,13 +27,13 @@ class SmallRegisterStep2ViewController: UIViewController {
     @IBOutlet private var termsLabel: UILabel!
     @IBOutlet private var signUpButton: RoundButton!
 
-
     // Variables
-    var imageGradient: UIImage = UIImage()
-    var emailUser: String = ""
+    var emailAddress: String
 
-    init() {
-        super.init(nibName: "SmallRegisterStep2ViewController", bundle: nil)
+    init(emailAddress: String) {
+        self.emailAddress = emailAddress
+
+        super.init(nibName: "SimpleRegisterDetailsViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -44,76 +44,17 @@ class SmallRegisterStep2ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
-        
         setupWithTheme()
         commonInit()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name:UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
     }
-    
 
-    func setupWithTheme() {
-
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
-
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        backView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        registerTitleLabel.textColor = .white
-
-        topSignUpView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        usernameHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        usernameHeaderTextView.setTextFieldColor(.white)
-        usernameHeaderTextView.setSecureField(false)
-
-        dateHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        dateHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        dateHeaderTextView.setTextFieldColor(.white)
-        dateHeaderTextView.setSecureField(false)
-
-        phoneView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        indicativeHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        indicativeHeaderTextView.setTextFieldColor(.white)
-        indicativeHeaderTextView.setViewColor(UIColor(patternImage: imageGradient))
-        indicativeHeaderTextView.setViewBorderColor(UIColor.App.headerTextFieldGray)
-        indicativeHeaderTextView.setSecureField(false)
-
-        phoneHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        phoneHeaderTextView.setTextFieldColor(.white)
-        phoneHeaderTextView.setSecureField(false)
-
-        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
-
-        emailHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        emailHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        emailHeaderTextView.setTextFieldColor(.white)
-        emailHeaderTextView.setSecureField(false)
-        emailHeaderTextView.setTextFieldDefaultValue(emailUser)
-        emailHeaderTextView.isDisabled = true
-
-        passwordHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        passwordHeaderTextView.setTextFieldColor(.white)
-        passwordHeaderTextView.setSecureField(true)
-
-        confirmPasswordHeaderTextView.backgroundColor = UIColor(patternImage: imageGradient)
-        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        confirmPasswordHeaderTextView.setTextFieldColor(.white)
-        confirmPasswordHeaderTextView.setSecureField(true)
-
-        underlineTextLabel()
-
-        signUpButton.backgroundColor = UIColor.App.buttonMain
-        signUpButton.cornerRadius = BorderRadius.button
-
-    }
 
     func commonInit() {
         backImageView.image = UIImage(named: "caret-left")
@@ -123,6 +64,11 @@ class SmallRegisterStep2ViewController: UIViewController {
         registerTitleLabel.text = localized("string_signup")
 
         usernameHeaderTextView.setPlaceholderText(localized("string_username"))
+
+        emailHeaderTextView.setPlaceholderText(localized("string_email"))
+        emailHeaderTextView.setSecureField(false)
+        emailHeaderTextView.setTextFieldDefaultValue(self.emailAddress)
+        emailHeaderTextView.isDisabled = true
 
         dateHeaderTextView.setPlaceholderText(localized("string_birth_date"))
         dateHeaderTextView.setImageTextField(UIImage(named: "calendar-regular")!)
@@ -144,14 +90,66 @@ class SmallRegisterStep2ViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapBackImageGestureRecognizer:)))
-            backImageView.isUserInteractionEnabled = true
+        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapBackImageButton))
+        backImageView.isUserInteractionEnabled = true
         backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
     }
 
-    @objc func imageTapped(tapBackImageGestureRecognizer: UITapGestureRecognizer)
-    {
+    func setupWithTheme() {
 
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        backView.backgroundColor = UIColor.App.mainBackgroundColor
+        registerTitleLabel.textColor = UIColor.App.headingMain
+        topSignUpView.backgroundColor = UIColor.App.mainBackgroundColor
+
+        usernameHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        usernameHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        usernameHeaderTextView.setSecureField(false)
+
+        dateHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        dateHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        dateHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        dateHeaderTextView.setSecureField(false)
+
+        phoneView.backgroundColor = UIColor.App.mainBackgroundColor
+
+        indicativeHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        indicativeHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        indicativeHeaderTextView.setViewColor(UIColor.App.mainBackgroundColor)
+        indicativeHeaderTextView.setViewBorderColor(UIColor.App.headerTextFieldGray)
+        indicativeHeaderTextView.setSecureField(false)
+
+        phoneHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        phoneHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        phoneHeaderTextView.setSecureField(false)
+
+        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
+
+        emailHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        emailHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        emailHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+
+        passwordHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        passwordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        passwordHeaderTextView.setSecureField(true)
+
+        confirmPasswordHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        confirmPasswordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        confirmPasswordHeaderTextView.setSecureField(true)
+
+        underlineTextLabel()
+
+        signUpButton.backgroundColor = UIColor.App.buttonMain
+        signUpButton.cornerRadius = BorderRadius.button
+    }
+
+    @objc func didTapBackImageButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -161,7 +159,7 @@ class SmallRegisterStep2ViewController: UIViewController {
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
         termsLabel.font = AppFont.with(type: .regular, size: 14.0)
-        self.termsLabel.textColor =  UIColor.white
+        self.termsLabel.textColor = UIColor.App.headingMain
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
@@ -174,16 +172,16 @@ class SmallRegisterStep2ViewController: UIViewController {
         paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
         paragraphStyle.alignment = .center
 
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, underlineAttriString.length))
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range1)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range2)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range3)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range2)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range3)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
+        underlineAttriString.addAttribute(.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, underlineAttriString.length))
 
         termsLabel.attributedText = underlineAttriString
         termsLabel.isUserInteractionEnabled = true
@@ -212,19 +210,26 @@ class SmallRegisterStep2ViewController: UIViewController {
     }
 
     @IBAction func signUpAction() {
+
+        let vc = SimpleRegisterEmailSentViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
+
+        return
+        
         var validFields = true
+
         // TEST
         let username = usernameHeaderTextView.text
         let birthDate = dateHeaderTextView.text
-        let phone = " \(indicativeHeaderTextView.text) \(phoneHeaderTextView.text)"
+        let phone = "\(indicativeHeaderTextView.text)\(phoneHeaderTextView.text)"
         let email = emailHeaderTextView.text
         let password = passwordHeaderTextView.text
         let confirmPassword = confirmPasswordHeaderTextView.text
 
-        //TO-DO: Username verification
 
+        //TO-DO: Username verification
         if password != confirmPassword {
-            passwordHeaderTextView.showErrorOnField(text: localized("string_password_not_match"), color: .systemRed)
+            passwordHeaderTextView.showErrorOnField(text: localized("string_password_not_match"), color: UIColor.App.alertError)
             validFields = false
         }
         else if password.count < 8 {
@@ -233,7 +238,7 @@ class SmallRegisterStep2ViewController: UIViewController {
         }
 
         if validFields {
-            let vc = SmallRegisterStep3ViewController()
+            let vc = SimpleRegisterEmailSentViewController()
             vc.emailUser = email
            
             self.navigationController?.pushViewController(vc, animated: true)

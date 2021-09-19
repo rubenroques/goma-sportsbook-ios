@@ -12,7 +12,7 @@ enum GomaGamingService {
     case geolocation(latitude: String, longitude: String)
     case settings
     case simpleRegister(username: String, email: String, phone: String, birthDate: String, userProviderId: String)
-
+    case modalPopUpDetails
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
 }
 
@@ -30,11 +30,13 @@ extension GomaGamingService: Endpoint {
         case .test:
             return "/api/\(apiVersion)/me"
         case .geolocation:
-            return "/api/\(apiVersion)/geolocation"
+            return "/api/settings/\(apiVersion)/geolocation"
         case .settings:
             return "/api/\(apiVersion)/modules"
         case .simpleRegister:
-            return "/api/\(apiVersion)/register"
+            return "/api/users/\(apiVersion)/register"
+        case .modalPopUpDetails:
+            return "/api/settings/\(apiVersion)/info-popup"
 //        case .xpto, .foo:
 //            return "/api/v1/abcd"
 //        default:
@@ -49,10 +51,9 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .settings:
+        case .settings, .simpleRegister, .modalPopUpDetails:
             return nil
-        case .simpleRegister:
-            return nil
+
             
 //        case .getPredictionSubmit(let userId, let userName, let eventId, let prediction, let message):
 //            return [URLQueryItem(name: "userId", value: userId),
@@ -72,8 +73,6 @@ extension GomaGamingService: Endpoint {
 
         switch self {
         case .test: ()
-        case .geolocation: ()
-        case .settings: ()
         default: ()
         }
 
@@ -92,9 +91,7 @@ extension GomaGamingService: Endpoint {
         switch self {
         case .test:
             return .get
-        case .geolocation:
-            return .get
-        case .settings:
+        case .geolocation, .settings, .modalPopUpDetails:
             return .get
         case .simpleRegister:
             return .post

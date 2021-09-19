@@ -97,7 +97,6 @@ class VersionUpdateViewController: UIViewController {
             titleLabel.text = localized("string_update_available_title")
             textLabel.text = localized("string_update_available_text")
         }
-
     }
 
     @IBAction private func updateAction(_ sender: UIButton) {

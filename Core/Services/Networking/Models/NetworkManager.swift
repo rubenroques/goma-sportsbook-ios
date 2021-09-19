@@ -21,13 +21,13 @@ struct NetworkManager {
         self.authenticator = Authenticator(session: session, authEndpointURL: authEndpointURL)
     }
 
-    func requestEndpoint<T: Decodable>(deviceId: String, endpoint: Endpoint) -> AnyPublisher<T?, NetworkError> {
+    func requestEndpoint<T: Decodable>(deviceId: String, endpoint: Endpoint) -> AnyPublisher<T, NetworkError> {
 
         guard
             let request = endpoint.request()
         else {
             let error = NetworkError.init(errors: [.invalidRequest])
-            return AnyPublisher(Fail<T?, NetworkError>(error: error))
+            return AnyPublisher(Fail<T, NetworkError>(error: error))
         }
 
         return authenticator.validToken(deviceId: deviceId)
@@ -50,11 +50,10 @@ struct NetworkManager {
                     }
                     .eraseToAnyPublisher()
             }
-            .decode(type: NetworkResponse<T>.self, decoder: JSONDecoder())
+            .decode(type: T.self, decoder: JSONDecoder())
             .mapError { _ in
                         return NetworkError(errors: [.invalidResponse])
             }
-            .map(\.data)
             .eraseToAnyPublisher()
     }
 

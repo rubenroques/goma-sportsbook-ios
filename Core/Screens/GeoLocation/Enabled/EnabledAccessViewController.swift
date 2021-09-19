@@ -15,14 +15,8 @@ class EnabledAccessViewController: UIViewController {
     @IBOutlet private var enabledImageView: UIImageView!
     @IBOutlet private var enabledLabel: UILabel!
     @IBOutlet private var dismissButton: UIButton!
-    // Variables
-    var networkClient: NetworkManager
-    var gomaGamingAPIClient: GomaGamingServiceClient
-    var cancellables = Set<AnyCancellable>()
 
     init() {
-        networkClient = Env.networkManager
-        gomaGamingAPIClient = GomaGamingServiceClient(networkClient: networkClient)
         super.init(nibName: "EnabledAccessViewController", bundle: nil)
     }
 
@@ -33,8 +27,9 @@ class EnabledAccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupWithTheme()
+
         commonInit()
+        setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -45,14 +40,14 @@ class EnabledAccessViewController: UIViewController {
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundDarkFade
+
         containerView.backgroundColor = UIColor.App.backgroundDarkFade
         enabledView.backgroundColor = UIColor.App.backgroundDarkModal
         enabledLabel.textColor = UIColor.App.headingMain
+
         dismissButton.setTitleColor(UIColor.white, for: .normal)
         dismissButton.layer.borderColor = UIColor.App.buttonMain.cgColor
         dismissButton.layer.backgroundColor = UIColor.App.buttonMain.cgColor
-
-        
     }
 
     func commonInit() {
@@ -60,10 +55,12 @@ class EnabledAccessViewController: UIViewController {
         enabledImageView.layer.cornerRadius = BorderRadius.modal
         enabledImageView.image = UIImage(named: "Location_Success")
         enabledImageView.contentMode = .scaleAspectFill
+
         enabledLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         enabledLabel.numberOfLines = 0
         enabledLabel.text = localized("string_success_location")
         enabledLabel.sizeToFit()
+
         dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         dismissButton.layer.cornerRadius = 5
         dismissButton.layer.borderWidth = 1
@@ -71,35 +68,7 @@ class EnabledAccessViewController: UIViewController {
     }
 
     @IBAction private func dismissAction() {
-        guard
-            let latitude = Env.userLatitude,
-            let longitude = Env.userLongitude
-        else {
-            return
-        }
 
-        gomaGamingAPIClient.requestGeoLocation(deviceId: Env.deviceId, latitude: latitude, longitude: longitude)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("User not allowed!")
-                    DispatchQueue.main.async {
-                        self.present(ForbiddenAccessViewController(), animated: true, completion: nil)
-                    }
-                case .finished:
-                    print("User allowed!")
-                    DispatchQueue.main.async {
-                        self.present(RootViewController(), animated: true, completion: nil)
-                    }
-                }
-
-                print("Received completion: \(completion).")
-
-            },
-            receiveValue: { data in
-                print("Received Content - data: \(String(describing: data)).")
-            })
-            .store(in: &cancellables)
     }
 
 }

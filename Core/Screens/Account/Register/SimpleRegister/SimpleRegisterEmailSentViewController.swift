@@ -1,5 +1,5 @@
 //
-//  SmallRegisterStep3ViewController.swift
+//  SimpleRegisterEmailSentViewController.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 15/09/2021.
@@ -7,9 +7,8 @@
 
 import UIKit
 
-class SmallRegisterStep3ViewController: UIViewController {
+class SimpleRegisterEmailSentViewController: UIViewController {
 
-    @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
     @IBOutlet private var backImageView: UIImageView!
@@ -19,13 +18,11 @@ class SmallRegisterStep3ViewController: UIViewController {
     @IBOutlet private var openEmailButton: RoundButton!
     @IBOutlet private var resendEmailButton: UIButton!
 
-
-    // Variables
-    var imageGradient: UIImage = UIImage()
+    //
     var emailUser: String = ""
 
     init() {
-        super.init(nibName: "SmallRegisterStep3ViewController", bundle: nil)
+        super.init(nibName: "SimpleRegisterEmailSentViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -36,30 +33,23 @@ class SmallRegisterStep3ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
-
         setupWithTheme()
         commonInit()
     }
 
     func setupWithTheme() {
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        backView.backgroundColor = UIColor.App.mainBackgroundColor
+        titleLabel.textColor = UIColor.App.headingMain
+        textLabel.textColor = UIColor.App.headingMain
 
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
-
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        backView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        titleLabel.textColor = .white
-
-        textLabel.textColor = .white
-
-        openEmailButton.setTitleColor(.white, for: .normal)
-        openEmailButton.backgroundColor = UIColor.Core.buttonMain
+        openEmailButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        openEmailButton.backgroundColor = UIColor.App.primaryButtonNormalColor
         openEmailButton.cornerRadius = BorderRadius.button
 
-        resendEmailButton.setTitleColor(.white, for: .normal)
-        resendEmailButton.backgroundColor = UIColor(patternImage: imageGradient)
+        resendEmailButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        resendEmailButton.backgroundColor = UIColor.App.mainBackgroundColor
     }
 
     func commonInit() {
@@ -77,7 +67,7 @@ class SmallRegisterStep3ViewController: UIViewController {
         textLabel.text = "\(localized("string_check_email_text1")) \(emailUser) \(localized("string_check_email_text2"))"
         textLabel.numberOfLines = 0
 
-        openEmailButton.setTitle(localized("string_open_email_app"), for: .normal)
+        openEmailButton.setTitle(localized("string_insert_email_code"), for: .normal)
         openEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
 
         resendEmailButton.setTitle(localized("string_resend_email"), for: .normal)
@@ -101,8 +91,7 @@ class SmallRegisterStep3ViewController: UIViewController {
             UIApplication.shared.open(mailURL, options: [:], completionHandler: nil)
         }
 
-        let vc = SmallRegisterStep4ViewController()
-
+        let vc = SimpleRegisterSendEmailCodeViewController()
         self.navigationController?.pushViewController(vc, animated: true)
     }
 

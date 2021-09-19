@@ -11,21 +11,18 @@ import SwiftUI
 
 class RootViewController: UIViewController {
 
+    @IBOutlet private weak var openProfileButton: UIButton!
+
     var showingDebug: Bool = false
-
-    var networkClient: NetworkManager
     var gomaGamingAPIClient: GomaGamingServiceClient
-
-    var isMaintenance: Bool = Env.isMaintenance
-    
-
-    var cancellables = Set<AnyCancellable>()
     var everyMatrixAPIClient: EveryMatrixAPIClient
 
+    var cancellables = Set<AnyCancellable>()
+
     init() {
-        networkClient = Env.networkManager
-        gomaGamingAPIClient = GomaGamingServiceClient(networkClient: networkClient)
-        everyMatrixAPIClient = EveryMatrixAPIClient()
+        gomaGamingAPIClient = Env.gomaNetworkClient
+        everyMatrixAPIClient = Env.everyMatrixAPIClient
+
         super.init(nibName: "RootViewController", bundle: nil)
     }
 
@@ -38,36 +35,20 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupWithTheme()
-        self.getLocationDateFormat()
     }
 
     override func viewWillAppear(_ animated: Bool) {
-
         super.viewWillAppear(animated)
 
-        // ToDo: isto vai correr mal, a verificação deve ser asincrona, forçar um delay de 2 seg. alem de poder trazer problemas
-        // não nos garante que fique a funcionar bem.
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//
-//            let isMaintenance = realtimeClient.verifyMaintenanceMode()
-//            let appUpdateType = realtimeClient.verifyAppUpdateType()
-//
-//            if isMaintenance {
-//                let maintenanceViewController = MaintenanceViewController()
-//                let navigationController = UINavigationController(rootViewController: maintenanceViewController)
-//                navigationController.modalPresentationStyle = .fullScreen
-//
-//                self.present(navigationController, animated: true, completion: nil)
-//            }
-//            else if appUpdateType != "" {
-//                let versionUpdateViewController = VersionUpdateViewController()
-//                let navigationController = UINavigationController(rootViewController: versionUpdateViewController)
-//                navigationController.modalPresentationStyle = .fullScreen
-//
-//                self.present(navigationController, animated: true, completion: nil)
-//            }
-//        }
+        self.openProfileButton.setTitle("Profile", for: .normal)
+        self.openProfileButton.setTitle("Profile-disabled", for: .disabled)
 
+        if !UserSessionStore.isUserLogged() {
+            self.openProfileButton.isEnabled = false
+        }
+        else {
+            self.openProfileButton.isEnabled = true
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -79,33 +60,6 @@ class RootViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.mainTintColor
     }
 
-    func getLocationDateFormat() {
-
-        if Env.locationManager.isLocationServicesEnabled() {
-            print("GEO ACTIVATED")
-        }
-        else {
-            print("GEO NOT ACTIVATED")
-            Env.locationManager.requestGeoLocationUpdates()
-        }
-
-        Env.locationManager.startGeoLocationUpdates()
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) { // FIXME:  .now() + 2 ? Não percebi este async after com 2 segundos
-
-            let location = Env.locationManager.lastLocation
-            
-            Env.userLatitude = location.coordinate.latitude
-            Env.userLongitude = location.coordinate.longitude
-
-            location.fetchCityAndCountry { city, country, error in
-                guard let city = city, let country = country, error == nil else { return }
-                print("\(city) \(country)")
-            }
-
-        }
-    }
-
     @IBAction private func didTapAPITest() {
 
         gomaGamingAPIClient.requestTest(deviceId: Env.deviceId)
@@ -114,37 +68,6 @@ class RootViewController: UIViewController {
             },
             receiveValue: { user in
                 print("Received Content - user: \(String(describing: user)).")
-            })
-            .store(in: &cancellables)
-
-    }
-
-    @IBAction private func didTapGeolocationAPI() {
-
-        guard
-            let latitude = Env.userLatitude,
-            let longitude = Env.userLongitude
-        else {
-            return
-        }
-
-        gomaGamingAPIClient.requestGeoLocation(deviceId: Env.deviceId, latitude: latitude, longitude: longitude)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("User not allowed!")
-                    DispatchQueue.main.async {
-                        self.showForbiddenAccess()
-                    }
-                case .finished:
-                    print("User allowed!")
-                }
-
-                print("Received completion: \(completion).")
-
-            },
-            receiveValue: { data in
-                print("Received Content - data: \(String(describing: data)).")
             })
             .store(in: &cancellables)
     }
@@ -221,22 +144,19 @@ class RootViewController: UIViewController {
 //                debugPrint("TSRequest: \(String(describing: value.records))")
 //            })
 //            .store(in: &cancellables)
+    }
 
+    @IBAction private func didTapOpenProfileButton() {
 
     }
 
 
+    @IBAction private func didTapLoginProfileButton() {
 
-    @objc func checkMaintenance() {
-        if Env.isMaintenance {
-            let maintenanceVC = MaintenanceViewController()
-            self.present(maintenanceVC, animated: true, completion: nil)
-        }
-        print("Checked maintenance mode")
     }
 
     func showForbiddenAccess() {
-        let forbiddenAccessViewController = ForbiddenAccessViewController()
+        let forbiddenAccessViewController = ForbiddenLocationViewController()
         let navigationController = UINavigationController(rootViewController: forbiddenAccessViewController)
         navigationController.modalPresentationStyle = .fullScreen
 

@@ -19,7 +19,14 @@ struct Bootstrap {
 
         self.router.makeKeyAndVisible()
         Env.clientSettingsSocket.connect()
-        
+
+        if Env.locationManager.isLocationServicesEnabled() {
+            Env.locationManager.startGeoLocationUpdates()
+        }
+        else {
+            Env.locationManager.requestGeoLocationUpdates()
+        }
+
     }
     
 }

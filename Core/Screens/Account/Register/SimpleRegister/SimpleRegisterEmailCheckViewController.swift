@@ -7,11 +7,12 @@
 
 import UIKit
 
-class SmallRegisterViewController: UIViewController {
+class SimpleRegisterEmailCheckViewController: UIViewController {
 
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var skipView: UIView!
+    @IBOutlet private var backButton: UIButton!
     @IBOutlet private var skipButton: UIButton!
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var registerTitleLabel: UILabel!
@@ -19,11 +20,8 @@ class SmallRegisterViewController: UIViewController {
     @IBOutlet private var registerButton: RoundButton!
     @IBOutlet private var termsLabel: UILabel!
 
-    // Variables
-    var imageGradient: UIImage = UIImage()
-    
     init() {
-        super.init(nibName: "SmallRegisterViewController", bundle: nil)
+        super.init(nibName: "SimpleRegisterEmailCheckViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -34,46 +32,22 @@ class SmallRegisterViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
-        
-        setupWithTheme()
         commonInit()
+        setupWithTheme()
     }
 
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
-
     }
 
-    func setupWithTheme() {
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
-
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        skipView.backgroundColor = UIColor(patternImage: imageGradient)
-
-        skipButton.setTitleColor(UIColor.white, for: .normal)
-        skipButton.layer.borderColor = .none
-        skipButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
-
-        registerTitleLabel.textColor = .white
-
-        emailHeadertextFieldView.backgroundColor = UIColor(patternImage: imageGradient)
-        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        emailHeadertextFieldView.setTextFieldColor(.white)
-        emailHeadertextFieldView.setSecureField(false)
-
-        registerButton.setTitleColor(.white, for: .normal)
-        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
-        //loginButton.backgroundColor = UIColor.Core.backgroundDarkModal
-        registerButton.backgroundColor = UIColor.App.buttonMain
-        registerButton.cornerRadius = BorderRadius.button
-
-        underlineTextLabel()
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     func commonInit() {
         skipButton.setTitle(localized("string_skip"), for: .normal)
+        skipButton.titleLabel?.font = AppFont.with(type: .semibold, size: 18)
 
         logoImageView.image = UIImage(named: "SPORTSBOOK")
         logoImageView.sizeToFit()
@@ -89,6 +63,32 @@ class SmallRegisterViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
+    }
+
+    func setupWithTheme() {
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+
+        skipView.backgroundColor = UIColor.App.mainBackgroundColor
+
+        skipButton.setTitleColor(UIColor.white, for: .normal)
+        skipButton.layer.borderColor = .none
+        skipButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
+
+        registerTitleLabel.textColor = .white
+
+        emailHeadertextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
+        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        emailHeadertextFieldView.setTextFieldColor(.white)
+        emailHeadertextFieldView.setSecureField(false)
+
+        registerButton.setTitleColor(.white, for: .normal)
+        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
+        registerButton.backgroundColor = UIColor.App.buttonMain
+        registerButton.cornerRadius = BorderRadius.button
+
+        underlineTextLabel()
     }
 
     func underlineTextLabel() {
@@ -110,20 +110,20 @@ class SmallRegisterViewController: UIViewController {
         paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
         paragraphStyle.alignment = .center
 
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
-        underlineAttriString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, underlineAttriString.length))
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range1)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range2)
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range3)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range2)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range3)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
+        underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, underlineAttriString.length))
 
         termsLabel.attributedText = underlineAttriString
         termsLabel.isUserInteractionEnabled = true
-        termsLabel.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapUnderlineLabel(gesture:))))
+        termsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapUnderlineLabel(gesture:))))
     }
 
     @IBAction func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
@@ -150,22 +150,27 @@ class SmallRegisterViewController: UIViewController {
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        _ = self.emailHeadertextFieldView.resignFirstResponder()
-
+        self.emailHeadertextFieldView.resignFirstResponder()
     }
 
-    @IBAction func registerAction() {
+    @IBAction private func didTapBackButton() {
+        self.navigationController?.popViewController(animated: true)
+    }
 
-        let input = self.emailHeadertextFieldView.text
+    @IBAction private func didTapRegisterButton() {
 
-        if (!input.isValidEmail()) {
-            self.emailHeadertextFieldView.showErrorOnField(text: "Invalid Email Address")
-        } else {
-            let vc = SmallRegisterStep2ViewController()
-            vc.emailUser = input
+        let smallRegisterStep2ViewController = SimpleRegisterDetailsViewController(emailAddress: "rubenroques@outlook.com")
+        self.navigationController?.pushViewController(smallRegisterStep2ViewController, animated: true)
 
-            self.navigationController?.pushViewController(vc, animated: true)
-        }
+//        let input = self.emailHeadertextFieldView.text
+//
+//        if !self.isValidEmail(input) {
+//            self.emailHeadertextFieldView.showErrorOnField(text: "Invalid Email Address")
+//        }
+//        else {
+//            let vc = SimpleRegisterDetailsViewController()
+//            vc.emailUser = input
+//        }
 
     }
 
@@ -175,6 +180,11 @@ class SmallRegisterViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
+    func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
 
+        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
+    }
 
 }

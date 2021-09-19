@@ -1,5 +1,5 @@
 //
-//  ForbiddenAccessViewController.swift
+//  ForbiddenLocationViewController.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 23/08/2021.
@@ -7,22 +7,28 @@
 
 import UIKit
 
-class ForbiddenAccessViewController: UIViewController {
+class ForbiddenLocationViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var logoMainImageView: UIImageView!
     @IBOutlet private var forbiddenView: UIView!
     @IBOutlet private var forbiddenImageView: UIImageView!
     @IBOutlet private var textLabel: UILabel!
-    // Variables
-    var imageGradient: UIImage = UIImage()
+
+    init() {
+        super.init(nibName: "ForbiddenLocationViewController", bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
+
         setupWithTheme()
         commonInit()
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -32,9 +38,9 @@ class ForbiddenAccessViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
-        forbiddenView.backgroundColor = UIColor(patternImage: imageGradient)
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        forbiddenView.backgroundColor = UIColor.App.mainBackgroundColor
         textLabel.textColor = UIColor.App.headingMain
     }
 
@@ -48,7 +54,6 @@ class ForbiddenAccessViewController: UIViewController {
         textLabel.numberOfLines = 0
         textLabel.text = localized("string_access_forbidden")
         textLabel.sizeToFit()
-
     }
 
 }

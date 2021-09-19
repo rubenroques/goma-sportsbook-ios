@@ -22,12 +22,12 @@ struct LoginAccount: Decodable {
 
 struct SessionInfo: Decodable {
 
-    var userID: String
+    var userID: Int
     var username: String
     var firstname: String
     var surname: String
     var email: String
-    var birthDate: Date?
+    var birthDate: String
     var currency: String
     var userCountry: String
     var ipCountry: String
@@ -35,8 +35,8 @@ struct SessionInfo: Decodable {
     var isEmailVerified: Bool
     var isAuthenticated: Bool
 
-    var loginDateTime: Date
-    var lastLoginDateTime: Date
+    var loginDateTime: String
+    var lastLoginDateTime: String
 
     var requiredTermsAndConditions: [Int]?
     var roles: [String]?
@@ -54,8 +54,8 @@ struct SessionInfo: Decodable {
         case ipCountry = "ipCountry"
         case isEmailVerified = "isEmailVerified"
         case isAuthenticated = "isAuthenticated"
-        case loginDateTime = "loginDateTime"
-        case lastLoginDateTime = "lastLoginDateTime"
+        case loginDateTime = "loginTime"
+        case lastLoginDateTime = "lastLoginTime"
 
         case requiredTermsAndConditions = "requiredTermsAndConditions"
         case roles = "roles"

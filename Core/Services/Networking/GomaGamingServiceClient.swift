@@ -22,10 +22,21 @@ struct GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestGeoLocation(deviceId: String, latitude: Double, longitude: Double) -> AnyPublisher<ExampleModel?, NetworkError> {
+    func requestGeoLocation(deviceId: String, latitude: Double, longitude: Double) -> AnyPublisher<Bool, NetworkError> {
+
+        #if DEBUG
+        if ceil(latitude) == -22 && ceil(longitude) == -43 {
+            return Just(false).setFailureType(to: NetworkError.self).eraseToAnyPublisher()
+        }
+        #endif
+
+        let accessGrantedMessage = "User Access Granted!"
         let endpoint = GomaGamingService.geolocation(latitude: String(latitude), longitude: String(longitude))
-        let requestPublisher: AnyPublisher<ExampleModel?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-        return requestPublisher
+        let requestPublisher: AnyPublisher<SimpleNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        let booleanPublisher = requestPublisher.map { simpleResponse in
+            return simpleResponse.message == accessGrantedMessage
+        }
+        return booleanPublisher.eraseToAnyPublisher()
     }
 
     func requestSettings(deviceId: String) -> AnyPublisher<[GomaClientSettings]?, NetworkError> {

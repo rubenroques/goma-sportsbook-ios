@@ -1,4 +1,6 @@
 import UIKit
+import CombineCocoa
+import Combine
 
 class HeaderTextFieldView: NibView {
 
@@ -20,7 +22,11 @@ class HeaderTextFieldView: NibView {
 
     @IBOutlet private weak var tipImageView: UIImageView!
 
-    var didTapReturn: (() -> ())?
+    var textPublisher: AnyPublisher<String?, Never> {
+        return self.textField.textPublisher
+    }
+
+    var didTapReturn: (() -> Void)?
 
     // Variables
     let datePicker = UIDatePicker()
@@ -116,7 +122,8 @@ class HeaderTextFieldView: NibView {
                 self.headerLabel.isHidden = true
                 self.textField.textColor = .white.withAlphaComponent(0.3)
                 self.textField.isUserInteractionEnabled = false
-            } else {
+            }
+            else {
                 self.headerLabel.isHidden = false
                 self.textField.textColor = .white
                 self.textField.isUserInteractionEnabled = true
@@ -234,9 +241,9 @@ class HeaderTextFieldView: NibView {
         return true
     }
 
+    @discardableResult
     override func resignFirstResponder() -> Bool {
         super.resignFirstResponder()
-
         self.textField.resignFirstResponder()
         return true
     }
@@ -312,14 +319,15 @@ class HeaderTextFieldView: NibView {
 
     func setSelectionPicker(_ array: [String]) {
         selectionArray = array
+
         pickerView.delegate = self
         pickerView.selectRow(0, inComponent: 0, animated: true)
 
         headerLabel.isHidden = true
 
         textField.inputView = pickerView
-        //textField.setCustomTextFieldBorders(color: TargetColor.grayMedium, width: 1.0, radius: 5.0)
         textField.text = selectionArray[0]
+
         // Set arrow image
         let arrowDropdownImageView = UIImageView()
         arrowDropdownImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
@@ -329,24 +337,22 @@ class HeaderTextFieldView: NibView {
         arrowDropdownImageView.addSubview(arrowImageView)
         textField.rightView = arrowDropdownImageView
         textField.rightViewMode = .always
+
         dismissPickerView()
     }
 
-    /**
-     Creates dismiss action on picker view
-     */
     func dismissPickerView() {
-       let toolBar = UIToolbar()
-       toolBar.sizeToFit()
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
         let button = UIBarButtonItem(title: localized("string_done"), style: .plain, target: self, action: #selector(pickerAction))
-       //toolBar.setItems([button], animated: true)
+        //toolBar.setItems([button], animated: true)
         toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
-       toolBar.isUserInteractionEnabled = true
+        toolBar.isUserInteractionEnabled = true
         textField.inputAccessoryView = toolBar
     }
 
     @objc func pickerAction() {
-          self.endEditing(true)
+        self.endEditing(true)
     }
 
     func showErrorOnField(text: String, color: UIColor = .systemRed) {

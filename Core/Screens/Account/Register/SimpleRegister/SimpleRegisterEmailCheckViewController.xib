@@ -9,8 +9,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SmallRegisterViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SimpleRegisterEmailCheckViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="backButton" destination="diZ-6h-KU5" id="grI-ST-dIh"/>
                 <outlet property="containerView" destination="omU-Eo-iKe" id="7sN-U0-c6g"/>
                 <outlet property="emailHeadertextFieldView" destination="9tz-Rj-uM1" id="MJA-Xd-yKM"/>
                 <outlet property="logoImageView" destination="cWG-bi-r9T" id="RQi-JE-e5k"/>
@@ -35,50 +36,63 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qhW-3R-JIm">
-                                    <rect key="frame" x="16" y="8" width="382" height="30"/>
+                                    <rect key="frame" x="16" y="8" width="382" height="40"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cTM-4K-uEp">
-                                            <rect key="frame" x="328" y="0.0" width="46" height="30"/>
+                                            <rect key="frame" x="328" y="5" width="46" height="30"/>
                                             <state key="normal" title="Button"/>
                                             <connections>
                                                 <action selector="skipAction" destination="-1" eventType="touchUpInside" id="BOt-3h-qtG"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="diZ-6h-KU5">
+                                            <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="40" id="0OM-wD-BNb"/>
+                                            </constraints>
+                                            <state key="normal" image="arrow_back_icon"/>
+                                            <connections>
+                                                <action selector="didTapBackButton" destination="-1" eventType="primaryActionTriggered" id="ILf-RX-q0P"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <color key="backgroundColor" systemColor="systemGray3Color"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="LyC-qR-ppN"/>
+                                        <constraint firstAttribute="height" constant="40" id="LyC-qR-ppN"/>
                                         <constraint firstItem="cTM-4K-uEp" firstAttribute="centerY" secondItem="qhW-3R-JIm" secondAttribute="centerY" id="VRg-Vn-Hw4"/>
                                         <constraint firstAttribute="trailing" secondItem="cTM-4K-uEp" secondAttribute="trailing" constant="8" id="Ycf-rb-8Nd"/>
+                                        <constraint firstAttribute="bottom" secondItem="diZ-6h-KU5" secondAttribute="bottom" id="aii-Rc-SeK"/>
+                                        <constraint firstItem="diZ-6h-KU5" firstAttribute="leading" secondItem="qhW-3R-JIm" secondAttribute="leading" id="hmI-dM-sS0"/>
+                                        <constraint firstItem="diZ-6h-KU5" firstAttribute="top" secondItem="qhW-3R-JIm" secondAttribute="top" id="pkQ-Kr-cMV"/>
                                     </constraints>
                                 </view>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="cWG-bi-r9T">
-                                    <rect key="frame" x="70" y="118" width="274" height="55"/>
+                                    <rect key="frame" x="70" y="124" width="274" height="55"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="55" id="3Z9-ZN-66Z"/>
                                     </constraints>
                                 </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OVR-cc-uFz">
-                                    <rect key="frame" x="16" y="253" width="382" height="21"/>
+                                    <rect key="frame" x="16" y="259" width="382" height="21"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9tz-Rj-uM1" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="304" width="382" height="80"/>
+                                    <rect key="frame" x="16" y="310" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="QFN-OG-JpK"/>
                                     </constraints>
                                 </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xrL-Nf-KAU" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="414" width="382" height="50"/>
+                                    <rect key="frame" x="16" y="420" width="382" height="50"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="50" id="vHV-9x-hOe"/>
                                     </constraints>
                                     <state key="normal" title="Button"/>
                                     <connections>
-                                        <action selector="registerAction" destination="-1" eventType="touchUpInside" id="NDD-pU-toL"/>
+                                        <action selector="didTapRegisterButton" destination="-1" eventType="primaryActionTriggered" id="bjI-mm-EXF"/>
                                     </connections>
                                 </button>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gT2-sC-ogn">
@@ -90,7 +104,7 @@
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
-                                <constraint firstItem="cWG-bi-r9T" firstAttribute="top" secondItem="qhW-3R-JIm" secondAttribute="bottom" constant="80" id="2R5-Tz-YZ2"/>
+                                <constraint firstItem="cWG-bi-r9T" firstAttribute="top" secondItem="qhW-3R-JIm" secondAttribute="bottom" constant="76" id="2R5-Tz-YZ2"/>
                                 <constraint firstAttribute="trailing" secondItem="cWG-bi-r9T" secondAttribute="trailing" constant="70" id="FKg-a2-DBz"/>
                                 <constraint firstItem="9tz-Rj-uM1" firstAttribute="top" secondItem="OVR-cc-uFz" secondAttribute="bottom" constant="30" id="GJk-g7-4IQ"/>
                                 <constraint firstAttribute="bottom" secondItem="gT2-sC-ogn" secondAttribute="bottom" constant="40" id="HUp-w7-s4d"/>
@@ -135,8 +149,12 @@
         </view>
     </objects>
     <resources>
+        <image name="arrow_back_icon" width="14" height="23"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

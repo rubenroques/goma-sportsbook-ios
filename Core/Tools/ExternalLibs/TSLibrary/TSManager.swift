@@ -96,31 +96,44 @@ final class TSManager {
     }
     
     func getModel<T: Decodable>(router: TSRouter, decodingType: T.Type) -> AnyPublisher<T, EveryMatrixSocketAPIError> {
-        return Future { [self] promise in
+        return Future<T, EveryMatrixSocketAPIError> { [self] promise in
             tsQueue.async {
 
-                guard let swampSession = self.swampSession else { return }
+                guard
+                    let swampSession = self.swampSession
+                else {
+                    promise(.failure(.noResultsReceived))
+                    return
+                }
 
                 if swampSession.isConnected() {
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: {
-                        (details, results, kwResults, arrResults) in
+                        (_, _, kwResults, arrResults) in
 
                         do {
                             if kwResults != nil {
-                                let finalResult = try DictionaryDecoder().decode(decodingType, from: kwResults!)
+                                let decoder = DictionaryDecoder()
+                                decoder.dateDecodingStrategy = .iso8601
+                                let finalResult = try decoder.decode(decodingType, from: kwResults!)
                                 promise(.success(finalResult))
-                            } else {
+                            }
+                            else {
                                 if arrResults != nil {
-                                    let finalResult = try DictionaryDecoder().decode(decodingType, from: arrResults!)
+                                    let decoder = DictionaryDecoder()
+                                    decoder.dateDecodingStrategy = .iso8601
+                                    let finalResult = try decoder.decode(decodingType, from: arrResults!)
                                     promise(.success(finalResult))
-                                } else {
+                                }
+                                else {
                                     promise(.failure(.noResultsReceived))
                                 }
                             }
-                        } catch {
+                        }
+                        catch {
+                            print("TSManager Decoding Error: \(error)")
                             promise(.failure(.decodingError))
                         }
-                    }, onError: { (details, error, args, kwargs) in
+                    }, onError: { (_, error, args, kwargs) in
                         var desc = ""
                         if kwargs?["desc"] != nil {
                             desc = kwargs?["desc"] as! String
@@ -128,10 +141,11 @@ final class TSManager {
                         if !error.isEmpty && desc == "User is not logged in" {
                             // TODO: handle logout
                         }
-                        promise(.failure(.requestError(value: error)))
+                        promise(.failure(.requestError(value: desc.isEmpty ? error : desc)))
                     })
 
-                } else {
+                }
+                else {
                     promise(.failure(.notConnected))
                 }
 
@@ -145,19 +159,20 @@ final class TSManager {
             tsQueue.async {
                 if self.swampSession != nil {
                     if self.swampSession!.isConnected() {
-                        self.swampSession?.subscribe(procedure.procedure, onSuccess: { (subscription) in
+                        self.swampSession?.subscribe(procedure.procedure, onSuccess: { subscription in
                             promise(.success(true))
                             //
-                        }, onError: { (details, errorStr) in
+                        }, onError: { (_, errorStr) in
                             promise(.failure(.requestError(value: errorStr)))
-                        }) { (details, results, kwResults) in
+                        }) { (_, _, kwResults) in
                             if let code = kwResults?["code"] as? Int {
                                 if code == 3 {
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
                                     }
-                                } else if code == 0 {
-                                    //print("Subscribed!")
+                                }
+                                else if code == 0 {
+                                    // print("Subscribed!")
                                 }
                             }
                         }
@@ -173,7 +188,7 @@ final class TSManager {
     }
     
     func logout(router: TSRouter) {
-        swampSession?.call(router.procedure, onSuccess: { _,_,_,_ in }, onError: { _,_,_,_ in })
+        swampSession?.call(router.procedure, onSuccess: { _, _, _, _ in }, onError: { _, _, _, _ in })
     }
     
     func disconnect() {

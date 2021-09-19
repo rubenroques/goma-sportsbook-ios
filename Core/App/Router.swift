@@ -11,7 +11,9 @@ import Combine
 class Router {
 
     var rootWindow: UIWindow
-    var rootViewController: UIViewController?
+    var rootViewController: UIViewController? {
+        UIApplication.shared.windows.first?.rootViewController
+    }
 
     var cancellables = Set<AnyCancellable>()
 
@@ -27,7 +29,6 @@ class Router {
         case none
     }
 
-
     init(window: UIWindow) {
         self.rootWindow = window
     }
@@ -35,24 +36,24 @@ class Router {
     func makeKeyAndVisible() {
 
         var bootRootViewController: UIViewController
-        if UserSessionStore.isUserLogged() {
-            bootRootViewController = RootViewController()
+        if UserSessionStore.isUserLogged() || UserSessionStore.isUserAnonymous() {
+            bootRootViewController = Router.mainScreenViewControllerFlow()
         }
         else {
-            bootRootViewController = LoginViewController()
+            bootRootViewController = Router.createLoginViewControllerFlow()
         }
-        self.rootViewController = bootRootViewController
 
         self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
         self.rootWindow.rootViewController = bootRootViewController
         self.rootWindow.makeKeyAndVisible()
 
         self.subscribeToUserActionBlockers()
-
     }
 
     func subscribeToUserActionBlockers() {
-        Env.clientSettingsSocket.maintenanceModePublisher.receive(on: RunLoop.main).sink { message in
+        Env.clientSettingsSocket.maintenanceModePublisher
+            .receive(on: RunLoop.main)
+            .sink { message in
             if let messageValue = message {
                 self.showUnderMaintenanceScreen(withReason: messageValue)
             }
@@ -62,7 +63,9 @@ class Router {
         }
         .store(in: &cancellables)
 
-        Env.clientSettingsSocket.requiredVersionPublisher.delay(for: 3, scheduler: RunLoop.main).sink { serverVersion in
+        Env.clientSettingsSocket.requiredVersionPublisher
+            .receive(on: RunLoop.main)
+            .delay(for: 3, scheduler: RunLoop.main).sink { serverVersion in
 
             guard
                 let currentVersion = Bundle.main.versionNumber,
@@ -83,10 +86,33 @@ class Router {
             }
         }
         .store(in: &cancellables)
+
+        Env.locationManager.locationStatus
+            .receive(on: RunLoop.main)
+            .sink { locationStatus in
+            switch locationStatus {
+            case .valid:
+                self.hideLocationScreen()
+            case .invalid:
+                self.showInvalidLocationScreen()
+            case .notRequested:
+                self.showRequestLocationScreen()
+            case .notAuthorized:
+                self.showRequestDeniedLocationScreen()
+            case .notDetermined:
+                ()
+            }
+        }
+        .store(in: &cancellables)
     }
 
     // MaintenanceScreen
     func showUnderMaintenanceScreen(withReason reason: String) {
+
+        if let presentedViewController = self.rootViewController?.presentedViewController {
+            presentedViewController.dismiss(animated: false, completion: nil)
+        }
+
         let maintenanceViewController = MaintenanceViewController()
         maintenanceViewController.isModalInPresentation = true
         self.rootViewController?.present(maintenanceViewController, animated: true, completion: nil)
@@ -95,10 +121,9 @@ class Router {
     }
 
     func hideUnderMaintenanceScreen() {
-        if let blockerViewController = blockerViewController {
-            blockerViewController.dismiss(animated: true) { [weak self] in
-                self?.blockerViewController = nil
-            }
+        if let presentedViewController = self.rootViewController?.presentedViewController,
+           presentedViewController is MaintenanceViewController {
+            presentedViewController.dismiss(animated: false, completion: nil)
         }
     }
 
@@ -151,12 +176,80 @@ class Router {
         return currentVersion.compare(serverVersion, options: .numeric) == .orderedAscending
     }
 
+    func hideLocationScreen() {
+        
+        if let presentedViewController = self.rootViewController?.presentedViewController,
+           (presentedViewController is ForbiddenLocationViewController ||
+            presentedViewController is RequestLocationAccessViewController ||
+                presentedViewController is RefusedAccessViewController) {
+
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
+    }
+
+    func showInvalidLocationScreen() {
+        self.hideLocationScreen()
+
+        let forbiddenAccessViewController = ForbiddenLocationViewController()
+        forbiddenAccessViewController.isModalInPresentation = true
+        self.rootViewController?.present(forbiddenAccessViewController, animated: true, completion: nil)
+    }
+
+    func showRequestLocationScreen() {
+        self.hideLocationScreen()
+
+        let permissionAccessViewController = RequestLocationAccessViewController()
+        permissionAccessViewController.isModalInPresentation = true
+        self.rootViewController?.present(permissionAccessViewController, animated: true, completion: nil)
+    }
+
+    func showRequestDeniedLocationScreen() {
+        self.hideLocationScreen()
+        
+        let refusedAccessViewController = RefusedAccessViewController()
+        refusedAccessViewController.isModalInPresentation = true
+        self.rootViewController?.present(refusedAccessViewController, animated: true, completion: nil)
+    }
+
 }
+
+
+extension Router {
+
+    func presentViewControllerAsRoot(_ viewController: UIViewController) {
+        self.rootWindow.rootViewController = rootViewController
+    }
+
+    static func mainScreenViewController() -> UIViewController {
+        return RootViewController()
+    }
+
+    static func mainScreenViewControllerFlow() -> UIViewController {
+        return Router.navigationController(with: RootViewController() )
+    }
+
+}
+
 
 extension Router {
 
     static func createDebugFeatureNavigation() -> UIViewController {
         let navigationController = UINavigationController(rootViewController: DebugViewController() )
+        return navigationController
+    }
+
+    static func createLoginViewControllerFlow() -> UIViewController {
+        return Router.navigationController(with: LoginViewController())
+    }
+
+    static func createRootViewControllerNavigation() -> UIViewController {
+        return Router.navigationController(with: RootViewController())
+    }
+
+    static func navigationController(with viewController: UIViewController) -> UINavigationController {
+        let navigationController = UINavigationController(rootViewController: viewController)
+        navigationController.setNavigationBarHidden(true, animated: false)
+        navigationController.navigationBar.isTranslucent = false
         return navigationController
     }
 

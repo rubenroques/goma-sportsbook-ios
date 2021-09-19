@@ -20,10 +20,6 @@ function_body_length:
   - 60 # warning
   - 100 # error
 
-type_name:
-  excluded: # excluded names
-    - ID
-
 identifier_name:
   excluded: # excluded names
     - id
@@ -47,7 +43,8 @@ disabled_rules:
   - trailing_whitespace
   - redundant_string_enum_value
   - large_tuple
-  - todo
+#  - todo
+  - type_name
 
 opt_in_rules:
   - private_outlet

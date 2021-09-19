@@ -16,13 +16,10 @@ class RefusedAccessViewController: UIViewController {
     @IBOutlet private var refusedTitleLabel: UILabel!
     @IBOutlet private var refusedSubtitleLabel: UILabel!
     @IBOutlet private var locationButton: UIButton!
-    // Variables
-    var imageGradient: UIImage = UIImage()
-    let locationManager = GeoLocationManager()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageGradient = UIImage.init().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
+
         setupWithTheme()
         commonInit()
     }
@@ -34,11 +31,13 @@ class RefusedAccessViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor(patternImage: imageGradient)
-        containerView.backgroundColor = UIColor(patternImage: imageGradient)
-        refusedView.backgroundColor = UIColor(patternImage: imageGradient)
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        refusedView.backgroundColor = UIColor.App.mainBackgroundColor
         refusedTitleLabel.textColor = UIColor.App.headingMain
         refusedSubtitleLabel.textColor = UIColor.App.subtitleGray
+
         locationButton.setTitleColor(UIColor.white, for: .normal)
         locationButton.layer.borderColor = UIColor.App.buttonMain.cgColor
         locationButton.layer.backgroundColor = UIColor.App.buttonMain.cgColor
@@ -47,7 +46,7 @@ class RefusedAccessViewController: UIViewController {
     func commonInit() {
         logoMainImageView.image = UIImage(named: "SPORTSBOOK")
         logoMainImageView.sizeToFit()
-        refusedImageView.image = UIImage(named: "Location")
+        refusedImageView.image = UIImage(named: "Location_Error")
         refusedImageView.contentMode = .scaleAspectFill
         refusedTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         refusedTitleLabel.numberOfLines = 0
@@ -63,13 +62,9 @@ class RefusedAccessViewController: UIViewController {
     }
 
     @IBAction private func enableLocationAction() {
-        locationManager.requestGeoLocationUpdates()
-        locationManager.startGeoLocationUpdates()
-
-        while !locationManager.isLocationServicesEnabled() {
-            // Wait for location confirmation
-        }
-        self.present(EnabledAccessViewController(), animated: true, completion: nil)
+        if let settingsUrl = URL(string: UIApplication.openSettingsURLString) {
+           UIApplication.shared.open(settingsUrl)
+         }
     }
 
 }

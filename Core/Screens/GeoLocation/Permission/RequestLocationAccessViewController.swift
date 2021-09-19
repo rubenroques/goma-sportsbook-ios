@@ -1,5 +1,5 @@
 //
-//  PermissionAccessViewController.swift
+//  RequestLocationAccessViewController.swift
 //  ShowcaseProd
 //
 //  Created by André Lascas on 31/08/2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PermissionAccessViewController: UIViewController {
+class RequestLocationAccessViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var permissionView: UIView!
@@ -16,9 +16,16 @@ class PermissionAccessViewController: UIViewController {
     @IBOutlet private var permissionTextLabel: UILabel!
     @IBOutlet private var permissionSubtitleLabel: UILabel!
     @IBOutlet private var locationButton: UIButton!
-    // Variables
-    let locationManager = GeoLocationManager()
-    
+
+    init() {
+        super.init(nibName: "RequestLocationAccessViewController", bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -69,17 +76,7 @@ class PermissionAccessViewController: UIViewController {
     }
 
     @IBAction private func enableLocationAction() {
-        locationManager.requestGeoLocationUpdates()
-        locationManager.startGeoLocationUpdates()
-
-        while !locationManager.isLocationServicesEnabled() {
-            // Wait for location confirmation
-        }
-        let location = self.locationManager.lastLocation
-        Env.userLatitude = location.coordinate.latitude
-        Env.userLongitude = location.coordinate.longitude
-        
-        self.present(EnabledAccessViewController(), animated: true, completion: nil)
+        Env.locationManager.requestGeoLocationUpdates()
     }
 
 }

@@ -10,6 +10,7 @@ import Foundation
 enum UserDefaultsKey: String {
     case theme = "appThemeKey"
     case userSession = "userSession"
+    case userSkippedLoginFlow = "userSkippedLoginFlow"
 }
 
 extension UserDefaults {
@@ -26,13 +27,35 @@ extension UserDefaults {
 
     var userSession: UserSession? {
         get {
-            if let session = self.value(forKey: UserDefaultsKey.userSession.rawValue) as? UserSession {
-                return session
-            }
-            return nil
+            return self.codable(forKey: UserDefaultsKey.userSession.rawValue)
         }
         set {
-            set(newValue, forKey: UserDefaultsKey.userSession.rawValue)
+            set(codable: newValue, forKey: UserDefaultsKey.userSession.rawValue)
         }
+    }
+
+    var userSkippedLoginFlow: Bool {
+        get {
+            if let skipped = self.value(forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue) as? Bool {
+                return skipped
+            }
+            setValue(false, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
+            return false
+        }
+        set {
+            setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
+        }
+    }
+}
+
+extension UserDefaults {
+    func set<Element: Codable>(codable value: Element, forKey key: String) {
+        let data = try? JSONEncoder().encode(value)
+        UserDefaults.standard.setValue(data, forKey: key)
+    }
+    func codable<Element: Codable>(forKey key: String) -> Element? {
+        guard let data = UserDefaults.standard.data(forKey: key) else { return nil }
+        let element = try? JSONDecoder().decode(Element.self, from: data)
+        return element
     }
 }

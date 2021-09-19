@@ -40,6 +40,36 @@ class EveryMatrixAPIClient: ObservableObject {
     func login(username: String, password: String) -> AnyPublisher<LoginAccount, EveryMatrixSocketAPIError> {
         return TSManager.shared
             .getModel(router: .login(username: username, password: password), decodingType: LoginAccount.self)
+            .print()
+            .handleEvents(receiveSubscription: { sub in
+                print("LOGIN STREAM: receiveSubscription \(sub)")
+            },
+            receiveOutput: { loginAccount in
+                print("LOGIN STREAM: receiveOutput \(loginAccount)")
+            },
+            receiveCompletion: { completion in
+
+                print("LOGIN STREAM: receiveCompletion")
+                switch completion {
+                case .failure(let error):
+                    print("LOGIN STREAM: \(error)")
+                case .finished:
+                    print("LOGIN STREAM: true")
+                }
+            },
+            receiveCancel: {
+                print("LOGIN STREAM: receiveCancel")
+            },
+            receiveRequest: { demand in
+                print("LOGIN STREAM: receiveRequest \(demand)")
+            })
+            //                print(error)
+            //                return
+            //            })
+            //            .mapError({ error in
+            //                print(error)
+            //                return error
+            //            })
             .receive(on: RunLoop.main)
             .eraseToAnyPublisher()
     }
@@ -48,7 +78,42 @@ class EveryMatrixAPIClient: ObservableObject {
         return TSManager.shared
             .getModel(router: .getSessionInfo, decodingType: SessionInfo.self)
             .receive(on: RunLoop.main)
+            .handleEvents(receiveSubscription: { sub in
+                print("SESSION STREAM: receiveSubscription \(sub)")
+            },
+            receiveOutput: { loginAccount in
+                print("SESSION STREAM: receiveOutput \(loginAccount)")
+            },
+            receiveCompletion: { completion in
+
+                print("SESSION STREAM: receiveCompletion")
+                switch completion {
+                case .failure(let error):
+                    print("SESSION STREAM: \(error)")
+                case .finished:
+                    print("SESSION STREAM: true")
+                }
+            },
+            receiveCancel: {
+                print("SESSION STREAM: receiveCancel")
+            },
+            receiveRequest: { demand in
+                print("SESSION STREAM: receiveRequest \(demand)")
+            })
+
             .eraseToAnyPublisher()
+    }
+
+    func loginComplete(username: String, password: String) -> AnyPublisher<SessionInfo, EveryMatrixSocketAPIError> {
+        return self.login(username: username, password: password).flatMap { _ in
+            return self.getSessionInfo()
+        }
+        .handleEvents(receiveOutput: { publisher in
+            print(publisher)
+        }, receiveCompletion: { publisher in
+            print(publisher)
+        })
+        .eraseToAnyPublisher()
     }
 
     func getDisciplines(payload: [String: Any]?) {

@@ -180,6 +180,9 @@
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Avo-w1-rIz">
                                     <rect key="frame" x="344" y="0.0" width="30" height="30"/>
                                     <state key="normal" title="Skip"/>
+                                    <connections>
+                                        <action selector="didTapSkipButton" destination="-1" eventType="primaryActionTriggered" id="0Cv-vP-yDM"/>
+                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>

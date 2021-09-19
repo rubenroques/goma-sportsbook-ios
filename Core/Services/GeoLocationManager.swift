@@ -8,28 +8,36 @@
 import CoreLocation
 import Combine
 
+enum GeoLocationStatus {
+    case invalid
+    case valid
+    case notAuthorized
+    case notRequested
+    case notDetermined
+}
+
 class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
-    static let shared = GeoLocationManager()
-
     private var locationManager = CLLocationManager()
+    let locationStatus = CurrentValueSubject<GeoLocationStatus, Never>(.notDetermined)
+    let authorizationstatus: CLAuthorizationStatus = .notDetermined
+    var lastKnownLocation: CLLocation?
 
-    let authorizationSubject = PassthroughSubject<CLAuthorizationStatus, Never>()
-    let locationSubject = PassthroughSubject<[CLLocation], Never>()
-    var lastLocation: CLLocation = CLLocation()
+    var cancellables = Set<AnyCancellable>()
 
     override init() {
         super.init()
+
         locationManager.delegate = self
         locationManager.pausesLocationUpdatesAutomatically = true
     }
 
     func requestGeoLocationUpdates() {
         locationManager.requestWhenInUseAuthorization()
-        locationManager.requestAlwaysAuthorization()
     }
 
     func startGeoLocationUpdates() {
+        print("GeoLocationManager startGeoLocationUpdates")
         if CLLocationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()
         }
@@ -56,29 +64,82 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
                 return false
             }
         }
-
         return false
     }
 
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        authorizationSubject.send(status)
-
-        if status == .authorizedWhenInUse {
-            print("Authorized in use")
+        switch CLLocationManager.authorizationStatus() {
+        case .notDetermined:
+            locationStatus.send(.notRequested)
+        case .restricted, .denied:
+            locationStatus.send(.notAuthorized)
+        case .authorizedAlways, .authorizedWhenInUse:
+            self.startGeoLocationUpdates()
+        @unknown default:
+            locationStatus.send(.notRequested)
         }
+
+        print("GeoLocationManager didChangeAuthorization \(status)")
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last?.coordinate else { return }
-        print("User Location: \(location.latitude) - \(location.longitude)")
-        self.locationSubject.send(locations)
-        self.lastLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
-        Env.userLatitude = location.latitude
-        Env.userLongitude = location.longitude
+        if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
+            self.lastKnownLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
+            self.checkValidLocation(self.lastKnownLocation!)
+        }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-
+        self.stopGeoLocationUpdates()
+        self.startGeoLocationUpdates()
     }
 
+    func checkValidLocation(_ location: CLLocation) {
+
+        print("GeoLocationManager checkValidLocation \(location.coordinate) | \(CLLocationManager.authorizationStatus())")
+
+        Env.gomaNetworkClient.requestGeoLocation(deviceId: Env.deviceId,
+                                                 latitude: location.coordinate.latitude,
+                                                 longitude: location.coordinate.longitude)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    self.locationStatus.send(.notDetermined)
+                case .finished:
+                    self.locationStatus.send(.notDetermined)
+                }
+            },
+            receiveValue: { validLocation in
+                if validLocation {
+                    self.locationStatus.send(.valid)
+                }
+                else {
+                    self.locationStatus.send(.invalid)
+                }
+
+            })
+            .store(in: &cancellables)
+
+    }
+}
+
+extension CLAuthorizationStatus : CustomDebugStringConvertible {
+    public var debugDescription: String {
+        switch self {
+        case .authorizedAlways:
+            return "authorizedAlways"
+        case .authorizedWhenInUse:
+            return "authorizedWhenInUse"
+        case .denied:
+            return "denied"
+        case .notDetermined:
+            return "notDetermined"
+        case .restricted:
+            return "restricted"
+        @unknown default:
+            return "unknown case"
+        }
+    }
 }

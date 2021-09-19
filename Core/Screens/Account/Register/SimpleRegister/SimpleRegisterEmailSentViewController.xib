@@ -4,12 +4,13 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SmallRegisterStep3ViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SimpleRegisterEmailSentViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="backImageView" destination="3Ub-Af-kfV" id="q2a-4p-yn2"/>
                 <outlet property="backView" destination="pFn-Si-HDt" id="BPu-2x-eqL"/>
@@ -67,22 +68,26 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DMD-rt-YH6">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DMD-rt-YH6">
                             <rect key="frame" x="30" y="748" width="354" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="73A-Lw-8qd"/>
                             </constraints>
-                            <state key="normal" title="Button"/>
+                            <state key="normal" title="Button">
+                                <color key="titleColor" name="mainTintColor"/>
+                            </state>
                             <connections>
                                 <action selector="resendEmailAction" destination="-1" eventType="touchUpInside" id="dAv-8h-rtX"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tJ-FU-5Vx" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tJ-FU-5Vx" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
                             <rect key="frame" x="30" y="678" width="354" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="g1K-uC-Anq"/>
                             </constraints>
-                            <state key="normal" title="Button"/>
+                            <state key="normal" title="Button">
+                                <color key="titleColor" name="mainTintColor"/>
+                            </state>
                             <connections>
                                 <action selector="openEmailAppAction" destination="-1" eventType="touchUpInside" id="Wbf-ff-gAO"/>
                             </connections>
@@ -122,6 +127,9 @@
         </view>
     </objects>
     <resources>
+        <namedColor name="mainTintColor">
+            <color red="0.019999999552965164" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
