@@ -22,7 +22,6 @@ struct Environment {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    var appUpdateType = "" // FIXME: Esta variavel, se for para manter assim deveria ser um Enum e não uma string para evitar problemas futuros
     var operatorId: Int = 2474  // EM GOMA Operator Id
 
     var remember: Bool = false

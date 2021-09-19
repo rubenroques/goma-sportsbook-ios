@@ -11,7 +11,6 @@ class SimpleRegisterEmailSentViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
-    @IBOutlet private var backImageView: UIImageView!
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
@@ -54,9 +53,6 @@ class SimpleRegisterEmailSentViewController: UIViewController {
 
     func commonInit() {
 
-        backImageView.image = UIImage(named: "caret-left")
-        backImageView.sizeToFit()
-
         logoImageView.image = UIImage(named: "Check_Email")
         logoImageView.sizeToFit()
 
@@ -73,17 +69,9 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         resendEmailButton.setTitle(localized("string_resend_email"), for: .normal)
         resendEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
 
-        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapBackImageGestureRecognizer:)))
-            backImageView.isUserInteractionEnabled = true
-        backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
     }
 
-    @objc func imageTapped(tapBackImageGestureRecognizer: UITapGestureRecognizer)
-    {
-        self.navigationController?.popViewController(animated: true)
-    }
-
-    @IBAction func openEmailAppAction() {
+    @IBAction private func openEmailAppAction() {
 
         let mailURL = URL(string: "message://")!
 
@@ -95,9 +83,8 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
 
-    @IBAction func resendEmailAction() {
+    @IBAction private func resendEmailAction() {
         // TO-DO: Resend email
     }
-
 
 }

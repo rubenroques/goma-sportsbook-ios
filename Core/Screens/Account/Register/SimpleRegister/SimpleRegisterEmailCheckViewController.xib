@@ -36,10 +36,10 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="818"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qhW-3R-JIm">
-                                    <rect key="frame" x="16" y="8" width="382" height="40"/>
+                                    <rect key="frame" x="0.0" y="8" width="398" height="40"/>
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cTM-4K-uEp">
-                                            <rect key="frame" x="328" y="5" width="46" height="30"/>
+                                            <rect key="frame" x="344" y="5" width="46" height="30"/>
                                             <state key="normal" title="Button"/>
                                             <connections>
                                                 <action selector="skipAction" destination="-1" eventType="touchUpInside" id="BOt-3h-qtG"/>
@@ -117,7 +117,7 @@
                                 <constraint firstAttribute="trailing" secondItem="OVR-cc-uFz" secondAttribute="trailing" constant="16" id="WZn-jY-Sh9"/>
                                 <constraint firstItem="qhW-3R-JIm" firstAttribute="top" secondItem="omU-Eo-iKe" secondAttribute="top" constant="8" id="er8-mN-pae"/>
                                 <constraint firstItem="xrL-Nf-KAU" firstAttribute="top" secondItem="9tz-Rj-uM1" secondAttribute="bottom" constant="30" id="fTK-IF-g80"/>
-                                <constraint firstItem="qhW-3R-JIm" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" constant="16" id="hOi-rj-g2c"/>
+                                <constraint firstItem="qhW-3R-JIm" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" id="hOi-rj-g2c"/>
                                 <constraint firstAttribute="trailing" secondItem="xrL-Nf-KAU" secondAttribute="trailing" constant="16" id="rNv-Ks-FR0"/>
                                 <constraint firstAttribute="trailing" secondItem="gT2-sC-ogn" secondAttribute="trailing" constant="16" id="u7T-h6-VVz"/>
                                 <constraint firstAttribute="trailing" secondItem="qhW-3R-JIm" secondAttribute="trailing" constant="16" id="xEC-oc-aA9"/>

@@ -107,6 +107,7 @@ class LoginViewController: UIViewController {
         self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
         self.passwordHeaderTextFieldView.setPlaceholderText("Password")
 
+
         self.usernameHeaderTextFieldView.highlightColor = .white
         self.passwordHeaderTextFieldView.highlightColor = .white
 
@@ -188,6 +189,7 @@ class LoginViewController: UIViewController {
         registerLabel.font = AppFont.with(type: .bold, size: 14.0)
 
         self.registerLabel.textColor =  UIColor.white
+
         let highlightAttriString = NSMutableAttributedString(string: accountText)
         let range1 = (accountText as NSString).range(of: localized("string_create_account"))
         highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .bold, size: 14), range: range1)
@@ -205,6 +207,7 @@ class LoginViewController: UIViewController {
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
         termsLabel.font = font
+
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 

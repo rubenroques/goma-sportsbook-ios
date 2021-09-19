@@ -11,7 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SimpleRegisterSendEmailCodeViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
-                <outlet property="backImageView" destination="e44-KM-F5k" id="3JD-a8-yfw"/>
+                <outlet property="backButton" destination="cEP-lC-DYs" id="QQQ-PX-ups"/>
                 <outlet property="backView" destination="Cfg-We-5gW" id="MrW-e3-M8q"/>
                 <outlet property="codeHeaderTextFieldView" destination="gr0-6x-Vs1" id="xoJ-Tg-qzg"/>
                 <outlet property="containerView" destination="IpI-T3-bgm" id="sJK-vk-MRf"/>
@@ -33,20 +33,24 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cfg-We-5gW">
                             <rect key="frame" x="16" y="8" width="382" height="30"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="e44-KM-F5k">
-                                    <rect key="frame" x="0.0" y="5" width="20" height="20"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cEP-lC-DYs">
+                                    <rect key="frame" x="0.0" y="-5" width="40" height="40"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="20" id="bRX-ta-29V"/>
-                                        <constraint firstAttribute="height" constant="20" id="fiH-ta-FwC"/>
+                                        <constraint firstAttribute="width" constant="40" id="KgQ-mY-gbf"/>
+                                        <constraint firstAttribute="height" constant="40" id="VNd-eL-6xK"/>
                                     </constraints>
-                                </imageView>
+                                    <state key="normal" title="Button"/>
+                                    <connections>
+                                        <action selector="backAction" destination="-1" eventType="touchUpInside" id="Rcc-O3-pRO"/>
+                                    </connections>
+                                </button>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
-                                <constraint firstItem="e44-KM-F5k" firstAttribute="centerY" secondItem="Cfg-We-5gW" secondAttribute="centerY" id="8eK-K5-R7E"/>
-                                <constraint firstItem="e44-KM-F5k" firstAttribute="leading" secondItem="Cfg-We-5gW" secondAttribute="leading" id="Feh-m0-NTW"/>
                                 <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="30" id="QOS-Vn-fax"/>
+                                <constraint firstItem="cEP-lC-DYs" firstAttribute="centerY" secondItem="Cfg-We-5gW" secondAttribute="centerY" id="kOg-Xc-NDu"/>
                                 <constraint firstAttribute="height" constant="30" id="nbE-3F-qzd"/>
+                                <constraint firstItem="cEP-lC-DYs" firstAttribute="leading" secondItem="Cfg-We-5gW" secondAttribute="leading" id="nqJ-D4-hPJ"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ehg-YE-R1B">

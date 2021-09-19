@@ -26,6 +26,9 @@ extension UIColor {
 
         static let alertError: UIColor = UIColor(red: 0.88, green: 0.14, blue: 0.23, alpha: 1)
 
+        static let backgroundDarkProfile: UIColor = UIColor(red: 36/255, green: 39/255, blue: 49/255, alpha: 1.0)
+        static let error: UIColor = UIColor(red: 225/255, green: 36/255, blue: 59/255, alpha: 1.0)
+        static let success: UIColor = UIColor(red: 123/255, green: 194/255, blue: 62/255, alpha: 1.0)
     }
 
 }

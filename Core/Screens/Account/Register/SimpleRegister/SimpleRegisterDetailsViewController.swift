@@ -12,7 +12,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
-    @IBOutlet private var backImageView: UIImageView!
+    @IBOutlet private var backButton: UIButton!
     @IBOutlet private var registerTitleLabel: UILabel!
     @IBOutlet private var topSignUpView: UIView!
     @IBOutlet private var usernameHeaderTextView: HeaderTextFieldView!
@@ -55,10 +55,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                                object: nil)
     }
 
-
     func commonInit() {
-        backImageView.image = UIImage(named: "caret-left")
-        backImageView.sizeToFit()
 
         registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
         registerTitleLabel.text = localized("string_signup")
@@ -90,9 +87,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapBackImageButton))
-        backImageView.isUserInteractionEnabled = true
-        backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
     }
 
     func setupWithTheme() {
@@ -149,7 +143,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         signUpButton.cornerRadius = BorderRadius.button
     }
 
-    @objc func didTapBackImageButton() {
+    @IBAction func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -159,7 +153,9 @@ class SimpleRegisterDetailsViewController: UIViewController {
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
         termsLabel.font = AppFont.with(type: .regular, size: 14.0)
+
         self.termsLabel.textColor = UIColor.App.headingMain
+
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
@@ -181,11 +177,11 @@ class SimpleRegisterDetailsViewController: UIViewController {
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
-        underlineAttriString.addAttribute(.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, underlineAttriString.length))
+        underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, underlineAttriString.length))
 
         termsLabel.attributedText = underlineAttriString
         termsLabel.isUserInteractionEnabled = true
-        termsLabel.addGestureRecognizer(UITapGestureRecognizer(target:self, action: #selector(tapUnderlineLabel(gesture:))))
+        termsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapUnderlineLabel(gesture:))))
     }
 
     @IBAction func tapUnderlineLabel(gesture: UITapGestureRecognizer) {

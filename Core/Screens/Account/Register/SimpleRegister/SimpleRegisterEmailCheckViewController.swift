@@ -43,7 +43,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-    }
+   }
 
     func commonInit() {
         skipButton.setTitle(localized("string_skip"), for: .normal)
@@ -97,7 +97,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         termsLabel.text = termsText
         termsLabel.numberOfLines = 0
         termsLabel.font = AppFont.with(type: .regular, size: 14.0)
-        self.termsLabel.textColor =  UIColor.white
+        self.termsLabel.textColor =  UIColor.App.headingMain
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
@@ -126,7 +126,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         termsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapUnderlineLabel(gesture:))))
     }
 
-    @IBAction func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
+    @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = localized("string_agree_terms_conditions")
 
         let termsRange = (text as NSString).range(of: localized("string_terms"))
@@ -174,7 +174,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     }
 
-    @IBAction func skipAction() {
+    @IBAction private func skipAction() {
         let vc = RootViewController()
         
         self.navigationController?.pushViewController(vc, animated: true)

@@ -11,7 +11,7 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var backView: UIView!
-    @IBOutlet private var backImageView: UIImageView!
+    @IBOutlet private var backButton: UIButton!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var codeHeaderTextFieldView: HeaderTextFieldView!
@@ -60,8 +60,7 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
     }
 
     func commonInit() {
-        backImageView.image = UIImage(named: "caret-left")
-        backImageView.sizeToFit()
+
 
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
         titleLabel.text = localized("string_enter_code")
@@ -80,22 +79,17 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        let tapBackImageGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapBackImageGestureRecognizer:)))
-            backImageView.isUserInteractionEnabled = true
-        backImageView.addGestureRecognizer(tapBackImageGestureRecognizer)
     }
 
-    @objc func imageTapped(tapBackImageGestureRecognizer: UITapGestureRecognizer)
-    {
+    @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func doneAction() {
+    @IBAction private func doneAction() {
         // Finish
     }
 
-
-    @IBAction func pasteClipboardAction() {
+    @IBAction private func pasteClipboardAction() {
         let pb = UIPasteboard.general;
         codeHeaderTextFieldView.setTextFieldDefaultValue(pb.string ?? "")
     }
