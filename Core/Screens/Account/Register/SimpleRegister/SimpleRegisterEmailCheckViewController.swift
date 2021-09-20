@@ -159,25 +159,22 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     @IBAction private func didTapRegisterButton() {
 
-        let smallRegisterStep2ViewController = SimpleRegisterDetailsViewController(emailAddress: "rubenroques@outlook.com")
-        self.navigationController?.pushViewController(smallRegisterStep2ViewController, animated: true)
+        let input = self.emailHeadertextFieldView.text
 
-//        let input = self.emailHeadertextFieldView.text
-//
-//        if !self.isValidEmail(input) {
-//            self.emailHeadertextFieldView.showErrorOnField(text: "Invalid Email Address")
-//        }
-//        else {
-//            let vc = SimpleRegisterDetailsViewController()
-//            vc.emailUser = input
-//        }
+        if !self.isValidEmail(input) {
+            self.emailHeadertextFieldView.showErrorOnField(text: localized("string_invalid_email"))
+        }
+        else {
+            let smallRegisterStep2ViewController = SimpleRegisterDetailsViewController(emailAddress: emailHeadertextFieldView.text)
+            self.navigationController?.pushViewController(smallRegisterStep2ViewController, animated: true)
+        }
 
     }
 
     @IBAction private func skipAction() {
-        let vc = RootViewController()
+        let rootViewController = RootViewController()
         
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.pushViewController(rootViewController, animated: true)
     }
 
     func isValidEmail(_ email: String) -> Bool {

@@ -24,12 +24,12 @@ class EditAlertView: NibView {
         didSet {
             switch self.alertState {
             case .success:
-                alertImageView.image = UIImage(named: "Active")
+                alertImageView.image = UIImage(named: "Success")
                 alertLabel.text = localized("string_success")
                 alertLabel.textColor = UIColor.App.success
                 alertTextLabel.text = localized("string_success_edit")
             case .error:
-                alertImageView.image = UIImage(named: "Error")
+                alertImageView.image = UIImage(named: "error_input_icon")
                 alertLabel.textColor = UIColor.App.error
                 alertLabel.text = localized("string_error")
                 alertTextLabel.text = localized("string_error_edit")

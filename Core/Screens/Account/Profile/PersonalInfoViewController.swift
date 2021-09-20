@@ -9,7 +9,6 @@ import UIKit
 
 class PersonalInfoViewController: UIViewController {
 
-
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var headerView: UIView!
@@ -50,7 +49,7 @@ class PersonalInfoViewController: UIViewController {
         commonInit()
         setupWithTheme()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
