@@ -69,72 +69,11 @@ class PersonalInfoViewController: UIViewController {
 
         editButton.backgroundColor = UIColor.App.backgroundDarkProfile
 
-        firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        firstNameHeaderTextFieldView.setSecureField(false)
-
-        lastNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        lastNameHeaderTextFieldView.setSecureField(false)
-
-        countryHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        countryHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundDarkProfile)
-        countryHeaderTextFieldView.setViewBorderColor(UIColor.App.headerTextFieldGray)
-        countryHeaderTextFieldView.setSecureField(false)
-
-        birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        birthDateHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        birthDateHeaderTextFieldView.setSecureField(false)
-        birthDateHeaderTextFieldView.isDisabled = true
-
-        adress1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        adress1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        adress1HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        adress1HeaderTextFieldView.setSecureField(false)
-
-        adress2HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        adress2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        adress2HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        adress2HeaderTextFieldView.setSecureField(false)
-
-        cityHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        cityHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        cityHeaderTextFieldView.setSecureField(false)
-
-        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        postalCodeHeaderTextFieldView.setSecureField(false)
+        topFieldsSetup()
 
         lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
 
-        usernameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        usernameHeaderTextFieldView.setSecureField(false)
-
-        emailHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        emailHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        emailHeaderTextFieldView.setSecureField(false)
-        emailHeaderTextFieldView.isDisabled = true
-
-        cardIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        cardIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        cardIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        cardIdHeaderTextFieldView.setSecureField(false)
-        cardIdHeaderTextFieldView.isDisabled = true
-
-        bankIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        bankIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
-        bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        bankIdHeaderTextFieldView.setSecureField(false)
-        bankIdHeaderTextFieldView.isDisabled = true
+        bottomFieldsSetup()
 
     }
 
@@ -185,6 +124,75 @@ class PersonalInfoViewController: UIViewController {
         self.view.addGestureRecognizer(tapGestureRecognizer)
     }
 
+    func topFieldsSetup() {
+        firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        firstNameHeaderTextFieldView.setSecureField(false)
+
+        lastNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        lastNameHeaderTextFieldView.setSecureField(false)
+
+        countryHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        countryHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundDarkProfile)
+        countryHeaderTextFieldView.setViewBorderColor(UIColor.App.headerTextFieldGray)
+        countryHeaderTextFieldView.setSecureField(false)
+
+        birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        birthDateHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        birthDateHeaderTextFieldView.setSecureField(false)
+        birthDateHeaderTextFieldView.isDisabled = true
+
+        adress1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        adress1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        adress1HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        adress1HeaderTextFieldView.setSecureField(false)
+
+        adress2HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        adress2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        adress2HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        adress2HeaderTextFieldView.setSecureField(false)
+
+        cityHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        cityHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        cityHeaderTextFieldView.setSecureField(false)
+
+        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        postalCodeHeaderTextFieldView.setSecureField(false)
+    }
+
+    func bottomFieldsSetup() {
+        usernameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        usernameHeaderTextFieldView.setSecureField(false)
+
+        emailHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        emailHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        emailHeaderTextFieldView.setSecureField(false)
+        emailHeaderTextFieldView.isDisabled = true
+
+        cardIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        cardIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        cardIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        cardIdHeaderTextFieldView.setSecureField(false)
+        cardIdHeaderTextFieldView.isDisabled = true
+
+        bankIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        bankIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        bankIdHeaderTextFieldView.setSecureField(false)
+        bankIdHeaderTextFieldView.isDisabled = true
+    }
+
     func underlineButtonTitleLabel(button: UIButton) {
         let text = localized("string_edit")
 
@@ -224,7 +232,8 @@ class PersonalInfoViewController: UIViewController {
         // TEST
         if firstNameHeaderTextFieldView.text != "" {
             showAlert(type: .success)
-        } else {
+        }
+        else {
             showAlert(type: .error)
         }
     }
