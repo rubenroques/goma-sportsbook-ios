@@ -18,6 +18,7 @@ enum BorderRadius {
     static let headerInput: CGFloat = 10.0
     static let button: CGFloat = 8.0
     static let checkBox: CGFloat = 6.0
+    static let label: CGFloat = 3.0
 }
 
 enum TextSpacing {

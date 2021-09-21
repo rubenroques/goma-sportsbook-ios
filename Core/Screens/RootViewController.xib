@@ -80,6 +80,17 @@
                         <action selector="didTapLoginProfileButton" destination="-1" eventType="primaryActionTriggered" id="hES-PM-fYO"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yzE-oY-rIP">
+                    <rect key="frame" x="13" y="120" width="45" height="30"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <state key="normal" title="Popup">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="didTapLoginProfileButton" destination="-1" eventType="primaryActionTriggered" id="Epl-N8-pkk"/>
+                        <action selector="didTapPopupButton" destination="-1" eventType="touchUpInside" id="Mvk-g0-5Vt"/>
+                    </connections>
+                </button>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemGray3Color"/>
