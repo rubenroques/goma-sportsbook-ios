@@ -17,14 +17,12 @@ struct Bootstrap {
 
     func boot() {
 
+        let _ = Env
         self.router.makeKeyAndVisible()
-        Env.clientSettingsSocket.connect()
+        Env.businessSettingsSocket.connect()
 
         if Env.locationManager.isLocationServicesEnabled() {
             Env.locationManager.startGeoLocationUpdates()
-        }
-        else {
-            Env.locationManager.requestGeoLocationUpdates()
         }
 
     }

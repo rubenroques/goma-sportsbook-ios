@@ -19,6 +19,9 @@ class RootViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
+    var popUpBaseView: UIView?
+    var popUpView: UIView?
+
     init() {
         gomaGamingAPIClient = Env.gomaNetworkClient
         everyMatrixAPIClient = Env.everyMatrixAPIClient
@@ -35,6 +38,16 @@ class RootViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupWithTheme()
+
+        Env.businessSettingsSocket.clientSettingsPublisher
+            .compactMap({ $0 })
+            .map(\.showInformationPopUp)
+            .sink { showInformationPopUp in
+                if showInformationPopUp {
+                    self.loadPopUpViewContent()
+                }
+            }
+            .store(in: &cancellables)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -100,7 +113,6 @@ class RootViewController: UIViewController {
 
                 let settingsStored = Env.getUserSettings()
                 print("User settings: \(String(describing: settingsStored))")
-
             })
             .store(in: &cancellables)
     }
@@ -153,6 +165,53 @@ class RootViewController: UIViewController {
 
     @IBAction private func didTapLoginProfileButton() {
 
+    }
+
+    private func loadPopUpViewContent() {
+        Env.gomaNetworkClient
+            .requestPopUpInfo(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
+            .print()
+            .sink { popUpDetails in
+                if let popUpDetails = popUpDetails {
+                    self.showPopUpView(popUpDetails: popUpDetails)
+                }
+            }
+            .store(in: &cancellables)
+
+    }
+
+    private func showPopUpView(popUpDetails: PopUpDetails) {
+        let popUpBaseView = UIView()
+        popUpBaseView.translatesAutoresizingMaskIntoConstraints = false
+        popUpBaseView.backgroundColor = .gray.withAlphaComponent(0.2)
+
+        let popUpView = UIView()
+        popUpView.translatesAutoresizingMaskIntoConstraints = false
+        popUpView.backgroundColor = .systemRed
+
+        popUpBaseView.addSubview(popUpView)
+        self.view.addSubview(popUpBaseView)
+
+        NSLayoutConstraint.activate([
+            self.view.topAnchor.constraint(equalTo: popUpBaseView.topAnchor),
+            self.view.bottomAnchor.constraint(equalTo: popUpBaseView.bottomAnchor),
+            self.view.leadingAnchor.constraint(equalTo: popUpBaseView.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: popUpBaseView.trailingAnchor),
+
+            popUpView.heightAnchor.constraint(equalToConstant: 360),
+
+            popUpView.centerYAnchor.constraint(equalTo: popUpBaseView.centerYAnchor),
+            popUpView.centerXAnchor.constraint(equalTo: popUpBaseView.centerXAnchor),
+            popUpView.leadingAnchor.constraint(equalTo: popUpBaseView.leadingAnchor, constant: 26),
+            //popUpView.bottomAnchor.constraint(greaterThanOrEqualTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -16)
+        ])
+    }
+
+    func hidePopUpView() {
+        self.popUpBaseView?.removeFromSuperview()
+        self.popUpBaseView = nil
+        self.popUpView = nil
     }
 
     func showForbiddenAccess() {

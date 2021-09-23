@@ -157,7 +157,7 @@ class PersonalInfoViewController: UIViewController {
         countryHeaderTextFieldView.setSelectionPicker(["Portugal", "Spain", "England"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "Arrow_Down")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
-        countryHeaderTextFieldView.isSelect = true
+        countryHeaderTextFieldView.shouldBeginEditing = { return false }
 
         birthDateHeaderTextFieldView.setPlaceholderText(localized("string_birth_date"))
         birthDateHeaderTextFieldView.setTextFieldDefaultValue(birthDate)

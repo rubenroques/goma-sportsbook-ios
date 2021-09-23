@@ -44,14 +44,19 @@ class Router {
         }
 
         self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
-        self.rootWindow.rootViewController = bootRootViewController
-        self.rootWindow.makeKeyAndVisible()
 
+        #if DEBUG
+        self.rootWindow.rootViewController = Router.navigationController(with:  SimpleRegisterEmailCheckViewController() )
+        #else
+        self.rootWindow.rootViewController = bootRootViewController
+        #endif
+
+        self.rootWindow.makeKeyAndVisible()
         self.subscribeToUserActionBlockers()
     }
 
     func subscribeToUserActionBlockers() {
-        Env.clientSettingsSocket.maintenanceModePublisher
+        Env.businessSettingsSocket.maintenanceModePublisher
             .receive(on: RunLoop.main)
             .sink { message in
             if let messageValue = message {
@@ -63,7 +68,7 @@ class Router {
         }
         .store(in: &cancellables)
 
-        Env.clientSettingsSocket.requiredVersionPublisher
+        Env.businessSettingsSocket.requiredVersionPublisher
             .receive(on: RunLoop.main)
             .delay(for: 3, scheduler: RunLoop.main).sink { serverVersion in
 
@@ -110,66 +115,49 @@ class Router {
     func showUnderMaintenanceScreen(withReason reason: String) {
 
         if let presentedViewController = self.rootViewController?.presentedViewController {
-            presentedViewController.dismiss(animated: false, completion: nil)
+            if !(presentedViewController is MaintenanceViewController) {
+                presentedViewController.dismiss(animated: false, completion: nil)
+            }
         }
 
         let maintenanceViewController = MaintenanceViewController()
         maintenanceViewController.isModalInPresentation = true
         self.rootViewController?.present(maintenanceViewController, animated: true, completion: nil)
-
-        self.blockerViewController = maintenanceViewController
     }
 
     func hideUnderMaintenanceScreen() {
         if let presentedViewController = self.rootViewController?.presentedViewController,
            presentedViewController is MaintenanceViewController {
-            presentedViewController.dismiss(animated: false, completion: nil)
+            presentedViewController.dismiss(animated: true, completion: nil)
         }
     }
 
-    // UpdateScreen
+    // Required Update Screen
     func showRequiredUpdateScreen() {
-
-        if self.blockerViewController.hasValue {
-            return
-        }
-        
         let versionUpdateViewController = VersionUpdateViewController(required: true)
         versionUpdateViewController.isModalInPresentation = true
         self.rootViewController?.present(versionUpdateViewController, animated: true, completion: nil)
-
-        self.blockerViewController = versionUpdateViewController
     }
 
     func hideRequiredUpdateScreen() {
-        if let blockerViewController = blockerViewController {
-            blockerViewController.dismiss(animated: true) { [weak self] in
-                self?.blockerViewController = nil
-            }
+
+        if let presentedViewController = self.rootViewController?.presentedViewController,
+           presentedViewController is VersionUpdateViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
         }
     }
 
-    // UpdateScreen
+    // Update Screen
     func showAvailableUpdateScreen() {
-
-        if self.blockerViewController.hasValue {
-            return
-        }
-
         let versionUpdateViewController = VersionUpdateViewController(required: false)
         versionUpdateViewController.isModalInPresentation = false
-        versionUpdateViewController.dismissCallback = { [weak self] in
-            self?.blockerViewController = nil
-        }
         self.rootViewController?.present(versionUpdateViewController, animated: true, completion: nil)
-
-        self.blockerViewController = versionUpdateViewController
     }
 
     static func shouldShowUpdateAppPopUpScreen() -> Bool {
         guard
             let currentVersion = Bundle.main.versionNumber,
-            let serverVersion = Env.clientSettingsSocket.clientSettings?.currentAppVersion else {
+            let serverVersion = Env.businessSettingsSocket.clientSettings?.currentAppVersion else {
             return false
         }
 
@@ -177,13 +165,12 @@ class Router {
     }
 
     func hideLocationScreen() {
-        
-        if let presentedViewController = self.rootViewController?.presentedViewController,
-           (presentedViewController is ForbiddenLocationViewController ||
-            presentedViewController is RequestLocationAccessViewController ||
-                presentedViewController is RefusedAccessViewController) {
-
-            presentedViewController.dismiss(animated: true, completion: nil)
+        if let presentedViewController = self.rootViewController?.presentedViewController {
+            if presentedViewController is ForbiddenLocationViewController ||
+                presentedViewController is RequestLocationAccessViewController ||
+                presentedViewController is RefusedAccessViewController {
+                    presentedViewController.dismiss(animated: true, completion: nil)
+            }
         }
     }
 
@@ -212,7 +199,6 @@ class Router {
     }
 
 }
-
 
 extension Router {
 

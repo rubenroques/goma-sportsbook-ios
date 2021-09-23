@@ -37,7 +37,13 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     func startGeoLocationUpdates() {
-        print("GeoLocationManager startGeoLocationUpdates")
+        Logger.log("startGeoLocationUpdates")
+
+        #if DEBUG
+        locationManager.startUpdatingLocation()
+        return
+        #endif
+
         if CLLocationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()
         }
@@ -79,11 +85,16 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
             locationStatus.send(.notRequested)
         }
 
-        print("GeoLocationManager didChangeAuthorization \(status)")
+        Logger.log("didChangeAuthorization \(status)")
     }
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last?.coordinate else { return }
+        if self.lastKnownLocation?.coordinate.latitude == location.latitude &&
+            self.lastKnownLocation?.coordinate.longitude == location.longitude {
+            return
+        }
+        
         if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             self.lastKnownLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
             self.checkValidLocation(self.lastKnownLocation!)
@@ -91,13 +102,12 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        self.stopGeoLocationUpdates()
-        self.startGeoLocationUpdates()
+        Logger.log("locationManager didFailWithError \(error)")
     }
 
     func checkValidLocation(_ location: CLLocation) {
 
-        print("GeoLocationManager checkValidLocation \(location.coordinate) | \(CLLocationManager.authorizationStatus())")
+        Logger.log("checkValidLocation \(location.coordinate) | \(CLLocationManager.authorizationStatus())")
 
         Env.gomaNetworkClient.requestGeoLocation(deviceId: Env.deviceId,
                                                  latitude: location.coordinate.latitude,
@@ -125,7 +135,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
     }
 }
 
-extension CLAuthorizationStatus : CustomDebugStringConvertible {
+extension CLAuthorizationStatus: CustomDebugStringConvertible {
     public var debugDescription: String {
         switch self {
         case .authorizedAlways:

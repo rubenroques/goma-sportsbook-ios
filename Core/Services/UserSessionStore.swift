@@ -13,8 +13,9 @@ enum UserSessionError: Error {
     case serverError
 }
 
-struct UserSessionStore {
+class UserSessionStore {
 
+    var cancellables = Set<AnyCancellable>()
 
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
@@ -42,10 +43,10 @@ struct UserSessionStore {
         UserDefaults.standard.userSession = nil
     }
 
-    func loginUser(with email: String, password: String) -> AnyPublisher<UserSession, UserSessionError> {
+    func loginUser(withUsername username: String, password: String) -> AnyPublisher<UserSession, UserSessionError> {
 
         let publisher = Env.everyMatrixAPIClient
-            .loginComplete(username: email, password: password)
+            .loginComplete(username: username, password: password)
             .mapError { (error: EveryMatrixSocketAPIError) -> UserSessionError in
                 switch error {
                 case let .requestError(message) where message.contains("check your username and password"):
@@ -54,15 +55,55 @@ struct UserSessionStore {
                     return .serverError
                 }
             }
-            .map({ sessionInfo in
+            .map { sessionInfo in
                 UserSession(username: sessionInfo.username,
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)")
-            })
+            }
             .handleEvents(receiveOutput: cacheUserSession)
             .eraseToAnyPublisher()
 
         return publisher
+    }
+
+    func registerUser(form: EveryMatrix.SimpleRegisterForm) -> AnyPublisher<Bool, EveryMatrixSocketAPIError> {
+        return Env.everyMatrixAPIClient
+            .simpleRegister(form: form)
+            .map { _ in return true }
+            .handleEvents(receiveOutput: { registered in
+                if registered {
+                    self.triggerLoginOnRegister(form: form)
+                }
+            })
+            .eraseToAnyPublisher()
+    }
+
+    func registrationOnGomaAPI(form: EveryMatrix.SimpleRegisterForm, userId: String) {
+
+        let deviceId = Env.deviceId
+        let userRegisterForm = UserRegisterForm(username: form.username,
+                                                email: form.email,
+                                                mobile: form.mobileNumber,
+                                                birthDate: form.birthDate,
+                                                userProviderId: userId)
+        Env.gomaNetworkClient
+            .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
+            .replaceError(with: MessageNetworkResponse.failed)
+            .sink { registered in
+                print("User registered on goma api \(registered)")
+            }
+            .store(in: &cancellables)
+    }
+
+    private func triggerLoginOnRegister(form: EveryMatrix.SimpleRegisterForm) {
+        self.loginUser(withUsername: form.username, password: form.password)
+            .map { String($0.userId) }
+            .sink(receiveCompletion: { _ in
+
+            }, receiveValue: { userId in
+                self.registrationOnGomaAPI(form: form, userId: userId)
+            })
+            .store(in: &cancellables)
     }
 
 }

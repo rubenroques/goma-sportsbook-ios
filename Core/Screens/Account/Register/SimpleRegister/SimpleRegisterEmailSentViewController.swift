@@ -32,8 +32,12 @@ class SimpleRegisterEmailSentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupWithTheme()
         commonInit()
+        setupWithTheme()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     func setupWithTheme() {
@@ -49,6 +53,17 @@ class SimpleRegisterEmailSentViewController: UIViewController {
 
         resendEmailButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         resendEmailButton.backgroundColor = UIColor.App.mainBackgroundColor
+
+        openEmailButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
+        openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+
+        openEmailButton.backgroundColor = .clear
+        openEmailButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
+        openEmailButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        openEmailButton.layer.cornerRadius = BorderRadius.button
+        openEmailButton.layer.masksToBounds = true
+
     }
 
     func commonInit() {
@@ -56,31 +71,25 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         logoImageView.image = UIImage(named: "Check_Email")
         logoImageView.sizeToFit()
 
-        titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
+        titleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)
         titleLabel.text = localized("string_check_email")
 
-        textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 15)
+        textLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 15)
         textLabel.text = "\(localized("string_check_email_text1")) \(emailUser) \(localized("string_check_email_text2"))"
         textLabel.numberOfLines = 0
 
-        openEmailButton.setTitle(localized("string_insert_email_code"), for: .normal)
-        openEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+        openEmailButton.setTitle(localized("string_continue"), for: .normal)
+        openEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         resendEmailButton.setTitle(localized("string_resend_email"), for: .normal)
-        resendEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+        resendEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 15)
 
     }
 
     @IBAction private func openEmailAppAction() {
+        let mainScreenViewController = Router.mainScreenViewController()
+        self.navigationController?.pushViewController(mainScreenViewController, animated: true)
 
-        let mailURL = URL(string: "message://")!
-
-        if UIApplication.shared.canOpenURL(mailURL) {
-            UIApplication.shared.open(mailURL, options: [:], completionHandler: nil)
-        }
-
-        let vc = SimpleRegisterSendEmailCodeViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
     }
 
     @IBAction private func resendEmailAction() {

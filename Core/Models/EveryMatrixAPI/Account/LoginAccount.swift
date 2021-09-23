@@ -35,8 +35,8 @@ struct SessionInfo: Decodable {
     var isEmailVerified: Bool
     var isAuthenticated: Bool
 
-    var loginDateTime: String
-    var lastLoginDateTime: String
+    var loginDateTime: String?
+    var lastLoginDateTime: String?
 
     var requiredTermsAndConditions: [Int]?
     var roles: [String]?

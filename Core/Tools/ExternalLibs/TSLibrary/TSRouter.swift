@@ -11,11 +11,16 @@ import Foundation
 enum TSRouter {
 
     case login(username: String, password: String)
+    case getSessionInfo
+    case validateEmail(email: String)
+    case validateUsername(username: String)
+    case getCountries
+    case simpleRegister(form: EveryMatrix.SimpleRegisterForm)
+
 
     case registrationDismissed
     case getTransportSessionID
     case getClientIdentity
-    case getSessionInfo
     case getCmsSessionID
     case sessionStateChange
     case getProfile
@@ -41,6 +46,7 @@ enum TSRouter {
     case logout
     case acceptTC
     case coolOff24h
+
     // GOMA EveryMatrix
     case disciplines(payload: [String: Any]?)
     case locations(payload: [String: Any]?)
@@ -52,6 +58,7 @@ enum TSRouter {
     case nextMatches(payload: [String: Any]?)
     case events(payload: [String: Any]?)
     case odds(payload: [String: Any]?)
+
     // GOMA EveryMatrix Subscriptions
     case oddsMatch(language: String, matchId: String)
 
@@ -60,6 +67,19 @@ enum TSRouter {
         // EveryMatrix API
         case .login:
             return "/user#login"
+        case .getSessionInfo:
+            return "/user#getSessionInfo"
+
+        case .validateEmail:
+            return "/user/account#validateEmail"
+
+        case .validateUsername:
+            return "/user/account#validateUsername"
+        case .getCountries:
+            return "/user/account#getCountries"
+        case .simpleRegister:
+            return "/user/account#register"
+
 
         case .disciplines:
             return "/sports#disciplines"
@@ -85,7 +105,6 @@ enum TSRouter {
         case .oddsMatch(language: let language, matchId: let matchId):
             return "/sports/\(Env.operatorId)/\(language)/\(matchId)/match-odds"
 
-
         // Others
         case .registrationDismissed:
             return "/registrationDismissed"
@@ -93,8 +112,7 @@ enum TSRouter {
             return "/user#getTransportSessionID"
         case .getClientIdentity:
             return "/connection#getClientIdentity"
-        case .getSessionInfo:
-            return "/user#getSessionInfo"
+
         case .getCmsSessionID:
             return "/user#getCmsSessionID"
         case .sessionStateChange:
@@ -157,7 +175,26 @@ enum TSRouter {
         switch self {
         case .login(let username, let password):
             return ["usernameOrEmail": username, "password": password]
-
+        case .validateEmail(let email):
+            return ["email": email]
+        case let .validateUsername(username):
+            return ["username": username]
+        case .getCountries:
+            return [:]
+        case let .simpleRegister(form):
+            return ["email": form.email,
+                    "username": form.username,
+                    "password": form.password,
+                    "birthDate": form.birthDate,
+                    "mobilePrefix": form.mobilePrefix,
+                    "mobile": form.mobileNumber,
+                    "country": "PT",
+                    "currency": "EUR",
+                    "emailVerificationURL": form.emailVerificationURL,
+                    "userConsents": ["termsandconditions": true, "sms": false]]
+        //
+        //
+        //
         case .disciplines(payload: let payload):
             return payload
         case .locations(payload: let payload):
@@ -179,7 +216,8 @@ enum TSRouter {
         case.odds(payload: let payload):
             return payload
         case .getSessionInfo:
-            return ["culture": "de", "externalParty": "tipico", "fields": ["domainHost": "games.tipico.de"], "includeTermsConditionsFlags": true]
+            return [:]
+
         case .getGamingAccounts:
             return ["expectBalance": true, "expectBonus": true]
 
@@ -187,7 +225,7 @@ enum TSRouter {
             return ["anonymousUserIdentity": false, "type": "game", "id": gameID]
 
         case .getFavorites:
-            return ["anonymousUserIdentity": false, "expectedGameFields": 1, "expectedTableFields": 67108864, "filterByPlatform": ["iPhone"], "specificExportFields": ["gameID"]]
+            return ["anonymousUserIdentity": false, "expectedGameFields": 1, "expectedTableFields": 67108864, "filterByPlatform": ["imobile"], "specificExportFields": ["gameID"]]
 
         case .getApplicableBonuses(gamingAccountID: let gamingAcctID):
             return ["type": "transfer", "gamingAccountID": gamingAcctID]

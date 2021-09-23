@@ -23,34 +23,69 @@ struct GomaGamingServiceClient {
     }
 
     func requestGeoLocation(deviceId: String, latitude: Double, longitude: Double) -> AnyPublisher<Bool, NetworkError> {
-
-        #if DEBUG
-        if ceil(latitude) == -22 && ceil(longitude) == -43 {
-            return Just(false).setFailureType(to: NetworkError.self).eraseToAnyPublisher()
-        }
-        #endif
-
         let accessGrantedMessage = "User Access Granted!"
         let endpoint = GomaGamingService.geolocation(latitude: String(latitude), longitude: String(longitude))
-        let requestPublisher: AnyPublisher<SimpleNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-        let booleanPublisher = requestPublisher.map { simpleResponse in
-            return simpleResponse.message == accessGrantedMessage
-        }
-        return booleanPublisher.eraseToAnyPublisher()
+        let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+
+        return requestPublisher
+            .catch { (error: NetworkError) -> AnyPublisher<MessageNetworkResponse, NetworkError> in
+                if error.errors.contains(.forbidden) {
+                    return Just(MessageNetworkResponse.forbiden)
+                        .setFailureType(to: NetworkError.self)
+                        .eraseToAnyPublisher()
+                }
+                else {
+                    return Fail(outputType: MessageNetworkResponse.self, failure: error)
+                        .eraseToAnyPublisher()
+                }
+            }
+            .eraseToAnyPublisher()
+            .map { simpleResponse -> Bool in
+                return simpleResponse.message == accessGrantedMessage
+            }
+            .eraseToAnyPublisher()
+//
+//
+//
+//        return requestPublisher
+//            .tryCatch { (error: NetworkError) throws -> (AnyPublisher<MessageNetworkResponse, NetworkError>) in
+//                if error.errors.contains(.forbidden) {
+//                    return Just(MessageNetworkResponse.forbiden)
+//                        .setFailureType(to: NetworkError.self)
+//                        .eraseToAnyPublisher()
+//                }
+//                else {
+//                    throw error
+//                }
+//            }
+//            .map({ simpleResponse in
+//                return simpleResponse.message == accessGrantedMessage
+//            })
+//            .eraseToAnyPublisher()
     }
 
     func requestSettings(deviceId: String) -> AnyPublisher<[GomaClientSettings]?, NetworkError> {
         let endpoint = GomaGamingService.settings
-        // let requestPublisher: AnyPublisher<[ClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         let requestPublisher: AnyPublisher<[GomaClientSettings]?, NetworkError> = networkClient.requestEndpointArrayData(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 
-    func requestUserRegister(deviceId: String, username: String, email: String, phone: String, birthDate: String, userProviderId: String)
-    -> AnyPublisher<String?, NetworkError> {
-        let endpoint = GomaGamingService.simpleRegister(username: username, email: email, phone: phone, birthDate: birthDate, userProviderId: userProviderId)
-        // let requestPublisher: AnyPublisher<[ClientSettings]?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-        let requestPublisher: AnyPublisher<String?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+    func requestPopUpInfo(deviceId: String) -> AnyPublisher<PopUpDetails?, Never> {
+        let endpoint = GomaGamingService.modalPopUpDetails
+        let requestPublisher: AnyPublisher<PopUpDetails?, Never> = networkClient.requestEndpointArrayData(deviceId: deviceId, endpoint: endpoint)
+            .replaceError(with: nil)
+            .eraseToAnyPublisher()
+        return requestPublisher
+    }
+
+    func requestUserRegister(deviceId: String, userRegisterForm: UserRegisterForm) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
+        let endpoint = GomaGamingService.simpleRegister(username: userRegisterForm.username,
+                                                        email: userRegisterForm.email,
+                                                        phone: userRegisterForm.mobile,
+                                                        birthDate: userRegisterForm.birthDate,
+                                                        userProviderId: userRegisterForm.userProviderId)
+
+        let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 

@@ -108,7 +108,7 @@ final class TSManager {
 
                 if swampSession.isConnected() {
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: {
-                        (_, _, kwResults, arrResults) in
+                        _, _, kwResults, arrResults in
 
                         do {
                             if kwResults != nil {
@@ -133,7 +133,7 @@ final class TSManager {
                             print("TSManager Decoding Error: \(error)")
                             promise(.failure(.decodingError))
                         }
-                    }, onError: { (_, error, args, kwargs) in
+                    }, onError: { _, error, _, kwargs in
                         var desc = ""
                         if kwargs?["desc"] != nil {
                             desc = kwargs?["desc"] as! String
@@ -206,7 +206,7 @@ extension TSManager: SSWampSessionDelegate {
             .sink(receiveCompletion: { _ in
                 NotificationCenter.default.post(name: .wampSocketConnected, object: nil)
             }, receiveValue: { value in
-                print(value.description)
+                Logger.log("TSManager ssWampSessionConnected\(value.description)")
             })
             .store(in: &cancellable)
     }

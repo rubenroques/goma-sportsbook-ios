@@ -65,17 +65,11 @@ extension GomaGamingService: Endpoint {
     }
 
     var headers: HTTP.Headers? {
-
         let defaultHeaders = [
             "Accept-Encoding": "gzip, deflate",
-            "Content-Type": "application/json; charset=UTF-8"
+            "Content-Type": "application/json; charset=UTF-8",
+            "Accept": "application/json"
         ]
-
-        switch self {
-        case .test: ()
-        default: ()
-        }
-
         return defaultHeaders
     }
 
@@ -107,14 +101,12 @@ extension GomaGamingService: Endpoint {
         switch self {
         case .simpleRegister(let username, let email, let phone, let birthDate, let userProviderId):
             let body = """
-                       {
-                        \"type\": \"small_register\",
-                        \"email\": \"\(email)\",
-                        \"username\": \"\(username)\",
-                        \"phone_number\": \"\(phone)\",
-                        \"birthdate\": \"\(birthDate)\",
-                        \"user_provider_id\": \"\(userProviderId)\",
-                       }
+                       {"type": "small_register",
+                        "email": "\(email)",
+                        "username": "\(username)",
+                        "phone_number": "\(phone)",
+                        "birthdate": "\(birthDate)",
+                        "user_provider_id": "\(userProviderId)"}
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data

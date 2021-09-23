@@ -9,7 +9,6 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
 
     override init() {
         super.init()
-        print("Init")
     }
 
     required init?(coder: NSCoder) {

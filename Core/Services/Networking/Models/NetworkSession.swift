@@ -29,8 +29,9 @@ extension URLSession: NetworkSession {
 
         return dataTaskPublisher(for: request)
             .tryMap { result in
-                dump(request)
-                print(String(data: result.data, encoding: .utf8) ?? "")
+
+                //dump(request)
+                //print(String(data: result.data, encoding: .utf8) ?? "")
 
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw NetworkError(errors: [.unauthorized])

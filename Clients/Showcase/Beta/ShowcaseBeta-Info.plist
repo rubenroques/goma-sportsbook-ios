@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSLocationUsageDescription</key>
-	<string>The app needs your permission to use your location</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -26,6 +24,26 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>The app needs permission to use your location</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The app needs permission to use your location</string>
+	<key>NSLocationUsageDescription</key>
+	<string>The app needs your permission to use your location</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The app needs localization permission when in use</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Gilroy-Bold.ttf</string>
+		<string>Gilroy-ExtraBold.ttf</string>
+		<string>Gilroy-Black.ttf</string>
+		<string>Gilroy-Heavy.ttf</string>
+		<string>Gilroy-Light.ttf</string>
+		<string>Gilroy-Medium.ttf</string>
+		<string>Gilroy-Regular.ttf</string>
+		<string>Gilroy-SemiBold.ttf</string>
+		<string>Gilroy-Thin.ttf</string>
+	</array>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -36,16 +54,12 @@
 	<array>
 		<string>armv7</string>
 	</array>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleLightContent</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>The app needs localization permission when in use</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>The app needs permission to use your location</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>The app needs permission to use your location</string>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -53,19 +67,5 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-
-    <key>UIAppFonts</key>
-    <array>
-        <string>Gilroy-Bold.ttf</string>
-        <string>Gilroy-ExtraBold.ttf</string>
-        <string>Gilroy-Black.ttf</string>
-        <string>Gilroy-Heavy.ttf</string>
-        <string>Gilroy-Light.ttf</string>
-        <string>Gilroy-Medium.ttf</string>
-        <string>Gilroy-Regular.ttf</string>
-        <string>Gilroy-SemiBold.ttf</string>
-        <string>Gilroy-Thin.ttf</string>
-    </array>
-
 </dict>
 </plist>

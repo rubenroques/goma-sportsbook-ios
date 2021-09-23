@@ -19,3 +19,5 @@ struct EveryMatrixSocketResponse<T: Decodable>: Decodable {
         case records = "records"
     }
 }
+
+

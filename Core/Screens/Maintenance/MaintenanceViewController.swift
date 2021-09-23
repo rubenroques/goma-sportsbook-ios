@@ -46,7 +46,7 @@ class MaintenanceViewController: UIViewController {
 
     func commonInit() {
         logoImageView.backgroundColor = UIColor(patternImage: imageGradient)
-        logoImageView.image = UIImage(named: "Maintenance")
+        logoImageView.image = UIImage(named: "maintenance_icon")
         logoImageView.contentMode = .scaleAspectFill
 
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 22)
@@ -57,7 +57,7 @@ class MaintenanceViewController: UIViewController {
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         textLabel.textColor = UIColor.white
         textLabel.numberOfLines = 0
-        textLabel.text = String(describing: UserDefaults.standard.object(forKey: "maintenance_reason")!)
+        textLabel.text = Env.businessSettingsSocket.clientSettings?.maintenanceReason ?? ""
         textLabel.sizeToFit()
     }
 

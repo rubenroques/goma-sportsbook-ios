@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class SimpleRegisterEmailCheckViewController: UIViewController {
 
@@ -17,8 +18,12 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     @IBOutlet private var logoImageView: UIImageView!
     @IBOutlet private var registerTitleLabel: UILabel!
     @IBOutlet private var emailHeadertextFieldView: HeaderTextFieldView!
-    @IBOutlet private var registerButton: RoundButton!
+    @IBOutlet private var registerButton: UIButton!
     @IBOutlet private var termsLabel: UILabel!
+
+    @IBOutlet private var loadingEmailValidityView: UIActivityIndicatorView!
+
+    var cancellables = Set<AnyCancellable>()
 
     init() {
         super.init(nibName: "SimpleRegisterEmailCheckViewController", bundle: nil)
@@ -39,11 +44,14 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+
+        let code: String = String(UUID().uuidString.split(separator: "-").first!)
+        self.emailHeadertextFieldView.setText("email\(code)@email.com")
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-   }
+    }
 
     func commonInit() {
         skipButton.setTitle(localized("string_skip"), for: .normal)
@@ -52,17 +60,34 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         logoImageView.image = UIImage(named: "SPORTSBOOK")
         logoImageView.sizeToFit()
 
-        registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
+        registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)
         registerTitleLabel.text = localized("string_signup")
 
         emailHeadertextFieldView.setPlaceholderText("Email Address")
 
-        registerButton.setTitle(localized("string_login"), for: .normal)
-        registerButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+        registerButton.setTitle(localized("string_get_started"), for: .normal)
+        registerButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
+        emailHeadertextFieldView.textPublisher
+            .removeDuplicates()
+            .sink { _ in
+                self.hideEmailError()
+            }
+            .store(in: &cancellables)
+
+        emailHeadertextFieldView.textPublisher
+            .compactMap { $0 }
+            .filter(isValidEmail)
+            .removeDuplicates()
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.loadingEmailValidityView.startAnimating()
+            })
+            .sink(receiveValue: requestValidEmailCheck)
+            .store(in: &cancellables)
     }
 
     func setupWithTheme() {
@@ -83,10 +108,15 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         emailHeadertextFieldView.setTextFieldColor(.white)
         emailHeadertextFieldView.setSecureField(false)
 
-        registerButton.setTitleColor(.white, for: .normal)
-        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.1), for: .disabled)
-        registerButton.backgroundColor = UIColor.App.buttonMain
-        registerButton.cornerRadius = BorderRadius.button
+        registerButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
+        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+
+        registerButton.backgroundColor = .clear
+        registerButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
+        registerButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        registerButton.layer.cornerRadius = BorderRadius.button
+        registerButton.layer.masksToBounds = true
 
         underlineTextLabel()
     }
@@ -135,14 +165,17 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
         if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
             print("Tapped Terms")
-            // TO-DO: Call VC to register
-        } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
+            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+        }
+        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
             print("Tapped Privacy")
-            // TO-DO: Call VC to register
-        } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
+            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+        }
+        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
             print("Tapped EULA")
-            // TO-DO: Call VC to register
-        } else {
+            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+        }
+        else {
             print("Tapped none")
         }
     }
@@ -159,25 +192,44 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     @IBAction private func didTapRegisterButton() {
 
-        let smallRegisterStep2ViewController = SimpleRegisterDetailsViewController(emailAddress: "rubenroques@outlook.com")
+        let email = emailHeadertextFieldView.text
+
+        if !isValidEmail(email) {
+            self.showWrongEmailFormatError()
+            return
+        }
+
+        Env.everyMatrixAPIClient.validateEmail(email)
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.loadingEmailValidityView.startAnimating()
+            })
+            .sink { completed in
+                if case .failure = completed {
+                    self.showServerErrorAlert()
+                }
+                self.loadingEmailValidityView.stopAnimating()
+            }
+            receiveValue: { value in
+                if !value.isAvailable {
+                    self.showEmailUsedError()
+                }
+                else {
+                    self.pushRegisterNextViewController()
+                }
+                self.loadingEmailValidityView.stopAnimating()
+            }
+            .store(in: &cancellables)
+    }
+
+    private func pushRegisterNextViewController() {
+        let smallRegisterStep2ViewController = SimpleRegisterDetailsViewController(emailAddress: self.emailHeadertextFieldView.text)
         self.navigationController?.pushViewController(smallRegisterStep2ViewController, animated: true)
-
-//        let input = self.emailHeadertextFieldView.text
-//
-//        if !self.isValidEmail(input) {
-//            self.emailHeadertextFieldView.showErrorOnField(text: "Invalid Email Address")
-//        }
-//        else {
-//            let vc = SimpleRegisterDetailsViewController()
-//            vc.emailUser = input
-//        }
-
     }
 
     @IBAction private func skipAction() {
-        let vc = RootViewController()
-        
-        self.navigationController?.pushViewController(vc, animated: true)
+        let rootViewController = RootViewController()
+        self.navigationController?.pushViewController(rootViewController, animated: true)
     }
 
     func isValidEmail(_ email: String) -> Bool {
@@ -185,6 +237,41 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
         let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
+    }
+
+}
+
+extension SimpleRegisterEmailCheckViewController {
+
+    func requestValidEmailCheck(email: String) {
+        Env.everyMatrixAPIClient.validateEmail(email)
+            .receive(on: RunLoop.main)
+            .sink { _ in
+                self.loadingEmailValidityView.stopAnimating()
+            }
+            receiveValue: { value in
+                if !value.isAvailable {
+                    self.showEmailUsedError()
+                }
+                self.loadingEmailValidityView.stopAnimating()
+            }
+            .store(in: &cancellables)
+    }
+
+    func showServerErrorAlert() {
+        UIAlertController.showServerErrorMessage(on: self)
+    }
+
+    func showWrongEmailFormatError() {
+        self.emailHeadertextFieldView.showErrorOnField(text: localized("string_invalid_email"), color: UIColor.App.alertError)
+    }
+
+    func showEmailUsedError() {
+        self.emailHeadertextFieldView.showErrorOnField(text: localized("string_email_already_registered"), color: UIColor.App.alertError)
+    }
+
+    func hideEmailError() {
+        self.emailHeadertextFieldView.hideTipAndError()
     }
 
 }

@@ -45,6 +45,9 @@ disabled_rules:
   - large_tuple
 #  - todo
   - type_name
+  - trailing_comma
+  - trailing_closure
+  - file_length
 
 opt_in_rules:
   - private_outlet

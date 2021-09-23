@@ -36,7 +36,6 @@ extension Endpoint {
                 request.setValue(value, forHTTPHeaderField: key)
             }
         }
-
         return request
     }
 }

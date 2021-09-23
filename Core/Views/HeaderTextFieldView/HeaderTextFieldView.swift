@@ -31,12 +31,16 @@ class HeaderTextFieldView: NibView {
 
     var didTapReturn: (() -> Void)?
 
+    var didSelectPickerIndex: ((Int) -> Void)?
+    var shouldBeginEditing: (() -> Bool)?
+
     // Variables
     let datePicker = UIDatePicker()
     let pickerView = UIPickerView()
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
-    var isSelect: Bool = false
+
+    var showingTipLabel: Bool = false
 
     private var isSecureField = false {
         didSet {
@@ -200,13 +204,16 @@ class HeaderTextFieldView: NibView {
         return true
     }
 
-    func slideUp() {
+    func slideUp(animated: Bool = true) {
+
+        if headerLabel.text?.isEmpty ?? true {
+            return
+        }
 
         self.centerBottomConstraint.isActive = false
         self.centerTopConstraint.isActive = true
 
-
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
+        UIView.animate(withDuration: animated ? 0.2 : 0, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
 
             if self.shouldScalePlaceholder {
@@ -220,6 +227,10 @@ class HeaderTextFieldView: NibView {
     }
 
     func slideDown() {
+
+        if headerLabel.text?.isEmpty ?? true {
+            return
+        }
 
         self.centerBottomConstraint.isActive = true
         self.centerTopConstraint.isActive = false
@@ -242,6 +253,13 @@ class HeaderTextFieldView: NibView {
         super.resignFirstResponder()
         self.textField.resignFirstResponder()
         return true
+    }
+
+    func setText(_ text: String, slideUp: Bool = true) {
+        self.textField.text = text
+        if slideUp {
+            self.slideUp(animated: false)
+        }
     }
 
     func setPlaceholderText(_ placeholder: String) {
@@ -277,7 +295,7 @@ class HeaderTextFieldView: NibView {
 
     func setTextFieldDefaultValue(_ value: String) {
         self.textField.text = value
-        self.slideUp()
+        self.slideUp(animated: false)
     }
 
     func setTextFieldFont(_ font: UIFont) {
@@ -288,9 +306,11 @@ class HeaderTextFieldView: NibView {
         self.textField.keyboardType = keyboard
     }
 
-    func setDatePicker() {
-        isSelect = true
+    func setDatePickerMode() {
         datePicker.datePickerMode = .date
+        if #available(iOS 13.4, *) {
+            datePicker.preferredDatePickerStyle = .wheels
+        }
         datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
 
         let doneButton = UIBarButtonItem.init(title: localized("string_done"), style: .done, target: self, action: #selector(self.datePickerDone))
@@ -314,8 +334,13 @@ class HeaderTextFieldView: NibView {
         textField.text = "\(selectedDate)"
     }
 
+    func setPickerArray(_ array: [String]) {
+        selectionArray = array
+        pickerView.selectRow(0, inComponent: 0, animated: true)
+        textField.text = selectionArray[0]
+    }
+
     func setSelectionPicker(_ array: [String], headerVisible: Bool = false) {
-        isSelect = true
         selectionArray = array
 
         pickerView.delegate = self
@@ -325,7 +350,7 @@ class HeaderTextFieldView: NibView {
             headerLabel.isHidden = true
         }
         else {
-            slideUp()
+            slideUp(animated: false)
         }
 
         textField.inputView = pickerView
@@ -370,6 +395,8 @@ class HeaderTextFieldView: NibView {
         }
 
         self.containerView.layer.borderColor = color.cgColor
+
+        self.showingTipLabel = true
     }
 
     func showTip(text: String, color: UIColor = .systemRed) {
@@ -380,6 +407,8 @@ class HeaderTextFieldView: NibView {
         UIView.animate(withDuration: 0.1) {
             self.tipLabel.alpha = 1.0
         }
+
+        self.showingTipLabel = true
     }
 
     func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
@@ -394,14 +423,22 @@ class HeaderTextFieldView: NibView {
         tipImageView.isHidden = true
         usernameIconConstraint.isActive = false
         usernameLeadingConstraint.isActive = true
+
+        self.showingTipLabel = true
     }
 
     func hideTipAndError() {
 
+        if !self.showingTipLabel {
+            return
+        }
+
+        showingTipLabel = false
+
         tipLabel.text = ""
         tipLabel.textColor = .black
-
-        self.fieldState = .hidden
+        containerView.layer.borderColor = highlightColor.cgColor
+        fieldState = .hidden
 
         UIView.animate(withDuration: 0.1) {
             self.tipLabel.alpha = 0.0
@@ -417,15 +454,19 @@ class HeaderTextFieldView: NibView {
 extension HeaderTextFieldView: UITextFieldDelegate {
 
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        self.isActive = true
-        return true
+        let shouldBeginEditing = self.shouldBeginEditing?() ?? true
+        self.isActive = shouldBeginEditing
+        return shouldBeginEditing
     }
     func textFieldDidBeginEditing(_ textField: UITextField) {
 
         self.isActive = true
 
+        self.hideTipAndError()
+
         self.highlightColor = UIColor.App.headingMain
         self.containerView.layer.borderColor = self.highlightColor.cgColor
+
 
         self.slideUp()
     }
@@ -448,9 +489,6 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        if self.isSelect {
-            return false
-        }
         return true
     }
 }
@@ -466,6 +504,7 @@ extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        self.didSelectPickerIndex?(row)
         return selectionArray[row]
     }
 

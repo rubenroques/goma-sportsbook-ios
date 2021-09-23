@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class SimpleRegisterDetailsViewController: UIViewController {
 
@@ -25,8 +26,12 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var passwordHeaderTextView: HeaderTextFieldView!
     @IBOutlet private var confirmPasswordHeaderTextView: HeaderTextFieldView!
     @IBOutlet private var termsLabel: UILabel!
-    @IBOutlet private var signUpButton: RoundButton!
+    @IBOutlet private var signUpButton: UIButton!
 
+    @IBOutlet private var loadingUsernameValidityView: UIActivityIndicatorView!
+
+    var cancellables = Set<AnyCancellable>()
+    
     // Variables
     var emailAddress: String
 
@@ -55,9 +60,29 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                                object: nil)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+//        let code: String = String(UUID().uuidString.split(separator: "-").first!)
+
+//        self.usernameHeaderTextView.setText("rroques\(code)")
+//        self.dateHeaderTextView.setText("1989-06-01")
+//        self.indicativeHeaderTextView.setText("+351")
+//        self.phoneHeaderTextView.setText("961632773")
+//        self.emailHeaderTextView.setText("email\(code)@u461.com")
+//        self.passwordHeaderTextView.setText("goma-dev-test-1")
+//        self.confirmPasswordHeaderTextView.setText("goma-dev-test-1")
+
+        self.setupPublishers()
+    }
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     func commonInit() {
 
-        registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
+        registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)
         registerTitleLabel.text = localized("string_signup")
 
         usernameHeaderTextView.setPlaceholderText(localized("string_username"))
@@ -69,11 +94,13 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
         dateHeaderTextView.setPlaceholderText(localized("string_birth_date"))
         dateHeaderTextView.setImageTextField(UIImage(named: "calendar-regular")!)
-        dateHeaderTextView.setDatePicker()
+        dateHeaderTextView.setDatePickerMode()
 
-        indicativeHeaderTextView.setSelectionPicker(["🇵🇹 +351", "🇨🇭 +041"])
+        indicativeHeaderTextView.setPlaceholderText(localized("string_phone_prefix"))
+        indicativeHeaderTextView.setText("----")
         indicativeHeaderTextView.setImageTextField(UIImage(named: "Arrow_Down")!, size: 10)
         indicativeHeaderTextView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        indicativeHeaderTextView.isUserInteractionEnabled = false
 
         phoneHeaderTextView.setPlaceholderText(localized("string_phone_number"))
         phoneHeaderTextView.setKeyboardType(.numberPad)
@@ -82,10 +109,17 @@ class SimpleRegisterDetailsViewController: UIViewController {
         confirmPasswordHeaderTextView.setPlaceholderText(localized("string_confirm_password"))
 
         signUpButton.setTitle(localized("string_signup"), for: .normal)
-        signUpButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+        signUpButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.calendar = calendar
+        components.year = -18
+        let maxDate = calendar.date(byAdding: components, to: Date())!
+        dateHeaderTextView.datePicker.maximumDate = maxDate
 
     }
 
@@ -139,11 +173,71 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
         underlineTextLabel()
 
-        signUpButton.backgroundColor = UIColor.App.buttonMain
-        signUpButton.cornerRadius = BorderRadius.button
+        signUpButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        signUpButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
+        signUpButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+
+        signUpButton.backgroundColor = .clear
+        signUpButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
+        signUpButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        signUpButton.layer.cornerRadius = BorderRadius.button
+        signUpButton.layer.masksToBounds = true
     }
 
-    @IBAction func didTapBackButton() {
+    private func setupPublishers() {
+
+        Env.everyMatrixAPIClient.getCountries()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+                self.indicativeHeaderTextView.isUserInteractionEnabled = true
+            } receiveValue: { countries in
+                self.setupWithCountryCodes(countries)
+            }
+            .store(in: &cancellables)
+
+        self.usernameHeaderTextView.textPublisher
+            .removeDuplicates()
+            .sink { _ in
+                self.hideUsernameError()
+            }
+            .store(in: &cancellables)
+
+        self.usernameHeaderTextView.textPublisher
+            .removeDuplicates()
+            .compactMap { $0 }
+            .filter { $0.count > 3 }
+            .debounce(for: 0.5, scheduler: DispatchQueue.main)
+            .handleEvents(receiveOutput: { [weak self] _ in
+                self?.loadingUsernameValidityView.startAnimating()
+            })
+            .eraseToAnyPublisher()
+            .sink(receiveValue: {
+                self.requestValidUsernameCheck($0)
+            })
+            .store(in: &cancellables)
+
+        Publishers.CombineLatest4(self.usernameHeaderTextView.textPublisher,
+                                 self.passwordHeaderTextView.textPublisher,
+                                 self.confirmPasswordHeaderTextView.textPublisher,
+                                 self.phoneHeaderTextView.textPublisher)
+            .map { username, password, passwordConf, phone in
+
+                if password != passwordConf {
+                    return false
+                }
+
+                return (username?.isNotEmpty ?? false) &&
+                        (password?.isNotEmpty ?? false) &&
+                        (phone?.isNotEmpty ?? false)
+
+            }
+            .assign(to: \.isEnabled, on: signUpButton)
+            .store(in: &cancellables)
+
+    }
+
+    @IBAction private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -155,7 +249,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         termsLabel.font = AppFont.with(type: .regular, size: 14.0)
 
         self.termsLabel.textColor = UIColor.App.headingMain
-
 
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
@@ -184,7 +277,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         termsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapUnderlineLabel(gesture:))))
     }
 
-    @IBAction func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
+    @objc private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
         let text = localized("string_agree_terms_conditions")
 
         let termsRange = (text as NSString).range(of: localized("string_terms"))
@@ -193,37 +286,34 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
         if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
             print("Tapped Terms")
-            // TO-DO: Call VC to register
-        } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
+            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+        }
+        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
             print("Tapped Privacy")
-            // TO-DO: Call VC to register
-        } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
+            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+        }
+        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
             print("Tapped EULA")
-            // TO-DO: Call VC to register
-        } else {
+            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+        }
+        else {
             print("Tapped none")
         }
     }
 
-    @IBAction func signUpAction() {
+    @IBAction private func signUpAction() {
 
-        let vc = SimpleRegisterEmailSentViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
-
-        return
-        
         var validFields = true
 
-        // TEST
         let username = usernameHeaderTextView.text
-        let birthDate = dateHeaderTextView.text
-        let phone = "\(indicativeHeaderTextView.text)\(phoneHeaderTextView.text)"
+        let birthDate = dateHeaderTextView.text // Must be yyyy-MM-dd
+        let mobilePrefix = indicativeHeaderTextView.text
+        let mobile = phoneHeaderTextView.text
         let email = emailHeaderTextView.text
         let password = passwordHeaderTextView.text
         let confirmPassword = confirmPasswordHeaderTextView.text
+        let emailVerificationURL = EveryMatrixInfo.emailVerificationURL(withUserEmail: email)
 
-
-        //TO-DO: Username verification
         if password != confirmPassword {
             passwordHeaderTextView.showErrorOnField(text: localized("string_password_not_match"), color: UIColor.App.alertError)
             validFields = false
@@ -233,44 +323,191 @@ class SimpleRegisterDetailsViewController: UIViewController {
             validFields = false
         }
 
-        if validFields {
-            let vc = SimpleRegisterEmailSentViewController()
-            vc.emailUser = email
-           
-            self.navigationController?.pushViewController(vc, animated: true)
+        if dateHeaderTextView.text.isEmpty {
+            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+            validFields = false
         }
+
+        guard validFields else {
+            return
+        }
+
+        let form = EveryMatrix.SimpleRegisterForm(email: email,
+                                                  username: username,
+                                                  password: password,
+                                                  birthDate: birthDate,
+                                                  mobilePrefix: mobilePrefix,
+                                                  mobileNumber: mobile,
+                                                  emailVerificationURL: emailVerificationURL)
+        self.registerUser(form: form)
+
     }
 
+    func pushRegisterNextViewController(email: String) {
+        let simpleRegisterEmailSentViewController = SimpleRegisterEmailSentViewController()
+        simpleRegisterEmailSentViewController.emailUser = email
+        self.navigationController?.pushViewController(simpleRegisterEmailSentViewController, animated: true)
+    }
 
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        _ = self.usernameHeaderTextView.resignFirstResponder()
-
-        _ = self.dateHeaderTextView.resignFirstResponder()
-
-        _ = self.phoneHeaderTextView.resignFirstResponder()
-
-        _ = self.passwordHeaderTextView.resignFirstResponder()
-
-        _ = self.confirmPasswordHeaderTextView.resignFirstResponder()
-
+        self.usernameHeaderTextView.resignFirstResponder()
+        self.dateHeaderTextView.resignFirstResponder()
+        self.indicativeHeaderTextView.resignFirstResponder()
+        self.phoneHeaderTextView.resignFirstResponder()
+        self.passwordHeaderTextView.resignFirstResponder()
+        self.confirmPasswordHeaderTextView.resignFirstResponder()
     }
 
-    @objc func keyboardWillShow(notification:NSNotification) {
+}
+
+// Sign Up status updates
+extension SimpleRegisterDetailsViewController {
+
+    func enableSignUpButton() {
+        self.signUpButton.isEnabled = true
+    }
+
+    func disableSignUpButton() {
+        self.signUpButton.isEnabled = false
+    }
+
+}
+
+// Screen status updates
+extension SimpleRegisterDetailsViewController {
+
+    func showUsernameTakenErrorStatus() {
+        self.usernameHeaderTextView
+            .showErrorOnField(text: localized("string_username_already_registered"), color: UIColor.App.alertError)
+        self.disableSignUpButton()
+    }
+
+    func showEmailTakenErrorStatus() {
+        self.usernameHeaderTextView
+            .showErrorOnField(text: localized("string_email_already_registered"), color: UIColor.App.alertError)
+        self.disableSignUpButton()
+    }
+
+    func showServerErrorStatus() {
+        UIAlertController.showServerErrorMessage(on: self)
+    }
+
+    func hideUsernameError() {
+        self.usernameHeaderTextView.hideTipAndError()
+        self.enableSignUpButton()
+    }
+    
+}
+
+// Network Requests
+extension SimpleRegisterDetailsViewController {
+
+    private func registerUser(form: EveryMatrix.SimpleRegisterForm) {
+        Logger.log("Sent user register \(form.email)")
+        Env.userSessionStore.registerUser(form: form)
+            .breakpointOnError()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case let .requestError(message) where message.lowercased().contains("username is already taken"):
+                        self.showUsernameTakenErrorStatus()
+                    case let .requestError(message) where message.lowercased().contains("email already exists"):
+                        self.showEmailTakenErrorStatus()
+                    default:
+                        self.showServerErrorStatus()
+                    }
+                case .finished:
+                    ()
+                }
+            } receiveValue: { _ in
+                Logger.log("User registered \(form.email)")
+                self.pushRegisterNextViewController(email: form.email)
+            }
+            .store(in: &cancellables)
+    }
+
+    private func requestValidUsernameCheck(_ username: String) {
+        Env.everyMatrixAPIClient
+            .validateUsername(username)
+            .receive(on: DispatchQueue.main)
+            .sink { completed in
+                self.loadingUsernameValidityView.stopAnimating()
+            } receiveValue: { usernameAvailability in
+                if !usernameAvailability.isAvailable {
+                    self.showUsernameTakenErrorStatus()
+                }
+                self.loadingUsernameValidityView.stopAnimating()
+            }
+            .store(in: &cancellables)
+    }
+}
+
+// Flags business logic
+extension SimpleRegisterDetailsViewController {
+
+    private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
+
+        for country in listings.countries where country.isoCode == listings.currentIpCountry {
+            self.indicativeHeaderTextView.setText( self.formatIndicativeCountry(country), slideUp: true)
+        }
+
+        self.indicativeHeaderTextView.isUserInteractionEnabled = true
+        self.indicativeHeaderTextView.shouldBeginEditing = { [weak self] in
+            self?.showPhonePrefixSelector(listing: listings)
+            return false
+        }
+    }
+
+    private func showPhonePrefixSelector(listing: EveryMatrix.CountryListing) {
+        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing)
+        phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
+        phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
+            self?.setupWithSelectedCountry(country)
+            phonePrefixSelectorViewController.animateDismissView()
+        }
+        self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
+    }
+
+    private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
+        self.indicativeHeaderTextView.setText(formatIndicativeCountry(country), slideUp: true)
+    }
+
+    private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
+        var stringCountry = "\(country.phonePrefix)"
+        if let isoCode = country.isoCode {
+            stringCountry = "\(isoCode) - \(country.phonePrefix)"
+            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+                stringCountry = "\(flag) \(country.phonePrefix)"
+            }
+        }
+        return stringCountry
+    }
+
+}
+
+// Keyboard
+extension SimpleRegisterDetailsViewController {
+
+    @objc func keyboardWillShow(notification: NSNotification) {
 
         guard let userInfo = notification.userInfo else { return }
-        var keyboardFrame:CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+
+        // swiftlint:disable:next force_cast
+        var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
-        var contentInset:UIEdgeInsets = self.scrollView.contentInset
+        var contentInset = self.scrollView.contentInset
         contentInset.bottom = keyboardFrame.size.height + 20
         scrollView.contentInset = contentInset
     }
 
-    @objc func keyboardWillHide(notification:NSNotification) {
-
-        let contentInset:UIEdgeInsets = UIEdgeInsets.zero
+    @objc func keyboardWillHide(notification: NSNotification) {
+        let contentInset: UIEdgeInsets = .zero
         scrollView.contentInset = contentInset
     }
+
 }

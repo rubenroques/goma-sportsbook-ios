@@ -27,7 +27,23 @@
 "string_permission_location_subtitle" = "At any moment, you can disable this option at Settings > Sportsbook > Location";
 "string_skip" = "Skip";
 "string_login" = "Login";
+"string_ok" = "Ok";
+
+"string_get_started" = "Get Started";
+
+"string_login_error_title" = "Login error";
+"string_login_error_message" = "Incorrect username or password";
+
+"string_server_error_title" = "Unexpected Error";
+"string_server_error_message" = "An unexpected error occurred while processing your request. Please try again.";
+
+"string_register_error_title" = "Sign up error";
+"string_invalid_email" = "This email format appears to be invalid.";
+"string_email_already_registered" = "This email address is already registered.";
+"string_username_already_registered" = "This username is already registered.";
 "string_forgot" = "Forgot Password?";
+"string_continue" = "Continue";
+
 "string_new_create_account" = "New here? Create a new account";
 "string_create_account" = "Create a new account";
 "string_agree_terms_conditions" = "By Signing up, you agree to our
@@ -42,6 +58,7 @@ Terms of use, Privacy Policy and EULA";
 "string_done" = "Done";
 "string_password" = "Password";
 "string_confirm_password" = "Confirm Password";
+"string_phone_prefix" = "Prefix";
 "string_phone_number" = "Phone Number";
 "string_birth_date" = "Birth Date";
 "string_username" = "Username";
@@ -49,7 +66,7 @@ Terms of use, Privacy Policy and EULA";
 "string_weak_password" = "Must contain: 8 characters, 1 Uppercase, 1 Lowecase and 1 Symbol";
 "string_password_not_match" = "Passwords don't match";
 "string_check_email" = "Check your Email";
-"string_check_email_text1" = "We have sent a Code to";
+"string_check_email_text1" = "We have sent a code to";
 "string_check_email_text2" = "with a link to Sign In.";
 "string_open_email_app" = "Open email app";
 "string_insert_email_code" = "Insert code";
@@ -70,8 +87,11 @@ Terms of use, Privacy Policy and EULA";
 "string_postal_code" = "Postal Code";
 "string_id_number" = "ID Number";
 "string_bank_id" = "Bank ID";
-"string_email" = "Email";
 "string_success" = "Success";
 "string_error" = "Error";
 "string_error_edit" = "We can’t update your information at this moment. Please try again later.";
 "string_success_edit" = "Your information has been updated.";
+
+"string_cancel" = "Cancel";
+"string_search_field" = "Search..";
+"string_invalid_birthDate" = "Invalid birth date";

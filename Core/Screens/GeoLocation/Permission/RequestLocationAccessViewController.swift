@@ -17,6 +17,8 @@ class RequestLocationAccessViewController: UIViewController {
     @IBOutlet private var permissionSubtitleLabel: UILabel!
     @IBOutlet private var locationButton: UIButton!
 
+    var loadingView: UIView?
+
     init() {
         super.init(nibName: "RequestLocationAccessViewController", bundle: nil)
     }
@@ -76,7 +78,46 @@ class RequestLocationAccessViewController: UIViewController {
     }
 
     @IBAction private func enableLocationAction() {
-        Env.locationManager.requestGeoLocationUpdates()
+        showLoadingView()
+        executeDelayed(1) {
+            Env.locationManager.requestGeoLocationUpdates()
+        }
+    }
+
+    func showLoadingView() {
+
+        self.loadingView = self.createLoadingView()
+
+        self.view.addSubview(self.loadingView!)
+
+        NSLayoutConstraint.activate([
+            self.view.topAnchor.constraint(equalTo: self.loadingView!.topAnchor),
+            self.view.bottomAnchor.constraint(equalTo: self.loadingView!.bottomAnchor),
+            self.view.leadingAnchor.constraint(equalTo: self.loadingView!.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.loadingView!.trailingAnchor),
+        ])
+    }
+
+}
+
+extension RequestLocationAccessViewController {
+
+    func createLoadingView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .black.withAlphaComponent(0.5)
+
+        let activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.color = .white
+        activityIndicator.startAnimating()
+        view.addSubview(activityIndicator)
+
+        NSLayoutConstraint.activate([
+            view.centerYAnchor.constraint(equalTo: activityIndicator.centerYAnchor),
+            view.centerXAnchor.constraint(equalTo: activityIndicator.centerXAnchor),
+        ])
+        return view
     }
 
 }

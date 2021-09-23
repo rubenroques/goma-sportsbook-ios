@@ -11,18 +11,18 @@ var Env = Environment() // swiftlint:disable:this identifier_name
 
 struct Environment {
 
-    let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager())
+    let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager()) //session: Environment.pulseConnectedSession()))
     let everyMatrixAPIClient = EveryMatrixAPIClient()
 
     let userSessionStore = UserSessionStore()
-    let clientSettingsSocket = RealtimeSocketClient()
+    let businessSettingsSocket = RealtimeSocketClient()
     let locationManager = GeoLocationManager()
     
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    var operatorId: Int = 2474  // EM GOMA Operator Id
+    var operatorId: Int = 2474 // EM GOMA Operator Id
 
     var remember: Bool = false
     
@@ -31,5 +31,9 @@ struct Environment {
         let settingsArray = try? JSONDecoder().decode([GomaClientSettings].self, from: settingsData!)
         return settingsArray
     }
+
+//    private static func pulseConnectedSession() -> URLSession {
+//        return URLSession(configuration: .default, delegate: NetworkManagerDelegate(), delegateQueue: nil)
+//    }
 
 }

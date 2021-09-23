@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SimpleNetworkResponse: Decodable {
+struct MessageNetworkResponse: Decodable {
 
     let status: String
     let message: String
@@ -16,6 +16,10 @@ struct SimpleNetworkResponse: Decodable {
         case status = "status"
         case message = "message"
     }
+
+    static let forbiden: MessageNetworkResponse = MessageNetworkResponse(status: "error", message: "User Access Denied!")
+    static let failed: MessageNetworkResponse = MessageNetworkResponse(status: "error", message: "Failed request")
+
 }
 
 struct NetworkResponse<T: Decodable>: Decodable {

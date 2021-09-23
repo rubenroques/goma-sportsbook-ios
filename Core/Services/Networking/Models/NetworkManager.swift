@@ -51,8 +51,13 @@ struct NetworkManager {
                     .eraseToAnyPublisher()
             }
             .decode(type: T.self, decoder: JSONDecoder())
-            .mapError { _ in
-                        return NetworkError(errors: [.invalidResponse])
+            .mapError { error in
+                if let serviceError = error as? NetworkError, serviceError.errors.contains(.forbidden) {
+                    return NetworkError(errors: [.forbidden])
+                }
+                else {
+                    return NetworkError(errors: [.invalidResponse])
+                }
             }
             .eraseToAnyPublisher()
     }
@@ -69,13 +74,9 @@ struct NetworkManager {
             return authenticator.validToken(deviceId: deviceId)
                 .flatMap({ token -> AnyPublisher<Data, Error> in
                     // We can now use this token to authenticate the request
-                    print("flatMap1 token \(token)")
                     return session.publisher(for: request, token: token)
                 })
                 .tryCatch({ error -> AnyPublisher<Data, Error> in
-
-                    print("tryCatch error \(error)")
-
                     guard
                         let serviceError = error as? NetworkError,
                         serviceError.errors.contains(.unauthorized)
@@ -85,7 +86,6 @@ struct NetworkManager {
 
                     return authenticator.validToken(deviceId: deviceId, forceRefresh: true)
                         .flatMap({ token -> AnyPublisher<Data, Error> in
-                            print("flatMap1 token \(token)")
                             // We can now use this new token to authenticate the second attempt at making this request
                             return session.publisher(for: request, token: token)
                         })
@@ -98,3 +98,30 @@ struct NetworkManager {
                 .eraseToAnyPublisher()
         }
 }
+
+/*
+class NetworkManagerDelegate: NSObject, URLSessionDelegate {
+
+    private let logger = NetworkLogger()
+
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+        logger.logDataTask(dataTask, didReceive: response)
+        // ... make sure to call a completionHandler
+    }
+
+    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        logger.logTask(task, didCompleteWithError: error)
+        // ...
+    }
+
+    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        logger.logDataTask(dataTask, didReceive: data)
+        // ...
+    }
+
+    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+        logger.logTask(task, didFinishCollecting: metrics)
+        // ...
+    }
+}
+*/

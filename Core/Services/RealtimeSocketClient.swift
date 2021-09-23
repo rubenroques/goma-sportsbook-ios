@@ -18,6 +18,8 @@ class RealtimeSocketClient {
 
     var cancellables = Set<AnyCancellable>()
 
+    let clientSettingsPublisher = CurrentValueSubject<FirebaseClientSettings?, Never>(nil)
+
     var clientSettings: FirebaseClientSettings?
 
     init() {
@@ -42,6 +44,8 @@ class RealtimeSocketClient {
             self?.requiredVersionPublisher.send(versions)
 
             self?.clientSettings = firebaseClientSettings
+
+            self?.clientSettingsPublisher.send(firebaseClientSettings)
 
             if firebaseClientSettings.isOnMaintenance {
                 self?.maintenanceModePublisher.send(firebaseClientSettings.maintenanceReason)

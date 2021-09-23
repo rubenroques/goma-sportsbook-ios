@@ -53,7 +53,8 @@ class DebugViewController: UIViewController {
     }
 
     func openNetworkingLogs() {
-
+//        let pulseViewController = MainViewController()
+//        self.navigationController?.pushViewController(pulseViewController, animated: true)
     }
 
     func openAppLogs() {

@@ -37,7 +37,6 @@ class LoggerService {
 
         do {
             let fileHandle = try FileHandle(forWritingTo: self.destination)
-            //print("Successfully logging to: \(path)")
             return fileHandle
         }
         catch let error as NSError {

@@ -56,8 +56,8 @@ class LoginViewController: UIViewController {
             .store(in: &cancellables)
 
         #if DEBUG
-        self.usernameHeaderTextFieldView.textField.text = "pgomes999"
-        self.passwordHeaderTextFieldView.textField.text = "12345678-GOMA-sportsbook"
+        self.usernameHeaderTextFieldView.setText("pgomes999")
+        self.passwordHeaderTextFieldView.setText("12345678-GOMA-sportsbook")
         #endif
     }
 
@@ -170,11 +170,9 @@ class LoginViewController: UIViewController {
         loginButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
-
         loginButton.backgroundColor = .clear
         loginButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
         loginButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
-
         loginButton.layer.cornerRadius = BorderRadius.button
         loginButton.layer.masksToBounds = true
 
@@ -237,10 +235,8 @@ class LoginViewController: UIViewController {
     }
 
     @objc private func didTapCreateAccount() {
-
         let smallRegisterViewController = SimpleRegisterEmailCheckViewController()
         self.navigationController?.pushViewController(smallRegisterViewController, animated: true)
-
     }
 
     @IBAction private func didTapUnderlineLabel(gesture: UITapGestureRecognizer) {
@@ -309,13 +305,24 @@ class LoginViewController: UIViewController {
 
         self.loginButton.isEnabled = false
 
-        Env.userSessionStore.loginUser(with: username, password: password)
+        Env.userSessionStore.loginUser(withUsername: username, password: password)
             .print()
             .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error) where error == .invalidEmailPassword:
+                    self.showWrongPasswordStatus()
+                case .failure:
+                    self.showServerErrorStatus()
+                case .finished:
+                    ()
+                }
+
                 print("completion: \(completion)")
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
+
+                self.pushMainViewController()
             })
             .store(in: &cancellables)
 
@@ -334,6 +341,21 @@ class LoginViewController: UIViewController {
         self.navigationController?.pushViewController(rootViewController, animated: true)
     }
 
+    private func showWrongPasswordStatus() {
+        let alert = UIAlertController(title: localized("string_login_error_title"),
+                                      message: localized("string_login_error_message"),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+
+    private func showServerErrorStatus() {
+        let alert = UIAlertController(title: localized("string_login_error_title"),
+                                      message: localized("string_server_error_message"),
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 
     @IBAction private func didTapRecoverPassword() {
         self.navigationController?.pushViewController(RecoverPasswordViewController(), animated: true)
