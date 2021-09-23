@@ -42,7 +42,7 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="1158"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1gG-hR-Fft">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="1165"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="1085"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kzd-gV-ZoX">
                                     <rect key="frame" x="16" y="8" width="382" height="30"/>
@@ -126,53 +126,52 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6rd-p4-die" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="596" width="382" height="80"/>
+                                    <rect key="frame" x="16" y="596" width="183" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="1Xa-9e-daa"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CP6-gF-fhM" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="684" width="160" height="80"/>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="width" constant="160" id="XEw-1D-yfz"/>
-                                        <constraint firstAttribute="height" constant="80" id="tMn-ad-bP8"/>
-                                    </constraints>
-                                </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="OmS-ZR-XyP">
-                                    <rect key="frame" x="16" y="764" width="382" height="1"/>
+                                    <rect key="frame" x="16" y="684" width="382" height="1"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="1" id="Lrc-p6-irt"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CUN-hX-sYG" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="781" width="382" height="80"/>
+                                    <rect key="frame" x="16" y="701" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="GgA-Le-QCe"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hb2-tJ-haa" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="869" width="382" height="80"/>
+                                    <rect key="frame" x="16" y="789" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="78W-HD-MbP"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zvu-Rc-BwZ" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="957" width="382" height="80"/>
+                                    <rect key="frame" x="16" y="877" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="A6y-FL-PDi"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lvj-YW-x7r" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="1045" width="382" height="80"/>
+                                    <rect key="frame" x="16" y="965" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="Eg5-c2-tUD"/>
+                                    </constraints>
+                                </view>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CP6-gF-fhM" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                    <rect key="frame" x="215" y="596" width="183" height="80"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="80" id="tMn-ad-bP8"/>
                                     </constraints>
                                 </view>
                             </subviews>
@@ -183,16 +182,16 @@
                                 <constraint firstItem="hVs-Yj-IdY" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="2NT-5o-H6A"/>
                                 <constraint firstItem="CUN-hX-sYG" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="3sp-qg-gIi"/>
                                 <constraint firstAttribute="trailing" secondItem="Zvu-Rc-BwZ" secondAttribute="trailing" constant="16" id="4jq-Sp-uM9"/>
-                                <constraint firstItem="CP6-gF-fhM" firstAttribute="top" secondItem="6rd-p4-die" secondAttribute="bottom" constant="8" id="4zj-zo-yRu"/>
                                 <constraint firstAttribute="trailing" secondItem="64c-44-siR" secondAttribute="trailing" constant="16" id="51e-84-8rx"/>
                                 <constraint firstItem="eNO-fq-jLM" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="7nM-1o-vWn"/>
                                 <constraint firstItem="CUN-hX-sYG" firstAttribute="top" secondItem="OmS-ZR-XyP" secondAttribute="bottom" constant="16" id="8em-7G-uYE"/>
-                                <constraint firstItem="OmS-ZR-XyP" firstAttribute="top" secondItem="CP6-gF-fhM" secondAttribute="bottom" id="9ye-Lh-9pu"/>
                                 <constraint firstAttribute="trailing" secondItem="hVs-Yj-IdY" secondAttribute="trailing" constant="16" id="ArH-bq-KLr"/>
                                 <constraint firstItem="hVs-Yj-IdY" firstAttribute="top" secondItem="G8k-H1-yHP" secondAttribute="bottom" constant="8" id="BXQ-VS-YcM"/>
                                 <constraint firstItem="hb2-tJ-haa" firstAttribute="top" secondItem="CUN-hX-sYG" secondAttribute="bottom" constant="8" id="FhS-Tz-Avd"/>
-                                <constraint firstItem="CP6-gF-fhM" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="L6f-9y-YxE"/>
+                                <constraint firstItem="CP6-gF-fhM" firstAttribute="leading" secondItem="6rd-p4-die" secondAttribute="trailing" constant="16" id="JRc-LQ-QLM"/>
+                                <constraint firstItem="OmS-ZR-XyP" firstAttribute="top" secondItem="6rd-p4-die" secondAttribute="bottom" constant="8" id="Lj5-F0-bvN"/>
                                 <constraint firstItem="G8k-H1-yHP" firstAttribute="top" secondItem="eNO-fq-jLM" secondAttribute="bottom" constant="8" id="NPy-ND-icL"/>
+                                <constraint firstAttribute="trailing" secondItem="CP6-gF-fhM" secondAttribute="trailing" constant="16" id="Ne0-pN-jRU"/>
                                 <constraint firstAttribute="trailing" secondItem="Lvj-YW-x7r" secondAttribute="trailing" constant="16" id="Oag-zY-YhS"/>
                                 <constraint firstAttribute="trailing" secondItem="O1P-Mb-hlb" secondAttribute="trailing" constant="16" id="PKf-zG-4NR"/>
                                 <constraint firstAttribute="trailing" secondItem="CUN-hX-sYG" secondAttribute="trailing" constant="16" id="Pqy-zN-RZj"/>
@@ -209,11 +208,12 @@
                                 <constraint firstAttribute="trailing" secondItem="OmS-ZR-XyP" secondAttribute="trailing" constant="16" id="dhH-d9-Q5d"/>
                                 <constraint firstAttribute="trailing" secondItem="eNO-fq-jLM" secondAttribute="trailing" constant="16" id="dtI-5z-nJG"/>
                                 <constraint firstItem="6rd-p4-die" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="hIB-dR-7LI"/>
-                                <constraint firstAttribute="trailing" secondItem="6rd-p4-die" secondAttribute="trailing" constant="16" id="hg5-Dg-xP6"/>
                                 <constraint firstAttribute="trailing" secondItem="Kzd-gV-ZoX" secondAttribute="trailing" constant="16" id="hkt-Uj-62H"/>
+                                <constraint firstItem="CP6-gF-fhM" firstAttribute="top" secondItem="6rd-p4-die" secondAttribute="top" id="lh7-5x-6Uk"/>
                                 <constraint firstAttribute="trailing" secondItem="hb2-tJ-haa" secondAttribute="trailing" constant="16" id="n2i-xZ-mgF"/>
                                 <constraint firstItem="O1P-Mb-hlb" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="nQ5-QU-5lI"/>
                                 <constraint firstItem="Zvu-Rc-BwZ" firstAttribute="top" secondItem="hb2-tJ-haa" secondAttribute="bottom" constant="8" id="nWB-eO-HVi"/>
+                                <constraint firstItem="6rd-p4-die" firstAttribute="width" secondItem="CP6-gF-fhM" secondAttribute="width" id="qvF-KS-deI"/>
                                 <constraint firstItem="6rd-p4-die" firstAttribute="top" secondItem="hVs-Yj-IdY" secondAttribute="bottom" constant="8" id="u94-tq-IVc"/>
                                 <constraint firstItem="Lvj-YW-x7r" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="uSb-W9-PdV"/>
                                 <constraint firstItem="RSd-Yc-g2A" firstAttribute="leading" secondItem="1gG-hR-Fft" secondAttribute="leading" constant="16" id="xOQ-fd-fnn"/>

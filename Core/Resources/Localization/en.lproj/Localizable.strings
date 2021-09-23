@@ -95,3 +95,12 @@ Terms of use, Privacy Policy and EULA";
 "string_cancel" = "Cancel";
 "string_search_field" = "Search..";
 "string_invalid_birthDate" = "Invalid birth date";
+
+"string_update_password" = "Update Password";
+"string_old_password" = "Old Password";
+"string_new_password" = "New Password";
+"string_old_password_error" = "Old password is incorrect";
+"string_error_edit_password" = "We can’t update your password at this moment. Please try again later.";
+"string_success_edit_password" = "Your password has been updated.";
+"string_invalid_email" = "Invalid email address";
+

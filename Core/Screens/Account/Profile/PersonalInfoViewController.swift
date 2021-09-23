@@ -9,7 +9,6 @@ import UIKit
 
 class PersonalInfoViewController: UIViewController {
 
-
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var headerView: UIView!
@@ -50,7 +49,7 @@ class PersonalInfoViewController: UIViewController {
         commonInit()
         setupWithTheme()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
@@ -70,6 +69,62 @@ class PersonalInfoViewController: UIViewController {
 
         editButton.backgroundColor = UIColor.App.backgroundDarkProfile
 
+        topFieldsSetup()
+
+        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
+
+        bottomFieldsSetup()
+
+    }
+
+    func commonInit() {
+
+        backButton.setImage(UIImage(named: "caret-left"), for: .normal)
+
+        headerLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 17)
+        headerLabel.text = localized("string_personal_info")
+
+        underlineButtonTitleLabel(button: editButton)
+
+        firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
+        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextFieldGray)
+
+        lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
+
+        countryHeaderTextFieldView.setPlaceholderText(localized("string_nationality"))
+        countryHeaderTextFieldView.setSelectionPicker(["Portugal", "Spain", "England"], headerVisible: true)
+        countryHeaderTextFieldView.setImageTextField(UIImage(named: "Arrow_Down")!)
+        countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        countryHeaderTextFieldView.isSelect = true
+
+        birthDateHeaderTextFieldView.setPlaceholderText(localized("string_birth_date"))
+        birthDateHeaderTextFieldView.setTextFieldDefaultValue(birthDate)
+
+        adress1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
+
+        adress2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
+
+        cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
+
+        postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
+
+        usernameHeaderTextFieldView.setPlaceholderText(localized("string_username"))
+        usernameHeaderTextFieldView.setTextFieldDefaultValue(username)
+
+        emailHeaderTextFieldView.setPlaceholderText(localized("string_email"))
+        emailHeaderTextFieldView.setTextFieldDefaultValue(email)
+
+        cardIdHeaderTextFieldView.setPlaceholderText(localized("string_id_number"))
+        cardIdHeaderTextFieldView.setTextFieldDefaultValue(cardId)
+
+        bankIdHeaderTextFieldView.setPlaceholderText(localized("string_bank_id"))
+        bankIdHeaderTextFieldView.setTextFieldDefaultValue(bankId)
+
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    func topFieldsSetup() {
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
@@ -111,9 +166,9 @@ class PersonalInfoViewController: UIViewController {
         postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         postalCodeHeaderTextFieldView.setSecureField(false)
+    }
 
-        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
-
+    func bottomFieldsSetup() {
         usernameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
@@ -136,54 +191,6 @@ class PersonalInfoViewController: UIViewController {
         bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         bankIdHeaderTextFieldView.setSecureField(false)
         bankIdHeaderTextFieldView.isDisabled = true
-
-    }
-
-    func commonInit() {
-
-        backButton.setImage(UIImage(named: "caret-left"), for: .normal)
-
-        headerLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 17)
-        headerLabel.text = localized("string_personal_info")
-
-        underlineButtonTitleLabel(button: editButton)
-
-        firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
-        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextFieldGray)
-
-        lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
-
-        countryHeaderTextFieldView.setPlaceholderText(localized("string_nationality"))
-        countryHeaderTextFieldView.setSelectionPicker(["Portugal", "Spain", "England"], headerVisible: true)
-        countryHeaderTextFieldView.setImageTextField(UIImage(named: "Arrow_Down")!)
-        countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
-        countryHeaderTextFieldView.shouldBeginEditing = { return false }
-
-        birthDateHeaderTextFieldView.setPlaceholderText(localized("string_birth_date"))
-        birthDateHeaderTextFieldView.setTextFieldDefaultValue(birthDate)
-
-        adress1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
-
-        adress2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
-
-        cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
-
-        postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
-
-        usernameHeaderTextFieldView.setPlaceholderText(localized("string_username"))
-        usernameHeaderTextFieldView.setTextFieldDefaultValue(username)
-
-        emailHeaderTextFieldView.setPlaceholderText(localized("string_email"))
-        emailHeaderTextFieldView.setTextFieldDefaultValue(email)
-
-        cardIdHeaderTextFieldView.setPlaceholderText(localized("string_id_number"))
-        cardIdHeaderTextFieldView.setTextFieldDefaultValue(cardId)
-
-        bankIdHeaderTextFieldView.setPlaceholderText(localized("string_bank_id"))
-        bankIdHeaderTextFieldView.setTextFieldDefaultValue(bankId)
-
-        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
-        self.view.addGestureRecognizer(tapGestureRecognizer)
     }
 
     func underlineButtonTitleLabel(button: UIButton) {
@@ -225,7 +232,8 @@ class PersonalInfoViewController: UIViewController {
         // TEST
         if firstNameHeaderTextFieldView.text != "" {
             showAlert(type: .success)
-        } else {
+        }
+        else {
             showAlert(type: .error)
         }
     }
