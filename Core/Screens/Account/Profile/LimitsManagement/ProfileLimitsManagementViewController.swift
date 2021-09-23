@@ -19,7 +19,7 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var depositLabel: UILabel!
     @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var depositFrequencySelectTextFieldView: SelectTextFieldView!
-    @IBOutlet var depositLineView: UIView!
+    @IBOutlet private var depositLineView: UIView!
     @IBOutlet private var bettingView: UIView!
     @IBOutlet private var bettingLabel: UILabel!
     @IBOutlet private var bettingHeaderTextFieldView: HeaderTextFieldView!
@@ -50,7 +50,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         commonInit()
         setupWithTheme()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name:UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
@@ -125,6 +125,9 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
         depositHeaderTextFieldView.setKeyboardType(.numberPad)
         depositHeaderTextFieldView.isCurrency = true
+        depositHeaderTextFieldView.didTapIcon = {
+            self.showFieldInfo(view: self.depositHeaderTextFieldView.superview!)
+        }
 
         depositFrequencySelectTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
 
@@ -135,7 +138,9 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
         bettingHeaderTextFieldView.setKeyboardType(.numberPad)
         bettingHeaderTextFieldView.isCurrency = true
-
+        bettingHeaderTextFieldView.didTapIcon = {
+            self.showFieldInfo(view: self.bettingHeaderTextFieldView.superview!)
+        }
 
         bettingFrequencySelectTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
 
@@ -146,7 +151,9 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
         lossHeaderTextFieldView.setKeyboardType(.numberPad)
         lossHeaderTextFieldView.isCurrency = true
-
+        lossHeaderTextFieldView.didTapIcon = {
+            self.showFieldInfo(view: self.lossHeaderTextFieldView.superview!)
+        }
 
         lossFrequencySelectHeaderTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
 
@@ -156,9 +163,33 @@ class ProfileLimitsManagementViewController: UIViewController {
         exclusionSelectTextFieldView.isIconArray = true
         exclusionSelectTextFieldView.setSelectionPicker(["Active", "Limited", "Permanent"], iconArray: [UIImage(named: "icon_active")!, UIImage(named: "icon_limited")!, UIImage(named: "icon_excluded")!])
 
-
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    // TESTING
+    func showFieldInfo(view: UIView) {
+        let infoView = EditAlertView()
+        infoView.alertState = .info
+        view.addSubview(infoView)
+        NSLayoutConstraint.activate([
+
+            infoView.topAnchor.constraint(equalTo: view.topAnchor),
+            infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
+            infoView.alpha = 1
+        } completion: { _ in
+        }
+
+        infoView.onClose = {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
+                infoView.alpha = 0
+            } completion: { _ in
+                infoView.removeFromSuperview()
+            }
+        }
     }
 
     @objc func didTapBackground() {
@@ -172,16 +203,16 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     }
 
-
-    @IBAction func backAction() {
+    @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @IBAction func editAction() {
+    @IBAction private func editAction() {
         // TEST
         if depositHeaderTextFieldView.text != "" {
             self.showAlert(type: .success)
-        } else {
+        }
+        else {
             self.showAlert(type: .error)
         }
     }

@@ -81,3 +81,5 @@ Terms of use, Privacy Policy and EULA";
 "string_betting_limit" = "Betting Limit";
 "string_loss_limit" = "Loss Limit";
 "string_auto_exclusion" = "Auto Exclusion";
+"string_info" = "Info";
+"string_info_text" = "This is some info about this item";

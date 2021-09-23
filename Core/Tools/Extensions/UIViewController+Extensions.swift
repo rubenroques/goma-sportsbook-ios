@@ -39,7 +39,7 @@ extension UIViewController {
         } completion: { _ in
         }
 
-        popup.onClose = { [weak self] in
+        popup.onClose = {
             UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
                 popup.alpha = 0
             } completion: { _ in
