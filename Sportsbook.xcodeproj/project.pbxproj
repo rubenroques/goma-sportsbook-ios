@@ -326,6 +326,10 @@
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
 		A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
+		A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */; };
+		A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */; };
+		A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */; };
+		A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */; };
 		A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54826C53A5F00ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */; };
@@ -583,6 +587,8 @@
 		45DDBAB926F2406100A73E45 /* UserSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionStore.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
+		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
+		A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectTextFieldView.xib; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -1255,6 +1261,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A99A970F26FB414600F8D163 /* SelectTextFieldView */,
 				A9C82FB926F4E4D700059DCD /* EditAlertView */,
 				4589F41826BF0243005DF543 /* NibView.swift */,
 				4589F40826BF0203005DF543 /* RoundButton.swift */,
@@ -1309,6 +1316,15 @@
 				A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */,
 			);
 			path = LimitsManagement;
+			sourceTree = "<group>";
+		};
+		A99A970F26FB414600F8D163 /* SelectTextFieldView */ = {
+			isa = PBXGroup;
+			children = (
+				A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */,
+				A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */,
+			);
+			path = SelectTextFieldView;
 			sourceTree = "<group>";
 		};
 		A9A836AF26C6AC5D00508923 /* Maintenance */ = {
@@ -1607,6 +1623,7 @@
 				455A0D2026BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */,
+				A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				4589F3FB26BF017A005DF543 /* RegisterViewController.xib in Resources */,
 				A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */,
 				456B343A26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
@@ -1665,6 +1682,7 @@
 				455A0D2126BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41326BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
+				A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				4589F3FC26BF017A005DF543 /* RegisterViewController.xib in Resources */,
 				A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */,
 				456B343B26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
@@ -1754,6 +1772,7 @@
 			files = (
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
+				A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
@@ -1913,6 +1932,7 @@
 			files = (
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
+				A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,

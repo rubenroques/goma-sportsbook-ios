@@ -30,6 +30,7 @@ class HeaderTextFieldView: NibView {
     }
 
     var didTapReturn: (() -> Void)?
+    var didTapIcon: (() -> Void)?
 
     // Variables
     let datePicker = UIDatePicker()
@@ -37,6 +38,7 @@ class HeaderTextFieldView: NibView {
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
     var isSelect: Bool = false
+    var isCurrency: Bool = false
 
     private var isSecureField = false {
         didSet {
@@ -273,6 +275,18 @@ class HeaderTextFieldView: NibView {
         self.showStateImageView.image = image
         self.showStateImageView.isHidden = false
         self.imageWidthConstraint.constant = size
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapIconImageVIew(_:)))
+
+        self.showStateImageView.isUserInteractionEnabled = true
+        self.showStateImageView.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    @objc func didTapIconImageVIew(_ sender:AnyObject){
+
+//        let coordinates = self.frame
+//        print(coordinates)
+        didTapIcon?()
     }
 
     func setTextFieldDefaultValue(_ value: String) {
@@ -428,6 +442,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         self.containerView.layer.borderColor = self.highlightColor.cgColor
 
         self.slideUp()
+
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -440,6 +455,10 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         }
 
         self.isActive = false
+
+        if isCurrency {
+            textField.text = textField.text?.currencyFormatting()
+        }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -450,6 +469,17 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if self.isSelect {
             return false
+        }
+        if self.isCurrency {
+            print(string)
+            let decimals = CharacterSet(charactersIn: "0123456789.")
+            if range.length>0  && range.location == 0 {
+                return false
+
+            }
+            else if (string.rangeOfCharacter(from: decimals) == nil && string != "") {
+                    return false
+            }
         }
         return true
     }

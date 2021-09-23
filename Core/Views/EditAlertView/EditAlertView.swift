@@ -14,6 +14,8 @@ class EditAlertView: NibView {
     @IBOutlet private var alertLabel: UILabel!
     @IBOutlet private var alertTextLabel: UILabel!
     @IBOutlet private var closeButton: UIButton!
+    // Variables
+    var onClose:(() -> Void)?
 
     enum AlertState {
         case success
@@ -64,6 +66,7 @@ class EditAlertView: NibView {
     }
 
     func setupWithTheme() {
+        self.alpha = 0
 
         containerView.backgroundColor = UIColor.App.backgroundDarkProfile
 
@@ -91,7 +94,7 @@ class EditAlertView: NibView {
     }
 
     @IBAction private func closeView() {
-        self.removeFromSuperview()
+        onClose?()
     }
 
     override var intrinsicContentSize: CGSize {
