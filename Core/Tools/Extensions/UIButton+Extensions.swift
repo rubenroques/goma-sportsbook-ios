@@ -43,4 +43,14 @@ extension UIButton {
 
         self.setAttributedTitle(underlineAttriString, for: .normal)
     }
+
+    func enableButton() {
+        self.isEnabled = true
+        self.backgroundColor = UIColor.App.buttonMain
+    }
+
+    func disableButton() {
+        self.isEnabled = false
+        self.backgroundColor = UIColor.App.backgroundDarkProfile
+    }
 }

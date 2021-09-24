@@ -72,6 +72,15 @@ class SelectTextFieldView: NibView {
         iconLabelImageView.isHidden = true
     }
 
+    func setPickerIcon(_ image: UIImage) {
+        selectImageView.image = image
+    }
+
+    func setLabelFont(font: AppFont.AppFontType, size: CGFloat) {
+        selectLabel.font = AppFont.with(type: font, size: size)
+        textField.font = AppFont.with(type: font, size: size)
+    }
+
     override var canBecomeFirstResponder: Bool {
         return true
     }

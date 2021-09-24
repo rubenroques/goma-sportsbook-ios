@@ -31,6 +31,7 @@ class HeaderTextFieldView: NibView {
 
     var didTapReturn: (() -> Void)?
     var didTapIcon: (() -> Void)?
+    var hasText: ((Bool) -> Void)?
 
     // Variables
     let datePicker = UIDatePicker()
@@ -298,6 +299,10 @@ class HeaderTextFieldView: NibView {
         self.textField.font = font
     }
 
+    func setHeaderLabelFont(_ font: UIFont) {
+        self.headerLabel.font = font
+    }
+
     func setKeyboardType(_ keyboard: UIKeyboardType) {
         self.textField.keyboardType = keyboard
     }
@@ -458,6 +463,13 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
         if isCurrency {
             textField.text = textField.text?.currencyFormatting()
+        }
+
+        if self.textField.text != "" {
+            hasText?(true)
+        }
+        else {
+            hasText?(false)
         }
     }
 
