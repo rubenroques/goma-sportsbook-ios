@@ -17,6 +17,9 @@ class CountrySelectorTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        self.nameLabel.text = ""
+        self.prefixLabel.text = ""
+
         self.setupTheme()
     }
 

@@ -45,9 +45,9 @@ class ForbiddenLocationViewController: UIViewController {
     }
 
     func commonInit() {
-        logoMainImageView.image = UIImage(named: "SPORTSBOOK")
+        logoMainImageView.image = UIImage(named: "logo_horizontal_large")
         logoMainImageView.sizeToFit()
-        forbiddenImageView.image = UIImage(named: "Location_Error")
+        forbiddenImageView.image = UIImage(named: "location_error_icon")
         forbiddenImageView.contentMode = .scaleAspectFill
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 20)
         textLabel.textColor = UIColor.white

@@ -44,9 +44,9 @@ class RefusedAccessViewController: UIViewController {
     }
 
     func commonInit() {
-        logoMainImageView.image = UIImage(named: "SPORTSBOOK")
+        logoMainImageView.image = UIImage(named: "logo_horizontal_large")
         logoMainImageView.sizeToFit()
-        refusedImageView.image = UIImage(named: "Location_Error")
+        refusedImageView.image = UIImage(named: "location_error_icon")
         refusedImageView.contentMode = .scaleAspectFill
         refusedTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         refusedTitleLabel.numberOfLines = 0

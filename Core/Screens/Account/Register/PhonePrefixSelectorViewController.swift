@@ -33,10 +33,13 @@ class PhonePrefixSelectorViewController: UIViewController {
 
     var didSelectCountry: ((EveryMatrix.Country) -> Void)?
 
+    var showIndicatives: Bool = true
     let defaultHeight: CGFloat = 380
 
-    init(countriesArray: EveryMatrix.CountryListing) {
+    init(countriesArray: EveryMatrix.CountryListing, showIndicatives: Bool = true) {
         self.countriesListings = countriesArray
+        self.showIndicatives = showIndicatives
+
         super.init(nibName: "PhonePrefixSelectorViewController", bundle: nil)
 
         let processedCountries = self.convertCountries(listing: self.countriesListings)
@@ -210,10 +213,10 @@ extension PhonePrefixSelectorViewController: UITableViewDataSource {
         }
 
         if indexPath.section == 0, let originCountryValue = originCountry {
-            cell.setupWithCountry(country: originCountryValue, showPrefix: true)
+            cell.setupWithCountry(country: originCountryValue, showPrefix: self.showIndicatives)
         }
         else if let country = self.filteredCountries[safe: indexPath.row] {
-            cell.setupWithCountry(country: country, showPrefix: true)
+            cell.setupWithCountry(country: country, showPrefix: self.showIndicatives)
         }
         return cell
     }

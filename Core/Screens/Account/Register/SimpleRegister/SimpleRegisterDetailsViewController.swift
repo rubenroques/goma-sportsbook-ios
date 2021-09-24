@@ -35,6 +35,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
     // Variables
     var emailAddress: String
 
+    private var mobilePrefixTextual = ""
+
     init(emailAddress: String) {
         self.emailAddress = emailAddress
 
@@ -92,13 +94,15 @@ class SimpleRegisterDetailsViewController: UIViewController {
         emailHeaderTextView.setTextFieldDefaultValue(self.emailAddress)
         emailHeaderTextView.isDisabled = true
 
+        //dateHeaderTextView.shouldBeginEditing = { return false }
         dateHeaderTextView.setPlaceholderText(localized("string_birth_date"))
-        dateHeaderTextView.setImageTextField(UIImage(named: "calendar-regular")!)
+        dateHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         dateHeaderTextView.setDatePickerMode()
+
 
         indicativeHeaderTextView.setPlaceholderText(localized("string_phone_prefix"))
         indicativeHeaderTextView.setText("----")
-        indicativeHeaderTextView.setImageTextField(UIImage(named: "Arrow_Down")!, size: 10)
+        indicativeHeaderTextView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!, size: 10)
         indicativeHeaderTextView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         indicativeHeaderTextView.isUserInteractionEnabled = false
 
@@ -140,7 +144,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         dateHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
         dateHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         dateHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
-        dateHeaderTextView.setSecureField(false)
 
         phoneView.backgroundColor = UIColor.App.mainBackgroundColor
 
@@ -307,7 +310,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
         let username = usernameHeaderTextView.text
         let birthDate = dateHeaderTextView.text // Must be yyyy-MM-dd
-        let mobilePrefix = indicativeHeaderTextView.text
         let mobile = phoneHeaderTextView.text
         let email = emailHeaderTextView.text
         let password = passwordHeaderTextView.text
@@ -336,7 +338,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                                   username: username,
                                                   password: password,
                                                   birthDate: birthDate,
-                                                  mobilePrefix: mobilePrefix,
+                                                  mobilePrefix: mobilePrefixTextual,
                                                   mobileNumber: mobile,
                                                   emailVerificationURL: emailVerificationURL)
         self.registerUser(form: form)
@@ -390,6 +392,11 @@ extension SimpleRegisterDetailsViewController {
         self.disableSignUpButton()
     }
 
+    func showPasswordTooWeakErrorStatus() {
+        self.disableSignUpButton()
+        self.passwordHeaderTextView.showErrorOnField(text: localized("string_password_too_weak"), color: UIColor.App.alertError)
+    }
+
     func showServerErrorStatus() {
         UIAlertController.showServerErrorMessage(on: self)
     }
@@ -417,6 +424,8 @@ extension SimpleRegisterDetailsViewController {
                         self.showUsernameTakenErrorStatus()
                     case let .requestError(message) where message.lowercased().contains("email already exists"):
                         self.showEmailTakenErrorStatus()
+                    case let .requestError(message) where message.lowercased().contains("Your password is too simple and does not match"):
+                        self.showPasswordTooWeakErrorStatus()
                     default:
                         self.showServerErrorStatus()
                     }
@@ -452,6 +461,7 @@ extension SimpleRegisterDetailsViewController {
     private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
 
         for country in listings.countries where country.isoCode == listings.currentIpCountry {
+            self.mobilePrefixTextual = country.phonePrefix
             self.indicativeHeaderTextView.setText( self.formatIndicativeCountry(country), slideUp: true)
         }
 
@@ -473,6 +483,7 @@ extension SimpleRegisterDetailsViewController {
     }
 
     private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
+        self.mobilePrefixTextual = country.phonePrefix
         self.indicativeHeaderTextView.setText(formatIndicativeCountry(country), slideUp: true)
     }
 

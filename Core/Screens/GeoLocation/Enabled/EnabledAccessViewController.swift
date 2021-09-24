@@ -53,7 +53,7 @@ class EnabledAccessViewController: UIViewController {
     func commonInit() {
         enabledImageView.translatesAutoresizingMaskIntoConstraints = false
         enabledImageView.layer.cornerRadius = BorderRadius.modal
-        enabledImageView.image = UIImage(named: "Location_Success")
+        enabledImageView.image = UIImage(named: "location_success_icon")
         enabledImageView.contentMode = .scaleAspectFill
 
         enabledLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)

@@ -20,10 +20,10 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
 
     @IBOutlet private weak var tipImageView: UIImageView!
-    @IBOutlet private var showLabel: UILabel!
+    @IBOutlet private weak var showPasswordLabel: UILabel!
 
-    @IBOutlet private var usernameLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private var usernameIconConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var usernameLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var usernameIconConstraint: NSLayoutConstraint!
 
     var textPublisher: AnyPublisher<String?, Never> {
         return self.textField.textPublisher
@@ -49,7 +49,7 @@ class HeaderTextFieldView: NibView {
 
             if self.isSecureField {
                 self.showPassImageView.isHidden = false
-                self.showLabel.isHidden = false
+                self.showPasswordLabel.isHidden = false
             }
 
             self.showPassImageView.image = UIImage(named: "view_password_icon")
@@ -76,11 +76,11 @@ class HeaderTextFieldView: NibView {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
-                self.showLabel.text = localized("string_hide")
+                self.showPasswordLabel.text = localized("string_hide")
             }
             else {
                 self.textField.isSecureTextEntry = true
-                self.showLabel.text = localized("string_show")
+                self.showPasswordLabel.text = localized("string_show")
             }
         }
     }
@@ -180,18 +180,18 @@ class HeaderTextFieldView: NibView {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapShowPassword))
         self.showPassImageView.addGestureRecognizer(tapGestureRecognizer)
 
-        showLabel.text = localized("string_show")
-        showLabel.font = AppFont.with(type: .regular, size: 14.0)
-        showLabel.textColor =  UIColor.App.headingMain
+        showPasswordLabel.text = localized("string_show")
+        showPasswordLabel.font = AppFont.with(type: .regular, size: 14.0)
+        showPasswordLabel.textColor =  UIColor.App.headingMain
 
         let text = localized("string_show")
         let underlineAttriString = NSMutableAttributedString(string: text)
         let range = (text as NSString).range(of: localized("string_show"))
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
-        showLabel.attributedText = underlineAttriString
-        showLabel.isHidden = true
-        showLabel.isUserInteractionEnabled = true
-        showLabel.addGestureRecognizer(tapGestureRecognizer)
+        showPasswordLabel.attributedText = underlineAttriString
+        showPasswordLabel.isHidden = true
+        showPasswordLabel.isUserInteractionEnabled = true
+        showPasswordLabel.addGestureRecognizer(tapGestureRecognizer)
 
         tipLabel.font = AppFont.with(type: .semibold, size: 12)
 
@@ -269,6 +269,10 @@ class HeaderTextFieldView: NibView {
 
     func setSecureField(_ isSecure: Bool) {
         self.isSecureField = isSecure
+    }
+
+    func showPasswordLabelVisible(visible: Bool) {
+        self.showPasswordLabel.isHidden = !visible
     }
 
     func setHeaderLabelColor(_ color: UIColor) {

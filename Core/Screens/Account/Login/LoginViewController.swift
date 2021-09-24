@@ -55,10 +55,6 @@ class LoginViewController: UIViewController {
             .assign(to: \.isEnabled, on: loginButton)
             .store(in: &cancellables)
 
-        #if DEBUG
-        self.usernameHeaderTextFieldView.setText("pgomes999")
-        self.passwordHeaderTextFieldView.setText("12345678-GOMA-sportsbook")
-        #endif
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -96,9 +92,8 @@ class LoginViewController: UIViewController {
 
         skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 18)
         skipButton.setTitle(localized("string_skip"), for: .normal)
-        skipButton.layer.borderColor = .none
 
-        logoImageView.image = UIImage(named: "SPORTSBOOK")
+        logoImageView.image = UIImage(named: "logo_horizontal_large")
         logoImageView.sizeToFit()
 
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
@@ -146,7 +141,7 @@ class LoginViewController: UIViewController {
         skipView.backgroundColor = UIColor.App.mainBackgroundColor
 
         skipButton.setTitleColor(UIColor.white, for: .normal)
-        skipButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
+        skipButton.backgroundColor = .clear
 
         loginLabel.textColor = .white
 

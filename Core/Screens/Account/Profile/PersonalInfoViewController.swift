@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class PersonalInfoViewController: UIViewController {
 
@@ -28,13 +29,14 @@ class PersonalInfoViewController: UIViewController {
     @IBOutlet private var emailHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var cardIdHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var bankIdHeaderTextFieldView: HeaderTextFieldView!
+
     // Variables
-    var birthDate: String = "2017-01-01"
-    var username: String = "GOMA"
-    var email: String = "goma@gomadevelopment.pt"
-    var cardId: String = "123453 0 Z12"
-    var bankId: String = "PT0990122382"
-    init() {
+
+    var cancellables = Set<AnyCancellable>()
+    var userSession: UserSession?
+
+    init(userSession: UserSession?) {
+        self.userSession = userSession
         super.init(nibName: "PersonalInfoViewController", bundle: nil)
     }
 
@@ -46,59 +48,59 @@ class PersonalInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        commonInit()
-        setupWithTheme()
+        self.commonInit()
+        self.setupWithTheme()
+
+        self.setupPublishers()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
-    func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundDarkProfile
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        if let user = self.userSession {
+            birthDateHeaderTextFieldView.setTextFieldDefaultValue(user.birthDate)
+            usernameHeaderTextFieldView.setTextFieldDefaultValue(user.username)
+            emailHeaderTextFieldView.setTextFieldDefaultValue(user.email)
+        }
+    }
 
-        headerView.backgroundColor = UIColor.App.backgroundDarkProfile
 
-        backButton.backgroundColor = UIColor.App.backgroundDarkProfile
-        backButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        backButton.setTitle("", for: .normal)
-        backButton.tintColor = UIColor.App.headingMain
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
-        headerLabel.textColor = UIColor.App.headingMain
-
-        editButton.backgroundColor = UIColor.App.backgroundDarkProfile
-
-        topFieldsSetup()
-
-        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
-
-        bottomFieldsSetup()
-
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.setupWithTheme()
     }
 
     func commonInit() {
 
-        backButton.setImage(UIImage(named: "caret-left"), for: .normal)
-
         headerLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 17)
         headerLabel.text = localized("string_personal_info")
 
-        underlineButtonTitleLabel(button: editButton)
+        editButton.setTitle(localized("string_save"), for: .normal)
+        editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
-        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextFieldGray)
+        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"),
+                                                        color: UIColor.App.headerTextFieldGray)
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
 
         countryHeaderTextFieldView.setPlaceholderText(localized("string_nationality"))
-        countryHeaderTextFieldView.setSelectionPicker(["Portugal", "Spain", "England"], headerVisible: true)
-        countryHeaderTextFieldView.setImageTextField(UIImage(named: "Arrow_Down")!)
+        countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
+        countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
-        countryHeaderTextFieldView.isSelect = true
+        countryHeaderTextFieldView.shouldBeginEditing = { return false }
 
         birthDateHeaderTextFieldView.setPlaceholderText(localized("string_birth_date"))
-        birthDateHeaderTextFieldView.setTextFieldDefaultValue(birthDate)
+        birthDateHeaderTextFieldView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
+        birthDateHeaderTextFieldView.setDatePickerMode()
+        //birthDateHeaderTextFieldView.shouldBeginEditing = { return false }
 
         adress1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
 
@@ -109,104 +111,110 @@ class PersonalInfoViewController: UIViewController {
         postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
 
         usernameHeaderTextFieldView.setPlaceholderText(localized("string_username"))
-        usernameHeaderTextFieldView.setTextFieldDefaultValue(username)
 
         emailHeaderTextFieldView.setPlaceholderText(localized("string_email"))
-        emailHeaderTextFieldView.setTextFieldDefaultValue(email)
 
         cardIdHeaderTextFieldView.setPlaceholderText(localized("string_id_number"))
-        cardIdHeaderTextFieldView.setTextFieldDefaultValue(cardId)
 
         bankIdHeaderTextFieldView.setPlaceholderText(localized("string_bank_id"))
-        bankIdHeaderTextFieldView.setTextFieldDefaultValue(bankId)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        self.editButton.isEnabled = false
+        self.countryHeaderTextFieldView.isUserInteractionEnabled = false
+
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.calendar = calendar
+        components.year = -18
+        let maxDate = calendar.date(byAdding: components, to: Date())!
+        birthDateHeaderTextFieldView.datePicker.maximumDate = maxDate
+
     }
 
-    func topFieldsSetup() {
+    func setupWithTheme() {
+
+        self.view.backgroundColor = UIColor.App.backgroundDarkProfile
+
+        editButton.backgroundColor = .clear
+        editButton.setTitleColor(UIColor.App.primaryButtonNormalColor, for: .normal)
+        editButton.setTitleColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        editButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
+
+        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        headerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        headerLabel.textColor = UIColor.App.headingMain
+
+        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
+
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        firstNameHeaderTextFieldView.setSecureField(false)
 
         lastNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        lastNameHeaderTextFieldView.setSecureField(false)
 
         countryHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         countryHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundDarkProfile)
         countryHeaderTextFieldView.setViewBorderColor(UIColor.App.headerTextFieldGray)
-        countryHeaderTextFieldView.setSecureField(false)
 
         birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         birthDateHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        birthDateHeaderTextFieldView.setSecureField(false)
-        birthDateHeaderTextFieldView.isDisabled = true
 
         adress1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         adress1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         adress1HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        adress1HeaderTextFieldView.setSecureField(false)
 
         adress2HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         adress2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         adress2HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        adress2HeaderTextFieldView.setSecureField(false)
 
         cityHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         cityHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        cityHeaderTextFieldView.setSecureField(false)
 
         postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        postalCodeHeaderTextFieldView.setSecureField(false)
-    }
 
-    func bottomFieldsSetup() {
         usernameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        usernameHeaderTextFieldView.setSecureField(false)
 
         emailHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         emailHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        emailHeaderTextFieldView.setSecureField(false)
         emailHeaderTextFieldView.isDisabled = true
 
         cardIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         cardIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         cardIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        cardIdHeaderTextFieldView.setSecureField(false)
         cardIdHeaderTextFieldView.isDisabled = true
 
         bankIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         bankIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        bankIdHeaderTextFieldView.setSecureField(false)
         bankIdHeaderTextFieldView.isDisabled = true
+
     }
 
-    func underlineButtonTitleLabel(button: UIButton) {
-        let text = localized("string_edit")
 
-        let underlineAttriString = NSMutableAttributedString(string: text)
+    private func setupPublishers() {
 
-        let range1 = (text as NSString).range(of: localized("string_edit"))
+        Env.everyMatrixAPIClient.getCountries()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+                self.countryHeaderTextFieldView.isUserInteractionEnabled = true
+            } receiveValue: { countries in
+                self.setupWithCountryCodes(countries)
+            }
+        .store(in: &cancellables)
 
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 16), range: range1)
-
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
-
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
-
-        button.setAttributedTitle(underlineAttriString, for: .normal)
     }
 
     func showAlert(type: EditAlertView.AlertState) {
@@ -229,48 +237,84 @@ class PersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func editAction() {
-        // TEST
-        if firstNameHeaderTextFieldView.text != "" {
-            showAlert(type: .success)
-        }
-        else {
-            showAlert(type: .error)
+        self.didTapBackground()
+        self.view.isUserInteractionEnabled = false
+
+        executeDelayed(1.5) {
+            self.backAction()
         }
     }
 
     @objc func didTapBackground() {
         self.resignFirstResponder()
-
-        _ = self.firstNameHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.lastNameHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.countryHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.adress1HeaderTextFieldView.resignFirstResponder()
-
-        _ = self.adress2HeaderTextFieldView.resignFirstResponder()
-
-        _ = self.cityHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.postalCodeHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.usernameHeaderTextFieldView.resignFirstResponder()
+        self.firstNameHeaderTextFieldView.resignFirstResponder()
+        self.lastNameHeaderTextFieldView.resignFirstResponder()
+        self.countryHeaderTextFieldView.resignFirstResponder()
+        self.adress1HeaderTextFieldView.resignFirstResponder()
+        self.adress2HeaderTextFieldView.resignFirstResponder()
+        self.cityHeaderTextFieldView.resignFirstResponder()
+        self.postalCodeHeaderTextFieldView.resignFirstResponder()
+        self.usernameHeaderTextFieldView.resignFirstResponder()
     }
 
-    @objc func keyboardWillShow(notification: NSNotification) {
+}
 
+// Flags business logic
+extension PersonalInfoViewController {
+
+    private func setupWithCountryCodes(_ listings: EveryMatrix.CountryListing) {
+
+        for country in listings.countries where country.isoCode == listings.currentIpCountry {
+            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+        }
+
+        self.countryHeaderTextFieldView.isUserInteractionEnabled = true
+        self.countryHeaderTextFieldView.shouldBeginEditing = { [weak self] in
+            self?.showCountrySelector(listing: listings)
+            return false
+        }
+    }
+
+    private func showCountrySelector(listing: EveryMatrix.CountryListing) {
+        let phonePrefixSelectorViewController = PhonePrefixSelectorViewController(countriesArray: listing, showIndicatives: false)
+        phonePrefixSelectorViewController.modalPresentationStyle = .overCurrentContext
+        phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
+            self?.setupWithSelectedCountry(country)
+            phonePrefixSelectorViewController.animateDismissView()
+        }
+        self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
+    }
+
+    private func setupWithSelectedCountry(_ country: EveryMatrix.Country) {
+        self.countryHeaderTextFieldView.setText(formatIndicativeCountry(country), slideUp: true)
+    }
+
+    private func formatIndicativeCountry(_ country: EveryMatrix.Country) -> String {
+        var stringCountry = "\(country.name)"
+        if let isoCode = country.isoCode {
+            stringCountry = "\(isoCode) - \(country.name)"
+            if let flag = CountryFlagHelper.flag(forCode: isoCode) {
+                stringCountry = "\(flag) \(country.name)"
+            }
+        }
+        return stringCountry
+    }
+
+}
+
+extension PersonalInfoViewController {
+
+    @objc func keyboardWillShow(notification: NSNotification) {
         guard let userInfo = notification.userInfo else { return }
         var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset
-        contentInset.bottom = keyboardFrame.size.height + 20
+        contentInset.bottom = keyboardFrame.size.height + 24
         scrollView.contentInset = contentInset
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-
         let contentInset: UIEdgeInsets = UIEdgeInsets.zero
         scrollView.contentInset = contentInset
     }

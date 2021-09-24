@@ -52,6 +52,14 @@ class EveryMatrixAPIClient: ObservableObject {
         .eraseToAnyPublisher()
     }
 
+
+    func logout() -> AnyPublisher<Bool, EveryMatrixSocketAPIError> {
+        return TSManager.shared
+            .getModel(router: .logout, decodingType: Bool.self)
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+    }
+
     func getSessionInfo() -> AnyPublisher<SessionInfo, EveryMatrixSocketAPIError> {
         return TSManager.shared
             .getModel(router: .getSessionInfo, decodingType: SessionInfo.self)

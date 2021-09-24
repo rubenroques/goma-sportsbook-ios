@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class PasswordUpdateViewController: UIViewController {
 
@@ -17,6 +18,9 @@ class PasswordUpdateViewController: UIViewController {
     @IBOutlet private var oldPasswordHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var newPasswordHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var confirmPasswordHeaderTextFieldView: HeaderTextFieldView!
+
+    var cancellables = Set<AnyCancellable>()
+
 
     init() {
         super.init(nibName: "PasswordUpdateViewController", bundle: nil)
@@ -34,70 +38,78 @@ class PasswordUpdateViewController: UIViewController {
         setupWithTheme()
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        setupWithTheme()
+    }
+
+    func commonInit() {
+        headerLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        headerLabel.text = localized("string_update_password")
+
+        editButton.setTitle(localized("string_save"), for: .normal)
+        editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+
+        oldPasswordHeaderTextFieldView.setPlaceholderText(localized("string_old_password"))
+        newPasswordHeaderTextFieldView.setPlaceholderText(localized("string_new_password"))
+        confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("string_confirm_password"))
+
+        oldPasswordHeaderTextFieldView.setSecureField(true)
+        oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
+        
+        newPasswordHeaderTextFieldView.setSecureField(true)
+        confirmPasswordHeaderTextFieldView.setSecureField(true)
+
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        editButton.isEnabled = false
+
+        Publishers.CombineLatest3(oldPasswordHeaderTextFieldView.textPublisher,
+                                  newPasswordHeaderTextFieldView.textPublisher,
+                                  confirmPasswordHeaderTextFieldView.textPublisher)
+            .map { oldPassword, new, confirm in
+
+                if (oldPassword ?? "").count < 8 || (new ?? "").count < 8 || (confirm ?? "").count < 8 {
+                    return false
+                }
+                if (new ?? "") != (confirm ?? "") {
+                    return false
+                }
+                return true
+            }
+            .assign(to: \.isEnabled, on: editButton)
+            .store(in: &cancellables)
+    }
+
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundDarkProfile
 
         containerView.backgroundColor = UIColor.App.backgroundDarkProfile
-
+        
         headerView.backgroundColor = UIColor.App.backgroundDarkProfile
-
-        backButton.backgroundColor = UIColor.App.backgroundDarkProfile
-        backButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        backButton.setTitle("", for: .normal)
-        backButton.tintColor = UIColor.App.headingMain
-
         headerLabel.textColor = UIColor.App.headingMain
 
-        editButton.backgroundColor = UIColor.App.backgroundDarkProfile
+        editButton.backgroundColor = .clear
+        editButton.setTitleColor(UIColor.App.primaryButtonNormalColor, for: .normal)
+        editButton.setTitleColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        editButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
 
         oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         oldPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        oldPasswordHeaderTextFieldView.setSecureField(true)
 
         newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         newPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        newPasswordHeaderTextFieldView.setSecureField(true)
 
         confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
         confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        confirmPasswordHeaderTextFieldView.setSecureField(true)
-    }
-
-    func commonInit() {
-        backButton.setImage(UIImage(named: "caret-left"), for: .normal)
-
-        headerLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 17)
-        headerLabel.text = localized("string_update_password")
-
-        underlineButtonTitleLabel(button: editButton)
-
-        oldPasswordHeaderTextFieldView.setPlaceholderText(localized("string_old_password"))
-
-        newPasswordHeaderTextFieldView.setPlaceholderText(localized("string_new_password"))
-
-        confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("string_confirm_password"))
-
-        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
-        self.view.addGestureRecognizer(tapGestureRecognizer)
-    }
-
-    func underlineButtonTitleLabel(button: UIButton) {
-        let text = localized("string_edit")
-
-        let underlineAttriString = NSMutableAttributedString(string: text)
-
-        let range1 = (text as NSString).range(of: localized("string_edit"))
-
-        underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 16), range: range1)
-
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
-
-        underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
-
-        button.setAttributedTitle(underlineAttriString, for: .normal)
     }
 
     func showAlert(type: EditAlertView.AlertState, text: String = "") {
@@ -110,7 +122,6 @@ class PasswordUpdateViewController: UIViewController {
         popup.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(popup)
         NSLayoutConstraint.activate([
-
             popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             popup.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
@@ -121,37 +132,44 @@ class PasswordUpdateViewController: UIViewController {
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        _ = self.oldPasswordHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.newPasswordHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.confirmPasswordHeaderTextFieldView.resignFirstResponder()
+        self.oldPasswordHeaderTextFieldView.resignFirstResponder()
+        self.newPasswordHeaderTextFieldView.resignFirstResponder()
+        self.confirmPasswordHeaderTextFieldView.resignFirstResponder()
 
     }
 
     @IBAction private func editAction() {
-        // Clean warnings
-        oldPasswordHeaderTextFieldView.hideTipAndError()
-        newPasswordHeaderTextFieldView.hideTipAndError()
-        confirmPasswordHeaderTextFieldView.hideTipAndError()
 
-        // TEST field verification
-        let oldPassword = "goma123"
-        if oldPasswordHeaderTextFieldView.text != oldPassword {
-            oldPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_old_password_error"))
+        self.didTapBackground()
+        self.view.isUserInteractionEnabled = false
+
+        executeDelayed(1.5) {
+            self.backAction()
         }
-        else if newPasswordHeaderTextFieldView.text != confirmPasswordHeaderTextFieldView.text {
-            confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
-        }
-        else {
-            // TEST Alert
-            if oldPasswordHeaderTextFieldView.text != "" && newPasswordHeaderTextFieldView.text != "" && confirmPasswordHeaderTextFieldView.text != "" {
-                showAlert(type: .success, text: localized("string_success_edit_password"))
-            }
-            else {
-                showAlert(type: .error, text: localized("string_error_edit_password"))
-            }
-        }
+
+        
+//        // Clean warnings
+//        oldPasswordHeaderTextFieldView.hideTipAndError()
+//        newPasswordHeaderTextFieldView.hideTipAndError()
+//        confirmPasswordHeaderTextFieldView.hideTipAndError()
+//
+//        // TEST field verification
+//        let oldPassword = "goma123"
+//        if oldPasswordHeaderTextFieldView.text != oldPassword {
+//            oldPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_old_password_error"))
+//        }
+//        else if newPasswordHeaderTextFieldView.text != confirmPasswordHeaderTextFieldView.text {
+//            confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
+//        }
+//        else {
+//            // TEST Alert
+//            if oldPasswordHeaderTextFieldView.text != "" && newPasswordHeaderTextFieldView.text != "" && confirmPasswordHeaderTextFieldView.text != "" {
+//                showAlert(type: .success, text: localized("string_success_edit_password"))
+//            }
+//            else {
+//                showAlert(type: .error, text: localized("string_error_edit_password"))
+//            }
+//        }
 
     }
 

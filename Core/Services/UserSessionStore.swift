@@ -41,6 +41,15 @@ class UserSessionStore {
     //
     func logout() {
         UserDefaults.standard.userSession = nil
+
+        Env.everyMatrixAPIClient
+            .logout()
+            .sink(receiveCompletion: { completion in
+                Logger.log("User logout \(completion)")
+            }, receiveValue: { _ in
+
+            })
+            .store(in: &cancellables)
     }
 
     func loginUser(withUsername username: String, password: String) -> AnyPublisher<UserSession, UserSessionError> {
@@ -58,7 +67,9 @@ class UserSessionStore {
             .map { sessionInfo in
                 UserSession(username: sessionInfo.username,
                             email: sessionInfo.email,
-                            userId: "\(sessionInfo.userID)")
+                            userId: "\(sessionInfo.userID)",
+                            birthDate: sessionInfo.birthDate
+                    )
             }
             .handleEvents(receiveOutput: cacheUserSession)
             .eraseToAnyPublisher()

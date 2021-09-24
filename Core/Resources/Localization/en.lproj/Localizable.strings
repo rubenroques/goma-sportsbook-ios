@@ -76,6 +76,7 @@ Terms of use, Privacy Policy and EULA";
 "string_enter_code_text" = "Enter the code we have sent to your Email";
 "string_paste_clipboard" = "Paste from Clipboard";
 "string_edit" = "Edit";
+"string_save" = "Save";
 "string_personal_info" = "Personal Info";
 "string_first_name" = "First Name";
 "string_names_match_id" = "Please insert all names as registered in your ID Document.";
@@ -100,7 +101,19 @@ Terms of use, Privacy Policy and EULA";
 "string_old_password" = "Old Password";
 "string_new_password" = "New Password";
 "string_old_password_error" = "Old password is incorrect";
+"string_password_too_weak" = "Your password is too simple to be secure.";
 "string_error_edit_password" = "We can’t update your password at this moment. Please try again later.";
 "string_success_edit_password" = "Your password has been updated.";
 "string_invalid_email" = "Invalid email address";
 
+"string_close" = "Close";
+
+"string_personal_info" = "Personal Info";
+"string_update_password" = "Update Password";
+"string_wallet" = "Wallet";
+"string_documents" = "Documents";
+"string_bonus" = "Bonus";
+"string_history" = "History";
+"string_limits_management" = "Limits Management";
+"string_app_settings" = "App Settings";
+"string_support" = "Support";

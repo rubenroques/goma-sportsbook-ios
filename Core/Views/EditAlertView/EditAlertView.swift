@@ -24,7 +24,7 @@ class EditAlertView: NibView {
         didSet {
             switch self.alertState {
             case .success:
-                alertImageView.image = UIImage(named: "Success")
+                alertImageView.image = UIImage(named: "success_circle_icon")
                 alertLabel.text = localized("string_success")
                 alertLabel.textColor = UIColor.App.success
                 alertTextLabel.text = localized("string_success_edit")
@@ -51,7 +51,7 @@ class EditAlertView: NibView {
 
     override func commonInit() {
 
-        alertImageView.image = UIImage(named: "Success")
+        alertImageView.image = UIImage(named: "success_circle_icon")
 
         alertLabel.text = "Alert"
 
@@ -59,7 +59,7 @@ class EditAlertView: NibView {
         alertTextLabel.numberOfLines = 0
 
         closeButton.setTitle("", for: .normal)
-        closeButton.setImage(UIImage(named: "x-circle"), for: .normal)
+        closeButton.setImage(UIImage(named: "small_close_cross_icon"), for: .normal)
 
     }
 

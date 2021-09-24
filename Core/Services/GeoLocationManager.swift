@@ -38,11 +38,11 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
     func startGeoLocationUpdates() {
         Logger.log("startGeoLocationUpdates")
-
-        #if DEBUG
-        locationManager.startUpdatingLocation()
-        return
-        #endif
+//
+//        #if DEBUG
+//        locationManager.startUpdatingLocation()
+//        return
+//        #endif
 
         if CLLocationManager.significantLocationChangeMonitoringAvailable() {
             locationManager.startMonitoringSignificantLocationChanges()

@@ -13,5 +13,6 @@ struct UserSession: Codable {
     var username: String
     var email: String
     var userId: String
+    var birthDate: String
     
 }

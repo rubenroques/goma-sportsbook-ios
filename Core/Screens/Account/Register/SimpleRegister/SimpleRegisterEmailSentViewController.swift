@@ -68,7 +68,7 @@ class SimpleRegisterEmailSentViewController: UIViewController {
 
     func commonInit() {
 
-        logoImageView.image = UIImage(named: "Check_Email")
+        logoImageView.image = UIImage(named: "check_email_box_icon")
         logoImageView.sizeToFit()
 
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)

@@ -44,13 +44,14 @@ class Router {
         }
 
         self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+//
+//        #if DEBUG
+//        self.rootWindow.rootViewController = Router.navigationController(with: HomeViewController() )
+//        #else
+//        self.rootWindow.rootViewController = bootRootViewController
+//        #endif
 
-        #if DEBUG
-        self.rootWindow.rootViewController = Router.navigationController(with:  SimpleRegisterEmailCheckViewController() )
-        #else
         self.rootWindow.rootViewController = bootRootViewController
-        #endif
-
         self.rootWindow.makeKeyAndVisible()
         self.subscribeToUserActionBlockers()
     }
@@ -207,11 +208,11 @@ extension Router {
     }
 
     static func mainScreenViewController() -> UIViewController {
-        return RootViewController()
+        return HomeViewController()
     }
 
     static func mainScreenViewControllerFlow() -> UIViewController {
-        return Router.navigationController(with: RootViewController() )
+        return Router.navigationController(with: HomeViewController() )
     }
 
 }
@@ -237,6 +238,94 @@ extension Router {
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.navigationBar.isTranslucent = false
         return navigationController
+    }
+
+}
+
+
+class TestViewController: UIViewController {
+
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.title = "TestViewController-1"
+        self.view.backgroundColor = .systemBlue
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        executeDelayed(2) {
+            self.showModal()
+        }
+    }
+
+    func showModal() {
+        let testVc = Test2ViewController()
+        let navigationController = UINavigationController(rootViewController: testVc)
+        self.present(navigationController, animated: true, completion: nil)
+    }
+}
+
+class Test2ViewController: UIViewController {
+
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.title = "TestViewController-2"
+        self.view.backgroundColor = .systemRed
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        executeDelayed(2) {
+            self.push()
+        }
+    }
+
+    func push() {
+        self.navigationController?.pushViewController(Test3ViewController(), animated: true)
+    }
+}
+
+class Test3ViewController: UIViewController {
+
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.title = "TestViewController 3"
+        self.view.backgroundColor = .systemRed
+
+        self.navigationController?.navigationBar.backgroundColor = .white
+        self.navigationController?.navigationBar.barTintColor = .white
     }
 
 }
