@@ -424,6 +424,10 @@
 		A9C82FC426F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FC126F89B4500059DCD /* PasswordUpdateViewController.swift */; };
 		A9C82FC526F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */; };
 		A9C82FC626F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */; };
+		A9C82FCE26F9E0F900059DCD /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopupView.swift */; };
+		A9C82FD026F9E14800059DCD /* PopupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopupView.xib */; };
+		A9C82FD126F9F16700059DCD /* PopupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopupView.swift */; };
+		A9C82FD226F9F52E00059DCD /* PopupView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopupView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -654,6 +658,8 @@
 		A9C82FBD26F4E55000059DCD /* EditAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditAlertView.xib; sourceTree = "<group>"; };
 		A9C82FC126F89B4500059DCD /* PasswordUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordUpdateViewController.swift; sourceTree = "<group>"; };
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
+		A9C82FCD26F9E0F900059DCD /* PopupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopupView.swift; sourceTree = "<group>"; };
+		A9C82FCF26F9E14800059DCD /* PopupView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopupView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1313,6 +1319,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A9C82FCC26F9E0DD00059DCD /* Popup */,
 				A9C82FB926F4E4D700059DCD /* EditAlertView */,
 				4589F41826BF0243005DF543 /* NibView.swift */,
 				4589F40826BF0203005DF543 /* RoundButton.swift */,
@@ -1534,6 +1541,15 @@
 			path = EditAlertView;
 			sourceTree = "<group>";
 		};
+		A9C82FCC26F9E0DD00059DCD /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				A9C82FCD26F9E0F900059DCD /* PopupView.swift */,
+				A9C82FCF26F9E14800059DCD /* PopupView.xib */,
+			);
+			path = Popup;
+			sourceTree = "<group>";
+		};
 		A9C82FC026F89B1B00059DCD /* PasswordUpdate */ = {
 			isa = PBXGroup;
 			children = (
@@ -1695,6 +1711,7 @@
 				45BEA48726F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
+				A9C82FD026F9E14800059DCD /* PopupView.xib in Resources */,
 				45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
@@ -1711,6 +1728,9 @@
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
+				A9B840A726DE831400269B05 /* RequestLocationAccessViewController.xib in Resources */,
+				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
+				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A9B840A726DE831400269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
@@ -1743,6 +1763,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45BEA48026F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				A9C82FD226F9F52E00059DCD /* PopupView.xib in Resources */,
 				455A0D2126BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41326BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
@@ -1771,6 +1792,9 @@
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
+				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
+				A9B8408926D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
+				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
@@ -1838,6 +1862,7 @@
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
+				A9C82FCE26F9E0F900059DCD /* PopupView.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
@@ -2009,6 +2034,7 @@
 				45166D1E26F3548D00E69D65 /* SSWampError.swift in Sources */,
 				A9C82FB626F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */,
 				4589F41726BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
+				A9C82FD126F9F16700059DCD /* PopupView.swift in Sources */,
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,

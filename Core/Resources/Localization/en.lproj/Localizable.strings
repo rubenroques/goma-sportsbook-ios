@@ -92,6 +92,8 @@ Terms of use, Privacy Policy and EULA";
 "string_error" = "Error";
 "string_error_edit" = "We can’t update your information at this moment. Please try again later.";
 "string_success_edit" = "Your information has been updated.";
+"string_see_promo" = "See Promo";
+"string_not_now" = "Not right now";
 
 "string_cancel" = "Cancel";
 "string_search_field" = "Search..";

@@ -19,9 +19,8 @@ enum BorderRadius {
     static let button: CGFloat = 8.0
     static let checkBox: CGFloat = 6.0
     static let view: CGFloat = 5.0
+    static let label: CGFloat = 3.0
 }
-
-
 
 enum TextSpacing {
     static let subtitle: CGFloat = 1.25
