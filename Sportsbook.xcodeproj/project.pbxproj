@@ -348,6 +348,26 @@
 		45DDBAB126F2146100A73E45 /* Gilroy-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */; };
 		45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB926F2406100A73E45 /* UserSessionStore.swift */; };
 		45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB926F2406100A73E45 /* UserSessionStore.swift */; };
+		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
+		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
+		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
+		A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
+		A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */; };
+		A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */; };
+		A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */; };
+		A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */; };
+		A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */; };
+		A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */; };
+		A99A971E26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */; };
+		A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */; };
+		A99A972226FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */; };
+		A99A972326FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */; };
+		A99A972426FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */; };
+		A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */; };
+		A99A972826FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */; };
+		A99A972926FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */; };
+		A99A972A26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */; };
+		A99A972B26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */; };
 		A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54826C53A5F00ACDB07 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A99DD54726C53A5F00ACDB07 /* FirebaseDatabase */; };
@@ -623,6 +643,16 @@
 		45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Thin.ttf"; sourceTree = "<group>"; };
 		45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Black.ttf"; sourceTree = "<group>"; };
 		45DDBAB926F2406100A73E45 /* UserSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionStore.swift; sourceTree = "<group>"; };
+		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
+		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
+		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
+		A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectTextFieldView.xib; sourceTree = "<group>"; };
+		A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterPersonalInfoViewController.swift; sourceTree = "<group>"; };
+		A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterPersonalInfoViewController.xib; sourceTree = "<group>"; };
+		A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterAddressCountryViewController.swift; sourceTree = "<group>"; };
+		A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterAddressCountryViewController.xib; sourceTree = "<group>"; };
+		A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
+		A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -1287,6 +1317,7 @@
 		4589F3EE26BF017A005DF543 /* Register */ = {
 			isa = PBXGroup;
 			children = (
+				A99A971926FDDEC100F8D163 /* FullRegister */,
 				4589F3F026BF017A005DF543 /* RegisterViewController.swift */,
 				4589F3EF26BF017A005DF543 /* RegisterViewController.xib */,
 				455C960426FCA85F00456F30 /* PhonePrefixSelectorViewController.swift */,
@@ -1319,6 +1350,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A99A970F26FB414600F8D163 /* SelectTextFieldView */,
 				A9C82FCC26F9E0DD00059DCD /* Popup */,
 				A9C82FB926F4E4D700059DCD /* EditAlertView */,
 				4589F41826BF0243005DF543 /* NibView.swift */,
@@ -1377,6 +1409,37 @@
 				45BEA47926F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib */,
 			);
 			path = SimpleRegister;
+			sourceTree = "<group>";
+		};
+		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
+			isa = PBXGroup;
+			children = (
+				A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */,
+				A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */,
+			);
+			path = LimitsManagement;
+			sourceTree = "<group>";
+		};
+		A99A970F26FB414600F8D163 /* SelectTextFieldView */ = {
+			isa = PBXGroup;
+			children = (
+				A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */,
+				A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */,
+			);
+			path = SelectTextFieldView;
+			sourceTree = "<group>";
+		};
+		A99A971926FDDEC100F8D163 /* FullRegister */ = {
+			isa = PBXGroup;
+			children = (
+				A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */,
+				A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */,
+				A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */,
+				A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */,
+				A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */,
+				A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */,
+			);
+			path = FullRegister;
 			sourceTree = "<group>";
 		};
 		A9A836AF26C6AC5D00508923 /* Maintenance */ = {
@@ -1526,6 +1589,7 @@
 				455C961F26FDD66300456F30 /* ProfileViewController.swift */,
 				455C962026FDD66300456F30 /* ProfileViewController.xib */,
 				A9C82FC026F89B1B00059DCD /* PasswordUpdate */,
+				A99A970826FB2FDA00F8D163 /* LimitsManagement */,
 				A9C82FB326F3AFB400059DCD /* PersonalInfoViewController.swift */,
 				A9C82FB426F3AFB400059DCD /* PersonalInfoViewController.xib */,
 			);
@@ -1699,9 +1763,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				45BEA47F26F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				A99A972A26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */,
 				455A0D2026BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */,
+				A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				4589F3FB26BF017A005DF543 /* RegisterViewController.xib in Resources */,
 				A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */,
 				455C960826FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */,
@@ -1717,6 +1783,7 @@
 				45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
+				A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
 				45BEA48B26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib in Resources */,
@@ -1733,6 +1800,10 @@
 				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A9B840A726DE831400269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
+				A99A972426FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
+				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
+				A99A971E26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
+				A9B840A726DE831400269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A9C82FC526F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
 				455C962326FDD66400456F30 /* ProfileViewController.xib in Resources */,
@@ -1764,9 +1835,11 @@
 			files = (
 				45BEA48026F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopupView.xib in Resources */,
+				A99A972B26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */,
 				455A0D2126BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				4589F41326BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
+				A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				4589F3FC26BF017A005DF543 /* RegisterViewController.xib in Resources */,
 				A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */,
 				455C960926FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */,
@@ -1781,6 +1854,7 @@
 				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
+				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
 				45BEA48C26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib in Resources */,
@@ -1797,6 +1871,10 @@
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
+				A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
+				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
+				A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
+				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A9C82FC626F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
 				455C962426FDD66400456F30 /* ProfileViewController.xib in Resources */,
@@ -1861,6 +1939,7 @@
 			files = (
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
+				A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				A9C82FCE26F9E0F900059DCD /* PopupView.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
@@ -1898,6 +1977,7 @@
 				A9B8408126CFB49000269B05 /* DateUserLocation.swift in Sources */,
 				455A0C5426BD902C00EC572D /* AppDelegate.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45166CE326F3548D00E69D65 /* TSRouter.swift in Sources */,
 				455A0D0226BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
 				4589F3F726BF017A005DF543 /* WelcomeViewController.swift in Sources */,
@@ -1912,6 +1992,7 @@
 				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0726F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
+				A99A972226FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				45166D2126F3548D00E69D65 /* SSWampRole.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
 				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
@@ -1929,6 +2010,7 @@
 				45166CF526F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
+				A99A972826FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F41F26BF03FE005DF543 /* Fonts.swift in Sources */,
 				45166CDF26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
@@ -1990,6 +2072,7 @@
 				A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
 				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
+				A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				45166D2526F3548D00E69D65 /* TSManager.swift in Sources */,
 				455A0D1E26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
 				455A0CF026BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
@@ -2027,6 +2110,7 @@
 			files = (
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
+				A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
@@ -2064,6 +2148,7 @@
 				A9B8408226CFB49000269B05 /* DateUserLocation.swift in Sources */,
 				455A0CA326BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45166CE426F3548D00E69D65 /* TSRouter.swift in Sources */,
 				455A0D0326BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
 				4589F3F826BF017A005DF543 /* WelcomeViewController.swift in Sources */,
@@ -2078,6 +2163,7 @@
 				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0826F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
+				A99A972326FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				45166D2226F3548D00E69D65 /* SSWampRole.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
 				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
@@ -2095,6 +2181,7 @@
 				45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
+				A99A972926FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F42026BF03FE005DF543 /* Fonts.swift in Sources */,
 				45166CE026F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
@@ -2156,6 +2243,7 @@
 				A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
 				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
+				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				45166D2626F3548D00E69D65 /* TSManager.swift in Sources */,
 				455A0D1F26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
 				455A0CF126BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SelectTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="containerView" destination="day-vo-sb5" id="gI9-S5-3lL"/>
+                <outlet property="iconLabelImageView" destination="y5L-DZ-fCD" id="dqC-3v-1ba"/>
+                <outlet property="labelImageConstraint" destination="bd3-aW-Byr" id="IKK-8o-yON"/>
+                <outlet property="labelLeadingConstraint" destination="2nO-4a-ct3" id="Wc7-0p-eOW"/>
+                <outlet property="selectImageView" destination="fRK-gj-WMe" id="iXF-hq-Uq6"/>
+                <outlet property="selectLabel" destination="XO6-ec-esq" id="Yyz-4X-bc8"/>
+                <outlet property="textField" destination="0lh-dk-Q5D" id="KBA-lP-P9y"/>
+                <outlet property="textFieldImageConstraint" destination="dzl-5j-jgw" id="CRC-Y2-QgL"/>
+                <outlet property="textFieldLeadingConstraint" destination="zKw-kX-UXl" id="PwQ-Jt-STy"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="day-vo-sb5">
+                    <rect key="frame" x="16" y="8" width="382" height="64"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XO6-ec-esq">
+                            <rect key="frame" x="0.0" y="21.5" width="342" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fRK-gj-WMe">
+                            <rect key="frame" x="361" y="24.5" width="15" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="15" id="F8y-R4-NKC"/>
+                                <constraint firstAttribute="height" constant="15" id="Jp2-y5-waK"/>
+                            </constraints>
+                        </imageView>
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0lh-dk-Q5D">
+                            <rect key="frame" x="-6" y="15" width="382" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="y5L-DZ-fCD">
+                            <rect key="frame" x="-6" y="24.5" width="15" height="15"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="15" id="Jsz-dO-aDc"/>
+                                <constraint firstAttribute="height" constant="15" id="xic-bM-eUJ"/>
+                            </constraints>
+                        </imageView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="XO6-ec-esq" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" id="2nO-4a-ct3"/>
+                        <constraint firstAttribute="leading" secondItem="XO6-ec-esq" secondAttribute="trailing" constant="-342" id="3MB-Kn-k0S"/>
+                        <constraint firstAttribute="trailing" secondItem="fRK-gj-WMe" secondAttribute="trailing" constant="6" id="9i4-0G-Zrh"/>
+                        <constraint firstItem="fRK-gj-WMe" firstAttribute="leading" secondItem="0lh-dk-Q5D" secondAttribute="trailing" constant="-15" id="NqS-4d-kK1"/>
+                        <constraint firstItem="XO6-ec-esq" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="15" id="bd3-aW-Byr"/>
+                        <constraint firstItem="y5L-DZ-fCD" firstAttribute="centerY" secondItem="XO6-ec-esq" secondAttribute="centerY" id="c34-fw-hsv"/>
+                        <constraint firstItem="0lh-dk-Q5D" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="11" id="dzl-5j-jgw"/>
+                        <constraint firstItem="y5L-DZ-fCD" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="-6" id="jT0-cp-l3t"/>
+                        <constraint firstItem="XO6-ec-esq" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="nxu-jk-ukd"/>
+                        <constraint firstItem="0lh-dk-Q5D" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="r7K-L4-8E3"/>
+                        <constraint firstItem="fRK-gj-WMe" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="sko-xd-b0p"/>
+                        <constraint firstItem="0lh-dk-Q5D" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="-6" id="zKw-kX-UXl"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="dzl-5j-jgw"/>
+                            <exclude reference="bd3-aW-Byr"/>
+                        </mask>
+                    </variation>
+                </view>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="day-vo-sb5" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="16" id="QFL-3p-jQ0"/>
+                <constraint firstItem="day-vo-sb5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="8" id="aMY-f1-L5v"/>
+                <constraint firstAttribute="bottom" secondItem="day-vo-sb5" secondAttribute="bottom" constant="8" id="jwZ-tk-Ffv"/>
+                <constraint firstAttribute="trailing" secondItem="day-vo-sb5" secondAttribute="trailing" constant="16" id="mmZ-Mm-mEO"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="76.811594202898561" y="-217.63392857142856"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

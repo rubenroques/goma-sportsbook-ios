@@ -16,6 +16,35 @@ extension UIViewController {
 
         return presentingIsModal || presentingIsNavigation || presentingIsTabBar
     }
+
+    func showAlert(type: EditAlertView.AlertState) {
+
+        let popup = EditAlertView()
+        popup.alertState = type
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        popup.alpha = 0
+        self.view.addSubview(popup)
+        NSLayoutConstraint.activate([
+
+            popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            popup.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        self.view.bringSubviewToFront(popup)
+
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
+            popup.alpha = 1
+        } completion: { _ in
+        }
+
+        popup.onClose = {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut) {
+                popup.alpha = 0
+            } completion: { _ in
+                popup.removeFromSuperview()
+            }
+        }
+      }
 }
 
 extension UINavigationController {

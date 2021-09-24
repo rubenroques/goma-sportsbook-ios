@@ -14,10 +14,13 @@ class EditAlertView: NibView {
     @IBOutlet private var alertLabel: UILabel!
     @IBOutlet private var alertTextLabel: UILabel!
     @IBOutlet private var closeButton: UIButton!
+    // Variables
+    var onClose:(() -> Void)?
 
     enum AlertState {
         case success
         case error
+        case info
     }
 
     var alertState: AlertState = .success {
@@ -33,6 +36,11 @@ class EditAlertView: NibView {
                 alertLabel.textColor = UIColor.App.error
                 alertLabel.text = localized("string_error")
                 alertTextLabel.text = localized("string_error_edit")
+            case .info:
+                alertImageView.image = UIImage(named: "question-circle")
+                alertLabel.textColor = UIColor.App.headingMain
+                alertLabel.text = localized("string_info")
+                alertTextLabel.text = localized("string_info_text")
             }
         }
     }
@@ -64,13 +72,12 @@ class EditAlertView: NibView {
     }
 
     func setupWithTheme() {
+        self.alpha = 0
 
         containerView.backgroundColor = UIColor.App.backgroundDarkProfile
 
         alertImageView.backgroundColor = UIColor.App.backgroundDarkProfile
-
         alertLabel.textColor = UIColor.App.headingMain
-
         alertTextLabel.textColor = UIColor.App.headingMain
 
         closeButton.backgroundColor = UIColor.App.backgroundDarkProfile
@@ -91,7 +98,7 @@ class EditAlertView: NibView {
     }
 
     @IBAction private func closeView() {
-        self.removeFromSuperview()
+        onClose?()
     }
 
     override var intrinsicContentSize: CGSize {

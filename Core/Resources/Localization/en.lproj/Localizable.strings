@@ -119,3 +119,17 @@ Terms of use, Privacy Policy and EULA";
 "string_limits_management" = "Limits Management";
 "string_app_settings" = "App Settings";
 "string_support" = "Support";
+
+"string_limits_management" = "Limits Management";
+"string_save" = "Save";
+"string_deposit_limit" = "Deposit Limit";
+"string_betting_limit" = "Betting Limit";
+"string_loss_limit" = "Loss Limit";
+"string_auto_exclusion" = "Auto Exclusion";
+"string_info" = "Info";
+"string_info_text" = "This is some info about this item";
+"string_personal_information" = "Personal Information";
+"string_continue" = "Continue";
+"string_complete_signup" = "Complete Sign Up";
+"string_close" = "Close";
+"string_address_country" = "Address and Country";

@@ -30,6 +30,8 @@ class HeaderTextFieldView: NibView {
     }
 
     var didTapReturn: (() -> Void)?
+    var didTapIcon: (() -> Void)?
+    var hasText: ((Bool) -> Void)?
 
     var didSelectPickerIndex: ((Int) -> Void)?
     var shouldBeginEditing: (() -> Bool)?
@@ -39,6 +41,8 @@ class HeaderTextFieldView: NibView {
     let pickerView = UIPickerView()
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
+    var isSelect: Bool = false
+    var isCurrency: Bool = false
 
     var showingTipLabel: Bool = false
 
@@ -295,6 +299,18 @@ class HeaderTextFieldView: NibView {
         self.showStateImageView.image = image
         self.showStateImageView.isHidden = false
         self.imageWidthConstraint.constant = size
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapIconImageVIew(_:)))
+
+        self.showStateImageView.isUserInteractionEnabled = true
+        self.showStateImageView.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    @objc func didTapIconImageVIew(_ sender:AnyObject){
+
+//        let coordinates = self.frame
+//        print(coordinates)
+        didTapIcon?()
     }
 
     func setTextFieldDefaultValue(_ value: String) {
@@ -304,6 +320,10 @@ class HeaderTextFieldView: NibView {
 
     func setTextFieldFont(_ font: UIFont) {
         self.textField.font = font
+    }
+
+    func setHeaderLabelFont(_ font: UIFont) {
+        self.headerLabel.font = font
     }
 
     func setKeyboardType(_ keyboard: UIKeyboardType) {
@@ -473,6 +493,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
 
         self.slideUp()
+
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {
@@ -485,6 +506,17 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         }
 
         self.isActive = false
+
+        if isCurrency {
+            textField.text = textField.text?.currencyFormatting()
+        }
+
+        if self.textField.text != "" {
+            hasText?(true)
+        }
+        else {
+            hasText?(false)
+        }
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -493,6 +525,18 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     }
 
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        if self.isCurrency {
+            print(string)
+            let decimals = CharacterSet(charactersIn: "0123456789.")
+            if range.length>0  && range.location == 0 {
+                return false
+
+            }
+            else if (string.rangeOfCharacter(from: decimals) == nil && string != "") {
+                    return false
+            }
+        }
         return true
     }
 }

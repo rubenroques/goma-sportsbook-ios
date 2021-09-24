@@ -217,21 +217,6 @@ class PersonalInfoViewController: UIViewController {
 
     }
 
-    func showAlert(type: EditAlertView.AlertState) {
-
-        let popup = EditAlertView()
-        popup.alertState = type
-        popup.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(popup)
-        NSLayoutConstraint.activate([
-
-            popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
-            popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
-            popup.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
-        ])
-        self.view.bringSubviewToFront(popup)
-      }
-
     @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
     }
