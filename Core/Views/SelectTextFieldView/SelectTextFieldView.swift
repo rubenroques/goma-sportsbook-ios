@@ -50,12 +50,12 @@ class SelectTextFieldView: NibView {
     }
 
     func setup() {
-        self.backgroundColor = UIColor.App.backgroundDarkProfile
+        self.backgroundColor = UIColor.App.mainBackgroundColor
         self.layer.cornerRadius = BorderRadius.headerInput
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.App.headerTextFieldGray.withAlphaComponent(1).cgColor
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
 
         selectLabel.text = "Lorem"
         selectLabel.font = AppFont.with(type: .regular, size: 14.0)

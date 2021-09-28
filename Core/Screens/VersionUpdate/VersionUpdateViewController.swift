@@ -55,8 +55,8 @@ class VersionUpdateViewController: UIViewController {
         titleLabel.textColor = UIColor.App.headingMain
         textLabel.textColor = UIColor.App.headingMain
         updateButton.setTitleColor(UIColor.white, for: .normal)
-        updateButton.layer.borderColor = UIColor.App.buttonMain.cgColor
-        updateButton.layer.backgroundColor = UIColor.App.buttonMain.cgColor
+        updateButton.layer.borderColor = UIColor.App.mainTintColor.cgColor
+        updateButton.layer.backgroundColor = UIColor.App.mainTintColor.cgColor
         dismissButton.setTitleColor(UIColor.white, for: .normal)
         dismissButton.layer.borderColor = .none
         dismissButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor

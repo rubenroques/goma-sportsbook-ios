@@ -42,15 +42,15 @@ class RequestLocationAccessViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundDarkFade
-        containerView.backgroundColor = UIColor.App.backgroundDarkFade
-        permissionView.backgroundColor = UIColor.App.backgroundDarkModal
+        self.view.backgroundColor = UIColor.App.contentBackgroundColor
+        containerView.backgroundColor = UIColor.App.contentBackgroundColor
+        permissionView.backgroundColor = UIColor.App.secondaryBackgroundColor
         permissionTitleLabel.textColor = UIColor.App.headingMain
         permissionTextLabel.textColor = UIColor.App.headingMain
-        permissionSubtitleLabel.textColor = UIColor.App.subtitleGray
+        permissionSubtitleLabel.textColor = UIColor.App.fadeOutHeadingColor
         locationButton.setTitleColor(UIColor.white, for: .normal)
-        locationButton.layer.borderColor = UIColor.App.buttonMain.cgColor
-        locationButton.layer.backgroundColor = UIColor.App.buttonMain.cgColor
+        locationButton.layer.borderColor = UIColor.App.mainTintColor.cgColor
+        locationButton.layer.backgroundColor = UIColor.App.mainTintColor.cgColor
     }
 
     func commonInit() {

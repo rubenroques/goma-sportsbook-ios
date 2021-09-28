@@ -74,13 +74,13 @@ class EditAlertView: NibView {
     func setupWithTheme() {
         self.alpha = 0
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
 
-        alertImageView.backgroundColor = UIColor.App.backgroundDarkProfile
+        alertImageView.backgroundColor = UIColor.App.mainBackgroundColor
         alertLabel.textColor = UIColor.App.headingMain
         alertTextLabel.textColor = UIColor.App.headingMain
 
-        closeButton.backgroundColor = UIColor.App.backgroundDarkProfile
+        closeButton.backgroundColor = UIColor.App.mainBackgroundColor
         closeButton.tintColor = UIColor.App.headerTextFieldGray
 
     }

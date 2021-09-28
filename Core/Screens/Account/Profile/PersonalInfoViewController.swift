@@ -135,67 +135,67 @@ class PersonalInfoViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.backgroundDarkProfile
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
 
         editButton.backgroundColor = .clear
         editButton.setTitleColor(UIColor.App.primaryButtonNormalColor, for: .normal)
         editButton.setTitleColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
         editButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
-        headerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        headerView.backgroundColor = UIColor.App.mainBackgroundColor
         headerLabel.textColor = UIColor.App.headingMain
 
         lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
 
-        firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        firstNameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        lastNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        lastNameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        countryHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        countryHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         countryHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundDarkProfile)
+        countryHeaderTextFieldView.setViewColor(UIColor.App.mainBackgroundColor)
         countryHeaderTextFieldView.setViewBorderColor(UIColor.App.headerTextFieldGray)
 
-        birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        birthDateHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         birthDateHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        adress1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        adress1HeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         adress1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         adress1HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        adress2HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        adress2HeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         adress2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         adress2HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        cityHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        cityHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         cityHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        usernameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        usernameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        emailHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        emailHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         emailHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         emailHeaderTextFieldView.isDisabled = true
 
-        cardIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        cardIdHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         cardIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         cardIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         cardIdHeaderTextFieldView.isDisabled = true
 
-        bankIdHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        bankIdHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         bankIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         bankIdHeaderTextFieldView.isDisabled = true

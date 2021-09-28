@@ -115,7 +115,7 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var highlightColor = UIColor.App.buttonMain {
+    var highlightColor = UIColor.App.mainTintColor {
         didSet {
             if self.isActive {
             }
@@ -156,10 +156,10 @@ class HeaderTextFieldView: NibView {
             self.slideUp()
         }        
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkModal
+        containerView.backgroundColor = UIColor.App.secondaryBackgroundColor
         containerView.layer.cornerRadius = BorderRadius.headerInput
         containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.App.backgroundDarkModal.withAlphaComponent(0).cgColor
+        containerView.layer.borderColor = UIColor.App.secondaryBackgroundColor.withAlphaComponent(0).cgColor
         
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType

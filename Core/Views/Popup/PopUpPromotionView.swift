@@ -80,12 +80,12 @@ class PopUpPromotionView: NibView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App.backgroundDarkModal
+        self.backgroundColor = UIColor.App.secondaryBackgroundColor
 
-        roundTitleView.backgroundColor = UIColor.App.buttonMain
+        roundTitleView.backgroundColor = UIColor.App.mainTintColor
 
         titleImageViewLabel.textColor = UIColor.App.headingMain
-        titleImageViewLabel.backgroundColor = UIColor.App.buttonMain
+        titleImageViewLabel.backgroundColor = UIColor.App.mainTintColor
 
         subtitleImageViewLabel.textColor = UIColor.App.headingMain
 
@@ -98,7 +98,7 @@ class PopUpPromotionView: NibView {
         visitButton.cornerRadius = BorderRadius.button
 
         dismissButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        dismissButton.backgroundColor = UIColor.App.backgroundDarkModal
+        dismissButton.backgroundColor = UIColor.App.secondaryBackgroundColor
     }
 
     func setBannerImage(_ image: UIImage) {
