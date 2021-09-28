@@ -23,7 +23,7 @@ struct GomaGamingServiceClient {
     }
 
     func requestGeoLocation(deviceId: String, latitude: Double, longitude: Double) -> AnyPublisher<Bool, NetworkError> {
-        let accessGrantedMessage = "User Access Granted!"
+        let accessGrantedMessage = "User Access Granted!".lowercased()
         let endpoint = GomaGamingService.geolocation(latitude: String(latitude), longitude: String(longitude))
         let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
 
@@ -41,27 +41,11 @@ struct GomaGamingServiceClient {
             }
             .eraseToAnyPublisher()
             .map { simpleResponse -> Bool in
-                return simpleResponse.message == accessGrantedMessage
+                return simpleResponse.message.lowercased() == accessGrantedMessage
             }
+            .print()
             .eraseToAnyPublisher()
-//
-//
-//
-//        return requestPublisher
-//            .tryCatch { (error: NetworkError) throws -> (AnyPublisher<MessageNetworkResponse, NetworkError>) in
-//                if error.errors.contains(.forbidden) {
-//                    return Just(MessageNetworkResponse.forbiden)
-//                        .setFailureType(to: NetworkError.self)
-//                        .eraseToAnyPublisher()
-//                }
-//                else {
-//                    throw error
-//                }
-//            }
-//            .map({ simpleResponse in
-//                return simpleResponse.message == accessGrantedMessage
-//            })
-//            .eraseToAnyPublisher()
+
     }
 
     func requestSettings(deviceId: String) -> AnyPublisher<[GomaClientSettings]?, NetworkError> {
@@ -72,8 +56,9 @@ struct GomaGamingServiceClient {
 
     func requestPopUpInfo(deviceId: String) -> AnyPublisher<PopUpDetails?, Never> {
         let endpoint = GomaGamingService.modalPopUpDetails
-        let requestPublisher: AnyPublisher<PopUpDetails?, Never> = networkClient.requestEndpointArrayData(deviceId: deviceId, endpoint: endpoint)
-            .replaceError(with: nil)
+        let requestPublisher: AnyPublisher<PopUpDetails?, Never> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+            .print()
+            .replaceError(with: PopUpDetails.test)
             .eraseToAnyPublisher()
         return requestPublisher
     }

@@ -15,6 +15,8 @@ extension UIColor {
 
         static let mainBackgroundColor: UIColor = UIColor(named: "mainBackgroundColor")!
         static let secundaryBackgroundColor: UIColor = UIColor(named: "secundaryBackgroundColor")!
+        static let separatorLineColor: UIColor = UIColor(named: "separatorLineColor")!
+
 
         static let fadeOutHeadingColor: UIColor = UIColor(named: "fadeOutHeadingColor")!
 

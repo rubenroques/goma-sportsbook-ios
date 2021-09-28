@@ -16,6 +16,18 @@ enum GeoLocationStatus {
     case notDetermined
 }
 
+extension GeoLocationStatus: CustomDebugStringConvertible {
+    var debugDescription: String {
+        switch self {
+        case .invalid: return "invalid"
+        case .valid: return "valid"
+        case .notAuthorized: return "notAuthorized"
+        case .notRequested: return "notRequested"
+        case .notDetermined: return "notDetermined"
+        }
+    }
+}
+
 class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
     private var locationManager = CLLocationManager()
@@ -90,11 +102,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let location = locations.last?.coordinate else { return }
-        if self.lastKnownLocation?.coordinate.latitude == location.latitude &&
-            self.lastKnownLocation?.coordinate.longitude == location.longitude {
-            return
-        }
-        
+
         if CLLocationManager.authorizationStatus() == .authorizedAlways || CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
             self.lastKnownLocation = CLLocation(latitude: location.latitude, longitude: location.longitude)
             self.checkValidLocation(self.lastKnownLocation!)
@@ -118,7 +126,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
                 case .failure:
                     self.locationStatus.send(.notDetermined)
                 case .finished:
-                    self.locationStatus.send(.notDetermined)
+                    Logger.log("checkValidLocation publisher finished ok#")
                 }
             },
             receiveValue: { validLocation in

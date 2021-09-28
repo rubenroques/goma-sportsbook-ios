@@ -34,7 +34,6 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var exclusionLabel: UILabel!
     @IBOutlet private var exclusionSelectTextFieldView: SelectTextFieldView!
 
-
     init() {
         super.init(nibName: "ProfileLimitsManagementViewController", bundle: nil)
     }
@@ -111,15 +110,13 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     func commonInit() {
 
-        backButton.setImage(UIImage(named: "caret-left"), for: .normal)
-
-        headerLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 17)
+        headerLabel.font = AppFont.with(type: .semibold, size: 17)
         headerLabel.text = localized("string_limits_management")
 
         editButton.underlineButtonTitleLabel(title: localized("string_save"))
 
         depositLabel.text = localized("string_deposit_limit")
-        depositLabel.font = AppFont.with(type: .regular, size: 17)
+        depositLabel.font = AppFont.with(type: .semibold, size: 17)
 
         depositHeaderTextFieldView.setPlaceholderText(localized("string_deposit_limit"))
         depositHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
@@ -132,7 +129,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositFrequencySelectTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
 
         bettingLabel.text = localized("string_betting_limit")
-        bettingLabel.font = AppFont.with(type: .regular, size: 17)
+        bettingLabel.font = AppFont.with(type: .semibold, size: 17)
 
         bettingHeaderTextFieldView.setPlaceholderText(localized("string_betting_limit"))
         bettingHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
@@ -145,7 +142,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingFrequencySelectTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
 
         lossLabel.text = localized("string_loss_limit")
-        lossLabel.font = AppFont.with(type: .regular, size: 17)
+        lossLabel.font = AppFont.with(type: .semibold, size: 17)
 
         lossHeaderTextFieldView.setPlaceholderText(localized("string_loss_limit"))
         lossHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
@@ -158,7 +155,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossFrequencySelectHeaderTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
 
         exclusionLabel.text = localized("string_auto_exclusion")
-        exclusionLabel.font = AppFont.with(type: .regular, size: 17)
+        exclusionLabel.font = AppFont.with(type: .semibold, size: 17)
 
         exclusionSelectTextFieldView.isIconArray = true
         exclusionSelectTextFieldView.setSelectionPicker(["Active", "Limited", "Permanent"], iconArray: [UIImage(named: "icon_active")!, UIImage(named: "icon_limited")!, UIImage(named: "icon_excluded")!])
@@ -173,7 +170,6 @@ class ProfileLimitsManagementViewController: UIViewController {
         infoView.alertState = .info
         view.addSubview(infoView)
         NSLayoutConstraint.activate([
-
             infoView.topAnchor.constraint(equalTo: view.topAnchor),
             infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
@@ -195,12 +191,9 @@ class ProfileLimitsManagementViewController: UIViewController {
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        _ = self.depositHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.bettingHeaderTextFieldView.resignFirstResponder()
-
-        _ = self.lossHeaderTextFieldView.resignFirstResponder()
-
+        self.depositHeaderTextFieldView.resignFirstResponder()
+        self.bettingHeaderTextFieldView.resignFirstResponder()
+        self.lossHeaderTextFieldView.resignFirstResponder()
     }
 
     @IBAction private func backAction() {

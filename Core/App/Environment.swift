@@ -14,6 +14,8 @@ struct Environment {
     let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager()) //session: Environment.pulseConnectedSession()))
     let everyMatrixAPIClient = EveryMatrixAPIClient()
 
+    let eventsStore = EventsStore()
+
     let userSessionStore = UserSessionStore()
     let businessSettingsSocket = RealtimeSocketClient()
     let locationManager = GeoLocationManager()

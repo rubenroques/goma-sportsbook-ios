@@ -231,22 +231,8 @@ class EveryMatrixAPIClient: ObservableObject {
             .store(in: &cancellable)
     }
 
-    func getEvents(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .events(payload: payload), decodingType: EveryMatrixSocketResponse<Event>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-
-                case .finished:
-                    print("Data retrieved!")
-                }
-                debugPrint("TSRequestCompleted")
-            }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
-            })
-            .store(in: &cancellable)
+    func getEvents(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Event>, EveryMatrixSocketAPIError>  {
+        return TSManager.shared.getModel(router: .events(payload: payload), decodingType: EveryMatrixSocketResponse<Event>.self)
     }
 
     func getOdds(payload: [String: Any]?) {

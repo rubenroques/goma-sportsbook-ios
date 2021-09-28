@@ -16,11 +16,31 @@ extension UILabel {
         } else {
             attributedString = NSMutableAttributedString(string: labelText)
         }
-
-        // Character spacing attribute
-        attributedString.addAttribute(NSAttributedString.Key    .kern, value: characterSpacing, range: NSMakeRange(0, attributedString.length))
-
+        attributedString.addAttribute(.kern, value: characterSpacing, range: NSMakeRange(0, attributedString.length))
         attributedText = attributedString
     }
 
 }
+
+extension UILabel {
+
+    func setLineSpacing(lineSpacing: CGFloat = 0.0, lineHeightMultiple: CGFloat = 0.0) {
+
+        guard let labelText = self.text else { return }
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = lineSpacing
+        paragraphStyle.lineHeightMultiple = lineHeightMultiple
+
+        let attributedString: NSMutableAttributedString
+        if let labelattributedText = self.attributedText {
+            attributedString = NSMutableAttributedString(attributedString: labelattributedText)
+        }
+        else {
+            attributedString = NSMutableAttributedString(string: labelText)
+        }
+        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
+        self.attributedText = attributedString
+    }
+}
+

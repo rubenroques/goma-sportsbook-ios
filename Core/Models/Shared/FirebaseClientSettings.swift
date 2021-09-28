@@ -44,8 +44,16 @@ struct FirebaseClientSettings: Codable {
 
         let container = try decoder.container(keyedBy: CodingKeys.self)
 
-        let showInformationPopUpInt = try container.decode(Int.self, forKey: .showInformationPopUp)
-        self.showInformationPopUp = showInformationPopUpInt == 1 ? true : false
+        if let showInformationPopUpInt = try? container.decode(Int.self, forKey: .showInformationPopUp) {
+            self.showInformationPopUp = showInformationPopUpInt == 1 ? true : false
+        }
+        else if let showInformationPopUpString = try? container.decode(String.self, forKey: .showInformationPopUp) {
+            self.showInformationPopUp = showInformationPopUpString == "1" ? true : false
+        }
+        else {
+            self.showInformationPopUp = false
+        }
+
 
         let isOnMaintenanceInt = try container.decode(Int.self, forKey: .isOnMaintenance)
         self.isOnMaintenance = isOnMaintenanceInt == 1 ? true : false

@@ -30,8 +30,10 @@ extension URLSession: NetworkSession {
         return dataTaskPublisher(for: request)
             .tryMap { result in
 
-                //dump(request)
-                //print(String(data: result.data, encoding: .utf8) ?? "")
+                print("// ===== GOMA REQUEST")
+                dump(request)
+                print(String(data: result.data, encoding: .utf8) ?? "")
+                print("---      GOMA REQUEST === //")
 
                 if let httpResponse = result.response as? HTTPURLResponse, httpResponse.statusCode == 401 {
                     throw NetworkError(errors: [.unauthorized])

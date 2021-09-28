@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -19,6 +19,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LoginViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="dismissButton" destination="JLC-0J-PHb" id="QG8-qE-Exn"/>
                 <outlet property="forgotButton" destination="8fN-kL-paJ" id="RxH-7n-Btb"/>
                 <outlet property="forgotView" destination="piS-WX-buD" id="UKI-3f-T8D"/>
                 <outlet property="loginButton" destination="NYk-vn-9v8" id="CMe-q6-qqy"/>
@@ -187,10 +188,23 @@
                                         <action selector="didTapSkipButton" destination="-1" eventType="primaryActionTriggered" id="0Cv-vP-yDM"/>
                                     </connections>
                                 </button>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JLC-0J-PHb">
+                                    <rect key="frame" x="1" y="-1" width="46" height="46"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="46" id="Y01-Tk-CEB"/>
+                                        <constraint firstAttribute="width" constant="46" id="vnz-PP-7f3"/>
+                                    </constraints>
+                                    <state key="normal" image="arrow_close_icon"/>
+                                    <connections>
+                                        <action selector="didTapDismissButton" destination="-1" eventType="primaryActionTriggered" id="4Sn-hL-jXO"/>
+                                    </connections>
+                                </button>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
+                                <constraint firstItem="JLC-0J-PHb" firstAttribute="centerY" secondItem="ryS-WN-4K9" secondAttribute="centerY" id="9Nu-iT-j1q"/>
                                 <constraint firstItem="Avo-w1-rIz" firstAttribute="height" secondItem="ryS-WN-4K9" secondAttribute="height" id="Ggf-XS-zMi"/>
+                                <constraint firstItem="JLC-0J-PHb" firstAttribute="leading" secondItem="ryS-WN-4K9" secondAttribute="leading" constant="1" id="Z91-lg-3A6"/>
                                 <constraint firstAttribute="height" constant="44" id="o92-Hy-VAN"/>
                                 <constraint firstAttribute="trailing" secondItem="Avo-w1-rIz" secondAttribute="trailing" constant="8" id="rtb-RT-lWb"/>
                                 <constraint firstItem="Avo-w1-rIz" firstAttribute="centerY" secondItem="ryS-WN-4K9" secondAttribute="centerY" id="tas-Xd-SFU"/>
@@ -249,6 +263,7 @@
         </view>
     </objects>
     <resources>
+        <image name="arrow_close_icon" width="20" height="19"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

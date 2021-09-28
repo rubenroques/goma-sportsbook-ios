@@ -377,7 +377,8 @@ extension ProfileViewController {
     }
 
     @objc func limitsViewTapped() {
-
+        let profileLimitsManagementViewController = ProfileLimitsManagementViewController()
+        self.navigationController?.pushViewController(profileLimitsManagementViewController, animated: true)
     }
 
     @objc func appSettingsViewTapped() {

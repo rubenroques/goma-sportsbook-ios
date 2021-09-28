@@ -25,4 +25,16 @@ struct PopUpDetails: Codable {
         case textTile = "text_tile"
         case linkURL = "link_ios"
     }
+
+    static var test: PopUpDetails {
+        PopUpDetails(id: 2, type: 1,
+                     title: "SERIE A IS COMING!",
+                     subtitle: "DEPOSIT 20€ AND GET 10€ FREE",
+                     textTile: "Get ready Serie A is coming!",
+                     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
+                     promoButtonText: "See Promo",
+                     closeButtonText: "Maybe Later",
+                     coverImage: "https://via.placeholder.com/600x300",
+                     linkURL: "https://gomadevelopment.pt/")
+    }
 }

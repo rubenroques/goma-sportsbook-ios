@@ -1,13 +1,14 @@
 //
-//  PopupView.swift
+//  PopUpPromotionView.swift
 //  ShowcaseProd
 //
 //  Created by André Lascas on 21/09/2021.
 //
 
 import UIKit
+import Kingfisher
 
-class PopupView: NibView {
+class PopUpPromotionView: NibView {
 
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var roundTitleView: UIView!
@@ -17,52 +18,65 @@ class PopupView: NibView {
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var visitButton: RoundButton!
     @IBOutlet private var dismissButton: UIButton!
+
     // Variables
-    var viewHeight: CGFloat = 0
     var backgroundView: UIView = UIView()
 
-    override init(frame: CGRect) {
+    var details: PopUpDetails
+
+    var didTapPromotionButton: ((String?) -> Void)?
+    var didTapCloseButton: (() -> Void)?
+
+    convenience init(_ details: PopUpDetails) {
+        self.init(frame: .zero, details: details)
+    }
+
+    init(frame: CGRect, details: PopUpDetails) {
+        self.details = details
         super.init(frame: frame)
         commonInit()
         setupWithTheme()
-        viewHeight = imageView.frame.height + titleLabel.frame.height + textLabel.frame.height + visitButton.frame.height + dismissButton.frame.height
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-        setupWithTheme()
-        viewHeight = imageView.frame.height + titleLabel.frame.height + textLabel.frame.height + visitButton.frame.height + dismissButton.frame.height
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func commonInit() {
         self.layer.cornerRadius = BorderRadius.modal
 
-        imageView.image = UIImage(named: "promo_image")
+        imageView.image = nil
         imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+
+        if let imageURL = URL(string: details.coverImage) {
+            imageView.kf.setImage(with: imageURL)
+        }
 
         roundTitleView.layer.cornerRadius = BorderRadius.label
         roundTitleView.sizeToFit()
 
-        titleImageViewLabel.text = "Lorem ipsum"
+        titleImageViewLabel.text = details.title
         titleImageViewLabel.font = AppFont.with(type: .bold, size: 19)
         titleImageViewLabel.sizeToFit()
 
-        subtitleImageViewLabel.text = "Lorem ipsum dolor"
-        subtitleImageViewLabel.font = AppFont.with(type: .bold, size: 11)
+        subtitleImageViewLabel.text = details.subtitle
+        subtitleImageViewLabel.font = AppFont.with(type: .semibold, size: 11)
 
-        titleLabel.text = "Lorem ipsum"
+        titleLabel.text = details.textTile
         titleLabel.font = AppFont.with(type: .bold, size: 20)
 
-        textLabel.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam."
-        textLabel.font = AppFont.with(type: .regular, size: 14)
-        textLabel.sizeToFit()
+        textLabel.text = details.text
+        textLabel.font = AppFont.with(type: .semibold, size: 14)
+        textLabel.setLineSpacing(lineSpacing: 6, lineHeightMultiple: 1)
+        textLabel.textAlignment = .center
 
-        visitButton.setTitle(localized("string_see_promo"), for: .normal)
-        visitButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
+        visitButton.setTitle(details.promoButtonText, for: .normal)
+        visitButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
-        dismissButton.setTitle(localized("string_not_now"), for: .normal)
-        dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
+        dismissButton.setTitle(details.closeButtonText, for: .normal)
+        dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 14)
     }
 
     func setupWithTheme() {
@@ -87,14 +101,6 @@ class PopupView: NibView {
         dismissButton.backgroundColor = UIColor.App.backgroundDarkModal
     }
 
-    func setPromoItems(image: UIImage, imageTitle: String, imageSubtitle: String, title: String, text: String) {
-        imageView.image = image
-        titleImageViewLabel.text = imageTitle
-        subtitleImageViewLabel.text = imageSubtitle
-        titleLabel.text = title
-        textLabel.text = text
-    }
-
     func setBannerImage(_ image: UIImage) {
         imageView.image = image
     }
@@ -116,23 +122,15 @@ class PopupView: NibView {
     }
 
     @IBAction private func visitAction() {
-        // TO-DO: Call VC for promotion
+        self.didTapPromotionButton?(details.linkURL)
     }
 
     @IBAction private func dismissAction() {
-        PopupView.animate(
-            withDuration: 0.2,
-            delay: 0.0,
-            options: .curveEaseOut,
-            animations: {
-                self.alpha = 0
-                self.backgroundView.alpha = 0
-            }, completion: {_ in
-                self.removeFromSuperview()
-            })
+        self.didTapCloseButton?()
     }
 
     override var intrinsicContentSize: CGSize {
+        let viewHeight = imageView.frame.height + titleLabel.frame.height + textLabel.frame.height + visitButton.frame.height + dismissButton.frame.height
         return CGSize(width: self.frame.width, height: viewHeight)
     }
 
@@ -143,6 +141,7 @@ class PopupView: NibView {
 
 }
 
+// Todo: colocas as extensions no ficheiros proprios
 extension UIImageView {
    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))

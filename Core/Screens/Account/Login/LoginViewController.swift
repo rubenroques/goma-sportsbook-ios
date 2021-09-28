@@ -7,6 +7,7 @@ class LoginViewController: UIViewController {
 
     @IBOutlet private var skipView: UIView!
     @IBOutlet private var skipButton: UIButton!
+    @IBOutlet private var dismissButton: UIButton!
 
     @IBOutlet private var logoImageView: UIImageView!
 
@@ -133,6 +134,16 @@ class LoginViewController: UIViewController {
         highlightTextLabel()
         // Label with underline and highlighted text area
         underlineTextLabel()
+
+        if self.isModal {
+            self.skipButton.isHidden = true
+            self.dismissButton.isHidden = false
+        }
+        else {
+            self.skipButton.isHidden = false
+            self.dismissButton.isHidden = true
+        }
+
     }
 
     func setupWithTheme() {
@@ -285,6 +296,11 @@ class LoginViewController: UIViewController {
         self.passwordHeaderTextFieldView.resignFirstResponder()
     }
 
+
+    @IBAction private func didTapDismissButton() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
     @IBAction private func didTapSkipButton() {
 
         UserSessionStore.skippedLoginFlow()
@@ -301,7 +317,7 @@ class LoginViewController: UIViewController {
         self.loginButton.isEnabled = false
 
         Env.userSessionStore.loginUser(withUsername: username, password: password)
-            .print()
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error) where error == .invalidEmailPassword:
@@ -317,7 +333,7 @@ class LoginViewController: UIViewController {
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
 
-                self.pushMainViewController()
+                self.showNextViewController()
             })
             .store(in: &cancellables)
 
@@ -331,8 +347,17 @@ class LoginViewController: UIViewController {
 
     }
 
+    private func showNextViewController() {
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.pushMainViewController()
+        }
+    }
+
     private func pushMainViewController() {
-        let rootViewController = RootViewController()
+        let rootViewController = Router.mainScreenViewController()
         self.navigationController?.pushViewController(rootViewController, animated: true)
     }
 

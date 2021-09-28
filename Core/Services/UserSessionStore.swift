@@ -17,6 +17,8 @@ class UserSessionStore {
 
     var cancellables = Set<AnyCancellable>()
 
+    var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
+
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
     }
@@ -25,13 +27,25 @@ class UserSessionStore {
         return UserDefaults.standard.userSession != nil
     }
 
-    func cacheUserSession(_ userSession: UserSession) {
+    func saveUserSession(_ userSession: UserSession) {
+        userSessionPublisher.send(userSession)
+
         UserDefaults.standard.userSession = userSession
+    }
+
+    func loadLoggedUser() {
+        if let user = UserSessionStore.loggedUserSession() {
+            userSessionPublisher.send(user)
+        }
     }
 
     //
     static func isUserAnonymous() -> Bool {
-        return UserDefaults.standard.userSkippedLoginFlow
+        return !isUserLogged()
+    }
+
+    static func didSkipLoginFlow() -> Bool {
+        UserDefaults.standard.userSkippedLoginFlow
     }
 
     static func skippedLoginFlow() {
@@ -41,6 +55,8 @@ class UserSessionStore {
     //
     func logout() {
         UserDefaults.standard.userSession = nil
+
+        userSessionPublisher.send(nil)
 
         Env.everyMatrixAPIClient
             .logout()
@@ -71,7 +87,7 @@ class UserSessionStore {
                             birthDate: sessionInfo.birthDate
                     )
             }
-            .handleEvents(receiveOutput: cacheUserSession)
+            .handleEvents(receiveOutput: saveUserSession)
             .eraseToAnyPublisher()
 
         return publisher

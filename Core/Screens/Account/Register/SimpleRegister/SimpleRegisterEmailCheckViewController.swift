@@ -228,7 +228,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     }
 
     @IBAction private func skipAction() {
-        let rootViewController = RootViewController()
+        let rootViewController = Router.mainScreenViewController()
         self.navigationController?.pushViewController(rootViewController, animated: true)
     }
 

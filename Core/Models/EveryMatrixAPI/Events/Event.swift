@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias Events = [Event]
+
 enum Event: Decodable {
     case match(Match)
     case tournament(Tournament)

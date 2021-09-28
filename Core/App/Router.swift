@@ -36,7 +36,7 @@ class Router {
     func makeKeyAndVisible() {
 
         var bootRootViewController: UIViewController
-        if UserSessionStore.isUserLogged() || UserSessionStore.isUserAnonymous() {
+        if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             bootRootViewController = Router.mainScreenViewControllerFlow()
         }
         else {
@@ -96,6 +96,9 @@ class Router {
         Env.locationManager.locationStatus
             .receive(on: RunLoop.main)
             .sink { locationStatus in
+
+                Logger.log("Router.locationManager received \(locationStatus)")
+
             switch locationStatus {
             case .valid:
                 self.hideLocationScreen()

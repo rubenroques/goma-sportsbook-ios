@@ -27,9 +27,10 @@ struct TargetVariables: SportsbookTarget {
 
     static var firebaseDatabaseURL: String {
         #if DEBUG
-        "https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/"
+        "https://goma-sportsbook-ios-dev.europe-west1.firebasedatabase.app/"
         #else
-        "https://goma-sportsbook.europe-west1.firebasedatabase.app/"
+        "https://goma-sportsbook-dev.europe-west1.firebasedatabase.app/"
+        // "ht tps://goma-sportsbook.europe-west1.firebasedatabase.app/"
         #endif
     }
 

@@ -205,43 +205,43 @@ class RootViewController: UIViewController {
         ])
     }
 
-   @IBAction private func didTapPopupButton() {
-        let fadeView = UIView()
-        fadeView.translatesAutoresizingMaskIntoConstraints = false
-        fadeView.alpha = 0
-        fadeView.backgroundColor = UIColor.App.backgroundDarkModal.withAlphaComponent(0.9)
-        self.view.addSubview(fadeView)
-        NSLayoutConstraint.activate([
-
-            fadeView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            fadeView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            fadeView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            fadeView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-        ])
-        let popup = PopupView()
-        popup.backgroundView = fadeView
-        popup.translatesAutoresizingMaskIntoConstraints = false
-        popup.alpha = 0
-        popup.setPromoItems(image: UIImage(named: "promo_image")!, imageTitle: "SERIE A IS COMING", imageSubtitle: "DEPOSIT 20€ AND GET 10€ FREE", title: "SERIE A is Coming", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.")
-        self.view.addSubview(popup)
-        NSLayoutConstraint.activate([
-
-            popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
-            popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -30),
-            popup.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
-            popup.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor)
-        ])
-
-        PopupView.animate(
-            withDuration: 0.2,
-            delay: 0.0,
-            options: .curveEaseIn,
-            animations: {
-                fadeView.alpha = 1
-                popup.alpha = 1
-            }, completion: {_ in
-            })
-    }
+//   @IBAction private func didTapPopupButton() {
+//        let fadeView = UIView()
+//        fadeView.translatesAutoresizingMaskIntoConstraints = false
+//        fadeView.alpha = 0
+//        fadeView.backgroundColor = UIColor.App.backgroundDarkModal.withAlphaComponent(0.9)
+//        self.view.addSubview(fadeView)
+//        NSLayoutConstraint.activate([
+//
+//            fadeView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+//            fadeView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+//            fadeView.topAnchor.constraint(equalTo: self.view.topAnchor),
+//            fadeView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+//        ])
+//        let popup = PopUpPromotionView()
+//        popup.backgroundView = fadeView
+//        popup.translatesAutoresizingMaskIntoConstraints = false
+//        popup.alpha = 0
+//        popup.setPromoItems(image: UIImage(named: "promo_image")!, imageTitle: "SERIE A IS COMING", imageSubtitle: "DEPOSIT 20€ AND GET 10€ FREE", title: "SERIE A is Coming", text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.")
+//        self.view.addSubview(popup)
+//        NSLayoutConstraint.activate([
+//
+//            popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 30),
+//            popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -30),
+//            popup.centerXAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerXAnchor),
+//            popup.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor)
+//        ])
+//
+//        PopUpPromotionView.animate(
+//            withDuration: 0.2,
+//            delay: 0.0,
+//            options: .curveEaseIn,
+//            animations: {
+//                fadeView.alpha = 1
+//                popup.alpha = 1
+//            }, completion: {_ in
+//            })
+//    }
     
     func hidePopUpView() {
         self.popUpBaseView?.removeFromSuperview()

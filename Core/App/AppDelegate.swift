@@ -11,10 +11,8 @@ import Firebase
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    // TODO: Integrate fastlamne
-
+    // TODO: Integrate fastlane
     var window: UIWindow?
-
     var bootstrap: Bootstrap!
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
