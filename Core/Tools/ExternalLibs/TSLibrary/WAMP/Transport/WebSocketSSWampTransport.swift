@@ -21,15 +21,16 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     
     fileprivate var disconnectionReason: String?
     
-    public init(wsEndpoint: URL, userAgent: String, origin: String){
+    public init(wsEndpoint: URL, userAgent: String, origin: String) {
 
         var request = URLRequest(url: wsEndpoint)
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         request.addValue(origin, forHTTPHeaderField: "Origin")
         request.addValue("wamp.2.json", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+        //wamp.2.json, wamp.2.msgpack, my.protocol
 
         socket = WebSocket(request: request)
-        socket?.callbackQueue = DispatchQueue(label: "com.tipico.games.SSWampQueue")
+        socket?.callbackQueue = DispatchQueue(label: "com.goma.games.SSWampQueue")
         mode = .text
         socket?.delegate = self
     }
@@ -45,21 +46,27 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     
     open func sendData(_ data: Data) {
         if mode == .text {
-            socket?.write(string: String(data: data, encoding: String.Encoding.utf8)!)
-        } else {
+            let textData = String(data: data, encoding: .utf8)!
+            print("TSWebSocketClient sendData \(textData)")
+            socket?.write(string: textData)
+        }
+        else {
             socket?.write(data: data)
         }
     }
         
     public func websocketDidConnect(socket: WebSocketClient) {
+        print("TSWebSocketClient connect")
         delegate?.ssWampTransportDidConnectWithSerializer(JSONSSWampSerializer())
     }
 
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
+        print("TSWebSocketClient disconnect")
         delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
+        print("TSWebSocketClient receiveMessage \(text)")
         if let data = text.data(using: .utf8) {
             websocketDidReceiveData(socket: socket, data: data)
         }

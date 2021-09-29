@@ -61,9 +61,10 @@ public protocol SSWampSessionDelegate: AnyObject {
 }
 
 open class SSWampSession: SSWampTransportDelegate {
+
     weak var delegate: SSWampSessionDelegate?
     fileprivate let supportedRoles: [SSWampRole] = [.Caller, .Subscriber, .Publisher]
-    fileprivate let clientName = "iOSTipicoApp"
+    fileprivate let clientName = "iOSGomaSportsbookApp"
     fileprivate let realm: String
     fileprivate var transport: SSWampTransport
     fileprivate let authmethods: [String]?
@@ -80,7 +81,7 @@ open class SSWampSession: SSWampTransportDelegate {
     fileprivate var unsubscribeRequests: [Int: (subscription: Int, callback: UnsubscribeCallback, errorCallback: ErrorUnsubscribeCallback)] = [:]
     fileprivate var publishRequests: [Int: (callback: PublishCallback, errorCallback: ErrorPublishCallback)] = [:]
 
-    init(realm: String, transport: SSWampTransport, authmethods: [String]?=nil, authid: String?=nil, authrole: String?=nil, authextra: [String: Any]?=nil){
+    init(realm: String, transport: SSWampTransport, authmethods: [String]?=nil, authid: String?=nil, authrole: String?=nil, authextra: [String: Any]?=nil) {
         self.realm = realm
         self.transport = transport
         self.authmethods = authmethods
@@ -98,7 +99,7 @@ open class SSWampSession: SSWampTransportDelegate {
         self.transport.connect()
     }
 
-    final public func disconnect(_ reason: String="wamp.error.close_realm") {
+    final public func disconnect(_ reason: String = "wamp.error.close_realm") {
         self.sendMessage(GoodbyeSSWampMessage(details: [:], reason: reason))
     }
 
@@ -114,7 +115,7 @@ open class SSWampSession: SSWampTransportDelegate {
     // }
 
     open func subscribe(_ topic: String, options: [String: Any]=[:], onSuccess: @escaping SubscribeCallback, onError: @escaping ErrorSubscribeCallback, onEvent: @escaping EventCallback) {
-        // TODO: assert topic is a valid WAMP uri
+        // assert topic is a valid WAMP uri
         let subscribeRequestId = self.generateRequestId()
         // Tell router to subscribe client on a topic
         self.sendMessage(SubscribeSSWampMessage(requestId: subscribeRequestId, options: options, topic: topic))
@@ -132,7 +133,7 @@ open class SSWampSession: SSWampTransportDelegate {
 
     // without acknowledging
     open func publish(_ topic: String, options: [String: Any]=[:], args: [Any]?=nil, kwargs: [String: Any]?=nil) {
-        // TODO: assert topic is a valid WAMP uri
+        // assert topic is a valid WAMP uri
         let publishRequestId = self.generateRequestId()
         // Tell router to publish the event
         self.sendMessage(PublishSSWampMessage(requestId: publishRequestId, options: options, topic: topic, args: args, kwargs: kwargs))
@@ -144,7 +145,7 @@ open class SSWampSession: SSWampTransportDelegate {
         // add acknowledge to options, so we get callbacks
         var options = options
         options["acknowledge"] = true
-        // TODO: assert topic is a valid WAMP uri
+        // assert topic is a valid WAMP uri
         let publishRequestId = self.generateRequestId()
         // Tell router to publish the event
         self.sendMessage(PublishSSWampMessage(requestId: publishRequestId, options: options, topic: topic, args: args, kwargs: kwargs))
@@ -158,7 +159,8 @@ open class SSWampSession: SSWampTransportDelegate {
         }
         else if error != nil {
             delegate?.ssWampSessionEnded("Unexpected error: \(error!.localizedDescription)")
-        } else {
+        }
+        else {
             delegate?.ssWampSessionEnded("Unknown error.")
         }
     }
@@ -193,8 +195,10 @@ open class SSWampSession: SSWampTransportDelegate {
     }
 
     open func ssWampTransportReceivedData(_ data: Data) {
-        if let payload = self.serializer?.unpack(data), let message = SSWampMessages.createMessage(payload) {
-            self.handleMessage(message)
+        if let payload = self.serializer?.unpack(data) {
+            if let message = SSWampMessages.createMessage(payload) {
+                self.handleMessage(message)
+            }
         }
     }
     
@@ -204,7 +208,8 @@ open class SSWampSession: SSWampTransportDelegate {
         case let message as ChallengeSSWampMessage:
             if let authResponse = self.delegate?.ssWampSessionHandleChallenge(message.authMethod, extra: message.extra) {
                 self.sendMessage(AuthenticateSSWampMessage(signature: authResponse, extra: [:]))
-            } else {
+            }
+            else {
                 print("There was no delegate, aborting.")
                 self.abort()
             }
@@ -225,8 +230,9 @@ open class SSWampSession: SSWampTransportDelegate {
             let requestId = message.requestId
             if let (callback, _) = self.callRequests.removeValue(forKey: requestId) {
                 callback(message.details, message.results, message.kwResults, message.arrResults)
-            } else {
-                // TODO: log this erroneous situation
+            }
+            else {
+                // log this erroneous situation
             }
         case let message as SubscribedSSWampMessage:
             let requestId = message.requestId
@@ -236,14 +242,16 @@ open class SSWampSession: SSWampTransportDelegate {
                 callback(subscription)
                 // Subscription succeeded, we should store event callback for when it's fired
                 self.subscriptions[message.subscription] = subscription
-            } else {
-                // TODO: log this erroneous situation
+            }
+            else {
+                // log this erroneous situation
             }
         case let message as EventSSWampMessage:
             if let subscription = self.subscriptions[message.subscription] {
                 subscription.eventCallback(message.details, message.args, message.kwargs)
-            } else {
-                // TODO: log this erroneous situation
+            }
+            else {
+                // log this erroneous situation
             }
         case let message as UnsubscribedSSWampMessage:
             let requestId = message.requestId
@@ -251,18 +259,21 @@ open class SSWampSession: SSWampTransportDelegate {
                 if let subscription = self.subscriptions.removeValue(forKey: subscription) {
                     subscription.invalidate()
                     callback()
-                } else {
-                    // TODO: log this erroneous situation
                 }
-            } else {
-                // TODO: log this erroneous situation
+                else {
+                    // log this erroneous situation
+                }
+            }
+            else {
+                // log this erroneous situation
             }
         case let message as PublishedSSWampMessage:
             let requestId = message.requestId
             if let (callback, _) = self.publishRequests.removeValue(forKey: requestId) {
                 callback()
-            } else {
-                // TODO: log this erroneous situation
+            }
+            else {
+                // log this erroneous situation
             }
 
         case let message as ErrorSSWampMessage:
@@ -270,26 +281,30 @@ open class SSWampSession: SSWampTransportDelegate {
             case SSWampMessages.call:
                 if let (_, errorCallback) = self.callRequests.removeValue(forKey: message.requestId) {
                     errorCallback(message.details, message.error, message.args, message.kwargs)
-                } else {
-                    // TODO: log this erroneous situation
+                }
+                else {
+                    // log this erroneous situation
                 }
             case SSWampMessages.subscribe:
                 if let (_, errorCallback, _) = self.subscribeRequests.removeValue(forKey: message.requestId) {
                     errorCallback(message.details, message.error)
-                } else {
-                    // TODO: log this erroneous situation
+                }
+                else {
+                    // log this erroneous situation
                 }
             case SSWampMessages.unsubscribe:
                 if let (_, _, errorCallback) = self.unsubscribeRequests.removeValue(forKey: message.requestId) {
                     errorCallback(message.details, message.error)
-                } else {
-                    // TODO: log this erroneous situation
+                }
+                else {
+                    // log this erroneous situation
                 }
             case SSWampMessages.publish:
                 if let(_, errorCallback) = self.publishRequests.removeValue(forKey: message.requestId) {
                     errorCallback(message.details, message.error)
-                } else {
-                    // TODO: log this erroneous situation
+                }
+                else {
+                    // log this erroneous situation
                 }
             default:
                 return
@@ -307,7 +322,7 @@ open class SSWampSession: SSWampTransportDelegate {
         self.transport.disconnect("No challenge delegate found.")
     }
 
-    fileprivate func sendMessage(_ message: SSWampMessage){
+    fileprivate func sendMessage(_ message: SSWampMessage) {
         let marshalledMessage = message.marshal()
         let data = self.serializer!.pack(marshalledMessage as [Any])!
         self.transport.sendData(data)

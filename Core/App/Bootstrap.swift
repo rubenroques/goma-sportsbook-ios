@@ -18,6 +18,7 @@ struct Bootstrap {
     func boot() {
 
         let _ = Env
+
         self.router.makeKeyAndVisible()
         Env.businessSettingsSocket.connect()
 

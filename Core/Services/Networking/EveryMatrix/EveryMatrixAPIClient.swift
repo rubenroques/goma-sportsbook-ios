@@ -159,22 +159,8 @@ class EveryMatrixAPIClient: ObservableObject {
             .store(in: &cancellable)
     }
 
-    func getMatches(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .matches(payload: payload), decodingType: EveryMatrixSocketResponse<Match>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-
-                case .finished:
-                    print("Data retrieved!")
-                }
-                debugPrint("TSRequestCompleted")
-            }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
-            })
-            .store(in: &cancellable)
+    func getMatches(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Match>, EveryMatrixSocketAPIError>  {
+        return TSManager.shared.getModel(router: .matches(payload: payload), decodingType: EveryMatrixSocketResponse<Match>.self)
     }
 
     func getPopularMatches(payload: [String: Any]?) {
@@ -231,44 +217,71 @@ class EveryMatrixAPIClient: ObservableObject {
             .store(in: &cancellable)
     }
 
-    func getEvents(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Event>, EveryMatrixSocketAPIError>  {
+    func getEvents(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Event>, EveryMatrixSocketAPIError> {
         return TSManager.shared.getModel(router: .events(payload: payload), decodingType: EveryMatrixSocketResponse<Event>.self)
     }
 
-    func getOdds(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .odds(payload: payload), decodingType: EveryMatrixSocketResponse<Odd>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-
-                case .finished:
-                    print("Data retrieved!")
-                }
-                debugPrint("TSRequestCompleted")
-            }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
-            })
-            .store(in: &cancellable)
+    func getOdds(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Odd>, EveryMatrixSocketAPIError> {
+        return TSManager.shared.getModel(router: .odds(payload: payload), decodingType: EveryMatrixSocketResponse<Odd>.self)
     }
 
-    func subscribeOdd(payload: [String: Any]?) {
-        TSManager.shared.subscribeProcedure(procedure: .oddsMatch(language: "en", matchId: "148002218755281152"))
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+    func subscribeOdds(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<Odd>, EveryMatrixSocketAPIError> {
+         do {
 
-                case .finished:
-                    print("Data retrieved!")
+             let operatorId = "\(Env.operatorId)"
+             let publisher = try TSManager.shared.subscribeEndpoint(.oddsMatch(operatorId: operatorId,
+                                                                               language: language,
+                                                                               matchId: matchId),
+                                                  decodingType: EveryMatrixSocketResponse<Odd>.self)
+
+            .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<Odd>>) -> EveryMatrixSocketResponse<Odd>? in
+                print("subscriptionContent \(subscriptionContent)")
+                switch subscriptionContent {
+                case let .content(oddsData):
+                    return oddsData
+                default:
+                    return nil
                 }
-                debugPrint("Subscription Request Complete!")
-            }, receiveValue: { value in
-                debugPrint("Subscription: \(String(describing: value))")
-                
-            })
-            .store(in: &cancellable)
+            }
+            .compactMap({ $0 })
+
+             return publisher.eraseToAnyPublisher()
+        }
+        catch {
+            return Fail.init(outputType: EveryMatrixSocketResponse<Odd>.self, failure: EveryMatrixSocketAPIError.notConnected).eraseToAnyPublisher()
+        }
+    }
+
+
+    func subscribeSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<Discipline>, EveryMatrixSocketAPIError> {
+         do {
+             let sportId = sportType.rawValue
+             let operatorId = "\(Env.operatorId)"
+             let publisher = try TSManager.shared.subscribeEndpoint( .sportsStatus(operatorId: operatorId,
+                                                                                   language: language,
+                                                                                   sportId: sportId),
+                                                  decodingType: EveryMatrixSocketResponse<Discipline>.self)
+
+            .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<Discipline>>) -> EveryMatrixSocketResponse<Discipline>? in
+                print("subscriptionContent \(subscriptionContent)")
+                switch subscriptionContent {
+                case let .content(oddsData):
+                    return oddsData
+                default:
+                    return nil
+                }
+            }
+            .compactMap({ $0 })
+
+             return publisher.eraseToAnyPublisher()
+        }
+        catch {
+            return Fail.init(outputType: EveryMatrixSocketResponse<Discipline>.self, failure: EveryMatrixSocketAPIError.notConnected).eraseToAnyPublisher()
+        }
+    }
+
+    func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrixSocketAPIError>  {
+        return TSManager.shared.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
     }
 
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -55,11 +55,11 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vtq-cE-d9o">
                     <rect key="frame" x="16" y="602" width="382" height="30"/>
-                    <state key="normal" title="EM - Subscribe Test">
+                    <state key="normal" title="EM - Subscribe Sports Initial Dump">
                         <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </state>
                     <connections>
-                        <action selector="testSubscription" destination="-1" eventType="touchUpInside" id="okO-pa-ej2"/>
+                        <action selector="testSubscriptionInitialDump" destination="-1" eventType="primaryActionTriggered" id="VpB-Av-ebl"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AhL-zc-QDX">
@@ -88,7 +88,15 @@
                     </state>
                     <connections>
                         <action selector="didTapLoginProfileButton" destination="-1" eventType="primaryActionTriggered" id="Epl-N8-pkk"/>
-                        <action selector="didTapPopupButton" destination="-1" eventType="touchUpInside" id="Mvk-g0-5Vt"/>
+                    </connections>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dq6-Q2-Rhi">
+                    <rect key="frame" x="16" y="546" width="382" height="30"/>
+                    <state key="normal" title="EM - Subscribe Sports">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="testSubscription" destination="-1" eventType="touchUpInside" id="gbG-kV-bQk"/>
                     </connections>
                 </button>
             </subviews>
@@ -96,6 +104,8 @@
             <color key="backgroundColor" systemColor="systemGray3Color"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Vtq-cE-d9o" secondAttribute="trailing" constant="16" id="0VF-p4-6xG"/>
+                <constraint firstItem="dq6-Q2-Rhi" firstAttribute="leading" secondItem="Vtq-cE-d9o" secondAttribute="leading" id="Ah7-5r-rCd"/>
+                <constraint firstItem="dq6-Q2-Rhi" firstAttribute="trailing" secondItem="Vtq-cE-d9o" secondAttribute="trailing" id="Fco-zA-LsO"/>
                 <constraint firstItem="aMD-Cm-SRa" firstAttribute="top" secondItem="LPr-wd-cUE" secondAttribute="bottom" constant="20" id="Gb1-Yx-wFR"/>
                 <constraint firstItem="AhL-zc-QDX" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="HBB-mi-Jqx"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="RMP-kZ-il1" secondAttribute="trailing" constant="16" id="Jke-82-4ms"/>
@@ -109,6 +119,7 @@
                 <constraint firstItem="LPr-wd-cUE" firstAttribute="top" secondItem="RMP-kZ-il1" secondAttribute="bottom" constant="20" id="pMB-Fs-l5q"/>
                 <constraint firstItem="AhL-zc-QDX" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="16" id="tSE-M7-gEk"/>
                 <constraint firstItem="LPr-wd-cUE" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="tT5-V7-2ZF"/>
+                <constraint firstItem="Vtq-cE-d9o" firstAttribute="top" secondItem="dq6-Q2-Rhi" secondAttribute="bottom" constant="26" id="yuY-U9-2wa"/>
                 <constraint firstItem="RMP-kZ-il1" firstAttribute="top" secondItem="Vtq-cE-d9o" secondAttribute="bottom" constant="20" id="zIH-ah-yza"/>
                 <constraint firstItem="AQV-YM-CvT" firstAttribute="top" secondItem="AhL-zc-QDX" secondAttribute="bottom" constant="8" symbolic="YES" id="zfG-q4-hnN"/>
             </constraints>

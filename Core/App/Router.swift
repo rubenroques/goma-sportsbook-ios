@@ -17,6 +17,8 @@ class Router {
 
     var cancellables = Set<AnyCancellable>()
 
+    private var showingDebug: Bool = false
+
     var blockerViewController: UIViewController?
     var screenBlocker: ScreenBlocker = .none
 
@@ -35,6 +37,26 @@ class Router {
 
     func makeKeyAndVisible() {
 
+        let splashViewController = SplashViewController {
+            self.showPostLoadingFlow()
+        }
+
+        //        #if DEBUG
+        //        self.rootWindow.rootViewController = Router.navigationController(with: HomeViewController() )
+        //        #else
+        //        self.rootWindow.rootViewController = bootRootViewController
+        //        #endif
+
+        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+        //self.rootWindow.rootViewController = splashViewController
+        self.rootWindow.rootViewController = RootViewController()
+        self.rootWindow.makeKeyAndVisible()
+
+        self.subscribeToUserActionBlockers()
+    }
+
+    func showPostLoadingFlow() {
+
         var bootRootViewController: UIViewController
         if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
             bootRootViewController = Router.mainScreenViewControllerFlow()
@@ -42,56 +64,46 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
-
-        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
-//
-//        #if DEBUG
-//        self.rootWindow.rootViewController = Router.navigationController(with: HomeViewController() )
-//        #else
-//        self.rootWindow.rootViewController = bootRootViewController
-//        #endif
-
         self.rootWindow.rootViewController = bootRootViewController
-        self.rootWindow.makeKeyAndVisible()
-        self.subscribeToUserActionBlockers()
     }
+
 
     func subscribeToUserActionBlockers() {
         Env.businessSettingsSocket.maintenanceModePublisher
             .receive(on: RunLoop.main)
             .sink { message in
-            if let messageValue = message {
-                self.showUnderMaintenanceScreen(withReason: messageValue)
+                if let messageValue = message {
+                    self.showUnderMaintenanceScreen(withReason: messageValue)
+                }
+                else {
+                    self.hideUnderMaintenanceScreen()
+                }
             }
-            else {
-                self.hideUnderMaintenanceScreen()
-            }
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
 
         Env.businessSettingsSocket.requiredVersionPublisher
             .receive(on: RunLoop.main)
             .delay(for: 3, scheduler: RunLoop.main).sink { serverVersion in
 
-            guard
-                let currentVersion = Bundle.main.versionNumber,
-                let serverRequiredVersion = serverVersion.required,
-                let serverCurrentVersion = serverVersion.current
-            else {
-                return
-            }
+                guard
+                    let currentVersion = Bundle.main.versionNumber,
+                    let serverRequiredVersion = serverVersion.required,
+                    let serverCurrentVersion = serverVersion.current
+                else {
+                    return
+                }
 
-            if currentVersion.compare(serverRequiredVersion, options: .numeric) == .orderedAscending {
-                self.showRequiredUpdateScreen()
+                if currentVersion.compare(serverRequiredVersion, options: .numeric) == .orderedAscending {
+                    self.showRequiredUpdateScreen()
+                }
+                else if currentVersion.compare(serverCurrentVersion, options: .numeric) == .orderedAscending {
+                    self.showAvailableUpdateScreen()
+                }
+                else {
+                    self.hideRequiredUpdateScreen()
+                }
             }
-            else if currentVersion.compare(serverCurrentVersion, options: .numeric) == .orderedAscending {
-                self.showAvailableUpdateScreen()
-            }
-            else {
-                self.hideRequiredUpdateScreen()
-            }
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
 
         Env.locationManager.locationStatus
             .receive(on: RunLoop.main)
@@ -99,20 +111,20 @@ class Router {
 
                 Logger.log("Router.locationManager received \(locationStatus)")
 
-            switch locationStatus {
-            case .valid:
-                self.hideLocationScreen()
-            case .invalid:
-                self.showInvalidLocationScreen()
-            case .notRequested:
-                self.showRequestLocationScreen()
-            case .notAuthorized:
-                self.showRequestDeniedLocationScreen()
-            case .notDetermined:
-                ()
+                switch locationStatus {
+                case .valid:
+                    self.hideLocationScreen()
+                case .invalid:
+                    self.showInvalidLocationScreen()
+                case .notRequested:
+                    self.showRequestLocationScreen()
+                case .notAuthorized:
+                    self.showRequestDeniedLocationScreen()
+                case .notDetermined:
+                    ()
+                }
             }
-        }
-        .store(in: &cancellables)
+            .store(in: &cancellables)
     }
 
     // MaintenanceScreen
@@ -162,8 +174,8 @@ class Router {
         guard
             let currentVersion = Bundle.main.versionNumber,
             let serverVersion = Env.businessSettingsSocket.clientSettings?.currentAppVersion else {
-            return false
-        }
+                return false
+            }
 
         return currentVersion.compare(serverVersion, options: .numeric) == .orderedAscending
     }
@@ -173,7 +185,7 @@ class Router {
             if presentedViewController is ForbiddenLocationViewController ||
                 presentedViewController is RequestLocationAccessViewController ||
                 presentedViewController is RefusedAccessViewController {
-                    presentedViewController.dismiss(animated: true, completion: nil)
+                presentedViewController.dismiss(animated: true, completion: nil)
             }
         }
     }
@@ -244,6 +256,41 @@ extension Router {
     }
 
 }
+
+
+
+extension UIWindow {
+    open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        if motion == .motionShake {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.bootstrap.router.showDebugView()
+        }
+    }
+}
+
+
+extension Router {
+    func showDebugView() {
+        if showingDebug {
+            return
+        }
+
+        Logger.log("Debug screen called")
+        showingDebug = true
+
+        if TargetVariables.environmentType == .dev {
+
+            let debugViewController = DebugViewController()
+            debugViewController.isBeingDismissedAction = { [weak self] _ in
+                self?.showingDebug = false
+            }
+            let navigationController = UINavigationController(rootViewController: debugViewController)
+            navigationController.modalPresentationStyle = .fullScreen
+            rootWindow.rootViewController?.present(navigationController, animated: true, completion: nil)
+        }
+    }
+}
+
 
 
 class TestViewController: UIViewController {

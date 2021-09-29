@@ -7,6 +7,8 @@
 
 import Foundation
 
+typealias Matches = [Match]
+
 struct Match: Decodable {
 
     let type: String?
@@ -29,7 +31,7 @@ struct Match: Decodable {
     let rootPartId: String?
     let rootPartName: String?
     let shortRootPartName: String?
-    let startTime: Int?
+    let startTimestamp: Int?
     let parentId: String?
     let parentName: String?
     let shortParentName: String?
@@ -44,6 +46,7 @@ struct Match: Decodable {
     let awayShortParticipantName: String?
     let parentPartId: String?
     let parentPartName: String?
+
     // Optional Data
     let eventId: String?
     let streamingProviderId: String?
@@ -52,7 +55,6 @@ struct Match: Decodable {
     let renderType: String?
     let requiresToken: Bool?
     let requiresParent: Bool?
-
 
     enum CodingKeys: String, CodingKey {
         case type = "_type"
@@ -75,7 +77,7 @@ struct Match: Decodable {
         case rootPartId = "rootPartId"
         case rootPartName = "rootPartName"
         case shortRootPartName = "shortRootPartName"
-        case startTime = "startTime"
+        case startTimestamp = "startTime"
         case parentId = "parentId"
         case parentName = "parentName"
         case shortParentName = "shortParentName"
@@ -98,5 +100,15 @@ struct Match: Decodable {
         case renderType = "renderType"
         case requiresToken = "requiresToken"
         case requiresParent = "requiresParent"
+    }
+}
+
+extension Match {
+    var startDate: Date? {
+        if let timestamp = startTimestamp {
+            let normalizedTimestamp: Double = Double(timestamp)/100.0
+            return Date(timeIntervalSince1970: normalizedTimestamp)
+        }
+        return nil
     }
 }

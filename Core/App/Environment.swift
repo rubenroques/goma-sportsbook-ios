@@ -19,7 +19,13 @@ struct Environment {
     let userSessionStore = UserSessionStore()
     let businessSettingsSocket = RealtimeSocketClient()
     let locationManager = GeoLocationManager()
-    
+
+    var calendar = Calendar.autoupdatingCurrent
+    var locale = Locale.autoupdatingCurrent
+    var timezone = TimeZone.autoupdatingCurrent
+    var date: () -> Date = { Date.init() }
+
+
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
@@ -34,8 +40,15 @@ struct Environment {
         return settingsArray
     }
 
-//    private static func pulseConnectedSession() -> URLSession {
-//        return URLSession(configuration: .default, delegate: NetworkManagerDelegate(), delegateQueue: nil)
-//    }
+}
 
+extension Environment {
+    var timezoneOffset: TimeInterval {
+        return TimeInterval(Env.timezone.secondsFromGMT())
+    }
+
+    var timezoneOffsetInMinutes: Int {
+        let timeInterval = Env.timezoneOffset
+        return Int(timeInterval)/60
+    }
 }

@@ -5,17 +5,24 @@
 //  Created by Andrei Marinescu on 27/01/2020.
 //  Copyright © 2020 Tipico. All rights reserved.
 //
+// swiftlint:disable unused_closure_parameter
 
 import Foundation
 import DictionaryCoding
 import WebKit
 import Combine
 
+enum TSSubscriptionContent<T> {
+    case connect
+    case content(T)
+    case disconnect
+}
+
 final class TSManager {
     
     private var cancellable = Set<AnyCancellable>()
     
-    private let tsQueue = DispatchQueue(label: "com.tipico.games.TSQueue")
+    private let tsQueue = DispatchQueue(label: "com.goma.games.TSQueue")
     
     private static var sharedInstance: TSManager?
     
@@ -48,17 +55,21 @@ final class TSManager {
         DispatchQueue.main.async {
 
             self.userAgentExtractionWebView = WKWebView()
-            self.userAgentExtractionWebView?.evaluateJavaScript("navigator.userAgent") {[weak self] (userAgent, error) in
+            self.userAgentExtractionWebView?.evaluateJavaScript("navigator.userAgent") { [weak self] userAgent, error in
                 guard let usrAg = userAgent as? String, let self = self else {
                     return
                 }
                 self.tsQueue.async {
                     if let cid = UserDefaults.standard.string(forKey: "CID") {
-                        self.swampSession = SSWampSession(realm: TSParams.realm, transport: WebSocketSSWampTransport(wsEndpoint:  URL(string: TSParams.wsEndPoint + "?cid=\(cid)")!, userAgent: usrAg, origin: self.origin))
+                        self.swampSession = SSWampSession(realm: TSParams.realm,
+                                                          transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint + "?cid=\(cid)")!,
+                                                                                              userAgent: usrAg,
+                                                                                              origin: self.origin))
                     } else {
                         self.swampSession = SSWampSession(realm: TSParams.realm,
                                                           transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint)!,
-                                                                                              userAgent: usrAg, origin: self.origin))
+                                                                                              userAgent: usrAg,
+                                                                                              origin: self.origin))
                     }
                     self.swampSession?.delegate = self
                     self.swampSession?.connect()
@@ -73,18 +84,19 @@ final class TSManager {
             tsQueue.async {
                 if self.swampSession != nil {
                     if self.swampSession!.isConnected() {
-                        self.swampSession?.subscribe(TSRouter.sessionStateChange.procedure, onSuccess: { (subscription) in
+                        self.swampSession?.subscribe(TSRouter.sessionStateChange.procedure, onSuccess: { subscription in
                             promise(.success(true))
-                        }, onError: { (details, errorStr) in
+                        }, onError: { details, errorStr in
                             promise(.failure(.requestError(value: errorStr)))
-                        }) { (details, results, kwResults) in
+                        }) { details, results, kwResults in
                             if let code = kwResults?["code"] as? Int {
                                 if code == 3 {
                                     DispatchQueue.main.async {
                                         NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
                                     }
-                                } else if code == 0 {
-                                    //TODO: sessionStateChange success handler to be added here - KVO mechanism as above can be used
+                                }
+                                else if code == 0 {
+                                    // TODO: sessionStateChange success handler to be added here - KVO mechanism as above can be used
                                 }
                             }
                         }
@@ -102,13 +114,12 @@ final class TSManager {
                 guard
                     let swampSession = self.swampSession
                 else {
-                    promise(.failure(.noResultsReceived))
+                    promise(.failure(.notConnected))
                     return
                 }
 
                 if swampSession.isConnected() {
-                    swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: {
-                        _, _, kwResults, arrResults in
+                    swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
 
                         do {
                             if kwResults != nil {
@@ -157,32 +168,79 @@ final class TSManager {
     func subscribeProcedure(procedure: TSRouter) -> AnyPublisher<Bool, EveryMatrixSocketAPIError> {
         return Future {[self] promise in
             tsQueue.async {
-                if self.swampSession != nil {
-                    if self.swampSession!.isConnected() {
-                        self.swampSession?.subscribe(procedure.procedure, onSuccess: { subscription in
-                            promise(.success(true))
-                            //
-                        }, onError: { (_, errorStr) in
-                            promise(.failure(.requestError(value: errorStr)))
-                        }) { (_, _, kwResults) in
-                            if let code = kwResults?["code"] as? Int {
-                                if code == 3 {
-                                    DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
-                                    }
-                                }
-                                else if code == 0 {
-                                    // print("Subscribed!")
+
+                guard
+                    let swampSession = self.swampSession
+                else {
+                    promise(.failure(.notConnected))
+                    return
+                }
+
+                if swampSession.isConnected() {
+
+                    swampSession.subscribe(procedure.procedure, onSuccess: { (subscription: Subscription) in
+                        promise(.success(true))
+                    }, onError: { (details: [String: Any], errorStr: String) in
+                        promise(.failure(.requestError(value: errorStr)))
+                    }, onEvent: {( details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
+                        if let code = kwResults?["code"] as? Int {
+                            if code == 3 {
+                                DispatchQueue.main.async {
+                                    NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
                                 }
                             }
+                            else if code == 0 {
+                                print("Subscribed!")
+                            }
                         }
-                    }
+                    })
                 }
             }
         }
         .eraseToAnyPublisher()
     }
-    
+
+    func subscribeEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) throws -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrixSocketAPIError> {
+
+        guard
+            let swampSession = self.swampSession,
+            swampSession.isConnected()
+        else {
+            throw EveryMatrixSocketAPIError.notConnected
+        }
+
+        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrixSocketAPIError>()
+
+        let args: [String: Any] = endpoint.kwargs ?? [:]
+
+        Logger.log("subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
+
+        swampSession.subscribe(endpoint.procedure, options: args,
+        onSuccess: { (subscription: Subscription) in
+            subject.send(TSSubscriptionContent.connect)
+        },
+        onError: { (details: [String: Any], errorStr: String) in
+            subject.send(TSSubscriptionContent.disconnect)
+            subject.send(completion: .failure(.requestError(value: errorStr)))
+        },
+        onEvent: { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
+            if let code = kwResults?["code"] as? Int {
+                if code == 3 {
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
+                    }
+                    subject.send(TSSubscriptionContent.disconnect)
+                    subject.send(completion: .failure(.notConnected))
+                }
+                else if code == 0 {
+                    print("Subscribed!")
+                }
+            }
+        })
+
+        return subject.eraseToAnyPublisher()
+    }
+
     class func reconnect() {
         destroySharedInstance()
     }

@@ -6,12 +6,21 @@
 //
 
 import UIKit
+import Combine
 
 class SportsViewController: UIViewController {
 
     @IBOutlet private weak var filtersBarBaseView: UIView!
     @IBOutlet private weak var filtersSeparatorLineView: UIView!
     @IBOutlet private weak var tableView: UITableView!
+
+    var cancellables = Set<AnyCancellable>()
+    
+    private enum ScreenState {
+        case loading
+        case error
+        case data
+    }
 
     init() {
         super.init(nibName: "SportsViewController", bundle: nil)
@@ -35,18 +44,32 @@ class SportsViewController: UIViewController {
         setupWithTheme()
     }
 
-    func setupWithTheme() {
+    private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackgroundColor
 
-        self.filtersBarBaseView.backgroundColor = UIColor.App.mainBackgroundColor
+        self.filtersBarBaseView.backgroundColor = UIColor.App.contentBackgroundColor
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLineColor
         self.filtersSeparatorLineView.alpha = 0.25
         
-        self.tableView.backgroundColor = UIColor.App.mainBackgroundColor
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackgroundColor
+        self.tableView.backgroundColor = UIColor.App.contentBackgroundColor
+        self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackgroundColor
     }
 
-    func commonInit() {
+    private func commonInit() {
+
+        let sportType = SportType.football
+
+        print("Clock-Go!: \(Date())")
+
+        Env.eventsStore.getMatches(sportType: sportType)
+            .receive(on: DispatchQueue.main)
+            .sink { matches in
+
+                print("Clock-Done!: \(Date())")
+                //print(matches)
+
+            }
+            .store(in: &cancellables)
 
     }
 

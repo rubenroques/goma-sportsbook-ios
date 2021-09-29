@@ -112,6 +112,10 @@
 		452047B32703597500B277B5 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 452047B22703597500B277B5 /* FirebaseDatabase */; };
 		452047B62703656300B277B5 /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
 		452047B72703656300B277B5 /* EventsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B52703656300B277B5 /* EventsStore.swift */; };
+		452047BA27036D3900B277B5 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B827036D3900B277B5 /* SplashViewController.swift */; };
+		452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B827036D3900B277B5 /* SplashViewController.swift */; };
+		452047BC27036D3900B277B5 /* SplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 452047B927036D3900B277B5 /* SplashViewController.xib */; };
+		452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 452047B927036D3900B277B5 /* SplashViewController.xib */; };
 		454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
 		454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
 		454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
@@ -526,6 +530,8 @@
 		45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		4520365A26EF9B7F000BCFA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		452047B52703656300B277B5 /* EventsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsStore.swift; sourceTree = "<group>"; };
+		452047B827036D3900B277B5 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
+		452047B927036D3900B277B5 /* SplashViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SplashViewController.xib; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
 		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
@@ -947,6 +953,15 @@
 			path = Stores;
 			sourceTree = "<group>";
 		};
+		452047BE27036D4600B277B5 /* Splash */ = {
+			isa = PBXGroup;
+			children = (
+				452047B827036D3900B277B5 /* SplashViewController.swift */,
+				452047B927036D3900B277B5 /* SplashViewController.xib */,
+			);
+			path = Splash;
+			sourceTree = "<group>";
+		};
 		454A7A6126DA2FD600E6E74E /* Misc */ = {
 			isa = PBXGroup;
 			children = (
@@ -1310,6 +1325,7 @@
 			children = (
 				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
 				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
+				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Home */,
 				A9B8409426DE44BF00269B05 /* GeoLocation */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
@@ -1816,6 +1832,7 @@
 				45BEA47F26F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				A99A972A26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */,
 				455A0D2026BDE7AE00EC572D /* DebugViewController.xib in Resources */,
+				452047BC27036D3900B277B5 /* SplashViewController.xib in Resources */,
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */,
 				A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
@@ -1938,6 +1955,7 @@
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
+				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
 				455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1991,6 +2009,7 @@
 				A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				A9C82FCE26F9E0F900059DCD /* PopUpPromotionView.swift in Sources */,
+				452047BA27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
@@ -2166,6 +2185,7 @@
 				A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
+				452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				45166D1E26F3548D00E69D65 /* SSWampError.swift in Sources */,

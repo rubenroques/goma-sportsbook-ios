@@ -60,7 +60,10 @@ enum TSRouter {
     case odds(payload: [String: Any]?)
 
     // GOMA EveryMatrix Subscriptions
-    case oddsMatch(language: String, matchId: String)
+    case oddsMatch(operatorId: String, language: String, matchId: String)
+    case sportsStatus(operatorId: String, language: String, sportId: String)
+
+    case sportsInitialDump(topic: String)
 
     var procedure: String {
         switch self {
@@ -101,9 +104,17 @@ enum TSRouter {
             return "/sports#events"
         case .odds:
             return "/sports#odds"
+
+
         // EM Subscription
-        case .oddsMatch(language: let language, matchId: let matchId):
-            return "/sports/\(Env.operatorId)/\(language)/\(matchId)/match-odds"
+        case .oddsMatch(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds"
+        case .sportsStatus(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/sport/\(sportId)"
+
+        case .sportsInitialDump(let topic):
+            return "/sports#initialDump"
+
 
         // Others
         case .registrationDismissed:
@@ -192,7 +203,12 @@ enum TSRouter {
                     "currency": "EUR",
                     "emailVerificationURL": form.emailVerificationURL,
                     "userConsents": ["termsandconditions": true, "sms": false]]
+
         //
+        //
+        case .sportsInitialDump(let topic):
+            return ["topic": topic]
+
         //
         //
         case .disciplines(payload: let payload):

@@ -6,7 +6,8 @@
   
 */
 
-"languange_code" = "en-us";
+"languange_code" = "en";
+"languange_code_complete" = "en-us";
 
 "string_update_available" = "Update available";
 "string_maintenance_mode" = "Temporarily Down For Maintenance";
