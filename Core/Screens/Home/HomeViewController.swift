@@ -197,7 +197,7 @@ class HomeViewController: UIViewController {
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
         loginButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
         loginButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
-        loginButton.layer.cornerRadius = BorderRadius.view
+        loginButton.layer.cornerRadius = CornerRadius.view
         loginButton.layer.masksToBounds = true
     }
 
@@ -256,7 +256,8 @@ extension HomeViewController {
 
     func showPopUp(_ details: PopUpDetails) {
 
-        self.popUpPromotionView = PopUpPromotionView(details)
+
+        self.popUpPromotionView = PopUpPromotionView( PopUpDetails.test ) // details)
         self.popUpBackgroundView = UIView()
 
         guard
@@ -286,7 +287,7 @@ extension HomeViewController {
         self.view.addSubview(popUpPromotionView)
 
         self.view.addSubview(popUpBackgroundView, anchors: [.top(0), .bottom(0), .leading(0), .trailing(0)])
-        self.view.addSubview(popUpPromotionView, anchors: [.centerX(0), .centerY(0), .width(310)])
+        self.view.addSubview(popUpPromotionView, anchors: [.centerX(0), .centerY(0), .width(338)])
 
         popUpPromotionView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
 

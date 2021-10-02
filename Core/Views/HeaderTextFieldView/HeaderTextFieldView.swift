@@ -157,7 +157,7 @@ class HeaderTextFieldView: NibView {
         }        
 
         containerView.backgroundColor = UIColor.App.backgroundDarkModal
-        containerView.layer.cornerRadius = BorderRadius.headerInput
+        containerView.layer.cornerRadius = CornerRadius.headerInput
         containerView.layer.borderWidth = 1
         containerView.layer.borderColor = UIColor.App.backgroundDarkModal.withAlphaComponent(0).cgColor
         

@@ -13,7 +13,7 @@ enum AnimationDuration {
     static let short: TimeInterval = 0.15
 }
 
-enum BorderRadius {
+enum CornerRadius {
     static let modal: CGFloat = 11.0
     static let headerInput: CGFloat = 10.0
     static let button: CGFloat = 8.0

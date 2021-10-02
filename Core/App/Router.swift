@@ -41,15 +41,9 @@ class Router {
             self.showPostLoadingFlow()
         }
 
-        //        #if DEBUG
-        //        self.rootWindow.rootViewController = Router.navigationController(with: HomeViewController() )
-        //        #else
-        //        self.rootWindow.rootViewController = bootRootViewController
-        //        #endif
-
         self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
-        //self.rootWindow.rootViewController = splashViewController
-        self.rootWindow.rootViewController = RootViewController()
+        self.rootWindow.rootViewController = splashViewController
+        //self.rootWindow.rootViewController = RootViewController()
         self.rootWindow.makeKeyAndVisible()
 
         self.subscribeToUserActionBlockers()

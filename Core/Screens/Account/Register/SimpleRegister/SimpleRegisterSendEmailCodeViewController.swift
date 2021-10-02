@@ -53,7 +53,7 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
 
         doneButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         doneButton.backgroundColor = UIColor.App.primaryButtonNormalColor
-        doneButton.cornerRadius = BorderRadius.button
+        doneButton.cornerRadius = CornerRadius.button
 
         pasteClipboardButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         pasteClipboardButton.backgroundColor = UIColor.App.mainBackgroundColor

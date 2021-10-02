@@ -8,9 +8,36 @@
 import Foundation
 import Combine
 
+enum EventListType {
+    case all
+    case today
+    case popular
+    case favorites
+}
+
+
+struct SearchFilters {
+    var sport: SportType
+    var listType: EventListType
+}
+
 class EventsStore: NSObject {
 
     private var cancellable = Set<AnyCancellable>()
+
+    var eventsPublisher = CurrentValueSubject<Events, Never>([])
+    private var events: Events = [] {
+        didSet {
+            eventsPublisher.send(self.events)
+        }
+    }
+
+    var matchesPublisher = CurrentValueSubject<Matches, Never>([])
+    private var matches: Matches = [] {
+        didSet {
+            matchesPublisher.send(self.matches)
+        }
+    }
 
     override init() {
 
@@ -53,6 +80,7 @@ class EventsStore: NSObject {
     }
 
 }
+
 
 enum SportType: String {
     case football = "1"

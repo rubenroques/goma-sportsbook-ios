@@ -18,6 +18,8 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     weak var delegate: SSWampTransportDelegate?
     var socket: WebSocket?
     let mode: WebsocketMode
+
+    var messageCounter = 1
     
     fileprivate var disconnectionReason: String?
     
@@ -27,6 +29,12 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
         request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
         request.addValue(origin, forHTTPHeaderField: "Origin")
         request.addValue("wamp.2.json", forHTTPHeaderField: "Sec-WebSocket-Protocol")
+
+
+        //request.addValue("Upgrade", forHTTPHeaderField: "WebSocket")
+        //request.addValue("Upgrade", forHTTPHeaderField: "Connection")
+        //request.addValue("13", forHTTPHeaderField: "Sec-WebSocket-Version")
+
         //wamp.2.json, wamp.2.msgpack, my.protocol
 
         socket = WebSocket(request: request)
@@ -66,7 +74,8 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("TSWebSocketClient receiveMessage \(text)")
+        print("TSWebSocketClient receiveMessage [\(messageCounter)] \(text)")
+        messageCounter += 1
         if let data = text.data(using: .utf8) {
             websocketDidReceiveData(socket: socket, data: data)
         }

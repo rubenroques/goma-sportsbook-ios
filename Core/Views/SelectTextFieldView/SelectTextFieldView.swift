@@ -51,7 +51,7 @@ class SelectTextFieldView: NibView {
 
     func setup() {
         self.backgroundColor = UIColor.App.backgroundDarkProfile
-        self.layer.cornerRadius = BorderRadius.headerInput
+        self.layer.cornerRadius = CornerRadius.headerInput
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.App.headerTextFieldGray.withAlphaComponent(1).cgColor
 

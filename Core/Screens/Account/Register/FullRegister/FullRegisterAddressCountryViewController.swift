@@ -128,7 +128,7 @@ class FullRegisterAddressCountryViewController: UIViewController {
         continueButton.backgroundColor = UIColor.App.backgroundDarkProfile
         continueButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
         continueButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        continueButton.cornerRadius = BorderRadius.button
+        continueButton.cornerRadius = CornerRadius.button
     }
 
     private func checkUserInputs() {

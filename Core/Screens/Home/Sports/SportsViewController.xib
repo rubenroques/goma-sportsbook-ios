@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,21 +13,97 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SportsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="filtersBarBaseView" destination="vRj-e2-Szx" id="GDJ-9C-fEL"/>
+                <outlet property="filtersButtonView" destination="6zP-Po-yfR" id="5I1-zh-JcS"/>
+                <outlet property="filtersCollectionView" destination="bdq-E7-Xtb" id="BQH-oR-m5A"/>
                 <outlet property="filtersSeparatorLineView" destination="B0m-AP-ENY" id="9xu-In-76T"/>
+                <outlet property="leftGradientBaseView" destination="Ond-vd-nhl" id="4CI-b7-Yno"/>
+                <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
+                <outlet property="sportsSelectorButtonView" destination="L0P-hR-PWM" id="M7W-hm-vQU"/>
                 <outlet property="tableView" destination="AbP-eF-dUy" id="fhv-On-x1u"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="498" height="794"/>
+            <rect key="frame" x="0.0" y="0.0" width="346" height="724"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vRj-e2-Szx">
-                    <rect key="frame" x="0.0" y="0.0" width="498" height="70"/>
+                    <rect key="frame" x="0.0" y="0.0" width="346" height="70"/>
                     <subviews>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bdq-E7-Xtb">
+                            <rect key="frame" x="0.0" y="0.0" width="346" height="69"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="p7k-oV-OYt">
+                                <size key="itemSize" width="128" height="128"/>
+                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            </collectionViewFlowLayout>
+                        </collectionView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FxX-ck-Cyp">
+                            <rect key="frame" x="291" y="0.0" width="55" height="70"/>
+                            <color key="backgroundColor" systemColor="systemTealColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="55" id="7UV-nW-1uO"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ond-vd-nhl">
+                            <rect key="frame" x="0.0" y="0.0" width="73.5" height="70"/>
+                            <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" secondItem="Ond-vd-nhl" secondAttribute="height" multiplier="20:19" id="VpW-wr-jXt"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zP-Po-yfR">
+                            <rect key="frame" x="306" y="15" width="40" height="40"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="zbv-kg-RfQ">
+                                    <rect key="frame" x="8.5" y="9.5" width="23" height="21"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="23" id="8Xv-MM-kpc"/>
+                                        <constraint firstAttribute="height" constant="21" id="UhU-iB-bGo"/>
+                                    </constraints>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" name="secundaryBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="zbv-kg-RfQ" firstAttribute="centerX" secondItem="6zP-Po-yfR" secondAttribute="centerX" id="0Xq-hH-8fs"/>
+                                <constraint firstAttribute="height" constant="40" id="6o4-Ha-Ygm"/>
+                                <constraint firstItem="zbv-kg-RfQ" firstAttribute="centerY" secondItem="6zP-Po-yfR" secondAttribute="centerY" id="IUj-7a-OBh"/>
+                                <constraint firstAttribute="width" constant="40" id="cuh-Fm-lkN"/>
+                            </constraints>
+                        </view>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L0P-hR-PWM">
+                            <rect key="frame" x="0.0" y="15" width="55" height="40"/>
+                            <subviews>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sport_type_soccer_icon" translatesAutoresizingMaskIntoConstraints="NO" id="iOi-Sv-wfK">
+                                    <rect key="frame" x="9" y="8.5" width="23" height="23"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="23" id="G83-2Z-EVx"/>
+                                        <constraint firstAttribute="width" constant="23" id="deX-TK-kxR"/>
+                                    </constraints>
+                                </imageView>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="expand_top_down_arrows_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Y2j-ay-23y">
+                                    <rect key="frame" x="37" y="9.5" width="10" height="23"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="23" id="tDB-di-HRs"/>
+                                        <constraint firstAttribute="width" constant="10" id="w7h-JX-9As"/>
+                                    </constraints>
+                                </imageView>
+                            </subviews>
+                            <color key="backgroundColor" name="secundaryBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="55" id="3ys-0l-8NQ"/>
+                                <constraint firstAttribute="trailing" secondItem="Y2j-ay-23y" secondAttribute="trailing" constant="8" id="JAQ-xB-4zs"/>
+                                <constraint firstItem="iOi-Sv-wfK" firstAttribute="leading" secondItem="L0P-hR-PWM" secondAttribute="leading" constant="9" id="Lbr-hi-d3f"/>
+                                <constraint firstItem="Y2j-ay-23y" firstAttribute="centerY" secondItem="L0P-hR-PWM" secondAttribute="centerY" constant="1" id="RSl-mY-iml"/>
+                                <constraint firstItem="iOi-Sv-wfK" firstAttribute="centerY" secondItem="L0P-hR-PWM" secondAttribute="centerY" id="jxj-Fl-A2p"/>
+                                <constraint firstAttribute="height" constant="40" id="tjA-Eh-zyX"/>
+                            </constraints>
+                        </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="B0m-AP-ENY">
-                            <rect key="frame" x="0.0" y="69" width="498" height="1"/>
+                            <rect key="frame" x="0.0" y="69" width="346" height="1"/>
                             <color key="backgroundColor" systemColor="systemRedColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="1" id="Hhr-fl-cvS"/>
@@ -35,14 +112,28 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
+                        <constraint firstAttribute="trailing" secondItem="bdq-E7-Xtb" secondAttribute="trailing" id="0A6-QL-KIt"/>
+                        <constraint firstItem="Ond-vd-nhl" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="top" id="8gj-Qi-PHR"/>
+                        <constraint firstItem="L0P-hR-PWM" firstAttribute="leading" secondItem="Ond-vd-nhl" secondAttribute="leading" id="EJ5-Zk-GYt"/>
+                        <constraint firstItem="bdq-E7-Xtb" firstAttribute="leading" secondItem="vRj-e2-Szx" secondAttribute="leading" id="Jk4-8Z-Nao"/>
+                        <constraint firstItem="6zP-Po-yfR" firstAttribute="trailing" secondItem="FxX-ck-Cyp" secondAttribute="trailing" id="KkZ-c7-SAR"/>
                         <constraint firstAttribute="height" constant="70" id="NFm-9d-0OL"/>
+                        <constraint firstAttribute="bottom" secondItem="bdq-E7-Xtb" secondAttribute="bottom" constant="1" id="Sbx-hY-bDh"/>
+                        <constraint firstAttribute="trailing" secondItem="FxX-ck-Cyp" secondAttribute="trailing" id="TJQ-YE-v4y"/>
+                        <constraint firstAttribute="bottom" secondItem="Ond-vd-nhl" secondAttribute="bottom" id="Wra-pz-W68"/>
                         <constraint firstAttribute="bottom" secondItem="B0m-AP-ENY" secondAttribute="bottom" id="Xp7-Ex-Yjv"/>
+                        <constraint firstItem="FxX-ck-Cyp" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="top" id="Z7o-Fd-xfq"/>
+                        <constraint firstAttribute="bottom" secondItem="FxX-ck-Cyp" secondAttribute="bottom" id="c8P-FT-mhP"/>
+                        <constraint firstItem="L0P-hR-PWM" firstAttribute="centerY" secondItem="vRj-e2-Szx" secondAttribute="centerY" id="g1L-9L-Zem"/>
                         <constraint firstItem="B0m-AP-ENY" firstAttribute="leading" secondItem="vRj-e2-Szx" secondAttribute="leading" id="ii5-Ku-VUI"/>
                         <constraint firstAttribute="trailing" secondItem="B0m-AP-ENY" secondAttribute="trailing" id="mPL-UT-Eua"/>
+                        <constraint firstItem="Ond-vd-nhl" firstAttribute="leading" secondItem="vRj-e2-Szx" secondAttribute="leading" id="o5u-Jl-8bW"/>
+                        <constraint firstItem="6zP-Po-yfR" firstAttribute="centerY" secondItem="FxX-ck-Cyp" secondAttribute="centerY" id="r94-aX-Htm"/>
+                        <constraint firstItem="bdq-E7-Xtb" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="top" id="rba-Hz-4my"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="AbP-eF-dUy">
-                    <rect key="frame" x="0.0" y="70" width="498" height="724"/>
+                    <rect key="frame" x="0.0" y="70" width="346" height="654"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
             </subviews>
@@ -58,15 +149,27 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="AbP-eF-dUy" secondAttribute="trailing" id="nyt-gF-wkL"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="69.565217391304358" y="186.83035714285714"/>
+            <point key="canvasLocation" x="-40.579710144927539" y="210.26785714285714"/>
         </view>
     </objects>
     <resources>
+        <image name="expand_top_down_arrows_icon" width="9" height="14"/>
+        <image name="match_filters_icons" width="19" height="20"/>
+        <image name="sport_type_soccer_icon" width="23" height="23"/>
+        <namedColor name="secundaryBackgroundColor">
+            <color red="0.19200000166893005" green="0.20800000429153442" blue="0.2630000114440918" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemRedColor">
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemTealColor">
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

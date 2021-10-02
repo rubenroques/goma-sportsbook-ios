@@ -64,7 +64,7 @@ class WelcomeViewController: UIViewController {
     }
 
     @IBAction private func didTapCreateAccount() {
-        self.navigationController?.pushViewController(RegisterViewController(), animated: true)
+
     }
 
     @IBAction private func didTapContinueAsGuest() {

@@ -23,10 +23,12 @@ struct FirebaseClientSettings: Codable {
     struct Locale: Codable {
         var currency: String
         var language: String
+        var country: String
 
         enum CodingKeys: String, CodingKey { // swiftlint:disable:this nesting
             case currency = "currency"
             case language = "lang"
+            case country = "country"
         }
     }
 

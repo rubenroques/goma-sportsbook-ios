@@ -19,6 +19,7 @@ class AuthenticateSSWampMessage: SSWampMessage {
         self.extra = extra
     }
 
+    //
     required init(payload: [Any]) {
         self.signature  = payload[0] as! String
         self.extra = payload[1] as! [String: Any]

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Gilroy-SemiBold.ttf">
+            <string>Gilroy-Semibold</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="ListTypeCollectionViewCell" customModule="ShowcaseBeta" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="84" height="42"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="84" height="42"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LdD-o2-nyq">
+                        <rect key="frame" x="1" y="1" width="82" height="40"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EOR-xa-Ztt">
+                                <rect key="frame" x="2" y="2" width="78" height="36"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7wz-xG-xE1">
+                                        <rect key="frame" x="12" y="11" width="54" height="14"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="45" id="4Ac-aQ-Pcc"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" name="mainBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="7wz-xG-xE1" firstAttribute="centerX" secondItem="EOR-xa-Ztt" secondAttribute="centerX" id="NIm-Vo-3F4"/>
+                                    <constraint firstAttribute="trailing" secondItem="7wz-xG-xE1" secondAttribute="trailing" constant="12" id="OIL-9E-X6Y"/>
+                                    <constraint firstItem="7wz-xG-xE1" firstAttribute="centerY" secondItem="EOR-xa-Ztt" secondAttribute="centerY" id="mUs-gc-OFo"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" name="mainTintColor"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="40" id="8PO-LS-BRe"/>
+                            <constraint firstItem="EOR-xa-Ztt" firstAttribute="leading" secondItem="LdD-o2-nyq" secondAttribute="leading" constant="2" id="eu2-dR-PQF"/>
+                            <constraint firstItem="EOR-xa-Ztt" firstAttribute="top" secondItem="LdD-o2-nyq" secondAttribute="top" constant="2" id="gJy-YW-2b4"/>
+                            <constraint firstAttribute="trailing" secondItem="EOR-xa-Ztt" secondAttribute="trailing" constant="2" id="oHC-fq-tdo"/>
+                            <constraint firstAttribute="bottom" secondItem="EOR-xa-Ztt" secondAttribute="bottom" constant="2" id="vcP-hq-kQq"/>
+                        </constraints>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="LdD-o2-nyq" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" constant="1" id="Eh3-Sx-twd"/>
+                <constraint firstAttribute="bottom" secondItem="LdD-o2-nyq" secondAttribute="bottom" constant="1" id="GnH-pO-dlj"/>
+                <constraint firstAttribute="trailing" secondItem="LdD-o2-nyq" secondAttribute="trailing" constant="1" id="Him-X8-XQl"/>
+                <constraint firstItem="LdD-o2-nyq" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" constant="1" id="feY-E9-Rre"/>
+            </constraints>
+            <size key="customSize" width="84" height="41"/>
+            <connections>
+                <outlet property="labelView" destination="EOR-xa-Ztt" id="A9X-gc-auM"/>
+                <outlet property="selectionHighlightView" destination="LdD-o2-nyq" id="i4L-XV-r8x"/>
+                <outlet property="titleLabel" destination="7wz-xG-xE1" id="MC7-LI-NtF"/>
+            </connections>
+            <point key="canvasLocation" x="88.405797101449281" y="134.26339285714286"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <namedColor name="mainBackgroundColor">
+            <color red="0.14117647058823529" green="0.15294117647058825" blue="0.19215686274509805" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="mainTintColor">
+            <color red="0.019999999552965164" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+    </resources>
+</document>

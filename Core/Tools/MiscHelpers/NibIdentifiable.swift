@@ -29,3 +29,32 @@ extension UITableViewCell: NibIdentifiable { }
 extension UICollectionReusableView: NibIdentifiable { }
 
 extension UITableViewHeaderFooterView: NibIdentifiable { }
+
+extension UITableView {
+
+//    func registerCellNib<T: NibIdentifiable>(_ type: T.Type) {
+//        self.register(type.nib, forCellReuseIdentifier: type.identifier)
+//    }
+
+//    func registerCellClass<T: NibIdentifiable>(_ type: T.Type) {
+//        self.register(type.self, forCellReuseIdentifier: type.identifier)
+//    }
+
+    func dequeueCellType<T: NibIdentifiable>(_ type: T.Type) -> T? {
+        if let cell = self.dequeueReusableCell(withIdentifier: type.identifier) as? T {
+            return cell
+        }
+        return nil
+    }
+
+}
+
+extension UICollectionView {
+    func dequeueCellType<T: NibIdentifiable>(_ type: T.Type, indexPath: IndexPath) -> T? {
+        if let cell = self.dequeueReusableCell(withReuseIdentifier: type.identifier,
+                                               for: indexPath) as? T {
+            return cell
+        }
+        return nil
+    }
+}

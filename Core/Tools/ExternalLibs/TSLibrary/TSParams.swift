@@ -13,4 +13,3 @@ struct TSParams {
     //static let externalSession = "tipico"
 }
 
-

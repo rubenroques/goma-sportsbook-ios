@@ -55,7 +55,7 @@ class RequestLocationAccessViewController: UIViewController {
 
     func commonInit() {
         permissionView.translatesAutoresizingMaskIntoConstraints = false
-        permissionView.layer.cornerRadius = BorderRadius.modal
+        permissionView.layer.cornerRadius = CornerRadius.modal
         permissionImageView.image = UIImage(named: "location_prompt_icon")
         permissionImageView.contentMode = .scaleAspectFill
         permissionTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 20)

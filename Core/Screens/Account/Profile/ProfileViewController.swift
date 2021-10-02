@@ -153,75 +153,75 @@ class ProfileViewController: UIViewController {
         closeButton.setTitle(localized("string_close"), for: .normal)
         closeButton.backgroundColor = .clear
 
-        currentBalanceBaseView.layer.cornerRadius = BorderRadius.view
+        currentBalanceBaseView.layer.cornerRadius = CornerRadius.view
 
-        depositButton.layer.cornerRadius = BorderRadius.button
-        withdrawButton.layer.cornerRadius = BorderRadius.button
+        depositButton.layer.cornerRadius = CornerRadius.button
+        withdrawButton.layer.cornerRadius = CornerRadius.button
 
         depositButton.backgroundColor = .clear
-        depositButton.layer.cornerRadius = BorderRadius.button
+        depositButton.layer.cornerRadius = CornerRadius.button
         depositButton.layer.masksToBounds = true
 
         withdrawButton.backgroundColor = .clear
-        withdrawButton.layer.cornerRadius = BorderRadius.button
+        withdrawButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.masksToBounds = true
         withdrawButton.layer.borderWidth = 2
 
         logoutButton.backgroundColor = .clear
-        logoutButton.layer.cornerRadius = BorderRadius.button
+        logoutButton.layer.cornerRadius = CornerRadius.button
         logoutButton.layer.masksToBounds = true
         logoutButton.layer.borderWidth = 2
 
-        personalInfoBaseView.layer.cornerRadius = BorderRadius.view
-        personalInfoIconBaseView.layer.cornerRadius = BorderRadius.view
+        personalInfoBaseView.layer.cornerRadius = CornerRadius.view
+        personalInfoIconBaseView.layer.cornerRadius = CornerRadius.view
         personalInfoIconImageView.backgroundColor = .clear
         let personalInfoTapGesture = UITapGestureRecognizer(target: self, action: #selector(personalInfoViewTapped))
         personalInfoBaseView.addGestureRecognizer(personalInfoTapGesture)
 
-        passwordUpdateBaseView.layer.cornerRadius = BorderRadius.view
-        passwordUpdateIconBaseView.layer.cornerRadius = BorderRadius.view
+        passwordUpdateBaseView.layer.cornerRadius = CornerRadius.view
+        passwordUpdateIconBaseView.layer.cornerRadius = CornerRadius.view
         passwordUpdateIconImageView.backgroundColor = .clear
         let passwordUpdateTapGesture = UITapGestureRecognizer(target: self, action: #selector(passwordUpdateViewTapped))
         passwordUpdateBaseView.addGestureRecognizer(passwordUpdateTapGesture)
 
-        walletBaseView.layer.cornerRadius = BorderRadius.view
-        walletIconBaseView.layer.cornerRadius = BorderRadius.view
+        walletBaseView.layer.cornerRadius = CornerRadius.view
+        walletIconBaseView.layer.cornerRadius = CornerRadius.view
         walletIconImageView.backgroundColor = .clear
         let walletTapGesture = UITapGestureRecognizer(target: self, action: #selector(walletViewTapped))
         walletBaseView.addGestureRecognizer(walletTapGesture)
 
-        documentsBaseView.layer.cornerRadius = BorderRadius.view
-        documentsIconBaseView.layer.cornerRadius = BorderRadius.view
+        documentsBaseView.layer.cornerRadius = CornerRadius.view
+        documentsIconBaseView.layer.cornerRadius = CornerRadius.view
         documentsIconImageView.backgroundColor = .clear
         let documentsTapGesture = UITapGestureRecognizer(target: self, action: #selector(documentsViewTapped))
         documentsBaseView.addGestureRecognizer(documentsTapGesture)
 
-        bonusBaseView.layer.cornerRadius = BorderRadius.view
-        bonusIconBaseView.layer.cornerRadius = BorderRadius.view
+        bonusBaseView.layer.cornerRadius = CornerRadius.view
+        bonusIconBaseView.layer.cornerRadius = CornerRadius.view
         bonusIconImageView.backgroundColor = .clear
         let bonusTapGesture = UITapGestureRecognizer(target: self, action: #selector(bonusViewTapped))
         bonusBaseView.addGestureRecognizer(bonusTapGesture)
 
-        historyBaseView.layer.cornerRadius = BorderRadius.view
-        historyIconBaseView.layer.cornerRadius = BorderRadius.view
+        historyBaseView.layer.cornerRadius = CornerRadius.view
+        historyIconBaseView.layer.cornerRadius = CornerRadius.view
         historyIconImageView.backgroundColor = .clear
         let historyTapGesture = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped))
         historyBaseView.addGestureRecognizer(historyTapGesture)
 
-        limitsBaseView.layer.cornerRadius = BorderRadius.view
-        limitsIconBaseView.layer.cornerRadius = BorderRadius.view
+        limitsBaseView.layer.cornerRadius = CornerRadius.view
+        limitsIconBaseView.layer.cornerRadius = CornerRadius.view
         limitsIconImageView.backgroundColor = .clear
         let limitsTapGesture = UITapGestureRecognizer(target: self, action: #selector(limitsViewTapped))
         limitsBaseView.addGestureRecognizer(limitsTapGesture)
 
-        appSettingsBaseView.layer.cornerRadius = BorderRadius.view
-        appSettingsIconBaseView.layer.cornerRadius = BorderRadius.view
+        appSettingsBaseView.layer.cornerRadius = CornerRadius.view
+        appSettingsIconBaseView.layer.cornerRadius = CornerRadius.view
         appSettingsIconImageView.backgroundColor = .clear
         let appSettingsTapGesture = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped))
         appSettingsBaseView.addGestureRecognizer(appSettingsTapGesture)
 
-        supportBaseView.layer.cornerRadius = BorderRadius.view
-        supportIconBaseView.layer.cornerRadius = BorderRadius.view
+        supportBaseView.layer.cornerRadius = CornerRadius.view
+        supportIconBaseView.layer.cornerRadius = CornerRadius.view
         supportIconImageView.backgroundColor = .clear
         let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
         supportBaseView.addGestureRecognizer(supportTapGesture)

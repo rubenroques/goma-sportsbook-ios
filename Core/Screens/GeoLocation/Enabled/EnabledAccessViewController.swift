@@ -52,7 +52,7 @@ class EnabledAccessViewController: UIViewController {
 
     func commonInit() {
         enabledImageView.translatesAutoresizingMaskIntoConstraints = false
-        enabledImageView.layer.cornerRadius = BorderRadius.modal
+        enabledImageView.layer.cornerRadius = CornerRadius.modal
         enabledImageView.image = UIImage(named: "location_success_icon")
         enabledImageView.contentMode = .scaleAspectFill
 

@@ -252,12 +252,38 @@ class EveryMatrixAPIClient: ObservableObject {
         }
     }
 
-
     func subscribeSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<Discipline>, EveryMatrixSocketAPIError> {
          do {
              let sportId = sportType.rawValue
              let operatorId = "\(Env.operatorId)"
              let publisher = try TSManager.shared.subscribeEndpoint( .sportsStatus(operatorId: operatorId,
+                                                                                   language: language,
+                                                                                   sportId: sportId),
+                                                  decodingType: EveryMatrixSocketResponse<Discipline>.self)
+
+            .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<Discipline>>) -> EveryMatrixSocketResponse<Discipline>? in
+                print("subscriptionContent \(subscriptionContent)")
+                switch subscriptionContent {
+                case let .content(oddsData):
+                    return oddsData
+                default:
+                    return nil
+                }
+            }
+            .compactMap({ $0 })
+
+             return publisher.eraseToAnyPublisher()
+        }
+        catch {
+            return Fail.init(outputType: EveryMatrixSocketResponse<Discipline>.self, failure: EveryMatrixSocketAPIError.notConnected).eraseToAnyPublisher()
+        }
+    }
+
+    func registerOnSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<Discipline>, EveryMatrixSocketAPIError> {
+         do {
+             let sportId = sportType.rawValue
+             let operatorId = "\(Env.operatorId)"
+             let publisher = try TSManager.shared.registerOnEndpoint(.sportsStatus(operatorId: operatorId,
                                                                                    language: language,
                                                                                    sportId: sportId),
                                                   decodingType: EveryMatrixSocketResponse<Discipline>.self)

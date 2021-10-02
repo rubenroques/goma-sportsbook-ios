@@ -10,18 +10,33 @@ import Kingfisher
 
 class PopUpPromotionView: NibView {
 
+    @IBOutlet private var baseView: UIView!
+
+    @IBOutlet private var stackView: UIStackView!
+
+    @IBOutlet private var imageBaseView: UIView!
     @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private var roundTitleView: UIView!
-    @IBOutlet private var titleImageViewLabel: UILabel!
-    @IBOutlet private var subtitleImageViewLabel: UILabel!
+    @IBOutlet private var gradientView: UIView!
+
+    @IBOutlet private var topTitleBaseView: UIView!
+    @IBOutlet private var topTitleLabel: UILabel!
+    @IBOutlet private var topSubtitleLabel: UILabel!
+
+    @IBOutlet private var titleBaseView: UIView!
     @IBOutlet private var titleLabel: UILabel!
-    @IBOutlet private var textLabel: UILabel!
-    @IBOutlet private var visitButton: RoundButton!
+    @IBOutlet private var subtitleLabelBaseView: UIView!
+    @IBOutlet private var subtitleLabel: UILabel!
+
+    @IBOutlet private var spacerView: UIView!
+
+    @IBOutlet private var visitButtonBaseView: UIView!
+    @IBOutlet private var visitButton: UIButton!
+    @IBOutlet private var dismissButtonBaseView: UIView!
     @IBOutlet private var dismissButton: UIButton!
 
-    // Variables
-    var backgroundView: UIView = UIView()
+    @IBOutlet private var topCornerDismissView: UIView!
 
+    // Variables
     var details: PopUpDetails
 
     var didTapPromotionButton: ((String?) -> Void)?
@@ -43,82 +58,144 @@ class PopUpPromotionView: NibView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.topCornerDismissView.layer.cornerRadius = self.topCornerDismissView.frame.size.width / 2
+    }
+
     override func commonInit() {
-        self.layer.cornerRadius = BorderRadius.modal
+        self.layer.cornerRadius = CornerRadius.modal
 
         imageView.image = nil
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
 
-        if let imageURL = URL(string: details.coverImage) {
+
+        gradientView.backgroundColor = .black
+        let leftGradientMaskLayer = CAGradientLayer()
+        leftGradientMaskLayer.frame = gradientView.bounds
+        leftGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor]
+        leftGradientMaskLayer.locations = [0, 1]
+        leftGradientMaskLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        leftGradientMaskLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        gradientView.layer.mask = leftGradientMaskLayer
+
+
+        if let imageURLString = details.coverImage, let imageURL = URL(string: imageURLString) {
             imageView.kf.setImage(with: imageURL)
         }
+        else {
+            imageBaseView.isHidden = true
+        }
 
-        roundTitleView.layer.cornerRadius = BorderRadius.label
-        roundTitleView.sizeToFit()
+        // -- Top Title
+        if let topTitle = details.title {
+            topTitleBaseView.layer.cornerRadius = CornerRadius.label
+            topTitleLabel.text = topTitle
+        }
+        else {
+            topTitleBaseView.isHidden = true
+        }
 
-        titleImageViewLabel.text = details.title
-        titleImageViewLabel.font = AppFont.with(type: .bold, size: 19)
-        titleImageViewLabel.sizeToFit()
+        // -- Top SubTitle
+        if let topSubtitle = details.subtitle {
+            topSubtitleLabel.text = topSubtitle
+        }
+        else {
+            topSubtitleLabel.isHidden = true
+        }
 
-        subtitleImageViewLabel.text = details.subtitle
-        subtitleImageViewLabel.font = AppFont.with(type: .semibold, size: 11)
+        // -- Bottom Title
+        if let title = details.textTile {
+            titleLabel.text = title
+        }
+        else {
+            titleBaseView.isHidden = true
+        }
 
-        titleLabel.text = details.textTile
-        titleLabel.font = AppFont.with(type: .bold, size: 20)
+        // -- Bottom Subtitle
+        if let subtitleText = details.text {
+            subtitleLabel.text = subtitleText
+            subtitleLabel.setLineSpacing(lineSpacing: 6, lineHeightMultiple: 1)
+            subtitleLabel.textAlignment = .center
+        }
+        else {
+            subtitleLabelBaseView.isHidden = true
+        }
 
-        textLabel.text = details.text
-        textLabel.font = AppFont.with(type: .semibold, size: 14)
-        textLabel.setLineSpacing(lineSpacing: 6, lineHeightMultiple: 1)
-        textLabel.textAlignment = .center
+        // -- Buttons
+        if let visitLinkText = details.promoButtonText {
+            visitButton.layer.cornerRadius = CornerRadius.button
+            visitButton.setTitle(visitLinkText, for: .normal)
+            visitButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
+        }
+        else {
+            visitButtonBaseView.isHidden = true
+        }
 
-        visitButton.setTitle(details.promoButtonText, for: .normal)
-        visitButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
+        if let closeText = details.closeButtonText {
+            dismissButton.setTitle(closeText, for: .normal)
+            dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 14)
+        }
+        else {
+            dismissButtonBaseView.isHidden = true
+        }
 
-        dismissButton.setTitle(details.closeButtonText, for: .normal)
-        dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 14)
+        if details.type == 1 {
+            self.dismissButtonBaseView.isHidden = false
+            self.topCornerDismissView.isHidden = true
+        }
+        else if details.type == 2 {
+            self.dismissButtonBaseView.isHidden = true
+            self.topCornerDismissView.isHidden = false
+        }
+
+        self.clipsToBounds = true
+        self.baseView.layer.cornerRadius = 12
+        self.baseView.clipsToBounds = true
+
+        let closeCornerTap = UITapGestureRecognizer(target: self, action: #selector(didTapCloseAction))
+        self.topCornerDismissView.addGestureRecognizer(closeCornerTap)
+
+        if dismissButtonBaseView.isHidden &&
+            visitButtonBaseView.isHidden &&
+            topCornerDismissView.isHidden {
+            let closeBackgroundTap = UITapGestureRecognizer(target: self, action: #selector(didTapCloseAction))
+            self.baseView.addGestureRecognizer(closeBackgroundTap)
+        }
     }
 
+
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App.backgroundDarkModal
+        self.backgroundColor = UIColor.clear
 
-        roundTitleView.backgroundColor = UIColor.App.buttonMain
+        imageBaseView.backgroundColor = UIColor.clear
+        baseView.backgroundColor = UIColor.App.backgroundDarkModal
 
-        titleImageViewLabel.textColor = UIColor.App.headingMain
-        titleImageViewLabel.backgroundColor = UIColor.App.buttonMain
+        spacerView.backgroundColor = .clear
+        stackView.backgroundColor = .clear
+        topTitleBaseView.backgroundColor = .clear
+        titleBaseView.backgroundColor = .clear
+        subtitleLabelBaseView.backgroundColor = .clear
+        visitButtonBaseView.backgroundColor = .clear
+        dismissButtonBaseView.backgroundColor = .clear
 
-        subtitleImageViewLabel.textColor = UIColor.App.headingMain
+        topTitleLabel.textColor = UIColor.App.headingMain
+        topTitleBaseView.backgroundColor = UIColor.App.mainTintColor
+
+        topSubtitleLabel.textColor = UIColor.App.headingMain
 
         titleLabel.textColor = UIColor.App.headingMain
-
-        textLabel.textColor = UIColor.App.headingMain
+        subtitleLabel.textColor = UIColor.App.headingMain
 
         visitButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         visitButton.backgroundColor = UIColor.App.primaryButtonNormalColor
-        visitButton.cornerRadius = BorderRadius.button
 
         dismissButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         dismissButton.backgroundColor = UIColor.App.backgroundDarkModal
-    }
 
-    func setBannerImage(_ image: UIImage) {
-        imageView.image = image
-    }
-
-    func setBannerTitle(_ title: String) {
-        titleImageViewLabel.text = title
-    }
-
-    func setBannerSubtitle(_ subtitle: String) {
-        subtitleImageViewLabel.text = subtitle
-    }
-
-    func setTitle(_ title: String) {
-        titleLabel.text = title
-    }
-
-    func setText(_ text: String) {
-        textLabel.text = text
+        topCornerDismissView.backgroundColor = UIColor.App.secundaryBackgroundColor
     }
 
     @IBAction private func visitAction() {
@@ -129,14 +206,8 @@ class PopUpPromotionView: NibView {
         self.didTapCloseButton?()
     }
 
-    override var intrinsicContentSize: CGSize {
-        let viewHeight = imageView.frame.height + titleLabel.frame.height + textLabel.frame.height + visitButton.frame.height + dismissButton.frame.height
-        return CGSize(width: self.frame.width, height: viewHeight)
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        imageView.roundCorners(corners: [.topLeft, .topRight], radius: 11)
+    @objc func didTapCloseAction() {
+        self.didTapCloseButton?()
     }
 
 }

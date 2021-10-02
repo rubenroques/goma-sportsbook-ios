@@ -19,12 +19,18 @@ public typealias ErrorCallCallback = (_ details: [String: Any], _ error: String,
 
 public typealias SubscribeCallback = (_ subscription: Subscription) -> Void
 public typealias ErrorSubscribeCallback = (_ details: [String: Any], _ error: String) -> Void
-public typealias EventCallback = (_ details: [String: Any], _ results: [Any]?, _ kwResults: [String: Any]?) -> Void
 public typealias UnsubscribeCallback = () -> Void
 public typealias ErrorUnsubscribeCallback = (_ details: [String: Any], _ error: String) -> Void
 
 public typealias PublishCallback = () -> Void
 public typealias ErrorPublishCallback = (_ details: [String: Any], _ error: String) -> Void
+
+public typealias RegisterCallback = (_ registration: Registration) -> Void
+public typealias ErrorUnregisterCallback = (_ details: [String: Any], _ error: String) -> Void
+public typealias ErrorRegisterCallback = (_ details: [String: Any], _ error: String) -> Void
+public typealias UnregisterCallback = () -> Void
+
+public typealias EventCallback = (_ details: [String: Any], _ results: [Any]?, _ kwResults: [String: Any]?) -> Void
 
 open class Subscription {
     fileprivate weak var session: SSWampSession?
@@ -49,6 +55,34 @@ open class Subscription {
         self.session?.unsubscribe(self.subscription, onSuccess: onSuccess, onError: onError)
     }
 }
+
+
+open class Registration {
+    fileprivate weak var session: SSWampSession?
+    internal let registration: Int
+    internal let eventCallback: EventCallback
+    fileprivate var isActive: Bool = true
+
+    internal init(session: SSWampSession, registration: Int, onEvent: @escaping EventCallback) {
+        self.session = session
+        self.registration = registration
+        self.eventCallback = onEvent
+    }
+
+    internal func invalidate() {
+        self.isActive = false
+    }
+
+    open func cancel(_ onSuccess: @escaping UnregisterCallback, onError: @escaping ErrorUnregisterCallback) {
+        if !self.isActive {
+            onError([:], "Subscription already inactive.")
+        }
+        self.session?.unregister(self.registration, onSuccess: onSuccess, onError: onError)
+    }
+}
+
+
+
 
 //public class Registration {
 //    private let session: SSWampSession
@@ -75,10 +109,17 @@ open class SSWampSession: SSWampTransportDelegate {
     fileprivate var serializer: SSWampSerializer?
     fileprivate var sessionId: Int?
     fileprivate var routerSupportedRoles: [SSWampRole]?
+
     fileprivate var callRequests: [Int: (callback: CallCallback, errorCallback: ErrorCallCallback)] = [:]
+
     fileprivate var subscribeRequests: [Int: (callback: SubscribeCallback, errorCallback: ErrorSubscribeCallback, eventCallback: EventCallback)] = [:]
     fileprivate var subscriptions: [Int: Subscription] = [:]
     fileprivate var unsubscribeRequests: [Int: (subscription: Int, callback: UnsubscribeCallback, errorCallback: ErrorUnsubscribeCallback)] = [:]
+
+    fileprivate var registerRequests: [Int: (callback: RegisterCallback, errorCallback: ErrorRegisterCallback, eventCallback: EventCallback)] = [:]
+    fileprivate var registers: [Int: Registration] = [:]
+    fileprivate var unregisterRequests: [Int: (subscription: Int, callback: UnregisterCallback, errorCallback: ErrorUnregisterCallback)] = [:]
+
     fileprivate var publishRequests: [Int: (callback: PublishCallback, errorCallback: ErrorPublishCallback)] = [:]
 
     init(realm: String, transport: SSWampTransport, authmethods: [String]?=nil, authid: String?=nil, authrole: String?=nil, authextra: [String: Any]?=nil) {
@@ -114,6 +155,27 @@ open class SSWampSession: SSWampTransportDelegate {
     // public func register(proc: String, options: [String: AnyObject]=[:], onSuccess: RegisterCallback, onError: ErrorRegisterCallback, onFire: SSWampProc) {
     // }
 
+
+
+    open func register(_ topic: String, options: [String: Any]=[:], onSuccess: @escaping RegisterCallback, onError: @escaping ErrorRegisterCallback, onEvent: @escaping EventCallback) {
+        // assert topic is a valid WAMP uri
+        let registerRequestId = self.generateRequestId()
+        // Tell router to subscribe client on a topic
+        self.sendMessage(RegisterSSWampMessage.init(requestId: registerRequestId, options: options, proc: topic))
+        // Store request ID to handle result
+        self.registerRequests[registerRequestId] = (callback: onSuccess, errorCallback: onError, eventCallback: onEvent)
+    }
+
+    internal func unregister(_ registration: Int, onSuccess: @escaping UnsubscribeCallback, onError: @escaping ErrorUnsubscribeCallback) {
+        let unregisterRequestId = self.generateRequestId()
+        // Tell router to unsubscribe me from some subscription
+        self.sendMessage(UnregisterSSWampMessage(requestId: unregisterRequestId, registration: registration))
+        // Store request ID to handle result
+        self.unregisterRequests[unregisterRequestId] = (registration, onSuccess, onError)
+    }
+
+
+
     open func subscribe(_ topic: String, options: [String: Any]=[:], onSuccess: @escaping SubscribeCallback, onError: @escaping ErrorSubscribeCallback, onEvent: @escaping EventCallback) {
         // assert topic is a valid WAMP uri
         let subscribeRequestId = self.generateRequestId()
@@ -131,6 +193,7 @@ open class SSWampSession: SSWampTransportDelegate {
         self.unsubscribeRequests[unsubscribeRequestId] = (subscription, onSuccess, onError)
     }
 
+    
     // without acknowledging
     open func publish(_ topic: String, options: [String: Any]=[:], args: [Any]?=nil, kwargs: [String: Any]?=nil) {
         // assert topic is a valid WAMP uri
@@ -152,6 +215,9 @@ open class SSWampSession: SSWampTransportDelegate {
         // Store request ID to handle result
         self.publishRequests[publishRequestId] = (callback: onSuccess, errorCallback: onError)
     }
+
+
+    
    
     func ssWampTransportDidDisconnect(_ error: Error?, reason: String?) {
         if reason != nil {
@@ -203,6 +269,7 @@ open class SSWampSession: SSWampTransportDelegate {
     }
     
     // swiftlint:disable cyclomatic_complexity
+    // swiftlint:disable function_body_length
     fileprivate func handleMessage(_ message: SSWampMessage) {
         switch message {
         case let message as ChallengeSSWampMessage:
@@ -218,14 +285,18 @@ open class SSWampSession: SSWampTransportDelegate {
             let routerRoles = message.details["roles"]! as! [String : [String : Any]]
             self.routerSupportedRoles = routerRoles.keys.map { SSWampRole(rawValue: $0)! }
             self.delegate?.ssWampSessionConnected(self, sessionId: message.sessionId)
+
+
         case let message as GoodbyeSSWampMessage:
             if message.reason != "wamp.error.goodbye_and_out" {
                 // Means it's not our initiated goodbye, and we should reply with goodbye
                 self.sendMessage(GoodbyeSSWampMessage(details: [:], reason: "wamp.error.goodbye_and_out"))
             }
             self.transport.disconnect(message.reason)
+
         case let message as AbortSSWampMessage:
             self.transport.disconnect(message.reason)
+
         case let message as ResultSSWampMessage:
             let requestId = message.requestId
             if let (callback, _) = self.callRequests.removeValue(forKey: requestId) {
@@ -234,6 +305,34 @@ open class SSWampSession: SSWampTransportDelegate {
             else {
                 // log this erroneous situation
             }
+
+        case let message as RegisteredSSWampMessage:
+            let requestId = message.requestId
+            if let (callback, _, eventCallback) = self.registerRequests.removeValue(forKey: requestId) {
+                // Notify user and delegate him to unsubscribe this subscription
+                let registration = Registration(session: self, registration: message.registration, onEvent: eventCallback)
+                callback(registration)
+                // Subscription succeeded, we should store event callback for when it's fired
+                self.registers[message.registration] = registration
+            }
+            else {
+                // log this erroneous situation
+            }
+        case let message as UnregisteredSSWampMessage:
+            let requestId = message.requestId
+            if let (subscription, callback, _) = self.unregisterRequests.removeValue(forKey: requestId) {
+                if let subscription = self.registers.removeValue(forKey: subscription) {
+                    subscription.invalidate()
+                    callback()
+                }
+                else {
+                    // log this erroneous situation
+                }
+            }
+            else {
+                // log this erroneous situation
+            }
+
         case let message as SubscribedSSWampMessage:
             let requestId = message.requestId
             if let (callback, _, eventCallback) = self.subscribeRequests.removeValue(forKey: requestId) {
@@ -246,6 +345,8 @@ open class SSWampSession: SSWampTransportDelegate {
             else {
                 // log this erroneous situation
             }
+
+        //
         case let message as EventSSWampMessage:
             if let subscription = self.subscriptions[message.subscription] {
                 subscription.eventCallback(message.details, message.args, message.kwargs)
@@ -253,6 +354,8 @@ open class SSWampSession: SSWampTransportDelegate {
             else {
                 // log this erroneous situation
             }
+
+        //
         case let message as UnsubscribedSSWampMessage:
             let requestId = message.requestId
             if let (subscription, callback, _) = self.unsubscribeRequests.removeValue(forKey: requestId) {
@@ -276,6 +379,7 @@ open class SSWampSession: SSWampTransportDelegate {
                 // log this erroneous situation
             }
 
+        //
         case let message as ErrorSSWampMessage:
             switch message.requestType {
             case SSWampMessages.call:
@@ -309,7 +413,51 @@ open class SSWampSession: SSWampTransportDelegate {
             default:
                 return
             }
+
+        case let message as AuthenticateSSWampMessage:
+            print(message)
+            return
+        case let message as PublishSSWampMessage:
+            print(message)
+            return
+        case let message as UnsubscribeSSWampMessage:
+            print(message)
+            return
+        case let message as SubscribeSSWampMessage:
+            print(message)
+            return
+        case let message as YieldSSWampMessage:
+            print(message)
+            return
+        case let message as UnregisterSSWampMessage:
+            print(message)
+            return
+        case let message as RegisterSSWampMessage:
+            print(message)
+            return
+        case let message as InvocationSSWampMessage:
+            print(message)
+
+            if let registration = self.registers[message.registration] {
+                registration.eventCallback(message.details, message.args, message.kwargs)
+
+                let yieldMessage = YieldSSWampMessage(requestId: message.registration, options: [:])
+                self.sendMessage(yieldMessage)
+            }
+            else {
+                // log this erroneous situation
+            }
+
+            // send YieldSSWampMessage
+            return
+        case let message as CallSSWampMessage:
+            print(message)
+            return
+        case let message as HelloSSWampMessage:
+            print(message)
+            return
         default:
+            print("message default fallback")
             return
         }
     }

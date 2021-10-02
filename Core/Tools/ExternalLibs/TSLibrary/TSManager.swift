@@ -43,10 +43,10 @@ final class TSManager {
         swampSession = nil
     }
     
-    private var swampSession: SSWampSession?
-    private var userAgentExtractionWebView: WKWebView?
+    var swampSession: SSWampSession?
+    var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
-    private let origin = "https://clientsample-sports-stage.everymatrix.com/"
+    let origin = "https://clientsample-sports-stage.everymatrix.com/"
     
     private init() {
 
@@ -168,7 +168,6 @@ final class TSManager {
     func subscribeProcedure(procedure: TSRouter) -> AnyPublisher<Bool, EveryMatrixSocketAPIError> {
         return Future {[self] promise in
             tsQueue.async {
-
                 guard
                     let swampSession = self.swampSession
                 else {
@@ -217,6 +216,48 @@ final class TSManager {
 
         swampSession.subscribe(endpoint.procedure, options: args,
         onSuccess: { (subscription: Subscription) in
+            subject.send(TSSubscriptionContent.connect)
+        },
+        onError: { (details: [String: Any], errorStr: String) in
+            subject.send(TSSubscriptionContent.disconnect)
+            subject.send(completion: .failure(.requestError(value: errorStr)))
+        },
+        onEvent: { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
+            if let code = kwResults?["code"] as? Int {
+                if code == 3 {
+                    DispatchQueue.main.async {
+                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
+                    }
+                    subject.send(TSSubscriptionContent.disconnect)
+                    subject.send(completion: .failure(.notConnected))
+                }
+                else if code == 0 {
+                    print("Subscribed!")
+                }
+            }
+        })
+
+        return subject.eraseToAnyPublisher()
+    }
+
+    func registerOnEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) throws -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrixSocketAPIError> {
+
+        guard
+            let swampSession = self.swampSession,
+            swampSession.isConnected()
+        else {
+            throw EveryMatrixSocketAPIError.notConnected
+        }
+
+        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrixSocketAPIError>()
+
+        let args: [String: Any] = endpoint.kwargs ?? [:]
+
+        Logger.log("subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
+
+        swampSession.register(endpoint.procedure, options: args,
+        onSuccess: { (registration: Registration) in
+            print("\(registration)")
             subject.send(TSSubscriptionContent.connect)
         },
         onError: { (details: [String: Any], errorStr: String) in

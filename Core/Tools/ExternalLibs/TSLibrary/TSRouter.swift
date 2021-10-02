@@ -17,7 +17,6 @@ enum TSRouter {
     case getCountries
     case simpleRegister(form: EveryMatrix.SimpleRegisterForm)
 
-
     case registrationDismissed
     case getTransportSessionID
     case getClientIdentity

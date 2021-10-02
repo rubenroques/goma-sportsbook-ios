@@ -79,7 +79,7 @@ enum SSWampMessages: Int {
     ]
 
     static func createMessage(_ payload: [Any]) -> SSWampMessage? {
-        if let messageType = SSWampMessages(rawValue: payload[0] as! Int) {
+        if let messageType = SSWampMessages(rawValue: payload[0] as! Int) { //
             if let messageFactory = mapping1[messageType] {
                 return messageFactory(Array(payload[1..<payload.count]))
             }

@@ -109,7 +109,7 @@ class LoginViewController: UIViewController {
 
         rememberLabel.text = localized("string_remember")
         rememberLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 12)
-        rememberToggleView.layer.cornerRadius = BorderRadius.checkBox
+        rememberToggleView.layer.cornerRadius = CornerRadius.checkBox
         rememberImageView.backgroundColor = .clear
         rememberImageView.contentMode = .scaleAspectFit
 
@@ -179,7 +179,7 @@ class LoginViewController: UIViewController {
         loginButton.backgroundColor = .clear
         loginButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
         loginButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
-        loginButton.layer.cornerRadius = BorderRadius.button
+        loginButton.layer.cornerRadius = CornerRadius.button
         loginButton.layer.masksToBounds = true
 
         termsLabel.textColor = UIColor.App.headingMain

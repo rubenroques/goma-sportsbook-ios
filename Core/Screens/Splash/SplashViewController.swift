@@ -41,6 +41,11 @@ class SplashViewController: UIViewController {
             .store(in: &cancellables)
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+
     func startUserSessionIfNeeded() {
 
         guard

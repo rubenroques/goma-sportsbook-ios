@@ -43,10 +43,6 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-
-        let code: String = String(UUID().uuidString.split(separator: "-").first!)
-        self.emailHeadertextFieldView.setText("email\(code)@email.com")
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -88,6 +84,14 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
             })
             .sink(receiveValue: requestValidEmailCheck)
             .store(in: &cancellables)
+
+
+        if self.isModal {
+            self.skipButton.isHidden = true
+        }
+        else {
+            self.skipButton.isHidden = false
+        }
     }
 
     func setupWithTheme() {
@@ -115,7 +119,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         registerButton.backgroundColor = .clear
         registerButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
         registerButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
-        registerButton.layer.cornerRadius = BorderRadius.button
+        registerButton.layer.cornerRadius = CornerRadius.button
         registerButton.layer.masksToBounds = true
 
         underlineTextLabel()

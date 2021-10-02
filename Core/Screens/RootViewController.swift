@@ -16,6 +16,8 @@ class RootViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
+    var savedRegistration: Registration?
+
     init() {
         super.init(nibName: "RootViewController", bundle: nil)
     }
@@ -112,25 +114,119 @@ class RootViewController: UIViewController {
 
 
 
-        Env.everyMatrixAPIClient.subscribeSportsStatus(language: "en", sportType: .football)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("")
-            } receiveValue: { disciplines in
-                print("")
-            }
-            .store(in: &cancellables)
+//        Env.everyMatrixAPIClient.subscribeSportsStatus(language: "en", sportType: .football)
+//            .receive(on: DispatchQueue.main)
+//            .sink { completion in
+//                print("")
+//            } receiveValue: { disciplines in
+//                print("")
+//            }
+//            .store(in: &cancellables)
+
+
+//        let operatorId = "\(Env.operatorId)"
+//        TSManager.shared.subscribeProcedure(procedure: .sportsStatus(operatorId: operatorId,
+//                                                                     language: "en",
+//                                                                     sportId: "1"))
+//            .sink { completion in
+//                print("")
+//            } receiveValue: { value in
+//                print("")
+//            }
+//            .store(in: &cancellables)
+
+
+
+
+
+//
+//        TSManager.shared.swampSession?.subscribe("/sports/2474/en/sport/1", options: [:], onSuccess: { subscription in
+//
+//            print("subscribe")
+//            print(subscription)
+//
+//            TSManager.shared.swampSession?.call("/sports#initialDump",
+//                                                options: [:],
+//                                                args: [],
+//                                                kwargs: ["topic": "/sports/2474/en/sport/1"],
+//            onSuccess: { details, results, kwResults, arrResults in
+//                print("call onSuccess")
+//                print(details, results, kwResults, arrResults)
+//
+//            }, onError: { details, error, args, kwargs in
+//                print("call onError")
+//                print(details, error, args, kwargs)
+//            })
+//
+//        }, onError: { details, error in
+//
+//            print(details, error)
+//        }, onEvent: { details, results, kwResults in
+//            print(details, results, kwResults)
+//        })
+
+
+
+
+
+        TSManager.shared.swampSession?.register("/sports/2474/en/sport/1", options: [:], onSuccess: { registration in
+
+            self.savedRegistration = registration
+
+            print("registration")
+            print(registration)
+
+            TSManager.shared.swampSession?.call("/sports#initialDump",
+                                                options: [:],
+                                                args: [],
+                                                kwargs: ["topic": "/sports/2474/en/sport/1"],
+            onSuccess: { details, results, kwResults, arrResults in
+                print("call onSuccess")
+                //print(details, results, kwResults, arrResults)
+
+            }, onError: { details, error, args, kwargs in
+                print("call onError")
+                //print(details, error, args, kwargs)
+            })
+
+        }, onError: { details, error in
+
+            print(details, error)
+        }, onEvent: { details, results, kwResults in
+            print("call Register Event")
+            //print(details, results, kwResults)
+        })
+
+
+
+//        Env.everyMatrixAPIClient.registerOnSportsStatus(language: "en", sportType: .football)
+//            .receive(on: DispatchQueue.main)
+//            .sink { completion in
+//                print("")
+//            } receiveValue: { disciplines in
+//                print("")
+//            }
+//            .store(in: &cancellables)
 
     }
 
     @IBAction private func testSubscriptionInitialDump() {
 
-        Env.everyMatrixAPIClient.requestInitialDump(topic: "/sports/2474/en/sport/1").sink { completion in
-
-        } receiveValue: { string in
-
+        if let savedRegistration = savedRegistration {
+            TSManager.shared.swampSession?.unregister(savedRegistration.registration, onSuccess: {
+                self.savedRegistration = nil
+            }, onError: { details, error in
+                self.savedRegistration = nil
+            })
         }
-        .store(in: &cancellables)
+
+//
+//        Env.everyMatrixAPIClient.requestInitialDump(topic: "/sports/2474/en/sport/1").sink { completion in
+//
+//        } receiveValue: { string in
+//
+//        }
+//        .store(in: &cancellables)
 
     }
 

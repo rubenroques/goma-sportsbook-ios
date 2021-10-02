@@ -183,7 +183,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         signUpButton.backgroundColor = .clear
         signUpButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
         signUpButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
-        signUpButton.layer.cornerRadius = BorderRadius.button
+        signUpButton.layer.cornerRadius = CornerRadius.button
         signUpButton.layer.masksToBounds = true
     }
 
