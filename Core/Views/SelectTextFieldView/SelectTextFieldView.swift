@@ -50,12 +50,13 @@ class SelectTextFieldView: NibView {
     }
 
     func setup() {
-        self.backgroundColor = UIColor.App.backgroundDarkProfile
+
+        self.backgroundColor = UIColor.App.mainBackgroundColor
         self.layer.cornerRadius = CornerRadius.headerInput
         self.layer.borderWidth = 1
         self.layer.borderColor = UIColor.App.headerTextFieldGray.withAlphaComponent(1).cgColor
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
 
         selectLabel.text = "Lorem"
         selectLabel.font = AppFont.with(type: .regular, size: 14.0)
@@ -111,15 +112,6 @@ class SelectTextFieldView: NibView {
         textField.inputView = pickerView
         textField.text = selectionArray[0]
         selectLabel.text = selectionArray[0]
-        // Set arrow image
-//        let arrowDropdownImageView = UIImageView()
-//        arrowDropdownImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-//        let arrowImageView = UIImageView(image: UIImage(named: "selector_arrow_down_icon"))
-//        arrowImageView.frame = CGRect(x: -20, y: -4, width: 10, height: 10)
-//        arrowImageView.contentMode = .scaleAspectFit
-//        arrowDropdownImageView.addSubview(arrowImageView)
-//        textField.rightView = arrowDropdownImageView
-//        textField.rightViewMode = .always
 
         dismissPickerView()
     }

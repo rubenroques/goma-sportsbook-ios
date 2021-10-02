@@ -87,11 +87,11 @@ class PasswordUpdateViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundDarkProfile
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
         
-        headerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        headerView.backgroundColor = UIColor.App.mainBackgroundColor
         headerLabel.textColor = UIColor.App.headingMain
 
         editButton.backgroundColor = .clear
@@ -99,15 +99,15 @@ class PasswordUpdateViewController: UIViewController {
         editButton.setTitleColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
         editButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
 
-        oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         oldPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         newPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
     }

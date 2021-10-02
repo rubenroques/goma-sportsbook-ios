@@ -54,55 +54,55 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundDarkProfile
+        self.view.backgroundColor = UIColor.App.mainBackgroundColor
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackgroundColor
 
-        headerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        headerView.backgroundColor = UIColor.App.mainBackgroundColor
 
-        backButton.backgroundColor = UIColor.App.backgroundDarkProfile
+        backButton.backgroundColor = UIColor.App.mainBackgroundColor
         backButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         backButton.setTitle("", for: .normal)
         backButton.tintColor = UIColor.App.headingMain
 
         headerLabel.textColor = UIColor.App.headingMain
 
-        editButton.backgroundColor = UIColor.App.backgroundDarkProfile
+        editButton.backgroundColor = UIColor.App.mainBackgroundColor
 
-        depositView.backgroundColor = UIColor.App.backgroundDarkProfile
+        depositView.backgroundColor = UIColor.App.mainBackgroundColor
 
         depositLabel.textColor = UIColor.App.headingMain
 
-        depositHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        depositHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         depositHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         depositHeaderTextFieldView.setSecureField(false)
 
         depositLineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
 
-        bettingView.backgroundColor = UIColor.App.backgroundDarkProfile
+        bettingView.backgroundColor = UIColor.App.mainBackgroundColor
 
         bettingLabel.textColor = UIColor.App.headingMain
 
-        bettingHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        bettingHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         bettingHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         bettingHeaderTextFieldView.setSecureField(false)
 
         bettingLineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
 
-        lossView.backgroundColor = UIColor.App.backgroundDarkProfile
+        lossView.backgroundColor = UIColor.App.mainBackgroundColor
 
         lossLabel.textColor = UIColor.App.headingMain
 
-        lossHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
+        lossHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
         lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
         lossHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         lossHeaderTextFieldView.setSecureField(false)
 
         lossLineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
 
-        exclusionView.backgroundColor = UIColor.App.backgroundDarkProfile
+        exclusionView.backgroundColor = UIColor.App.mainBackgroundColor
 
         exclusionLabel.textColor = UIColor.App.headingMain
 

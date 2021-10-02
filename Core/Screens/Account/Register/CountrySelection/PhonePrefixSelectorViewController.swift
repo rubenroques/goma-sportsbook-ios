@@ -120,7 +120,7 @@ class PhonePrefixSelectorViewController: UIViewController {
 
         self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
         self.cancelButton.setTitle(localized("string_cancel"), for: .normal)
-        self.cancelButton.setTitleColor(UIColor.App.buttonMain, for: .normal)
+        self.cancelButton.setTitleColor(UIColor.App.mainTintColor, for: .normal)
 
         self.searchBarBaseView.backgroundColor = .clear
 
@@ -241,7 +241,7 @@ extension PhonePrefixSelectorViewController: UITableViewDelegate {
 
         let titleLabel = UILabel()
         titleLabel.backgroundColor = .clear
-        titleLabel.textColor = UIColor.App.subtitleGray
+        titleLabel.textColor = UIColor.App.fadeOutHeadingColor
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = AppFont.with(type: .bold, size: 12)
         view.addSubview(titleLabel)

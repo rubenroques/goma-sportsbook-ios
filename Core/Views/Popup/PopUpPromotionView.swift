@@ -168,6 +168,7 @@ class PopUpPromotionView: NibView {
 
 
     func setupWithTheme() {
+
         self.backgroundColor = UIColor.clear
 
         imageBaseView.backgroundColor = UIColor.clear
@@ -193,8 +194,8 @@ class PopUpPromotionView: NibView {
         visitButton.backgroundColor = UIColor.App.primaryButtonNormalColor
 
         dismissButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        dismissButton.backgroundColor = UIColor.App.backgroundDarkModal
 
+        dismissButton.backgroundColor = UIColor.App.backgroundDarkModal
         topCornerDismissView.backgroundColor = UIColor.App.secundaryBackgroundColor
     }
 
