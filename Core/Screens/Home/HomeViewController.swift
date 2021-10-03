@@ -36,7 +36,6 @@ class HomeViewController: UIViewController {
 
     @IBOutlet private weak var loginButton: UIButton!
 
-
     // Child view controllers
     lazy var sportsViewController = SportsViewController()
     lazy var liveEventsViewController = LiveEventsViewController()
@@ -110,7 +109,7 @@ class HomeViewController: UIViewController {
             .store(in: &cancellables)
 
         Env.businessSettingsSocket.clientSettingsPublisher
-            .delay(for: .seconds(2), scheduler: DispatchQueue.main)
+            .delay(for: .seconds(1), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .filter { [weak self] _ in
                 return self?.canShowPopUp ?? false
@@ -167,7 +166,6 @@ class HomeViewController: UIViewController {
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
         profilePictureBaseView.addGestureRecognizer(profileTapGesture)
     }
-
 
     func setupWithTheme() {
 
@@ -256,8 +254,11 @@ extension HomeViewController {
 
     func showPopUp(_ details: PopUpDetails) {
 
+        if !PopUpStore.shouldShowPopUp(withId: details.id) {
+            return
+        }
 
-        self.popUpPromotionView = PopUpPromotionView( PopUpDetails.test ) // details)
+        self.popUpPromotionView = PopUpPromotionView(details)
         self.popUpBackgroundView = UIView()
 
         guard
@@ -270,12 +271,14 @@ extension HomeViewController {
         popUpPromotionView.translatesAutoresizingMaskIntoConstraints = false
         popUpPromotionView.alpha = 0
         popUpPromotionView.didTapCloseButton = { [weak self] in
+            PopUpStore.didHidePopUp(withId: details.id, withTimeout: details.intervalMinutes ?? 0)
             self?.closePopUp()
         }
         popUpPromotionView.didTapPromotionButton = { [weak self] link in
             if let link = link, let url = URL(string: link) {
                 UIApplication.shared.open(url)
             }
+            PopUpStore.didHidePopUp(withId: details.id, withTimeout: details.intervalMinutes ?? 0)
             self?.closePopUp()
         }
 
