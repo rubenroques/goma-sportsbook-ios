@@ -60,10 +60,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
-        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextFieldGray)
+        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextField)
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
-        lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextFieldGray)
+        lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextField)
 
         continueButton.setTitle(localized("string_continue"), for: .normal)
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
@@ -77,32 +77,32 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     func setupWithTheme() {
 
-        topView.backgroundColor = UIColor.App.backgroundDarkProfile
+        topView.backgroundColor = UIColor.App.mainBackground
 
-        view.backgroundColor = UIColor.App.backgroundDarkProfile
+        view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackground
 
-        navigationView.backgroundColor = UIColor.App.backgroundDarkProfile
+        navigationView.backgroundColor = UIColor.App.mainBackground
 
         closeButton.setTitleColor(UIColor.App.headingMain, for: .normal)
 
-        progressView.backgroundColor = UIColor.App.backgroundDarkProfile
+        progressView.backgroundColor = UIColor.App.mainBackground
 
         progressLabel.textColor = UIColor.App.headingMain
 
         titleLabel.textColor = UIColor.App.headingMain
 
-        firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        firstNameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        lastNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        lastNameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        continueButton.backgroundColor = UIColor.App.backgroundDarkProfile
-        continueButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
+        continueButton.backgroundColor = UIColor.App.mainBackground
+        continueButton.setTitleColor(UIColor.App.headerTextField, for: .disabled)
         continueButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         continueButton.cornerRadius = CornerRadius.button
 

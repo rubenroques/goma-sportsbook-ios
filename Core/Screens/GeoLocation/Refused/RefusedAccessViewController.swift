@@ -31,16 +31,16 @@ class RefusedAccessViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
-        refusedView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
+        refusedView.backgroundColor = UIColor.App.mainBackground
         refusedTitleLabel.textColor = UIColor.App.headingMain
-        refusedSubtitleLabel.textColor = UIColor.App.fadeOutHeadingColor
+        refusedSubtitleLabel.textColor = UIColor.App.fadeOutHeading
 
         locationButton.setTitleColor(UIColor.white, for: .normal)
-        locationButton.layer.borderColor = UIColor.App.mainTintColor.cgColor
-        locationButton.layer.backgroundColor = UIColor.App.mainTintColor.cgColor
+        locationButton.layer.borderColor = UIColor.App.mainTint.cgColor
+        locationButton.layer.backgroundColor = UIColor.App.mainTint.cgColor
     }
 
     func commonInit() {

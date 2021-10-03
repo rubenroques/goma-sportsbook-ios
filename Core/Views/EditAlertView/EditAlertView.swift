@@ -29,15 +29,15 @@ class EditAlertView: NibView {
             case .success:
                 alertImageView.image = UIImage(named: "success_circle_icon")
                 alertLabel.text = localized("string_success")
-                alertLabel.textColor = UIColor.App.success
+                alertLabel.textColor = UIColor.App.alertSuccess
                 alertTextLabel.text = localized("string_success_edit")
             case .error:
                 alertImageView.image = UIImage(named: "error_input_icon")
-                alertLabel.textColor = UIColor.App.error
+                alertLabel.textColor = UIColor.App.alertError
                 alertLabel.text = localized("string_error")
                 alertTextLabel.text = localized("string_error_edit")
             case .info:
-                alertImageView.image = UIImage(named: "question-circle")
+                alertImageView.image = UIImage(named: "question_circle_icon")
                 alertLabel.textColor = UIColor.App.headingMain
                 alertLabel.text = localized("string_info")
                 alertTextLabel.text = localized("string_info_text")
@@ -74,14 +74,14 @@ class EditAlertView: NibView {
     func setupWithTheme() {
         self.alpha = 0
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
 
-        alertImageView.backgroundColor = UIColor.App.mainBackgroundColor
+        alertImageView.backgroundColor = UIColor.App.mainBackground
         alertLabel.textColor = UIColor.App.headingMain
         alertTextLabel.textColor = UIColor.App.headingMain
 
-        closeButton.backgroundColor = UIColor.App.mainBackgroundColor
-        closeButton.tintColor = UIColor.App.headerTextFieldGray
+        closeButton.backgroundColor = UIColor.App.mainBackground
+        closeButton.tintColor = UIColor.App.headerTextField
 
     }
 

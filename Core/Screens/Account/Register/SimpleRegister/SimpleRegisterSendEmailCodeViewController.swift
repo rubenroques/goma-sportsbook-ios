@@ -36,27 +36,27 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
 
-        backView.backgroundColor = UIColor.App.mainBackgroundColor
+        backView.backgroundColor = UIColor.App.mainBackground
 
         titleLabel.textColor = UIColor.App.headingMain
 
         textLabel.textColor = UIColor.App.headingMain
 
-        codeHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        codeHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         codeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         codeHeaderTextFieldView.setSecureField(false)
 
         doneButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        doneButton.backgroundColor = UIColor.App.primaryButtonNormalColor
+        doneButton.backgroundColor = UIColor.App.primaryButtonNormal
         doneButton.cornerRadius = CornerRadius.button
 
         pasteClipboardButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        pasteClipboardButton.backgroundColor = UIColor.App.mainBackgroundColor
+        pasteClipboardButton.backgroundColor = UIColor.App.mainBackground
     }
 
     func commonInit() {

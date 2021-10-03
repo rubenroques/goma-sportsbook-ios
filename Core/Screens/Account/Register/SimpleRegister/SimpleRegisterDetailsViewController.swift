@@ -129,48 +129,48 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
-        backView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
+        backView.backgroundColor = UIColor.App.mainBackground
         registerTitleLabel.textColor = UIColor.App.headingMain
-        topSignUpView.backgroundColor = UIColor.App.mainBackgroundColor
+        topSignUpView.backgroundColor = UIColor.App.mainBackground
 
-        usernameHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
-        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        usernameHeaderTextView.backgroundColor = UIColor.App.mainBackground
+        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
         usernameHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
         usernameHeaderTextView.setSecureField(false)
 
-        dateHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
-        dateHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        dateHeaderTextView.backgroundColor = UIColor.App.mainBackground
+        dateHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
         dateHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
 
-        phoneView.backgroundColor = UIColor.App.mainBackgroundColor
+        phoneView.backgroundColor = UIColor.App.mainBackground
 
-        indicativeHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
+        indicativeHeaderTextView.backgroundColor = UIColor.App.mainBackground
         indicativeHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
-        indicativeHeaderTextView.setViewColor(UIColor.App.mainBackgroundColor)
-        indicativeHeaderTextView.setViewBorderColor(UIColor.App.headerTextFieldGray)
+        indicativeHeaderTextView.setViewColor(UIColor.App.mainBackground)
+        indicativeHeaderTextView.setViewBorderColor(UIColor.App.headerTextField)
         indicativeHeaderTextView.setSecureField(false)
 
-        phoneHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
-        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        phoneHeaderTextView.backgroundColor = UIColor.App.mainBackground
+        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
         phoneHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
         phoneHeaderTextView.setSecureField(false)
 
-        lineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
+        lineView.backgroundColor = UIColor.App.headerTextField.withAlphaComponent(0.2)
 
-        emailHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
-        emailHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        emailHeaderTextView.backgroundColor = UIColor.App.mainBackground
+        emailHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
         emailHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
 
-        passwordHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
-        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        passwordHeaderTextView.backgroundColor = UIColor.App.mainBackground
+        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
         passwordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
         passwordHeaderTextView.setSecureField(true)
 
-        confirmPasswordHeaderTextView.backgroundColor = UIColor.App.mainBackgroundColor
-        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        confirmPasswordHeaderTextView.backgroundColor = UIColor.App.mainBackground
+        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
         confirmPasswordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
         confirmPasswordHeaderTextView.setSecureField(true)
 
@@ -181,8 +181,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
         signUpButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
 
         signUpButton.backgroundColor = .clear
-        signUpButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
-        signUpButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        signUpButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
+        signUpButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
         signUpButton.layer.cornerRadius = CornerRadius.button
         signUpButton.layer.masksToBounds = true
     }
@@ -267,9 +267,9 @@ class SimpleRegisterDetailsViewController: UIViewController {
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range1)
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range2)
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range1)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range2)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range3)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range3)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)

@@ -95,11 +95,11 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
 
-        skipView.backgroundColor = UIColor.App.mainBackgroundColor
+        skipView.backgroundColor = UIColor.App.mainBackground
 
         skipButton.setTitleColor(UIColor.white, for: .normal)
         skipButton.layer.borderColor = .none
@@ -107,8 +107,8 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
         registerTitleLabel.textColor = .white
 
-        emailHeadertextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        emailHeadertextFieldView.backgroundColor = UIColor.App.mainBackground
+        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         emailHeadertextFieldView.setTextFieldColor(.white)
         emailHeadertextFieldView.setSecureField(false)
 
@@ -117,8 +117,8 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
 
         registerButton.backgroundColor = .clear
-        registerButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
-        registerButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        registerButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
+        registerButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
         registerButton.layer.cornerRadius = CornerRadius.button
         registerButton.layer.masksToBounds = true
 
@@ -147,9 +147,9 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range1)
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range2)
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range1)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range2)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range3)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range3)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)

@@ -51,18 +51,18 @@ class SelectTextFieldView: NibView {
 
     func setup() {
 
-        self.backgroundColor = UIColor.App.mainBackgroundColor
+        self.backgroundColor = UIColor.App.mainBackground
         self.layer.cornerRadius = CornerRadius.headerInput
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.App.headerTextFieldGray.withAlphaComponent(1).cgColor
+        self.layer.borderColor = UIColor.App.headerTextField.withAlphaComponent(1).cgColor
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
 
         selectLabel.text = "Lorem"
         selectLabel.font = AppFont.with(type: .regular, size: 14.0)
         selectLabel.textColor =  UIColor.App.headingMain
 
-        selectImageView.image = UIImage(named: "chevron-down")
+        selectImageView.image = UIImage(named: "arrow_down_icon")
 
         textField.autocorrectionType = .no
         textField.keyboardType = self.keyboardType

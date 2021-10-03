@@ -85,48 +85,48 @@ class FullRegisterAddressCountryViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        topView.backgroundColor = UIColor.App.backgroundDarkProfile
+        topView.backgroundColor = UIColor.App.mainBackground
 
-        view.backgroundColor = UIColor.App.backgroundDarkProfile
+        view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.backgroundDarkProfile
+        containerView.backgroundColor = UIColor.App.mainBackground
 
-        navigationView.backgroundColor = UIColor.App.backgroundDarkProfile
+        navigationView.backgroundColor = UIColor.App.mainBackground
 
         closeButton.setTitleColor(UIColor.App.headingMain, for: .normal)
 
-        progressView.backgroundColor = UIColor.App.backgroundDarkProfile
+        progressView.backgroundColor = UIColor.App.mainBackground
 
         progressLabel.textColor = UIColor.App.headingMain
 
         titleLabel.textColor = UIColor.App.headingMain
 
-        address1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        address1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        address1HeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        address1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         address1HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         address1HeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         address1HeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        address2HeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        address2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        address2HeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        address2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         address2HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         address2HeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         address2HeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        cityHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        cityHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         cityHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         cityHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         cityHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundDarkProfile
-        postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         postalCodeHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         postalCodeHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        continueButton.backgroundColor = UIColor.App.backgroundDarkProfile
-        continueButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
+        continueButton.backgroundColor = UIColor.App.mainBackground
+        continueButton.setTitleColor(UIColor.App.headerTextField, for: .disabled)
         continueButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         continueButton.cornerRadius = CornerRadius.button
     }

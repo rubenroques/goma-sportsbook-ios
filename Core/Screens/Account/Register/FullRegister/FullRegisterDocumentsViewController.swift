@@ -36,7 +36,7 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.backgroundDarkProfile
+        self.view.backgroundColor = UIColor.App.mainBackground
     }
 
 }

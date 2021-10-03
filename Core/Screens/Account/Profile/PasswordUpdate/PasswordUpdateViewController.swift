@@ -87,28 +87,28 @@ class PasswordUpdateViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
         
-        headerView.backgroundColor = UIColor.App.mainBackgroundColor
+        headerView.backgroundColor = UIColor.App.mainBackground
         headerLabel.textColor = UIColor.App.headingMain
 
         editButton.backgroundColor = .clear
-        editButton.setTitleColor(UIColor.App.primaryButtonNormalColor, for: .normal)
-        editButton.setTitleColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
-        editButton.setTitleColor(UIColor.App.headerTextFieldGray, for: .disabled)
+        editButton.setTitleColor(UIColor.App.primaryButtonNormal, for: .normal)
+        editButton.setTitleColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        editButton.setTitleColor(UIColor.App.headerTextField, for: .disabled)
 
-        oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         oldPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         newPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
     }
 

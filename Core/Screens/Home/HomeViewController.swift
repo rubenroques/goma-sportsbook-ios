@@ -171,11 +171,11 @@ class HomeViewController: UIViewController {
 
     func setupWithTheme() {
 
-        topSafeAreaView.backgroundColor = UIColor.App.mainBackgroundColor
-        topBarView.backgroundColor = UIColor.App.mainBackgroundColor
-        contentView.backgroundColor = UIColor.App.contentBackgroundColor
-        tabBarView.backgroundColor = UIColor.App.mainBackgroundColor
-        bottomSafeAreaView.backgroundColor = UIColor.App.mainBackgroundColor
+        topSafeAreaView.backgroundColor = UIColor.App.mainBackground
+        topBarView.backgroundColor = UIColor.App.mainBackground
+        contentView.backgroundColor = UIColor.App.contentBackground
+        tabBarView.backgroundColor = UIColor.App.mainBackground
+        bottomSafeAreaView.backgroundColor = UIColor.App.mainBackground
 
         tabBarView.layer.shadowRadius = 20
         tabBarView.layer.shadowOffset = .zero
@@ -190,13 +190,13 @@ class HomeViewController: UIViewController {
         sportsButtonBaseView.backgroundColor = .clear
         liveButtonBaseView.backgroundColor = .clear
 
-        profilePictureBaseView.backgroundColor = UIColor.App.mainTintColor
+        profilePictureBaseView.backgroundColor = UIColor.App.mainTint
 
         loginButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
+        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.view
         loginButton.layer.masksToBounds = true
     }

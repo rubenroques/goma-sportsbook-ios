@@ -172,7 +172,7 @@ class PopUpPromotionView: NibView {
         self.backgroundColor = UIColor.clear
 
         imageBaseView.backgroundColor = UIColor.clear
-        baseView.backgroundColor = UIColor.App.backgroundDarkModal
+        baseView.backgroundColor = UIColor.App.secondaryBackground
 
         spacerView.backgroundColor = .clear
         stackView.backgroundColor = .clear
@@ -183,7 +183,7 @@ class PopUpPromotionView: NibView {
         dismissButtonBaseView.backgroundColor = .clear
 
         topTitleLabel.textColor = UIColor.App.headingMain
-        topTitleBaseView.backgroundColor = UIColor.App.mainTintColor
+        topTitleBaseView.backgroundColor = UIColor.App.mainTint
 
         topSubtitleLabel.textColor = UIColor.App.headingMain
 
@@ -191,12 +191,12 @@ class PopUpPromotionView: NibView {
         subtitleLabel.textColor = UIColor.App.headingMain
 
         visitButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        visitButton.backgroundColor = UIColor.App.primaryButtonNormalColor
+        visitButton.backgroundColor = UIColor.App.primaryButtonNormal
 
         dismissButton.setTitleColor(UIColor.App.headingMain, for: .normal)
 
-        dismissButton.backgroundColor = UIColor.App.backgroundDarkModal
-        topCornerDismissView.backgroundColor = UIColor.App.secundaryBackgroundColor
+        dismissButton.backgroundColor = UIColor.App.secondaryBackground
+        topCornerDismissView.backgroundColor = UIColor.App.secondaryBackground
     }
 
     @IBAction private func visitAction() {

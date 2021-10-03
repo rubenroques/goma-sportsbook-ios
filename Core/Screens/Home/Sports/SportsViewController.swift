@@ -61,7 +61,7 @@ class SportsViewController: UIViewController {
 
     private func commonInit() {
 
-        let color = UIColor.App.contentBackgroundColor
+        let color = UIColor.App.contentBackground
         
         leftGradientBaseView.backgroundColor = color
         let leftGradientMaskLayer = CAGradientLayer()
@@ -82,13 +82,13 @@ class SportsViewController: UIViewController {
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
-        filtersBarBaseView.backgroundColor = UIColor.App.contentBackgroundColor
+        filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
         filtersCollectionView.backgroundColor = .clear
 
-        sportsSelectorButtonView.backgroundColor = UIColor.App.mainTintColor
+        sportsSelectorButtonView.backgroundColor = UIColor.App.mainTint
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App.secundaryBackgroundColor
+        filtersButtonView.backgroundColor = UIColor.App.secondaryBackground
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
 
 
@@ -131,14 +131,14 @@ class SportsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
 
-        self.filtersBarBaseView.backgroundColor = UIColor.App.contentBackgroundColor
-        self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLineColor
+        self.filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
+        self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.filtersSeparatorLineView.alpha = 0.25
         
-        self.tableView.backgroundColor = UIColor.App.contentBackgroundColor
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackgroundColor
+        self.tableView.backgroundColor = UIColor.App.contentBackground
+        self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
     }
 
 }

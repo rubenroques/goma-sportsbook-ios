@@ -43,7 +43,7 @@ class CountrySelectorTableViewCell: UITableViewCell {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        self.containerView.backgroundColor = UIColor.App.mainBackground
         self.nameLabel.textColor = UIColor.App.headingMain
         self.prefixLabel.textColor = UIColor.App.headingMain
     }

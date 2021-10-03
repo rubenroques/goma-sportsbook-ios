@@ -54,55 +54,55 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
 
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
+        containerView.backgroundColor = UIColor.App.mainBackground
 
-        headerView.backgroundColor = UIColor.App.mainBackgroundColor
+        headerView.backgroundColor = UIColor.App.mainBackground
 
-        backButton.backgroundColor = UIColor.App.mainBackgroundColor
+        backButton.backgroundColor = UIColor.App.mainBackground
         backButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         backButton.setTitle("", for: .normal)
         backButton.tintColor = UIColor.App.headingMain
 
         headerLabel.textColor = UIColor.App.headingMain
 
-        editButton.backgroundColor = UIColor.App.mainBackgroundColor
+        editButton.backgroundColor = UIColor.App.mainBackground
 
-        depositView.backgroundColor = UIColor.App.mainBackgroundColor
+        depositView.backgroundColor = UIColor.App.mainBackground
 
         depositLabel.textColor = UIColor.App.headingMain
 
-        depositHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        depositHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         depositHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         depositHeaderTextFieldView.setSecureField(false)
 
-        depositLineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
+        depositLineView.backgroundColor = UIColor.App.headerTextField.withAlphaComponent(0.2)
 
-        bettingView.backgroundColor = UIColor.App.mainBackgroundColor
+        bettingView.backgroundColor = UIColor.App.mainBackground
 
         bettingLabel.textColor = UIColor.App.headingMain
 
-        bettingHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        bettingHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         bettingHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         bettingHeaderTextFieldView.setSecureField(false)
 
-        bettingLineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
+        bettingLineView.backgroundColor = UIColor.App.headerTextField.withAlphaComponent(0.2)
 
-        lossView.backgroundColor = UIColor.App.mainBackgroundColor
+        lossView.backgroundColor = UIColor.App.mainBackground
 
         lossLabel.textColor = UIColor.App.headingMain
 
-        lossHeaderTextFieldView.backgroundColor = UIColor.App.mainBackgroundColor
-        lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        lossHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         lossHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         lossHeaderTextFieldView.setSecureField(false)
 
-        lossLineView.backgroundColor = UIColor.App.headerTextFieldGray.withAlphaComponent(0.2)
+        lossLineView.backgroundColor = UIColor.App.headerTextField.withAlphaComponent(0.2)
 
-        exclusionView.backgroundColor = UIColor.App.mainBackgroundColor
+        exclusionView.backgroundColor = UIColor.App.mainBackground
 
         exclusionLabel.textColor = UIColor.App.headingMain
 
@@ -119,7 +119,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositLabel.font = AppFont.with(type: .semibold, size: 17)
 
         depositHeaderTextFieldView.setPlaceholderText(localized("string_deposit_limit"))
-        depositHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
+        depositHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
         depositHeaderTextFieldView.setKeyboardType(.numberPad)
         depositHeaderTextFieldView.isCurrency = true
         depositHeaderTextFieldView.didTapIcon = {
@@ -132,7 +132,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingLabel.font = AppFont.with(type: .semibold, size: 17)
 
         bettingHeaderTextFieldView.setPlaceholderText(localized("string_betting_limit"))
-        bettingHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
+        bettingHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
         bettingHeaderTextFieldView.setKeyboardType(.numberPad)
         bettingHeaderTextFieldView.isCurrency = true
         bettingHeaderTextFieldView.didTapIcon = {
@@ -145,7 +145,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossLabel.font = AppFont.with(type: .semibold, size: 17)
 
         lossHeaderTextFieldView.setPlaceholderText(localized("string_loss_limit"))
-        lossHeaderTextFieldView.setImageTextField(UIImage(named: "question-circle")!)
+        lossHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
         lossHeaderTextFieldView.setKeyboardType(.numberPad)
         lossHeaderTextFieldView.isCurrency = true
         lossHeaderTextFieldView.didTapIcon = {

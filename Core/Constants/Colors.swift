@@ -11,52 +11,46 @@ extension UIColor {
 
     // Colors file is localed on each Client "ThemeColors.xcassets" file
     struct App {
-        static let mainTintColor: UIColor = UIColor(named: "mainTintColor")! // This will read the tintColor on the Client ThemeColor.xcasset
-
-        static let mainBackgroundColor: UIColor = UIColor(named: "mainBackgroundColor")!
-
-        static let secondaryBackgroundColor: UIColor = UIColor(named: "secondaryBackgroundColor")!
-
-        static let separatorLineColor: UIColor = UIColor(named: "separatorLineColor")!
-
-        static let fadeOutHeadingColor: UIColor = UIColor(named: "fadeOutHeadingColor")!
-
-        static let primaryButtonNormalColor = UIColor(named: "primaryButtonNormalColor")!
-
-        static let primaryButtonPressedColor = UIColor(named: "primaryButtonPressedColor")!
-
-        static let contentAlphaBackgroundColor = UIColor(named: "contentAlphaBackgroundColor")!
-
-        static let contentBackgroundColor = UIColor(named: "contentBackgroundColor")!
-
-        static let clearButtonAction: UIColor = UIColor(named: "clearButtonActionColor")
-
-        static let headingMain: UIColor = UIColor(named: "headingMainColor")
-
-        static let error: UIColor = UIColor(named: "alertErrorColor")
-
-        static let success: UIColor = UIColor(named: "alertSuccessColor")
-
-        static let headerTextFieldGray: UIColor = UIColor(named: "headerTextFieldGrayColor")
-
-        // Duplicado
-        static let buttonMain: UIColor = UIColor(named: "mainTintColor")
-
-        // Duplicado
-        static let subtitleGray: UIColor = UIColor(named: "fadeOutHeadingColor")
-
-        // Duplicado
-        static let backgroundDarkFade: UIColor = UIColor(named: "contentBackgroundColor")
-
-        // Duplicado
-        static let backgroundDarkModal: UIColor = UIColor(named: "secondaryBackgroundColor")
-
-        // Duplicado
-        static let alertError: UIColor = UIColor(named: "alertErrorColor")
-
-        // Duplicado
-        static let backgroundDarkProfile: UIColor = UIColor(named: "mainBackgroundColor")
-
+        
+        static let mainTint: UIColor = UIColor(named: "mainTintColor")!
+        
+        static let mainBackground = UIColor(named: "mainBackgroundColor")!
+        static let secondaryBackground = UIColor(named: "secondaryBackgroundColor")!
+        static let contentBackground = UIColor(named: "contentBackgroundColor")!
+        
+        static let separatorLine = UIColor(named: "separatorLineColor")!
+        static let fadeOutHeading = UIColor(named: "fadeOutHeadingColor")!
+        static let headingMain = UIColor(named: "headingMainColor")!
+        static let headerTextField = UIColor(named: "headerTextFieldGrayColor")!
+        
+        static let primaryButtonNormal = UIColor(named: "primaryButtonNormalColor")!
+        static let primaryButtonPressed = UIColor(named: "primaryButtonPressedColor")!
+        static let contentAlphaBackground = UIColor(named: "contentAlphaBackgroundColor")!
+        static let clearButtonAction = UIColor(named: "clearButtonActionColor")!
+        
+        static let alertError = UIColor(named: "alertErrorColor")!
+        static let alertSuccess = UIColor(named: "alertSuccessColor")!
+    
     }
 
 }
+
+// #047DFF ->  mainTintColor -
+
+// #232730 ->  mainBackgroundColor -
+// #313543 ->  secondaryBackgroundColor -
+// #1D1F25 ->  contentBackgroundColor -
+// #1A1C22 ->  contentAlphaBackgroundColor - (80%)
+
+// #747E8F ->  headerTextFieldGrayColor -
+// #FFFFFF ->  headingMainColor - (white)
+// #6E7888 ->  fadeOutHeadingColor -
+
+// #047DFF ->  primaryButtonNormalColor -
+// #1974EB ->  primaryButtonPressedColor -
+// #1C7CFF ->  clearButtonActionColor -
+
+// #4A5468 ->  separatorLineColor -
+
+// #E0243B ->  alertErrorColor -
+// #7BC23E ->  alertSuccessColor -

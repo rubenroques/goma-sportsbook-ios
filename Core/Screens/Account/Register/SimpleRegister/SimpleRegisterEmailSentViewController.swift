@@ -41,26 +41,26 @@ class SimpleRegisterEmailSentViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
-        containerView.backgroundColor = UIColor.App.mainBackgroundColor
-        backView.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App.mainBackground
+        backView.backgroundColor = UIColor.App.mainBackground
         titleLabel.textColor = UIColor.App.headingMain
         textLabel.textColor = UIColor.App.headingMain
 
         openEmailButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        openEmailButton.backgroundColor = UIColor.App.primaryButtonNormalColor
+        openEmailButton.backgroundColor = UIColor.App.primaryButtonNormal
         openEmailButton.cornerRadius = CornerRadius.button
 
         resendEmailButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        resendEmailButton.backgroundColor = UIColor.App.mainBackgroundColor
+        resendEmailButton.backgroundColor = UIColor.App.mainBackground
 
         openEmailButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
 
         openEmailButton.backgroundColor = .clear
-        openEmailButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
-        openEmailButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        openEmailButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
+        openEmailButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
         openEmailButton.layer.cornerRadius = CornerRadius.button
         openEmailButton.layer.masksToBounds = true
 

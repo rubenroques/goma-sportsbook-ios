@@ -40,7 +40,7 @@ class RootViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainTintColor
+        self.view.backgroundColor = UIColor.App.mainTint
     }
 
     @IBAction private func didTapAPITest() {
@@ -98,7 +98,7 @@ class RootViewController: UIViewController {
                           "bettingOfferIds": [],
                           "eventIds": []] // as [String : Any?]
 
-        Env.everyMatrixAPIClient.getOdds(payload: payloadOdd)
+        //Env.everyMatrixAPIClient.getOdds(payload: payloadOdd)
     }
 
     @IBAction private func testSubscription() {

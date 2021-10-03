@@ -148,27 +148,27 @@ class LoginViewController: UIViewController {
 
     func setupWithTheme() {
         
-        self.view.backgroundColor = UIColor.App.mainBackgroundColor
-        skipView.backgroundColor = UIColor.App.mainBackgroundColor
+        self.view.backgroundColor = UIColor.App.mainBackground
+        skipView.backgroundColor = UIColor.App.mainBackground
 
         skipButton.setTitleColor(UIColor.white, for: .normal)
         skipButton.backgroundColor = .clear
 
         loginLabel.textColor = .white
 
-        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextFieldGray)
+        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
         rememberView.backgroundColor = .clear
         rememberLabel.textColor = UIColor.App.headingMain
         if self.shouldRememberUser {
-            rememberToggleView.backgroundColor =  UIColor.App.mainTintColor
+            rememberToggleView.backgroundColor =  UIColor.App.mainTint
         }
         else {
-            rememberToggleView.backgroundColor =  UIColor.App.backgroundDarkModal
+            rememberToggleView.backgroundColor =  UIColor.App.secondaryBackground
         }
 
         forgotButton.setTitleColor(UIColor.App.headingMain, for: .normal)
@@ -177,8 +177,8 @@ class LoginViewController: UIViewController {
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
         loginButton.backgroundColor = .clear
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormalColor, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressedColor, for: .highlighted)
+        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
+        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.button
         loginButton.layer.masksToBounds = true
 
@@ -197,7 +197,7 @@ class LoginViewController: UIViewController {
         let highlightAttriString = NSMutableAttributedString(string: accountText)
         let range1 = (accountText as NSString).range(of: localized("string_create_account"))
         highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .bold, size: 14), range: range1)
-        highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.buttonMain, range: range1)
+        highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.mainTint, range: range1)
 
         registerLabel.attributedText = highlightAttriString
         registerLabel.isUserInteractionEnabled = true
@@ -227,9 +227,9 @@ class LoginViewController: UIViewController {
         underlineAttriString.addAttribute(.font, value: font, range: range1)
         underlineAttriString.addAttribute(.font, value: font, range: range2)
         underlineAttriString.addAttribute(.font, value: font, range: range3)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range1)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range2)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.buttonMain, range: range3)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range3)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
@@ -279,13 +279,13 @@ class LoginViewController: UIViewController {
 
     private func enableRememberUser() {
         rememberImageView.image = UIImage(named: "active_toggle_icon")
-        rememberToggleView.backgroundColor = UIColor.App.mainTintColor
+        rememberToggleView.backgroundColor = UIColor.App.mainTint
         Env.remember = true
     }
 
     private func disableRememberUser() {
         rememberImageView.image = nil
-        rememberToggleView.backgroundColor = UIColor.App.backgroundDarkModal
+        rememberToggleView.backgroundColor = UIColor.App.secondaryBackground
         Env.remember = false
     }
 
@@ -342,7 +342,7 @@ class LoginViewController: UIViewController {
 //        print(input)
 //
 //        if username != input {
-//            self.usernameHeaderTextFieldView.showErrorOnField(text: "Error", color: UIColor.App.alertError)
+//            self.usernameHeaderTextFieldView.showErrorOnField(text: "Error", color: UIColor.App.error)
 //        }
 
     }

@@ -42,8 +42,8 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.normalColor = UIColor.App.secundaryBackgroundColor
-        self.selectedColor = UIColor.App.mainTintColor
+        self.normalColor = UIColor.App.secondaryBackground
+        self.selectedColor = UIColor.App.mainTint
 
         self.selectionHighlightView.backgroundColor = self.selectedColor
         self.labelView.backgroundColor = self.normalColor

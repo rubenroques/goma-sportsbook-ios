@@ -27,8 +27,8 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App.mainBackgroundColor
-        self.backgroundView?.backgroundColor = UIColor.App.mainBackgroundColor
+        self.backgroundColor = UIColor.App.mainBackground
+        self.backgroundView?.backgroundColor = UIColor.App.mainBackground
 
         self.titleLabel.textColor = UIColor.App.headingMain
     }
