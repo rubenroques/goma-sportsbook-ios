@@ -217,12 +217,6 @@
 		455C960D26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C960A26FCDDE700456F30 /* CountrySelectorTableViewCell.swift */; };
 		455C960E26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C960B26FCDDE700456F30 /* CountrySelectorTableViewCell.xib */; };
 		455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C960B26FCDDE700456F30 /* CountrySelectorTableViewCell.xib */; };
-		455C961426FD0A7200456F30 /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = 455C961326FD0A7200456F30 /* Pulse */; };
-		455C961626FD0A7200456F30 /* PulseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 455C961526FD0A7200456F30 /* PulseCore */; };
-		455C961826FD0A7200456F30 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 455C961726FD0A7200456F30 /* PulseUI */; };
-		455C961A26FD0E8700456F30 /* Pulse in Frameworks */ = {isa = PBXBuildFile; productRef = 455C961926FD0E8700456F30 /* Pulse */; };
-		455C961C26FD0E8700456F30 /* PulseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 455C961B26FD0E8700456F30 /* PulseCore */; };
-		455C961E26FD0E8700456F30 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 455C961D26FD0E8700456F30 /* PulseUI */; };
 		455C962126FDD66400456F30 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C961F26FDD66300456F30 /* ProfileViewController.swift */; };
 		455C962226FDD66400456F30 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C961F26FDD66300456F30 /* ProfileViewController.swift */; };
 		455C962326FDD66400456F30 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962026FDD66300456F30 /* ProfileViewController.xib */; };
@@ -380,8 +374,22 @@
 		45DDBAB126F2146100A73E45 /* Gilroy-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */; };
 		45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB926F2406100A73E45 /* UserSessionStore.swift */; };
 		45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB926F2406100A73E45 /* UserSessionStore.swift */; };
+		45E5190C270C8B570052794F /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E5190B270C8B570052794F /* Color+Extensions.swift */; };
+		45E5190D270C8B570052794F /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E5190B270C8B570052794F /* Color+Extensions.swift */; };
 		45EF540A2709E81C00D1E13E /* PopUpStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF54092709E81C00D1E13E /* PopUpStore.swift */; };
 		45EF540B2709E81C00D1E13E /* PopUpStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF54092709E81C00D1E13E /* PopUpStore.swift */; };
+		45EF5424270C5F8100D1E13E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5423270C5F8100D1E13E /* FirebaseAnalytics */; };
+		45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5425270C5F8100D1E13E /* FirebaseAuth */; };
+		45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5427270C5F8100D1E13E /* FirebaseCrashlytics */; };
+		45EF542A270C5F8100D1E13E /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5429270C5F8100D1E13E /* FirebaseDatabase */; };
+		45EF542D270C5FB700D1E13E /* MultiSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF542C270C5FB700D1E13E /* MultiSlider */; };
+		45EF542F270C5FC300D1E13E /* MultiSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF542E270C5FC300D1E13E /* MultiSlider */; };
+		45EF5436270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
+		45EF5437270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
+		45EF5438270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
+		45EF5439270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
+		45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
+		45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -691,7 +699,11 @@
 		45DDBA8E26F2146100A73E45 /* Gilroy-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Thin.ttf"; sourceTree = "<group>"; };
 		45DDBA8F26F2146100A73E45 /* Gilroy-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Gilroy-Black.ttf"; sourceTree = "<group>"; };
 		45DDBAB926F2406100A73E45 /* UserSessionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSessionStore.swift; sourceTree = "<group>"; };
+		45E5190B270C8B570052794F /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		45EF54092709E81C00D1E13E /* PopUpStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpStore.swift; sourceTree = "<group>"; };
+		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
+		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
+		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
@@ -747,15 +759,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				452047B32703597500B277B5 /* FirebaseDatabase in Frameworks */,
-				455C961426FD0A7200456F30 /* Pulse in Frameworks */,
 				A9B8419326E235AD00269B05 /* DictionaryCoding in Frameworks */,
 				4515637826BED19B00690896 /* Reachability in Frameworks */,
-				455C961826FD0A7200456F30 /* PulseUI in Frameworks */,
 				451B386226FF172C008D49C5 /* Kingfisher in Frameworks */,
-				455C961626FD0A7200456F30 /* PulseCore in Frameworks */,
 				4515637B26BED57400690896 /* Nuke in Frameworks */,
 				452047AF2703597500B277B5 /* FirebaseAuth in Frameworks */,
 				45166D2C26F3D89B00E69D65 /* CombineCocoa in Frameworks */,
+				45EF542D270C5FB700D1E13E /* MultiSlider in Frameworks */,
 				452047B12703597500B277B5 /* FirebaseCrashlytics in Frameworks */,
 				452047AD2703597500B277B5 /* FirebaseAnalytics in Frameworks */,
 				A9B841A126E26BEE00269B05 /* Starscream in Frameworks */,
@@ -773,15 +783,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				455C961A26FD0E8700456F30 /* Pulse in Frameworks */,
+				45EF542A270C5F8100D1E13E /* FirebaseDatabase in Frameworks */,
+				45EF5424270C5F8100D1E13E /* FirebaseAnalytics in Frameworks */,
 				A9B8419126E2359800269B05 /* DictionaryCoding in Frameworks */,
 				4515637D26BED58900690896 /* Reachability in Frameworks */,
-				455C961E26FD0E8700456F30 /* PulseUI in Frameworks */,
 				451B386426FF173D008D49C5 /* Kingfisher in Frameworks */,
-				455C961C26FD0E8700456F30 /* PulseCore in Frameworks */,
 				4515637F26BED58900690896 /* Nuke in Frameworks */,
 				45166D2E26F3D8AC00E69D65 /* CombineCocoa in Frameworks */,
+				45EF542F270C5FC300D1E13E /* MultiSlider in Frameworks */,
+				45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */,
 				A9B841A326E26C0B00269B05 /* Starscream in Frameworks */,
+				45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1148,7 +1160,6 @@
 		455A0CBF26BD9D9000EC572D /* Tools */ = {
 			isa = PBXGroup;
 			children = (
-				45D712FD2703477600AC0364 /* Frameworks */,
 				45166CA926F3548D00E69D65 /* ExternalLibs */,
 				456B341926C179A8009D7D27 /* Functional */,
 				455A0CC826BD9D9000EC572D /* Extensions */,
@@ -1168,6 +1179,7 @@
 		455A0CC826BD9D9000EC572D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				45E5190A270C8B3F0052794F /* SwiftUI */,
 				455A0CC926BD9D9000EC572D /* Array+Extensions.swift */,
 				455A0CCA26BD9D9000EC572D /* UIImageView+Extensions.swift */,
 				455A0CCB26BD9D9000EC572D /* UIViewController+Extensions.swift */,
@@ -1233,10 +1245,11 @@
 		455C962526FE11B300456F30 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				45EF5430270C5FD600D1E13E /* Filters */,
 				455C962626FE11CA00456F30 /* HomeViewController.swift */,
 				455C962726FE11CA00456F30 /* HomeViewController.xib */,
 				45D712EC27031C4F00AC0364 /* Sports */,
-				45D712FC27033BF400AC0364 /* Live Events */,
+				45D712FC27033BF400AC0364 /* LiveEvents */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1515,20 +1528,31 @@
 			path = Sports;
 			sourceTree = "<group>";
 		};
-		45D712FC27033BF400AC0364 /* Live Events */ = {
+		45D712FC27033BF400AC0364 /* LiveEvents */ = {
 			isa = PBXGroup;
 			children = (
 				45D712F627033BEF00AC0364 /* LiveEventsViewController.swift */,
 				45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */,
 			);
-			path = "Live Events";
+			path = LiveEvents;
 			sourceTree = "<group>";
 		};
-		45D712FD2703477600AC0364 /* Frameworks */ = {
+		45E5190A270C8B3F0052794F /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				45E5190B270C8B570052794F /* Color+Extensions.swift */,
 			);
-			path = Frameworks;
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		45EF5430270C5FD600D1E13E /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */,
+				45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */,
+				45EF543A270C664100D1E13E /* CollapsibleView.swift */,
+			);
+			path = Filters;
 			sourceTree = "<group>";
 		};
 		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
@@ -1766,14 +1790,12 @@
 				A9B8419226E235AD00269B05 /* DictionaryCoding */,
 				A9B841A026E26BEE00269B05 /* Starscream */,
 				45166D2B26F3D89B00E69D65 /* CombineCocoa */,
-				455C961326FD0A7200456F30 /* Pulse */,
-				455C961526FD0A7200456F30 /* PulseCore */,
-				455C961726FD0A7200456F30 /* PulseUI */,
 				451B386126FF172C008D49C5 /* Kingfisher */,
 				452047AC2703597500B277B5 /* FirebaseAnalytics */,
 				452047AE2703597500B277B5 /* FirebaseAuth */,
 				452047B02703597500B277B5 /* FirebaseCrashlytics */,
 				452047B22703597500B277B5 /* FirebaseDatabase */,
+				45EF542C270C5FB700D1E13E /* MultiSlider */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -1818,10 +1840,12 @@
 				A9B8419026E2359800269B05 /* DictionaryCoding */,
 				A9B841A226E26C0B00269B05 /* Starscream */,
 				45166D2D26F3D8AC00E69D65 /* CombineCocoa */,
-				455C961926FD0E8700456F30 /* Pulse */,
-				455C961B26FD0E8700456F30 /* PulseCore */,
-				455C961D26FD0E8700456F30 /* PulseUI */,
 				451B386326FF173D008D49C5 /* Kingfisher */,
+				45EF5423270C5F8100D1E13E /* FirebaseAnalytics */,
+				45EF5425270C5F8100D1E13E /* FirebaseAuth */,
+				45EF5427270C5F8100D1E13E /* FirebaseCrashlytics */,
+				45EF5429270C5F8100D1E13E /* FirebaseDatabase */,
+				45EF542E270C5FC300D1E13E /* MultiSlider */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -1861,9 +1885,9 @@
 				A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
 				A9B8419F26E26BEE00269B05 /* XCRemoteSwiftPackageReference "Starscream" */,
 				45166D2A26F3D89B00E69D65 /* XCRemoteSwiftPackageReference "CombineCocoa" */,
-				455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */,
 				451B386026FF172C008D49C5 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -1901,6 +1925,7 @@
 				45D712F427031DDE00AC0364 /* SportsViewController.xib in Resources */,
 				A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */,
 				45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
+				45EF5438270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
@@ -1974,6 +1999,7 @@
 				45DDBAB126F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
 				45DDBA9726F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
 				4589F3FA26BF017A005DF543 /* WelcomeViewController.xib in Resources */,
+				45EF5439270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */,
 				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
@@ -2085,6 +2111,7 @@
 				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
+				45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */,
 				A9B841AE26E674AA00269B05 /* Match.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
 				45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
@@ -2109,6 +2136,7 @@
 				45D712F827033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				457816B52707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
+				45E5190C270C8B570052794F /* Color+Extensions.swift in Sources */,
 				A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45166CE326F3548D00E69D65 /* TSRouter.swift in Sources */,
 				455A0D0226BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
@@ -2192,6 +2220,7 @@
 				A9B8409826DE65BF00269B05 /* RefusedAccessViewController.swift in Sources */,
 				45166CEF26F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
 				45166CF926F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
+				45EF5436270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
 				A9B840C726E1285200269B05 /* Discipline.swift in Sources */,
@@ -2266,6 +2295,7 @@
 				45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45B7DAE026F92CE40032C1C3 /* UserSession.swift in Sources */,
+				45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */,
 				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
 				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
@@ -2290,6 +2320,7 @@
 				45D712F927033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				457816B62707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
+				45E5190D270C8B570052794F /* Color+Extensions.swift in Sources */,
 				A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45166CE426F3548D00E69D65 /* TSRouter.swift in Sources */,
 				455A0D0326BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
@@ -2373,6 +2404,7 @@
 				A9B8409A26DE6ABB00269B05 /* RefusedAccessViewController.swift in Sources */,
 				45166CF026F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
 				45166CFA26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
+				45EF5437270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				4515636026BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
 				A9B840C826E1285200269B05 /* Discipline.swift in Sources */,
@@ -2801,12 +2833,12 @@
 				minimumVersion = 7.0.0;
 			};
 		};
-		455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */ = {
+		45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kean/Pulse";
+			repositoryURL = "https://github.com/yonat/MultiSlider";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.9.9;
+				minimumVersion = 1.11.2;
 			};
 		};
 		A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
@@ -2888,35 +2920,35 @@
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
 		};
-		455C961326FD0A7200456F30 /* Pulse */ = {
+		45EF5423270C5F8100D1E13E /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */;
-			productName = Pulse;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
 		};
-		455C961526FD0A7200456F30 /* PulseCore */ = {
+		45EF5425270C5F8100D1E13E /* FirebaseAuth */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */;
-			productName = PulseCore;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
 		};
-		455C961726FD0A7200456F30 /* PulseUI */ = {
+		45EF5427270C5F8100D1E13E /* FirebaseCrashlytics */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */;
-			productName = PulseUI;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
-		455C961926FD0E8700456F30 /* Pulse */ = {
+		45EF5429270C5F8100D1E13E /* FirebaseDatabase */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */;
-			productName = Pulse;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
 		};
-		455C961B26FD0E8700456F30 /* PulseCore */ = {
+		45EF542C270C5FB700D1E13E /* MultiSlider */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */;
-			productName = PulseCore;
+			package = 45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */;
+			productName = MultiSlider;
 		};
-		455C961D26FD0E8700456F30 /* PulseUI */ = {
+		45EF542E270C5FC300D1E13E /* MultiSlider */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 455C961226FD0A7100456F30 /* XCRemoteSwiftPackageReference "Pulse" */;
-			productName = PulseUI;
+			package = 45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */;
+			productName = MultiSlider;
 		};
 		A9B8419026E2359800269B05 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;
