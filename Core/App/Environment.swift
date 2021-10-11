@@ -11,8 +11,11 @@ var Env = Environment() // swiftlint:disable:this identifier_name
 
 struct Environment {
 
+    let appSession = AppSession()
+
     let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager()) //session: Environment.pulseConnectedSession()))
     let everyMatrixAPIClient = EveryMatrixAPIClient()
+    let everyMatrixStorage = AggregatorsInMemoryStore()
 
     let eventsStore = EventsStore()
 
@@ -25,12 +28,9 @@ struct Environment {
     var timezone = TimeZone.autoupdatingCurrent
     var date: () -> Date = { Date.init() }
 
-
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
-
-    var operatorId: Int = 2474 // EM GOMA Operator Id
 
     var remember: Bool = false
     

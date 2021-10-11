@@ -15,7 +15,7 @@ struct UserRegisterForm {
     let userProviderId: String
 }
 
-enum EveryMatrix {
+extension EveryMatrix {
 
     struct SimpleRegisterForm {
         let email: String

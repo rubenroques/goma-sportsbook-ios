@@ -8,9 +8,9 @@
 import Foundation
 
 enum Odd: Decodable {
-    case match(Match)
+    case match(EveryMatrix.Match)
     case bettingOffer(BettingOffer)
-    case outcome(Outcome)
+    case outcome(BetOutcome)
     case marketOutcomeRelation(MarketOutcomeRelation)
     case unknown
 
@@ -29,13 +29,13 @@ enum Odd: Decodable {
 
         switch type {
         case .match:
-            let match = try objectContainer.decode(Match.self)
+            let match = try objectContainer.decode(EveryMatrix.Match.self)
             self = .match(match)
         case .bettingOffer:
             let bettingOffer = try objectContainer.decode(BettingOffer.self)
             self = .bettingOffer(bettingOffer)
         case .outcome:
-            let outcome = try objectContainer.decode(Outcome.self)
+            let outcome = try objectContainer.decode(BetOutcome.self)
             self = .outcome(outcome)
         case .marketOutcomeRelation:
             let marketOutcomeRelation = try objectContainer.decode(MarketOutcomeRelation.self)
@@ -47,6 +47,7 @@ enum Odd: Decodable {
 }
 
 enum OddType: String, Decodable {
+    
     case match = "MATCH"
     case bettingOffer = "BETTING_OFFER"
     case outcome = "OUTCOME"

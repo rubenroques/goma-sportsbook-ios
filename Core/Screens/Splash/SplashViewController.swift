@@ -29,15 +29,26 @@ class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+
         Logger.log("Starting connections")
         _ = TSManager.shared.isConnected
 
+
+
         NotificationCenter.default.publisher(for: .wampSocketConnected)
+            .setFailureType(to: EveryMatrix.APIError.self)
+//            .flatMap({ _ -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> in
+//                return EveryMatrixAPIClient.operatorInfo()
+//            })
+//            .eraseToAnyPublisher()
             .receive(on: DispatchQueue.main)
-            .sink { _ in
+            .sink(receiveCompletion: { completion in
+                Logger.log("completion \(completion)")
+                Logger.log("Services Bootstrap")
+            }, receiveValue: { operatorInfo in
                 Logger.log("Socket connected: \(TSManager.shared.isConnected)")
                 self.startUserSessionIfNeeded()
-            }
+            })
             .store(in: &cancellables)
     }
 
@@ -45,8 +56,22 @@ class SplashViewController: UIViewController {
         return .lightContent
     }
 
+    func saveOperatorInfo(operatorInfo: EveryMatrix.OperatorInfo) {
+        if let operatorId = operatorInfo.ucsOperatorId {
+            Env.appSession.operatorId = String(operatorId)
+        }
+    }
 
     func startUserSessionIfNeeded() {
+//
+//        EveryMatrixAPIClient.operatorInfo().sink(receiveCompletion: { completion in
+//            Logger.log("completion \(completion)")
+//
+//        }, receiveValue: { operatorInfo in
+//            Logger.log("Socket connected: \(TSManager.shared.isConnected)")
+//            self.startUserSessionIfNeeded()
+//        })
+//        .store(in: &cancellables)
 
         guard
             let user = UserSessionStore.loggedUserSession()
@@ -67,8 +92,8 @@ class SplashViewController: UIViewController {
                 switch completion {
                 case .finished:
                     self.splashLoadingCompleted()
-                case .failure(let everyMatrixSocketAPIError):
-                    print("error \(everyMatrixSocketAPIError)")
+                case .failure(let error):
+                    print("error \(error)")
                 }
 
             } receiveValue: { account in

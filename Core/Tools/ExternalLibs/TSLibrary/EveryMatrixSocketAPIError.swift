@@ -7,12 +7,18 @@
 
 import Foundation
 
-enum EveryMatrixSocketAPIError: Error {
-    case decodingError
-    case httpError(Int)
-    case unknown
-    case missingTransportSessionID
-    case notConnected
-    case noResultsReceived
-    case requestError(value: String)
+extension EveryMatrix {
+
+    enum APIError: Error {
+        case decodingError
+        case httpError(Int)
+        case unknown
+        case missingTransportSessionID
+        case notConnected
+        case noResultsReceived
+        case requestError(value: String)
+    }
+
 }
+
+

@@ -11,8 +11,8 @@ struct MarketOutcomeRelation: Decodable {
 
     let type: String
     let id: String
-    let marketId: String
-    let outcomeId: String
+    let marketId: String?
+    let outcomeId: String?
 
     enum CodingKeys: String, CodingKey {
         case type = "_type"

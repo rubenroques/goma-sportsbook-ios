@@ -131,6 +131,13 @@ class HomeViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+//
+//                EveryMatrixAPIClient.operatorInfo().sink(receiveCompletion: { completion in
+//                    Logger.log("completion \(completion)")
+//                }, receiveValue: { operatorInfo in
+//                    Logger.log("Socket connected: \(TSManager.shared.isConnected)")
+//                })
+//                .store(in: &cancellables)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

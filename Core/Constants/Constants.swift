@@ -36,6 +36,12 @@ enum EveryMatrixInfo {
     }
 }
 
+enum Assets {
+    static func flagName(withCountryCode code: String) -> String {
+        return "country_flag_\(code)"
+    }
+}
+
 // swiftlint:disable line_length
 enum CountryFlagHelper {
     static func flag(forCode code: String) -> String? {
