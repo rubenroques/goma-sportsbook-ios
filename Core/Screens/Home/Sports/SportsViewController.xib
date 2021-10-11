@@ -17,6 +17,8 @@
                 <outlet property="filtersCollectionView" destination="bdq-E7-Xtb" id="BQH-oR-m5A"/>
                 <outlet property="filtersSeparatorLineView" destination="B0m-AP-ENY" id="9xu-In-76T"/>
                 <outlet property="leftGradientBaseView" destination="Ond-vd-nhl" id="4CI-b7-Yno"/>
+                <outlet property="loadingBaseView" destination="kGb-Bw-Z5y" id="DzJ-v2-UsN"/>
+                <outlet property="loadingView" destination="R1v-pN-KYj" id="l8c-Hq-phP"/>
                 <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
                 <outlet property="sportsSelectorButtonView" destination="L0P-hR-PWM" id="M7W-hm-vQU"/>
                 <outlet property="tableView" destination="AbP-eF-dUy" id="fhv-On-x1u"/>
@@ -136,17 +138,35 @@
                     <rect key="frame" x="0.0" y="70" width="346" height="654"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-Bw-Z5y">
+                    <rect key="frame" x="0.0" y="70" width="346" height="654"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="R1v-pN-KYj">
+                            <rect key="frame" x="163" y="317" width="20" height="20"/>
+                            <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.63368694598858177" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerX" secondItem="kGb-Bw-Z5y" secondAttribute="centerX" id="6K5-Cx-cXA"/>
+                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerY" secondItem="kGb-Bw-Z5y" secondAttribute="centerY" id="L72-bf-x0e"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="AbP-eF-dUy" secondAttribute="bottom" id="3e9-P7-W6O"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="HEp-3X-9bd"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kGb-Bw-Z5y" secondAttribute="trailing" id="czS-Rh-7Xt"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="h8G-p6-8JQ"/>
                 <constraint firstItem="AbP-eF-dUy" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="iR1-oI-fNa"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="kGb-Bw-Z5y" secondAttribute="bottom" id="jIT-UJ-POS"/>
                 <constraint firstItem="AbP-eF-dUy" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="bottom" id="kAs-Yx-ieq"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="muJ-IF-tbT"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="AbP-eF-dUy" secondAttribute="trailing" id="nyt-gF-wkL"/>
+                <constraint firstItem="kGb-Bw-Z5y" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="bottom" id="twW-vH-UOx"/>
+                <constraint firstItem="kGb-Bw-Z5y" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="vml-O9-ARJ"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="-40.579710144927539" y="210.26785714285714"/>

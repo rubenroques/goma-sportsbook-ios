@@ -11,17 +11,17 @@ struct BettingOffer: Decodable {
 
     let type: String
     let id: String
-    let providerId: String
-    let outcomeId: String
-    let bettingTypeId: String
-    let statusId: String
-    let isLive: Bool
-    let odds: Double
-    let couponKey: String
-    let lastChangedTime: Int
-    let bettingTypeName: String
-    let shortBettingTypeName: String
-    let isAvailable: Bool
+    let providerId: String?
+    let outcomeId: String?
+    let bettingTypeId: String?
+    let statusId: String?
+    let isLive: Bool?
+    let oddsValue: Double?
+    let couponKey: String?
+    let lastChangedTime: Int?
+    let bettingTypeName: String?
+    let shortBettingTypeName: String?
+    let isAvailable: Bool?
 
     enum CodingKeys: String, CodingKey {
         case type = "_type"
@@ -31,7 +31,7 @@ struct BettingOffer: Decodable {
         case bettingTypeId = "bettingTypeId"
         case statusId = "statusId"
         case isLive = "isLive"
-        case odds = "odds"
+        case oddsValue = "odds"
         case couponKey = "couponKey"
         case lastChangedTime = "lastChangedTime"
         case bettingTypeName = "bettingTypeName"

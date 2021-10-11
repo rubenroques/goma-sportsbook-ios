@@ -10,7 +10,7 @@ import Foundation
 typealias Events = [Event]
 
 enum Event: Decodable {
-    case match(Match)
+    case match(EveryMatrix.Match)
     case tournament(Tournament)
     case unknown
 
@@ -29,7 +29,7 @@ enum Event: Decodable {
 
         switch type {
         case .match:
-            let match = try objectContainer.decode(Match.self)
+            let match = try objectContainer.decode(EveryMatrix.Match.self)
             self = .match(match)
         case .tournament:
             let tournament = try objectContainer.decode(Tournament.self)

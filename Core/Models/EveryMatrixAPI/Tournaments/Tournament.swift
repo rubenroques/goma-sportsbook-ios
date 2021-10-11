@@ -12,26 +12,26 @@ struct Tournament: Decodable {
     let type: String
     let id: String
     let idAsString: String?
-    let typeId: String
-    let name: String
+    let typeId: String?
+    let name: String?
     let shortName: String?
-    let numberOfEvents: Int
-    let numberOfMarkets: Int
-    let numberOfBettingOffers: Int
-    let numberOfLiveEvents: Int
-    let numberOfLiveMarkets: Int
-    let numberOfLiveBettingOffers: Int
-    let sportId: String
-    let sportName: String
-    let shortSportName: String
-    let venueId: String
-    let venueName: String
-    let shortVenueName: String
-    let templateId: String
-    let templateName: String
-    let rootPartId: String
-    let rootPartName: String
-    let shortRootPartName: String
+    let numberOfEvents: Int?
+    let numberOfMarkets: Int?
+    let numberOfBettingOffers: Int?
+    let numberOfLiveEvents: Int?
+    let numberOfLiveMarkets: Int?
+    let numberOfLiveBettingOffers: Int?
+    let sportId: String?
+    let sportName: String?
+    let shortSportName: String?
+    let venueId: String?
+    let venueName: String?
+    let shortVenueName: String?
+    let templateId: String?
+    let templateName: String?
+    let rootPartId: String?
+    let rootPartName: String?
+    let shortRootPartName: String?
 
     enum CodingKeys: String, CodingKey {
         case type = "_type"

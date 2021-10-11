@@ -7,6 +7,23 @@
 
 import UIKit
 import Combine
+import OrderedCollections
+
+struct BannerCellViewModel {
+
+}
+
+struct UserInfoCellViewModel {
+
+}
+
+struct MatchLineCellViewModel {
+
+}
+
+struct MatchWidgetCellViewModel {
+
+}
 
 class SportsViewController: UIViewController {
 
@@ -21,23 +38,17 @@ class SportsViewController: UIViewController {
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
 
+    @IBOutlet weak var loadingBaseView: UIView!
+    @IBOutlet weak var loadingView: UIActivityIndicatorView!
 
     var cancellables = Set<AnyCancellable>()
-    
-    private enum ScreenState {
-        case loading
-        case error
-        case data
-    }
 
-    private var listType: ListType = .myGames
-    private enum ListType {
-        case myGames
-        case today
-        case competitions
-    }
+    var viewModel: SportsViewModel
+
+    var filterSelectedOption: Int = 0
 
     init() {
+        self.viewModel = SportsViewModel()
         super.init(nibName: "SportsViewController", bundle: nil)
     }
 
@@ -51,6 +62,24 @@ class SportsViewController: UIViewController {
 
         commonInit()
         setupWithTheme()
+
+        self.viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { isLoading in
+                self.loadingBaseView.isHidden = !isLoading
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.contentList
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+                self.tableView.setContentOffset(.zero, animated: true)
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.fetchData()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -92,8 +121,6 @@ class SportsViewController: UIViewController {
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
 
 
-
-
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
@@ -106,20 +133,18 @@ class SportsViewController: UIViewController {
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self
 
-        tableView.register(MatchTableViewCell.nib, forCellReuseIdentifier: MatchTableViewCell.identifier)
+        tableView.backgroundColor = .clear
+        tableView.backgroundView?.backgroundColor = .clear
+        
+        tableView.separatorStyle = .none
+        tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         tableView.delegate = self
         tableView.dataSource = self
 
-        let sportType = SportType.football
-//        print("Clock-Go!: \(Date())")
-//
-//       Env.eventsStore.getMatches(sportType: sportType)
-//            .receive(on: DispatchQueue.main)
-//            .sink { matches in
-//                print("Clock-Done!: \(Date())")
-//                //print(matches)
-//            }
-//            .store(in: &cancellables)
+        tableView.estimatedRowHeight = 155
+        tableView.estimatedSectionHeaderHeight = 0
+        tableView.estimatedSectionFooterHeight = 0
+
 
     }
 
@@ -146,16 +171,17 @@ class SportsViewController: UIViewController {
 extension SportsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return self.viewModel.numberOfSections
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return self.viewModel.itemsForSection(section)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         guard
-            let cell = tableView.dequeueCellType(MatchTableViewCell.self)
+            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self)
         else {
             fatalError()
         }
@@ -163,8 +189,12 @@ extension SportsViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        tableView.dequeueReusableHeaderFooterView(withIdentifier: "")
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 155
     }
 }
 
@@ -196,31 +226,32 @@ extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSo
             ()
         }
 
-        switch (self.listType, indexPath.row) {
-        case (.myGames, 0):
+        if filterSelectedOption == indexPath.row {
             cell.setSelected(true)
-        case (.today, 1):
-            cell.setSelected(true)
-        case (.competitions, 2):
-            cell.setSelected(true)
-        default:
+        }
+        else {
             cell.setSelected(false)
         }
+
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        self.filterSelectedOption = indexPath.row
+
         switch indexPath.row {
         case 0:
-            self.listType = .myGames
+            self.viewModel.setMatchListType(.myGames)
         case 1:
-            self.listType = .today
-        case 2:
-            self.listType = .competitions
+            self.viewModel.setMatchListType(.today)
         default:
             ()
         }
-        self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+
         self.filtersCollectionView.reloadData()
+        self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
+
+
 }

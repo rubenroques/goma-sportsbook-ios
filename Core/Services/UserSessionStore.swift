@@ -72,7 +72,7 @@ class UserSessionStore {
 
         let publisher = Env.everyMatrixAPIClient
             .loginComplete(username: username, password: password)
-            .mapError { (error: EveryMatrixSocketAPIError) -> UserSessionError in
+            .mapError { (error: EveryMatrix.APIError) -> UserSessionError in
                 switch error {
                 case let .requestError(message) where message.contains("check your username and password"):
                     return .invalidEmailPassword
@@ -93,7 +93,7 @@ class UserSessionStore {
         return publisher
     }
 
-    func registerUser(form: EveryMatrix.SimpleRegisterForm) -> AnyPublisher<Bool, EveryMatrixSocketAPIError> {
+    func registerUser(form: EveryMatrix.SimpleRegisterForm) -> AnyPublisher<Bool, EveryMatrix.APIError> {
         return Env.everyMatrixAPIClient
             .simpleRegister(form: form)
             .map { _ in return true }

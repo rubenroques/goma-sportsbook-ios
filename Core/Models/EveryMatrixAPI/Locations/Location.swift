@@ -9,11 +9,11 @@ import Foundation
 
 struct Location: Decodable {
 
-    let type: String
     let id: String
-    let typeId: String
-    let name: String
-    let shortName: String
+    let type: String?
+    let typeId: String?
+    let name: String?
+    let shortName: String?
     let code: String?
 
     enum CodingKeys: String, CodingKey {

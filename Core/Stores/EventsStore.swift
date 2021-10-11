@@ -32,8 +32,8 @@ class EventsStore: NSObject {
         }
     }
 
-    var matchesPublisher = CurrentValueSubject<Matches, Never>([])
-    private var matches: Matches = [] {
+    var matchesPublisher = CurrentValueSubject<EveryMatrix.Matches, Never>([])
+    private var matches: EveryMatrix.Matches = [] {
         didSet {
             matchesPublisher.send(self.matches)
         }
@@ -57,8 +57,7 @@ class EventsStore: NSObject {
             .eraseToAnyPublisher()
     }
 
-
-    func getMatches(sportType: SportType?) -> AnyPublisher<Matches, Never> {
+    func getMatches(sportType: SportType?) -> AnyPublisher<EveryMatrix.Matches, Never> {
 
         var payload = [
             "lang": localized("languange_code")
@@ -78,37 +77,4 @@ class EventsStore: NSObject {
             })
             .eraseToAnyPublisher()
     }
-
-}
-
-
-enum SportType: String {
-    case football = "1"
-    case basketball = "8"
-    case tennis = "3"
-    case futsal = "49"
-    case footballSimulated = "140"
-    case tennisSimulated = "141"
-    case americanFootball = "5"
-    case baseball = "9"
-    case chess = "52"
-    case cricket = "26"
-    case cycling = "37"
-    case darts = "45"
-    case fighting = "25"
-    case golf = "2"
-    case greyhounds = "27"
-    case handball = "7"
-    case harnessRacing = "74"
-    case horseRacing = "24"
-    case iceHockey = "6"
-    case kabaddi = "155"
-    case motorRacing = "23"
-    case rugbyLeague = "28"
-    case rugbyUnion = "39"
-    case snooker = "36"
-    case specials = "34"
-    case tableTennis = "63"
-    case volleyball = "20"
-    case eSports = "96"
 }

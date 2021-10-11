@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import SwiftUI
 
 class Router {
 
@@ -37,19 +38,24 @@ class Router {
 
     func makeKeyAndVisible() {
 
-        let splashViewController = SplashViewController {
+        let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
-        }
+        })
 
         self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+
         self.rootWindow.rootViewController = splashViewController
         //self.rootWindow.rootViewController = RootViewController()
+
+        //self.rootWindow.rootViewController = SportTypeSelectionViewController(viewModel: SportTypeSelectorViewModel(sportsTypeStore: SportsTypeStore()))
+
         self.rootWindow.makeKeyAndVisible()
 
-        self.subscribeToUserActionBlockers()
     }
 
     func showPostLoadingFlow() {
+
+        self.subscribeToUserActionBlockers()
 
         var bootRootViewController: UIViewController
         if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
@@ -60,7 +66,6 @@ class Router {
         }
         self.rootWindow.rootViewController = bootRootViewController
     }
-
 
     func subscribeToUserActionBlockers() {
         Env.businessSettingsSocket.maintenanceModePublisher

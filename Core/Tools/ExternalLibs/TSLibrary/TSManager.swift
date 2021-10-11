@@ -14,13 +14,14 @@ import Combine
 
 enum TSSubscriptionContent<T> {
     case connect
-    case content(T)
+    case initialContent(T)
+    case updatedContent(T)
     case disconnect
 }
 
 final class TSManager {
     
-    private var cancellable = Set<AnyCancellable>()
+    private var globalCancellable = Set<AnyCancellable>()
     
     private let tsQueue = DispatchQueue(label: "com.goma.games.TSQueue")
     
@@ -79,7 +80,7 @@ final class TSManager {
         }
     }
     
-    func sessionStateChanged() -> AnyPublisher<Bool, EveryMatrixSocketAPIError> {
+    func sessionStateChanged() -> AnyPublisher<Bool, EveryMatrix.APIError> {
         return Future {[self] promise in
             tsQueue.async {
                 if self.swampSession != nil {
@@ -107,8 +108,8 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
     
-    func getModel<T: Decodable>(router: TSRouter, decodingType: T.Type) -> AnyPublisher<T, EveryMatrixSocketAPIError> {
-        return Future<T, EveryMatrixSocketAPIError> { [self] promise in
+    func getModel<T: Decodable>(router: TSRouter, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
+        return Future<T, EveryMatrix.APIError> { [self] promise in
             tsQueue.async {
 
                 guard
@@ -165,7 +166,7 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
 
-    func subscribeProcedure(procedure: TSRouter) -> AnyPublisher<Bool, EveryMatrixSocketAPIError> {
+    func subscribeProcedure(procedure: TSRouter) -> AnyPublisher<Bool, EveryMatrix.APIError> {
         return Future {[self] promise in
             tsQueue.async {
                 guard
@@ -199,16 +200,16 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
 
-    func subscribeEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) throws -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrixSocketAPIError> {
+    func subscribeEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) throws -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
 
         guard
             let swampSession = self.swampSession,
             swampSession.isConnected()
         else {
-            throw EveryMatrixSocketAPIError.notConnected
+            throw EveryMatrix.APIError.notConnected
         }
 
-        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrixSocketAPIError>()
+        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
 
         let args: [String: Any] = endpoint.kwargs ?? [:]
 
@@ -240,16 +241,18 @@ final class TSManager {
         return subject.eraseToAnyPublisher()
     }
 
-    func registerOnEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) throws -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrixSocketAPIError> {
+    func registerOnEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
+
+        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
+
 
         guard
             let swampSession = self.swampSession,
             swampSession.isConnected()
         else {
-            throw EveryMatrixSocketAPIError.notConnected
+            subject.send(completion: .failure(.notConnected))
+            return subject.eraseToAnyPublisher()
         }
-
-        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrixSocketAPIError>()
 
         let args: [String: Any] = endpoint.kwargs ?? [:]
 
@@ -257,28 +260,43 @@ final class TSManager {
 
         swampSession.register(endpoint.procedure, options: args,
         onSuccess: { (registration: Registration) in
-            print("\(registration)")
+            print("registerOnEndpoint - onSuccess \(registration)")
             subject.send(TSSubscriptionContent.connect)
+
+            if let initialDumpEndpoint = endpoint.intiailDumpRequest {
+                self.getModel(router: initialDumpEndpoint, decodingType: decodingType)
+                    .sink { completion in
+                        if case .failure(let error) = completion {
+                            subject.send(TSSubscriptionContent.disconnect)
+                            subject.send(completion: .failure(error))
+                        }
+                    } receiveValue: { decoded in
+                        subject.send(.initialContent(decoded))
+                    }
+                    .store(in: &self.globalCancellable)
+            }
         },
         onError: { (details: [String: Any], errorStr: String) in
             subject.send(TSSubscriptionContent.disconnect)
             subject.send(completion: .failure(.requestError(value: errorStr)))
         },
         onEvent: { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
-            if let code = kwResults?["code"] as? Int {
-                if code == 3 {
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
-                    }
-                    subject.send(TSSubscriptionContent.disconnect)
-                    subject.send(completion: .failure(.notConnected))
+            do {
+                if kwResults != nil {
+                    let decoder = DictionaryDecoder()
+                    decoder.dateDecodingStrategy = .iso8601
+                    let decoded = try decoder.decode(decodingType, from: kwResults!)
+                    subject.send(.updatedContent(decoded))
                 }
-                else if code == 0 {
-                    print("Subscribed!")
+                else {
+                    subject.send(completion: .failure(.noResultsReceived))
                 }
             }
+            catch {
+                print("TSManager Decoding Error: \(error)")
+                subject.send(completion: .failure(.decodingError))
+            }
         })
-
         return subject.eraseToAnyPublisher()
     }
 
@@ -307,7 +325,7 @@ extension TSManager: SSWampSessionDelegate {
             }, receiveValue: { value in
                 Logger.log("TSManager ssWampSessionConnected\(value.description)")
             })
-            .store(in: &cancellable)
+            .store(in: &globalCancellable)
     }
     
     func ssWampSessionEnded(_ reason: String) {

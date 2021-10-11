@@ -10,20 +10,20 @@ import Foundation
 struct Discipline: Decodable {
 
     let type: String
-    let id: String
-    let name: String
-    let shortName: String
-    let isVirtual: Bool
-    let numberOfEvents: Int
-    let numberOfMarkets: Int
-    let numberOfBettingOffers: Int
-    let numberOfLiveEvents: Int
-    let numberOfLiveMarkets: Int
-    let numberOfLiveBettingOffers: Int
-    let numberOfUpcomingMatches: Int
+    let id: String?
+    let name: String?
+    let shortName: String?
+    let isVirtual: Bool?
+    let numberOfEvents: Int?
+    let numberOfMarkets: Int?
+    let numberOfBettingOffers: Int?
+    let numberOfLiveEvents: Int?
+    let numberOfLiveMarkets: Int?
+    let numberOfLiveBettingOffers: Int?
+    let numberOfUpcomingMatches: Int?
     let childrenIds: [String]?
-    let displayChildren: Bool
-    let showEventCategory: Bool
+    let displayChildren: Bool?
+    let showEventCategory: Bool?
 
     enum CodingKeys: String, CodingKey {
         case type = "_type"

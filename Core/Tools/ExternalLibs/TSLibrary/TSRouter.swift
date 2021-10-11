@@ -11,6 +11,7 @@ import Foundation
 enum TSRouter {
 
     case login(username: String, password: String)
+    case getOperatorInfo
     case getSessionInfo
     case validateEmail(email: String)
     case validateUsername(username: String)
@@ -58,17 +59,26 @@ enum TSRouter {
     case events(payload: [String: Any]?)
     case odds(payload: [String: Any]?)
 
-    // GOMA EveryMatrix Subscriptions
+    // GOMA EveryMatrix Subscriptions tests
     case oddsMatch(operatorId: String, language: String, matchId: String)
     case sportsStatus(operatorId: String, language: String, sportId: String)
 
     case sportsInitialDump(topic: String)
 
+    // EveryMatrix <-> GOMA  Subscriptions
+    case sportsPublisher(operatorId: String)
+    case popularMatchesPublisher(operatorId: String, language: String, sportId: String)
+
+    case todayMatchesPublisher(operatorId: String, timezoneOffset: Int, language: String, sportId: String)
+
+
     var procedure: String {
         switch self {
-        // EveryMatrix API
+            // EveryMatrix API
         case .login:
             return "/user#login"
+        case .getOperatorInfo:
+            return "/sports#operatorInfo"
         case .getSessionInfo:
             return "/user#getSessionInfo"
 
@@ -82,7 +92,29 @@ enum TSRouter {
         case .simpleRegister:
             return "/user/account#register"
 
+        //
+        //
+        // EM Subscription
+        // Sports
+        case .sportsInitialDump:
+            return "/sports#initialDump"
+        case .oddsMatch(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds"
+        case .sportsStatus(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/sport/\(sportId)"
+        case .sportsPublisher(let operatorId):
+            return "/sports/\(operatorId)/en/disciplines/BOTH/BOTH"
 
+        case .popularMatchesPublisher(let operatorId, let language, let sportId):
+            let marketsCount = 4
+            let eventsCount = 10
+            return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
+        case .todayMatchesPublisher(let operatorId, let timezoneOffset, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/todays-events-aggregator/\(timezoneOffset)/default-event-info/\(sportId)"
+
+        //
+        //
+        //
         case .disciplines:
             return "/sports#disciplines"
         case .locations:
@@ -104,18 +136,7 @@ enum TSRouter {
         case .odds:
             return "/sports#odds"
 
-
-        // EM Subscription
-        case .oddsMatch(let operatorId, let language, let matchId):
-            return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds"
-        case .sportsStatus(let operatorId, let language, let sportId):
-            return "/sports/\(operatorId)/\(language)/sport/\(sportId)"
-
-        case .sportsInitialDump(let topic):
-            return "/sports#initialDump"
-
-
-        // Others
+            // Others
         case .registrationDismissed:
             return "/registrationDismissed"
         case .getTransportSessionID:
@@ -174,6 +195,8 @@ enum TSRouter {
             return "/user#acceptTCv2"
         case .coolOff24h:
             return "/user/coolOff#enable"
+
+
         }
     }
     
@@ -203,13 +226,17 @@ enum TSRouter {
                     "emailVerificationURL": form.emailVerificationURL,
                     "userConsents": ["termsandconditions": true, "sms": false]]
 
-        //
-        //
+            //
+            //
         case .sportsInitialDump(let topic):
             return ["topic": topic]
+        case .sportsPublisher:
+            return [:]
 
-        //
-        //
+            //
+            //
+            //
+            //
         case .disciplines(payload: let payload):
             return payload
         case .locations(payload: let payload):
@@ -234,16 +261,25 @@ enum TSRouter {
             return [:]
 
         case .getGamingAccounts:
-            return ["expectBalance": true, "expectBonus": true]
+            return ["expectBalance": true,
+                    "expectBonus": true]
 
         case .addToFavorites(id: let gameID), .removeFromFavorites(id: let gameID):
-            return ["anonymousUserIdentity": false, "type": "game", "id": gameID]
+            return ["anonymousUserIdentity": false,
+                    "type": "game",
+                    "id": gameID]
 
         case .getFavorites:
-            return ["anonymousUserIdentity": false, "expectedGameFields": 1, "expectedTableFields": 67108864, "filterByPlatform": ["imobile"], "specificExportFields": ["gameID"]]
+            return ["anonymousUserIdentity": false,
+                    "expectedGameFields": 1,
+                    "expectedTableFields": 67108864,
+                    "filterByPlatform": ["imobile"],
+                    "specificExportFields": ["gameID"]
+            ]
 
         case .getApplicableBonuses(gamingAccountID: let gamingAcctID):
-            return ["type": "transfer", "gamingAccountID": gamingAcctID]
+            return ["type": "transfer",
+                    "gamingAccountID": gamingAcctID]
 
         case .getGrantedBonuses, .getClaimableBonuses:
             return [:]
@@ -253,12 +289,15 @@ enum TSRouter {
 
         case .forfeitBonus(bonusID: let bID):
             return ["bonusID": bID]
-        // swiftlint:disable identifier_name
+
+            // swiftlint:disable identifier_name
         case .setLimit(type: _, period: let p, amount: let a, currency: let c):
-            return ["period" : p, "amount" : a, "currency" : c]
+            return ["period": p,
+                    "amount": a,
+                    "currency": c]
 
         case .realityCheckSet(value: let val):
-            return ["value" : val]
+            return ["value": val]
 
         case .getTransactionHistory(type: let tp, startTime: let st, endTime: let et, pageIndex: let pi, pageSize: let ps):
             return ["type": tp, "startTime": st, "endTime": et, "pageIndex": pi, "pageSize": ps]
@@ -267,22 +306,38 @@ enum TSRouter {
             if sl != nil {
                 if posid != nil {
                     return ["slug": sl!, "realMoney": rm, "culture": cult, "pid": posid!]
-                } else {
+                }
+                else {
                     return ["slug": sl!, "realMoney": rm, "culture": cult]
                 }
-            } else {
+            }
+            else {
                 if posid != nil {
                     return ["tableId": tID!, "realMoney": rm, "culture": cult, "pid": posid!]
-                } else {
+                }
+                else {
                     return ["tableId": tID!, "realMoney": rm, "culture": cult]
                 }
             }
         case .acceptTC:
-            return ["acceptedTermsType" : ""]
+            return ["acceptedTermsType": ""]
         case .coolOff24h:
-            return ["reason": "24hourPanic", "unsatisfiedReason" : "", "period" : "CoolOffFor24Hours"]
+            return ["reason": "24hourPanic", "unsatisfiedReason": "", "period": "CoolOffFor24Hours"]
         default:
             return nil
         }
     }
+
+    var intiailDumpRequest: TSRouter? {
+        switch self {
+        case .popularMatchesPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .todayMatchesPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+            
+        default:
+            return nil
+        }
+    }
+
 }

@@ -7,55 +7,6 @@
 
 import SwiftUI
 
-struct FilterLineView: View {
-    
-    var allowMultiSelection: Bool = false
-    var title: String
-    @State var selected: Bool
-    
-    init(title: String, selected: Bool, multiSelection: Bool) {
-        self.title = title
-        self.selected = selected
-        self.allowMultiSelection = multiSelection
-    }
-    
-    var body: some View {
-        HStack {
-            Text(self.title)
-                .font(.system(size: 18, weight: .bold))
-                .foregroundColor(.white)
-            Spacer()
-            
-            if allowMultiSelection {
-                Button(
-                    action: {
-                        self.selected.toggle()
-                    },
-                    label: { Image(systemName: self.selected ?
-                                    "record.circle" : "circle")
-                        .foregroundColor(.blue)
-                        .font(.system(size: 26, weight: .medium))
-                    }
-                )
-            }
-            else {
-                Button(
-                    action: {
-                        self.selected.toggle()
-                    },
-                    label: {
-                        Image(systemName: self.selected ?
-                                "checkmark.square.fill" : "square")
-                            .foregroundColor(.blue)
-                            .font(.system(size: 26, weight: .medium))
-                    })
-            }
-        }.frame(minHeight: 60)
-    }
-}
-//
-//
-//
 //
 struct CollapsibleView<Content: View>: View {
     
@@ -73,8 +24,8 @@ struct CollapsibleView<Content: View>: View {
     }
     
     var body: some View {
-        VStack {
-            HStack {
+        VStack(spacing: 0) {
+            HStack(spacing: 0) {
                 if isOptional {
                     Button(action: {
                         self.isEnabled.toggle()
@@ -87,6 +38,7 @@ struct CollapsibleView<Content: View>: View {
                         .frame(width: 32.0, height: 32.0)
                     })
                 }
+
                 Button(
                     action: {
                         self.isCollapsed.toggle()
@@ -105,8 +57,7 @@ struct CollapsibleView<Content: View>: View {
                     }
                 )
             }
-            //Rectangle().fill(Color(hex: 0x979797)).frame(height: isCollapsed ? 0 : 1).opacity(0.3)
-            VStack {
+            VStack(spacing: 0) {
                 self.content().opacity( isEnabled ? 1.0 : 0.3 )
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: isCollapsed ? 0 : .none)
@@ -120,19 +71,16 @@ struct CollapsibleView<Content: View>: View {
     }
 }
 
-//
-//
-//
 struct CollapsibleView_Previews: PreviewProvider {
     static var previews: some View {
         CollapsibleView(
-            isOptional: false,
+            isOptional: true,
             label: {
                 Text("Collapsible")
                     .font(.system(size: 18, weight: .bold))
             },
             content: {
-                VStack {
+                VStack(spacing: 5) {
                     FilterLineView(title: "Value 1 - Title",
                                    selected: false,
                                    multiSelection: true)
@@ -158,13 +106,5 @@ struct CollapsibleView_Previews: PreviewProvider {
             }
         )
         .frame(maxWidth: 300)
-        
-        
-    }
-}
-
-extension EdgeInsets {
-    static var zero: EdgeInsets {
-        EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
     }
 }

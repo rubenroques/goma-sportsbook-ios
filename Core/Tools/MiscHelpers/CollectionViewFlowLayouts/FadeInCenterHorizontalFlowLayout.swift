@@ -3,9 +3,9 @@ import UIKit
 class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
 
     // If the cell is in between this middle position it will appear as a normal cell
-    var normalCellMiddleMarginMultiplier = 0.1
-    var alpha = 0.6
-    var minimumScale = 0.7
+    var normalCellMiddleMarginMultiplier = 0.19
+    var alpha = 0.8
+    var minimumScale = 0.8
 
     override init() {
         super.init()
