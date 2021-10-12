@@ -17,6 +17,7 @@ enum TSRouter {
     case validateUsername(username: String)
     case getCountries
     case simpleRegister(form: EveryMatrix.SimpleRegisterForm)
+    case matchDetails(language: String, matchId: String)
 
     case registrationDismissed
     case getTransportSessionID
@@ -68,9 +69,8 @@ enum TSRouter {
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsPublisher(operatorId: String)
     case popularMatchesPublisher(operatorId: String, language: String, sportId: String)
-
-    case todayMatchesPublisher(operatorId: String, timezoneOffset: Int, language: String, sportId: String)
-
+    case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
+    case bannersInfoPublisher(operatorId: String, language: String)
 
     var procedure: String {
         switch self {
@@ -91,7 +91,8 @@ enum TSRouter {
             return "/user/account#getCountries"
         case .simpleRegister:
             return "/user/account#register"
-
+        case .matchDetails:
+            return "/sports#matches"
         //
         //
         // EM Subscription
@@ -106,12 +107,17 @@ enum TSRouter {
             return "/sports/\(operatorId)/en/disciplines/BOTH/BOTH"
 
         case .popularMatchesPublisher(let operatorId, let language, let sportId):
-            let marketsCount = 4
+            let marketsCount = 5
             let eventsCount = 10
             return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
-        case .todayMatchesPublisher(let operatorId, let timezoneOffset, let language, let sportId):
-            return "/sports/\(operatorId)/\(language)/todays-events-aggregator/\(timezoneOffset)/default-event-info/\(sportId)"
 
+        case .todayMatchesPublisher(let operatorId, let language, let sportId):
+            let marketsCount = 5
+            let eventsCount = 10
+            return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
+
+        case .bannersInfoPublisher(let operatorId, let language):
+            return "/sports/\(operatorId)/\(language)/sportsBannerData"
         //
         //
         //
@@ -225,7 +231,10 @@ enum TSRouter {
                     "currency": "EUR",
                     "emailVerificationURL": form.emailVerificationURL,
                     "userConsents": ["termsandconditions": true, "sms": false]]
-
+        case .matchDetails(let language, let matchId):
+            return ["lang": language,
+                    "matchId": matchId]
+            
             //
             //
         case .sportsInitialDump(let topic):
@@ -334,7 +343,8 @@ enum TSRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
-            
+        case .bannersInfoPublisher:
+            return .sportsInitialDump(topic: self.procedure)
         default:
             return nil
         }

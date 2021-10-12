@@ -46,4 +46,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
+    func applicationWillTerminate(_ application: UIApplication) {
+        if !Env.userSessionStore.shouldRecordUserSession {
+            Env.userSessionStore.logout()
+        }
+    }
+
 }

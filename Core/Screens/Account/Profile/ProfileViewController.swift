@@ -241,7 +241,7 @@ class ProfileViewController: UIViewController {
 
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
-            self.infoLabel.text = "App Version \(versionNumber)(\(buildNumber)\nSportsbook® All Rights Reserved"
+            self.infoLabel.text = "App Version \(versionNumber)(\(buildNumber))\nSportsbook® All Rights Reserved"
         }
 
     }

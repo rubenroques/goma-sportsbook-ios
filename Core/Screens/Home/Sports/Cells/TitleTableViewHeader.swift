@@ -9,7 +9,8 @@ import UIKit
 
 class TitleTableViewHeader: UITableViewHeaderFooterView {
 
-    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var baseView: UIView!
+    @IBOutlet weak var sectionTitleLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -18,6 +19,8 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+
+        self.sectionTitleLabel.text = ""
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -27,10 +30,10 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App.mainBackground
-        self.backgroundView?.backgroundColor = UIColor.App.mainBackground
+        self.backgroundColor = .clear
+        self.backgroundView?.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.headingMain
+        self.sectionTitleLabel.textColor = UIColor.App.headingMain
     }
 
 }

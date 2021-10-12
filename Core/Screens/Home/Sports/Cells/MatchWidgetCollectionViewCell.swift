@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
@@ -17,7 +18,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var numberOfBetsLabels: UILabel!
     
     @IBOutlet weak var eventNameLabel: UILabel!
-    @IBOutlet weak var sportTypeImageView: UIImageView!
     @IBOutlet weak var locationFlagImageView: UIImageView!
 
     @IBOutlet weak var favoritesButton: UIButton!
@@ -44,10 +44,25 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var awayOddTitleLabel: UILabel!
     @IBOutlet weak var awayOddValueLabel: UILabel!
 
+    @IBOutlet weak var suspendedBaseView: UIView!
+    @IBOutlet weak var suspendedLabel: UILabel!
 
     var viewModel: MatchWidgetCellViewModel? {
         didSet {
-            
+            if let viewModelValue = self.viewModel {
+                self.eventNameLabel.text = "\(viewModelValue.competitionName)"
+                self.homeParticipantNameLabel.text = "\(viewModelValue.homeTeamName)"
+                self.awayParticipantNameLabel.text = "\(viewModelValue.awayTeamName)"
+                self.dateLabel.text = "\(viewModelValue.startDateString)"
+                self.timeLabel.text = "\(viewModelValue.startTimeString)"
+
+               // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
+                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
+
+                if viewModelValue.isToday {
+                    self.dateLabel.isHidden = true
+                }
+            }
         }
     }
 
@@ -67,7 +82,18 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.backgroundColor = .clear
         self.awayBaseView.backgroundColor = .clear
 
-        self.sportTypeImageView.backgroundColor = .clear
+        self.suspendedBaseView.layer.cornerRadius = 4.5
+        self.homeBaseView.layer.cornerRadius = 4.5
+        self.drawBaseView.layer.cornerRadius = 4.5
+        self.awayBaseView.layer.cornerRadius = 4.5
+
+        self.eventNameLabel.text = ""
+        self.homeParticipantNameLabel.text = ""
+        self.awayParticipantNameLabel.text = ""
+        self.dateLabel.text = ""
+        self.timeLabel.text = ""
+        self.locationFlagImageView.image = nil
+        self.suspendedBaseView.isHidden = true
 
         self.setupWithTheme()
     }
@@ -81,21 +107,30 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.locationFlagImageView.layer.cornerRadius = 3
+        self.locationFlagImageView.layer.cornerRadius = self.locationFlagImageView.frame.size.width / 2
+    }
 
-        self.homeBaseView.layer.cornerRadius = 4
-        self.drawBaseView.layer.cornerRadius = 4
-        self.awayBaseView.layer.cornerRadius = 4
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        self.dateLabel.isHidden = false
+        
+        self.eventNameLabel.text = ""
+        self.homeParticipantNameLabel.text = ""
+        self.awayParticipantNameLabel.text = ""
+        self.dateLabel.text = ""
+        self.timeLabel.text = ""
+        self.locationFlagImageView.image = nil
     }
 
     func setupWithTheme() {
         self.baseView.backgroundColor = UIColor.App.secondaryBackground
 
         self.numberOfBetsLabels.textColor = UIColor.App.headingMain
-        self.eventNameLabel.textColor = UIColor.App.headingMain
+        self.eventNameLabel.textColor = UIColor.App.headingSecondary
         self.homeParticipantNameLabel.textColor = UIColor.App.headingMain
         self.awayParticipantNameLabel.textColor = UIColor.App.headingMain
-        self.dateLabel.textColor = UIColor.App.fadeOutHeading
+        self.dateLabel.textColor = UIColor.App.headingSecondary
         self.timeLabel.textColor = UIColor.App.headingMain
         self.homeOddTitleLabel.textColor = UIColor.App.headingMain
         self.homeOddValueLabel.textColor = UIColor.App.headingMain
@@ -104,10 +139,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayOddTitleLabel.textColor = UIColor.App.headingMain
         self.awayOddValueLabel.textColor = UIColor.App.headingMain
 
-        self.homeBaseView.backgroundColor = UIColor.App.mainBackground
-        self.drawBaseView.backgroundColor = UIColor.App.mainBackground
-        self.awayBaseView.backgroundColor = UIColor.App.mainBackground
+        self.homeBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
 
+        self.suspendedBaseView.backgroundColor = UIColor.App.mainBackground
+        self.suspendedLabel.textColor = UIColor.App.headingDisabled
     }
 
     @IBAction func didTapFavoritesButton(_ sender: Any) {

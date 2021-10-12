@@ -11,6 +11,7 @@ import UIKit
 struct UserSession: Codable {
 
     var username: String
+    var password: String?
     var email: String
     var userId: String
     var birthDate: String

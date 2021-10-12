@@ -32,8 +32,6 @@ struct Environment {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    var remember: Bool = false
-    
     func getUserSettings() -> [GomaClientSettings]? {
         let settingsData = UserDefaults.standard.data(forKey: "user_settings")
         let settingsArray = try? JSONDecoder().decode([GomaClientSettings].self, from: settingsData!)
@@ -50,5 +48,12 @@ extension Environment {
     var timezoneOffsetInMinutes: Int {
         let timeInterval = Env.timezoneOffset
         return Int(timeInterval)/60
+    }
+}
+
+extension Environment {
+
+    var bundleId: String {
+        return Bundle.main.bundleIdentifier ?? "com.goma.sportsbook"
     }
 }

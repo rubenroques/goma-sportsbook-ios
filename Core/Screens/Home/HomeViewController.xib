@@ -44,14 +44,14 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Su0-qa-MeF">
-                    <rect key="frame" x="0.0" y="110" width="610" height="988"/>
+                    <rect key="frame" x="0.0" y="108" width="610" height="990"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fxl-nZ-JeH">
-                            <rect key="frame" x="0.0" y="0.0" width="610" height="988"/>
+                            <rect key="frame" x="0.0" y="0.0" width="610" height="990"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kSr-MY-svK">
-                            <rect key="frame" x="0.0" y="0.0" width="610" height="988"/>
+                            <rect key="frame" x="0.0" y="0.0" width="610" height="990"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                     </subviews>
@@ -68,10 +68,10 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HKG-0A-qeh">
-                    <rect key="frame" x="0.0" y="44" width="610" height="66"/>
+                    <rect key="frame" x="0.0" y="44" width="610" height="64"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9OD-Ud-62c">
-                            <rect key="frame" x="16" y="15" width="36" height="36"/>
+                            <rect key="frame" x="16" y="14" width="36" height="36"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="empty_user_image" translatesAutoresizingMaskIntoConstraints="NO" id="lyV-4f-rcf">
                                     <rect key="frame" x="2" y="2" width="32" height="32"/>
@@ -88,13 +88,13 @@
                             </constraints>
                         </view>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_vertical" translatesAutoresizingMaskIntoConstraints="NO" id="RMW-wP-BFm">
-                            <rect key="frame" x="260" y="11" width="90" height="44"/>
+                            <rect key="frame" x="262" y="11" width="86" height="42"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="RMW-wP-BFm" secondAttribute="height" multiplier="119:58" id="d65-0U-cz5"/>
                             </constraints>
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUd-4d-bYt">
-                            <rect key="frame" x="556" y="10" width="46" height="46"/>
+                            <rect key="frame" x="556" y="9" width="46" height="46"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="46" id="5hh-9M-gpH"/>
                                 <constraint firstAttribute="width" constant="46" id="nwc-VJ-XYZ"/>
@@ -103,7 +103,7 @@
                             <state key="normal" image="search_bar_icon"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="paS-oq-fLH">
-                            <rect key="frame" x="490" y="15.5" width="65" height="35"/>
+                            <rect key="frame" x="490" y="13" width="65" height="38"/>
                             <color key="backgroundColor" name="primaryButtonNormalColor"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="13"/>
                             <inset key="contentEdgeInsets" minX="16" minY="11" maxX="16" maxY="11"/>
@@ -124,7 +124,7 @@
                         <constraint firstItem="paS-oq-fLH" firstAttribute="centerY" secondItem="HKG-0A-qeh" secondAttribute="centerY" id="Nuf-k8-Zok"/>
                         <constraint firstItem="RMW-wP-BFm" firstAttribute="centerX" secondItem="HKG-0A-qeh" secondAttribute="centerX" id="WG5-mn-y72"/>
                         <constraint firstItem="xUd-4d-bYt" firstAttribute="centerY" secondItem="HKG-0A-qeh" secondAttribute="centerY" id="bgw-d8-w77"/>
-                        <constraint firstAttribute="height" constant="66" id="jz2-lw-DDM"/>
+                        <constraint firstAttribute="height" constant="64" id="jz2-lw-DDM"/>
                         <constraint firstItem="xUd-4d-bYt" firstAttribute="leading" secondItem="paS-oq-fLH" secondAttribute="trailing" constant="1" id="mHM-ka-W9K"/>
                     </constraints>
                 </view>
@@ -220,7 +220,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="7JK-Qm-Mkc" secondAttribute="bottom" id="GFm-rx-dAa"/>
                 <constraint firstItem="KmS-Xh-sK7" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="bottom" id="I3d-Sn-A63"/>
                 <constraint firstAttribute="bottom" secondItem="fh2-pN-wGO" secondAttribute="bottom" id="IaO-aZ-vOW"/>
-                <constraint firstItem="Su0-qa-MeF" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="66" id="Qbk-ts-lo6"/>
+                <constraint firstItem="Su0-qa-MeF" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="64" id="Qbk-ts-lo6"/>
                 <constraint firstItem="fh2-pN-wGO" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="VGC-s9-tca"/>
                 <constraint firstItem="7JK-Qm-Mkc" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Y6f-dB-wQ1"/>
                 <constraint firstItem="7JK-Qm-Mkc" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="aeq-G1-jmc"/>

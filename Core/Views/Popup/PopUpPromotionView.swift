@@ -213,7 +213,7 @@ class PopUpPromotionView: NibView {
 
 }
 
-// Todo: colocas as extensions no ficheiros proprios
+// ToDo: colocas as extensions no ficheiros proprios
 extension UIImageView {
    func roundCorners(corners: UIRectCorner, radius: CGFloat) {
         let path = UIBezierPath(roundedRect: bounds, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))

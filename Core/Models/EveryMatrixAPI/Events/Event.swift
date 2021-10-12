@@ -11,7 +11,7 @@ typealias Events = [Event]
 
 enum Event: Decodable {
     case match(EveryMatrix.Match)
-    case tournament(Tournament)
+    case tournament(EveryMatrix.Tournament)
     case unknown
 
     enum CodingKeys: String, CodingKey {
@@ -32,7 +32,7 @@ enum Event: Decodable {
             let match = try objectContainer.decode(EveryMatrix.Match.self)
             self = .match(match)
         case .tournament:
-            let tournament = try objectContainer.decode(Tournament.self)
+            let tournament = try objectContainer.decode(EveryMatrix.Tournament.self)
             self = .tournament(tournament)
         case .unknown:
             self = .unknown

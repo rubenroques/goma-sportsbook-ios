@@ -19,8 +19,21 @@ class UserSessionStore {
 
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
 
+    var shouldRecordUserSession = true
+
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
+    }
+
+    static func storedUserPassword() -> String? {
+        guard
+            let storedUserSession = UserSessionStore.loggedUserSession(),
+            let passwordData = try? KeychainInterface.readPassword(service: Env.bundleId, account: storedUserSession.userId),
+            let password = String(data: passwordData, encoding: .utf8)
+        else {
+            return nil
+        }
+        return password
     }
 
     static func isUserLogged() -> Bool {
@@ -31,7 +44,17 @@ class UserSessionStore {
         userSessionPublisher.send(userSession)
 
         UserDefaults.standard.userSession = userSession
+
+        if let password = userSession.password, let passwordData = password.data(using: .utf8) {
+            do {
+                try KeychainInterface.save(password: passwordData, service: Env.bundleId, account: userSession.userId)
+            }
+            catch {
+                shouldRecordUserSession = false
+            }
+        }
     }
+
 
     func loadLoggedUser() {
         if let user = UserSessionStore.loggedUserSession() {
@@ -54,9 +77,14 @@ class UserSessionStore {
 
     //
     func logout() {
-        UserDefaults.standard.userSession = nil
 
+        if let userSession = UserSessionStore.loggedUserSession() {
+            try? KeychainInterface.deletePassword(service: Env.bundleId, account: userSession.userId)
+        }
+
+        UserDefaults.standard.userSession = nil
         userSessionPublisher.send(nil)
+
 
         Env.everyMatrixAPIClient
             .logout()
@@ -82,6 +110,7 @@ class UserSessionStore {
             }
             .map { sessionInfo in
                 UserSession(username: sessionInfo.username,
+                            password: password,
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)",
                             birthDate: sessionInfo.birthDate
