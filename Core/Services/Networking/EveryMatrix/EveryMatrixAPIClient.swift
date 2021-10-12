@@ -96,7 +96,7 @@ class EveryMatrixAPIClient: ObservableObject {
     }
 
     func getDisciplines(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<Discipline>.self)
+        TSManager.shared.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -114,7 +114,7 @@ class EveryMatrixAPIClient: ObservableObject {
     }
 
     func getLocations(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .locations(payload: payload), decodingType: EveryMatrixSocketResponse<Location>.self)
+        TSManager.shared.getModel(router: .locations(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -132,7 +132,7 @@ class EveryMatrixAPIClient: ObservableObject {
     }
 
     func getTournaments(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .tournaments(payload: payload), decodingType: EveryMatrixSocketResponse<Tournament>.self)
+        TSManager.shared.getModel(router: .tournaments(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -150,7 +150,7 @@ class EveryMatrixAPIClient: ObservableObject {
     }
 
     func getPopularTournaments(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .popularTournaments(payload: payload), decodingType: EveryMatrixSocketResponse<Tournament>.self)
+        TSManager.shared.getModel(router: .popularTournaments(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -264,16 +264,16 @@ class EveryMatrixAPIClient: ObservableObject {
         }
     }
 
-    func subscribeSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<Discipline>, EveryMatrix.APIError> {
+    func subscribeSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
         do {
             let sportId = sportType.rawValue
             let operatorId = Env.appSession.operatorId
             let publisher = try TSManager.shared.subscribeEndpoint( .sportsStatus(operatorId: operatorId,
                                                                                   language: language,
                                                                                   sportId: sportId),
-                                                                    decodingType: EveryMatrixSocketResponse<Discipline>.self)
+                                                                    decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
 
-                .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<Discipline>>) -> EveryMatrixSocketResponse<Discipline>? in
+                .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Discipline>>) -> EveryMatrixSocketResponse<EveryMatrix.Discipline>? in
                     print("subscriptionContent \(subscriptionContent)")
                     switch subscriptionContent {
                     case let .updatedContent(oddsData):
@@ -287,20 +287,20 @@ class EveryMatrixAPIClient: ObservableObject {
             return publisher.eraseToAnyPublisher()
         }
         catch {
-            return Fail.init(outputType: EveryMatrixSocketResponse<Discipline>.self, failure: EveryMatrix.APIError.notConnected).eraseToAnyPublisher()
+            return Fail.init(outputType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self, failure: EveryMatrix.APIError.notConnected).eraseToAnyPublisher()
         }
     }
 
-    func registerOnSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<Discipline>, EveryMatrix.APIError> {
+    func registerOnSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
 
         let sportId = sportType.rawValue
         let operatorId = Env.appSession.operatorId
         let publisher = TSManager.shared.registerOnEndpoint(.sportsStatus(operatorId: operatorId,
                                                                               language: language,
                                                                               sportId: sportId),
-                                                                decodingType: EveryMatrixSocketResponse<Discipline>.self)
+                                                            decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
 
-            .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<Discipline>>) -> EveryMatrixSocketResponse<Discipline>? in
+            .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Discipline>>) -> EveryMatrixSocketResponse<EveryMatrix.Discipline>? in
                 print("subscriptionContent \(subscriptionContent)")
                 switch subscriptionContent {
                 case let .updatedContent(oddsData):

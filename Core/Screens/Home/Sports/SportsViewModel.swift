@@ -11,7 +11,7 @@ import Combine
 
 class SportsViewModel {
 
-    private var banners: [BannerInfo] = []
+    private var banners: [EveryMatrix.BannerInfo] = []
     private var bannersViewModel: BannerLineCellViewModel?
     private var userMessages: [String] = []
 
@@ -27,7 +27,7 @@ class SportsViewModel {
     }
 
     enum CellType {
-        case banner(banners: [BannerInfo])
+        case banner(banners: [EveryMatrix.BannerInfo])
         case userMessage(text: String)
         case match(match: EveryMatrix.Match)
     }
@@ -97,7 +97,7 @@ class SportsViewModel {
         return contentList
     }
 
-    private func setupPopularAggregatorProcessor(aggregator: Aggregator) {
+    private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: AggregatorListType.popularEvents)
         let matches = Env.everyMatrixStorage.matchesForListType(AggregatorListType.popularEvents)
 
@@ -106,7 +106,7 @@ class SportsViewModel {
         self.updateContentList()
     }
 
-    private func setupTodayAggregatorProcessor(aggregator: Aggregator) {
+    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: AggregatorListType.todayEvents)
 
         let matches = Env.everyMatrixStorage.matchesForListType(AggregatorListType.todayEvents)
@@ -123,7 +123,7 @@ class SportsViewModel {
                                                         sportId: "1")
 
         TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: Aggregator.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -155,7 +155,7 @@ class SportsViewModel {
                                                       sportId: "1")
 
         TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: Aggregator.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -186,7 +186,7 @@ class SportsViewModel {
     func fetchBanners() {
         let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
         TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<BannerInfo>.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -314,7 +314,8 @@ class SportsViewModel {
         }
 
         let matchViewModel = MatchWidgetCellViewModel(match: matchAtIndex)
-        return MatchLineCellViewModel(matchWidgetCellViewModel: matchViewModel)
+        let marketsIdsForMatch = Env.everyMatrixStorage.marketsForMatch[matchAtIndex.id] ?? []
+        return MatchLineCellViewModel(matchWidgetCellViewModel: matchViewModel, marketsIds: marketsIdsForMatch)
     }
 
     func createBannersViewModel() -> BannerLineCellViewModel {

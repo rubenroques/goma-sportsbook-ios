@@ -69,8 +69,25 @@ struct UserInfoCellViewModel {
 
 }
 
+struct MarketOutcome {
+
+}
+
+struct MarketWidgetCellViewModel {
+
+    var name: String
+    var outcomes: [EveryMatrix.BetOutcome]
+
+    init(name: String, outcomes: [EveryMatrix.BetOutcome]) {
+        self.name = name
+        self.outcomes = outcomes
+    }
+    
+}
+
 struct MatchLineCellViewModel {
     var matchWidgetCellViewModel: MatchWidgetCellViewModel
+    var marketsIds: [String]
 }
 
 

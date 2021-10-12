@@ -398,6 +398,8 @@
 		45D728D227158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D728CF27158DA400EFE04D /* BannerMatchCollectionViewCell.swift */; };
 		45D728D327158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
 		45D728D427158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */; };
+		45D728D72715F6DC00EFE04D /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D728D62715F6DC00EFE04D /* Match.swift */; };
+		45D728D82715F6DC00EFE04D /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D728D62715F6DC00EFE04D /* Match.swift */; };
 		45D871BE270F5B5500F5B87B /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871BD270F5B5500F5B87B /* Aggregator.swift */; };
 		45D871BF270F5B5500F5B87B /* Aggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871BD270F5B5500F5B87B /* Aggregator.swift */; };
 		45D871C22710769600F5B87B /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 45D871C12710769600F5B87B /* Collections */; };
@@ -766,6 +768,7 @@
 		45D728CC2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetCellViewModel.swift; sourceTree = "<group>"; };
 		45D728CF27158DA400EFE04D /* BannerMatchCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerMatchCollectionViewCell.swift; sourceTree = "<group>"; };
 		45D728D027158DA400EFE04D /* BannerMatchCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BannerMatchCollectionViewCell.xib; sourceTree = "<group>"; };
+		45D728D62715F6DC00EFE04D /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		45D871BD270F5B5500F5B87B /* Aggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aggregator.swift; sourceTree = "<group>"; };
 		45D871CB27108F5900F5B87B /* CountryFlags.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = CountryFlags.xcassets; sourceTree = "<group>"; };
 		45D871CF2710995700F5B87B /* AggregatorsInMemoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorsInMemoryStore.swift; sourceTree = "<group>"; };
@@ -1365,6 +1368,7 @@
 		456B341326C13AEE009D7D27 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				45D728D52715F6C700EFE04D /* App */,
 				45B7DADD26F92CC30032C1C3 /* Shared */,
 				A9B840C126E1270E00269B05 /* EveryMatrixAPI */,
 			);
@@ -1635,6 +1639,14 @@
 				45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */,
 			);
 			path = LiveEvents;
+			sourceTree = "<group>";
+		};
+		45D728D52715F6C700EFE04D /* App */ = {
+			isa = PBXGroup;
+			children = (
+				45D728D62715F6DC00EFE04D /* Match.swift */,
+			);
+			path = App;
 			sourceTree = "<group>";
 		};
 		45D871CE271098F100F5B87B /* Cells */ = {
@@ -2330,6 +2342,7 @@
 				A9B841B226E9054700269B05 /* Market.swift in Sources */,
 				45B7DADB26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
+				45D728D72715F6DC00EFE04D /* Match.swift in Sources */,
 				45166CFF26F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
@@ -2534,6 +2547,7 @@
 				A9B841B326E9054700269B05 /* Market.swift in Sources */,
 				45B7DADC26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
+				45D728D82715F6DC00EFE04D /* Match.swift in Sources */,
 				45166D0026F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,

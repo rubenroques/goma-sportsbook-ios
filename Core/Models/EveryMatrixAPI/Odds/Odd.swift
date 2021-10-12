@@ -8,10 +8,11 @@
 import Foundation
 
 enum Odd: Decodable {
+    
     case match(EveryMatrix.Match)
-    case bettingOffer(BettingOffer)
-    case outcome(BetOutcome)
-    case marketOutcomeRelation(MarketOutcomeRelation)
+    case bettingOffer(EveryMatrix.BettingOffer)
+    case outcome(EveryMatrix.BetOutcome)
+    case marketOutcomeRelation(EveryMatrix.MarketOutcomeRelation)
     case unknown
 
     enum CodingKeys: String, CodingKey {
@@ -32,13 +33,13 @@ enum Odd: Decodable {
             let match = try objectContainer.decode(EveryMatrix.Match.self)
             self = .match(match)
         case .bettingOffer:
-            let bettingOffer = try objectContainer.decode(BettingOffer.self)
+            let bettingOffer = try objectContainer.decode(EveryMatrix.BettingOffer.self)
             self = .bettingOffer(bettingOffer)
         case .outcome:
-            let outcome = try objectContainer.decode(BetOutcome.self)
+            let outcome = try objectContainer.decode(EveryMatrix.BetOutcome.self)
             self = .outcome(outcome)
         case .marketOutcomeRelation:
-            let marketOutcomeRelation = try objectContainer.decode(MarketOutcomeRelation.self)
+            let marketOutcomeRelation = try objectContainer.decode(EveryMatrix.MarketOutcomeRelation.self)
             self = .marketOutcomeRelation(marketOutcomeRelation)
         case .unknown:
             self = .unknown
