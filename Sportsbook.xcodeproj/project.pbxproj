@@ -428,6 +428,14 @@
 		45EF5439270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
 		45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
+		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
+		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
+		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
+		A98D3B2D2714858E003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
+		A98D3B3127148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */; };
+		A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */; };
+		A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
+		A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -759,6 +767,10 @@
 		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
+		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
+		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
+		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
+		A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
@@ -1589,6 +1601,7 @@
 		45D712EC27031C4F00AC0364 /* Sports */ = {
 			isa = PBXGroup;
 			children = (
+				A98D3B272714817C003BAE6F /* SportSelection */,
 				45D871CF2710995700F5B87B /* AggregatorsInMemoryStore.swift */,
 				458F4C912712AB1900AC13DB /* SportsViewModel.swift */,
 				45D712F027031DDE00AC0364 /* SportsViewController.swift */,
@@ -1659,6 +1672,25 @@
 				45BF4E6C270DC37D00785E79 /* FilterLineView.swift */,
 			);
 			path = Filters;
+			sourceTree = "<group>";
+		};
+		A98D3B272714817C003BAE6F /* SportSelection */ = {
+			isa = PBXGroup;
+			children = (
+				A98D3B2E271488EE003BAE6F /* Cells */,
+				A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */,
+				A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */,
+			);
+			path = SportSelection;
+			sourceTree = "<group>";
+		};
+		A98D3B2E271488EE003BAE6F /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */,
+				A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
@@ -2046,6 +2078,7 @@
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
 				457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
+				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
 				A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
@@ -2066,6 +2099,7 @@
 				457816B12706699900F66878 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				A9B840A726DE831400269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
+				A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				A9C82FC526F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
 				455C962326FDD66400456F30 /* ProfileViewController.xib in Resources */,
 				45D712FA27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
@@ -2095,6 +2129,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A98D3B2D2714858E003BAE6F /* SportSelectionViewController.xib in Resources */,
 				45BEA48026F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45D712FB27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */,
@@ -2121,6 +2156,7 @@
 				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
+				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
@@ -2227,6 +2263,7 @@
 				455A0D0A26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898026C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
+				A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */,
 				452047B62703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
@@ -2302,6 +2339,7 @@
 				45166D0B26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */,
 				455A0CE426BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
+				A98D3B3127148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
@@ -2425,6 +2463,7 @@
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
+				A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */,
 				452047B72703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
@@ -2500,6 +2539,7 @@
 				45166D0C26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */,
 				455A0CE526BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
+				A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,

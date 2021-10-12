@@ -46,6 +46,7 @@ class SportsViewController: UIViewController {
     var viewModel: SportsViewModel
 
     var filterSelectedOption: Int = 0
+    var sportSelected: String = "1"
 
     init() {
         self.viewModel = SportsViewModel()
@@ -145,7 +146,15 @@ class SportsViewController: UIViewController {
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
 
+        let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(self.handleSportsSelectionTap(_:)))
+        sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
 
+    }
+
+    @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
+        let sportSelectionVC = SportSelectionViewController(defaultSport: self.sportSelected)
+        sportSelectionVC.delegate = self
+        self.present(sportSelectionVC, animated: true, completion: nil)
     }
 
     override func viewDidLayoutSubviews() {
@@ -254,4 +263,14 @@ extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
 
 
+}
+
+protocol SportsViewDelegate: AnyObject {
+    func setSport(sport: String)
+}
+
+extension SportsViewController: SportsViewDelegate {
+    func setSport(sport: String) {
+        self.sportSelected = sport
+    }
 }
