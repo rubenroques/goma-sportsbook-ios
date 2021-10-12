@@ -12,7 +12,7 @@ struct Aggregator: Decodable {
     var content: [Content]
     var messageType: ContentType
 
-    enum ContentType: Decodable {
+    enum ContentType: String, Decodable {
         case update
         case initialDump
     }

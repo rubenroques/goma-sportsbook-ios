@@ -8,22 +8,71 @@
 import UIKit
 import Combine
 import OrderedCollections
+import SwiftUI
 
-struct BannerCellViewModel {
+class BannerLineCellViewModel {
 
+    var banners: [BannerCellViewModel]
+
+    init(banners: [BannerCellViewModel]) {
+        self.banners = banners
+    }
 }
+
+class BannerCellViewModel {
+
+    enum PresentationType {
+        case image
+        case match
+    }
+
+    var presentationType: PresentationType
+    var matchId: String?
+    var imageURL: URL?
+
+    var match: CurrentValueSubject<EveryMatrix.Match?, Never> = .init(nil)
+
+    var cancellables = Set<AnyCancellable>()
+
+    init(matchId: String?, imageURL: String) {
+        self.matchId = matchId
+        let imageURLString = imageURL
+
+        if let matchId = self.matchId {
+            self.presentationType = .match
+            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+            self.requestMatchInfo(matchId)
+        }
+        else {
+            self.presentationType = .image
+            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+        }
+
+    }
+
+    func requestMatchInfo(_ matchId: String) {
+        let language = "en"
+        Env.everyMatrixAPIClient.getMatchDetails(language: language, matchId: matchId)
+            .sink { _ in
+
+            } receiveValue: { response in
+                if let match = response.records?.first {
+                    self.match.send(match)
+                }
+            }
+            .store(in: &cancellables)
+    }
+}
+
 
 struct UserInfoCellViewModel {
 
 }
 
 struct MatchLineCellViewModel {
-
+    var matchWidgetCellViewModel: MatchWidgetCellViewModel
 }
 
-struct MatchWidgetCellViewModel {
-
-}
 
 class SportsViewController: UIViewController {
 
@@ -138,14 +187,16 @@ class SportsViewController: UIViewController {
         
         tableView.separatorStyle = .none
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
+        tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
+        tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        
         tableView.delegate = self
         tableView.dataSource = self
 
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
-
-
     }
 
     override func viewDidLayoutSubviews() {
@@ -179,14 +230,11 @@ extension SportsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        return self.viewModel.cellForRowAt(indexPath: indexPath, onTableView: tableView)
+    }
 
-        guard
-            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self)
-        else {
-            fatalError()
-        }
-
-        return cell
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return self.viewModel.viewForHeaderInSection(section, tableView: tableView)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -196,6 +244,23 @@ extension SportsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 155
     }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return self.viewModel.heightForHeaderInSection(section: section, tableView: tableView)
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.01
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return 0.01
+    }
+
 }
 
 extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -245,6 +310,8 @@ extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSo
             self.viewModel.setMatchListType(.myGames)
         case 1:
             self.viewModel.setMatchListType(.today)
+        case 2:
+            self.viewModel.setMatchListType(.competitions)
         default:
             ()
         }

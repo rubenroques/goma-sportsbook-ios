@@ -85,7 +85,6 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
             .sink(receiveValue: requestValidEmailCheck)
             .store(in: &cancellables)
 
-
         if self.isModal {
             self.skipButton.isHidden = true
         }

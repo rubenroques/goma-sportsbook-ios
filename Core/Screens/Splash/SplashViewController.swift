@@ -29,18 +29,10 @@ class SplashViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-
         Logger.log("Starting connections")
-        _ = TSManager.shared.isConnected
-
-
 
         NotificationCenter.default.publisher(for: .wampSocketConnected)
             .setFailureType(to: EveryMatrix.APIError.self)
-//            .flatMap({ _ -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> in
-//                return EveryMatrixAPIClient.operatorInfo()
-//            })
-//            .eraseToAnyPublisher()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 Logger.log("completion \(completion)")
@@ -63,39 +55,27 @@ class SplashViewController: UIViewController {
     }
 
     func startUserSessionIfNeeded() {
-//
-//        EveryMatrixAPIClient.operatorInfo().sink(receiveCompletion: { completion in
-//            Logger.log("completion \(completion)")
-//
-//        }, receiveValue: { operatorInfo in
-//            Logger.log("Socket connected: \(TSManager.shared.isConnected)")
-//            self.startUserSessionIfNeeded()
-//        })
-//        .store(in: &cancellables)
 
         guard
-            let user = UserSessionStore.loggedUserSession()
+            let user = UserSessionStore.loggedUserSession(),
+            let userPassword = UserSessionStore.storedUserPassword()
         else {
             self.splashLoadingCompleted()
             return
         }
 
-        let username = user.username
-        let password = "12345678-GOMA-sportsbook"
+        Env.userSessionStore.loadLoggedUser()
 
         TSManager.shared
-            .getModel(router: .login(username: username, password: password), decodingType: LoginAccount.self)
+            .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
             .receive(on: RunLoop.main)
             .sink { completion in
-                print(completion)
-
                 switch completion {
                 case .finished:
                     self.splashLoadingCompleted()
                 case .failure(let error):
                     print("error \(error)")
                 }
-
             } receiveValue: { account in
                 print(account)
             }

@@ -49,6 +49,9 @@ class LoginViewController: UIViewController {
         commonInit()
         setupWithTheme()
 
+        //Default value
+        Env.userSessionStore.shouldRecordUserSession = true
+
         Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
             .map { username, password in
                 return (username?.isNotEmpty ?? false) && (password?.isNotEmpty ?? false)
@@ -280,13 +283,13 @@ class LoginViewController: UIViewController {
     private func enableRememberUser() {
         rememberImageView.image = UIImage(named: "active_toggle_icon")
         rememberToggleView.backgroundColor = UIColor.App.mainTint
-        Env.remember = true
+        Env.userSessionStore.shouldRecordUserSession = true
     }
 
     private func disableRememberUser() {
         rememberImageView.image = nil
         rememberToggleView.backgroundColor = UIColor.App.secondaryBackground
-        Env.remember = false
+        Env.userSessionStore.shouldRecordUserSession = false
     }
 
     @objc func didTapBackground() {

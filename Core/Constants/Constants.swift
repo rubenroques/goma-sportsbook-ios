@@ -34,11 +34,13 @@ enum EveryMatrixInfo {
     static func emailVerificationURL(withUserEmail email: String) -> String {
         return "https://sportsbook-cms.gomagaming.com/Register/Activate?email=\(email)&key="
     }
+
+    static let staticHost = "https://static.everymatrix.com"
 }
 
 enum Assets {
     static func flagName(withCountryCode code: String) -> String {
-        return "country_flag_\(code)"
+        return "country_flag_\(code.lowercased())"
     }
 }
 

@@ -109,8 +109,10 @@ extension EveryMatrix {
 extension EveryMatrix.Match {
     var startDate: Date? {
         if let timestamp = startTimestamp {
-            let normalizedTimestamp: Double = Double(timestamp)/100.0
-            return Date(timeIntervalSince1970: normalizedTimestamp)
+            let normalizedTimestamp: Double = Double(timestamp)/1000.0
+            let date = Date(timeIntervalSince1970: normalizedTimestamp)
+            print("DATEDEBUG \(date) - \(timestamp)")
+            return date
         }
         return nil
     }

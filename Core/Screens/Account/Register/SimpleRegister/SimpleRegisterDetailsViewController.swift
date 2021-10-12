@@ -64,17 +64,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-//        let code: String = String(UUID().uuidString.split(separator: "-").first!)
-
-//        self.usernameHeaderTextView.setText("rroques\(code)")
-//        self.dateHeaderTextView.setText("1989-06-01")
-//        self.indicativeHeaderTextView.setText("+351")
-//        self.phoneHeaderTextView.setText("961632773")
-//        self.emailHeaderTextView.setText("email\(code)@u461.com")
-//        self.passwordHeaderTextView.setText("goma-dev-test-1")
-//        self.confirmPasswordHeaderTextView.setText("goma-dev-test-1")
-
         self.setupPublishers()
     }
 

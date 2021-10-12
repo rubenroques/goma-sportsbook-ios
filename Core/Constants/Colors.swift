@@ -16,11 +16,17 @@ extension UIColor {
         
         static let mainBackground = UIColor(named: "mainBackgroundColor")!
         static let secondaryBackground = UIColor(named: "secondaryBackgroundColor")!
+        static let tertiaryBackground = UIColor(named: "tertiaryBackgroundColor")!
+
         static let contentBackground = UIColor(named: "contentBackgroundColor")!
         
         static let separatorLine = UIColor(named: "separatorLineColor")!
         static let fadeOutHeading = UIColor(named: "fadeOutHeadingColor")!
+
         static let headingMain = UIColor(named: "headingMainColor")!
+        static let headingSecondary = UIColor(named: "headingSecondaryColor")!
+        static let headingDisabled = UIColor(named: "headingDisabledColor")!
+
         static let headerTextField = UIColor(named: "headerTextFieldGrayColor")!
         
         static let primaryButtonNormal = UIColor(named: "primaryButtonNormalColor")!

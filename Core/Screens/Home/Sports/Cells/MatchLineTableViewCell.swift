@@ -31,22 +31,26 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
-
+        
         let flowLayout = FadeInCenterHorizontalFlowLayout()
+        flowLayout.alpha = 0.38
+        flowLayout.minimumScale = 0.7
         //flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = flowLayout
 
-        let screenWidth = UIScreen.main.bounds.size.width
-        let inset = (screenWidth - cellWidth) / 2
-        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+//        let screenWidth = UIScreen.main.bounds.size.width
+//        let inset = (screenWidth - cellWidth) / 2
+//        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+
+        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 
         self.setupWithTheme()
     }
 
     override func prepareForReuse() {
-        self.collectionView.layoutIfNeeded()
-        self.collectionView.contentOffset = .zero
+        super.prepareForReuse()
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -63,6 +67,10 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionBaseView.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
         self.collectionView.backgroundView?.backgroundColor = .clear
+    }
+
+    func setupWithViewModel(_ viewModel : MatchLineCellViewModel) {
+
     }
 
 }
@@ -86,13 +94,16 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 fatalError()
             }
 
+            if let matchWidgetCellViewModel = self.viewModel?.matchWidgetCellViewModel {
+                cell.viewModel = matchWidgetCellViewModel
+            }
             return cell
         }
         else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
-            cell.backgroundView?.backgroundColor = .red
-            cell.backgroundColor = .red
-
+            cell.backgroundView?.backgroundColor = UIColor.App.secondaryBackground
+            cell.backgroundColor = UIColor.App.secondaryBackground
+            cell.layer.cornerRadius = 9
             return cell
         }
     }
@@ -106,7 +117,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return -9
+        return 0
     }
 
     func collectionView(_ collectionView: UICollectionView,

@@ -41,6 +41,7 @@ struct PopUpStore {
         cache[id] = Date(timeIntervalSinceReferenceDate: nextShowDate)
         
         UserDefaults.standard.set(codable: cache, forKey: PopUpStore.key)
+        UserDefaults.standard.synchronize()
     }
     
 }
