@@ -12,15 +12,17 @@ struct Match {
     var competitionName: String
     var homeParticipant: Participant
     var awayParticipant: Participant
-    var date: Date
+    var date: Date?
     var sportType: String
-    var venue: Venue
+    var venue: Venue?
+    var numberTotalOfMarkets: Int
     var markets: [Market]
 }
 
 struct Venue {
     var id: String
     var name: String
+    var isoCode: String
 }
 
 struct Participant {
@@ -37,7 +39,11 @@ struct Market {
 
 struct Outcome {
     var id: String
-    var name: String
+    var codeName: String
+    var translatedName: String
+    var nameDigit1: Double?
+    var nameDigit2: Double?
+    var nameDigit3: Double?
     var bettingOffer: BettingOffer
 }
 

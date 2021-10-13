@@ -126,7 +126,13 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 347, height: 158)
+
+        let screenWidth = UIScreen.main.bounds.size.width
+        var width = screenWidth*0.9
+        if width > 390 {
+            width = 390
+        }
+        return CGSize(width: width, height: 158) // design width: 331
     }
 }
 

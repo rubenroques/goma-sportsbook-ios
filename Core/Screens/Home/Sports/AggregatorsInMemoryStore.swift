@@ -32,8 +32,13 @@ class AggregatorsInMemoryStore {
 
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
+    var mainMarketsOrder: OrderedSet<String> = []
 
-    func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType) {
+    func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
+
+        if shouldClear {
+            self.matchesForType = [:]
+        }
 
         for content in aggregator.content {
             switch content {
@@ -72,6 +77,8 @@ class AggregatorsInMemoryStore {
 
             case .mainMarket(let market):
                 mainMarkets[market.id] = market
+                mainMarketsOrder.append(market.bettingTypeId ?? "")
+
             case .marketOutcomeRelation(let marketOutcomeRelationContent):
                 marketOutcomeRelations[marketOutcomeRelationContent.id] = marketOutcomeRelationContent
 
@@ -96,7 +103,7 @@ class AggregatorsInMemoryStore {
         }
     }
 
-    func matchesForListType(_ listType: AggregatorListType) -> EveryMatrix.Matches {
+    func rawMatchesForListType(_ listType: AggregatorListType) -> EveryMatrix.Matches {
         guard let matchesIds = self.matchesForType[listType] else {
             return []
         }
@@ -109,8 +116,127 @@ class AggregatorsInMemoryStore {
         return matchesList
     }
 
+    func matchesForListType(_ listType: AggregatorListType) -> [Match] {
+
+        guard let matchesIds = self.matchesForType[listType] else {
+            return []
+        }
+
+        let rawMatchesList = matchesIds.map { id in
+            return matches[id]
+        }
+        .compactMap({$0})
+
+        var matchesList: [Match] = []
+
+        for rawMatch in rawMatchesList {
+
+            var matchMarkets: [Market] = []
+
+            let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
+            let rawMarketsList = marketsIds.map { id in
+                return self.markets[id]
+            }
+            .compactMap({$0})
+
+
+            for rawMarket  in rawMarketsList {
+
+                let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
+
+                let rawOutcomesList = rawOutcomeIds.map { id in
+                    return self.betOutcomes[id]
+                }
+                .compactMap({$0})
+
+                var outcomes: [Outcome] = []
+                for rawOutcome in rawOutcomesList {
+
+                    if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
+                        let bettingOffer = BettingOffer(id: rawBettingOffer.id,
+                                                        value: rawBettingOffer.oddsValue ?? 0.0)
+
+                        let outcome = Outcome(id: rawOutcome.id,
+                                              codeName: rawOutcome.headerNameKey ?? "",
+                                              translatedName: rawOutcome.headerName ?? "",
+                                              nameDigit1: rawOutcome.paramFloat1,
+                                              nameDigit2: rawOutcome.paramFloat2,
+                                              nameDigit3: rawOutcome.paramFloat3,
+                                              bettingOffer: bettingOffer)
+                        outcomes.append(outcome)
+                    }
+                }
+
+                let sortedOutcomes = outcomes.sorted { out1, out2 in
+                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
+                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+                    return out1Value < out2Value
+                }
+
+                let market = Market(id: rawMarket.id,
+                                    typeId: rawMarket.bettingTypeId ?? "",
+                                    name: rawMarket.shortName ?? "",
+                                    outcomes: sortedOutcomes)
+                matchMarkets.append(market)
+            }
+
+            let sortedMarkets = matchMarkets.sorted { market1, market2 in
+                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 100
+                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 100
+                return position1 < position2
+            }
+
+            var location: Venue?
+            if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
+                location = Venue(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
+            }
+
+            let match = Match(id: rawMatch.id,
+                              competitionName: rawMatch.parentName ?? "",
+                              homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
+                                                           name: rawMatch.homeParticipantName ?? ""),
+                              awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
+                                                           name: rawMatch.awayParticipantName ?? ""),
+                              date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
+                              sportType: rawMatch.sportId ?? "",
+                              venue: location,
+                              numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
+                              markets: sortedMarkets)
+
+            matchesList.append(match)
+        }
+
+        return matchesList
+    }
+
+
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
     }
     
+}
+
+struct OddOutcomesSortingHelper {
+
+    static func sortValueForOutcome(_ key: String) -> Int {
+        switch key.lowercased() {
+        case "yes": return 10
+        case "no": return 20
+
+        case "home": return 10
+        case "draw": return 20
+        case "away": return 30
+
+        case "home_draw": return 10
+        case "home_away": return 20
+        case "away_draw": return 30
+
+        case "under": return 10
+        case "over": return 20
+
+        default:
+            return 1000
+        }
+    }
+
 }

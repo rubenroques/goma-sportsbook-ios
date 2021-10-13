@@ -98,6 +98,7 @@ class SportsViewController: UIViewController {
     @IBOutlet private weak var filtersSeparatorLineView: UIView!
     @IBOutlet private weak var tableView: UITableView!
 
+    @IBOutlet private weak var sportTypeIconImageView: UIImageView!
     @IBOutlet private weak var leftGradientBaseView: UIView!
     @IBOutlet private weak var sportsSelectorButtonView: UIView!
 
@@ -157,6 +158,7 @@ class SportsViewController: UIViewController {
 
     private func commonInit() {
 
+        self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_1")
         let color = UIColor.App.contentBackground
         
         leftGradientBaseView.backgroundColor = color
@@ -274,7 +276,7 @@ extension SportsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return UITableView.automaticDimension
+        return self.viewModel.heightForHeaderInSection(section: section, tableView: tableView)
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
@@ -351,12 +353,19 @@ extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
 }
 
-protocol SportsViewDelegate: AnyObject {
+protocol SportTypeSelectionViewDelegate: AnyObject {
     func setSport(sport: String)
 }
 
-extension SportsViewController: SportsViewDelegate {
+extension SportsViewController: SportTypeSelectionViewDelegate {
     func setSport(sport: String) {
         self.sportSelected = sport
+
+        self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(sport)")
+        
+        if let sportId = Int(sport) {
+            self.viewModel.selectedSportId = sportId
+        }
+
     }
 }

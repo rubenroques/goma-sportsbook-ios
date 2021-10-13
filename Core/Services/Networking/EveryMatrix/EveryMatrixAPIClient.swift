@@ -95,8 +95,8 @@ class EveryMatrixAPIClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-    func getDisciplinesData(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Discipline>, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<Discipline>.self)
+    func getDisciplinesData(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .eraseToAnyPublisher()
     }
 

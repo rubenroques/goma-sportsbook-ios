@@ -18,10 +18,11 @@ class SportSelectionViewController: UIViewController {
     @IBOutlet private var searchBar: UISearchBar!
 
     // Variables
-    weak var delegate: SportsViewDelegate!
+    weak var delegate: SportTypeSelectionViewDelegate?
     private var cancellable = Set<AnyCancellable>()
-    var sportsData: [Discipline] = []
-    var fullSportsData: [Discipline] = []
+
+    var sportsData: [EveryMatrix.Discipline] = []
+    var fullSportsData: [EveryMatrix.Discipline] = []
     var defaultSport: String = ""
     
     init(defaultSport: String) {
@@ -62,7 +63,6 @@ class SportSelectionViewController: UIViewController {
         collectionView.dataSource = self
 
         searchBar.delegate = self
-
     }
 
     func setupWithTheme() {
@@ -82,8 +82,8 @@ class SportSelectionViewController: UIViewController {
         self.searchBar.sizeToFit()
         self.searchBar.isTranslucent = false
         self.searchBar.backgroundImage = UIImage()
-        self.searchBar.tintColor = .blue
-        self.searchBar.barTintColor = .red
+//        self.searchBar.tintColor = .blue
+//        self.searchBar.barTintColor = .red
         self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
         self.searchBar.placeholder = localized("string_search")
 
@@ -114,7 +114,6 @@ class SportSelectionViewController: UIViewController {
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
-
                 case .finished:
                     print("Data retrieved!")
                 }
@@ -149,7 +148,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
             fatalError()
         }
         cell.setSport(sport: sportsData[indexPath.row])
-        if cell.sport[0].id == self.defaultSport {
+        if cell.sport?.id == self.defaultSport {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
         }
@@ -163,8 +162,8 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! SportSelectionCollectionViewCell
         cell.isSelected = true
-        self.defaultSport = cell.sport[0].id ?? ""
-        delegate.setSport(sport: self.defaultSport)
+        self.defaultSport = cell.sport?.id ?? ""
+        delegate?.setSport(sport: self.defaultSport)
         self.dismiss(animated: true, completion: nil)
     }
 

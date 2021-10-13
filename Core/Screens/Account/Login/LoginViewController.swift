@@ -330,7 +330,6 @@ class LoginViewController: UIViewController {
                 case .finished:
                     ()
                 }
-
                 print("completion: \(completion)")
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in

@@ -66,6 +66,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var match: Match?
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -113,6 +115,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.viewModel = nil
+        self.match = nil
+
         self.dateLabel.isHidden = false
         
         self.eventNameLabel.text = ""
@@ -145,6 +150,42 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.suspendedBaseView.backgroundColor = UIColor.App.mainBackground
         self.suspendedLabel.textColor = UIColor.App.headingDisabled
+    }
+
+    func setupWithMatch(_ match: Match) {
+        self.match = match
+
+        let viewModel = MatchWidgetCellViewModel(match: match)
+
+        self.eventNameLabel.text = "\(viewModel.competitionName)"
+        self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
+        self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
+        self.dateLabel.text = "\(viewModel.startDateString)"
+        self.timeLabel.text = "\(viewModel.startTimeString)"
+
+       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+
+        if viewModel.isToday {
+            self.dateLabel.isHidden = true
+        }
+
+        if let market = match.markets.first {
+            if let rightOutcome = market.outcomes[safe: 0] {
+                self.homeOddTitleLabel.text = rightOutcome.translatedName
+                self.homeOddValueLabel.text = String(format: "%.2f", rightOutcome.bettingOffer.value)
+            }
+
+            if let middleOutcome = market.outcomes[safe: 1] {
+                self.drawOddTitleLabel.text = middleOutcome.translatedName
+                self.drawOddValueLabel.text = String(format: "%.2f", middleOutcome.bettingOffer.value)
+            }
+
+            if let leftOutcome = market.outcomes[safe: 2] {
+                self.awayOddTitleLabel.text = leftOutcome.translatedName
+                self.awayOddValueLabel.text = String(format: "%.2f", leftOutcome.bettingOffer.value)
+            }
+        }
     }
 
     @IBAction func didTapFavoritesButton(_ sender: Any) {

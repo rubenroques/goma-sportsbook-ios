@@ -245,7 +245,6 @@ final class TSManager {
 
         let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
 
-
         guard
             let swampSession = self.swampSession,
             swampSession.isConnected()

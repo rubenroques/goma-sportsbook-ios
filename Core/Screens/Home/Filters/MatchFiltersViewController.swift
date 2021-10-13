@@ -9,6 +9,11 @@ import UIKit
 
 class MatchFiltersViewController: UIViewController {
 
+    @IBOutlet private var topView: UIView!
+    @IBOutlet private var navigationView: UIView!
+    @IBOutlet private var navigationLabel: UILabel!
+    @IBOutlet private var cancelButton: UIButton!
+    
     init() {
         super.init(nibName: "MatchFiltersViewController", bundle: nil)
     }
@@ -21,25 +26,34 @@ class MatchFiltersViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        self.commonInit()
+        self.setupWithTheme()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        self.setupWithTheme()
+        self.commonInit()
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
-    func setupSubviews() {
-        self.setupWithTheme()
+    func commonInit() {
+        navigationLabel.text = localized("string_choose_sport")
+        navigationLabel.font = AppFont.with(type: .bold, size: 16)
+
+        cancelButton.setTitle(localized("string_cancel"), for: .normal)
+        cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
     }
 
     func setupWithTheme() {
-        
+        self.view.backgroundColor = UIColor.App.mainBackground
+        topView.backgroundColor = UIColor.App.mainBackground
+        navigationView.backgroundColor = UIColor.App.mainBackground
+        navigationLabel.textColor = UIColor.App.headingMain
+        cancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
     }
     
 }

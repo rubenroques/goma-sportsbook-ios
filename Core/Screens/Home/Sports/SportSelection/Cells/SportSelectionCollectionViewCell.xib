@@ -53,8 +53,8 @@
             </constraints>
             <connections>
                 <outlet property="containerView" destination="1GK-PR-V5Z" id="zwj-RB-L7y"/>
-                <outlet property="imageView" destination="Rtg-lG-e5O" id="4xd-3C-EHk"/>
-                <outlet property="label" destination="cfv-NU-i8s" id="RrH-kl-GB1"/>
+                <outlet property="iconImageView" destination="Rtg-lG-e5O" id="4xd-3C-EHk"/>
+                <outlet property="nameLabel" destination="cfv-NU-i8s" id="RrH-kl-GB1"/>
             </connections>
             <point key="canvasLocation" x="73.188405797101453" y="71.986607142857139"/>
         </collectionViewCell>

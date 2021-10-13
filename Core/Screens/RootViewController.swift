@@ -91,14 +91,14 @@ class RootViewController: UIViewController {
         // let payload = ["lang":"en", "maxResults":"10"]
         // let payloadToday = ["lang":"en", "userTimezoneOffsetInMinutes":"0", "maxResults":"10"]
         // let payloadNext = ["lang":"en", "hoursTillLive":"2", "maxResults":"10", "disciplineId":"1"]
-        let payloadOdd: [String: Any] = ["lang": "en",
-                          "matchId": "148056830725115904",
-                          "tournamentId": "",
-                          "bettingOfferId": "",
-                          "bettingOfferIds": [],
-                          "eventIds": []] // as [String : Any?]
-
-        //Env.everyMatrixAPIClient.getOdds(payload: payloadOdd)
+//        let payloadOdd: [String: Any] = ["lang": "en",
+//                          "matchId": "148056830725115904",
+//                          "tournamentId": "",
+//                          "bettingOfferId": "",
+//                          "bettingOfferIds": [],
+//                          "eventIds": []] // as [String : Any?]
+//
+//        //Env.everyMatrixAPIClient.getOdds(payload: payloadOdd)
     }
 
     @IBAction private func testSubscription() {

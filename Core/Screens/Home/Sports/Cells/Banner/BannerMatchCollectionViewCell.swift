@@ -59,6 +59,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 }
 
                 self.matchBaseView.isHidden = false
+                self.imageView.isHidden = false
             }
         }
     }
@@ -70,7 +71,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
-        self.baseView.backgroundColor = .clear
+
         self.centerView.backgroundColor = .clear
 
         self.baseView.clipsToBounds = true
@@ -102,6 +103,14 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.homeBaseView.layer.cornerRadius = 4
         self.drawBaseView.layer.cornerRadius = 4
         self.awayBaseView.layer.cornerRadius = 4
+
+        let rightGradientMaskLayer = CAGradientLayer()
+        rightGradientMaskLayer.frame = matchGradientView.bounds
+        rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
+        rightGradientMaskLayer.locations = [0.0, 0.52, 0.78, 1]
+        rightGradientMaskLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
+        rightGradientMaskLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
+        matchGradientView.layer.mask = rightGradientMaskLayer
     }
 
     override func prepareForReuse() {
@@ -121,6 +130,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.backgroundView?.backgroundColor = .clear
 
         self.matchBaseView.backgroundColor = .clear
+        self.imageBaseView.backgroundColor = .clear
+
+        self.baseView.backgroundColor = UIColor.App.secondaryBackground
 
         self.homeParticipantNameLabel.textColor = UIColor.App.headingMain
         self.awayParticipantNameLabel.textColor = UIColor.App.headingMain
@@ -154,6 +166,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.viewModel = viewModel
 
         self.matchBaseView.isHidden = true
+        self.imageView.isHidden = true
 
         switch viewModel.presentationType {
         case .match:
@@ -163,11 +176,12 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             viewModel.match
                 .receive(on: DispatchQueue.main)
                 .compactMap({$0}).sink { [weak self] match in
-                self?.matchViewModel = MatchWidgetCellViewModel(match: match)
-            }
-            .store(in: &cancellables)
+                    self?.matchViewModel = MatchWidgetCellViewModel(match: match)
+                }
+                .store(in: &cancellables)
 
         case .image:
+            self.imageView.isHidden = false
             if let url = viewModel.imageURL {
                 self.imageView.kf.setImage(with: url)
             }

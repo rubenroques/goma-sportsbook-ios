@@ -10,8 +10,9 @@ import UIKit
 class SportSelectionCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private var containerView: UIView!
-    @IBOutlet private var imageView: UIImageView!
-    @IBOutlet private var label: UILabel!
+    @IBOutlet private var iconImageView: UIImageView!
+    @IBOutlet private var nameLabel: UILabel!
+
     // Variables
     override var isSelected: Bool {
         didSet{
@@ -23,7 +24,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
             }
         }
     }
-    var sport: [Discipline] = []
+    var sport: EveryMatrix.Discipline?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -40,24 +41,27 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         containerView.layer.borderColor = UIColor.App.secondaryBackground.cgColor
         containerView.layer.borderWidth = 2
 
-        imageView.backgroundColor = UIColor.App.secondaryBackground
-        imageView.image = UIImage(named: "sport_type_soccer_icon")
-        imageView.contentMode = .scaleAspectFill
+        iconImageView.backgroundColor = UIColor.App.secondaryBackground
+        iconImageView.image = UIImage(named: "sport_type_icon")
+        iconImageView.contentMode = .scaleAspectFit
 
-        label.text = "Sport"
-        label.font = AppFont.with(type: .bold, size: 12)
-        label.textColor = UIColor.App.headingMain
-        label.numberOfLines = 0
+        nameLabel.text = "Sport"
+        nameLabel.font = AppFont.with(type: .bold, size: 12)
+        nameLabel.textColor = UIColor.App.headingMain
+        nameLabel.numberOfLines = 2
     }
 
-    func setSport(sport: Discipline) {
-        self.sport.append(sport)
-        label.text = sport.name
+    func setSport(sport: EveryMatrix.Discipline) {
+        self.sport = sport
+        nameLabel.text = sport.name
+        iconImageView.image = UIImage(named: "sport_type_icon_\(sport.id ?? "")")
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        sport = []
+        iconImageView.image = nil
+        nameLabel.text = ""
+        sport = nil
     }
 
 }

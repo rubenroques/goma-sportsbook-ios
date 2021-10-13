@@ -70,6 +70,7 @@ enum TSRouter {
     case sportsPublisher(operatorId: String)
     case popularMatchesPublisher(operatorId: String, language: String, sportId: String)
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
+    case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
 
     var procedure: String {
@@ -116,6 +117,11 @@ enum TSRouter {
             let eventsCount = 10
             return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
 
+        case .competitionsMatchesPublisher(let operatorId, let language, _, let events):
+            let marketsCount = 5
+            let eventsIds = events.joined(separator: ",")
+            return "/sports/\(operatorId)/\(language)/tournament-aggregator-main/\(eventsIds)/default-event-info/\(marketsCount)"
+        
         case .bannersInfoPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/sportsBannerData"
         //
@@ -344,6 +350,8 @@ enum TSRouter {
         case .todayMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .bannersInfoPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .competitionsMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         default:
             return nil

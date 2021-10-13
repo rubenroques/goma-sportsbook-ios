@@ -20,6 +20,7 @@
                 <outlet property="loadingBaseView" destination="kGb-Bw-Z5y" id="DzJ-v2-UsN"/>
                 <outlet property="loadingView" destination="R1v-pN-KYj" id="l8c-Hq-phP"/>
                 <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
+                <outlet property="sportTypeIconImageView" destination="iOi-Sv-wfK" id="bdC-qr-Mbb"/>
                 <outlet property="sportsSelectorButtonView" destination="L0P-hR-PWM" id="M7W-hm-vQU"/>
                 <outlet property="tableView" destination="AbP-eF-dUy" id="fhv-On-x1u"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

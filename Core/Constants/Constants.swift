@@ -32,7 +32,7 @@ enum EveryMatrixInfo {
     static let realm: String = "http://www.gomadevelopment.pt"
 
     static func emailVerificationURL(withUserEmail email: String) -> String {
-        return "https://sportsbook-cms.gomagaming.com/Register/Activate?email=\(email)&key="
+        return "https://sportsbook.gomagaming.com/Register/Activate?email=\(email)&key="
     }
 
     static let staticHost = "https://static.everymatrix.com"

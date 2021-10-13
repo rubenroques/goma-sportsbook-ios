@@ -413,7 +413,7 @@ extension SimpleRegisterDetailsViewController {
                         self.showUsernameTakenErrorStatus()
                     case let .requestError(message) where message.lowercased().contains("email already exists"):
                         self.showEmailTakenErrorStatus()
-                    case let .requestError(message) where message.lowercased().contains("Your password is too simple and does not match"):
+                    case let .requestError(message) where message.lowercased().contains("your password is too simple"):
                         self.showPasswordTooWeakErrorStatus()
                     default:
                         self.showServerErrorStatus()

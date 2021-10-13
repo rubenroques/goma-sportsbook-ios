@@ -19,6 +19,12 @@ class SportsViewModel {
     private var todayEvents: EveryMatrix.Matches = []
     private var popularEvents: EveryMatrix.Matches = []
 
+
+    private var userFavoriteMatches: [Match] = []
+    private var todayMatches: [Match] = []
+    private var popularMatches: [Match] = []
+    private var competitionsMatches: [Match] = []
+
     var matchListType: MatchListType = .myGames
     enum MatchListType {
         case myGames
@@ -29,7 +35,7 @@ class SportsViewModel {
     enum CellType {
         case banner(banners: [EveryMatrix.BannerInfo])
         case userMessage(text: String)
-        case match(match: EveryMatrix.Match)
+        case match(match: Match)
     }
 
     var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(false)
@@ -39,6 +45,18 @@ class SportsViewModel {
     var isLoading: AnyPublisher<Bool, Never>
 
     var contentList: CurrentValueSubject<[CellType], Never> = .init([])
+
+    var didChangeSportType = false
+    var selectedSportId: Int = 1 {
+        willSet {
+            if newValue != self.selectedSportId {
+                didChangeSportType = true
+            }
+        }
+        didSet {
+            self.fetchData()
+        }
+    }
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -52,6 +70,8 @@ class SportsViewModel {
             .eraseToAnyPublisher()
     }
 
+
+
     func fetchData() {
         self.isLoadingPopularList.send(true)
         self.isLoadingTodayList.send(true)
@@ -61,6 +81,7 @@ class SportsViewModel {
 
         self.fetchPopularMatches()
         self.fetchTodayMatches()
+        self.fetchCompetitionsMatches()
 
         self.isLoadingMyGamesList.send(false)
     }
@@ -88,30 +109,54 @@ class SportsViewModel {
 
         switch matchListType {
         case .myGames:
-            contentList.append(contentsOf: self.popularEvents.map({ return CellType.match(match: $0) }) )
+            contentList.append(contentsOf: self.popularMatches.map({ return CellType.match(match: $0) }) )
         case .today:
-            contentList.append(contentsOf: self.todayEvents.map({ return CellType.match(match: $0) }) )
+            contentList.append(contentsOf: self.todayMatches.map({ return CellType.match(match: $0) }) )
         case .competitions:
-            () // ToDo: get competitions
+            contentList.append(contentsOf: self.competitionsMatches.map({ return CellType.match(match: $0) }) )
         }
         return contentList
     }
 
     private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: AggregatorListType.popularEvents)
-        let matches = Env.everyMatrixStorage.matchesForListType(AggregatorListType.popularEvents)
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .popularEvents,
+                                                 shouldClear: didChangeSportType)
+        let matches = Env.everyMatrixStorage.rawMatchesForListType(.popularEvents)
+
+
+        let appMatches = Env.everyMatrixStorage.matchesForListType(.popularEvents)
 
         self.popularEvents = matches
+        self.popularMatches = appMatches
+
         self.isLoadingPopularList.send(false)
         self.updateContentList()
     }
 
     private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: AggregatorListType.todayEvents)
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .todayEvents,
+                                                 shouldClear: didChangeSportType)
 
-        let matches = Env.everyMatrixStorage.matchesForListType(AggregatorListType.todayEvents)
+        let matches = Env.everyMatrixStorage.rawMatchesForListType(.todayEvents)
+
+        let appMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
 
         self.todayEvents = matches
+        self.todayMatches = appMatches
+
+        self.isLoadingTodayList.send(false)
+
+        self.updateContentList()
+    }
+
+    private func setupCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .competitions,
+                                                 shouldClear: didChangeSportType)
+
+        let appMatches = Env.everyMatrixStorage.matchesForListType(.competitions)
+
+        self.competitionsMatches = appMatches
+
         self.isLoadingTodayList.send(false)
 
         self.updateContentList()
@@ -120,7 +165,7 @@ class SportsViewModel {
     private func fetchPopularMatches() {
         let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                         language: "en",
-                                                        sportId: "1")
+                                                        sportId: "\(self.selectedSportId)")
 
         TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
@@ -145,6 +190,7 @@ class SportsViewModel {
                 case .disconnect:
                     print("disconnect")
                 }
+
             })
             .store(in: &cancellables)
     }
@@ -152,7 +198,7 @@ class SportsViewModel {
     private func fetchTodayMatches() {
         let endpoint = TSRouter.todayMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                       language: "en",
-                                                      sportId: "1")
+                                                      sportId: "\(self.selectedSportId)")
 
         TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
@@ -164,7 +210,7 @@ class SportsViewModel {
                 case .finished:
                     print("Data retrieved!")
                 }
-                self.isLoadingPopularList.send(false)
+                self.isLoadingTodayList.send(false)
             }, receiveValue: { state in
                 debugPrint("SportsViewModel todayMatchesPublisher")
 
@@ -179,6 +225,38 @@ class SportsViewModel {
                     print("disconnect")
                 }
 
+            })
+            .store(in: &cancellables)
+    }
+
+    func fetchCompetitionsMatches() {
+        let eventsList = ["140103443573428224"]
+        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId, language: "en", sportId: "\(self.selectedSportId)", events: eventsList)
+
+        TSManager.shared
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+
+                case .finished:
+                    print("Data retrieved!")
+                }
+                self.isLoadingPopularList.send(false)
+            }, receiveValue: { state in
+                debugPrint("SportsViewModel competitionsMatchesPublisher")
+
+                switch state {
+                case .connect:
+                    ()
+                case .initialContent(let aggregator):
+                    self.setupCompetitionsAggregatorProcessor(aggregator: aggregator)
+                case .updatedContent(let aggregator):
+                    print("updatedContent \(aggregator)")
+                case .disconnect:
+                    print("disconnect")
+                }
             })
             .store(in: &cancellables)
     }
@@ -228,7 +306,7 @@ class SportsViewModel {
         case 0:
             return banners.isEmpty ? 0 : 1
         case 1:
-            return userMessages.count
+            return 0
         case 2:
             return self.selectedFilterMatches().count
         default:
@@ -254,8 +332,8 @@ class SportsViewModel {
             }
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let viewModel = self.matchViewModel(forIndex: indexPath.row) {
-                cell.viewModel = viewModel
+               let match = self.selectedFilterMatches()[safe: indexPath.row] {
+                cell.setupWithMatch(match)
                 return cell
             }
         default:
@@ -291,17 +369,20 @@ class SportsViewModel {
         case (2, .today):
             return 54
         default:
-            return 0.0
+            return 0.001
         }
     }
 
 
-    func selectedFilterMatches() -> EveryMatrix.Matches {
+    func selectedFilterMatches() -> [Match] {
         if case .myGames = matchListType {
-            return self.popularEvents
+            return self.popularMatches
         }
         else if case .today = matchListType {
-            return self.todayEvents
+            return self.todayMatches
+        }
+        else if case .competitions = matchListType {
+            return self.competitionsMatches
         }
         return []
     }
@@ -317,6 +398,8 @@ class SportsViewModel {
         let marketsIdsForMatch = Env.everyMatrixStorage.marketsForMatch[matchAtIndex.id] ?? []
         return MatchLineCellViewModel(matchWidgetCellViewModel: matchViewModel, marketsIds: marketsIdsForMatch)
     }
+
+
 
     func createBannersViewModel() -> BannerLineCellViewModel {
         var cells = [BannerCellViewModel]()
