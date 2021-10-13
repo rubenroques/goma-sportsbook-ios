@@ -448,6 +448,10 @@
 		45EF5439270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
 		45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
+		A92F5D792717169900884BDF /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
+		A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
+		A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
+		A92F5D7D271716B900884BDF /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -512,8 +516,8 @@
 		A9B841A726E6557000269B05 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A526E6557000269B05 /* Location.swift */; };
 		A9B841AA26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
 		A9B841AB26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
-		A9B841AE26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
-		A9B841AF26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		A9B841AE26E674AA00269B05 /* Match1.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match1.swift */; };
+		A9B841AF26E674AA00269B05 /* Match1.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match1.swift */; };
 		A9B841B226E9054700269B05 /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B126E9054700269B05 /* Market.swift */; };
 		A9B841B326E9054700269B05 /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B126E9054700269B05 /* Market.swift */; };
 		A9B841B526E914FB00269B05 /* BetOutcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B426E914FB00269B05 /* BetOutcome.swift */; };
@@ -526,6 +530,18 @@
 		A9B841C026EA5A1000269B05 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841BE26EA5A1000269B05 /* Event.swift */; };
 		A9B841C226EB5D5900269B05 /* Odd.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841C126EB5D5900269B05 /* Odd.swift */; };
 		A9B841C326EB5D5900269B05 /* Odd.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841C126EB5D5900269B05 /* Odd.swift */; };
+		A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
+		A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
+		A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
+		A9C6022E2716F41200992E11 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
+		A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602342716F7BE00992E11 /* FilterCollapseView.swift */; };
+		A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602342716F7BE00992E11 /* FilterCollapseView.swift */; };
+		A9C602382716F7F900992E11 /* FilterCollapseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C602372716F7F900992E11 /* FilterCollapseView.xib */; };
+		A9C602392716F7F900992E11 /* FilterCollapseView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C602372716F7F900992E11 /* FilterCollapseView.xib */; };
+		A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023A2716F99A00992E11 /* CheckboxButton.swift */; };
+		A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023A2716F99A00992E11 /* CheckboxButton.swift */; };
+		A9C6023E2716FACB00992E11 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
+		A9C6023F2716FACB00992E11 /* RadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C6023D2716FACB00992E11 /* RadioButton.swift */; };
 		A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F8A26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift */; };
 		A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82F8A26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift */; };
 		A9C82FB026F3A37F00059DCD /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FAF26F3A37F00059DCD /* String+Extensions.swift */; };
@@ -789,6 +805,8 @@
 		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
+		A92F5D782717169900884BDF /* FilterRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRowView.swift; sourceTree = "<group>"; };
+		A92F5D7B271716B900884BDF /* FilterRowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterRowView.xib; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
@@ -819,13 +837,19 @@
 		A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSessionIDModel.swift; sourceTree = "<group>"; };
 		A9B841A526E6557000269B05 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		A9B841A926E6597300269B05 /* Tournament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
-		A9B841AD26E674AA00269B05 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
+		A9B841AD26E674AA00269B05 /* Match1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match1.swift; sourceTree = "<group>"; };
 		A9B841B126E9054700269B05 /* Market.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Market.swift; sourceTree = "<group>"; };
 		A9B841B426E914FB00269B05 /* BetOutcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetOutcome.swift; sourceTree = "<group>"; };
 		A9B841B726E91BBC00269B05 /* BettingOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingOffer.swift; sourceTree = "<group>"; };
 		A9B841BA26EA1A7600269B05 /* MarketOutcomeRelation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketOutcomeRelation.swift; sourceTree = "<group>"; };
 		A9B841BE26EA5A1000269B05 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		A9B841C126EB5D5900269B05 /* Odd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Odd.swift; sourceTree = "<group>"; };
+		A9C602292716F13F00992E11 /* HomeFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterViewController.swift; sourceTree = "<group>"; };
+		A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeFilterViewController.xib; sourceTree = "<group>"; };
+		A9C602342716F7BE00992E11 /* FilterCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollapseView.swift; sourceTree = "<group>"; };
+		A9C602372716F7F900992E11 /* FilterCollapseView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterCollapseView.xib; sourceTree = "<group>"; };
+		A9C6023A2716F99A00992E11 /* CheckboxButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxButton.swift; sourceTree = "<group>"; };
+		A9C6023D2716FACB00992E11 /* RadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadioButton.swift; sourceTree = "<group>"; };
 		A9C82F8A26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITapGestureRecognizer+Extensions.swift"; sourceTree = "<group>"; };
 		A9C82FAF26F3A37F00059DCD /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		A9C82FB326F3AFB400059DCD /* PersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInfoViewController.swift; sourceTree = "<group>"; };
@@ -1534,6 +1558,8 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A92F5D772717168100884BDF /* FilterRowView */,
+				A9C602332716F7A600992E11 /* FilterCollapse */,
 				45936CB2270EF02200E8260E /* SearchTextField.swift */,
 				4589F41826BF0243005DF543 /* NibView.swift */,
 				4589F40826BF0203005DF543 /* RoundButton.swift */,
@@ -1542,6 +1568,8 @@
 				A9C82FB926F4E4D700059DCD /* EditAlertView */,
 				456B342926C18BB8009D7D27 /* TitleTextFieldView */,
 				456B342A26C18BC1009D7D27 /* HeaderTextFieldView */,
+				A9C6023A2716F99A00992E11 /* CheckboxButton.swift */,
+				A9C6023D2716FACB00992E11 /* RadioButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1700,12 +1728,22 @@
 		45EF5430270C5FD600D1E13E /* Filters */ = {
 			isa = PBXGroup;
 			children = (
+				A9C602282716F11A00992E11 /* HomeFilter */,
 				45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */,
 				45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */,
 				45EF543A270C664100D1E13E /* CollapsibleView.swift */,
 				45BF4E6C270DC37D00785E79 /* FilterLineView.swift */,
 			);
 			path = Filters;
+			sourceTree = "<group>";
+		};
+		A92F5D772717168100884BDF /* FilterRowView */ = {
+			isa = PBXGroup;
+			children = (
+				A92F5D782717169900884BDF /* FilterRowView.swift */,
+				A92F5D7B271716B900884BDF /* FilterRowView.xib */,
+			);
+			path = FilterRowView;
 			sourceTree = "<group>";
 		};
 		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
@@ -1858,7 +1896,7 @@
 		A9B841AC26E6749900269B05 /* Matches */ = {
 			isa = PBXGroup;
 			children = (
-				A9B841AD26E674AA00269B05 /* Match.swift */,
+				A9B841AD26E674AA00269B05 /* Match1.swift */,
 			);
 			path = Matches;
 			sourceTree = "<group>";
@@ -1881,6 +1919,24 @@
 				A9B841BE26EA5A1000269B05 /* Event.swift */,
 			);
 			path = Events;
+			sourceTree = "<group>";
+		};
+		A9C602282716F11A00992E11 /* HomeFilter */ = {
+			isa = PBXGroup;
+			children = (
+				A9C602292716F13F00992E11 /* HomeFilterViewController.swift */,
+				A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */,
+			);
+			path = HomeFilter;
+			sourceTree = "<group>";
+		};
+		A9C602332716F7A600992E11 /* FilterCollapse */ = {
+			isa = PBXGroup;
+			children = (
+				A9C602342716F7BE00992E11 /* FilterCollapseView.swift */,
+				A9C602372716F7F900992E11 /* FilterCollapseView.xib */,
+			);
+			path = FilterCollapse;
 			sourceTree = "<group>";
 		};
 		A9C82FB226F3AB3400059DCD /* Profile */ = {
@@ -2077,6 +2133,7 @@
 				A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */,
 				45936CA6270E1BCE00E8260E /* SportTypeSelectionViewController.xib in Resources */,
+				A9C602382716F7F900992E11 /* FilterCollapseView.xib in Resources */,
 				455C960826FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */,
 				456B343A26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
 				457816BD2707632400F66878 /* TitleTableViewHeader.xib in Resources */,
@@ -2096,6 +2153,7 @@
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
 				457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
+				A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */,
 				A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
@@ -2107,6 +2165,7 @@
 				45BEA48326F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
+				A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */,
 				45A16E162707B6C100A95C01 /* ListTypeCollectionViewCell.xib in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
@@ -2184,6 +2243,7 @@
 				455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45D3DE3D271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
 				45BEA48426F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
+				A92F5D7D271716B900884BDF /* FilterRowView.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
@@ -2198,12 +2258,14 @@
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
+				A9C6022E2716F41200992E11 /* HomeFilterViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A9C82FC626F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
 				455C962426FDD66400456F30 /* ProfileViewController.xib in Resources */,
 				455A0CAD26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				456B343926C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
 				45DDBAAF26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */,
+				A9C602392716F7F900992E11 /* FilterCollapseView.xib in Resources */,
 				45A16E172707B6C100A95C01 /* ListTypeCollectionViewCell.xib in Resources */,
 				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				45DDBA9926F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
@@ -2282,6 +2344,7 @@
 				455A0D0A26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898026C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
+				A9C6023E2716FACB00992E11 /* RadioButton.swift in Sources */,
 				452047B62703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
@@ -2289,7 +2352,7 @@
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB0270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */,
-				A9B841AE26E674AA00269B05 /* Match.swift in Sources */,
+				A9B841AE26E674AA00269B05 /* Match1.swift in Sources */,
 				45D3DE3A271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
 				45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
@@ -2307,6 +2370,7 @@
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0CA826BD973C00EC572D /* TargetVariables.swift in Sources */,
 				455A0D1026BD9D9000EC572D /* Changeable.swift in Sources */,
+				A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */,
 				45166CA626F28D2E00E69D65 /* Bootstrap.swift in Sources */,
 				45166D1B26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */,
 				45BEA48D26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
@@ -2395,11 +2459,13 @@
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
+				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				455C960C26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4027149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
+				A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				45936CAA270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
@@ -2429,6 +2495,7 @@
 				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA4270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
 				45D871BE270F5B5500F5B87B /* Aggregator.swift in Sources */,
+				A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				45166D2526F3548D00E69D65 /* TSManager.swift in Sources */,
@@ -2487,6 +2554,7 @@
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
+				A9C6023F2716FACB00992E11 /* RadioButton.swift in Sources */,
 				452047B72703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
@@ -2494,7 +2562,7 @@
 				45B7DAE026F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB1270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */,
-				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
+				A9B841AF26E674AA00269B05 /* Match1.swift in Sources */,
 				45D3DE3B271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
 				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
@@ -2512,6 +2580,7 @@
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0C9726BD943900EC572D /* TargetVariables.swift in Sources */,
 				455A0D1126BD9D9000EC572D /* Changeable.swift in Sources */,
+				A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */,
 				45166CA726F28D2E00E69D65 /* Bootstrap.swift in Sources */,
 				45166D1C26F3548D00E69D65 /* JSONSSWampSerializer.swift in Sources */,
 				45BEA48E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */,
@@ -2600,11 +2669,13 @@
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
+				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0E26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				455C960D26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4127149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
+				A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
 				45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				45936CAB270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
@@ -2634,6 +2705,7 @@
 				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA5270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
 				45D871BF270F5B5500F5B87B /* Aggregator.swift in Sources */,
+				A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				45166D2626F3548D00E69D65 /* TSManager.swift in Sources */,
