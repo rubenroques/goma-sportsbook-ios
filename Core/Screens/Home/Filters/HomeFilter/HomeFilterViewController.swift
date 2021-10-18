@@ -15,11 +15,12 @@ class HomeFilterViewController: UIViewController {
     @IBOutlet private var navigationCancelButton: UIButton!
     @IBOutlet private var navigationResetButton: UIButton!
     @IBOutlet private var scrollView: UIScrollView!
+    @IBOutlet private var stackContainerView: UIView!
     @IBOutlet private var stackView: UIStackView!
     @IBOutlet private var sortByFilterCollapseView: FilterCollapseView!
-
-    @IBOutlet private var timeRangeCollapseView: FilterCollapseView!
+    @IBOutlet private var timeRangeCollapseView: FilterSliderCollapseView!
     @IBOutlet private var availableMarketsCollapseView: FilterCollapseView!
+    @IBOutlet private var oddsCollapseView: FilterSliderCollapseView!
     @IBOutlet private var bottomButtonView: UIView!
     @IBOutlet private var applyButton: RoundButton!
 
@@ -53,6 +54,8 @@ class HomeFilterViewController: UIViewController {
 
         setupAvailableMarketsSection()
 
+        setupOddsSection()
+
         applyButton.setTitle(localized("string_apply"), for: .normal)
         applyButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         applyButton.layer.cornerRadius = CornerRadius.button
@@ -72,6 +75,8 @@ class HomeFilterViewController: UIViewController {
         navigationCancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
 
         scrollView.backgroundColor = UIColor.App.mainBackground
+
+        stackContainerView.backgroundColor = UIColor.App.mainBackground
 
         stackView.backgroundColor = UIColor.App.mainBackground
 
@@ -107,60 +112,55 @@ class HomeFilterViewController: UIViewController {
         highOddsView.hasBorderBottom = false
         highOddsView.setTitle(title: localized("string_highest_odds"))
 
-        //Alternate Radio Button
+        // Alternate Radio Button
         startingSoonRadio.alternateButton = [competitionRadio, lowRadio, highRadio]
         startingSoonRadio.isSelected = true
         competitionRadio.alternateButton = [startingSoonRadio, lowRadio, highRadio]
         lowRadio.alternateButton = [competitionRadio, startingSoonRadio, highRadio]
         highRadio.alternateButton = [competitionRadio, lowRadio, startingSoonRadio]
 
-
         sortByFilterCollapseView.addViewtoStack(view: startingSoonView)
         sortByFilterCollapseView.addViewtoStack(view: competitionView)
         sortByFilterCollapseView.addViewtoStack(view: lowOddsView)
         sortByFilterCollapseView.addViewtoStack(view: highOddsView)
+
+        sortByFilterCollapseView.didToggle = { value in
+            print(value)
+            if value {
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: { _ in
+                })
+            }
+        }
     }
 
     func setupTimeRangeSection() {
+        let minValue: CGFloat = 0
+        let maxValue: CGFloat = 24
         timeRangeCollapseView.setTitle(title: localized("string_time_range"))
         timeRangeCollapseView.hasCheckbox = true
-        timeRangeCollapseView.setCheckboxSelected(selected: true)
+        // timeRangeCollapseView.setCheckboxSelected(selected: true)
+        let contentView = timeRangeCollapseView.getContentView()
 
-        let horizontalMultiSlider = MultiSlider()
-        //horizontalMultiSlider.disabledThumbIndices = [0]
-        horizontalMultiSlider.backgroundColor = UIColor.App.secondaryBackground
-        horizontalMultiSlider.orientation = .horizontal
-        horizontalMultiSlider.minimumValue = 0
-        horizontalMultiSlider.maximumValue = 24
-        horizontalMultiSlider.outerTrackColor = UIColor.App.headerTextField
-                horizontalMultiSlider.value = [0, 24]
-        horizontalMultiSlider.snapStepSize = 1
-        horizontalMultiSlider.thumbImage = UIImage(named: "sport_type_soccer_icon")
-        horizontalMultiSlider.valueLabelPosition = .bottomMargin
-        horizontalMultiSlider.tintColor = UIColor.App.mainTint
-        horizontalMultiSlider.trackWidth = 6
-        horizontalMultiSlider.showsThumbImageShadow = false
-        horizontalMultiSlider.addTarget(self, action: #selector(sliderChanged), for: .valueChanged)
-        view.addConstrainedSubview(horizontalMultiSlider, constrain: .leftMargin, .rightMargin, .bottomMargin)
-        view.layoutMargins = UIEdgeInsets(top: 32, left: 32, bottom: 32, right: 32)
+        setupSlider(minValue: minValue, maxValue: maxValue, steps: 1, hasLabels: true, edges: UIEdgeInsets(top: 8, left: 8, bottom: 16, right: 8), view: contentView, target: #selector(timeSliderChanged))
 
-        horizontalMultiSlider.keepsDistanceBetweenThumbs = false
-        //horizontalMultiSlider.valueLabelFormatter.positiveSuffix = " 𝞵s"
-        horizontalMultiSlider.valueLabelColor = UIColor.App.headingMain
-        horizontalMultiSlider.valueLabelFont = AppFont.with(type: .bold, size: 14)
-        timeRangeCollapseView.addViewtoStack(view: horizontalMultiSlider)
-    }
-
-    @objc func sliderChanged(_ slider: MultiSlider) {
-            print("thumb \(slider.draggedThumbIndex) moved")
-            print("now thumbs are at \(slider.value)") // e.g., [1.0, 4.5, 5.0]
+        timeRangeCollapseView.didToggle = { value in
+            print(value)
+            if value {
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: { _ in
+                })
+            }
         }
+
+    }
 
     func setupAvailableMarketsSection() {
         availableMarketsCollapseView.setTitle(title: localized("string_available_markets"))
         availableMarketsCollapseView.hasCheckbox = true
-        availableMarketsCollapseView.setCheckboxSelected(selected: true)
-
+        // availableMarketsCollapseView.setCheckboxSelected(selected: true)
         let resultView = FilterRowView()
         resultView.buttonType = .checkbox
         resultView.setTitle(title: "Result")
@@ -175,10 +175,88 @@ class HomeFilterViewController: UIViewController {
         handicapView.hasBorderBottom = false
         handicapView.setTitle(title: "Handycap")
 
-
-
         availableMarketsCollapseView.addViewtoStack(view: resultView)
         availableMarketsCollapseView.addViewtoStack(view: doubleOutcomeView)
         availableMarketsCollapseView.addViewtoStack(view: handicapView)
+
+        availableMarketsCollapseView.didToggle = { value in
+            if value {
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: { _ in
+                })
+            }
+        }
     }
+
+    func setupOddsSection() {
+        let minValue: CGFloat = 1.0
+        let maxValue: CGFloat = 15.0
+        oddsCollapseView.setTitle(title: localized("string_odds_filter"))
+        oddsCollapseView.hasCheckbox = true
+        oddsCollapseView.setCheckboxSelected(selected: true)
+        let contentView = oddsCollapseView.getContentView()
+        setupSlider(minValue: minValue, maxValue: maxValue, steps: 0.1, hasLabels: false, edges: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8), view: contentView, target: #selector(oddsSliderChanged))
+
+        oddsCollapseView.hasSliderInfo = true
+        oddsCollapseView.updateOddsLabels(fromText: "\(minValue)", toText: "\(maxValue)")
+
+        oddsCollapseView.didToggle = { value in
+            if value {
+                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
+                    self.view.layoutIfNeeded()
+                }, completion: { _ in
+                })
+            }
+        }
+    }
+
+    func setupSlider(minValue: CGFloat, maxValue: CGFloat, steps: CGFloat, hasLabels: Bool, edges: UIEdgeInsets, view: UIView, target: Selector) {
+        let horizontalMultiSlider = MultiSlider()
+        horizontalMultiSlider.backgroundColor = UIColor.App.secondaryBackground
+        horizontalMultiSlider.orientation = .horizontal
+        horizontalMultiSlider.minimumValue = minValue
+        horizontalMultiSlider.maximumValue = maxValue
+        horizontalMultiSlider.outerTrackColor = UIColor.App.fadedGrayLine
+        horizontalMultiSlider.value = [minValue, maxValue]
+        horizontalMultiSlider.snapStepSize = steps
+        horizontalMultiSlider.thumbImage = UIImage(named: "slider_thumb_icon")
+        horizontalMultiSlider.tintColor = UIColor.App.mainTint
+        horizontalMultiSlider.trackWidth = 6
+        horizontalMultiSlider.showsThumbImageShadow = false
+        horizontalMultiSlider.keepsDistanceBetweenThumbs = false
+        horizontalMultiSlider.addTarget(self, action: target, for: .valueChanged)
+        if hasLabels {
+            horizontalMultiSlider.valueLabelPosition = .bottom
+            horizontalMultiSlider.valueLabelColor = UIColor.App.headingMain
+            horizontalMultiSlider.valueLabelFont = AppFont.with(type: .bold, size: 14)
+        }
+        else {
+            horizontalMultiSlider.valueLabelPosition = .notAnAttribute
+        }
+
+        view.addConstrainedSubview(horizontalMultiSlider, constrain: .leftMargin, .rightMargin, .bottomMargin, .topMargin)
+        view.layoutMargins = edges
+
+    }
+
+    @objc func timeSliderChanged(_ slider: MultiSlider) {
+        // Get time slider values
+    }
+
+    @objc func oddsSliderChanged(_ slider: MultiSlider) {
+        // Get odds slider values
+        let minValue = String(format: "%.1f", slider.value[0])
+        let maxValue = String(format: "%.1f", slider.value[1])
+        oddsCollapseView.updateOddsLabels(fromText: minValue, toText: maxValue)
+    }
+
+    @IBAction private func resetAction() {
+        // Reset values
+    }
+
+    @IBAction private func cancelAction() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
 }

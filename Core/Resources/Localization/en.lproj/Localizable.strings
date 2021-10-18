@@ -144,3 +144,6 @@ Terms of use, Privacy Policy and EULA";
 "string_available_markets" = "Available Markets";
 "string_apply" = "Apply";
 "string_time_range" = "Time Range";
+"string_odds_filter" = "Odds Filter";
+"string_from" = "From";
+"string_to" = "To";

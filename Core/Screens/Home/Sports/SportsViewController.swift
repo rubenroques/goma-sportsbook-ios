@@ -185,6 +185,9 @@ class SportsViewController: UIViewController {
 
         filtersButtonView.backgroundColor = UIColor.App.secondaryBackground
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
+        filtersButtonView.addGestureRecognizer(tapFilterGesture)
+        filtersButtonView.isUserInteractionEnabled = true
 
 
         let flowLayout = UICollectionViewFlowLayout()
@@ -232,6 +235,11 @@ class SportsViewController: UIViewController {
         
         self.tableView.backgroundColor = UIColor.App.contentBackground
         self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
+    }
+
+    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
+        let homeFilterViewController = HomeFilterViewController()
+        self.present(homeFilterViewController, animated: true, completion: nil)
     }
 
 }

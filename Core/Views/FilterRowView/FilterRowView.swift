@@ -44,7 +44,6 @@ class FilterRowView: NibView {
         }
     }
 
-
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -70,7 +69,7 @@ class FilterRowView: NibView {
         radioButton.contentMode = .scaleAspectFit
         checkboxButton.contentMode = .scaleAspectFit
 
-        lineView.backgroundColor = UIColor.App.headerTextField
+        lineView.backgroundColor = UIColor.App.fadedGrayLine
 
         checkboxButton.isHidden = false
         radioButton.isHidden = true

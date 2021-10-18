@@ -45,7 +45,7 @@ class RadioButton: UIButton {
                 self.backgroundColor = UIColor.App.mainTint
                 self.setImage(UIImage(named: "white_dot_icon"), for: .normal)
             } else {
-                self.layer.borderColor = UIColor.App.headerTextField.cgColor
+                self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
                 self.backgroundColor = UIColor.App.secondaryBackground
                 self.setImage(nil, for: .normal)
             }
