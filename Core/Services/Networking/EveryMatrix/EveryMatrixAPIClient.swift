@@ -74,6 +74,13 @@ class EveryMatrixAPIClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+
+    func getOperatorInfo() -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> {
+        return TSManager.shared
+            .getModel(router: .getOperatorInfo, decodingType: EveryMatrix.OperatorInfo.self)
+            .eraseToAnyPublisher()
+    }
+
     func validateEmail(_ email: String) -> AnyPublisher<EveryMatrix.EmailAvailability, EveryMatrix.APIError> {
         return TSManager.shared.getModel(router: .validateEmail(email: email), decodingType: EveryMatrix.EmailAvailability.self)
             .eraseToAnyPublisher()

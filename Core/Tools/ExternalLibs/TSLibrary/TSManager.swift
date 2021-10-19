@@ -138,7 +138,7 @@ final class TSManager {
                                 }
                                 else {
                                     promise(.failure(.noResultsReceived))
-                                }
+                                } 
                             }
                         }
                         catch {

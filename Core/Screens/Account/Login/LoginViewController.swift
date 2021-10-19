@@ -323,14 +323,16 @@ class LoginViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
-                case .failure(let error) where error == .invalidEmailPassword:
-                    self.showWrongPasswordStatus()
-                case .failure:
-                    self.showServerErrorStatus()
+                case .failure(let error):
+                    if case error = UserSessionError.invalidEmailPassword {
+                        self.showWrongPasswordStatus()
+                    }
+                    else {
+                        self.showServerErrorStatus()
+                    }
                 case .finished:
                     ()
                 }
-                print("completion: \(completion)")
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")

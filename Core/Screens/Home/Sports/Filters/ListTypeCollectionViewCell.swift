@@ -16,6 +16,8 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
     var selectedColor: UIColor = .white
     var normalColor: UIColor = .black
 
+    var selectedType: Bool = false
+
     override var bounds: CGRect {
         didSet {
             self.layoutIfNeeded()
@@ -41,21 +43,30 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
         self.setupWithTheme()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        self.setSelectedType(false)
+    }
+
     func setupWithTheme() {
         self.normalColor = UIColor.App.secondaryBackground
         self.selectedColor = UIColor.App.mainTint
 
-        self.selectionHighlightView.backgroundColor = self.selectedColor
-        self.labelView.backgroundColor = self.normalColor
+        self.setupWithSelection(self.selectedType)
     }
 
     func setupWithTitle(_ title: String) {
         self.titleLabel.text = title
     }
 
-    func setSelected(_ selected: Bool) {
-        self.isSelected = selected
-        if self.isSelected {
+    func setSelectedType(_ selected: Bool) {
+        self.selectedType = selected
+        self.setupWithSelection(self.selectedType)
+    }
+
+    func setupWithSelection(_ selected: Bool) {
+        if selected {
             self.selectionHighlightView.backgroundColor = self.selectedColor
             self.labelView.backgroundColor = self.normalColor
         }

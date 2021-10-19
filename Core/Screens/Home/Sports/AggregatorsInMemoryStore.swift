@@ -139,7 +139,6 @@ class AggregatorsInMemoryStore {
             }
             .compactMap({$0})
 
-
             for rawMarket  in rawMarketsList {
 
                 let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
@@ -225,6 +224,7 @@ struct OddOutcomesSortingHelper {
 
         case "home": return 10
         case "draw": return 20
+        case "none": return 21
         case "away": return 30
 
         case "home_draw": return 10

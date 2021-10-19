@@ -322,10 +322,10 @@ extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         }
 
         if filterSelectedOption == indexPath.row {
-            cell.setSelected(true)
+            cell.setSelectedType(true)
         }
         else {
-            cell.setSelected(false)
+            cell.setSelectedType(false)
         }
 
         return cell
@@ -349,7 +349,6 @@ extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSo
         self.filtersCollectionView.reloadData()
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
-
 
 }
 

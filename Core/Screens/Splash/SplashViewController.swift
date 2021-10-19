@@ -37,9 +37,9 @@ class SplashViewController: UIViewController {
             .sink(receiveCompletion: { completion in
                 Logger.log("completion \(completion)")
                 Logger.log("Services Bootstrap")
-            }, receiveValue: { operatorInfo in
+            }, receiveValue: { [weak self] operatorInfo in
                 Logger.log("Socket connected: \(TSManager.shared.isConnected)")
-                self.startUserSessionIfNeeded()
+                self?.startUserSessionIfNeeded()
             })
             .store(in: &cancellables)
     }
