@@ -23,6 +23,10 @@ class HomeFilterViewController: UIViewController {
     @IBOutlet private var oddsCollapseView: FilterSliderCollapseView!
     @IBOutlet private var bottomButtonView: UIView!
     @IBOutlet private var applyButton: RoundButton!
+    // Variables
+    var timeSliderValues: [CGFloat] = []
+    var oddsSliderValues: [CGFloat] = []
+    var filterValues: [String:Any] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +42,11 @@ class HomeFilterViewController: UIViewController {
     }
 
     func commonInit() {
+        // Test values
+        filterValues = ["sort": "2",
+                        "timeRange": [0, 8],
+                        "markets": [0, 2],
+                        "odds": [1.2, 10.8]]
 
         navigationLabel.text = localized("string_filters")
         navigationLabel.font = AppFont.with(type: .bold, size: 17)
@@ -48,7 +57,7 @@ class HomeFilterViewController: UIViewController {
         navigationCancelButton.setTitle(localized("string_cancel"), for: .normal)
         navigationCancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
-        setupSortBySection()
+        setupSortBySection(value: filterValues["sort"] as! String)
 
         setupTimeRangeSection()
 
@@ -87,37 +96,52 @@ class HomeFilterViewController: UIViewController {
 
     }
 
-    func setupSortBySection() {
+    func setupSortBySection(value: String) {
         sortByFilterCollapseView.setTitle(title: localized("string_sort_by"))
         sortByFilterCollapseView.hasCheckbox = false
+
+        var views: [FilterRowView] = []
+        var radioButtons: [RadioButton] = []
 
         let startingSoonView = FilterRowView()
         startingSoonView.buttonType = .radio
         let startingSoonRadio = startingSoonView.getRadioButton()
         startingSoonView.setTitle(title: localized("string_starting_soon"))
+        views.append(startingSoonView)
+        radioButtons.append(startingSoonRadio)
 
         let competitionView = FilterRowView()
         competitionView.buttonType = .radio
         let competitionRadio = competitionView.getRadioButton()
         competitionView.setTitle(title: localized("string_by_competition"))
+        views.append(competitionView)
+        radioButtons.append(competitionRadio)
 
         let lowOddsView = FilterRowView()
         lowOddsView.buttonType = .radio
         let lowRadio = lowOddsView.getRadioButton()
         lowOddsView.setTitle(title: localized("string_lowest_odds"))
+        views.append(lowOddsView)
+        radioButtons.append(lowRadio)
 
         let highOddsView = FilterRowView()
         highOddsView.buttonType = .radio
         let highRadio = highOddsView.getRadioButton()
         highOddsView.hasBorderBottom = false
         highOddsView.setTitle(title: localized("string_highest_odds"))
+        views.append(highOddsView)
+        radioButtons.append(highRadio)
 
         // Alternate Radio Button
         startingSoonRadio.alternateButton = [competitionRadio, lowRadio, highRadio]
-        startingSoonRadio.isSelected = true
         competitionRadio.alternateButton = [startingSoonRadio, lowRadio, highRadio]
         lowRadio.alternateButton = [competitionRadio, startingSoonRadio, highRadio]
         highRadio.alternateButton = [competitionRadio, lowRadio, startingSoonRadio]
+
+        // Set selected radio
+        var viewIndex = Int(value)
+        //radioButtons[viewIndex ?? 0].isSelected = true
+        views[viewIndex ?? 0].getRadioButton().isSelected = true
 
         sortByFilterCollapseView.addViewtoStack(view: startingSoonView)
         sortByFilterCollapseView.addViewtoStack(view: competitionView)
@@ -138,12 +162,13 @@ class HomeFilterViewController: UIViewController {
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
         let maxValue: CGFloat = 24
+        let values: [CGFloat] = [3, 8]
         timeRangeCollapseView.setTitle(title: localized("string_time_range"))
         timeRangeCollapseView.hasCheckbox = true
         // timeRangeCollapseView.setCheckboxSelected(selected: true)
         let contentView = timeRangeCollapseView.getContentView()
 
-        setupSlider(minValue: minValue, maxValue: maxValue, steps: 1, hasLabels: true, edges: UIEdgeInsets(top: 8, left: 8, bottom: 16, right: 8), view: contentView, target: #selector(timeSliderChanged))
+        setupSlider(minValue: minValue, maxValue: maxValue, values: values, steps: 1, hasLabels: true, edges: UIEdgeInsets(top: 8, left: 8, bottom: 16, right: 8), view: contentView, target: #selector(timeSliderChanged))
 
         timeRangeCollapseView.didToggle = { value in
             print(value)
@@ -192,14 +217,15 @@ class HomeFilterViewController: UIViewController {
     func setupOddsSection() {
         let minValue: CGFloat = 1.0
         let maxValue: CGFloat = 15.0
+        let values: [CGFloat] = [2.5, 12.5]
         oddsCollapseView.setTitle(title: localized("string_odds_filter"))
         oddsCollapseView.hasCheckbox = true
         oddsCollapseView.setCheckboxSelected(selected: true)
         let contentView = oddsCollapseView.getContentView()
-        setupSlider(minValue: minValue, maxValue: maxValue, steps: 0.1, hasLabels: false, edges: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8), view: contentView, target: #selector(oddsSliderChanged))
+        setupSlider(minValue: minValue, maxValue: maxValue, values: values, steps: 0.1, hasLabels: false, edges: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8), view: contentView, target: #selector(oddsSliderChanged))
 
         oddsCollapseView.hasSliderInfo = true
-        oddsCollapseView.updateOddsLabels(fromText: "\(minValue)", toText: "\(maxValue)")
+        oddsCollapseView.updateOddsLabels(fromText: "\(values[0])", toText: "\(values[1])")
 
         oddsCollapseView.didToggle = { value in
             if value {
@@ -211,14 +237,14 @@ class HomeFilterViewController: UIViewController {
         }
     }
 
-    func setupSlider(minValue: CGFloat, maxValue: CGFloat, steps: CGFloat, hasLabels: Bool, edges: UIEdgeInsets, view: UIView, target: Selector) {
+    func setupSlider(minValue: CGFloat, maxValue: CGFloat, values: [CGFloat], steps: CGFloat, hasLabels: Bool, edges: UIEdgeInsets, view: UIView, target: Selector) {
         let horizontalMultiSlider = MultiSlider()
         horizontalMultiSlider.backgroundColor = UIColor.App.secondaryBackground
         horizontalMultiSlider.orientation = .horizontal
         horizontalMultiSlider.minimumValue = minValue
         horizontalMultiSlider.maximumValue = maxValue
         horizontalMultiSlider.outerTrackColor = UIColor.App.fadedGrayLine
-        horizontalMultiSlider.value = [minValue, maxValue]
+        horizontalMultiSlider.value = values
         horizontalMultiSlider.snapStepSize = steps
         horizontalMultiSlider.thumbImage = UIImage(named: "slider_thumb_icon")
         horizontalMultiSlider.tintColor = UIColor.App.mainTint
@@ -242,6 +268,8 @@ class HomeFilterViewController: UIViewController {
 
     @objc func timeSliderChanged(_ slider: MultiSlider) {
         // Get time slider values
+        timeSliderValues = slider.value
+        print(timeSliderValues)
     }
 
     @objc func oddsSliderChanged(_ slider: MultiSlider) {
@@ -249,6 +277,8 @@ class HomeFilterViewController: UIViewController {
         let minValue = String(format: "%.1f", slider.value[0])
         let maxValue = String(format: "%.1f", slider.value[1])
         oddsCollapseView.updateOddsLabels(fromText: minValue, toText: maxValue)
+        oddsSliderValues = [slider.value[0].round(to: 1), slider.value[1].round(to: 1)]
+        print(oddsSliderValues)
     }
 
     @IBAction private func resetAction() {
