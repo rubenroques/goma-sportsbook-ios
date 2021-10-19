@@ -350,6 +350,18 @@
 		45A2898426C3EA6C00BCD5DA /* GomaGamingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */; };
 		45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkError.swift */; };
 		45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A2898526C418F700BCD5DA /* NetworkError.swift */; };
+		45B0BD31271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
+		45B0BD32271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
+		45B0BD34271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD33271EEE58009C41FA /* CompetitionFilterHeaderView.swift */; };
+		45B0BD35271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD33271EEE58009C41FA /* CompetitionFilterHeaderView.swift */; };
+		45B0BD37271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD36271F1007009C41FA /* CompetitionFilterTableViewCell.swift */; };
+		45B0BD38271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD36271F1007009C41FA /* CompetitionFilterTableViewCell.swift */; };
+		45B0BD3B271F180D009C41FA /* XcodePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD3A271F180D009C41FA /* XcodePreviewViewController.swift */; };
+		45B0BD3C271F180D009C41FA /* XcodePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD3A271F180D009C41FA /* XcodePreviewViewController.swift */; };
+		45B0BD3F271F18DB009C41FA /* CheckboxToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD3E271F18DB009C41FA /* CheckboxToggleView.swift */; };
+		45B0BD40271F18DB009C41FA /* CheckboxToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD3E271F18DB009C41FA /* CheckboxToggleView.swift */; };
+		45B0BD48271F206C009C41FA /* CheckboxToggleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45B0BD47271F206C009C41FA /* CheckboxToggleView.xib */; };
+		45B0BD49271F206C009C41FA /* CheckboxToggleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45B0BD47271F206C009C41FA /* CheckboxToggleView.xib */; };
 		45B7DADB26F8FF130032C1C3 /* PopUpDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */; };
 		45B7DADC26F8FF130032C1C3 /* PopUpDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */; };
 		45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B7DADE26F92CE40032C1C3 /* UserSession.swift */; };
@@ -784,6 +796,12 @@
 		45A2897F26C3E74B00BCD5DA /* AuthToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthToken.swift; sourceTree = "<group>"; };
 		45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingService.swift; sourceTree = "<group>"; };
 		45A2898526C418F700BCD5DA /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
+		45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionSectionViewModel.swift; sourceTree = "<group>"; };
+		45B0BD33271EEE58009C41FA /* CompetitionFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterHeaderView.swift; sourceTree = "<group>"; };
+		45B0BD36271F1007009C41FA /* CompetitionFilterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterTableViewCell.swift; sourceTree = "<group>"; };
+		45B0BD3A271F180D009C41FA /* XcodePreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XcodePreviewViewController.swift; sourceTree = "<group>"; };
+		45B0BD3E271F18DB009C41FA /* CheckboxToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckboxToggleView.swift; sourceTree = "<group>"; };
+		45B0BD47271F206C009C41FA /* CheckboxToggleView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CheckboxToggleView.xib; sourceTree = "<group>"; };
 		45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpDetails.swift; sourceTree = "<group>"; };
 		45B7DADE26F92CE40032C1C3 /* UserSession.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserSession.swift; sourceTree = "<group>"; };
 		45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRegisterForm.swift; sourceTree = "<group>"; };
@@ -952,7 +970,7 @@
 		45166CA926F3548D00E69D65 /* ExternalLibs */ = {
 			isa = PBXGroup;
 			children = (
-				45BD39C5270213DE001DD51D /* KeychainInterface.swift */,
+				45B0BD2E271EE138009C41FA /* KeychainExtras */,
 				45166CAA26F3548D00E69D65 /* TSLibrary */,
 			);
 			path = ExternalLibs;
@@ -1312,6 +1330,7 @@
 		455A0CBF26BD9D9000EC572D /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				45B0BD39271F17E8009C41FA /* SwiftUI */,
 				45166CA926F3548D00E69D65 /* ExternalLibs */,
 				456B341926C179A8009D7D27 /* Functional */,
 				455A0CC826BD9D9000EC572D /* Extensions */,
@@ -1404,6 +1423,7 @@
 				45D712FC27033BF400AC0364 /* LiveEvents */,
 				45EF5430270C5FD600D1E13E /* Filters */,
 				45936CA8270E1BF600E8260E /* SportTypeSelection */,
+				45B0BD2F271EED24009C41FA /* CompetitionsList */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1595,6 +1615,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				45B0BD3D271F189A009C41FA /* FilterSelectionViews */,
 				A92F5D772717168100884BDF /* FilterRowView */,
 				A9C602332716F7A600992E11 /* FilterCollapse */,
 				45936CB2270EF02200E8260E /* SearchTextField.swift */,
@@ -1653,6 +1674,41 @@
 				45A2898526C418F700BCD5DA /* NetworkError.swift */,
 			);
 			path = Definitions;
+			sourceTree = "<group>";
+		};
+		45B0BD2E271EE138009C41FA /* KeychainExtras */ = {
+			isa = PBXGroup;
+			children = (
+				45BD39C5270213DE001DD51D /* KeychainInterface.swift */,
+			);
+			path = KeychainExtras;
+			sourceTree = "<group>";
+		};
+		45B0BD2F271EED24009C41FA /* CompetitionsList */ = {
+			isa = PBXGroup;
+			children = (
+				45B0BD33271EEE58009C41FA /* CompetitionFilterHeaderView.swift */,
+				45B0BD36271F1007009C41FA /* CompetitionFilterTableViewCell.swift */,
+				45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */,
+			);
+			path = CompetitionsList;
+			sourceTree = "<group>";
+		};
+		45B0BD39271F17E8009C41FA /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				45B0BD3A271F180D009C41FA /* XcodePreviewViewController.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		45B0BD3D271F189A009C41FA /* FilterSelectionViews */ = {
+			isa = PBXGroup;
+			children = (
+				45B0BD3E271F18DB009C41FA /* CheckboxToggleView.swift */,
+				45B0BD47271F206C009C41FA /* CheckboxToggleView.xib */,
+			);
+			path = FilterSelectionViews;
 			sourceTree = "<group>";
 		};
 		45B7DADD26F92CC30032C1C3 /* Shared */ = {
@@ -2261,6 +2317,7 @@
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				A9C82FC526F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
+				45B0BD48271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
 				455C962326FDD66400456F30 /* ProfileViewController.xib in Resources */,
 				45D3DE4227149BE800717124 /* BannerTopCollectionViewCell.xib in Resources */,
 				45D712FA27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
@@ -2366,6 +2423,7 @@
 				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
 				45D712F527031DDE00AC0364 /* SportsViewController.xib in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
+				45B0BD49271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
@@ -2424,6 +2482,7 @@
 				A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				A9C82FCE26F9E0F900059DCD /* PopUpPromotionView.swift in Sources */,
+				45B0BD3F271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
 				452047BA27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
@@ -2445,6 +2504,7 @@
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB0270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */,
+				45B0BD31271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */,
 				A9B841AE26E674AA00269B05 /* Match1.swift in Sources */,
 				45D3DE3A271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
@@ -2503,6 +2563,7 @@
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				45D728D72715F6DC00EFE04D /* AppModels.swift in Sources */,
 				45166CFF26F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
+				45B0BD37271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
 				45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
@@ -2525,6 +2586,7 @@
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CE926F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
+				45B0BD3B271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CED26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
@@ -2592,6 +2654,7 @@
 				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA4270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
 				45D871BE270F5B5500F5B87B /* Aggregator.swift in Sources */,
+				45B0BD34271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -2640,6 +2703,7 @@
 				A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
+				45B0BD40271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
 				452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
@@ -2661,6 +2725,7 @@
 				45B7DAE026F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB1270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */,
+				45B0BD32271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */,
 				A9B841AF26E674AA00269B05 /* Match1.swift in Sources */,
 				45D3DE3B271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
@@ -2719,6 +2784,7 @@
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				45D728D82715F6DC00EFE04D /* AppModels.swift in Sources */,
 				45166D0026F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
+				45B0BD38271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
 				A9C82FBC26F4E50D00059DCD /* EditAlertView.swift in Sources */,
@@ -2741,6 +2807,7 @@
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CEA26F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
+				45B0BD3C271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CEE26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
@@ -2808,6 +2875,7 @@
 				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA5270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
 				45D871BF270F5B5500F5B87B /* Aggregator.swift in Sources */,
+				45B0BD35271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
