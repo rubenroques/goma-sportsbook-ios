@@ -83,12 +83,14 @@ extension EveryMatrix {
         var name: String
         var phonePrefix: String
         var currency: String
+        var legalAge: Int
 
         enum CodingKeys: String, CodingKey {
         case isoCode = "code"
         case name = "name"
         case phonePrefix = "phonePrefix"
         case currency = "currency"
+        case legalAge = "legalAge"
         }
     }
 
