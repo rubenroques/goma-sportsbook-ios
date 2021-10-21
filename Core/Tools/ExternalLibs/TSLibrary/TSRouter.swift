@@ -18,6 +18,8 @@ enum TSRouter {
     case getCountries
     case simpleRegister(form: EveryMatrix.SimpleRegisterForm)
     case matchDetails(language: String, matchId: String)
+    case getPolicy
+    case changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?)
 
     case registrationDismissed
     case getTransportSessionID
@@ -92,6 +94,10 @@ enum TSRouter {
             return "/user/account#getCountries"
         case .simpleRegister:
             return "/user/account#register"
+        case .getPolicy:
+            return "/user/pwd#getPolicy"
+        case .changePassword( _, _, _, _, _):
+            return "/user/pwd#change"
         case .matchDetails:
             return "/sports#matches"
         //
@@ -237,6 +243,14 @@ enum TSRouter {
                     "currency": "EUR",
                     "emailVerificationURL": form.emailVerificationURL,
                     "userConsents": ["termsandconditions": true, "sms": false]]
+        case .getPolicy:
+            return [:]
+        case .changePassword(let oldPassword, let newPassword, let captchaPublicKey, let captchaChallenge, let captchaResponse):
+            return ["oldPassword": oldPassword,
+                    "newPassword": newPassword,
+                    "captchaPublicKey": captchaPublicKey ?? "",
+                    "captchaChallenge": captchaChallenge ?? "",
+                    "captchaResponse": captchaResponse ?? ""]
         case .matchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]

@@ -20,7 +20,8 @@ class PasswordUpdateViewController: UIViewController {
     @IBOutlet private var confirmPasswordHeaderTextFieldView: HeaderTextFieldView!
 
     var cancellables = Set<AnyCancellable>()
-
+    var passwordRegex: String = ""
+    var passwordRegexMessage: String = ""
 
     init() {
         super.init(nibName: "PasswordUpdateViewController", bundle: nil)
@@ -60,6 +61,7 @@ class PasswordUpdateViewController: UIViewController {
 
         oldPasswordHeaderTextFieldView.setSecureField(true)
         oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
+        oldPasswordHeaderTextFieldView.isTipPermanent = true
         
         newPasswordHeaderTextFieldView.setSecureField(true)
         confirmPasswordHeaderTextFieldView.setSecureField(true)
@@ -69,21 +71,36 @@ class PasswordUpdateViewController: UIViewController {
 
         editButton.isEnabled = false
 
-        Publishers.CombineLatest3(oldPasswordHeaderTextFieldView.textPublisher,
-                                  newPasswordHeaderTextFieldView.textPublisher,
-                                  confirmPasswordHeaderTextFieldView.textPublisher)
-            .map { oldPassword, new, confirm in
+        Env.everyMatrixAPIClient.getPolicy()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+            } receiveValue: { policy in
+                self.passwordRegex = policy.regularExpression
+                self.passwordRegexMessage = policy.message
+                self.oldPasswordHeaderTextFieldView.showTip(text: self.passwordRegexMessage, color: UIColor.App.headerTextField)
+                Publishers.CombineLatest3(self.oldPasswordHeaderTextFieldView.textPublisher,
+                                          self.newPasswordHeaderTextFieldView.textPublisher,
+                                          self.confirmPasswordHeaderTextFieldView.textPublisher)
+                    .map { oldPassword, new, confirm in
 
-                if (oldPassword ?? "").count < 8 || (new ?? "").count < 8 || (confirm ?? "").count < 8 {
-                    return false
-                }
-                if (new ?? "") != (confirm ?? "") {
-                    return false
-                }
-                return true
+                        if oldPassword?.range(of: self.passwordRegex, options: .regularExpression) == nil || new?.range(of: self.passwordRegex, options: .regularExpression) == nil || confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+                            return false
+                        }
+                        if (new ?? "") != (confirm ?? "") {
+                            self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
+                            return false
+                        }
+
+                        self.newPasswordHeaderTextFieldView.hideTipAndError()
+                        self.confirmPasswordHeaderTextFieldView.hideTipAndError()
+                        return true
+                    }
+                    .assign(to: \.isEnabled, on: self.editButton)
+                    .store(in: &self.cancellables)
             }
-            .assign(to: \.isEnabled, on: editButton)
             .store(in: &cancellables)
+
     }
 
     func setupWithTheme() {
@@ -119,13 +136,29 @@ class PasswordUpdateViewController: UIViewController {
         if text != "" {
             popup.setAlertText(text)
         }
+        
         popup.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(popup)
+
         NSLayoutConstraint.activate([
             popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
             popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             popup.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
         ])
+
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+            popup.alpha = 1
+        }, completion: { _ in
+        })
+
+        popup.onClose = {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                popup.alpha = 0
+            }, completion: { _ in
+                popup.removeFromSuperview()
+            })
+
+        }
         self.view.bringSubviewToFront(popup)
     }
 
@@ -140,36 +173,56 @@ class PasswordUpdateViewController: UIViewController {
 
     @IBAction private func editAction() {
 
-        self.didTapBackground()
-        self.view.isUserInteractionEnabled = false
+        var validFields = true
+        // Clean warnings
+        newPasswordHeaderTextFieldView.hideTipAndError()
+        confirmPasswordHeaderTextFieldView.hideTipAndError()
 
-        executeDelayed(1.5) {
-            self.backAction()
+        if newPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
+            newPasswordHeaderTextFieldView.showErrorOnField(text: "Invalid Password")
+            validFields = false
         }
 
-        
-//        // Clean warnings
-//        oldPasswordHeaderTextFieldView.hideTipAndError()
-//        newPasswordHeaderTextFieldView.hideTipAndError()
-//        confirmPasswordHeaderTextFieldView.hideTipAndError()
-//
-//        // TEST field verification
-//        let oldPassword = "goma123"
-//        if oldPasswordHeaderTextFieldView.text != oldPassword {
-//            oldPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_old_password_error"))
-//        }
-//        else if newPasswordHeaderTextFieldView.text != confirmPasswordHeaderTextFieldView.text {
-//            confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
-//        }
-//        else {
-//            // TEST Alert
-//            if oldPasswordHeaderTextFieldView.text != "" && newPasswordHeaderTextFieldView.text != "" && confirmPasswordHeaderTextFieldView.text != "" {
-//                showAlert(type: .success, text: localized("string_success_edit_password"))
-//            }
-//            else {
-//                showAlert(type: .error, text: localized("string_error_edit_password"))
-//            }
-//        }
+        if confirmPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
+            confirmPasswordHeaderTextFieldView.showErrorOnField(text: "Invalid Password")
+            validFields = false
+        }
+
+        if validFields {
+            Env.everyMatrixAPIClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text, newPassword: newPasswordHeaderTextFieldView.text, captchaPublicKey: "", captchaChallenge: "", captchaResponse: "")
+                .receive(on: DispatchQueue.main)
+                .eraseToAnyPublisher()
+                .sink( receiveCompletion: { completion in
+                    switch completion {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        var errorMessage = ""
+                        switch error {
+                        case .requestError(let value):
+                            errorMessage = value
+                        case .decodingError:
+                            errorMessage = "\(error)"
+                        case .httpError:
+                            errorMessage = "\(error)"
+                        case .unknown:
+                            errorMessage = "\(error)"
+                        case .missingTransportSessionID:
+                            errorMessage = "\(error)"
+                        case .notConnected:
+                            errorMessage = "\(error)"
+                        case .noResultsReceived:
+                            errorMessage = "\(error)"
+                        }
+                        self.showAlert(type: .error, text: "\(errorMessage)")
+
+                    }
+                }, receiveValue: { _ in
+                    self.showAlert(type: .success, text: localized("string_success_edit_password"))
+                    UserDefaults.standard.userSession?.password = self.newPasswordHeaderTextFieldView.text
+                }).store(in: &cancellables)
+
+        }
 
     }
 

@@ -92,4 +92,22 @@ extension EveryMatrix {
         }
     }
 
+    struct PasswordPolicy: Decodable {
+        var regularExpression: String
+        var message: String
+
+        enum CodingKeys: String, CodingKey {
+            case regularExpression = "regularExpression"
+            case message = "message"
+        }
+    }
+
+    struct PasswordChange: Decodable {
+        var isCaptchaEnabled: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case isCaptchaEnabled = "isCaptchaEnabled"
+        }
+    }
+
 }
