@@ -16,12 +16,6 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
-    var viewModel: MatchLineCellViewModel? {
-        didSet {
-            self.collectionView.reloadData()
-        }
-    }
-
     var match: Match?
 
     override func awakeFromNib() {

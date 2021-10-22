@@ -104,13 +104,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.layer.cornerRadius = 4
         self.awayBaseView.layer.cornerRadius = 4
 
-        let rightGradientMaskLayer = CAGradientLayer()
-        rightGradientMaskLayer.frame = matchGradientView.bounds
-        rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
-        rightGradientMaskLayer.locations = [0.0, 0.52, 0.78, 1]
-        rightGradientMaskLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        rightGradientMaskLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        matchGradientView.layer.mask = rightGradientMaskLayer
+        self.setupGradient()
     }
 
     override func prepareForReuse() {
@@ -136,8 +130,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         self.homeParticipantNameLabel.textColor = UIColor.App.headingMain
         self.awayParticipantNameLabel.textColor = UIColor.App.headingMain
-        self.dateLabel.textColor = UIColor.App.headingSecondary
+        self.dateLabel.textColor = UIColor.App.headingMain
         self.timeLabel.textColor = UIColor.App.headingMain
+
         self.homeOddTitleLabel.textColor = UIColor.App.headingMain
         self.homeOddValueLabel.textColor = UIColor.App.headingMain
         self.drawOddTitleLabel.textColor = UIColor.App.headingMain
@@ -149,17 +144,23 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
         self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
 
-        matchOffuscationView.backgroundColor = UIColor.App.secondaryBackground
-        matchOffuscationView.alpha = 0.65
+        self.matchOffuscationView.backgroundColor = UIColor.App.secondaryBackground
+        self.matchOffuscationView.alpha = 0.66
 
-        matchGradientView.backgroundColor = UIColor.App.secondaryBackground
+        self.setupGradient()
+    }
+
+    func setupGradient() {
+        self.matchGradientView.alpha = 1.0
+        self.matchGradientView.backgroundColor = UIColor.App.secondaryBackground
+
         let rightGradientMaskLayer = CAGradientLayer()
         rightGradientMaskLayer.frame = matchGradientView.bounds
-        rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
-        rightGradientMaskLayer.locations = [0.0, 0.52, 0.78, 1]
+        rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.clear.cgColor, UIColor.white.cgColor]
+        rightGradientMaskLayer.locations = [0.0, 0.48, 1.0]
         rightGradientMaskLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         rightGradientMaskLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        matchGradientView.layer.mask = rightGradientMaskLayer
+        self.matchGradientView.layer.mask = rightGradientMaskLayer
     }
 
     func setupWithViewModel(_ viewModel: BannerCellViewModel) {

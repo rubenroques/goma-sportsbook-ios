@@ -10,87 +10,6 @@ import Combine
 import OrderedCollections
 import SwiftUI
 
-class BannerLineCellViewModel {
-
-    var banners: [BannerCellViewModel]
-
-    init(banners: [BannerCellViewModel]) {
-        self.banners = banners
-    }
-}
-
-class BannerCellViewModel {
-
-    enum PresentationType {
-        case image
-        case match
-    }
-
-    var presentationType: PresentationType
-    var matchId: String?
-    var imageURL: URL?
-
-    var match: CurrentValueSubject<EveryMatrix.Match?, Never> = .init(nil)
-
-    var cancellables = Set<AnyCancellable>()
-
-    init(matchId: String?, imageURL: String) {
-        self.matchId = matchId
-        let imageURLString = imageURL
-
-        if let matchId = self.matchId {
-            self.presentationType = .match
-            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
-            self.requestMatchInfo(matchId)
-        }
-        else {
-            self.presentationType = .image
-            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
-        }
-
-    }
-
-    func requestMatchInfo(_ matchId: String) {
-        let language = "en"
-        Env.everyMatrixAPIClient.getMatchDetails(language: language, matchId: matchId)
-            .sink { _ in
-
-            } receiveValue: { response in
-                if let match = response.records?.first {
-                    self.match.send(match)
-                }
-            }
-            .store(in: &cancellables)
-    }
-}
-
-
-struct UserInfoCellViewModel {
-
-}
-
-struct MarketOutcome {
-
-}
-
-struct MarketWidgetCellViewModel {
-
-    var name: String
-    var outcomes: [EveryMatrix.BetOutcome]
-
-    init(name: String, outcomes: [EveryMatrix.BetOutcome]) {
-        self.name = name
-        self.outcomes = outcomes
-    }
-    
-}
-
-struct MatchLineCellViewModel {
-    var matchWidgetCellViewModel: MatchWidgetCellViewModel
-    var marketsIds: [String]
-}
-
-
 class SportsViewController: UIViewController {
 
     @IBOutlet private weak var filtersBarBaseView: UIView!
@@ -108,12 +27,18 @@ class SportsViewController: UIViewController {
     @IBOutlet weak var loadingBaseView: UIView!
     @IBOutlet weak var loadingView: UIActivityIndicatorView!
 
+    @IBOutlet private weak var openedCompetitionsFiltersConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var competitionsFiltersBaseView: UIView!
+    @IBOutlet private weak var competitionsFiltersDarkBackgroundView: UIView!
+    private var competitionsFiltersView: CompetitionsFiltersView?
+
     var cancellables = Set<AnyCancellable>()
 
     var viewModel: SportsViewModel
 
     var filterSelectedOption: Int = 0
     var sportSelected: String = "1"
+    private var lastContentOffset: CGFloat = 0
 
     init() {
         self.viewModel = SportsViewModel()
@@ -128,6 +53,8 @@ class SportsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.view.bringSubviewToFront(self.loadingBaseView)
+        
         commonInit()
         setupWithTheme()
 
@@ -144,6 +71,27 @@ class SportsViewController: UIViewController {
                 self.tableView.reloadData()
                 self.tableView.layoutIfNeeded()
                 self.tableView.setContentOffset(.zero, animated: true)
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.matchListType
+            .map {  $0 == .competitions }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] isCompetitionTab in
+                self.competitionsFiltersBaseView.isHidden = !isCompetitionTab
+                self.competitionsFiltersDarkBackgroundView.isHidden = !isCompetitionTab
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.competitionGroups
+            .map {
+                $0.enumerated().map {
+                    CompetitionFilterSectionViewModel(index: $0.offset, competitionGroup: $0.element)
+                }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] competitions in
+                self.competitionsFiltersView?.competitions = competitions
             }
             .store(in: &cancellables)
 
@@ -221,6 +169,28 @@ class SportsViewController: UIViewController {
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(self.handleSportsSelectionTap(_:)))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
 
+        //
+        //
+        self.competitionsFiltersView = CompetitionsFiltersView()
+
+        self.competitionsFiltersView?.applyFiltersAction = { [unowned self] selectedCompetitionsIds in
+            self.applyCompetitionsFiltersWithIds(selectedCompetitionsIds)
+        }
+        self.competitionsFiltersView?.tapHeaderViewAction = { [unowned self] in
+            self.openCompetitionsFilters()
+        }
+
+        self.competitionsFiltersDarkBackgroundView.alpha = 0.4
+        self.competitionsFiltersBaseView.backgroundColor = .clear
+        self.competitionsFiltersBaseView.addSubview(self.competitionsFiltersView!)
+
+        NSLayoutConstraint.activate([
+            self.competitionsFiltersBaseView.leadingAnchor.constraint(equalTo: self.competitionsFiltersView!.leadingAnchor),
+            self.competitionsFiltersBaseView.trailingAnchor.constraint(equalTo: self.competitionsFiltersView!.trailingAnchor),
+            self.competitionsFiltersBaseView.topAnchor.constraint(equalTo: self.competitionsFiltersView!.topAnchor),
+            self.competitionsFiltersBaseView.bottomAnchor.constraint(equalTo: self.competitionsFiltersView!.bottomAnchor),
+        ])
+
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -241,12 +211,85 @@ class SportsViewController: UIViewController {
 
         self.filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
-        self.filtersSeparatorLineView.alpha = 0.25
+        self.filtersSeparatorLineView.alpha = 0.5
         
         self.tableView.backgroundColor = UIColor.App.contentBackground
         self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
     }
 
+    func applyCompetitionsFiltersWithIds(_ ids: [String]) {
+        self.viewModel.fetchCompetitionsMatchesWithIds(ids)
+        self.showBottomBarCompetitionsFilters()
+    }
+
+    func openCompetitionsFilters() {
+        guard let competitionsFiltersView = competitionsFiltersView else {
+            return
+        }
+
+        UIView.animate(withDuration: 0.32, delay: 0.0, options: .curveEaseOut, animations: {
+            self.competitionsFiltersDarkBackgroundView.alpha = 0.4
+            self.openedCompetitionsFiltersConstraint.constant = 0
+            self.tableView.contentInset.bottom = 16
+            competitionsFiltersView.barHeaderViewSize()
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+
+
+    }
+
+    func showBottomBarCompetitionsFilters() {
+        guard let competitionsFiltersView = competitionsFiltersView else {
+            return
+        }
+
+        UIView.animate(withDuration: 0.32, delay: 0.0, options: .curveEaseOut, animations: {
+            self.competitionsFiltersDarkBackgroundView.alpha = 0.0
+            self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 52)
+            self.tableView.contentInset.bottom = 54+16
+            competitionsFiltersView.barHeaderViewSize()
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+
+    func showBottomLineCompetitionsFilters() {
+        guard let competitionsFiltersView = competitionsFiltersView else {
+            return
+        }
+
+        UIView.animate(withDuration: 0.32, delay: 0.0, options: .curveEaseOut, animations: {
+            self.competitionsFiltersDarkBackgroundView.alpha = 0.0
+            self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 18)
+            self.tableView.contentInset.bottom = 24
+            competitionsFiltersView.lineHeaderViewSize()
+            self.view.layoutIfNeeded()
+        }, completion: nil)
+    }
+
+}
+
+extension SportsViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        switch scrollView.panGestureRecognizer.state {
+        case .began, .changed:
+            ()
+        default:
+            return
+        }
+
+        if (self.lastContentOffset > scrollView.contentOffset.y) {
+            // moving up
+            self.showBottomBarCompetitionsFilters()
+        }
+        else if (self.lastContentOffset < scrollView.contentOffset.y) {
+            // move down
+            self.showBottomLineCompetitionsFilters()
+        }
+
+        // update the new position acquired
+        self.lastContentOffset = scrollView.contentOffset.y
+    }
 }
 
 extension SportsViewController: UITableViewDataSource, UITableViewDelegate {

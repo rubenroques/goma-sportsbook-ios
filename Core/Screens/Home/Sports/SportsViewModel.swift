@@ -25,7 +25,9 @@ class SportsViewModel {
     private var popularMatches: [Match] = []
     private var competitionsMatches: [Match] = []
 
-    var matchListType: MatchListType = .myGames
+    var competitionGroups: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
+
+    var matchListType: CurrentValueSubject<MatchListType, Never> = .init(.myGames)
     enum MatchListType {
         case myGames
         case today
@@ -38,9 +40,11 @@ class SportsViewModel {
         case match(match: Match)
     }
 
-    var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(false)
-    var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(false)
-    var isLoadingMyGamesList: CurrentValueSubject<Bool, Never> = .init(false)
+    private var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingMyGamesList: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingCompetitions: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
 
     var isLoading: AnyPublisher<Bool, Never>
 
@@ -61,10 +65,9 @@ class SportsViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     init() {
-        isLoading = Publishers.CombineLatest3(isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList)
-            .map({ (isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList) in
-                let isLoading = isLoadingTodayList || isLoadingPopularList || isLoadingMyGamesList
-                print("Publishers isLoading? [\(isLoading)] (isLoadingToday:\(isLoadingTodayList), isLoadingPopular:\(isLoadingPopularList), isLoadingMyGames:\(isLoadingMyGamesList))")
+        isLoading = Publishers.CombineLatest4(isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions)
+            .map({ (isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions) in
+                let isLoading = isLoadingTodayList || isLoadingPopularList || isLoadingMyGamesList || isLoadingCompetitions
                 return isLoading
             })
             .eraseToAnyPublisher()
@@ -76,18 +79,22 @@ class SportsViewModel {
         self.isLoadingPopularList.send(true)
         self.isLoadingTodayList.send(true)
         self.isLoadingMyGamesList.send(true)
+        self.isLoadingCompetitions.send(true)
+        self.isLoadingCompetitionGroups.send(true)
+
 
         self.fetchBanners()
 
         self.fetchPopularMatches()
         self.fetchTodayMatches()
-        self.fetchCompetitionsMatches()
+        self.fetchCompetitionsFilters()
 
+        self.isLoadingCompetitions.send(false)
         self.isLoadingMyGamesList.send(false)
     }
 
     func setMatchListType(_ matchListType: MatchListType) {
-        self.matchListType = matchListType
+        self.matchListType.send(matchListType)
         self.updateContentList()
     }
 
@@ -107,7 +114,7 @@ class SportsViewModel {
             contentList.append(CellType.banner(banners: self.banners))
         }
 
-        switch matchListType {
+        switch matchListType.value {
         case .myGames:
             contentList.append(contentsOf: self.popularMatches.map({ return CellType.match(match: $0) }) )
         case .today:
@@ -149,6 +156,64 @@ class SportsViewModel {
         self.updateContentList()
     }
 
+    private func setupCompetitionGroups() {
+        var addedCompetitionIds: [String] = []
+
+        var popularCompetitions = [Competition]()
+        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values {
+
+            let competition = Competition(id: popularCompetition.id, name: popularCompetition.name ?? "")
+            addedCompetitionIds.append(popularCompetition.id)
+            popularCompetitions.append(competition)
+        }
+
+        let popularCompetitionGroup = CompetitionGroup(id: "0",
+                                                        name: "Popular Competitions",
+                                                        aggregationType: CompetitionGroup.AggregationType.popular,
+                                                        competitions: popularCompetitions)
+        var popularCompetitionGroups = [popularCompetitionGroup]
+
+
+        var competitionsGroups = [CompetitionGroup]()
+        for location in Env.everyMatrixStorage.locations.values {
+
+            var locationCompetitions = [Competition]()
+
+            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? []) {
+
+                guard
+                    let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId]
+                else {
+                    continue
+                }
+
+                if addedCompetitionIds.contains(rawCompetition.id) {
+                    continue
+                }
+
+                let competition = Competition(id: rawCompetition.id, name: rawCompetition.name ?? "")
+                addedCompetitionIds.append(rawCompetition.id)
+                locationCompetitions.append(competition)
+            }
+
+            let locationCompetitionGroup = CompetitionGroup(id: location.id,
+                                                            name: location.name ?? "",
+                                                            aggregationType: CompetitionGroup.AggregationType.region,
+                                                            competitions: locationCompetitions)
+
+            if locationCompetitions.isNotEmpty {
+                competitionsGroups.append(locationCompetitionGroup)
+            }
+        }
+        
+        popularCompetitionGroups.append(contentsOf: competitionsGroups)
+
+        self.competitionGroups.send(popularCompetitionGroups)
+        self.isLoadingCompetitionGroups.send(false)
+
+        self.updateContentList()
+    }
+
     private func setupCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .competitions,
                                                  shouldClear: didChangeSportType)
@@ -157,7 +222,7 @@ class SportsViewModel {
 
         self.competitionsMatches = appMatches
 
-        self.isLoadingTodayList.send(false)
+        self.isLoadingCompetitions.send(false)
 
         self.updateContentList()
     }
@@ -229,9 +294,52 @@ class SportsViewModel {
             .store(in: &cancellables)
     }
 
-    func fetchCompetitionsMatches() {
-        let eventsList = ["140103443573428224"]
-        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId, language: "en", sportId: "\(self.selectedSportId)", events: eventsList)
+    func fetchCompetitionsFilters() {
+
+        let language = "en"
+        let sportId = "\(self.selectedSportId)"
+
+        let popularTournamentsPublisher = TSManager.shared
+            .getModel(router: TSRouter.getPopularTournaments(language: language, sportId: sportId),
+                      decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
+
+        let tournamentsPublisher = TSManager.shared
+            .getModel(router: TSRouter.getTournaments(language: language, sportId: sportId),
+                      decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
+
+        let locationsPublisher = TSManager.shared
+            .getModel(router: TSRouter.getLocations(language: language, sortByPopularity: false),
+                      decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+
+
+        Publishers.Zip3(popularTournamentsPublisher, tournamentsPublisher, locationsPublisher)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+                self.isLoadingCompetitionGroups.send(false)
+            }, receiveValue: { popularTournaments, tournaments, locations in
+                Env.everyMatrixStorage.storePopularTournaments(tournaments: popularTournaments.records ?? [])
+                Env.everyMatrixStorage.storeTournaments(tournaments: tournaments.records ?? [])
+                Env.everyMatrixStorage.storeLocations(locations: locations.records ?? [])
+
+                self.setupCompetitionGroups()
+            })
+            .store(in: &cancellables)
+
+        //
+        //
+
+
+    }
+    func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
+
+        self.isLoadingCompetitions.send(true)
+
+        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId, language: "en", sportId: "\(self.selectedSportId)", events: ids)
 
         TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
@@ -243,7 +351,7 @@ class SportsViewModel {
                 case .finished:
                     print("Data retrieved!")
                 }
-                self.isLoadingPopularList.send(false)
+                self.isLoadingCompetitions.send(false)
             }, receiveValue: { state in
                 debugPrint("SportsViewModel competitionsMatchesPublisher")
 
@@ -297,6 +405,11 @@ class SportsViewModel {
 
     }
 
+}
+
+
+extension SportsViewModel {
+
     var numberOfSections: Int {
         return 4
     }
@@ -343,7 +456,7 @@ class SportsViewModel {
     }
 
     func viewForHeaderInSection(_  section: Int, tableView: UITableView) -> UIView? {
-        switch (section, matchListType) {
+        switch (section, matchListType.value) {
         case (2, .myGames):
             if  let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
                     as? TitleTableViewHeader {
@@ -363,7 +476,7 @@ class SportsViewModel {
     }
 
     func heightForHeaderInSection(section: Int, tableView: UITableView) -> CGFloat {
-        switch (section, matchListType) {
+        switch (section, matchListType.value) {
         case (2, .myGames):
             return 54
         case (2, .today):
@@ -375,30 +488,17 @@ class SportsViewModel {
 
 
     func selectedFilterMatches() -> [Match] {
-        if case .myGames = matchListType {
+        if case .myGames = matchListType.value {
             return self.popularMatches
         }
-        else if case .today = matchListType {
+        else if case .today = matchListType.value {
             return self.todayMatches
         }
-        else if case .competitions = matchListType {
+        else if case .competitions = matchListType.value {
             return self.competitionsMatches
         }
         return []
     }
-
-    func matchViewModel(forIndex index: Int) -> MatchLineCellViewModel? {
-        guard
-            let matchAtIndex = self.selectedFilterMatches()[safe: index]
-        else {
-            return nil
-        }
-
-        let matchViewModel = MatchWidgetCellViewModel(match: matchAtIndex)
-        let marketsIdsForMatch = Env.everyMatrixStorage.marketsForMatch[matchAtIndex.id] ?? []
-        return MatchLineCellViewModel(matchWidgetCellViewModel: matchViewModel, marketsIds: marketsIdsForMatch)
-    }
-
 
 
     func createBannersViewModel() -> BannerLineCellViewModel {

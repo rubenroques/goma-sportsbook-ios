@@ -39,27 +39,3 @@ struct XcodePreviewView: UIViewRepresentable {
         // Not needed
     }
 }
-
-//
-// USAGE:
-//
-// struct PreviewViewController_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ViewControllerPreview {
-//            PreviewViewController()
-//        }
-//    }
-// }
-//
-
-struct PreviewViewController_Previews: PreviewProvider {
-    static var previews: some View {
-        XcodePreviewView.init({
-            let checkboxToggleView = CheckboxToggleView()
-            checkboxToggleView.unselectedColor = UIColor.App.separatorLine
-            checkboxToggleView.selectedColor = UIColor.App.mainBackground
-            checkboxToggleView.isSelected = true
-            return checkboxToggleView
-        })
-    }
-}
