@@ -25,7 +25,6 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var usernameLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var bottomStackView: UIStackView!
 
-
     var textPublisher: AnyPublisher<String?, Never> {
         return self.textField.textPublisher
     }
@@ -310,10 +309,8 @@ class HeaderTextFieldView: NibView {
         self.showStateImageView.addGestureRecognizer(tapGestureRecognizer)
     }
 
-    @objc func didTapIconImageVIew(_ sender:AnyObject){
+    @objc func didTapIconImageVIew(_ sender: AnyObject) {
 
-//        let coordinates = self.frame
-//        print(coordinates)
         didTapIcon?()
     }
 
@@ -495,7 +492,6 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         self.highlightColor = UIColor.App.headingMain
         self.containerView.layer.borderColor = self.highlightColor.cgColor
 
-
         self.slideUp()
 
     }
@@ -537,7 +533,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
                 return false
 
             }
-            else if (string.rangeOfCharacter(from: decimals) == nil && string != "") {
+            else if string.rangeOfCharacter(from: decimals) == nil && string != "" {
                     return false
             }
         }

@@ -179,12 +179,12 @@ class PasswordUpdateViewController: UIViewController {
         confirmPasswordHeaderTextFieldView.hideTipAndError()
 
         if newPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
-            newPasswordHeaderTextFieldView.showErrorOnField(text: "Invalid Password")
+            newPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
             validFields = false
         }
 
         if confirmPasswordHeaderTextFieldView.text.range(of: self.passwordRegex, options: .regularExpression) == nil {
-            confirmPasswordHeaderTextFieldView.showErrorOnField(text: "Invalid Password")
+            confirmPasswordHeaderTextFieldView.showErrorOnField(text: self.passwordRegexMessage)
             validFields = false
         }
 
