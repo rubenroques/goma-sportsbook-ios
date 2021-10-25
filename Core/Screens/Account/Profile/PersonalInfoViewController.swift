@@ -16,6 +16,8 @@ class PersonalInfoViewController: UIViewController {
     @IBOutlet private var backButton: UIButton!
     @IBOutlet private var headerLabel: UILabel!
     @IBOutlet private var editButton: UIButton!
+
+    @IBOutlet private var titleHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var countryHeaderTextFieldView: HeaderTextFieldView!
@@ -34,6 +36,8 @@ class PersonalInfoViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
     var userSession: UserSession?
+    var countries: EveryMatrix.CountryListing?
+    var profile: EveryMatrix.UserProfile?
 
     init(userSession: UserSession?) {
         self.userSession = userSession
@@ -85,11 +89,25 @@ class PersonalInfoViewController: UIViewController {
         editButton.setTitle(localized("string_save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
+        titleHeaderTextFieldView.setPlaceholderText(localized("Title"))
+        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+        titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
+        titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        titleHeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
+
         firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"),
                                                         color: UIColor.App.headerTextField)
+        firstNameHeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
+        lastNameHeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
 
         countryHeaderTextFieldView.setPlaceholderText(localized("string_nationality"))
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
@@ -103,14 +121,29 @@ class PersonalInfoViewController: UIViewController {
         //birthDateHeaderTextFieldView.shouldBeginEditing = { return false }
 
         adress1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
+        adress1HeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
 
         adress2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
+        adress2HeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
 
         cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
+        cityHeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
 
         postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
+        postalCodeHeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
 
         usernameHeaderTextFieldView.setPlaceholderText(localized("string_username"))
+        usernameHeaderTextFieldView.didValueChanged = {
+            self.checkProfileInfoChanged()
+        }
 
         emailHeaderTextFieldView.setPlaceholderText(localized("string_email"))
 
@@ -147,6 +180,11 @@ class PersonalInfoViewController: UIViewController {
         headerLabel.textColor = UIColor.App.headingMain
 
         lineView.backgroundColor = UIColor.App.headerTextField.withAlphaComponent(0.2)
+
+        titleHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        titleHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        titleHeaderTextFieldView.setViewColor(UIColor.App.mainBackground)
+        titleHeaderTextFieldView.setViewBorderColor(UIColor.App.headerTextField)
 
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
         firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
@@ -211,10 +249,42 @@ class PersonalInfoViewController: UIViewController {
             .sink { _ in
                 self.countryHeaderTextFieldView.isUserInteractionEnabled = true
             } receiveValue: { countries in
+                self.countries = countries
                 self.setupWithCountryCodes(countries)
             }
         .store(in: &cancellables)
 
+        Env.everyMatrixAPIClient.getProfile()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+
+            } receiveValue: { profile in
+                print("PROFILE: \(profile)")
+                self.setupProfile(profile: profile)
+            }
+        .store(in: &cancellables)
+
+    }
+
+    func checkProfileInfoChanged() {
+        // Updatable fields
+        let emailChanged = emailHeaderTextFieldView.text == profile?.email ? false : true
+        let usernameChanged = usernameHeaderTextFieldView.text == profile?.username ? false : true
+        let titleChanged = titleHeaderTextFieldView.text == profile?.title ? false : true
+        let firstNameChanged = firstNameHeaderTextFieldView.text == profile?.firstname ? false : true
+        let lastNameChanged = lastNameHeaderTextFieldView.text == profile?.surname ? false : true
+        let address1Changed = adress1HeaderTextFieldView.text == profile?.address1 ? false : true
+        let address2Changed = adress2HeaderTextFieldView.text == profile?.address2 ? false : true
+        let cityChanged = cityHeaderTextFieldView.text == profile?.city ? false : true
+        let postalCodeChanged = postalCodeHeaderTextFieldView.text == profile?.postalCode ? false : true
+
+        if emailChanged || usernameChanged || titleChanged || firstNameChanged || lastNameChanged || address1Changed || address2Changed || cityChanged || postalCodeChanged {
+            self.editButton.isEnabled = true
+        }
+        else {
+            self.editButton.isEnabled = false
+        }
     }
 
     @IBAction private func backAction() {
@@ -222,12 +292,101 @@ class PersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func editAction() {
-        self.didTapBackground()
-        self.view.isUserInteractionEnabled = false
+//        self.didTapBackground()
+//        self.view.isUserInteractionEnabled = false
+//
+//        executeDelayed(1.5) {
+//            self.backAction()
+//        }
+        var validFields = true
 
-        executeDelayed(1.5) {
-            self.backAction()
+        let email = emailHeaderTextFieldView.text
+        let username = usernameHeaderTextFieldView.text
+        let title = titleHeaderTextFieldView.text
+        let gender = titleHeaderTextFieldView.text == "Mr." ? "M" : "F"
+        let firstName = firstNameHeaderTextFieldView.text
+        let lastName = lastNameHeaderTextFieldView.text
+        let birthDate = birthDateHeaderTextFieldView.text
+        let mobilePrefix = profile?.mobilePrefix ?? ""
+        let mobile = profile?.mobile ?? ""
+        let phonePrefix = profile?.phonePrefix ?? ""
+        let phone = profile?.phone ?? ""
+        let country = profile?.country ?? ""
+        let address1 = adress1HeaderTextFieldView.text
+        let address2 = adress2HeaderTextFieldView.text
+        let city = cityHeaderTextFieldView.text
+        let postalCode = postalCodeHeaderTextFieldView.text
+
+        // Verify required fields
+        if firstName == "" {
+            firstNameHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            validFields = false
         }
+        else if lastName == "" {
+            lastNameHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            validFields = false
+        }
+        else if address1 == "" {
+            adress1HeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            validFields = false
+        }
+        else if city == "" {
+            cityHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            validFields = false
+        }
+        else if postalCode == "" {
+            postalCodeHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            validFields = false
+        }
+
+        if validFields {
+            let form = EveryMatrix.ProfileForm(username: username,
+                                               email: email,
+                                               title: title,
+                                               gender: gender,
+                                               firstname: firstName,
+                                               surname: lastName,
+                                               birthDate: birthDate,
+                                               country: country,
+                                               address1: address1,
+                                               address2: address2,
+                                               city: city,
+                                               postalCode: postalCode,
+                                               mobile: mobile,
+                                               mobilePrefix: mobilePrefix,
+                                               phone: phone,
+                                               phonePrefix: phonePrefix)
+
+            self.updateProfile(form: form)
+        }
+    }
+
+    func showAlert(type: EditAlertView.AlertState, text: String = "") {
+
+        let popup = EditAlertView()
+        popup.alertState = type
+        if text != "" {
+            popup.setAlertText(text)
+        }
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+            popup.alpha = 1
+        }, completion: { _ in
+        })
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(popup)
+        NSLayoutConstraint.activate([
+            popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            popup.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        popup.onClose = {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                popup.alpha = 0
+            }, completion: { _ in
+                popup.removeFromSuperview()
+            })
+        }
+        self.view.bringSubviewToFront(popup)
     }
 
     @objc func didTapBackground() {
@@ -242,6 +401,31 @@ class PersonalInfoViewController: UIViewController {
         self.usernameHeaderTextFieldView.resignFirstResponder()
     }
 
+    private func updateProfile(form: EveryMatrix.ProfileForm) {
+        Env.everyMatrixAPIClient.updateProfile(form: form)
+            .breakpointOnError()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                case .failure(let error):
+                    switch error {
+                    case let .requestError(message):
+                        print(message)
+                        self.showAlert(type: .error, text: message)
+                    default:
+                        print(error)
+                        self.showAlert(type: .error, text: "\(error)")
+                    }
+                case .finished:
+                    ()
+                }
+            } receiveValue: { _ in
+                print("UPDATE SUCCESS")
+                self.showAlert(type: .success, text: localized("string_profile_updated_success"))
+            }
+            .store(in: &cancellables)
+    }
+
 }
 
 // Flags business logic
@@ -251,6 +435,12 @@ extension PersonalInfoViewController {
 
         for country in listings.countries where country.isoCode == listings.currentIpCountry {
             self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+//            let calendar = Calendar(identifier: .gregorian)
+//            var components = DateComponents()
+//            components.calendar = calendar
+//            components.year = -country.legalAge
+//            let maxDate = calendar.date(byAdding: components, to: Date())!
+//            self.birthDateHeaderTextFieldView.datePicker.maximumDate = maxDate
         }
 
         self.countryHeaderTextFieldView.isUserInteractionEnabled = true
@@ -283,6 +473,51 @@ extension PersonalInfoViewController {
             }
         }
         return stringCountry
+    }
+
+    private func setupProfile(profile: EveryMatrix.UserProfileField) {
+        self.profile = profile.fields
+
+        if let optionIndex = UserTitles.titles.firstIndex(of: profile.fields.title) {
+            self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
+        }
+
+        if !profile.isFirstnameUpdatable {
+            self.firstNameHeaderTextFieldView.isDisabled = true
+        }
+        self.firstNameHeaderTextFieldView.setText(profile.fields.firstname)
+
+        if !profile.isSurnameUpdatable {
+            self.lastNameHeaderTextFieldView.isDisabled = true
+        }
+        self.lastNameHeaderTextFieldView.setText(profile.fields.surname)
+
+        if !profile.isCountryUpdatable {
+            self.countryHeaderTextFieldView.isDisabled = true
+        }
+        for country in countries!.countries where country.isoCode == profile.fields.country {
+            self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
+        }
+
+        if !profile.isBirthDateUpdatable {
+            self.birthDateHeaderTextFieldView.isDisabled = true
+        }
+        self.birthDateHeaderTextFieldView.setText(profile.fields.birthDate)
+
+        self.adress1HeaderTextFieldView.setText(profile.fields.address1)
+
+        self.adress2HeaderTextFieldView.setText(profile.fields.address2)
+
+        self.cityHeaderTextFieldView.setText(profile.fields.city)
+
+        self.postalCodeHeaderTextFieldView.setText(profile.fields.postalCode)
+
+        self.usernameHeaderTextFieldView.setText(profile.fields.username)
+
+        if !profile.isEmailUpdatable {
+            self.emailHeaderTextFieldView.isDisabled = true
+        }
+        self.emailHeaderTextFieldView.setText(profile.fields.email)
     }
 
 }

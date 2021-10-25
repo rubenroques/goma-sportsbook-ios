@@ -32,6 +32,7 @@ class HeaderTextFieldView: NibView {
     var didTapReturn: (() -> Void)?
     var didTapIcon: (() -> Void)?
     var hasText: ((Bool) -> Void)?
+    var didValueChanged: (() -> Void)?
 
     var didSelectPickerIndex: ((Int) -> Void)?
     var shouldBeginEditing: (() -> Bool)?
@@ -365,11 +366,16 @@ class HeaderTextFieldView: NibView {
         textField.text = selectionArray[0]
     }
 
-    func setSelectionPicker(_ array: [String], headerVisible: Bool = false) {
+    func setSelectedPickerOption(option: Int) {
+        pickerView.selectRow(option, inComponent: 0, animated: true)
+        textField.text = selectionArray[option]
+    }
+
+    func setSelectionPicker(_ array: [String], headerVisible: Bool = false, defaultValue: Int = 0) {
         selectionArray = array
 
         pickerView.delegate = self
-        pickerView.selectRow(0, inComponent: 0, animated: true)
+        pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
 
         if !headerVisible {
             headerLabel.isHidden = true
@@ -379,7 +385,7 @@ class HeaderTextFieldView: NibView {
         }
 
         textField.inputView = pickerView
-        textField.text = selectionArray[0]
+        textField.text = selectionArray[defaultValue]
 
         // Set arrow image
         let arrowDropdownImageView = UIImageView()
@@ -518,6 +524,9 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         else {
             hasText?(false)
         }
+
+        self.didValueChanged?()
+
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -560,5 +569,6 @@ extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedItem = selectionArray[row]
         textField.text = selectedItem
+        self.didValueChanged?()
     }
 }

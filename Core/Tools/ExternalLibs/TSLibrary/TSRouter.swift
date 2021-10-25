@@ -18,7 +18,7 @@ enum TSRouter {
     case getCountries
     case simpleRegister(form: EveryMatrix.SimpleRegisterForm)
     case matchDetails(language: String, matchId: String)
-
+    case profileUpdate(form: EveryMatrix.ProfileForm)
     case registrationDismissed
     case getTransportSessionID
     case getClientIdentity
@@ -94,6 +94,8 @@ enum TSRouter {
             return "/user/account#register"
         case .matchDetails:
             return "/sports#matches"
+        case .profileUpdate:
+            return "/user/account#updateProfile"
         //
         //
         // EM Subscription
@@ -236,6 +238,24 @@ enum TSRouter {
                     "country": "PT",
                     "currency": "EUR",
                     "emailVerificationURL": form.emailVerificationURL,
+                    "userConsents": ["termsandconditions": true, "sms": false]]
+        case let .profileUpdate(form):
+            return ["email": form.email,
+                    "username": form.username,
+                    "title": form.title,
+                    "gender": form.gender,
+                    "firstName": form.firstname,
+                    "surname": form.surname,
+                    "birthDate": form.birthDate,
+                    "mobilePrefix": form.mobilePrefix,
+                    "mobile": form.mobile,
+                    "phonePrefix": form.phonePrefix,
+                    "phone": form.phone,
+                    "country": form.country,
+                    "address1": form.address1,
+                    "address2": form.address2,
+                    "city": form.city,
+                    "postalCode": form.postalCode,
                     "userConsents": ["termsandconditions": true, "sms": false]]
         case .matchDetails(let language, let matchId):
             return ["lang": language,
