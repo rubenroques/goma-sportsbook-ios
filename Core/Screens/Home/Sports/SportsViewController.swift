@@ -38,7 +38,9 @@ class SportsViewController: UIViewController {
 
     var filterSelectedOption: Int = 0
     var sportSelected: String = "1"
+
     private var lastContentOffset: CGFloat = 0
+    private var shouldDetectScrollMovement = false
 
     init() {
         self.viewModel = SportsViewModel()
@@ -55,53 +57,16 @@ class SportsViewController: UIViewController {
 
         self.view.bringSubviewToFront(self.loadingBaseView)
         
-        commonInit()
-        setupWithTheme()
-
-        self.viewModel.isLoading
-            .receive(on: DispatchQueue.main)
-            .sink { isLoading in
-                self.loadingBaseView.isHidden = !isLoading
-            }
-            .store(in: &cancellables)
-
-        self.viewModel.contentList
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] _ in
-                self.tableView.reloadData()
-                self.tableView.layoutIfNeeded()
-                self.tableView.setContentOffset(.zero, animated: true)
-            }
-            .store(in: &cancellables)
-
-        self.viewModel.matchListType
-            .map {  $0 == .competitions }
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] isCompetitionTab in
-                self.competitionsFiltersBaseView.isHidden = !isCompetitionTab
-                self.competitionsFiltersDarkBackgroundView.isHidden = !isCompetitionTab
-            }
-            .store(in: &cancellables)
-
-        self.viewModel.competitionGroups
-            .map {
-                $0.enumerated().map {
-                    CompetitionFilterSectionViewModel(index: $0.offset, competitionGroup: $0.element)
-                }
-            }
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] competitions in
-                self.competitionsFiltersView?.competitions = competitions
-            }
-            .store(in: &cancellables)
-
+        self.commonInit()
+        self.setupWithTheme()
+        self.connectPublishers()
         self.viewModel.fetchData()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     private func commonInit() {
@@ -193,6 +158,57 @@ class SportsViewController: UIViewController {
 
     }
 
+    func connectPublishers() {
+
+        self.viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { isLoading in
+                self.loadingBaseView.isHidden = !isLoading
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.contentList
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] _ in
+                self.tableView.reloadData()
+                self.tableView.layoutIfNeeded()
+                self.tableView.setContentOffset(.zero, animated: true)
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.matchListTypePublisher
+            .map {  $0 == .competitions }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] isCompetitionTab in
+                self.shouldDetectScrollMovement = isCompetitionTab
+                self.competitionsFiltersBaseView.isHidden = !isCompetitionTab
+                self.competitionsFiltersDarkBackgroundView.isHidden = !isCompetitionTab
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.competitionGroupsPublisher
+            .map {
+                $0.enumerated().map {
+                    CompetitionFilterSectionViewModel(index: $0.offset, competitionGroup: $0.element)
+                }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] competitions in
+                self.competitionsFiltersView?.competitions = competitions
+            }
+            .store(in: &cancellables)
+
+        self.competitionsFiltersView?.selectedIds
+            .compactMap({ $0.count == 0 })
+            .sink(receiveValue: { [unowned self] shouldShowOpen in
+                if shouldShowOpen {
+                    self.openCompetitionsFilters()
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
         let sportSelectionVC = SportSelectionViewController(defaultSport: self.sportSelected)
         sportSelectionVC.delegate = self
@@ -223,7 +239,10 @@ class SportsViewController: UIViewController {
     }
 
     func openCompetitionsFilters() {
-        guard let competitionsFiltersView = competitionsFiltersView else {
+        guard
+            let competitionsFiltersView = competitionsFiltersView,
+            competitionsFiltersView.state != .opened
+        else {
             return
         }
 
@@ -231,7 +250,8 @@ class SportsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.4
             self.openedCompetitionsFiltersConstraint.constant = 0
             self.tableView.contentInset.bottom = 16
-            competitionsFiltersView.barHeaderViewSize()
+            //competitionsFiltersView.openedBarHeaderViewSize()
+            competitionsFiltersView.state = .opened
             self.view.layoutIfNeeded()
         }, completion: nil)
 
@@ -247,7 +267,8 @@ class SportsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 52)
             self.tableView.contentInset.bottom = 54+16
-            competitionsFiltersView.barHeaderViewSize()
+            //competitionsFiltersView.closedBarHeaderViewSize()
+            competitionsFiltersView.state = .bar
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -261,7 +282,8 @@ class SportsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 18)
             self.tableView.contentInset.bottom = 24
-            competitionsFiltersView.lineHeaderViewSize()
+            //competitionsFiltersView.lineHeaderViewSize()
+            competitionsFiltersView.state = .line
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
@@ -271,6 +293,10 @@ class SportsViewController: UIViewController {
 extension SportsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
+        if !shouldDetectScrollMovement {
+            return
+        }
+        
         switch scrollView.panGestureRecognizer.state {
         case .began, .changed:
             ()
@@ -407,6 +433,7 @@ extension SportsViewController: SportTypeSelectionViewDelegate {
         
         if let sportId = Int(sport) {
             self.viewModel.selectedSportId = sportId
+            self.competitionsFiltersView?.resetSelection()
         }
 
     }

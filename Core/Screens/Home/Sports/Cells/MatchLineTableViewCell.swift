@@ -21,6 +21,8 @@ class MatchLineTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        self.selectionStyle = .none
+
         self.backSliderView.alpha = 0.0
 
         self.collectionView.delegate = self
@@ -59,6 +61,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+
+        self.selectionStyle = .none
 
         self.backSliderView.alpha = 0.0
 

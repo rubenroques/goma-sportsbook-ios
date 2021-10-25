@@ -30,22 +30,55 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    var selectedIds: CurrentValueSubject<[String], Never> = .init([])
-
-    var expandedCells: Set<Int> = []
+    var selectedIds: CurrentValueSubject<Set<String>, Never> = .init([])
+    var expandedCellsDictionary: [String: Bool] = [:]
 
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
+            self.expandedCellsDictionary = [:]
+            self.competitions.forEach( { competition in self.expandedCellsDictionary[competition.id] = false } )
             self.searchBarView.text = nil
             self.filteredCompetitions = competitions
         }
     }
     var filteredCompetitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
+            let selectedCells = tableView.indexPathsForSelectedRows ?? []
             self.tableView.reloadData()
+            for selectedCellIndexPath in selectedCells {
+                tableView.selectRow(at: selectedCellIndexPath, animated: false, scrollPosition: .none)
+            }
         }
     }
 
+    enum SizeState {
+        case opened
+        case bar
+        case line
+    }
+
+    var state: SizeState = .opened {
+        didSet {
+            switch self.state {
+            case .opened:
+                UIView.animate(withDuration: 0.4) {
+                    self.titleLabel.alpha = 1.0
+                    self.smallTitleLabel.alpha = 0.0
+                }
+            case .bar:
+                UIView.animate(withDuration: 0.4) {
+                    self.titleLabel.alpha = 1.0
+                    self.smallTitleLabel.alpha = 0.0
+                }
+            case .line:
+                UIView.animate(withDuration: 0.4) {
+                    self.titleLabel.alpha = 0.0
+                    self.smallTitleLabel.alpha = 1.0
+                }
+            }
+
+        }
+    }
 
     convenience init() {
         self.init(frame: .zero)
@@ -126,6 +159,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         swipeHeaderTapGesture.direction = .up
         headerBaseView.addGestureRecognizer(swipeHeaderTapGesture)
 
+//        self.headerBaseView.layer.borderColor = UIColor.black.cgColor
+//        self.headerBaseView.layer.borderWidth = 2
+
         self.selectedIds
             .map(\.isNotEmpty)
             .receive(on: DispatchQueue.main)
@@ -202,22 +238,8 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         }
     }
 
-    func barHeaderViewSize() {
-        UIView.animate(withDuration: 0.4) {
-            self.titleLabel.alpha = 1.0
-            self.smallTitleLabel.alpha = 0.0
-        }
-    }
-
-    func lineHeaderViewSize() {
-        UIView.animate(withDuration: 0.4) {
-            self.titleLabel.alpha = 0.0
-            self.smallTitleLabel.alpha = 1.0
-        }
-    }
-
     @IBAction func didTapApplyButton() {
-        self.applyFiltersAction?(self.selectedIds.value)
+        self.applyFiltersAction?(Array(self.selectedIds.value))
     }
 
     @objc func didTapHeaderView() {
@@ -228,6 +250,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.resignFirstResponder()
     }
 
+    func resetSelection() {
+        self.selectedIds.send([])
+        self.tableView.reloadData()
+    }
 
 }
 
@@ -268,23 +294,25 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
             cell.configureAsNormalCell()
         }
 
-        let selected = viewModel.isSelected
-        cell.setSelected(selected, animated: true)
-
         cell.titleLabel.text = viewModel.name
-
+        cell.selectionStyle = .none
+        
         return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let sectionViewModel = filteredCompetitions[safe: indexPath.section], expandedCells.contains(indexPath.section) {
+        if let viewModelForSection = filteredCompetitions[safe: indexPath.section],
+           expandedCellsDictionary[viewModelForSection.id] ?? false {
+            // if expandedCells.contains(indexPath.section) {
             return 52
         }
         return 0
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if let sectionViewModel = filteredCompetitions[safe: indexPath.section], expandedCells.contains(indexPath.section) {
+        if let viewModelForSection = filteredCompetitions[safe: indexPath.section],
+           expandedCellsDictionary[viewModelForSection.id] ?? false {
+        //if expandedCells.contains(indexPath.section) {
             return 52
         }
         return 0
@@ -317,15 +345,18 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         headerView.backgroundView?.backgroundColor = .red
         headerView.backgroundColor = .blue
         headerView.delegate = self
-        headerView.viewModel = viewModelForSection
-        
+
+        headerView.section = section
+        headerView.isExpanded = expandedCellsDictionary[viewModelForSection.id] ?? false // expandedCells.contains(section)
+        headerView.sectionIdentifier = viewModelForSection.id
+        headerView.titleLabel.text = viewModelForSection.name
+
         return headerView
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let typedCell = cell as? CompetitionFilterTableViewCell,
-           var viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row]
-        {
+           let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
             if self.selectedIds.value.contains(viewModelForIndex.id) {
                 typedCell.setSelected(true, animated: false)
             }
@@ -335,23 +366,19 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         }
     }
 
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if var viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
-
-
+        if let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
             var selectedIdsCopy = selectedIds.value
-            selectedIdsCopy.append(viewModelForIndex.id)
+            selectedIdsCopy.insert(viewModelForIndex.id)
             self.selectedIds.send(selectedIdsCopy)
         }
     }
 
     func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if var viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
-
+        if let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
             var selectedIdsCopy = selectedIds.value
-            selectedIdsCopy.removeAll { element in
-                viewModelForIndex.id == element
-            }
+            selectedIdsCopy.remove(viewModelForIndex.id)
             self.selectedIds.send(selectedIdsCopy)
         }
     }
@@ -360,23 +387,30 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
 
 extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
 
-    func didCollapseSection(section: Int) {
-        //filteredCompetitions[safe: section]?.isExpanded = false
-        expandedCells.remove(section)
+    func didToogleSection(sectionIdentifier: String) {
 
-        self.redrawForSection(section)
+        if expandedCellsDictionary[sectionIdentifier] ?? false {
+            expandedCellsDictionary[sectionIdentifier] = false
+        }
+        else {
+            expandedCellsDictionary[sectionIdentifier] = true
+        }
+
+        self.redrawForSection(sectionIdentifier)
     }
 
-    func didExpandSection(section: Int) {
-        //filteredCompetitions[safe: section]?.isExpanded = true
+    func redrawForSection(_ sectionIdentifier: String) {
 
-        expandedCells.insert(section)
+        var selectedSection: Int?
+        for (i, section) in self.filteredCompetitions.enumerated() {
+            if section.id == sectionIdentifier {
+                selectedSection = i
+                break
+            }
+        }
 
-        self.redrawForSection(section)
-    }
-
-    func redrawForSection(_ section: Int) {
         guard
+            let section = selectedSection,
             let viewModelForSection = filteredCompetitions[safe: section]
         else {
             return
@@ -384,18 +418,15 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
 
         let rows = (0 ..< viewModelForSection.cells.count).map({ IndexPath(row: $0, section: section) }) // all section rows
 
-//        let selectedRows = tableView.indexPathsForSelectedRows
+        let selectedCells = tableView.indexPathsForSelectedRows ?? []
 
         tableView.beginUpdates()
         tableView.reloadRows(at: rows, with: .automatic)
         tableView.endUpdates()
 
-//        if let selectedRow = selectedRows {
-//            for indexPath in selectedRow {
-//                tableView.selectRow(at: indexPath, animated: false, scrollPosition: .none)
-//            }
-//        }
-
+        for selectedCellIndexPath in selectedCells {
+            tableView.selectRow(at: selectedCellIndexPath, animated: false, scrollPosition: .none)
+        }
     }
 }
 
@@ -408,7 +439,7 @@ extension CompetitionsFiltersView: UISearchBarDelegate {
             return
         }
 
-        self.expandedCells = []
+//        self.expandedCells = []
 
         let searchText = (self.searchBarView.text ?? "").lowercased()
 
@@ -432,7 +463,6 @@ extension CompetitionsFiltersView: UISearchBarDelegate {
         }
 
         self.filteredCompetitions = filteredCompetitionGroup
-
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

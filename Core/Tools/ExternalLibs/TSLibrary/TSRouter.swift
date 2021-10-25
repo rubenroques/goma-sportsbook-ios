@@ -19,6 +19,7 @@ enum TSRouter {
     case simpleRegister(form: EveryMatrix.SimpleRegisterForm)
     case getMatchDetails(language: String, matchId: String)
     case getLocations(language: String, sortByPopularity: Bool = false)
+    case getCustomTournaments(language: String, sportId: String)
     case getTournaments(language: String, sportId: String)
     case getPopularTournaments(language: String, sportId: String)
 
@@ -103,6 +104,8 @@ enum TSRouter {
             return "/sports#matches"
         case .getLocations:
             return "/sports#locations"
+        case .getCustomTournaments:
+            return "/sports#customEvents"
         case .getTournaments:
             return "/sports#tournaments"
         case .getPopularTournaments:
@@ -268,6 +271,8 @@ enum TSRouter {
             return ["lang": language,
                     "sortByPopularity": sortByPopularityString]
 
+        case .getCustomTournaments(let language, _):
+            return ["lang": language]
         case .getTournaments(let language, let sportId):
             return ["lang": language,
                     "sportId": sportId]

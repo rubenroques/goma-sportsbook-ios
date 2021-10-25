@@ -40,6 +40,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         return imageView
     }()
 
+    var isCellSelected: Bool = false
     var isLastCell: Bool = false
 
     private var cancellables: Set<AnyCancellable> = []
@@ -88,6 +89,17 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         if selected {
+            selectedImageView.image = UIImage(named: "checkbox_selected_icon")!
+        }
+        else {
+            selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
+        }
+    }
+
+    func setCellSelected(_ selected: Bool) {
+        self.isCellSelected = selected
+
+        if self.isCellSelected {
             selectedImageView.image = UIImage(named: "checkbox_selected_icon")!
         }
         else {

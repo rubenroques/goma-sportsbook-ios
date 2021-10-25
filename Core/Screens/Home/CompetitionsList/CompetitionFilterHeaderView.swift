@@ -9,13 +9,13 @@ import UIKit
 
 class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
-    private var baseView: UIView = {
+    var baseView: UIView = {
         var baseView  = UIView()
         baseView.translatesAutoresizingMaskIntoConstraints = false
         return baseView
     }()
 
-    private var titleLabel: UILabel = {
+    var titleLabel: UILabel = {
         var label  = UILabel()
         label.font = AppFont.with(type: .bold, size: 16)
         label.numberOfLines = 2
@@ -23,17 +23,24 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         return label
     }()
 
-    private var arrowImageView: UIImageView = {
+    var arrowImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
-    var isExpanded: Bool = true
+    var isExpanded: Bool = true {
+        didSet {
+            self.setNeedsLayout()
+            self.layoutIfNeeded()
+        }
+    }
+    var section: Int? = nil
+
+    var sectionIdentifier: String? = nil
 
     var viewModel: CompetitionFilterSectionViewModel? {
         didSet {
-            self.isExpanded = self.viewModel?.isExpanded ?? false
             self.titleLabel.text = self.viewModel?.name ?? ""
         }
     }
@@ -56,26 +63,28 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
     @objc func tapHeader() {
 
-        guard let viewModel = viewModel else {
+        guard let sectionIdentifier = sectionIdentifier else {
             return
         }
+//
+//        if self.isExpanded {
+//            self.isExpanded = false
+//            delegate?.didCollapseSection(section: section)
+//        }
+//        else {
+//            self.isExpanded = true
+//            delegate?.didExpandSection(section: section)
+//        }
 
-        if self.isExpanded {
-            self.isExpanded = false
-            delegate?.didCollapseSection(section: viewModel.sectionIndex)
-        }
-        else {
-            self.isExpanded = true
-            delegate?.didExpandSection(section: viewModel.sectionIndex)
-        }
-
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
+        self.delegate?.didToogleSection(sectionIdentifier: sectionIdentifier)
+        self.isExpanded.toggle()
      }
 
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.sectionIdentifier = nil
+        self.section = nil
         self.isExpanded = false
         self.viewModel = nil
     }
@@ -147,7 +156,6 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
 
 protocol CollapsibleTableViewHeaderDelegate: AnyObject {
-    func didCollapseSection(section: Int)
-    func didExpandSection(section: Int)
+    func didToogleSection(sectionIdentifier: String)
 }
 

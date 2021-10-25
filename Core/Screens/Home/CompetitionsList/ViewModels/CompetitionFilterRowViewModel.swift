@@ -11,18 +11,16 @@ struct CompetitionFilterRowViewModel {
 
     var id: String = ""
     var name: String = ""
-    var isSelected: Bool = false
 
-    init(id: String, name: String, isSelected: Bool) {
+    init(id: String, name: String) {
         self.id = id
         self.name = name
-        self.isSelected = isSelected
     }
 }
 
 
 extension CompetitionFilterRowViewModel {
     init(competition: Competition) {
-        self.init(id: competition.id, name: competition.name, isSelected: false)
+        self.init(id: competition.id, name: competition.name)
     }
 }

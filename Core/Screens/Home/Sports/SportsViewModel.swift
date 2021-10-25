@@ -25,9 +25,9 @@ class SportsViewModel {
     private var popularMatches: [Match] = []
     private var competitionsMatches: [Match] = []
 
-    var competitionGroups: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
+    var competitionGroupsPublisher: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
 
-    var matchListType: CurrentValueSubject<MatchListType, Never> = .init(.myGames)
+    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.myGames)
     enum MatchListType {
         case myGames
         case today
@@ -82,6 +82,8 @@ class SportsViewModel {
         self.isLoadingCompetitions.send(true)
         self.isLoadingCompetitionGroups.send(true)
 
+        self.competitionsMatches = []
+        self.competitionGroupsPublisher.send([])
 
         self.fetchBanners()
 
@@ -94,7 +96,7 @@ class SportsViewModel {
     }
 
     func setMatchListType(_ matchListType: MatchListType) {
-        self.matchListType.send(matchListType)
+        self.matchListTypePublisher.send(matchListType)
         self.updateContentList()
     }
 
@@ -114,7 +116,7 @@ class SportsViewModel {
             contentList.append(CellType.banner(banners: self.banners))
         }
 
-        switch matchListType.value {
+        switch matchListTypePublisher.value {
         case .myGames:
             contentList.append(contentsOf: self.popularMatches.map({ return CellType.match(match: $0) }) )
         case .today:
@@ -160,7 +162,8 @@ class SportsViewModel {
         var addedCompetitionIds: [String] = []
 
         var popularCompetitions = [Competition]()
-        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values {
+        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values
+        where (popularCompetition.sportId ?? "") == String(self.selectedSportId) {
 
             let competition = Competition(id: popularCompetition.id, name: popularCompetition.name ?? "")
             addedCompetitionIds.append(popularCompetition.id)
@@ -179,15 +182,12 @@ class SportsViewModel {
 
             var locationCompetitions = [Competition]()
 
-            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? []) {
+            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? [])  {
 
                 guard
-                    let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId]
+                    let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
+                    (rawCompetition.sportId ?? "") == String(self.selectedSportId)
                 else {
-                    continue
-                }
-
-                if addedCompetitionIds.contains(rawCompetition.id) {
                     continue
                 }
 
@@ -208,7 +208,7 @@ class SportsViewModel {
         
         popularCompetitionGroups.append(contentsOf: competitionsGroups)
 
-        self.competitionGroups.send(popularCompetitionGroups)
+        self.competitionGroupsPublisher.send(popularCompetitionGroups)
         self.isLoadingCompetitionGroups.send(false)
 
         self.updateContentList()
@@ -216,7 +216,7 @@ class SportsViewModel {
 
     private func setupCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .competitions,
-                                                 shouldClear: didChangeSportType)
+                                                 shouldClear: true)
 
         let appMatches = Env.everyMatrixStorage.matchesForListType(.competitions)
 
@@ -300,7 +300,7 @@ class SportsViewModel {
         let sportId = "\(self.selectedSportId)"
 
         let popularTournamentsPublisher = TSManager.shared
-            .getModel(router: TSRouter.getPopularTournaments(language: language, sportId: sportId),
+            .getModel(router: TSRouter.getCustomTournaments(language: language, sportId: sportId),
                       decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
 
         let tournamentsPublisher = TSManager.shared
@@ -417,7 +417,10 @@ extension SportsViewModel {
     func itemsForSection(_ section: Int) -> Int {
         switch section {
         case 0:
-            return banners.isEmpty ? 0 : 1
+            if case .myGames = matchListTypePublisher.value {
+                return banners.isEmpty ? 0 : 1
+            }
+            return 0
         case 1:
             return 0
         case 2:
@@ -428,6 +431,7 @@ extension SportsViewModel {
     }
 
     func cellForRowAt(indexPath: IndexPath, onTableView tableView: UITableView) -> UITableViewCell {
+
         switch indexPath.section {
         case 0:
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
@@ -456,7 +460,7 @@ extension SportsViewModel {
     }
 
     func viewForHeaderInSection(_  section: Int, tableView: UITableView) -> UIView? {
-        switch (section, matchListType.value) {
+        switch (section, matchListTypePublisher.value) {
         case (2, .myGames):
             if  let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
                     as? TitleTableViewHeader {
@@ -476,7 +480,7 @@ extension SportsViewModel {
     }
 
     func heightForHeaderInSection(section: Int, tableView: UITableView) -> CGFloat {
-        switch (section, matchListType.value) {
+        switch (section, matchListTypePublisher.value) {
         case (2, .myGames):
             return 54
         case (2, .today):
@@ -488,13 +492,13 @@ extension SportsViewModel {
 
 
     func selectedFilterMatches() -> [Match] {
-        if case .myGames = matchListType.value {
+        if case .myGames = matchListTypePublisher.value {
             return self.popularMatches
         }
-        else if case .today = matchListType.value {
+        else if case .today = matchListTypePublisher.value {
             return self.todayMatches
         }
-        else if case .competitions = matchListType.value {
+        else if case .competitions = matchListTypePublisher.value {
             return self.competitionsMatches
         }
         return []
