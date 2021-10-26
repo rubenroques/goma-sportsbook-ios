@@ -172,6 +172,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             .map(\.count)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { count in
+                // swiftlint:disable empty_count
                 if count == 0 {
                     self.titleLabel.text = "Choose competitions"
                     self.smallTitleLabel.text = "Choose competitions"

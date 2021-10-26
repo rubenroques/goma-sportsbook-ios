@@ -197,7 +197,7 @@ class SportsViewController: UIViewController {
                 self.competitionsFiltersView?.competitions = competitions
             }
             .store(in: &cancellables)
-
+        // swiftlint:disable empty_count
         self.competitionsFiltersView?.selectedIds
             .compactMap({ $0.count == 0 })
             .sink(receiveValue: { [unowned self] shouldShowOpen in
