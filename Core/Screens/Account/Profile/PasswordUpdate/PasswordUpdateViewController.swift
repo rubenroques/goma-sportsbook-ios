@@ -79,27 +79,28 @@ class PasswordUpdateViewController: UIViewController {
                 self.passwordRegex = policy.regularExpression
                 self.passwordRegexMessage = policy.message
                 self.oldPasswordHeaderTextFieldView.showTip(text: self.passwordRegexMessage, color: UIColor.App.headerTextField)
-                Publishers.CombineLatest3(self.oldPasswordHeaderTextFieldView.textPublisher,
-                                          self.newPasswordHeaderTextFieldView.textPublisher,
-                                          self.confirmPasswordHeaderTextFieldView.textPublisher)
-                    .map { oldPassword, new, confirm in
-
-                        if oldPassword?.range(of: self.passwordRegex, options: .regularExpression) == nil || new?.range(of: self.passwordRegex, options: .regularExpression) == nil || confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
-                            return false
-                        }
-                        if (new ?? "") != (confirm ?? "") {
-                            self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
-                            return false
-                        }
-
-                        self.newPasswordHeaderTextFieldView.hideTipAndError()
-                        self.confirmPasswordHeaderTextFieldView.hideTipAndError()
-                        return true
-                    }
-                    .assign(to: \.isEnabled, on: self.editButton)
-                    .store(in: &self.cancellables)
             }
             .store(in: &cancellables)
+
+        Publishers.CombineLatest3(self.oldPasswordHeaderTextFieldView.textPublisher,
+                                  self.newPasswordHeaderTextFieldView.textPublisher,
+                                  self.confirmPasswordHeaderTextFieldView.textPublisher)
+            .map { oldPassword, new, confirm in
+
+                if oldPassword == "" || new?.range(of: self.passwordRegex, options: .regularExpression) == nil || confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+                    return false
+                }
+                if (new ?? "") != (confirm ?? "") {
+                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
+                    return false
+                }
+
+                self.newPasswordHeaderTextFieldView.hideTipAndError()
+                self.confirmPasswordHeaderTextFieldView.hideTipAndError()
+                return true
+            }
+            .assign(to: \.isEnabled, on: self.editButton)
+            .store(in: &self.cancellables)
 
     }
 
