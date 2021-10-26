@@ -75,10 +75,10 @@ class PasswordUpdateViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
-            } receiveValue: { policy in
-                self.passwordRegex = policy.regularExpression
-                self.passwordRegexMessage = policy.message
-                self.oldPasswordHeaderTextFieldView.showTip(text: self.passwordRegexMessage, color: UIColor.App.headerTextField)
+            } receiveValue: { [weak self] policy in
+                self?.passwordRegex = policy.regularExpression
+                self?.passwordRegexMessage = policy.message
+                self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.headerTextField)
             }
             .store(in: &cancellables)
 
@@ -86,7 +86,9 @@ class PasswordUpdateViewController: UIViewController {
                                   self.newPasswordHeaderTextFieldView.textPublisher,
                                   self.confirmPasswordHeaderTextFieldView.textPublisher)
             .map { oldPassword, new, confirm in
-
+                if self.passwordRegex == "" {
+                    return false
+                }
                 if oldPassword == "" || new?.range(of: self.passwordRegex, options: .regularExpression) == nil || confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
                     return false
                 }
