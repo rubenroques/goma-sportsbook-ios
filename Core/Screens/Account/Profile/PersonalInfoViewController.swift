@@ -64,11 +64,6 @@ class PersonalInfoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-//        if let user = self.userSession {
-//            birthDateHeaderTextFieldView.setTextFieldDefaultValue(user.birthDate)
-//            usernameHeaderTextFieldView.setTextFieldDefaultValue(user.username)
-//            emailHeaderTextFieldView.setTextFieldDefaultValue(user.email)
-//        }
     }
 
 
