@@ -23,7 +23,7 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var showPasswordLabel: UILabel!
 
     @IBOutlet private weak var usernameLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var usernameIconConstraint: NSLayoutConstraint!
+    @IBOutlet private var bottomStackView: UIStackView!
 
     var textPublisher: AnyPublisher<String?, Never> {
         return self.textField.textPublisher
@@ -42,6 +42,7 @@ class HeaderTextFieldView: NibView {
     var shouldScalePlaceholder = true
     var isSelect: Bool = false
     var isCurrency: Bool = false
+    var isTipPermanent: Bool = false
 
     var showingTipLabel: Bool = false
 
@@ -173,6 +174,7 @@ class HeaderTextFieldView: NibView {
         self.fieldState = .hidden
 
         self.tipLabel.alpha = 0.0
+        self.tipLabel.numberOfLines = 0
 
         tipImageView.isHidden = true
 
@@ -306,10 +308,8 @@ class HeaderTextFieldView: NibView {
         self.showStateImageView.addGestureRecognizer(tapGestureRecognizer)
     }
 
-    @objc func didTapIconImageVIew(_ sender:AnyObject){
+    @objc func didTapIconImageVIew(_ sender: AnyObject) {
 
-//        let coordinates = self.frame
-//        print(coordinates)
         didTapIcon?()
     }
 
@@ -450,8 +450,6 @@ class HeaderTextFieldView: NibView {
         }
 
         tipImageView.isHidden = true
-        usernameIconConstraint.isActive = false
-        usernameLeadingConstraint.isActive = true
 
         self.showingTipLabel = true
     }
@@ -491,11 +489,12 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
         self.isActive = true
 
-        self.hideTipAndError()
+        if !isTipPermanent {
+            self.hideTipAndError()
+        }
 
         self.highlightColor = UIColor.App.headingMain
         self.containerView.layer.borderColor = self.highlightColor.cgColor
-
 
         self.slideUp()
 
@@ -539,7 +538,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
                 return false
 
             }
-            else if (string.rangeOfCharacter(from: decimals) == nil && string != "") {
+            else if string.rangeOfCharacter(from: decimals) == nil && string != "" {
                     return false
             }
         }

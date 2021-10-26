@@ -26,6 +26,8 @@ enum TSRouter {
     // GOMA EveryMatrix Subscriptions tests
     case oddsMatch(operatorId: String, language: String, matchId: String)
     case sportsStatus(operatorId: String, language: String, sportId: String)
+    case getPolicy
+    case changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?)
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -102,6 +104,10 @@ enum TSRouter {
             return "/user/account#register"
         case .getMatchDetails:
             return "/sports#matches"
+        case .getPolicy:
+            return "/user/pwd#getPolicy"
+        case .changePassword( _, _, _, _, _):
+            return "/user/pwd#change"
         case .getLocations:
             return "/sports#locations"
         case .getCustomTournaments:
@@ -265,6 +271,14 @@ enum TSRouter {
         case .getMatchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]
+        case .getPolicy:
+            return [:]
+        case .changePassword(let oldPassword, let newPassword, let captchaPublicKey, let captchaChallenge, let captchaResponse):
+            return ["oldPassword": oldPassword,
+                    "newPassword": newPassword,
+                    "captchaPublicKey": captchaPublicKey ?? "",
+                    "captchaChallenge": captchaChallenge ?? "",
+                    "captchaResponse": captchaResponse ?? ""]
         case let .profileUpdate(form):
             return ["email": form.email,
                     "title": form.title,
