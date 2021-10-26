@@ -1,0 +1,113 @@
+name: Sportsbook # The name of the App
+options: # Some general settings for the project
+  createIntermediateGroups: true # If the folders are nested, also nest the groups in Xcode
+  indentWidth: 2 # indent by 2 spaces
+  tabWidth: 2 # a tab is 2 spaces
+  bundleIdPrefix: "com.gomagaming.sportsbook"
+  deploymentTarget: "13.0"
+targets: # The List of our targets
+  ShowcaseProd:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    sources:
+      #Sources
+      - path:
+    settings:
+      base:
+        INFOPLIST_FILE: Clients/Showcase/Prod/ShowcaseProd-Info.plist
+    dependencies:
+      - package: Starscream
+      - package: CombineCocoa
+      - package: Kingfisher
+      - package: Nuke
+      - package: Reachability
+      - package: DictionaryCoding
+      - package: Pulse
+        product: Pulse
+      - package: Pulse
+        product: PulseUI
+      - package: Pulse
+        product: PulseCore
+      - package: Firebase
+        product: FirebaseDatabase
+      - package: Firebase
+        product: FirebaseAnalytics
+      - package: Firebase
+        product: FirebaseCrashlytics
+      - package: Firebase
+        product: FirebaseAuth
+  ShowcaseBeta:
+    type: application
+    platform: iOS
+    deploymentTarget: "13.0"
+    sources:
+      #Sources
+      - path:
+        excludes:
+        - SwiftWAMP
+        - .git
+        - Clients/Showcase/Prod
+        - Core/Services/TSLibrary
+        - Core/Tests
+    settings:
+      base:
+        INFOPLIST_FILE: Clients/Showcase/Beta/ShowcaseBeta-Info.plist
+    dependencies:
+      - package: Starscream
+      - package: CombineCocoa
+      - package: Kingfisher
+      - package: Nuke
+      - package: Reachability
+      - package: DictionaryCoding
+      - package: Pulse
+        product: Pulse
+      - package: Pulse
+        product: PulseUI
+      - package: Pulse
+        product: PulseCore
+      - package: Firebase
+        product: FirebaseDatabase
+      - package: Firebase
+        product: FirebaseAnalytics
+      - package: Firebase
+        product: FirebaseCrashlytics
+      - package: Firebase
+        product: FirebaseAuth
+  SportsbookTests:
+    type: bundle.unit-test
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - path:
+    dependencies:
+      - target: ShowcaseBeta
+    settings:
+      base:
+        INFOPLIST_FILE: Core/Tests/CoreTests/Info.plist
+      TEST_HOST: $(BUILT_PRODUCTS_DIR)/ShowcaseBeta.app/ShowcaseBeta
+packages:
+  Reachability:
+    url: https://github.com/ashleymills/Reachability.swift
+    from: 5.1.0
+  Nuke:
+    url: https://github.com/kean/Nuke.git
+    from: 10.3.2
+  DictionaryCoding:
+    url: https://github.com/elegantchaos/DictionaryCoding.git
+    from: 1.0.9
+  Starscream:
+    url: https://github.com/daltoniam/Starscream.git
+    from: 3.1.1
+  CombineCocoa:
+    url: https://github.com/CombineCommunity/CombineCocoa.git
+    from: 0.3.0
+  Pulse:
+    url: https://github.com/kean/Pulse
+    from: 0.9.9
+  Kingfisher:
+    url: https://github.com/onevcat/Kingfisher
+    from: 7.0.0
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk.git
+    from: 7.0.0
