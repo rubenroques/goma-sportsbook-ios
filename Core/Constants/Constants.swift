@@ -82,4 +82,8 @@ enum CountryFlagHelper {
         return nil
     }
 }
+
+enum UserTitles {
+    static let titles = ["Mr.", "Ms.", "Mrs.", "Miss"]
+}
 // swiftlint:enable line_length
