@@ -32,8 +32,6 @@ class HeaderTextFieldView: NibView {
     var didTapReturn: (() -> Void)?
     var didTapIcon: (() -> Void)?
     var hasText: ((Bool) -> Void)?
-    var didValueChanged: (() -> Void)?
-
     var didSelectPickerIndex: ((Int) -> Void)?
     var shouldBeginEditing: (() -> Bool)?
 
@@ -525,8 +523,6 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             hasText?(false)
         }
 
-        self.didValueChanged?()
-
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -569,6 +565,5 @@ extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedItem = selectionArray[row]
         textField.text = selectedItem
-        self.didValueChanged?()
     }
 }

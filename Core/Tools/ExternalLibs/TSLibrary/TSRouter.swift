@@ -241,7 +241,6 @@ enum TSRouter {
                     "userConsents": ["termsandconditions": true, "sms": false]]
         case let .profileUpdate(form):
             return ["email": form.email,
-                    "username": form.username,
                     "title": form.title,
                     "gender": form.gender,
                     "firstName": form.firstname,
@@ -256,6 +255,7 @@ enum TSRouter {
                     "address2": form.address2,
                     "city": form.city,
                     "postalCode": form.postalCode,
+                    "personalID": form.personalID,
                     "userConsents": ["termsandconditions": true, "sms": false]]
         case .matchDetails(let language, let matchId):
             return ["lang": language,

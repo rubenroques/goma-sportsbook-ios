@@ -130,6 +130,7 @@ extension EveryMatrix {
         var mobilePrefix: String
         var phone: String
         var phonePrefix: String
+        var personalID: String
 
         enum CodingKeys: String, CodingKey {
             case username = "username"
@@ -147,11 +148,11 @@ extension EveryMatrix {
             case mobilePrefix = "mobilePrefix"
             case phone = "phone"
             case phonePrefix = "phonePrefix"
+            case personalID = "personalID"
         }
     }
 
     struct ProfileForm {
-        var username: String
         var email: String
         var title: String
         var gender: String
@@ -167,6 +168,7 @@ extension EveryMatrix {
         var mobilePrefix: String
         var phone: String
         var phonePrefix: String
+        var personalID: String
     }
 
     struct ProfileUpdateResponse: Codable {

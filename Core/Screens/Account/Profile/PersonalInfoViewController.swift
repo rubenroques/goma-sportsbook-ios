@@ -64,11 +64,11 @@ class PersonalInfoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        if let user = self.userSession {
-            birthDateHeaderTextFieldView.setTextFieldDefaultValue(user.birthDate)
-            usernameHeaderTextFieldView.setTextFieldDefaultValue(user.username)
-            emailHeaderTextFieldView.setTextFieldDefaultValue(user.email)
-        }
+//        if let user = self.userSession {
+//            birthDateHeaderTextFieldView.setTextFieldDefaultValue(user.birthDate)
+//            usernameHeaderTextFieldView.setTextFieldDefaultValue(user.username)
+//            emailHeaderTextFieldView.setTextFieldDefaultValue(user.email)
+//        }
     }
 
 
@@ -93,21 +93,12 @@ class PersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
-        titleHeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"),
                                                         color: UIColor.App.headerTextField)
-        firstNameHeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
-        lastNameHeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         countryHeaderTextFieldView.setPlaceholderText(localized("string_nationality"))
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
@@ -118,32 +109,16 @@ class PersonalInfoViewController: UIViewController {
         birthDateHeaderTextFieldView.setPlaceholderText(localized("string_birth_date"))
         birthDateHeaderTextFieldView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         birthDateHeaderTextFieldView.setDatePickerMode()
-        //birthDateHeaderTextFieldView.shouldBeginEditing = { return false }
 
         adress1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
-        adress1HeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         adress2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
-        adress2HeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
-        cityHeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
-        postalCodeHeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         usernameHeaderTextFieldView.setPlaceholderText(localized("string_username"))
-        usernameHeaderTextFieldView.didValueChanged = {
-            self.checkProfileInfoChanged()
-        }
 
         emailHeaderTextFieldView.setPlaceholderText(localized("string_email"))
 
@@ -222,6 +197,7 @@ class PersonalInfoViewController: UIViewController {
         usernameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
         usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        usernameHeaderTextFieldView.isDisabled = true
 
         emailHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
         emailHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
@@ -231,7 +207,6 @@ class PersonalInfoViewController: UIViewController {
         cardIdHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
         cardIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         cardIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        cardIdHeaderTextFieldView.isDisabled = true
 
         bankIdHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
         bankIdHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
@@ -270,7 +245,6 @@ class PersonalInfoViewController: UIViewController {
     func checkProfileInfoChanged() {
         // Updatable fields
         let emailChanged = emailHeaderTextFieldView.text == profile?.email ? false : true
-        let usernameChanged = usernameHeaderTextFieldView.text == profile?.username ? false : true
         let titleChanged = titleHeaderTextFieldView.text == profile?.title ? false : true
         let firstNameChanged = firstNameHeaderTextFieldView.text == profile?.firstname ? false : true
         let lastNameChanged = lastNameHeaderTextFieldView.text == profile?.surname ? false : true
@@ -278,8 +252,9 @@ class PersonalInfoViewController: UIViewController {
         let address2Changed = adress2HeaderTextFieldView.text == profile?.address2 ? false : true
         let cityChanged = cityHeaderTextFieldView.text == profile?.city ? false : true
         let postalCodeChanged = postalCodeHeaderTextFieldView.text == profile?.postalCode ? false : true
+        let personalIdChanged = cardIdHeaderTextFieldView.text == profile?.personalID ? false : true
 
-        if emailChanged || usernameChanged || titleChanged || firstNameChanged || lastNameChanged || address1Changed || address2Changed || cityChanged || postalCodeChanged {
+        if emailChanged || titleChanged || firstNameChanged || lastNameChanged || address1Changed || address2Changed || cityChanged || postalCodeChanged || personalIdChanged {
             self.editButton.isEnabled = true
         }
         else {
@@ -292,16 +267,10 @@ class PersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func editAction() {
-//        self.didTapBackground()
-//        self.view.isUserInteractionEnabled = false
-//
-//        executeDelayed(1.5) {
-//            self.backAction()
-//        }
+
         var validFields = true
 
         let email = emailHeaderTextFieldView.text
-        let username = usernameHeaderTextFieldView.text
         let title = titleHeaderTextFieldView.text
         let gender = titleHeaderTextFieldView.text == "Mr." ? "M" : "F"
         let firstName = firstNameHeaderTextFieldView.text
@@ -316,6 +285,7 @@ class PersonalInfoViewController: UIViewController {
         let address2 = adress2HeaderTextFieldView.text
         let city = cityHeaderTextFieldView.text
         let postalCode = postalCodeHeaderTextFieldView.text
+        let personalId = cardIdHeaderTextFieldView.text
 
         // Verify required fields
         if firstName == "" {
@@ -340,8 +310,7 @@ class PersonalInfoViewController: UIViewController {
         }
 
         if validFields {
-            let form = EveryMatrix.ProfileForm(username: username,
-                                               email: email,
+            let form = EveryMatrix.ProfileForm(email: email,
                                                title: title,
                                                gender: gender,
                                                firstname: firstName,
@@ -355,7 +324,7 @@ class PersonalInfoViewController: UIViewController {
                                                mobile: mobile,
                                                mobilePrefix: mobilePrefix,
                                                phone: phone,
-                                               phonePrefix: phonePrefix)
+                                               phonePrefix: phonePrefix, personalID: personalId)
 
             self.updateProfile(form: form)
         }
@@ -399,6 +368,7 @@ class PersonalInfoViewController: UIViewController {
         self.cityHeaderTextFieldView.resignFirstResponder()
         self.postalCodeHeaderTextFieldView.resignFirstResponder()
         self.usernameHeaderTextFieldView.resignFirstResponder()
+        self.cardIdHeaderTextFieldView.resignFirstResponder()
     }
 
     private func updateProfile(form: EveryMatrix.ProfileForm) {
@@ -420,7 +390,6 @@ class PersonalInfoViewController: UIViewController {
                     ()
                 }
             } receiveValue: { _ in
-                print("UPDATE SUCCESS")
                 self.showAlert(type: .success, text: localized("string_profile_updated_success"))
             }
             .store(in: &cancellables)
@@ -435,12 +404,6 @@ extension PersonalInfoViewController {
 
         for country in listings.countries where country.isoCode == listings.currentIpCountry {
             self.countryHeaderTextFieldView.setText( self.formatIndicativeCountry(country), slideUp: true)
-//            let calendar = Calendar(identifier: .gregorian)
-//            var components = DateComponents()
-//            components.calendar = calendar
-//            components.year = -country.legalAge
-//            let maxDate = calendar.date(byAdding: components, to: Date())!
-//            self.birthDateHeaderTextFieldView.datePicker.maximumDate = maxDate
         }
 
         self.countryHeaderTextFieldView.isUserInteractionEnabled = true
@@ -481,16 +444,34 @@ extension PersonalInfoViewController {
         if let optionIndex = UserTitles.titles.firstIndex(of: profile.fields.title) {
             self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
         }
+        self.titleHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
 
         if !profile.isFirstnameUpdatable {
             self.firstNameHeaderTextFieldView.isDisabled = true
         }
         self.firstNameHeaderTextFieldView.setText(profile.fields.firstname)
+        self.firstNameHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
 
         if !profile.isSurnameUpdatable {
             self.lastNameHeaderTextFieldView.isDisabled = true
         }
         self.lastNameHeaderTextFieldView.setText(profile.fields.surname)
+        self.lastNameHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
 
         if !profile.isCountryUpdatable {
             self.countryHeaderTextFieldView.isDisabled = true
@@ -505,12 +486,36 @@ extension PersonalInfoViewController {
         self.birthDateHeaderTextFieldView.setText(profile.fields.birthDate)
 
         self.adress1HeaderTextFieldView.setText(profile.fields.address1)
+        self.adress1HeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
 
         self.adress2HeaderTextFieldView.setText(profile.fields.address2)
+        self.adress2HeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
 
         self.cityHeaderTextFieldView.setText(profile.fields.city)
+        self.cityHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
 
         self.postalCodeHeaderTextFieldView.setText(profile.fields.postalCode)
+        self.postalCodeHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
 
         self.usernameHeaderTextFieldView.setText(profile.fields.username)
 
@@ -518,6 +523,14 @@ extension PersonalInfoViewController {
             self.emailHeaderTextFieldView.isDisabled = true
         }
         self.emailHeaderTextFieldView.setText(profile.fields.email)
+
+        self.cardIdHeaderTextFieldView.setText(profile.fields.personalID)
+        self.cardIdHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkProfileInfoChanged()
+            })
+            .store(in: &cancellables)
     }
 
 }
