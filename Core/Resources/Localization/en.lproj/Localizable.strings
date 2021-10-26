@@ -98,6 +98,7 @@ Terms of use, Privacy Policy and EULA";
 
 "string_cancel" = "Cancel";
 "string_search_field" = "Search..";
+"string_search_field_competitions" = "Search competitions..";
 "string_invalid_birthDate" = "Invalid birth date";
 
 "string_update_password" = "Update Password";

@@ -8,6 +8,7 @@
 import Foundation
 
 extension EveryMatrix {
+
     struct Tournament: Decodable {
         
         let type: String

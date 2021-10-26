@@ -7,6 +7,25 @@
 
 import Foundation
 
+struct CompetitionGroup {
+    var id: String
+    var name: String
+
+    var aggregationType: AggregationType
+    var competitions: [Competition]
+
+    
+    enum AggregationType {
+        case popular
+        case region
+    }
+}
+
+struct Competition {
+    var id: String
+    var name: String
+}
+
 struct Match {
     var id: String
     var competitionName: String
@@ -14,12 +33,12 @@ struct Match {
     var awayParticipant: Participant
     var date: Date?
     var sportType: String
-    var venue: Venue?
+    var venue: Location?
     var numberTotalOfMarkets: Int
     var markets: [Market]
 }
 
-struct Venue {
+struct Location {
     var id: String
     var name: String
     var isoCode: String

@@ -195,7 +195,7 @@ class EveryMatrixAPIClient: ObservableObject {
     }
 
     func getMatchDetails(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError>  {
-        return TSManager.shared.getModel(router: .matchDetails(language: language, matchId: matchId) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
+        return TSManager.shared.getModel(router: .getMatchDetails(language: language, matchId: matchId) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
     }
 
     func getPopularMatches(payload: [String: Any]?) {

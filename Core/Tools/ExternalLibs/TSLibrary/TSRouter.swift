@@ -17,8 +17,26 @@ enum TSRouter {
     case validateUsername(username: String)
     case getCountries
     case simpleRegister(form: EveryMatrix.SimpleRegisterForm)
-    case matchDetails(language: String, matchId: String)
+    case getMatchDetails(language: String, matchId: String)
+    case getLocations(language: String, sortByPopularity: Bool = false)
+    case getCustomTournaments(language: String, sportId: String)
+    case getTournaments(language: String, sportId: String)
+    case getPopularTournaments(language: String, sportId: String)
     case profileUpdate(form: EveryMatrix.ProfileForm)
+    // GOMA EveryMatrix Subscriptions tests
+    case oddsMatch(operatorId: String, language: String, matchId: String)
+    case sportsStatus(operatorId: String, language: String, sportId: String)
+
+    // EveryMatrix <-> GOMA  Subscriptions
+    case sportsInitialDump(topic: String)
+    case sportsPublisher(operatorId: String)
+    case popularMatchesPublisher(operatorId: String, language: String, sportId: String)
+    case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
+    case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
+    case bannersInfoPublisher(operatorId: String, language: String)
+
+
+    // Others
     case registrationDismissed
     case getTransportSessionID
     case getClientIdentity
@@ -60,22 +78,12 @@ enum TSRouter {
     case events(payload: [String: Any]?)
     case odds(payload: [String: Any]?)
 
-    // GOMA EveryMatrix Subscriptions tests
-    case oddsMatch(operatorId: String, language: String, matchId: String)
-    case sportsStatus(operatorId: String, language: String, sportId: String)
-
-    case sportsInitialDump(topic: String)
-
-    // EveryMatrix <-> GOMA  Subscriptions
-    case sportsPublisher(operatorId: String)
-    case popularMatchesPublisher(operatorId: String, language: String, sportId: String)
-    case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
-    case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
-    case bannersInfoPublisher(operatorId: String, language: String)
 
     var procedure: String {
         switch self {
-            // EveryMatrix API
+
+        // RPCS
+        // EveryMatrix API
         case .login:
             return "/user#login"
         case .getOperatorInfo:
@@ -92,8 +100,16 @@ enum TSRouter {
             return "/user/account#getCountries"
         case .simpleRegister:
             return "/user/account#register"
-        case .matchDetails:
+        case .getMatchDetails:
             return "/sports#matches"
+        case .getLocations:
+            return "/sports#locations"
+        case .getCustomTournaments:
+            return "/sports#customEvents"
+        case .getTournaments:
+            return "/sports#tournaments"
+        case .getPopularTournaments:
+            return "/sports#popularTournaments"
         case .profileUpdate:
             return "/user/account#updateProfile"
         //
@@ -126,6 +142,10 @@ enum TSRouter {
         
         case .bannersInfoPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/sportsBannerData"
+
+        //
+        //
+        //
         //
         //
         //
@@ -220,14 +240,17 @@ enum TSRouter {
     
     var kwargs: [String: Any]? {
         switch self {
+
+        //
+        //
+        // RPC calls
+        //
         case .login(let username, let password):
             return ["usernameOrEmail": username, "password": password]
         case .validateEmail(let email):
             return ["email": email]
         case let .validateUsername(username):
             return ["username": username]
-        case .getCountries:
-            return [:]
         case let .simpleRegister(form):
             return ["email": form.email,
                     "username": form.username,
@@ -239,6 +262,9 @@ enum TSRouter {
                     "currency": "EUR",
                     "emailVerificationURL": form.emailVerificationURL,
                     "userConsents": ["termsandconditions": true, "sms": false]]
+        case .getMatchDetails(let language, let matchId):
+            return ["lang": language,
+                    "matchId": matchId]
         case let .profileUpdate(form):
             return ["email": form.email,
                     "title": form.title,
@@ -256,22 +282,34 @@ enum TSRouter {
                     "city": form.city,
                     "postalCode": form.postalCode,
                     "personalID": form.personalID,
-                    "userConsents": ["termsandconditions": true, "sms": false]]
-        case .matchDetails(let language, let matchId):
+                    "userConsents": ["termsandconditions": true, "sms": false]]            
+        case .getLocations(let language, let sortByPopularity):
+            let sortByPopularityString = String(sortByPopularity)
             return ["lang": language,
-                    "matchId": matchId]
-            
-            //
-            //
+                    "sortByPopularity": sortByPopularityString]
+
+        case .getCustomTournaments(let language, _):
+            return ["lang": language]
+        case .getTournaments(let language, let sportId):
+            return ["lang": language,
+                    "sportId": sportId]
+        case .getPopularTournaments(let language, let sportId):
+            return ["lang": language,
+                    "sportId": sportId]
+
+        //
+        //
+        //
+        // EM Subscription
+        //
         case .sportsInitialDump(let topic):
             return ["topic": topic]
-        case .sportsPublisher:
-            return [:]
 
-            //
-            //
-            //
-            //
+        //
+        //
+        //
+        // Others
+        //
         case .disciplines(payload: let payload):
             return payload
         case .locations(payload: let payload):
@@ -292,8 +330,6 @@ enum TSRouter {
             return payload
         case.odds(payload: let payload):
             return payload
-        case .getSessionInfo:
-            return [:]
 
         case .getGamingAccounts:
             return ["expectBalance": true,
@@ -325,7 +361,7 @@ enum TSRouter {
         case .forfeitBonus(bonusID: let bID):
             return ["bonusID": bID]
 
-            // swiftlint:disable identifier_name
+        // swiftlint:disable identifier_name
         case .setLimit(type: _, period: let p, amount: let a, currency: let c):
             return ["period": p,
                     "amount": a,
