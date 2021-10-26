@@ -22,7 +22,7 @@ enum TSRouter {
     case getCustomTournaments(language: String, sportId: String)
     case getTournaments(language: String, sportId: String)
     case getPopularTournaments(language: String, sportId: String)
-
+    case profileUpdate(form: EveryMatrix.ProfileForm)
     // GOMA EveryMatrix Subscriptions tests
     case oddsMatch(operatorId: String, language: String, matchId: String)
     case sportsStatus(operatorId: String, language: String, sportId: String)
@@ -110,8 +110,8 @@ enum TSRouter {
             return "/sports#tournaments"
         case .getPopularTournaments:
             return "/sports#popularTournaments"
-
-
+        case .profileUpdate:
+            return "/user/account#updateProfile"
         //
         //
         // EM Subscription
@@ -265,7 +265,24 @@ enum TSRouter {
         case .getMatchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]
-
+        case let .profileUpdate(form):
+            return ["email": form.email,
+                    "title": form.title,
+                    "gender": form.gender,
+                    "firstName": form.firstname,
+                    "surname": form.surname,
+                    "birthDate": form.birthDate,
+                    "mobilePrefix": form.mobilePrefix,
+                    "mobile": form.mobile,
+                    "phonePrefix": form.phonePrefix,
+                    "phone": form.phone,
+                    "country": form.country,
+                    "address1": form.address1,
+                    "address2": form.address2,
+                    "city": form.city,
+                    "postalCode": form.postalCode,
+                    "personalID": form.personalID,
+                    "userConsents": ["termsandconditions": true, "sms": false]]            
         case .getLocations(let language, let sortByPopularity):
             let sortByPopularityString = String(sortByPopularity)
             return ["lang": language,
