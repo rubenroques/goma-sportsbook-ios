@@ -1,5 +1,5 @@
 //
-//  AggregatorsInMemoryStore.swift
+//  AggregatorsRepository.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 08/10/2021.
@@ -15,12 +15,10 @@ enum AggregatorListType {
     case competitions
 }
 
-class AggregatorsInMemoryStore {
+class AggregatorsRepository {
 
     var matchesForType: [AggregatorListType: [String] ] = [:]
 
-    var tournaments: [String: EveryMatrix.Tournament] = [:]
-    var locations: [String: EveryMatrix.Location] = [:]
     var events: [String: Event] = [:]
     var matches: [String: EveryMatrix.Match] = [:]
     var markets: [String: EveryMatrix.Market] = [:]
@@ -34,6 +32,13 @@ class AggregatorsInMemoryStore {
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
     var mainMarketsOrder: OrderedSet<String> = []
 
+    var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
+    var tournamentsForLocation: [String: [String] ] = [:]
+
+    var tournaments: [String: EveryMatrix.Tournament] = [:]
+    var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
+
+    
     func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
 
         if shouldClear {
@@ -185,9 +190,9 @@ class AggregatorsInMemoryStore {
                 return position1 < position2
             }
 
-            var location: Venue?
+            var location: Location?
             if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
-                location = Venue(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
+                location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
             }
 
             let match = Match(id: rawMatch.id,
@@ -211,6 +216,34 @@ class AggregatorsInMemoryStore {
 
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
+    }
+
+    func storeLocations(locations: [EveryMatrix.Location]) {
+        for location in locations {
+            self.locations[location.id] = location
+        }
+    }
+
+    func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
+        for tournament in tournaments {
+            self.tournaments[tournament.id] = tournament
+
+            if let venueId = tournament.venueId {
+                if var tournamentsForLocationWithId = self.tournamentsForLocation[venueId] {
+                    tournamentsForLocationWithId.append(tournament.id)
+                    self.tournamentsForLocation[venueId] = tournamentsForLocationWithId
+                }
+                else {
+                    self.tournamentsForLocation[venueId] = [tournament.id]
+                }
+            }
+        }
+    }
+
+    func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
+        for tournament in tournaments {
+            self.popularTournaments[tournament.id] = tournament
+        }
     }
     
 }

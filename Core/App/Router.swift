@@ -38,16 +38,16 @@ class Router {
 
     func makeKeyAndVisible() {
 
+        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
-
-        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
-
         self.rootWindow.rootViewController = splashViewController
-        //self.rootWindow.rootViewController = RootViewController()
 
-        //self.rootWindow.rootViewController = SportTypeSelectionViewController(viewModel: SportTypeSelectorViewModel(sportsTypeStore: SportsTypeStore()))
+        // self.rootWindow.rootViewController = RootViewController()
+
+        // self.rootWindow.rootViewController = ContainerViewController(containedView: CompetitionsFiltersView(), containerType: .edges)
 
         self.rootWindow.makeKeyAndVisible()
 
@@ -292,9 +292,20 @@ extension Router {
 
 
 
-class TestViewController: UIViewController {
+class ContainerViewController<T: UIView>: UIViewController {
 
-    init() {
+    var containedView: T
+
+    var containerType: ContainerType = .center
+    enum ContainerType {
+        case center
+        case edges
+    }
+
+    init(containedView: T, containerType: ContainerType = .center) {
+        self.containedView = containedView
+        self.containerType = containerType
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -306,75 +317,26 @@ class TestViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = "TestViewController-1"
-        self.view.backgroundColor = .systemBlue
-    }
+        containedView.translatesAutoresizingMaskIntoConstraints = false
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+        self.view.addSubview(containedView)
 
-        executeDelayed(2) {
-            self.showModal()
+        if case .edges = self.containerType {
+            NSLayoutConstraint.activate([
+                self.view.leadingAnchor.constraint(equalTo: containedView.leadingAnchor),
+                self.view.trailingAnchor.constraint(equalTo: containedView.trailingAnchor),
+                self.view.topAnchor.constraint(equalTo: containedView.topAnchor),
+                self.view.bottomAnchor.constraint(equalTo: containedView.bottomAnchor),
+            ])
         }
-    }
-
-    func showModal() {
-        let testVc = Test2ViewController()
-        let navigationController = UINavigationController(rootViewController: testVc)
-        self.present(navigationController, animated: true, completion: nil)
-    }
-}
-
-class Test2ViewController: UIViewController {
-
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    @available(iOS, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        self.title = "TestViewController-2"
-        self.view.backgroundColor = .systemRed
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-
-        executeDelayed(2) {
-            self.push()
+        else {
+            NSLayoutConstraint.activate([
+                self.view.centerXAnchor.constraint(equalTo: containedView.centerXAnchor),
+                self.view.centerYAnchor.constraint(equalTo: containedView.centerYAnchor),
+            ])
         }
-    }
 
-    func push() {
-        self.navigationController?.pushViewController(Test3ViewController(), animated: true)
-    }
-}
 
-class Test3ViewController: UIViewController {
-
-    init() {
-        super.init(nibName: nil, bundle: nil)
-    }
-
-    @available(iOS, unavailable)
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        self.title = "TestViewController 3"
-        self.view.backgroundColor = .systemRed
-
-        self.navigationController?.navigationBar.backgroundColor = .white
-        self.navigationController?.navigationBar.barTintColor = .white
     }
 
 }

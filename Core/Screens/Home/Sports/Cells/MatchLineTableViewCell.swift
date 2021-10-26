@@ -16,16 +16,12 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
-    var viewModel: MatchLineCellViewModel? {
-        didSet {
-            self.collectionView.reloadData()
-        }
-    }
-
     var match: Match?
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        self.selectionStyle = .none
 
         self.backSliderView.alpha = 0.0
 
@@ -65,6 +61,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+
+        self.selectionStyle = .none
 
         self.backSliderView.alpha = 0.0
 

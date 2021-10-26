@@ -97,8 +97,19 @@ class EveryMatrixAPIClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+    func updateProfile(form: EveryMatrix.ProfileForm) -> AnyPublisher<EveryMatrix.ProfileUpdateResponse, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .profileUpdate(form: form), decodingType: EveryMatrix.ProfileUpdateResponse.self)
+            .breakpointOnError()
+            .eraseToAnyPublisher()
+    }
+
     func getCountries() -> AnyPublisher<EveryMatrix.CountryListing, EveryMatrix.APIError> {
         return TSManager.shared.getModel(router: .getCountries, decodingType: EveryMatrix.CountryListing.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getProfile() -> AnyPublisher<EveryMatrix.UserProfileField, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .getProfile, decodingType: EveryMatrix.UserProfileField.self)
             .eraseToAnyPublisher()
     }
 
@@ -194,7 +205,7 @@ class EveryMatrixAPIClient: ObservableObject {
     }
 
     func getMatchDetails(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError>  {
-        return TSManager.shared.getModel(router: .matchDetails(language: language, matchId: matchId) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
+        return TSManager.shared.getModel(router: .getMatchDetails(language: language, matchId: matchId) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
     }
 
     func getPopularMatches(payload: [String: Any]?) {
