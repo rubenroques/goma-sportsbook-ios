@@ -32,6 +32,8 @@ class LoginViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
+    let spinner = SpinnerViewController()
+
     init() {
         super.init(nibName: "LoginViewController", bundle: nil)
     }
@@ -319,15 +321,19 @@ class LoginViewController: UIViewController {
 
         self.loginButton.isEnabled = false
 
+        self.showLoadingSpinner()
+
         Env.userSessionStore.loginUser(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
                     if case error = UserSessionError.invalidEmailPassword {
+                        self.hideLoadingSpinner()
                         self.showWrongPasswordStatus()
                     }
                     else {
+                        self.hideLoadingSpinner()
                         self.showServerErrorStatus()
                     }
                 case .finished:
@@ -336,19 +342,26 @@ class LoginViewController: UIViewController {
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
-
+                self.hideLoadingSpinner()
                 self.showNextViewController()
             })
             .store(in: &cancellables)
 
-//        let username = "andrelascas@hotmail.com"
-//        let input = self.usernameHeaderTextFieldView.text
-//        print(input)
-//
-//        if username != input {
-//            self.usernameHeaderTextFieldView.showErrorOnField(text: "Error", color: UIColor.App.error)
-//        }
+    }
 
+    func showLoadingSpinner() {
+
+        addChild(spinner)
+        spinner.view.frame = view.frame
+        view.addSubview(spinner.view)
+        spinner.didMove(toParent: self)
+
+    }
+
+    func hideLoadingSpinner() {
+        spinner.willMove(toParent: nil)
+        spinner.view.removeFromSuperview()
+        spinner.removeFromParent()
     }
 
     private func showNextViewController() {
