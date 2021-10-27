@@ -9,20 +9,19 @@ import UIKit
 
 class SpinnerViewController: UIViewController {
 
-    var spinner = UIActivityIndicatorView(style: .whiteLarge)
+    var spinnerActivityIndicatorView = UIActivityIndicatorView(style: .whiteLarge)
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = UIView()
         view.backgroundColor = .black.withAlphaComponent(0.4)
 
-        spinner.translatesAutoresizingMaskIntoConstraints = false
-        spinner.startAnimating()
-        view.addSubview(spinner)
+        spinnerActivityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        spinnerActivityIndicatorView.startAnimating()
+        view.addSubview(spinnerActivityIndicatorView)
 
-        spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        spinnerActivityIndicatorView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        spinnerActivityIndicatorView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 
 }

@@ -32,7 +32,7 @@ class LoginViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
-    let spinner = SpinnerViewController()
+    let spinnerViewController = SpinnerViewController()
 
     init() {
         super.init(nibName: "LoginViewController", bundle: nil)
@@ -323,14 +323,13 @@ class LoginViewController: UIViewController {
         Env.userSessionStore.loginUser(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
+                self.hideLoadingSpinner()
                 switch completion {
                 case .failure(let error):
                     if case error = UserSessionError.invalidEmailPassword {
-                        self.hideLoadingSpinner()
                         self.showWrongPasswordStatus()
                     }
                     else {
-                        self.hideLoadingSpinner()
                         self.showServerErrorStatus()
                     }
                 case .finished:
@@ -339,7 +338,6 @@ class LoginViewController: UIViewController {
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
-                self.hideLoadingSpinner()
                 self.showNextViewController()
             })
             .store(in: &cancellables)
@@ -348,17 +346,21 @@ class LoginViewController: UIViewController {
 
     func showLoadingSpinner() {
 
-        addChild(spinner)
-        spinner.view.frame = view.frame
-        view.addSubview(spinner.view)
-        spinner.didMove(toParent: self)
+        spinnerViewController.view.frame = CGRect(x: view.frame.minX, y: view.frame.minY, width: view.frame.width, height: view.frame.height)
+        view.addSubview(spinnerViewController.view)
+        spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        spinnerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        spinnerViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        spinnerViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        spinnerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        spinnerViewController.didMove(toParent: self)
 
     }
 
     func hideLoadingSpinner() {
-        spinner.willMove(toParent: nil)
-        spinner.view.removeFromSuperview()
-        spinner.removeFromParent()
+        spinnerViewController.willMove(toParent: nil)
+        spinnerViewController.removeFromParent()
+        spinnerViewController.view.removeFromSuperview()
     }
 
     private func showNextViewController() {
