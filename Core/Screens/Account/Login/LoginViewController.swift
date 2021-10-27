@@ -44,6 +44,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        AnalyticsClient.logEvent(event: .loginScreen)
+       
+        
         self.title = "SplashViewController"
 
         commonInit()
@@ -336,7 +339,7 @@ class LoginViewController: UIViewController {
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
-
+               
                 self.showNextViewController()
             })
             .store(in: &cancellables)
@@ -352,6 +355,7 @@ class LoginViewController: UIViewController {
     }
 
     private func showNextViewController() {
+        AnalyticsClient.logEvent(event: .userLogin)
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
         }

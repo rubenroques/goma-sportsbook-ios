@@ -25,6 +25,8 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        AnalyticsClient.logEvent(event: .welcomeScreen)
+        
         self.title = "WelcomeViewController"
 
         self.facebookButton.isCircular = true

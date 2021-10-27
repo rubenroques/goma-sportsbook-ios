@@ -343,6 +343,7 @@ extension ProfileViewController {
     }
 
     @IBAction private func didTapLogoutButton() {
+        AnalyticsClient.logEvent(event: .userLogout)
         Env.userSessionStore.logout()
         self.didTapCloseButton()
     }
