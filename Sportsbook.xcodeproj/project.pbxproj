@@ -2249,7 +2249,7 @@
 					};
 					455A0C6526BD902F00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
-						TestTargetID = 455A0C8326BD904300EC572D;
+						TestTargetID = 455A0C4F26BD902C00EC572D;
 					};
 				};
 			};
@@ -3172,7 +3172,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShowcaseBeta.app/ShowcaseBeta";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShowcaseProd.app/ShowcaseProd";
 			};
 			name = Debug;
 		};
@@ -3194,7 +3194,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShowcaseBeta.app/ShowcaseBeta";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShowcaseProd.app/ShowcaseProd";
 			};
 			name = Release;
 		};

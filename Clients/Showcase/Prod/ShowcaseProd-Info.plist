@@ -28,6 +28,8 @@
 	<string>The app needs permission to use your location</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>The app needs permission to use your location</string>
+	<key>NSLocationUsageDescription</key>
+	<string>The app needs your permission to use your location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>The app needs localization permission when in use</string>
 	<key>UIAppFonts</key>
