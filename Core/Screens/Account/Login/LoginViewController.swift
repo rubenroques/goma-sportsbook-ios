@@ -51,7 +51,7 @@ class LoginViewController: UIViewController {
         commonInit()
         setupWithTheme()
 
-        //Default value
+        // Default value
         Env.userSessionStore.shouldRecordUserSession = true
 
         Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
@@ -107,7 +107,6 @@ class LoginViewController: UIViewController {
 
         self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
         self.passwordHeaderTextFieldView.setPlaceholderText("Password")
-
 
         self.usernameHeaderTextFieldView.highlightColor = .white
         self.passwordHeaderTextFieldView.highlightColor = .white
@@ -217,7 +216,6 @@ class LoginViewController: UIViewController {
         termsLabel.numberOfLines = 0
         termsLabel.font = font
 
-
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
         let range1 = (termsText as NSString).range(of: localized("string_terms"))
@@ -300,7 +298,6 @@ class LoginViewController: UIViewController {
         self.usernameHeaderTextFieldView.resignFirstResponder()
         self.passwordHeaderTextFieldView.resignFirstResponder()
     }
-
 
     @IBAction private func didTapDismissButton() {
         self.dismiss(animated: true, completion: nil)
