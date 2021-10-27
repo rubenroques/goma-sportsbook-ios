@@ -346,7 +346,6 @@ class LoginViewController: UIViewController {
 
     func showLoadingSpinner() {
 
-        spinnerViewController.view.frame = CGRect(x: view.frame.minX, y: view.frame.minY, width: view.frame.width, height: view.frame.height)
         view.addSubview(spinnerViewController.view)
         spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
         spinnerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
