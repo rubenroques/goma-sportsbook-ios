@@ -167,14 +167,11 @@ class SportsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.viewModel.contentList
-            .receive(on: DispatchQueue.main)
-            .sink { [unowned self] _ in
-                self.tableView.reloadData()
-                self.tableView.layoutIfNeeded()
-                self.tableView.setContentOffset(.zero, animated: true)
-            }
-            .store(in: &cancellables)
+        self.viewModel.dataDidChangedAction = { [unowned self] in
+            self.tableView.reloadData()
+            self.tableView.layoutIfNeeded()
+            self.tableView.setContentOffset(.zero, animated: true)
+        }
 
         self.viewModel.matchListTypePublisher
             .map {  $0 == .competitions }
@@ -321,35 +318,35 @@ extension SportsViewController: UIScrollViewDelegate {
 extension SportsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.numberOfSections
+        return self.viewModel.numberOfSections(in: tableView)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.itemsForSection(section)
+        return self.viewModel.tableView(tableView, numberOfRowsInSection: section)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return self.viewModel.cellForRowAt(indexPath: indexPath, onTableView: tableView)
+        return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return self.viewModel.viewForHeaderInSection(section, tableView: tableView)
+        return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 155
+        return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return self.viewModel.heightForHeaderInSection(section: section, tableView: tableView)
+        return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return self.viewModel.heightForHeaderInSection(section: section, tableView: tableView)
+        return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
