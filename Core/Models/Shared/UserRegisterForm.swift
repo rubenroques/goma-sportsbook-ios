@@ -15,6 +15,17 @@ struct UserRegisterForm {
     let userProviderId: String
 }
 
+struct FullRegisterUserInfo {
+    let title: String
+    let firstName: String
+    let lastName: String
+    let country: String
+    let address1: String
+    let address2: String?
+    let city: String
+    let postalCode: String
+}
+
 extension EveryMatrix {
 
     struct SimpleRegisterForm {

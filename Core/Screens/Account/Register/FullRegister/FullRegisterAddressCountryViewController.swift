@@ -63,13 +63,14 @@ class FullRegisterAddressCountryViewController: UIViewController {
         titleLabel.text = localized("string_address_country")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        countrySelectTextFieldView.setPickerIcon(UIImage(named: "arrow_down")!)
+        countrySelectTextFieldView.setPickerIcon(UIImage(named: "arrow_down_icon")!)
         countrySelectTextFieldView.setLabelFont(font: .semibold, size: 16)
         countrySelectTextFieldView.setSelectionPicker(["Portugal", "Spain", "England"])
 
         address1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
 
         address2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
+
         cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
         postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
 
