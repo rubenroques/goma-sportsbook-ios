@@ -152,3 +152,7 @@ Terms of use, Privacy Policy and EULA";
 "string_security_question" = "Security Question";
 "string_security_answer" = "Security Answer";
 "string_account_security" = "Account Security";
+"string_documents_id" = "Documents and ID";
+"string_add_file" = "Add File";
+"string_submit" = "Submit";
+"string_upload_complete" = "Upload Complete";

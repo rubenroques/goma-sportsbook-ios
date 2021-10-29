@@ -40,7 +40,7 @@ class DocumentPickerView: NibView {
         addFileButton.titleLabel?.font = AppFont.with(type: .bold, size: 16.0)
         addFileButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         addFileButton.backgroundColor = UIColor.App.mainBackground
-        //addFileButton.setInsets(forContentPadding: UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 10), imageTitlePadding: CGFloat(0))
+        addFileButton.setInsets(forContentPadding: UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 10), imageTitlePadding: CGFloat(0))
         addFileButton.imageView?.contentMode = .scaleAspectFit
     }
 

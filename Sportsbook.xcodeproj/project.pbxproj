@@ -492,6 +492,14 @@
 		A92F5D97272C410400884BDF /* DocumentPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D94272C410400884BDF /* DocumentPickerView.xib */; };
 		A92F5D98272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
 		A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
+		A92F5DA4272C44A000884BDF /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
+		A92F5DA5272C44A000884BDF /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
+		A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA3272C44A000884BDF /* UploadView.swift */; };
+		A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA3272C44A000884BDF /* UploadView.swift */; };
+		A92F5DAA272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */; };
+		A92F5DAB272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */; };
+		A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
+		A92F5DAD272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
@@ -516,10 +524,6 @@
 		A99A972326FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */; };
 		A99A972426FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */; };
 		A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */; };
-		A99A972826FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */; };
-		A99A972926FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */; };
-		A99A972A26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */; };
-		A99A972B26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */; };
 		A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -875,6 +879,10 @@
 		A92F5D7B271716B900884BDF /* FilterRowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterRowView.xib; sourceTree = "<group>"; };
 		A92F5D94272C410400884BDF /* DocumentPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerView.xib; sourceTree = "<group>"; };
 		A92F5D95272C410400884BDF /* DocumentPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerView.swift; sourceTree = "<group>"; };
+		A92F5DA2272C44A000884BDF /* UploadView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadView.xib; sourceTree = "<group>"; };
+		A92F5DA3272C44A000884BDF /* UploadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
+		A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
+		A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -887,8 +895,6 @@
 		A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterPersonalInfoViewController.xib; sourceTree = "<group>"; };
 		A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterAddressCountryViewController.swift; sourceTree = "<group>"; };
 		A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterAddressCountryViewController.xib; sourceTree = "<group>"; };
-		A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
-		A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
@@ -1633,6 +1639,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A92F5DA1272C44A000884BDF /* UploadView */,
 				A92F5D93272C410400884BDF /* DocumentPickerView */,
 				45B0BD3D271F189A009C41FA /* FilterSelectionViews */,
 				A92F5D772717168100884BDF /* FilterRowView */,
@@ -1911,6 +1918,15 @@
 			path = DocumentPickerView;
 			sourceTree = "<group>";
 		};
+		A92F5DA1272C44A000884BDF /* UploadView */ = {
+			isa = PBXGroup;
+			children = (
+				A92F5DA2272C44A000884BDF /* UploadView.xib */,
+				A92F5DA3272C44A000884BDF /* UploadView.swift */,
+			);
+			path = UploadView;
+			sourceTree = "<group>";
+		};
 		A98D3B272714817C003BAE6F /* SportSelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -1955,8 +1971,8 @@
 				A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */,
 				A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */,
 				A99A972126FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib */,
-				A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */,
-				A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */,
+				A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */,
+				A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */,
 			);
 			path = FullRegister;
 			sourceTree = "<group>";
@@ -2308,7 +2324,6 @@
 			files = (
 				454990CC2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
 				45BEA47F26F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
-				A99A972A26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */,
 				455A0D2026BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				45D871CC27108F5900F5B87B /* CountryFlags.xcassets in Resources */,
 				457816B72707631000F66878 /* TournamentTableViewHeader.xib in Resources */,
@@ -2329,6 +2344,7 @@
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				45CD7B5A271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
+				A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */,
 				45D712F427031DDE00AC0364 /* SportsViewController.xib in Resources */,
 				45D728D327158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */,
@@ -2336,6 +2352,7 @@
 				45D3DE3C271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
 				45EF5438270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
+				A92F5DA4272C44A000884BDF /* UploadView.xib in Resources */,
 				45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
@@ -2403,7 +2420,6 @@
 				45BEA48026F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				45D712FB27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */,
-				A99A972B26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */,
 				45D728D427158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				45D3DE4327149BE800717124 /* BannerTopCollectionViewCell.xib in Resources */,
 				455A0D2126BDE7AE00EC572D /* DebugViewController.xib in Resources */,
@@ -2447,6 +2463,7 @@
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
+				A92F5DAD272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457816AC2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
@@ -2474,6 +2491,7 @@
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
 				45D712F527031DDE00AC0364 /* SportsViewController.xib in Resources */,
+				A92F5DA5272C44A000884BDF /* UploadView.xib in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				45B0BD49271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
@@ -2538,6 +2556,7 @@
 				452047BA27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
+				A92F5DAA272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */,
 				45EF540A2709E81C00D1E13E /* PopUpStore.swift in Sources */,
 				458F4C922712AB1900AC13DB /* SportsViewModel.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
@@ -2627,7 +2646,6 @@
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
-				A99A972826FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F41F26BF03FE005DF543 /* Fonts.swift in Sources */,
 				45166CDF26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
@@ -2672,6 +2690,7 @@
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
+				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
@@ -2763,6 +2782,7 @@
 				452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
+				A92F5DAB272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */,
 				45EF540B2709E81C00D1E13E /* PopUpStore.swift in Sources */,
 				458F4C932712AB1900AC13DB /* SportsViewModel.swift in Sources */,
 				45166D1E26F3548D00E69D65 /* SSWampError.swift in Sources */,
@@ -2852,7 +2872,6 @@
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
-				A99A972926FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				4589F42026BF03FE005DF543 /* Fonts.swift in Sources */,
 				45166CE026F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
@@ -2897,6 +2916,7 @@
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
+				A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0E26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,

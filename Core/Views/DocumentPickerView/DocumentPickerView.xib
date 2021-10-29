@@ -23,12 +23,12 @@
                     <rect key="frame" x="16" y="8" width="382" height="64"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vZ8-ep-CRI">
-                            <rect key="frame" x="0.0" y="12" width="108" height="40"/>
+                            <rect key="frame" x="0.0" y="12" width="91" height="40"/>
                             <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="uf1-Ir-Grd"/>
                             </constraints>
-                            <state key="normal" title="Add File" image="cloud_arrow_up">
+                            <state key="normal" title="Add File" image="cloud-arrow-up">
                                 <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </state>
                             <connections>
@@ -55,7 +55,7 @@
         </view>
     </objects>
     <resources>
-        <image name="cloud_arrow_up" width="43" height="32"/>
+        <image name="cloud-arrow-up" width="26" height="19"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
