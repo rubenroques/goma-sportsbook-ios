@@ -9,7 +9,10 @@ import UIKit
 
 class FullRegisterDocumentsViewController: UIViewController {
 
-    init() {
+    var registerForm: FullRegisterUserInfo
+
+    init(registerForm: FullRegisterUserInfo) {
+        self.registerForm = registerForm
         super.init(nibName: "FullRegisterDocumentsViewController", bundle: nil)
     }
 

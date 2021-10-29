@@ -149,3 +149,6 @@ Terms of use, Privacy Policy and EULA";
 "string_time_range" = "Time Range";
 "string_required_field" = "Required Field";
 "string_profile_updated_success" = "Profile updated succesfully!";
+"string_security_question" = "Security Question";
+"string_security_answer" = "Security Answer";
+"string_account_security" = "Account Security";

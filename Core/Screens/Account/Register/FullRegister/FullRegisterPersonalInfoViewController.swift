@@ -35,7 +35,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     var buttonEnabled: Bool = false
     var cancellables = Set<AnyCancellable>()
     var countries: EveryMatrix.CountryListing?
-
+    var fullRegisterUserInfo: FullRegisterUserInfo?
 
     init() {
         super.init(nibName: "FullRegisterPersonalInfoViewController", bundle: nil)
@@ -280,14 +280,17 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let address2Text = address2HeaderTextFieldView.text
         let cityText = cityHeaderTextFieldView.text
         let postalCodeText = postalCodeHeaderTextFieldView.text
-        let fullRegisterUserInfo = FullRegisterUserInfo(title: titleText,
+        fullRegisterUserInfo = FullRegisterUserInfo(title: titleText,
             firstName: firstNameText,
             lastName: lastNameText,
             country: countryText,
             address1: address1Text,
             address2: address2Text,
             city: cityText,
-            postalCode: postalCodeText)
+            postalCode: postalCodeText,
+            securityQuestion: "",
+            securityAnswer: "",
+            personalID: "")
         print(fullRegisterUserInfo)
     }
 
@@ -296,7 +299,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
-        self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(), animated: true)
+        self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
     }
 
     @objc func didTapBackground() {

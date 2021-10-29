@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class FullRegisterAddressCountryViewController: UIViewController {
 
@@ -15,20 +16,19 @@ class FullRegisterAddressCountryViewController: UIViewController {
     @IBOutlet private var closeButton: UIButton!
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
-
     @IBOutlet private var progressView: UIView!
     @IBOutlet private var progressLabel: UILabel!
     @IBOutlet private var progressImageView: UIImageView!
-
     @IBOutlet private var titleLabel: UILabel!
-    @IBOutlet private var countrySelectTextFieldView: SelectTextFieldView!
-    @IBOutlet private var address1HeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var address2HeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var cityHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var postalCodeHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var securityQuestionTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var securityAnswerHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var continueButton: RoundButton!
+    // Variables
+    var cancellables = Set<AnyCancellable>()
+    var registerForm: FullRegisterUserInfo
 
-    init() {
+    init(registerForm: FullRegisterUserInfo) {
+        self.registerForm = registerForm
         super.init(nibName: "FullRegisterAddressCountryViewController", bundle: nil)
     }
 
@@ -42,6 +42,8 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
         commonInit()
         setupWithTheme()
+
+        setupPublishers()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -60,19 +62,12 @@ class FullRegisterAddressCountryViewController: UIViewController {
         progressLabel.text = localized("string_complete_signup")
         progressLabel.font = AppFont.with(type: .bold, size: 24)
 
-        titleLabel.text = localized("string_address_country")
+        titleLabel.text = localized("string_account_security")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        countrySelectTextFieldView.setPickerIcon(UIImage(named: "arrow_down_icon")!)
-        countrySelectTextFieldView.setLabelFont(font: .semibold, size: 16)
-        countrySelectTextFieldView.setSelectionPicker(["Portugal", "Spain", "England"])
+        securityQuestionTextFieldView.setPlaceholderText(localized("string_security_question"))
 
-        address1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
-
-        address2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
-
-        cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
-        postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
+        securityAnswerHeaderTextFieldView.setPlaceholderText(localized("string_security_answer"))
 
         continueButton.setTitle(localized("string_continue"), for: .normal)
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
@@ -102,29 +97,17 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
         titleLabel.textColor = UIColor.App.headingMain
 
-        address1HeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        address1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        address1HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        address1HeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
-        address1HeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        securityQuestionTextFieldView.backgroundColor = UIColor.App.mainBackground
+        securityQuestionTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
+        securityQuestionTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        securityQuestionTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
+        securityQuestionTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        address2HeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        address2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        address2HeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        address2HeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
-        address2HeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
-
-        cityHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        cityHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        cityHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
-        cityHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
-
-        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-        postalCodeHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
-        postalCodeHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
+        securityAnswerHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
+        securityAnswerHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
+        securityAnswerHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        securityAnswerHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
+        securityAnswerHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
         continueButton.backgroundColor = UIColor.App.mainBackground
         continueButton.setTitleColor(UIColor.App.headerTextField, for: .disabled)
@@ -132,56 +115,44 @@ class FullRegisterAddressCountryViewController: UIViewController {
         continueButton.cornerRadius = CornerRadius.button
     }
 
+    func setupPublishers() {
+        self.securityQuestionTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkUserInputs()
+            })
+            .store(in: &cancellables)
+
+        self.securityAnswerHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkUserInputs()
+            })
+            .store(in: &cancellables)
+    }
+
     private func checkUserInputs() {
-        // Check if both fields have data
-        address1HeaderTextFieldView.hasText = { value in
-            if value {
-                if self.cityHeaderTextFieldView.text != "" && self.postalCodeHeaderTextFieldView.text != "" {
-                    self.continueButton.enableButton()
-                }
-            }
-            else {
-                self.continueButton.disableButton()
-            }
-        }
+        let securityQuestionText = securityQuestionTextFieldView.text == "" ? false : true
+        let securityAnswerText = securityAnswerHeaderTextFieldView.text == "" ? false : true
 
-        cityHeaderTextFieldView.hasText = { value in
-            if value {
-                if self.address1HeaderTextFieldView.text != "" && self.postalCodeHeaderTextFieldView.text != "" {
-                    self.continueButton.enableButton()
-                }
-            }
-            else {
-                self.continueButton.disableButton()
-            }
+        if  securityQuestionText && securityAnswerText {
+            self.continueButton.isEnabled = true
+            continueButton.backgroundColor = UIColor.App.mainTint
+            self.setupFullRegisterUserInfoForm()
         }
+        else {
+            self.continueButton.isEnabled = false
+            continueButton.backgroundColor = UIColor.App.mainBackground
+        }
+    }
 
-        postalCodeHeaderTextFieldView.hasText = { value in
-            if value {
-                if self.cityHeaderTextFieldView.text != "" && self.address1HeaderTextFieldView.text != "" {
-                    self.continueButton.enableButton()
-                }
-            }
-            else {
-                self.continueButton.disableButton()
-            }
-        }
+    func setupFullRegisterUserInfoForm() {
+        let securityQuestionText = securityQuestionTextFieldView.text
+        let securityAnswerText = securityAnswerHeaderTextFieldView.text
 
-        address1HeaderTextFieldView.didTapReturn = {
-            self.view.endEditing(true)
-        }
-
-        address2HeaderTextFieldView.didTapReturn = {
-            self.view.endEditing(true)
-        }
-
-        cityHeaderTextFieldView.didTapReturn = {
-            self.view.endEditing(true)
-        }
-
-        postalCodeHeaderTextFieldView.didTapReturn = {
-            self.view.endEditing(true)
-        }
+        registerForm.securityQuestion = securityQuestionText
+        registerForm.securityAnswer = securityAnswerText
+        print(registerForm)
     }
 
     @IBAction private func backAction() {
@@ -189,19 +160,16 @@ class FullRegisterAddressCountryViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
-        self.navigationController?.pushViewController(FullRegisterDocumentsViewController(), animated: true)
+        self.navigationController?.pushViewController(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true)
     }
 
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        address1HeaderTextFieldView.resignFirstResponder()
+        securityQuestionTextFieldView.resignFirstResponder()
 
-        address2HeaderTextFieldView.resignFirstResponder()
+        securityAnswerHeaderTextFieldView.resignFirstResponder()
 
-        cityHeaderTextFieldView.resignFirstResponder()
-
-        postalCodeHeaderTextFieldView.resignFirstResponder()
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
