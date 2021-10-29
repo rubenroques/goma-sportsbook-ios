@@ -488,6 +488,10 @@
 		A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
 		A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
 		A92F5D7D271716B900884BDF /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
+		A92F5D96272C410400884BDF /* DocumentPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D94272C410400884BDF /* DocumentPickerView.xib */; };
+		A92F5D97272C410400884BDF /* DocumentPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D94272C410400884BDF /* DocumentPickerView.xib */; };
+		A92F5D98272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
+		A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
 		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
@@ -869,6 +873,8 @@
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		A92F5D782717169900884BDF /* FilterRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRowView.swift; sourceTree = "<group>"; };
 		A92F5D7B271716B900884BDF /* FilterRowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterRowView.xib; sourceTree = "<group>"; };
+		A92F5D94272C410400884BDF /* DocumentPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerView.xib; sourceTree = "<group>"; };
+		A92F5D95272C410400884BDF /* DocumentPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerView.swift; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1627,6 +1633,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A92F5D93272C410400884BDF /* DocumentPickerView */,
 				45B0BD3D271F189A009C41FA /* FilterSelectionViews */,
 				A92F5D772717168100884BDF /* FilterRowView */,
 				A9C602332716F7A600992E11 /* FilterCollapse */,
@@ -1893,6 +1900,15 @@
 				A92F5D7B271716B900884BDF /* FilterRowView.xib */,
 			);
 			path = FilterRowView;
+			sourceTree = "<group>";
+		};
+		A92F5D93272C410400884BDF /* DocumentPickerView */ = {
+			isa = PBXGroup;
+			children = (
+				A92F5D94272C410400884BDF /* DocumentPickerView.xib */,
+				A92F5D95272C410400884BDF /* DocumentPickerView.swift */,
+			);
+			path = DocumentPickerView;
 			sourceTree = "<group>";
 		};
 		A98D3B272714817C003BAE6F /* SportSelection */ = {
@@ -2327,6 +2343,7 @@
 				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
 				A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */,
 				A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
+				A92F5D96272C410400884BDF /* DocumentPickerView.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
 				45BEA48B26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib in Resources */,
@@ -2422,6 +2439,7 @@
 				45936CA7270E1BCE00E8260E /* SportTypeSelectionViewController.xib in Resources */,
 				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				45CD7B4F2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
+				A92F5D97272C410400884BDF /* DocumentPickerView.xib in Resources */,
 				455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45D3DE3D271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
 				45BEA48426F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
@@ -2534,6 +2552,7 @@
 				452047B62703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
+				A92F5D98272C410400884BDF /* DocumentPickerView.swift in Sources */,
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB0270EEFA200E8260E /* LoadableContent.swift in Sources */,
@@ -2758,6 +2777,7 @@
 				452047B72703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
+				A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45B7DAE026F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB1270EEFA200E8260E /* LoadableContent.swift in Sources */,
