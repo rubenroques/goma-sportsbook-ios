@@ -43,9 +43,8 @@ class HomeFilterViewController: UIViewController {
 
     func commonInit() {
         // Test values
-        filterValues = ["sort": "2",
-                        "timeRange": [0, 8],
-                        "markets": [0, 2],
+        filterValues = ["timeRange": [0, 8],
+                        "market": "1",
                         "odds": [1.2, 10.8]]
 
         navigationLabel.text = localized("string_filters")
@@ -57,11 +56,12 @@ class HomeFilterViewController: UIViewController {
         navigationCancelButton.setTitle(localized("string_cancel"), for: .normal)
         navigationCancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
-        setupSortBySection(value: filterValues["sort"] as! String)
+        //setupSortBySection(value: filterValues["sort"] as! String)
+        sortByFilterCollapseView.isHidden = true
 
         setupTimeRangeSection()
 
-        setupAvailableMarketsSection()
+        setupAvailableMarketsSection(value: filterValues["market"] as! String)
 
         setupOddsSection()
 
@@ -96,76 +96,76 @@ class HomeFilterViewController: UIViewController {
 
     }
 
-    func setupSortBySection(value: String) {
-        sortByFilterCollapseView.setTitle(title: localized("string_sort_by"))
-        sortByFilterCollapseView.hasCheckbox = false
-
-        var views: [FilterRowView] = []
-        var radioButtons: [RadioButton] = []
-
-        let startingSoonView = FilterRowView()
-        startingSoonView.buttonType = .radio
-        let startingSoonRadio = startingSoonView.getRadioButton()
-        startingSoonView.setTitle(title: localized("string_starting_soon"))
-        views.append(startingSoonView)
-        radioButtons.append(startingSoonRadio)
-
-        let competitionView = FilterRowView()
-        competitionView.buttonType = .radio
-        let competitionRadio = competitionView.getRadioButton()
-        competitionView.setTitle(title: localized("string_by_competition"))
-        views.append(competitionView)
-        radioButtons.append(competitionRadio)
-
-        let lowOddsView = FilterRowView()
-        lowOddsView.buttonType = .radio
-        let lowRadio = lowOddsView.getRadioButton()
-        lowOddsView.setTitle(title: localized("string_lowest_odds"))
-        views.append(lowOddsView)
-        radioButtons.append(lowRadio)
-
-        let highOddsView = FilterRowView()
-        highOddsView.buttonType = .radio
-        let highRadio = highOddsView.getRadioButton()
-        highOddsView.hasBorderBottom = false
-        highOddsView.setTitle(title: localized("string_highest_odds"))
-        views.append(highOddsView)
-        radioButtons.append(highRadio)
-
-        // Alternate Radio Button
-        startingSoonRadio.alternateButton = [competitionRadio, lowRadio, highRadio]
-        competitionRadio.alternateButton = [startingSoonRadio, lowRadio, highRadio]
-        lowRadio.alternateButton = [competitionRadio, startingSoonRadio, highRadio]
-        highRadio.alternateButton = [competitionRadio, lowRadio, startingSoonRadio]
-
-        // Set selected radio
-        var viewIndex = Int(value)
-        //radioButtons[viewIndex ?? 0].isSelected = true
-        views[viewIndex ?? 0].getRadioButton().isSelected = true
-
-        sortByFilterCollapseView.addViewtoStack(view: startingSoonView)
-        sortByFilterCollapseView.addViewtoStack(view: competitionView)
-        sortByFilterCollapseView.addViewtoStack(view: lowOddsView)
-        sortByFilterCollapseView.addViewtoStack(view: highOddsView)
-
-        sortByFilterCollapseView.didToggle = { value in
-            print(value)
-            if value {
-                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
-                    self.view.layoutIfNeeded()
-                }, completion: { _ in
-                })
-            }
-        }
-    }
+//    func setupSortBySection(value: String) {
+//        sortByFilterCollapseView.setTitle(title: localized("string_sort_by"))
+//        sortByFilterCollapseView.hasCheckbox = false
+//
+//        var views: [FilterRowView] = []
+//        var radioButtons: [RadioButton] = []
+//
+//        let startingSoonView = FilterRowView()
+//        startingSoonView.buttonType = .radio
+//        let startingSoonRadio = startingSoonView.getRadioButton()
+//        startingSoonView.setTitle(title: localized("string_starting_soon"))
+//        views.append(startingSoonView)
+//        radioButtons.append(startingSoonRadio)
+//
+//        let competitionView = FilterRowView()
+//        competitionView.buttonType = .radio
+//        let competitionRadio = competitionView.getRadioButton()
+//        competitionView.setTitle(title: localized("string_by_competition"))
+//        views.append(competitionView)
+//        radioButtons.append(competitionRadio)
+//
+//        let lowOddsView = FilterRowView()
+//        lowOddsView.buttonType = .radio
+//        let lowRadio = lowOddsView.getRadioButton()
+//        lowOddsView.setTitle(title: localized("string_lowest_odds"))
+//        views.append(lowOddsView)
+//        radioButtons.append(lowRadio)
+//
+//        let highOddsView = FilterRowView()
+//        highOddsView.buttonType = .radio
+//        let highRadio = highOddsView.getRadioButton()
+//        highOddsView.hasBorderBottom = false
+//        highOddsView.setTitle(title: localized("string_highest_odds"))
+//        views.append(highOddsView)
+//        radioButtons.append(highRadio)
+//
+//        // Alternate Radio Button
+//        startingSoonRadio.alternateButton = [competitionRadio, lowRadio, highRadio]
+//        competitionRadio.alternateButton = [startingSoonRadio, lowRadio, highRadio]
+//        lowRadio.alternateButton = [competitionRadio, startingSoonRadio, highRadio]
+//        highRadio.alternateButton = [competitionRadio, lowRadio, startingSoonRadio]
+//
+//        // Set selected radio
+//        var viewIndex = Int(value)
+//        //radioButtons[viewIndex ?? 0].isSelected = true
+//        views[viewIndex ?? 0].getRadioButton().isSelected = true
+//
+//        sortByFilterCollapseView.addViewtoStack(view: startingSoonView)
+//        sortByFilterCollapseView.addViewtoStack(view: competitionView)
+//        sortByFilterCollapseView.addViewtoStack(view: lowOddsView)
+//        sortByFilterCollapseView.addViewtoStack(view: highOddsView)
+//
+//        sortByFilterCollapseView.didToggle = { value in
+//            print(value)
+//            if value {
+//                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
+//                    self.view.layoutIfNeeded()
+//                }, completion: { _ in
+//                })
+//            }
+//        }
+//    }
 
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
         let maxValue: CGFloat = 24
         let values: [CGFloat] = [3, 8]
-        timeRangeCollapseView.setTitle(title: localized("string_time_range"))
-        timeRangeCollapseView.hasCheckbox = true
-        // timeRangeCollapseView.setCheckboxSelected(selected: true)
+        timeRangeCollapseView.setTitle(title: localized("string_time_today_only"))
+        timeRangeCollapseView.hasCheckbox = false
+
         let contentView = timeRangeCollapseView.getContentView()
 
         setupSlider(minValue: minValue, maxValue: maxValue, values: values, steps: 1, hasLabels: true, edges: UIEdgeInsets(top: 8, left: 8, bottom: 16, right: 8), view: contentView, target: #selector(timeSliderChanged))
@@ -182,23 +182,44 @@ class HomeFilterViewController: UIViewController {
 
     }
 
-    func setupAvailableMarketsSection() {
-        availableMarketsCollapseView.setTitle(title: localized("string_available_markets"))
-        availableMarketsCollapseView.hasCheckbox = true
-        // availableMarketsCollapseView.setCheckboxSelected(selected: true)
+    func setupAvailableMarketsSection(value: String) {
+        availableMarketsCollapseView.setTitle(title: localized("string_default_market"))
+        availableMarketsCollapseView.hasCheckbox = false
+
+        var views: [FilterRowView] = []
+
         let resultView = FilterRowView()
-        resultView.buttonType = .checkbox
+        resultView.buttonType = .radio
         resultView.setTitle(title: "Result")
-        resultView.setCheckboxSelected(selected: true)
+        resultView.viewId = 1
+        views.append(resultView)
 
         let doubleOutcomeView = FilterRowView()
-        doubleOutcomeView.buttonType = .checkbox
+        doubleOutcomeView.buttonType = .radio
         doubleOutcomeView.setTitle(title: "Double Outcome")
+        doubleOutcomeView.viewId = 2
+        views.append(doubleOutcomeView)
 
         let handicapView = FilterRowView()
-        handicapView.buttonType = .checkbox
+        handicapView.buttonType = .radio
         handicapView.hasBorderBottom = false
         handicapView.setTitle(title: "Handycap")
+        handicapView.viewId = 3
+        views.append(handicapView)
+
+        // Set selected view
+        var viewInt = Int(value)
+
+        for view in views {
+            view.didTapView = { value in
+                self.checkMarketRadioOptions(views: views, viewTapped: view)
+            }
+            // Default market selected
+            if view.viewId == viewInt {
+                view.isChecked = true
+            }
+        }
+
 
         availableMarketsCollapseView.addViewtoStack(view: resultView)
         availableMarketsCollapseView.addViewtoStack(view: doubleOutcomeView)
@@ -214,13 +235,19 @@ class HomeFilterViewController: UIViewController {
         }
     }
 
+    func checkMarketRadioOptions(views: [FilterRowView], viewTapped: FilterRowView) {
+        for view in views {
+            view.isChecked = false
+        }
+        viewTapped.isChecked = true
+    }
+
     func setupOddsSection() {
         let minValue: CGFloat = 1.0
         let maxValue: CGFloat = 15.0
         let values: [CGFloat] = [2.5, 12.5]
         oddsCollapseView.setTitle(title: localized("string_odds_filter"))
-        oddsCollapseView.hasCheckbox = true
-        oddsCollapseView.setCheckboxSelected(selected: true)
+        oddsCollapseView.hasCheckbox = false
         let contentView = oddsCollapseView.getContentView()
         setupSlider(minValue: minValue, maxValue: maxValue, values: values, steps: 0.1, hasLabels: false, edges: UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8), view: contentView, target: #selector(oddsSliderChanged))
 
