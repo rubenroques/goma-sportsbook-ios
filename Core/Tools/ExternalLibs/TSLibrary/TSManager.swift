@@ -138,7 +138,7 @@ final class TSManager {
                                 }
                                 else {
                                     promise(.failure(.noResultsReceived))
-                                }
+                                } 
                             }
                         }
                         catch {
@@ -244,7 +244,6 @@ final class TSManager {
     func registerOnEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
 
         let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
-
 
         guard
             let swampSession = self.swampSession,

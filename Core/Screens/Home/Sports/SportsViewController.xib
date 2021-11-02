@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -12,6 +12,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SportsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="competitionsFiltersBaseView" destination="JDo-j5-eFq" id="wH3-i5-qwV"/>
+                <outlet property="competitionsFiltersDarkBackgroundView" destination="1Zb-TC-NS9" id="vf1-pP-AQ0"/>
                 <outlet property="filtersBarBaseView" destination="vRj-e2-Szx" id="GDJ-9C-fEL"/>
                 <outlet property="filtersButtonView" destination="6zP-Po-yfR" id="5I1-zh-JcS"/>
                 <outlet property="filtersCollectionView" destination="bdq-E7-Xtb" id="BQH-oR-m5A"/>
@@ -19,7 +21,9 @@
                 <outlet property="leftGradientBaseView" destination="Ond-vd-nhl" id="4CI-b7-Yno"/>
                 <outlet property="loadingBaseView" destination="kGb-Bw-Z5y" id="DzJ-v2-UsN"/>
                 <outlet property="loadingView" destination="R1v-pN-KYj" id="l8c-Hq-phP"/>
+                <outlet property="openedCompetitionsFiltersConstraint" destination="QEY-gK-pFr" id="9vt-3h-1zZ"/>
                 <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
+                <outlet property="sportTypeIconImageView" destination="iOi-Sv-wfK" id="bdC-qr-Mbb"/>
                 <outlet property="sportsSelectorButtonView" destination="L0P-hR-PWM" id="M7W-hm-vQU"/>
                 <outlet property="tableView" destination="AbP-eF-dUy" id="fhv-On-x1u"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -27,9 +31,23 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="346" height="724"/>
+            <rect key="frame" x="0.0" y="0.0" width="346" height="793"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-Bw-Z5y">
+                    <rect key="frame" x="0.0" y="70" width="346" height="723"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="R1v-pN-KYj">
+                            <rect key="frame" x="163" y="351.5" width="20" height="20"/>
+                            <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.63368694598858177" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerX" secondItem="kGb-Bw-Z5y" secondAttribute="centerX" id="6K5-Cx-cXA"/>
+                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerY" secondItem="kGb-Bw-Z5y" secondAttribute="centerY" id="L72-bf-x0e"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vRj-e2-Szx">
                     <rect key="frame" x="0.0" y="0.0" width="346" height="70"/>
                     <subviews>
@@ -134,31 +152,35 @@
                         <constraint firstItem="bdq-E7-Xtb" firstAttribute="top" secondItem="vRj-e2-Szx" secondAttribute="top" id="rba-Hz-4my"/>
                     </constraints>
                 </view>
-                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="AbP-eF-dUy">
-                    <rect key="frame" x="0.0" y="70" width="346" height="654"/>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="AbP-eF-dUy">
+                    <rect key="frame" x="0.0" y="70" width="346" height="723"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-Bw-Z5y">
-                    <rect key="frame" x="0.0" y="70" width="346" height="654"/>
-                    <subviews>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="R1v-pN-KYj">
-                            <rect key="frame" x="163" y="317" width="20" height="20"/>
-                            <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        </activityIndicatorView>
-                    </subviews>
-                    <color key="backgroundColor" white="0.0" alpha="0.63368694598858177" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerX" secondItem="kGb-Bw-Z5y" secondAttribute="centerX" id="6K5-Cx-cXA"/>
-                        <constraint firstItem="R1v-pN-KYj" firstAttribute="centerY" secondItem="kGb-Bw-Z5y" secondAttribute="centerY" id="L72-bf-x0e"/>
-                    </constraints>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1Zb-TC-NS9">
+                    <rect key="frame" x="0.0" y="70" width="346" height="723"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JDo-j5-eFq">
+                    <rect key="frame" x="10" y="78.5" width="326" height="714.5"/>
+                    <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="JDo-j5-eFq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-54" id="1pu-e0-kz7"/>
                 <constraint firstAttribute="bottom" secondItem="AbP-eF-dUy" secondAttribute="bottom" id="3e9-P7-W6O"/>
+                <constraint firstItem="JDo-j5-eFq" firstAttribute="leading" secondItem="AbP-eF-dUy" secondAttribute="leading" constant="10" id="5tN-YF-CSI"/>
+                <constraint firstItem="1Zb-TC-NS9" firstAttribute="bottom" secondItem="AbP-eF-dUy" secondAttribute="bottom" id="6zi-Qj-gEX"/>
+                <constraint firstItem="1Zb-TC-NS9" firstAttribute="leading" secondItem="AbP-eF-dUy" secondAttribute="leading" id="Fct-Xl-L5y"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="HEp-3X-9bd"/>
+                <constraint firstItem="JDo-j5-eFq" firstAttribute="trailing" secondItem="AbP-eF-dUy" secondAttribute="trailing" constant="-10" id="HQm-Hc-qZl"/>
+                <constraint firstAttribute="bottom" secondItem="JDo-j5-eFq" secondAttribute="bottom" id="QEY-gK-pFr"/>
+                <constraint firstItem="JDo-j5-eFq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-18" id="TEn-np-FZP"/>
+                <constraint firstItem="1Zb-TC-NS9" firstAttribute="top" secondItem="AbP-eF-dUy" secondAttribute="top" id="Vhe-3N-zHL"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kGb-Bw-Z5y" secondAttribute="trailing" id="czS-Rh-7Xt"/>
+                <constraint firstItem="1Zb-TC-NS9" firstAttribute="trailing" secondItem="AbP-eF-dUy" secondAttribute="trailing" id="d0K-F1-pyi"/>
+                <constraint firstItem="JDo-j5-eFq" firstAttribute="height" secondItem="AbP-eF-dUy" secondAttribute="height" multiplier="0.988" id="g6n-H3-T9M"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="h8G-p6-8JQ"/>
                 <constraint firstItem="AbP-eF-dUy" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="iR1-oI-fNa"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="kGb-Bw-Z5y" secondAttribute="bottom" id="jIT-UJ-POS"/>
@@ -169,7 +191,13 @@
                 <constraint firstItem="kGb-Bw-Z5y" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="vml-O9-ARJ"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-40.579710144927539" y="210.26785714285714"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="1pu-e0-kz7"/>
+                    <exclude reference="TEn-np-FZP"/>
+                </mask>
+            </variation>
+            <point key="canvasLocation" x="-40.579710144927539" y="187.16517857142856"/>
         </view>
     </objects>
     <resources>
@@ -189,7 +217,7 @@
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

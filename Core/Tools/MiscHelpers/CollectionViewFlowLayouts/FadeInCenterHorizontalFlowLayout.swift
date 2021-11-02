@@ -62,10 +62,8 @@ class FadeInCenterHorizontalFlowLayout: UICollectionViewFlowLayout {
                 let remainingValue = (1.0-minimumScaleValue) * reversedDistanceToCenterPercentage
 
                 att.transform = .init(scaleX: minimumScaleValue+remainingValue, y: minimumScaleValue+remainingValue)
-
             }
         }
-
         return attributes
     }
 

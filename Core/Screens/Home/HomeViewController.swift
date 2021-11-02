@@ -123,6 +123,16 @@ class HomeViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+
+        Env.everyMatrixAPIClient.getOperatorInfo()
+            .receive(on: DispatchQueue.main)
+            .sink { completed in
+                print(completed)
+            } receiveValue: { operatorInfo in
+                print(operatorInfo)
+            }
+            .store(in: &cancellables)
+        
     }
 
     override func viewWillAppear(_ animated: Bool) {

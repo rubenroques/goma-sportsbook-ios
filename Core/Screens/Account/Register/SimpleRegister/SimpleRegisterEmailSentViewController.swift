@@ -87,9 +87,14 @@ class SimpleRegisterEmailSentViewController: UIViewController {
     }
 
     @IBAction private func openEmailAppAction() {
-        let mainScreenViewController = Router.mainScreenViewController()
-        self.navigationController?.pushViewController(mainScreenViewController, animated: true)
 
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            let mainScreenViewController = Router.mainScreenViewController()
+            self.navigationController?.pushViewController(mainScreenViewController, animated: true)
+        }
     }
 
     @IBAction private func resendEmailAction() {
