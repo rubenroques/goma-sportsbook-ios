@@ -528,6 +528,8 @@
 		A99A972B26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */; };
 		A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
+		A99DFBEA2731A2F700002CDB /* HomeFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */; };
+		A99DFBEB2731A2F700002CDB /* HomeFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -899,6 +901,7 @@
 		A99A972626FE326200F8D163 /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
 		A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
+		A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterOptions.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -1760,6 +1763,7 @@
 				455643A026F2634E00EE78FA /* GomaClientSettings.swift */,
 				45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */,
 				45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */,
+				A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -2732,6 +2736,7 @@
 				A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
 				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA4270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
+				A99DFBEA2731A2F700002CDB /* HomeFilterOptions.swift in Sources */,
 				45D871BE270F5B5500F5B87B /* Aggregator.swift in Sources */,
 				45B0BD34271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
@@ -2959,6 +2964,7 @@
 				A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
 				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA5270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
+				A99DFBEB2731A2F700002CDB /* HomeFilterOptions.swift in Sources */,
 				45D871BF270F5B5500F5B87B /* Aggregator.swift in Sources */,
 				45B0BD35271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */,

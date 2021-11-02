@@ -150,6 +150,9 @@
                                 <constraint firstAttribute="height" constant="50" id="2SS-9t-Rlx"/>
                             </constraints>
                             <state key="normal" title="Button"/>
+                            <connections>
+                                <action selector="applyFiltersAction" destination="-1" eventType="touchUpInside" id="Hnj-pt-S4D"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>

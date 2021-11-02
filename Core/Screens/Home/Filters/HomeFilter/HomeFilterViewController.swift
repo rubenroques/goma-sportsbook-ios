@@ -26,7 +26,10 @@ class HomeFilterViewController: UIViewController {
     // Variables
     var timeSliderValues: [CGFloat] = []
     var oddsSliderValues: [CGFloat] = []
-    var filterValues: [String:Any] = [:]
+    var slidersArray: [MultiSlider] = []
+    var defaultMarketId: Int = 1
+    var marketViews: [FilterRowView] = []
+    var filterValues: HomeFilterOptions?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,9 +46,7 @@ class HomeFilterViewController: UIViewController {
 
     func commonInit() {
         // Test values
-        filterValues = ["timeRange": [0, 8],
-                        "market": "1",
-                        "odds": [1.2, 10.8]]
+        filterValues = HomeFilterOptions(timeRange: [0, 8], defaultMarketId: 1, oddsRange: [1.2, 8.8])
 
         navigationLabel.text = localized("string_filters")
         navigationLabel.font = AppFont.with(type: .bold, size: 17)
@@ -61,7 +62,7 @@ class HomeFilterViewController: UIViewController {
 
         setupTimeRangeSection()
 
-        setupAvailableMarketsSection(value: filterValues["market"] as! String)
+        setupAvailableMarketsSection(value: "\(filterValues!.defaultMarketId)")
 
         setupOddsSection()
 
@@ -162,7 +163,7 @@ class HomeFilterViewController: UIViewController {
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
         let maxValue: CGFloat = 24
-        let values: [CGFloat] = [3, 8]
+        let values = filterValues!.timeRange
         timeRangeCollapseView.setTitle(title: localized("string_time_today_only"))
         timeRangeCollapseView.hasCheckbox = false
 
@@ -186,39 +187,38 @@ class HomeFilterViewController: UIViewController {
         availableMarketsCollapseView.setTitle(title: localized("string_default_market"))
         availableMarketsCollapseView.hasCheckbox = false
 
-        var views: [FilterRowView] = []
-
         let resultView = FilterRowView()
         resultView.buttonType = .radio
         resultView.setTitle(title: "Result")
         resultView.viewId = 1
-        views.append(resultView)
+        marketViews.append(resultView)
 
         let doubleOutcomeView = FilterRowView()
         doubleOutcomeView.buttonType = .radio
         doubleOutcomeView.setTitle(title: "Double Outcome")
         doubleOutcomeView.viewId = 2
-        views.append(doubleOutcomeView)
+        marketViews.append(doubleOutcomeView)
 
         let handicapView = FilterRowView()
         handicapView.buttonType = .radio
         handicapView.hasBorderBottom = false
         handicapView.setTitle(title: "Handycap")
         handicapView.viewId = 3
-        views.append(handicapView)
+        marketViews.append(handicapView)
 
         // Set selected view
         var viewInt = Int(value)
 
-        for view in views {
-            view.didTapView = { value in
-                self.checkMarketRadioOptions(views: views, viewTapped: view)
+        for view in marketViews {
+            view.didTapView = { _ in
+                self.checkMarketRadioOptions(views: self.marketViews, viewTapped: view)
             }
             // Default market selected
             if view.viewId == viewInt {
                 view.isChecked = true
             }
         }
+
 
 
         availableMarketsCollapseView.addViewtoStack(view: resultView)
@@ -240,12 +240,13 @@ class HomeFilterViewController: UIViewController {
             view.isChecked = false
         }
         viewTapped.isChecked = true
+        defaultMarketId = viewTapped.viewId
     }
 
     func setupOddsSection() {
         let minValue: CGFloat = 1.0
         let maxValue: CGFloat = 15.0
-        let values: [CGFloat] = [2.5, 12.5]
+        let values = filterValues!.oddsRange
         oddsCollapseView.setTitle(title: localized("string_odds_filter"))
         oddsCollapseView.hasCheckbox = false
         let contentView = oddsCollapseView.getContentView()
@@ -290,6 +291,7 @@ class HomeFilterViewController: UIViewController {
 
         view.addConstrainedSubview(horizontalMultiSlider, constrain: .leftMargin, .rightMargin, .bottomMargin, .topMargin)
         view.layoutMargins = edges
+        slidersArray.append(horizontalMultiSlider)
 
     }
 
@@ -309,11 +311,32 @@ class HomeFilterViewController: UIViewController {
     }
 
     @IBAction private func resetAction() {
-        // Reset values
+        slidersArray[0].value = filterValues!.timeRange
+        timeSliderValues = filterValues!.timeRange
+        slidersArray[1].value = filterValues!.oddsRange
+        oddsCollapseView.updateOddsLabels(fromText: "\(filterValues!.oddsRange[0])", toText: "\(filterValues!.oddsRange[1])")
+        oddsSliderValues = [slidersArray[1].value[0].round(to: 1), slidersArray[1].value[1].round(to: 1)]
+
+        for view in self.marketViews {
+            view.isChecked = false
+            // Default market selected
+            if view.viewId == filterValues?.defaultMarketId {
+                view.isChecked = true
+                defaultMarketId = view.viewId
+            }
+        }
+
+
     }
 
     @IBAction private func cancelAction() {
         self.dismiss(animated: true, completion: nil)
     }
+
+    @IBAction func applyFiltersAction() {
+        let homeFilterOptions = HomeFilterOptions(timeRange: timeSliderValues, defaultMarketId: defaultMarketId, oddsRange: oddsSliderValues)
+        print(homeFilterOptions)
+    }
+
 
 }
