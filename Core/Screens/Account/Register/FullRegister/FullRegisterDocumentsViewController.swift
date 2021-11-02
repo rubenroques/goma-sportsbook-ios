@@ -92,6 +92,9 @@ class FullRegisterDocumentsViewController: UIViewController {
         submitButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         submitButton.isEnabled = false
 
+        // Service not implemented
+        addFileDocumentPickerView.isHidden = true
+
         checkUserInputs()
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
