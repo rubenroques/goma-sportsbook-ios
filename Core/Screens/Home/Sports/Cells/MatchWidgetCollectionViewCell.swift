@@ -125,6 +125,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayParticipantNameLabel.text = ""
         self.dateLabel.text = ""
         self.timeLabel.text = ""
+
+        self.locationFlagImageView.isHidden = false
         self.locationFlagImageView.image = nil
     }
 
@@ -186,6 +188,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddValueLabel.text = String(format: "%.2f", leftOutcome.bettingOffer.value)
             }
         }
+    }
+
+    func shouldShowCountryFlag(_ show: Bool) {
+        self.locationFlagImageView.isHidden = !show
     }
 
     @IBAction func didTapFavoritesButton(_ sender: Any) {

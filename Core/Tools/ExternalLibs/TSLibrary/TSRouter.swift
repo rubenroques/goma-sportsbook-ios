@@ -23,7 +23,6 @@ enum TSRouter {
     case getTournaments(language: String, sportId: String)
     case getPopularTournaments(language: String, sportId: String)
     case profileUpdate(form: EveryMatrix.ProfileForm)
-    // GOMA EveryMatrix Subscriptions tests
     case oddsMatch(operatorId: String, language: String, matchId: String)
     case sportsStatus(operatorId: String, language: String, sportId: String)
     case getPolicy
@@ -36,7 +35,8 @@ enum TSRouter {
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
-
+    case locationsPublisher(operatorId: String, language: String, sportId: String)
+    case tournamentsPublisher(operatorId: String, language: String, sportId: String)
 
     // Others
     case registrationDismissed
@@ -148,8 +148,11 @@ enum TSRouter {
         
         case .bannersInfoPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/sportsBannerData"
+        case .locationsPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/locations/\(sportId)"
+        case .tournamentsPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/tournaments/\(sportId)"
 
-        //
         //
         //
         //
@@ -415,6 +418,7 @@ enum TSRouter {
 
     var intiailDumpRequest: TSRouter? {
         switch self {
+            
         case .popularMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesPublisher:
@@ -423,6 +427,11 @@ enum TSRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .competitionsMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
+        case .locationsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .tournamentsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+
         default:
             return nil
         }

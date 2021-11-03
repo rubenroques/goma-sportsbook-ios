@@ -16,7 +16,8 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
-    var match: Match?
+    private var match: Match?
+    private var shouldShowCountryFlag: Bool = true
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -64,6 +65,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.selectionStyle = .none
 
+        self.shouldShowCountryFlag = true
+
         self.backSliderView.alpha = 0.0
 
         self.collectionView.layoutSubviews()
@@ -95,6 +98,10 @@ class MatchLineTableViewCell: UITableViewCell {
     func setupWithMatch(_ match: Match) {
         self.match = match
         self.collectionView.reloadData()
+    }
+
+    func shouldShowCountryFlag(_ show: Bool) {
+        self.shouldShowCountryFlag = show
     }
 
     @objc func didTapBackSliderButton() {
@@ -160,6 +167,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             if let match = self.match {
                 cell.setupWithMatch(match)
             }
+            cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
             return cell
         }
         else {
@@ -173,12 +181,14 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.setupWithMarket(market, teamsText: teamsText, countryIso: countryIso)
+                        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                         return cell
                     }
                 }
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.setupWithMarket(market, teamsText: teamsText, countryIso: countryIso)
+                        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                         return cell
                     }
                 }
