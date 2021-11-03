@@ -237,7 +237,8 @@ class SportsViewController: UIViewController {
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        let homeFilterViewController = HomeFilterViewController()
+        let homeFilterViewController = HomeFilterViewController(sportsModel: self.viewModel)
+        homeFilterViewController.delegate = self
         self.present(homeFilterViewController, animated: true, completion: nil)
     }
 
@@ -445,5 +446,16 @@ extension SportsViewController: SportTypeSelectionViewDelegate {
             self.competitionsFiltersView?.resetSelection()
         }
 
+    }
+}
+
+protocol HomeFilterOptionsViewDelegate: AnyObject {
+    func setHomeFilters(homeFilters: HomeFilterOptions)
+}
+
+extension SportsViewController: HomeFilterOptionsViewDelegate {
+    func setHomeFilters(homeFilters: HomeFilterOptions) {
+        self.viewModel.homeFilterOptions = homeFilters
+        print(self.viewModel.homeFilterOptions)
     }
 }

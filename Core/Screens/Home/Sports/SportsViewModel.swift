@@ -61,6 +61,11 @@ class SportsViewModel {
             self.fetchData()
         }
     }
+    var homeFilterOptions: HomeFilterOptions = HomeFilterOptions(timeRange: [0, 24], defaultMarketId: Int((Env.everyMatrixStorage.mainMarkets.values.first?.bettingTypeId ?? "69")) ?? 69, oddsRange: [1.0, 30.0]) {
+        didSet {
+//            self.fetchData()
+        }
+    }
 
     private var cancellables = Set<AnyCancellable>()
 

@@ -7,6 +7,7 @@
 
 import UIKit
 import MultiSlider
+import OrderedCollections
 
 class HomeFilterViewController: UIViewController {
     @IBOutlet private var topView: UIView!
@@ -30,12 +31,26 @@ class HomeFilterViewController: UIViewController {
     var defaultMarketId: Int = 1
     var marketViews: [FilterRowView] = []
     var filterValues: HomeFilterOptions?
+    var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
+    var sportsModel: SportsViewModel
+    weak var delegate: HomeFilterOptionsViewDelegate?
+
+    init(sportsModel: SportsViewModel) {
+        self.sportsModel = sportsModel
+        super.init(nibName: "HomeFilterViewController", bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         commonInit()
         setupWithTheme()
+        print("SPORTS MODEL:\(sportsModel.homeFilterOptions)")
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -46,7 +61,9 @@ class HomeFilterViewController: UIViewController {
 
     func commonInit() {
         // Test values
-        filterValues = HomeFilterOptions(timeRange: [0, 8], defaultMarketId: 1, oddsRange: [1.2, 8.8])
+        mainMarkets = Env.everyMatrixStorage.mainMarkets
+        filterValues = sportsModel.homeFilterOptions
+        defaultMarketId = sportsModel.homeFilterOptions.defaultMarketId
 
         navigationLabel.text = localized("string_filters")
         navigationLabel.font = AppFont.with(type: .bold, size: 17)
@@ -164,6 +181,7 @@ class HomeFilterViewController: UIViewController {
         let minValue: CGFloat = 0
         let maxValue: CGFloat = 24
         let values = filterValues!.timeRange
+        timeSliderValues = values
         timeRangeCollapseView.setTitle(title: localized("string_time_today_only"))
         timeRangeCollapseView.hasCheckbox = false
 
@@ -187,27 +205,36 @@ class HomeFilterViewController: UIViewController {
         availableMarketsCollapseView.setTitle(title: localized("string_default_market"))
         availableMarketsCollapseView.hasCheckbox = false
 
-        let resultView = FilterRowView()
-        resultView.buttonType = .radio
-        resultView.setTitle(title: "Result")
-        resultView.viewId = 1
-        marketViews.append(resultView)
+//        let resultView = FilterRowView()
+//        resultView.buttonType = .radio
+//        resultView.setTitle(title: "Result")
+//        resultView.viewId = 1
+//        marketViews.append(resultView)
+//
+//        let doubleOutcomeView = FilterRowView()
+//        doubleOutcomeView.buttonType = .radio
+//        doubleOutcomeView.setTitle(title: "Double Outcome")
+//        doubleOutcomeView.viewId = 2
+//        marketViews.append(doubleOutcomeView)
+//
+//        let handicapView = FilterRowView()
+//        handicapView.buttonType = .radio
+//        handicapView.hasBorderBottom = false
+//        handicapView.setTitle(title: "Handycap")
+//        handicapView.viewId = 3
+//        marketViews.append(handicapView)
 
-        let doubleOutcomeView = FilterRowView()
-        doubleOutcomeView.buttonType = .radio
-        doubleOutcomeView.setTitle(title: "Double Outcome")
-        doubleOutcomeView.viewId = 2
-        marketViews.append(doubleOutcomeView)
-
-        let handicapView = FilterRowView()
-        handicapView.buttonType = .radio
-        handicapView.hasBorderBottom = false
-        handicapView.setTitle(title: "Handycap")
-        handicapView.viewId = 3
-        marketViews.append(handicapView)
+        for market in mainMarkets {
+            let marketView = FilterRowView()
+            marketView.buttonType = .radio
+            marketView.setTitle(title: "\(market.value.bettingTypeName!)")
+            marketView.viewId = Int(market.value.bettingTypeId!)!
+            marketViews.append(marketView)
+            availableMarketsCollapseView.addViewtoStack(view: marketView)
+        }
 
         // Set selected view
-        var viewInt = Int(value)
+        let viewInt = Int(value)
 
         for view in marketViews {
             view.didTapView = { _ in
@@ -219,11 +246,9 @@ class HomeFilterViewController: UIViewController {
             }
         }
 
-
-
-        availableMarketsCollapseView.addViewtoStack(view: resultView)
-        availableMarketsCollapseView.addViewtoStack(view: doubleOutcomeView)
-        availableMarketsCollapseView.addViewtoStack(view: handicapView)
+//        availableMarketsCollapseView.addViewtoStack(view: resultView)
+//        availableMarketsCollapseView.addViewtoStack(view: doubleOutcomeView)
+//        availableMarketsCollapseView.addViewtoStack(view: handicapView)
 
         availableMarketsCollapseView.didToggle = { value in
             if value {
@@ -245,8 +270,9 @@ class HomeFilterViewController: UIViewController {
 
     func setupOddsSection() {
         let minValue: CGFloat = 1.0
-        let maxValue: CGFloat = 15.0
+        let maxValue: CGFloat = 30.0
         let values = filterValues!.oddsRange
+        oddsSliderValues = values
         oddsCollapseView.setTitle(title: localized("string_odds_filter"))
         oddsCollapseView.hasCheckbox = false
         let contentView = oddsCollapseView.getContentView()
@@ -326,17 +352,17 @@ class HomeFilterViewController: UIViewController {
             }
         }
 
-
     }
 
     @IBAction private func cancelAction() {
         self.dismiss(animated: true, completion: nil)
     }
 
-    @IBAction func applyFiltersAction() {
+    @IBAction private func applyFiltersAction() {
         let homeFilterOptions = HomeFilterOptions(timeRange: timeSliderValues, defaultMarketId: defaultMarketId, oddsRange: oddsSliderValues)
-        print(homeFilterOptions)
+        sportsModel.homeFilterOptions = homeFilterOptions
+        delegate?.setHomeFilters(homeFilters: sportsModel.homeFilterOptions)
+        self.dismiss(animated: true, completion: nil)
     }
-
 
 }
