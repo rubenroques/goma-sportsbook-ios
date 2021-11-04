@@ -50,7 +50,6 @@ class HomeFilterViewController: UIViewController {
 
         commonInit()
         setupWithTheme()
-        print("SPORTS MODEL:\(sportsModel.homeFilterOptions)")
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -74,7 +73,6 @@ class HomeFilterViewController: UIViewController {
         navigationCancelButton.setTitle(localized("string_cancel"), for: .normal)
         navigationCancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
-        //setupSortBySection(value: filterValues["sort"] as! String)
         sortByFilterCollapseView.isHidden = true
 
         setupTimeRangeSection()
@@ -114,69 +112,6 @@ class HomeFilterViewController: UIViewController {
 
     }
 
-//    func setupSortBySection(value: String) {
-//        sortByFilterCollapseView.setTitle(title: localized("string_sort_by"))
-//        sortByFilterCollapseView.hasCheckbox = false
-//
-//        var views: [FilterRowView] = []
-//        var radioButtons: [RadioButton] = []
-//
-//        let startingSoonView = FilterRowView()
-//        startingSoonView.buttonType = .radio
-//        let startingSoonRadio = startingSoonView.getRadioButton()
-//        startingSoonView.setTitle(title: localized("string_starting_soon"))
-//        views.append(startingSoonView)
-//        radioButtons.append(startingSoonRadio)
-//
-//        let competitionView = FilterRowView()
-//        competitionView.buttonType = .radio
-//        let competitionRadio = competitionView.getRadioButton()
-//        competitionView.setTitle(title: localized("string_by_competition"))
-//        views.append(competitionView)
-//        radioButtons.append(competitionRadio)
-//
-//        let lowOddsView = FilterRowView()
-//        lowOddsView.buttonType = .radio
-//        let lowRadio = lowOddsView.getRadioButton()
-//        lowOddsView.setTitle(title: localized("string_lowest_odds"))
-//        views.append(lowOddsView)
-//        radioButtons.append(lowRadio)
-//
-//        let highOddsView = FilterRowView()
-//        highOddsView.buttonType = .radio
-//        let highRadio = highOddsView.getRadioButton()
-//        highOddsView.hasBorderBottom = false
-//        highOddsView.setTitle(title: localized("string_highest_odds"))
-//        views.append(highOddsView)
-//        radioButtons.append(highRadio)
-//
-//        // Alternate Radio Button
-//        startingSoonRadio.alternateButton = [competitionRadio, lowRadio, highRadio]
-//        competitionRadio.alternateButton = [startingSoonRadio, lowRadio, highRadio]
-//        lowRadio.alternateButton = [competitionRadio, startingSoonRadio, highRadio]
-//        highRadio.alternateButton = [competitionRadio, lowRadio, startingSoonRadio]
-//
-//        // Set selected radio
-//        var viewIndex = Int(value)
-//        //radioButtons[viewIndex ?? 0].isSelected = true
-//        views[viewIndex ?? 0].getRadioButton().isSelected = true
-//
-//        sortByFilterCollapseView.addViewtoStack(view: startingSoonView)
-//        sortByFilterCollapseView.addViewtoStack(view: competitionView)
-//        sortByFilterCollapseView.addViewtoStack(view: lowOddsView)
-//        sortByFilterCollapseView.addViewtoStack(view: highOddsView)
-//
-//        sortByFilterCollapseView.didToggle = { value in
-//            print(value)
-//            if value {
-//                UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
-//                    self.view.layoutIfNeeded()
-//                }, completion: { _ in
-//                })
-//            }
-//        }
-//    }
-
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
         let maxValue: CGFloat = 24
@@ -205,24 +140,6 @@ class HomeFilterViewController: UIViewController {
         availableMarketsCollapseView.setTitle(title: localized("string_default_market"))
         availableMarketsCollapseView.hasCheckbox = false
 
-//        let resultView = FilterRowView()
-//        resultView.buttonType = .radio
-//        resultView.setTitle(title: "Result")
-//        resultView.viewId = 1
-//        marketViews.append(resultView)
-//
-//        let doubleOutcomeView = FilterRowView()
-//        doubleOutcomeView.buttonType = .radio
-//        doubleOutcomeView.setTitle(title: "Double Outcome")
-//        doubleOutcomeView.viewId = 2
-//        marketViews.append(doubleOutcomeView)
-//
-//        let handicapView = FilterRowView()
-//        handicapView.buttonType = .radio
-//        handicapView.hasBorderBottom = false
-//        handicapView.setTitle(title: "Handycap")
-//        handicapView.viewId = 3
-//        marketViews.append(handicapView)
         var filterMarketsId: [String] = []
         for market in mainMarkets {
             if !filterMarketsId.contains(market.value.bettingTypeId!) {
@@ -235,7 +152,6 @@ class HomeFilterViewController: UIViewController {
                 availableMarketsCollapseView.addViewtoStack(view: marketView)
             }
         }
-        print("FILTER MARKET IDS: \(filterMarketsId)")
 
         // Set selected view
         let viewInt = Int(value)
@@ -249,10 +165,6 @@ class HomeFilterViewController: UIViewController {
                 view.isChecked = true
             }
         }
-
-//        availableMarketsCollapseView.addViewtoStack(view: resultView)
-//        availableMarketsCollapseView.addViewtoStack(view: doubleOutcomeView)
-//        availableMarketsCollapseView.addViewtoStack(view: handicapView)
 
         availableMarketsCollapseView.didToggle = { value in
             if value {

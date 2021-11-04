@@ -134,7 +134,6 @@ class SportsViewModel: NSObject {
 
         self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
 
-        //self.competitionSportsViewModelDataSource.competitions = self.competitions
         self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
 
         DispatchQueue.main.async {
@@ -204,7 +203,6 @@ class SportsViewModel: NSObject {
             // Check time range
             var timeInRange = false
             if dateRange.contains(match.date!) {
-                print("DATE MATCHES FILTER")
                 timeInRange = true
             }
 
@@ -219,7 +217,6 @@ class SportsViewModel: NSObject {
                     break
                 }
             }
-
 
             if oddsInRange && timeInRange {
                 print("\(oddsInRange) + \(timeInRange)")
@@ -237,7 +234,6 @@ class SportsViewModel: NSObject {
         guard let filterOptionsValue = filtersOptions else {
             return competitions
         }
-
 
         var filteredMatches: [Match] = []
         var filteredCompetitions: [Competition] = []
