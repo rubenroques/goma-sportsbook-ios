@@ -36,7 +36,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        AnalyticsClient.logEvent(event: .signupScreen)
         commonInit()
         setupWithTheme()
     }
@@ -216,9 +216,11 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
             receiveValue: { value in
                 if !value.isAvailable {
                     self.showEmailUsedError()
+                    AnalyticsClient.logEvent(event: .userSignUpFail)
                 }
                 else {
                     self.pushRegisterNextViewController()
+                    AnalyticsClient.logEvent(event: .userSignUpSuccess)
                 }
                 self.loadingEmailValidityView.stopAnimating()
             }
