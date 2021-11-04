@@ -530,6 +530,8 @@
 		A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */; };
 		A99DFBEA2731A2F700002CDB /* HomeFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */; };
 		A99DFBEB2731A2F700002CDB /* HomeFilterOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */; };
+		A99DFBED27342AEB00002CDB /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */; };
+		A99DFBEE27342AEB00002CDB /* FavoritesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -902,6 +904,7 @@
 		A99A972726FE326200F8D163 /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
 		A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimeSocketClient.swift; sourceTree = "<group>"; };
 		A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterOptions.swift; sourceTree = "<group>"; };
+		A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesManager.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -1422,6 +1425,7 @@
 				A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */,
 				45DDBAB926F2406100A73E45 /* UserSessionStore.swift */,
 				45D9CBE0270F3C8400B8C321 /* AppSession.swift */,
+				A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -2750,6 +2754,7 @@
 				455A0CA226BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				456B342D26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
+				A99DFBED27342AEB00002CDB /* FavoritesManager.swift in Sources */,
 				455A0CEA26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1926F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				4589F41426BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
@@ -2978,6 +2983,7 @@
 				455A0C8626BD904300EC572D /* AppDelegate.swift in Sources */,
 				45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				456B342E26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
+				A99DFBEE27342AEB00002CDB /* FavoritesManager.swift in Sources */,
 				455A0CEB26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1A26F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				4589F41526BF0203005DF543 /* TitleTextFieldView.swift in Sources */,

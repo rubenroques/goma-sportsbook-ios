@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+// swiftlint:disable type_body_length
 enum TSRouter {
 
     case login(username: String, password: String)
@@ -27,6 +27,8 @@ enum TSRouter {
     case sportsStatus(operatorId: String, language: String, sportId: String)
     case getPolicy
     case changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?)
+    case getUserMetaData
+    case postUserMetadata(favoriteEvents: [String])
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -118,6 +120,10 @@ enum TSRouter {
             return "/sports#popularTournaments"
         case .profileUpdate:
             return "/user/account#updateProfile"
+        case .getUserMetaData:
+            return "/sports#getUserMetadata"
+        case .postUserMetadata:
+            return "/sports#postUserMetadata"
         //
         //
         // EM Subscription
@@ -313,6 +319,11 @@ enum TSRouter {
         case .getPopularTournaments(let language, let sportId):
             return ["lang": language,
                     "sportId": sportId]
+        case .getUserMetaData:
+            return ["keys": ["favoriteEvents"]]
+        case .postUserMetadata(let favoriteEvents):
+            return ["key": "favoriteEvents",
+                    "value": favoriteEvents]
 
         //
         //

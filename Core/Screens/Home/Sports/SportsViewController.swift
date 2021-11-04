@@ -61,6 +61,7 @@ class SportsViewController: UIViewController {
         self.setupWithTheme()
         self.connectPublishers()
         self.viewModel.fetchData()
+        Env.favoritesManager.getUserMetadata()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

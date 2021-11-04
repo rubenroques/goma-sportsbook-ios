@@ -148,6 +148,9 @@ class SportsViewModel: NSObject {
 
         var filteredMatches: [Match] = []
         for match in matches {
+            if match.markets.isEmpty {
+                continue
+            }
             // Check default market order
             var marketSort: [Market] = []
             let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })

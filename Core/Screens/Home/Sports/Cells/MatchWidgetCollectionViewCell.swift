@@ -68,6 +68,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     var match: Match?
 
+    var isFavorite: Bool = false {
+        didSet {
+            if isFavorite {
+                self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
+            }
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -188,6 +196,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddValueLabel.text = String(format: "%.2f", leftOutcome.bettingOffer.value)
             }
         }
+
+        for matchId in Env.favoritesManager.favoriteMatchesId {
+            if matchId == match.id {
+                print("CELL MATCH: \(matchId)")
+                print("MATCH: \(match)")
+                self.isFavorite = true
+            }
+        }
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -195,7 +211,28 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction func didTapFavoritesButton(_ sender: Any) {
+        
+        var favoriteMatchExists = false
+        Env.favoritesManager.getUserMetadata()
+        
+        for matchId in Env.favoritesManager.favoriteMatchesId {
+            if self.match!.id == matchId {
+                favoriteMatchExists = true
+                Env.favoritesManager.favoriteMatchesId = Env.favoritesManager.favoriteMatchesId.filter {$0 != self.match!.id}
+            }
+        }
 
+        if self.isFavorite {
+            self.isFavorite = false
+            self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+        }
+        else {
+            self.isFavorite = true
+            self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
+
+            Env.favoritesManager.favoriteMatchesId.append(self.match!.id)
+        }
+        Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteMatchesId)
     }
 
 }
