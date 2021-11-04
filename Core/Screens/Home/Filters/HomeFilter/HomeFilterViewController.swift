@@ -62,8 +62,8 @@ class HomeFilterViewController: UIViewController {
     func commonInit() {
         // Test values
         mainMarkets = Env.everyMatrixStorage.mainMarkets
-        filterValues = sportsModel.homeFilterOptions
-        defaultMarketId = sportsModel.homeFilterOptions.defaultMarketId
+        filterValues = sportsModel.homeFilterOptions != nil ? sportsModel.homeFilterOptions : HomeFilterOptions()
+        defaultMarketId = filterValues!.defaultMarketId
 
         navigationLabel.text = localized("string_filters")
         navigationLabel.font = AppFont.with(type: .bold, size: 17)
@@ -79,7 +79,7 @@ class HomeFilterViewController: UIViewController {
 
         setupTimeRangeSection()
 
-        setupAvailableMarketsSection(value: "\(filterValues!.defaultMarketId)")
+        setupAvailableMarketsSection(value: "\(String(describing: filterValues!.defaultMarketId))")
 
         setupOddsSection()
 
@@ -223,19 +223,23 @@ class HomeFilterViewController: UIViewController {
 //        handicapView.setTitle(title: "Handycap")
 //        handicapView.viewId = 3
 //        marketViews.append(handicapView)
-
+        var filterMarketsId: [String] = []
         for market in mainMarkets {
-            let marketView = FilterRowView()
-            marketView.buttonType = .radio
-            marketView.setTitle(title: "\(market.value.bettingTypeName!)")
-            marketView.viewId = Int(market.value.bettingTypeId!)!
-            marketViews.append(marketView)
-            availableMarketsCollapseView.addViewtoStack(view: marketView)
+            if !filterMarketsId.contains(market.value.bettingTypeId!) {
+                let marketView = FilterRowView()
+                marketView.buttonType = .radio
+                marketView.setTitle(title: "\(market.value.bettingTypeName!)")
+                marketView.viewId = Int(market.value.bettingTypeId!)!
+                marketViews.append(marketView)
+                filterMarketsId.append(market.value.bettingTypeId!)
+                availableMarketsCollapseView.addViewtoStack(view: marketView)
+            }
         }
+        print("FILTER MARKET IDS: \(filterMarketsId)")
 
         // Set selected view
         let viewInt = Int(value)
-
+        print(value)
         for view in marketViews {
             view.didTapView = { _ in
                 self.checkMarketRadioOptions(views: self.marketViews, viewTapped: view)
@@ -361,7 +365,7 @@ class HomeFilterViewController: UIViewController {
     @IBAction private func applyFiltersAction() {
         let homeFilterOptions = HomeFilterOptions(timeRange: timeSliderValues, defaultMarketId: defaultMarketId, oddsRange: oddsSliderValues)
         sportsModel.homeFilterOptions = homeFilterOptions
-        delegate?.setHomeFilters(homeFilters: sportsModel.homeFilterOptions)
+        delegate?.setHomeFilters(homeFilters: sportsModel.homeFilterOptions!)
         self.dismiss(animated: true, completion: nil)
     }
 

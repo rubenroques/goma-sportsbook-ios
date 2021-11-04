@@ -453,6 +453,5 @@ protocol HomeFilterOptionsViewDelegate: AnyObject {
 extension SportsViewController: HomeFilterOptionsViewDelegate {
     func setHomeFilters(homeFilters: HomeFilterOptions) {
         self.viewModel.homeFilterOptions = homeFilters
-        print(self.viewModel.homeFilterOptions)
     }
 }
