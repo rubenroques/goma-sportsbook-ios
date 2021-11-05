@@ -30,7 +30,8 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         didSet {
             if isFavorite {
                 self.favoriteLeagueImageView.image = UIImage(named: "selected_favorite_icon")
-            } else {
+            }
+            else {
                 self.favoriteLeagueImageView.image = UIImage(named: "unselected_favorite_icon")
             }
         }
@@ -61,11 +62,13 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         super.prepareForReuse()
 
         self.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: "pt") )
-        self.favoriteLeagueImageView.image = UIImage(named: "unselected_favorite_icon")
+
         self.collapseImageView.image = UIImage(named: "arrow_up_icon")
 
         self.nameTitleLabel.text = ""
         self.sectionIndex = nil
+
+        self.isFavorite = false
     }
 
 
@@ -95,7 +98,6 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     func setupCompetition() {
         for competitionId in Env.favoritesManager.favoriteEventsId {
             if competitionId == self.competition!.id {
-                print("COMPETITION MATCH!: \(self.competition!.id)")
                 self.isFavorite = true
             }
         }
@@ -108,27 +110,26 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     @objc func didTapFavoriteImageView() {
-        var favoriteCompetitionExists = false
-        Env.favoritesManager.getUserMetadata()
+        if UserDefaults.standard.userSession != nil {
 
-        for competitionId in Env.favoritesManager.favoriteEventsId {
-            if self.competition!.id == competitionId {
-                favoriteCompetitionExists = true
-                Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.competition!.id}
+            var favoriteCompetitionExists = false
+
+            for competitionId in Env.favoritesManager.favoriteEventsId {
+                if self.competition!.id == competitionId {
+                    favoriteCompetitionExists = true
+                    Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.competition!.id}
+                }
             }
-        }
 
-        if self.isFavorite {
-            self.isFavorite = false
-            self.favoriteLeagueImageView.image = UIImage(named: "unselected_favorite_icon")
-        }
-        else {
-            self.isFavorite = true
-            self.favoriteLeagueImageView.image = UIImage(named: "selected_favorite_icon")
+            if self.isFavorite {
+                self.isFavorite = false
+            }
+            else {
+                self.isFavorite = true
 
-            Env.favoritesManager.favoriteEventsId.append(self.competition!.id)
+                Env.favoritesManager.favoriteEventsId.append(self.competition!.id)
+            }
+            Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
         }
-        Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
-        print(Env.favoritesManager.favoriteEventsId)
     }
 }

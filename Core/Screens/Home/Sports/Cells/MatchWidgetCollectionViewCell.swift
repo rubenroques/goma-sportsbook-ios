@@ -73,6 +73,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             if isFavorite {
                 self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
             }
+            else {
+                self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+            }
         }
     }
 
@@ -137,7 +140,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.isHidden = false
         self.locationFlagImageView.image = nil
 
-        self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+        self.isFavorite = false
     }
 
     func setupWithTheme() {
@@ -199,7 +202,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
 
-        for matchId in Env.favoritesManager.favoriteEventsId {
+        for matchId in Env.favoritesManager.favoriteEventsId{
             if matchId == match.id {
                 self.isFavorite = true
             }
@@ -210,29 +213,29 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.isHidden = !show
     }
 
-    @IBAction func didTapFavoritesButton(_ sender: Any) {
-        
-        var favoriteMatchExists = false
-        Env.favoritesManager.getUserMetadata()
-        
-        for matchId in Env.favoritesManager.favoriteEventsId {
-            if self.match!.id == matchId {
-                favoriteMatchExists = true
-                Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.match!.id}
+    @IBAction private func didTapFavoritesButton(_ sender: Any) {
+
+        if UserDefaults.standard.userSession != nil {
+
+            var favoriteMatchExists = false
+
+            for matchId in Env.favoritesManager.favoriteEventsId {
+                if self.match!.id == matchId {
+                    favoriteMatchExists = true
+                    Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.match!.id}
+                }
             }
-        }
 
-        if self.isFavorite {
-            self.isFavorite = false
-            self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
-        }
-        else {
-            self.isFavorite = true
-            self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
+            if self.isFavorite {
+                self.isFavorite = false
+            }
+            else {
+                self.isFavorite = true
 
-            Env.favoritesManager.favoriteEventsId.append(self.match!.id)
+                Env.favoritesManager.favoriteEventsId.append(self.match!.id)
+            }
+            Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
         }
-        Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
     }
 
 }

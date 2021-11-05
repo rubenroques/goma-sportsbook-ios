@@ -10,14 +10,10 @@ import Combine
 
 class FavoritesManager {
 
-    var favoriteMatchesId: [String]
-    var favoriteCompetitionsId: [String]
     var favoriteEventsId: [String]
     var cancellables = Set<AnyCancellable>()
 
-    init(matchesId: [String] = [], competitionsId: [String] = [], eventsId: [String] = []) {
-        self.favoriteMatchesId = matchesId
-        self.favoriteCompetitionsId = competitionsId
+    init(eventsId: [String] = []) {
         self.favoriteEventsId = eventsId
     }
 
@@ -27,8 +23,10 @@ class FavoritesManager {
             .eraseToAnyPublisher()
             .sink { _ in
             } receiveValue: { [weak self] userMetadata in
-                print("GET METADATA: \(userMetadata)")
-                self!.favoriteEventsId = userMetadata.records[0].value!
+                if userMetadata.records[0].value != nil {
+                    self!.favoriteEventsId = userMetadata.records[0].value!
+                }
+
             }
             .store(in: &cancellables)
     }

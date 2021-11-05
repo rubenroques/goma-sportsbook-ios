@@ -105,7 +105,6 @@ class SportsViewController: UIViewController {
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
 
-
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
@@ -207,6 +206,10 @@ class SportsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+    }
+
+    func reloadTableViewData() {
+        self.tableView.reloadData()
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
