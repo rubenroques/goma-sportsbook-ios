@@ -136,6 +136,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.locationFlagImageView.isHidden = false
         self.locationFlagImageView.image = nil
+
+        self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
     }
 
     func setupWithTheme() {
@@ -197,10 +199,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
 
-        for matchId in Env.favoritesManager.favoriteMatchesId {
+        for matchId in Env.favoritesManager.favoriteEventsId {
             if matchId == match.id {
-                print("CELL MATCH: \(matchId)")
-                print("MATCH: \(match)")
                 self.isFavorite = true
             }
         }
@@ -215,10 +215,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         var favoriteMatchExists = false
         Env.favoritesManager.getUserMetadata()
         
-        for matchId in Env.favoritesManager.favoriteMatchesId {
+        for matchId in Env.favoritesManager.favoriteEventsId {
             if self.match!.id == matchId {
                 favoriteMatchExists = true
-                Env.favoritesManager.favoriteMatchesId = Env.favoritesManager.favoriteMatchesId.filter {$0 != self.match!.id}
+                Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.match!.id}
             }
         }
 
@@ -230,9 +230,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.isFavorite = true
             self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
 
-            Env.favoritesManager.favoriteMatchesId.append(self.match!.id)
+            Env.favoritesManager.favoriteEventsId.append(self.match!.id)
         }
-        Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteMatchesId)
+        Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
     }
 
 }

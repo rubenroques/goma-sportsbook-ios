@@ -12,12 +12,13 @@ class FavoritesManager {
 
     var favoriteMatchesId: [String]
     var favoriteCompetitionsId: [String]
+    var favoriteEventsId: [String]
     var cancellables = Set<AnyCancellable>()
 
-    init(matchesId: [String] = [], competitionsId: [String] = []) {
+    init(matchesId: [String] = [], competitionsId: [String] = [], eventsId: [String] = []) {
         self.favoriteMatchesId = matchesId
         self.favoriteCompetitionsId = competitionsId
-
+        self.favoriteEventsId = eventsId
     }
 
     func getUserMetadata() {
@@ -27,7 +28,7 @@ class FavoritesManager {
             .sink { _ in
             } receiveValue: { [weak self] userMetadata in
                 print("GET METADATA: \(userMetadata)")
-                self!.favoriteMatchesId = userMetadata.records[0].value!
+                self!.favoriteEventsId = userMetadata.records[0].value!
             }
             .store(in: &cancellables)
     }

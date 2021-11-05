@@ -63,7 +63,6 @@ class SplashViewController: UIViewController {
             self.splashLoadingCompleted()
             return
         }
-
         Env.userSessionStore.loadLoggedUser()
 
         TSManager.shared
@@ -72,6 +71,7 @@ class SplashViewController: UIViewController {
             .sink { completion in
                 switch completion {
                 case .finished:
+                    Env.favoritesManager.getUserMetadata()
                     self.splashLoadingCompleted()
                 case .failure(let error):
                     print("error \(error)")

@@ -400,7 +400,7 @@ class SportsViewModel: NSObject {
     // MARK: - Fetches
     //
     //
-    private func fetchPopularMatches() {
+    private func  fetchPopularMatches() {
         let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                         language: "en",
                                                         sportId: "\(self.selectedSportId)")
@@ -1077,6 +1077,7 @@ class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UIT
         headerView.nameTitleLabel.text = competition.name
         headerView.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
         headerView.sectionIndex = section
+        headerView.competition = competition
         headerView.didToggleHeaderViewAction = { [weak self, weak tableView] section in
             guard
                 let weakSelf = self,

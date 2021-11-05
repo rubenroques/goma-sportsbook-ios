@@ -20,6 +20,21 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     @IBOutlet weak var collapseImageView: UIImageView!
 
     var sectionIndex: Int?
+    var competition: Competition? {
+        didSet {
+            self.setupCompetition()
+        }
+    }
+
+    var isFavorite: Bool = false {
+        didSet {
+            if isFavorite {
+                self.favoriteLeagueImageView.image = UIImage(named: "selected_favorite_icon")
+            } else {
+                self.favoriteLeagueImageView.image = UIImage(named: "unselected_favorite_icon")
+            }
+        }
+    }
 
     var didToggleHeaderViewAction: ((Int) -> ())?
 
@@ -35,6 +50,9 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didToggleCell))
         collapseLargeBaseView.addGestureRecognizer(tapGesture)
+
+        let tapFavoriteGesture = UITapGestureRecognizer(target: self, action: #selector(didTapFavoriteImageView))
+        favoriteLeagueBaseView.addGestureRecognizer(tapFavoriteGesture)
 
         self.setupWithTheme()
     }
@@ -74,10 +92,43 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         self.nameTitleLabel.textColor = UIColor.App.headingMain
     }
 
+    func setupCompetition() {
+        for competitionId in Env.favoritesManager.favoriteEventsId {
+            if competitionId == self.competition!.id {
+                print("COMPETITION MATCH!: \(self.competition!.id)")
+                self.isFavorite = true
+            }
+        }
+    }
+
     @objc func didToggleCell() {
         if let sectionIndex = sectionIndex {
             self.didToggleHeaderViewAction?(sectionIndex)
         }
     }
 
+    @objc func didTapFavoriteImageView() {
+        var favoriteCompetitionExists = false
+        Env.favoritesManager.getUserMetadata()
+
+        for competitionId in Env.favoritesManager.favoriteEventsId {
+            if self.competition!.id == competitionId {
+                favoriteCompetitionExists = true
+                Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.competition!.id}
+            }
+        }
+
+        if self.isFavorite {
+            self.isFavorite = false
+            self.favoriteLeagueImageView.image = UIImage(named: "unselected_favorite_icon")
+        }
+        else {
+            self.isFavorite = true
+            self.favoriteLeagueImageView.image = UIImage(named: "selected_favorite_icon")
+
+            Env.favoritesManager.favoriteEventsId.append(self.competition!.id)
+        }
+        Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
+        print(Env.favoritesManager.favoriteEventsId)
+    }
 }
