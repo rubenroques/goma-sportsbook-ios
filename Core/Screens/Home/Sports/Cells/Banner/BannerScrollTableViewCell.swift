@@ -20,7 +20,7 @@ class BannerScrollTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        AnalyticsClient.logEvent(event: .promoBannerClicked)
+        AnalyticsClient.sendEvent(event: .promoBannerClicked)
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 

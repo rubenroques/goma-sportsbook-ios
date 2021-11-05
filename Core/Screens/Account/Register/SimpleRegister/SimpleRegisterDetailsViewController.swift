@@ -418,13 +418,13 @@ extension SimpleRegisterDetailsViewController {
                     default:
                         self.showServerErrorStatus()
                     }
-                    AnalyticsClient.logEvent(event: .userSignUpFail)
+                    AnalyticsClient.sendEvent(event: .userSignUpFail)
                 case .finished:
                     ()
                 }
             } receiveValue: { _ in
                 Logger.log("User registered \(form.email)")
-                AnalyticsClient.logEvent(event: .userSignUpSuccess)
+                AnalyticsClient.sendEvent(event: .userSignUpSuccess)
                 self.pushRegisterNextViewController(email: form.email)
             }
             .store(in: &cancellables)

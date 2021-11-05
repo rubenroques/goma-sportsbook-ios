@@ -32,7 +32,7 @@ struct AnalyticsClient {
         case addToBetslip
     }
 
-    static func logEvent(event: Event) {
+    static func sendEvent(event: Event) {
 
         var eventTypeKey = ""
         var parameters: [String: String]?
@@ -99,5 +99,6 @@ struct AnalyticsClient {
         }
 
         Analytics.logEvent(eventTypeKey, parameters: parameters)
+        Logger.log(eventTypeKey)
     }
 }

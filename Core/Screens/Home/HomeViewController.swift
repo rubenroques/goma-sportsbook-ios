@@ -88,7 +88,7 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        AnalyticsClient.logEvent(event: .appStart)
+        AnalyticsClient.sendEvent(event: .appStart)
 
         self.view.sendSubviewToBack(topBarView)
         self.view.sendSubviewToBack(tabBarView)
@@ -302,7 +302,7 @@ extension HomeViewController {
                 UIApplication.shared.open(url)
             }
             PopUpStore.didHidePopUp(withId: details.id, withTimeout: details.intervalMinutes ?? 0)
-            AnalyticsClient.logEvent(event: .infoDialogButtonClicked)
+            AnalyticsClient.sendEvent(event: .infoDialogButtonClicked)
             self?.closePopUp()
         }
 

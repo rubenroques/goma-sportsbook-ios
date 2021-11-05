@@ -25,7 +25,7 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        AnalyticsClient.logEvent(event: .welcomeScreen)
+        AnalyticsClient.sendEvent(event: .welcomeScreen)
         
         self.title = "WelcomeViewController"
 

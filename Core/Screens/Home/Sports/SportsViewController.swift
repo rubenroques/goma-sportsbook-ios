@@ -406,13 +406,13 @@ extension SportsViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
         switch indexPath.row {
         case 0:
-            AnalyticsClient.logEvent(event: .myGamesScreen)
+            AnalyticsClient.sendEvent(event: .myGamesScreen)
             self.viewModel.setMatchListType(.myGames)
         case 1:
-            AnalyticsClient.logEvent(event: .todayScreen)
+            AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.today)
         case 2:
-            AnalyticsClient.logEvent(event: .competitionsScreen)
+            AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
         default:
             ()
