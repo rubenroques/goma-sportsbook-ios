@@ -117,13 +117,10 @@ class SportSelectionViewController: UIViewController {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
                 self.sportsData = value.records ?? []
                 self.fullSportsData = self.sportsData
                 self.collectionView.reloadData()
-
             })
             .store(in: &self.cancellable)
 

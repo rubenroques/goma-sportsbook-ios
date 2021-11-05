@@ -63,6 +63,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.leftOddValueLabel.text = ""
         self.rightOddTitleLabel.text = ""
         self.rightOddValueLabel.text = ""
+
+        self.participantsCountryImageView.isHidden = false
+        self.participantsCountryImageView.image = nil
     }
 
 
@@ -110,7 +113,10 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             self.rightOddValueLabel.text = String(format: "%.2f", secondOutcome.bettingOffer.value)
         }
 
-
     }
 
+    func shouldShowCountryFlag(_ show: Bool) {
+        self.participantsCountryImageView.isHidden = !show
+    }
+    
 }

@@ -196,6 +196,7 @@ class AggregatorsRepository {
             }
 
             let match = Match(id: rawMatch.id,
+                              competitionId: rawMatch.parentId ?? "",
                               competitionName: rawMatch.parentName ?? "",
                               homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
                                                            name: rawMatch.homeParticipantName ?? ""),

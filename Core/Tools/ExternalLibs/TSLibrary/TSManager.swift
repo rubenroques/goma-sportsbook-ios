@@ -13,14 +13,16 @@ import WebKit
 import Combine
 
 enum TSSubscriptionContent<T> {
-    case connect
+    case connect(publisherIdentifiable: EndpointPublisherIdentifiable)
     case initialContent(T)
     case updatedContent(T)
     case disconnect
 }
 
 final class TSManager {
-    
+
+
+
     private var globalCancellable = Set<AnyCancellable>()
     
     private let tsQueue = DispatchQueue(label: "com.goma.games.TSQueue")
@@ -48,7 +50,9 @@ final class TSManager {
     var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
     let origin = "https://clientsample-sports-stage.everymatrix.com/"
-    
+
+    private var debugLoggerTimer = Timer()
+
     private init() {
 
         Logger.log("TSManager init")
@@ -78,8 +82,18 @@ final class TSManager {
                 }
             }
         }
+
+//
+//        self.debugLoggerTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { [weak self] _ in
+//            self?.printSWAMPLogs()
+//        })
+
     }
-    
+
+    func printSWAMPLogs(){
+        self.swampSession?.printMemoryLogs()
+    }
+
     func sessionStateChanged() -> AnyPublisher<Bool, EveryMatrix.APIError> {
         return Future {[self] promise in
             tsQueue.async {
@@ -217,7 +231,7 @@ final class TSManager {
 
         swampSession.subscribe(endpoint.procedure, options: args,
         onSuccess: { (subscription: Subscription) in
-            subject.send(TSSubscriptionContent.connect)
+            subject.send(TSSubscriptionContent.connect(publisherIdentifiable: subscription))
         },
         onError: { (details: [String: Any], errorStr: String) in
             subject.send(TSSubscriptionContent.disconnect)
@@ -241,6 +255,23 @@ final class TSManager {
         return subject.eraseToAnyPublisher()
     }
 
+    func unregisterFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
+        guard
+            let swampSession = self.swampSession,
+            swampSession.isConnected()
+        else {
+            return
+        }
+
+        print("UnregisterFromEndpoint withId \(endpointPublisherIdentifiable.identificationCode)")
+
+        swampSession.unregister(endpointPublisherIdentifiable.identificationCode) {
+            print("UnregisterFromEndpoint ok")
+        } onError: { details, error in
+            print("UnregisterFromEndpoint error \(details) \(error)")
+        }
+    }
+
     func registerOnEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
 
         let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
@@ -259,8 +290,8 @@ final class TSManager {
 
         swampSession.register(endpoint.procedure, options: args,
         onSuccess: { (registration: Registration) in
-            print("registerOnEndpoint - onSuccess \(registration)")
-            subject.send(TSSubscriptionContent.connect)
+
+            subject.send(TSSubscriptionContent.connect(publisherIdentifiable: registration))
 
             if let initialDumpEndpoint = endpoint.intiailDumpRequest {
                 self.getModel(router: initialDumpEndpoint, decodingType: decodingType)
@@ -268,6 +299,7 @@ final class TSManager {
                         if case .failure(let error) = completion {
                             subject.send(TSSubscriptionContent.disconnect)
                             subject.send(completion: .failure(error))
+
                         }
                     } receiveValue: { decoded in
                         subject.send(.initialContent(decoded))
@@ -296,7 +328,13 @@ final class TSManager {
                 subject.send(completion: .failure(.decodingError))
             }
         })
-        return subject.eraseToAnyPublisher()
+        return subject.handleEvents(receiveOutput: { content in
+
+        }, receiveCompletion: { completion in
+            print("completion \(completion)")
+        }, receiveCancel: {
+
+        }).eraseToAnyPublisher()
     }
 
     class func reconnect() {

@@ -88,7 +88,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         dateHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         dateHeaderTextView.setDatePickerMode()
 
-
         indicativeHeaderTextView.setPlaceholderText(localized("string_phone_prefix"))
         indicativeHeaderTextView.setText("----")
         indicativeHeaderTextView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!, size: 10)
@@ -107,11 +106,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
 
-        let calendar = Calendar(identifier: .gregorian)
-        var components = DateComponents()
-        components.calendar = calendar
-        components.year = -18
-        let maxDate = calendar.date(byAdding: components, to: Date())!
+        let maxDate = setCalendarMaxDate(legalAge: 18)
         dateHeaderTextView.datePicker.maximumDate = maxDate
 
     }
@@ -314,10 +309,11 @@ class SimpleRegisterDetailsViewController: UIViewController {
             validFields = false
         }
 
-        if dateHeaderTextView.text.isEmpty {
-            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
-            validFields = false
-        }
+//        if dateHeaderTextView.text.isEmpty {
+//            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+//            validFields = false
+//        }
+        validFields = checkDateBirth()
 
         guard validFields else {
             return
@@ -332,6 +328,30 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                                   emailVerificationURL: emailVerificationURL)
         self.registerUser(form: form)
 
+    }
+
+    private func checkDateBirth() -> Bool {
+
+        if dateHeaderTextView.text.isEmpty {
+            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+            return false
+        }
+        else {
+
+            let textDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
+            if textDate > dateHeaderTextView.datePicker.date {
+                dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+                return false
+            }
+        }
+        return true
+    }
+
+    func getDateFromTextFieldString(string: String) -> Date {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy/MM/dd"
+        let textDate = dateFormatter.date(from: string)!
+        return textDate
     }
 
     func pushRegisterNextViewController(email: String) {
@@ -454,6 +474,9 @@ extension SimpleRegisterDetailsViewController {
         for country in listings.countries where country.isoCode == listings.currentIpCountry {
             self.mobilePrefixTextual = country.phonePrefix
             self.indicativeHeaderTextView.setText( self.formatIndicativeCountry(country), slideUp: true)
+
+            let maxDate = setCalendarMaxDate(legalAge: country.legalAge)
+            dateHeaderTextView.datePicker.maximumDate = maxDate
         }
 
         self.indicativeHeaderTextView.isUserInteractionEnabled = true
@@ -469,6 +492,7 @@ extension SimpleRegisterDetailsViewController {
         phonePrefixSelectorViewController.didSelectCountry = { [weak self] country in
             self?.setupWithSelectedCountry(country)
             phonePrefixSelectorViewController.animateDismissView()
+            self?.updateBirthAgeLimit(ageLimit: country.legalAge)
         }
         self.present(phonePrefixSelectorViewController, animated: false, completion: nil)
     }
@@ -487,6 +511,26 @@ extension SimpleRegisterDetailsViewController {
             }
         }
         return stringCountry
+    }
+
+    private func updateBirthAgeLimit(ageLimit: Int) {
+
+        let maxDate = setCalendarMaxDate(legalAge: ageLimit)
+        //let fieldDate = dateHeaderTextView.datePicker.date
+        let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
+        if fieldDate > maxDate {
+            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+            dateHeaderTextView.datePicker.maximumDate = maxDate
+        }
+    }
+
+    private func setCalendarMaxDate(legalAge: Int) -> Date {
+        let calendar = Calendar(identifier: .gregorian)
+        var components = DateComponents()
+        components.calendar = calendar
+        components.year = -legalAge
+        let maxDate = calendar.date(byAdding: components, to: Date())!
+        return maxDate
     }
 
 }

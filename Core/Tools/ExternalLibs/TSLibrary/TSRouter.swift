@@ -22,10 +22,11 @@ enum TSRouter {
     case getCustomTournaments(language: String, sportId: String)
     case getTournaments(language: String, sportId: String)
     case getPopularTournaments(language: String, sportId: String)
-
-    // GOMA EveryMatrix Subscriptions tests
+    case profileUpdate(form: EveryMatrix.ProfileForm)
     case oddsMatch(operatorId: String, language: String, matchId: String)
     case sportsStatus(operatorId: String, language: String, sportId: String)
+    case getPolicy
+    case changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?)
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -34,7 +35,8 @@ enum TSRouter {
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
-
+    case locationsPublisher(operatorId: String, language: String, sportId: String)
+    case tournamentsPublisher(operatorId: String, language: String, sportId: String)
 
     // Others
     case registrationDismissed
@@ -102,6 +104,10 @@ enum TSRouter {
             return "/user/account#register"
         case .getMatchDetails:
             return "/sports#matches"
+        case .getPolicy:
+            return "/user/pwd#getPolicy"
+        case .changePassword( _, _, _, _, _):
+            return "/user/pwd#change"
         case .getLocations:
             return "/sports#locations"
         case .getCustomTournaments:
@@ -110,8 +116,8 @@ enum TSRouter {
             return "/sports#tournaments"
         case .getPopularTournaments:
             return "/sports#popularTournaments"
-
-
+        case .profileUpdate:
+            return "/user/account#updateProfile"
         //
         //
         // EM Subscription
@@ -142,8 +148,11 @@ enum TSRouter {
         
         case .bannersInfoPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/sportsBannerData"
+        case .locationsPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/locations/\(sportId)"
+        case .tournamentsPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/tournaments/\(sportId)"
 
-        //
         //
         //
         //
@@ -265,7 +274,32 @@ enum TSRouter {
         case .getMatchDetails(let language, let matchId):
             return ["lang": language,
                     "matchId": matchId]
-
+        case .getPolicy:
+            return [:]
+        case .changePassword(let oldPassword, let newPassword, let captchaPublicKey, let captchaChallenge, let captchaResponse):
+            return ["oldPassword": oldPassword,
+                    "newPassword": newPassword,
+                    "captchaPublicKey": captchaPublicKey ?? "",
+                    "captchaChallenge": captchaChallenge ?? "",
+                    "captchaResponse": captchaResponse ?? ""]
+        case let .profileUpdate(form):
+            return ["email": form.email,
+                    "title": form.title,
+                    "gender": form.gender,
+                    "firstName": form.firstname,
+                    "surname": form.surname,
+                    "birthDate": form.birthDate,
+                    "mobilePrefix": form.mobilePrefix,
+                    "mobile": form.mobile,
+                    "phonePrefix": form.phonePrefix,
+                    "phone": form.phone,
+                    "country": form.country,
+                    "address1": form.address1,
+                    "address2": form.address2,
+                    "city": form.city,
+                    "postalCode": form.postalCode,
+                    "personalID": form.personalID,
+                    "userConsents": ["termsandconditions": true, "sms": false]]            
         case .getLocations(let language, let sortByPopularity):
             let sortByPopularityString = String(sortByPopularity)
             return ["lang": language,
@@ -384,6 +418,7 @@ enum TSRouter {
 
     var intiailDumpRequest: TSRouter? {
         switch self {
+            
         case .popularMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesPublisher:
@@ -392,6 +427,11 @@ enum TSRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .competitionsMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
+        case .locationsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .tournamentsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+
         default:
             return nil
         }

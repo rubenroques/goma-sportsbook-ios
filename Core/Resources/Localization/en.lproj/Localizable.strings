@@ -147,3 +147,5 @@ Terms of use, Privacy Policy and EULA";
 "string_available_markets" = "Available Markets";
 "string_apply" = "Apply";
 "string_time_range" = "Time Range";
+"string_required_field" = "Required Field";
+"string_profile_updated_success" = "Profile updated succesfully!";

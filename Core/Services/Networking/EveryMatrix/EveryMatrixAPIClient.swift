@@ -97,8 +97,29 @@ class EveryMatrixAPIClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+    func updateProfile(form: EveryMatrix.ProfileForm) -> AnyPublisher<EveryMatrix.ProfileUpdateResponse, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .profileUpdate(form: form), decodingType: EveryMatrix.ProfileUpdateResponse.self)
+            .breakpointOnError()
+            .eraseToAnyPublisher()
+    }
+
     func getCountries() -> AnyPublisher<EveryMatrix.CountryListing, EveryMatrix.APIError> {
         return TSManager.shared.getModel(router: .getCountries, decodingType: EveryMatrix.CountryListing.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getProfile() -> AnyPublisher<EveryMatrix.UserProfileField, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .getProfile, decodingType: EveryMatrix.UserProfileField.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getPolicy() -> AnyPublisher<EveryMatrix.PasswordPolicy, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .getPolicy, decodingType: EveryMatrix.PasswordPolicy.self)
+            .eraseToAnyPublisher()
+    }
+
+    func changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?) -> AnyPublisher<EveryMatrix.PasswordChange, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .changePassword(oldPassword: oldPassword, newPassword: newPassword, captchaPublicKey: captchaPublicKey ?? "", captchaChallenge: captchaChallenge ?? "", captchaResponse: captchaResponse ?? ""), decodingType: EveryMatrix.PasswordChange.self)
             .eraseToAnyPublisher()
     }
 
@@ -118,9 +139,9 @@ class EveryMatrixAPIClient: ObservableObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
+
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
+
             })
             .store(in: &cancellable)
     }
@@ -136,9 +157,9 @@ class EveryMatrixAPIClient: ObservableObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
+
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
+
             })
             .store(in: &cancellable)
     }
@@ -154,9 +175,9 @@ class EveryMatrixAPIClient: ObservableObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
+
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
+
             })
             .store(in: &cancellable)
     }
@@ -172,9 +193,9 @@ class EveryMatrixAPIClient: ObservableObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
+
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
+
             })
             .store(in: &cancellable)
     }
@@ -198,9 +219,9 @@ class EveryMatrixAPIClient: ObservableObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
+
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
+
             })
             .store(in: &cancellable)
     }
@@ -216,9 +237,9 @@ class EveryMatrixAPIClient: ObservableObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
+
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
+
             })
             .store(in: &cancellable)
     }
@@ -234,9 +255,9 @@ class EveryMatrixAPIClient: ObservableObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                debugPrint("TSRequestCompleted")
+
             }, receiveValue: { value in
-                debugPrint("TSRequest: \(String(describing: value.records))")
+
             })
             .store(in: &cancellable)
     }
