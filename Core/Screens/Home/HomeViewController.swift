@@ -14,7 +14,7 @@ class HomeViewController: UIViewController {
     @IBOutlet private weak var topBarView: UIView!
     @IBOutlet private weak var contentView: UIView!
 
-    @IBOutlet private weak var sportsBaseView: UIView!
+    @IBOutlet private weak var preLiveBaseView: UIView!
     @IBOutlet private weak var liveBaseView: UIView!
 
     @IBOutlet private weak var tabBarView: UIView!
@@ -37,8 +37,14 @@ class HomeViewController: UIViewController {
     @IBOutlet private weak var loginButton: UIButton!
 
     // Child view controllers
-    lazy var sportsViewController = SportsViewController()
+    lazy var preLiveViewController = PreLiveEventsViewController()
     lazy var liveEventsViewController = LiveEventsViewController()
+
+    // Loaded view controllers
+    var preLiveViewControllerLoaded = false
+    var liveEventsViewControllerLoaded = false
+
+    var currentSportType: SportType
 
     // Combine
     var cancellables = Set<AnyCancellable>()
@@ -77,6 +83,7 @@ class HomeViewController: UIViewController {
     //
     init(initialScreen: TabItem = .sports) {
         self.selectedTabItem = initialScreen
+        self.currentSportType = .football
         super.init(nibName: "HomeViewController", bundle: nil)
     }
 
@@ -186,6 +193,9 @@ class HomeViewController: UIViewController {
 
     func setupWithTheme() {
 
+        preLiveBaseView.backgroundColor = UIColor.App.mainBackground
+        liveBaseView.backgroundColor = UIColor.App.mainBackground
+
         topSafeAreaView.backgroundColor = UIColor.App.mainBackground
         topBarView.backgroundColor = UIColor.App.mainBackground
         contentView.backgroundColor = UIColor.App.contentBackground
@@ -225,15 +235,64 @@ class HomeViewController: UIViewController {
             self.loginButton.isHidden = false
         }
     }
+
+    func didChangedPreLiveSportType(sportType: SportType) {
+        self.currentSportType = sportType
+        if liveEventsViewControllerLoaded {
+            self.liveEventsViewController.selectedSportType = sportType
+        }
+    }
+
+    func didChangedLiveSportType(sportType: SportType) {
+        self.currentSportType = sportType
+        if preLiveViewControllerLoaded {
+            self.preLiveViewController.selectedSportType = sportType
+        }
+    }
+
+    func openBetslipModel() {
+        let betslipViewController = BetslipViewController()
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.reloadChildViewControllersData()
+        }
+        self.present(betslipViewController, animated: true, completion: {
+
+        })
+    }
+
+    func reloadChildViewControllersData() {
+        if preLiveViewControllerLoaded {
+            self.preLiveViewController.reloadData()
+        }
+        if liveEventsViewControllerLoaded {
+            self.liveEventsViewController.reloadData()
+        }
+    }
 }
 
 extension HomeViewController {
     func loadChildViewControllerIfNeeded(tab: TabItem) {
-        if case .sports = tab, self.sportsBaseView.subviews.isEmpty {
-            self.addChildViewController(self.sportsViewController, toView: self.sportsBaseView)
+        if case .sports = tab, !preLiveViewControllerLoaded {
+            self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
+            self.preLiveViewController.selectedSportType = self.currentSportType
+            self.preLiveViewController.didChangeSportType = { [weak self] newSportType in
+                self?.didChangedPreLiveSportType(sportType: newSportType)
+            }
+            self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
+                self?.openBetslipModel()
+            }
+            preLiveViewControllerLoaded = true
         }
-        if case .live = tab, self.sportsBaseView.subviews.isEmpty {
-            self.addChildViewController(self.liveEventsViewController, toView: self.sportsBaseView)
+        if case .live = tab, !liveEventsViewControllerLoaded {
+            self.addChildViewController(self.liveEventsViewController, toView: self.liveBaseView)
+            self.liveEventsViewController.selectedSportType = self.currentSportType
+            self.liveEventsViewController.didChangeSportType = { [weak self] newSportType in
+                self?.didChangedLiveSportType(sportType: newSportType)
+            }
+            self.liveEventsViewController.didTapBetslipButtonAction = { [weak self] in
+                self?.openBetslipModel()
+            }
+            liveEventsViewControllerLoaded = true
         }
     }
 }
@@ -365,7 +424,7 @@ extension HomeViewController {
     func selectSportsTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .sports)
 
-        self.sportsBaseView.isHidden = false
+        self.preLiveBaseView.isHidden = false
         self.liveBaseView.isHidden = true
 
         sportsButtonBaseView.alpha = 1.0
@@ -375,7 +434,7 @@ extension HomeViewController {
     func selectLiveTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .live)
 
-        self.sportsBaseView.isHidden = true
+        self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = false
 
         sportsButtonBaseView.alpha = 0.2
@@ -383,5 +442,6 @@ extension HomeViewController {
     }
 
 }
+
 
 

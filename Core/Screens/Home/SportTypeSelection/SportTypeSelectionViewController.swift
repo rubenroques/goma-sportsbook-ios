@@ -46,7 +46,6 @@ class SportTypeSelectionViewController: UIViewController {
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground
-
     }
 
 }

@@ -31,8 +31,9 @@ enum TSRouter {
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
-    case popularMatchesPublisher(operatorId: String, language: String, sportId: String)
-    case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
+    case liveMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
+    case popularMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
+    case todayMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
     case locationsPublisher(operatorId: String, language: String, sportId: String)
@@ -131,16 +132,15 @@ enum TSRouter {
         case .sportsPublisher(let operatorId):
             return "/sports/\(operatorId)/en/disciplines/BOTH/BOTH"
 
-        case .popularMatchesPublisher(let operatorId, let language, let sportId):
+        case .liveMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
-            let eventsCount = 10
-            return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
-
-        case .todayMatchesPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/live-matches-aggregator-main/\(sportId)/all-locations/default-event-info/\(matchesCount)/\(marketsCount)"
+        case .popularMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
-            let eventsCount = 10
-            return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
-
+            return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
+        case .todayMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
+            let marketsCount = 5
+            return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
         case .competitionsMatchesPublisher(let operatorId, let language, _, let events):
             let marketsCount = 5
             let eventsIds = events.joined(separator: ",")
@@ -418,7 +418,8 @@ enum TSRouter {
 
     var intiailDumpRequest: TSRouter? {
         switch self {
-            
+        case .liveMatchesPublisher:
+            return .sportsInitialDump(topic: self.procedure)
         case .popularMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesPublisher:

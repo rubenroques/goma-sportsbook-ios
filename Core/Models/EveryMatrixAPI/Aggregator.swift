@@ -8,15 +8,16 @@
 import Foundation
 
 extension EveryMatrix {
+
+    enum AggregatorContentType: Decodable {
+        case update(content: [ContentUpdate])
+        case initialDump(content: [Content])
+    }
+
     struct Aggregator: Decodable {
 
-        var content: [Content]
-        var messageType: ContentType
-
-        enum ContentType: String, Decodable {
-            case update
-            case initialDump
-        }
+        //var content: [Content]
+        var messageType: AggregatorContentType
 
         enum CodingKeys: String, CodingKey {
             case content = "records"
@@ -28,15 +29,84 @@ extension EveryMatrix {
 
             let messageTypeString = try container.decode(String.self, forKey: .messageType)
             if messageTypeString == "UPDATE" {
-                messageType = .initialDump
+                let rawItems = try container.decode([FailableDecodable<ContentUpdate>].self, forKey: .content).compactMap({ $0.base })
+                let filteredItems = rawItems.filter({
+                    if case .unknown = $0 {
+                        return false
+                      }
+                      return true
+                })
+                messageType = .update(content: filteredItems)
             }
             else if messageTypeString == "INITIAL_DUMP" {
-                messageType = .update
+                let items = try container.decode([FailableDecodable<Content>].self, forKey: .content).compactMap({ $0.base })
+                messageType = .initialDump(content: items)
             }
             else {
-                messageType = .update
+                messageType = .update(content: [])
             }
-            self.content = try container.decode([Content].self, forKey: .content)
+        }
+
+        var content: [Content]? {
+            switch self.messageType {
+            case .initialDump(let content):
+                return content
+            default: return nil
+            }
+        }
+
+        var contentUpdates: [ContentUpdate]? {
+            switch self.messageType {
+            case .update(let contents):
+                return contents
+            default: return nil
+            }
+        }
+
+    }
+
+    enum ContentUpdateError: Error {
+        case uknownUpdateType
+        case invalidUpdateFormat
+    }
+
+    enum ContentUpdate: Decodable {
+
+        case bettingOfferUpdate(id: String, odd: Double)
+        case unknown
+
+        enum CodingKeys: String, CodingKey {
+            case type = "_type"
+            case changeType = "changeType"
+            case entityType = "entityType"
+            case contentId = "id"
+            case oddValue = "odds"
+            case changedProperties = "changedProperties"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+
+            guard
+                let changeTypeString = try? container.decode(String.self, forKey: .changeType),
+                let entityTypeString = try? container.decode(String.self, forKey: .entityType)
+            else {
+                throw ContentUpdateError.uknownUpdateType
+            }
+
+            if changeTypeString == "UPDATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
+                if entityTypeString == "BETTING_OFFER",
+                   let changedPropertiesContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .changedProperties),
+                   let newOddValue = try? changedPropertiesContainer.decode(Double.self, forKey: .oddValue) {
+                    self = .bettingOfferUpdate(id: contentId, odd: newOddValue)
+                }
+                else {
+                    self = .unknown
+                }
+            }
+            else {
+                self = .unknown
+            }
         }
 
     }
@@ -44,6 +114,8 @@ extension EveryMatrix {
     enum Content: Decodable {
 
         case match(EveryMatrix.Match)
+        case matchInfo(EveryMatrix.MatchInfo)
+
         case tournament(EveryMatrix.Tournament)
         case event(Event)
         case bettingOffer(EveryMatrix.BettingOffer)
@@ -61,6 +133,7 @@ extension EveryMatrix {
         enum ContentTypeKey: String, Decodable {
 
             case match = "MATCH"
+            case matchInfo = "EVENT_INFO"
             case tournament = "TOURNAMENT"
             case event = "EVENT"
             case bettingOffer = "BETTING_OFFER"
@@ -98,6 +171,9 @@ extension EveryMatrix {
             case .match:
                 let match = try objectContainer.decode(EveryMatrix.Match.self)
                 self = .match(match)
+            case .matchInfo:
+                let matchInfo = try objectContainer.decode(EveryMatrix.MatchInfo.self)
+                self = .matchInfo(matchInfo)
             case .tournament:
                 let tournament = try objectContainer.decode(EveryMatrix.Tournament.self)
                 self = .tournament(tournament)

@@ -17,6 +17,8 @@ struct Environment {
     let everyMatrixAPIClient = EveryMatrixAPIClient()
     let everyMatrixStorage = AggregatorsRepository()
 
+    let betslipManager = BetslipManager()
+
     let eventsStore = EventsStore()
 
     let userSessionStore = UserSessionStore()

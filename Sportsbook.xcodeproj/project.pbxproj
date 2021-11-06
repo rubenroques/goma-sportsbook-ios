@@ -124,6 +124,54 @@
 		454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
 		454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
 		454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
+		454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
+		454E0A8F2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
+		454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A902732A78A00794E0C /* BetslipManager.swift */; };
+		454E0A922732A78B00794E0C /* BetslipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A902732A78A00794E0C /* BetslipManager.swift */; };
+		454E0A962732C01B00794E0C /* BetslipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A942732C01B00794E0C /* BetslipViewController.swift */; };
+		454E0A972732C01B00794E0C /* BetslipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A942732C01B00794E0C /* BetslipViewController.swift */; };
+		454E0A982732C01B00794E0C /* BetslipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0A952732C01B00794E0C /* BetslipViewController.xib */; };
+		454E0A992732C01B00794E0C /* BetslipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0A952732C01B00794E0C /* BetslipViewController.xib */; };
+		454E0A9C2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A9A2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift */; };
+		454E0A9D2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A9A2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift */; };
+		454E0A9E2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0A9B2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib */; };
+		454E0A9F2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0A9B2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib */; };
+		454E0AA22732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA02732C10C00794E0C /* SubmitedBetslipViewController.swift */; };
+		454E0AA32732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA02732C10C00794E0C /* SubmitedBetslipViewController.swift */; };
+		454E0AA42732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0AA12732C10C00794E0C /* SubmitedBetslipViewController.xib */; };
+		454E0AA52732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0AA12732C10C00794E0C /* SubmitedBetslipViewController.xib */; };
+		454E0AAE2732C58D00794E0C /* TabularBarDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA72732C58D00794E0C /* TabularBarDataSource.swift */; };
+		454E0AAF2732C58D00794E0C /* TabularBarDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA72732C58D00794E0C /* TabularBarDataSource.swift */; };
+		454E0AB02732C58D00794E0C /* TabularBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA82732C58D00794E0C /* TabularBarDelegate.swift */; };
+		454E0AB12732C58D00794E0C /* TabularBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA82732C58D00794E0C /* TabularBarDelegate.swift */; };
+		454E0AB22732C58D00794E0C /* TabularBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA92732C58D00794E0C /* TabularBarView.swift */; };
+		454E0AB32732C58D00794E0C /* TabularBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AA92732C58D00794E0C /* TabularBarView.swift */; };
+		454E0AB42732C58D00794E0C /* TabularBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAA2732C58D00794E0C /* TabularBarButton.swift */; };
+		454E0AB52732C58D00794E0C /* TabularBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAA2732C58D00794E0C /* TabularBarButton.swift */; };
+		454E0AB62732C58D00794E0C /* TabularViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAB2732C58D00794E0C /* TabularViewDataSource.swift */; };
+		454E0AB72732C58D00794E0C /* TabularViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAB2732C58D00794E0C /* TabularViewDataSource.swift */; };
+		454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAC2732C58D00794E0C /* TabularViewDelegate.swift */; };
+		454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAC2732C58D00794E0C /* TabularViewDelegate.swift */; };
+		454E0ABA2732C58D00794E0C /* TabularViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAD2732C58D00794E0C /* TabularViewController.swift */; };
+		454E0ABB2732C58D00794E0C /* TabularViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AAD2732C58D00794E0C /* TabularViewController.swift */; };
+		454E0ABE2732C78300794E0C /* TitleTabularDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0ABD2732C78300794E0C /* TitleTabularDataSource.swift */; };
+		454E0ABF2732C78300794E0C /* TitleTabularDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0ABD2732C78300794E0C /* TitleTabularDataSource.swift */; };
+		454E0AC3273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AC1273305E200794E0C /* SingleBettingTicketTableViewCell.swift */; };
+		454E0AC4273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AC1273305E200794E0C /* SingleBettingTicketTableViewCell.swift */; };
+		454E0AC5273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0AC2273305E200794E0C /* SingleBettingTicketTableViewCell.xib */; };
+		454E0AC6273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0AC2273305E200794E0C /* SingleBettingTicketTableViewCell.xib */; };
+		454E0AC82733FBF200794E0C /* StyleHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AC72733FBF200794E0C /* StyleHelpers.swift */; };
+		454E0AC92733FBF200794E0C /* StyleHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AC72733FBF200794E0C /* StyleHelpers.swift */; };
+		454E0ACC2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0ACA2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift */; };
+		454E0ACD2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0ACA2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift */; };
+		454E0ACE2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
+		454E0ACF2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */; };
+		454E0AD12734A39800794E0C /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
+		454E0AD22734A39800794E0C /* CurrencyHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD02734A39800794E0C /* CurrencyHelper.swift */; };
+		454E0AD42735709E00794E0C /* BettingTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD32735709E00794E0C /* BettingTicket.swift */; };
+		454E0AD52735709E00794E0C /* BettingTicket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0AD32735709E00794E0C /* BettingTicket.swift */; };
+		454E0AD82735C76600794E0C /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 454E0AD72735C76600794E0C /* CombineExt */; };
+		454E0ADA2735C79600794E0C /* CombineExt in Frameworks */ = {isa = PBXBuildFile; productRef = 454E0AD92735C79600794E0C /* CombineExt */; };
 		4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
 		4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
 		455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455643A026F2634E00EE78FA /* GomaClientSettings.swift */; };
@@ -251,6 +299,18 @@
 		456B343B26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 456B343426C2819E009D7D27 /* Inconsolata-Medium.ttf */; };
 		456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 456B343526C2819E009D7D27 /* Inconsolata-Regular.ttf */; };
 		456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 456B343526C2819E009D7D27 /* Inconsolata-Regular.ttf */; };
+		45726331272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4572632F272B13D7002F2959 /* LoadingMoreTableViewCell.swift */; };
+		45726332272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4572632F272B13D7002F2959 /* LoadingMoreTableViewCell.swift */; };
+		45726333272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
+		45726334272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */; };
+		45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45726335272C0998002F2959 /* LiveEventsViewModel.swift */; };
+		45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45726335272C0998002F2959 /* LiveEventsViewModel.swift */; };
+		4572633A272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45726339272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		4572633B272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45726339272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.swift */; };
+		4572633D272C2220002F2959 /* MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4572633C272C2220002F2959 /* MatchInfo.swift */; };
+		4572633E272C2220002F2959 /* MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4572633C272C2220002F2959 /* MatchInfo.swift */; };
+		4572633F272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
+		45726340272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */; };
 		457816A92706679400F66878 /* MatchLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816A72706679400F66878 /* MatchLineTableViewCell.swift */; };
 		457816AA2706679400F66878 /* MatchLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816A72706679400F66878 /* MatchLineTableViewCell.swift */; };
 		457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816A82706679400F66878 /* MatchLineTableViewCell.xib */; };
@@ -420,10 +480,10 @@
 		45D527E02720535400744D34 /* CompetitionsFiltersView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D527DE2720535400744D34 /* CompetitionsFiltersView.xib */; };
 		45D527E22720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D527E12720575000744D34 /* CompetitionFilterRowViewModel.swift */; };
 		45D527E32720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D527E12720575000744D34 /* CompetitionFilterRowViewModel.swift */; };
-		45D712F227031DDE00AC0364 /* SportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D712F027031DDE00AC0364 /* SportsViewController.swift */; };
-		45D712F327031DDE00AC0364 /* SportsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D712F027031DDE00AC0364 /* SportsViewController.swift */; };
-		45D712F427031DDE00AC0364 /* SportsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* SportsViewController.xib */; };
-		45D712F527031DDE00AC0364 /* SportsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* SportsViewController.xib */; };
+		45D712F227031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */; };
+		45D712F327031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */; };
+		45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
+		45D712F527031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */; };
 		45D712F827033BEF00AC0364 /* LiveEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D712F627033BEF00AC0364 /* LiveEventsViewController.swift */; };
 		45D712F927033BEF00AC0364 /* LiveEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D712F627033BEF00AC0364 /* LiveEventsViewController.swift */; };
 		45D712FA27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */; };
@@ -560,8 +620,8 @@
 		A9B841A726E6557000269B05 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A526E6557000269B05 /* Location.swift */; };
 		A9B841AA26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
 		A9B841AB26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
-		A9B841AE26E674AA00269B05 /* Match1.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match1.swift */; };
-		A9B841AF26E674AA00269B05 /* Match1.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match1.swift */; };
+		A9B841AE26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
+		A9B841AF26E674AA00269B05 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841AD26E674AA00269B05 /* Match.swift */; };
 		A9B841B226E9054700269B05 /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B126E9054700269B05 /* Market.swift */; };
 		A9B841B326E9054700269B05 /* Market.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B126E9054700269B05 /* Market.swift */; };
 		A9B841B526E914FB00269B05 /* BetOutcome.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841B426E914FB00269B05 /* BetOutcome.swift */; };
@@ -680,6 +740,29 @@
 		454990CE27163D3200D57CE2 /* CollapsibleGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleGroupView.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
 		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
+		454E0A8D2731B01F00794E0C /* FailableDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableDecodable.swift; sourceTree = "<group>"; };
+		454E0A902732A78A00794E0C /* BetslipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipManager.swift; sourceTree = "<group>"; };
+		454E0A942732C01B00794E0C /* BetslipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipViewController.swift; sourceTree = "<group>"; };
+		454E0A952732C01B00794E0C /* BetslipViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetslipViewController.xib; sourceTree = "<group>"; };
+		454E0A9A2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreSubmissionBetslipViewController.swift; sourceTree = "<group>"; };
+		454E0A9B2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreSubmissionBetslipViewController.xib; sourceTree = "<group>"; };
+		454E0AA02732C10C00794E0C /* SubmitedBetslipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetslipViewController.swift; sourceTree = "<group>"; };
+		454E0AA12732C10C00794E0C /* SubmitedBetslipViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubmitedBetslipViewController.xib; sourceTree = "<group>"; };
+		454E0AA72732C58D00794E0C /* TabularBarDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabularBarDataSource.swift; sourceTree = "<group>"; };
+		454E0AA82732C58D00794E0C /* TabularBarDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabularBarDelegate.swift; sourceTree = "<group>"; };
+		454E0AA92732C58D00794E0C /* TabularBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabularBarView.swift; sourceTree = "<group>"; };
+		454E0AAA2732C58D00794E0C /* TabularBarButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabularBarButton.swift; sourceTree = "<group>"; };
+		454E0AAB2732C58D00794E0C /* TabularViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabularViewDataSource.swift; sourceTree = "<group>"; };
+		454E0AAC2732C58D00794E0C /* TabularViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabularViewDelegate.swift; sourceTree = "<group>"; };
+		454E0AAD2732C58D00794E0C /* TabularViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabularViewController.swift; sourceTree = "<group>"; };
+		454E0ABD2732C78300794E0C /* TitleTabularDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTabularDataSource.swift; sourceTree = "<group>"; };
+		454E0AC1273305E200794E0C /* SingleBettingTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleBettingTicketTableViewCell.swift; sourceTree = "<group>"; };
+		454E0AC2273305E200794E0C /* SingleBettingTicketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SingleBettingTicketTableViewCell.xib; sourceTree = "<group>"; };
+		454E0AC72733FBF200794E0C /* StyleHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleHelpers.swift; sourceTree = "<group>"; };
+		454E0ACA2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleBettingTicketTableViewCell.swift; sourceTree = "<group>"; };
+		454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MultipleBettingTicketTableViewCell.xib; sourceTree = "<group>"; };
+		454E0AD02734A39800794E0C /* CurrencyHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyHelper.swift; sourceTree = "<group>"; };
+		454E0AD32735709E00794E0C /* BettingTicket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingTicket.swift; sourceTree = "<group>"; };
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
 		455643A026F2634E00EE78FA /* GomaClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaClientSettings.swift; sourceTree = "<group>"; };
 		455A0C5026BD902C00EC572D /* ShowcaseProd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShowcaseProd.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -756,6 +839,12 @@
 		456B343326C2819E009D7D27 /* Inconsolata-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inconsolata-Light.ttf"; sourceTree = "<group>"; };
 		456B343426C2819E009D7D27 /* Inconsolata-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inconsolata-Medium.ttf"; sourceTree = "<group>"; };
 		456B343526C2819E009D7D27 /* Inconsolata-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inconsolata-Regular.ttf"; sourceTree = "<group>"; };
+		4572632F272B13D7002F2959 /* LoadingMoreTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingMoreTableViewCell.swift; sourceTree = "<group>"; };
+		45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LoadingMoreTableViewCell.xib; sourceTree = "<group>"; };
+		45726335272C0998002F2959 /* LiveEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveEventsViewModel.swift; sourceTree = "<group>"; };
+		45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LiveMatchWidgetCollectionViewCell.xib; sourceTree = "<group>"; };
+		45726339272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveMatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		4572633C272C2220002F2959 /* MatchInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchInfo.swift; sourceTree = "<group>"; };
 		457816A72706679400F66878 /* MatchLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchLineTableViewCell.swift; sourceTree = "<group>"; };
 		457816A82706679400F66878 /* MatchLineTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchLineTableViewCell.xib; sourceTree = "<group>"; };
 		457816AD2706699900F66878 /* MatchWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -839,8 +928,8 @@
 		45D527DB2720534600744D34 /* CompetitionsFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsFiltersView.swift; sourceTree = "<group>"; };
 		45D527DE2720535400744D34 /* CompetitionsFiltersView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompetitionsFiltersView.xib; sourceTree = "<group>"; };
 		45D527E12720575000744D34 /* CompetitionFilterRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterRowViewModel.swift; sourceTree = "<group>"; };
-		45D712F027031DDE00AC0364 /* SportsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsViewController.swift; sourceTree = "<group>"; };
-		45D712F127031DDE00AC0364 /* SportsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportsViewController.xib; sourceTree = "<group>"; };
+		45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveEventsViewController.swift; sourceTree = "<group>"; };
+		45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PreLiveEventsViewController.xib; sourceTree = "<group>"; };
 		45D712F627033BEF00AC0364 /* LiveEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveEventsViewController.swift; sourceTree = "<group>"; };
 		45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LiveEventsViewController.xib; sourceTree = "<group>"; };
 		45D728CC2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchWidgetCellViewModel.swift; sourceTree = "<group>"; };
@@ -903,7 +992,7 @@
 		A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportSessionIDModel.swift; sourceTree = "<group>"; };
 		A9B841A526E6557000269B05 /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		A9B841A926E6597300269B05 /* Tournament.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tournament.swift; sourceTree = "<group>"; };
-		A9B841AD26E674AA00269B05 /* Match1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match1.swift; sourceTree = "<group>"; };
+		A9B841AD26E674AA00269B05 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		A9B841B126E9054700269B05 /* Market.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Market.swift; sourceTree = "<group>"; };
 		A9B841B426E914FB00269B05 /* BetOutcome.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetOutcome.swift; sourceTree = "<group>"; };
 		A9B841B726E91BBC00269B05 /* BettingOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingOffer.swift; sourceTree = "<group>"; };
@@ -937,6 +1026,7 @@
 				A9B8419326E235AD00269B05 /* DictionaryCoding in Frameworks */,
 				4515637826BED19B00690896 /* Reachability in Frameworks */,
 				451B386226FF172C008D49C5 /* Kingfisher in Frameworks */,
+				454E0AD82735C76600794E0C /* CombineExt in Frameworks */,
 				4515637B26BED57400690896 /* Nuke in Frameworks */,
 				452047AF2703597500B277B5 /* FirebaseAuth in Frameworks */,
 				45D871C22710769600F5B87B /* Collections in Frameworks */,
@@ -964,6 +1054,7 @@
 				45EF5424270C5F8100D1E13E /* FirebaseAnalytics in Frameworks */,
 				A9B8419126E2359800269B05 /* DictionaryCoding in Frameworks */,
 				4515637D26BED58900690896 /* Reachability in Frameworks */,
+				454E0ADA2735C79600794E0C /* CombineExt in Frameworks */,
 				451B386426FF173D008D49C5 /* Kingfisher in Frameworks */,
 				4515637F26BED58900690896 /* Nuke in Frameworks */,
 				45D871C8271076B800F5B87B /* Collections in Frameworks */,
@@ -982,6 +1073,7 @@
 		45166CA926F3548D00E69D65 /* ExternalLibs */ = {
 			isa = PBXGroup;
 			children = (
+				454E0AA62732C58D00794E0C /* Tabular */,
 				45B0BD2E271EE138009C41FA /* KeychainExtras */,
 				45166CAA26F3548D00E69D65 /* TSLibrary */,
 			);
@@ -1202,6 +1294,54 @@
 			path = Misc;
 			sourceTree = "<group>";
 		};
+		454E0A932732BF4600794E0C /* Betslip */ = {
+			isa = PBXGroup;
+			children = (
+				454E0A942732C01B00794E0C /* BetslipViewController.swift */,
+				454E0A952732C01B00794E0C /* BetslipViewController.xib */,
+				454E0A9A2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift */,
+				454E0A9B2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib */,
+				454E0AA02732C10C00794E0C /* SubmitedBetslipViewController.swift */,
+				454E0AA12732C10C00794E0C /* SubmitedBetslipViewController.xib */,
+				454E0AC0273305BE00794E0C /* Cells */,
+			);
+			path = Betslip;
+			sourceTree = "<group>";
+		};
+		454E0AA62732C58D00794E0C /* Tabular */ = {
+			isa = PBXGroup;
+			children = (
+				454E0ABC2732C76800794E0C /* Datasources */,
+				454E0AA72732C58D00794E0C /* TabularBarDataSource.swift */,
+				454E0AA82732C58D00794E0C /* TabularBarDelegate.swift */,
+				454E0AA92732C58D00794E0C /* TabularBarView.swift */,
+				454E0AAA2732C58D00794E0C /* TabularBarButton.swift */,
+				454E0AAB2732C58D00794E0C /* TabularViewDataSource.swift */,
+				454E0AAC2732C58D00794E0C /* TabularViewDelegate.swift */,
+				454E0AAD2732C58D00794E0C /* TabularViewController.swift */,
+			);
+			path = Tabular;
+			sourceTree = "<group>";
+		};
+		454E0ABC2732C76800794E0C /* Datasources */ = {
+			isa = PBXGroup;
+			children = (
+				454E0ABD2732C78300794E0C /* TitleTabularDataSource.swift */,
+			);
+			path = Datasources;
+			sourceTree = "<group>";
+		};
+		454E0AC0273305BE00794E0C /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				454E0AC1273305E200794E0C /* SingleBettingTicketTableViewCell.swift */,
+				454E0AC2273305E200794E0C /* SingleBettingTicketTableViewCell.xib */,
+				454E0ACA2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift */,
+				454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		455A0C4726BD902C00EC572D = {
 			isa = PBXGroup;
 			children = (
@@ -1397,12 +1537,14 @@
 		455A0D1426BD9F3400EC572D /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				456B341226C13AE1009D7D27 /* Networking */,
-				45D9CBE4270F444000B8C321 /* Helpers */,
+				454E0A902732A78A00794E0C /* BetslipManager.swift */,
 				455A0D1526BD9F4D00EC572D /* GeoLocationManager.swift */,
 				A99DD54426C5364600ACDB07 /* RealtimeSocketClient.swift */,
 				45DDBAB926F2406100A73E45 /* UserSessionStore.swift */,
+				45D871CF2710995700F5B87B /* AggregatorsRepository.swift */,
 				45D9CBE0270F3C8400B8C321 /* AppSession.swift */,
+				456B341226C13AE1009D7D27 /* Networking */,
+				45D9CBE4270F444000B8C321 /* Helpers */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1431,7 +1573,7 @@
 			children = (
 				455C962626FE11CA00456F30 /* HomeViewController.swift */,
 				455C962726FE11CA00456F30 /* HomeViewController.xib */,
-				45D712EC27031C4F00AC0364 /* Sports */,
+				45D712EC27031C4F00AC0364 /* PreLive */,
 				45D712FC27033BF400AC0364 /* LiveEvents */,
 				45EF5430270C5FD600D1E13E /* Filters */,
 				45936CA8270E1BF600E8260E /* SportTypeSelection */,
@@ -1509,6 +1651,7 @@
 				455A0CDA26BD9D9000EC572D /* CountryName.swift */,
 				A9B8408026CFB49000269B05 /* DateUserLocation.swift */,
 				45936CAF270EEFA200E8260E /* LoadableContent.swift */,
+				454E0A8D2731B01F00794E0C /* FailableDecodable.swift */,
 			);
 			path = MiscHelpers;
 			sourceTree = "<group>";
@@ -1570,6 +1713,7 @@
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				4589F3EA26BF017A005DF543 /* Account */,
+				454E0A932732BF4600794E0C /* Betslip */,
 				455A0D2226BDE7B900EC572D /* DebugHelper */,
 			);
 			path = Screens;
@@ -1795,19 +1939,18 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
-		45D712EC27031C4F00AC0364 /* Sports */ = {
+		45D712EC27031C4F00AC0364 /* PreLive */ = {
 			isa = PBXGroup;
 			children = (
-				45D871CF2710995700F5B87B /* AggregatorsRepository.swift */,
+				45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */,
+				45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */,
 				458F4C912712AB1900AC13DB /* SportsViewModel.swift */,
-				45D712F027031DDE00AC0364 /* SportsViewController.swift */,
-				45D712F127031DDE00AC0364 /* SportsViewController.xib */,
 				45D728CC2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift */,
 				A98D3B272714817C003BAE6F /* SportSelection */,
 				45D871CE271098F100F5B87B /* Cells */,
 				45A16E112707B69200A95C01 /* Filters */,
 			);
-			path = Sports;
+			path = PreLive;
 			sourceTree = "<group>";
 		};
 		45D712FC27033BF400AC0364 /* LiveEvents */ = {
@@ -1815,6 +1958,9 @@
 			children = (
 				45D712F627033BEF00AC0364 /* LiveEventsViewController.swift */,
 				45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */,
+				45726335272C0998002F2959 /* LiveEventsViewModel.swift */,
+				45726339272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.swift */,
+				45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */,
 			);
 			path = LiveEvents;
 			sourceTree = "<group>";
@@ -1823,6 +1969,7 @@
 			isa = PBXGroup;
 			children = (
 				45D728D62715F6DC00EFE04D /* AppModels.swift */,
+				454E0AD32735709E00794E0C /* BettingTicket.swift */,
 			);
 			path = App;
 			sourceTree = "<group>";
@@ -1841,6 +1988,8 @@
 				457816B42707631000F66878 /* TournamentTableViewHeader.xib */,
 				457816B92707632400F66878 /* TitleTableViewHeader.swift */,
 				457816BA2707632400F66878 /* TitleTableViewHeader.xib */,
+				4572632F272B13D7002F2959 /* LoadingMoreTableViewCell.swift */,
+				45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */,
 				45CD7B5C27173D81003044C5 /* Banner */,
 			);
 			path = Cells;
@@ -1860,6 +2009,8 @@
 			children = (
 				4515635E26BE032E00690896 /* AnalyticsClient.swift */,
 				456B342626C18257009D7D27 /* Logger.swift */,
+				454E0AC72733FBF200794E0C /* StyleHelpers.swift */,
+				454E0AD02734A39800794E0C /* CurrencyHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2064,7 +2215,8 @@
 		A9B841AC26E6749900269B05 /* Matches */ = {
 			isa = PBXGroup;
 			children = (
-				A9B841AD26E674AA00269B05 /* Match1.swift */,
+				A9B841AD26E674AA00269B05 /* Match.swift */,
+				4572633C272C2220002F2959 /* MatchInfo.swift */,
 			);
 			path = Matches;
 			sourceTree = "<group>";
@@ -2178,6 +2330,7 @@
 				45EF542C270C5FB700D1E13E /* MultiSlider */,
 				45D871C12710769600F5B87B /* Collections */,
 				45D871C52710769600F5B87B /* OrderedCollections */,
+				454E0AD72735C76600794E0C /* CombineExt */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -2230,6 +2383,7 @@
 				45EF542E270C5FC300D1E13E /* MultiSlider */,
 				45D871C7271076B800F5B87B /* Collections */,
 				45D871C9271076B800F5B87B /* OrderedCollections */,
+				454E0AD92735C79600794E0C /* CombineExt */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -2273,6 +2427,7 @@
 				452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */,
 				45D871C02710769600F5B87B /* XCRemoteSwiftPackageReference "swift-collections" */,
+				454E0AD62735C76600794E0C /* XCRemoteSwiftPackageReference "CombineExt" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -2298,6 +2453,7 @@
 				457816B72707631000F66878 /* TournamentTableViewHeader.xib in Resources */,
 				452047BC27036D3900B277B5 /* SplashViewController.xib in Resources */,
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
+				454E0AC5273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */,
 				A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */,
 				A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */,
@@ -2307,22 +2463,26 @@
 				455C960826FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */,
 				456B343A26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
 				457816BD2707632400F66878 /* TitleTableViewHeader.xib in Resources */,
+				454E0AA42732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */,
 				4589F3FF26BF017A005DF543 /* LoginViewController.xib in Resources */,
 				455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */,
 				45BEA48726F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				45CD7B5A271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
-				45D712F427031DDE00AC0364 /* SportsViewController.xib in Resources */,
+				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				45D728D327158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */,
 				45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
+				454E0A9E2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */,
 				45D3DE3C271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
+				454E0A982732C01B00794E0C /* BetslipViewController.xib in Resources */,
 				45EF5438270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
+				45726333272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
 				457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
 				A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */,
@@ -2340,6 +2500,7 @@
 				A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */,
 				45A16E162707B6C100A95C01 /* ListTypeCollectionViewCell.xib in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
+				454E0ACE2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
 				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
@@ -2356,6 +2517,7 @@
 				45D712FA27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
 				455A0CA726BD973900EC572D /* Showcase-Assets.xcassets in Resources */,
 				456B343826C2819E009D7D27 /* Inconsolata-Light.ttf in Resources */,
+				45726340272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				45DDBAAE26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */,
 				4589F40526BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				45DDBA9826F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
@@ -2384,9 +2546,11 @@
 				A98D3B2D2714858E003BAE6F /* SportSelectionViewController.xib in Resources */,
 				45D527E02720535400744D34 /* CompetitionsFiltersView.xib in Resources */,
 				45BEA48026F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
+				454E0AA52732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */,
 				45D712FB27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */,
 				A99A972B26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */,
+				454E0ACF2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45D728D427158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				45D3DE4327149BE800717124 /* BannerTopCollectionViewCell.xib in Resources */,
 				455A0D2126BDE7AE00EC572D /* DebugViewController.xib in Resources */,
@@ -2413,6 +2577,7 @@
 				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
+				454E0A9F2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
@@ -2425,6 +2590,7 @@
 				455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45D3DE3D271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
 				45BEA48426F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
+				454E0A992732C01B00794E0C /* BetslipViewController.xib in Resources */,
 				A92F5D7D271716B900884BDF /* FilterRowView.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
@@ -2449,15 +2615,18 @@
 				45DDBAAF26F2146100A73E45 /* Gilroy-Thin.ttf in Resources */,
 				A9C602392716F7F900992E11 /* FilterCollapseView.xib in Resources */,
 				45A16E172707B6C100A95C01 /* ListTypeCollectionViewCell.xib in Resources */,
+				4572633F272C4355002F2959 /* LiveMatchWidgetCollectionViewCell.xib in Resources */,
 				4589F40626BF017A005DF543 /* RecoverPasswordViewController.xib in Resources */,
 				45DDBA9926F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
 				A9C82FBF26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				454990CD2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
-				45D712F527031DDE00AC0364 /* SportsViewController.xib in Resources */,
+				454E0AC6273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */,
+				45D712F527031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				45B0BD49271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
+				45726334272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
@@ -2510,6 +2679,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45D9CBE1270F3C8400B8C321 /* AppSession.swift in Sources */,
+				454E0AB62732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45D728D127158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
@@ -2528,6 +2698,7 @@
 				4589F41626BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
 				455A0D0A26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898026C3E74B00BCD5DA /* AuthToken.swift in Sources */,
+				4572633D272C2220002F2959 /* MatchInfo.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */,
 				A9C6023E2716FACB00992E11 /* RadioButton.swift in Sources */,
@@ -2539,7 +2710,7 @@
 				45936CB0270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */,
 				45B0BD31271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */,
-				A9B841AE26E674AA00269B05 /* Match1.swift in Sources */,
+				A9B841AE26E674AA00269B05 /* Match.swift in Sources */,
 				45D3DE3A271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
 				45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
@@ -2568,6 +2739,7 @@
 				45D712F827033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				457816B52707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
+				454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */,
 				45E5190C270C8B570052794F /* Color+Extensions.swift in Sources */,
 				A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45166CE326F3548D00E69D65 /* TSRouter.swift in Sources */,
@@ -2579,14 +2751,20 @@
 				4589F42926C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				45B7DAE226F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
 				455A0CE626BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
+				454E0AC82733FBF200794E0C /* StyleHelpers.swift in Sources */,
+				454E0A962732C01B00794E0C /* BetslipViewController.swift in Sources */,
+				4572633B272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				45A2897026C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
+				454E0AD42735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0726F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
 				A99A972226FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				45166D2126F3548D00E69D65 /* SSWampRole.swift in Sources */,
+				454E0ABA2732C58D00794E0C /* TabularViewController.swift in Sources */,
 				45D728CD2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift in Sources */,
+				454E0ACC2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
 				458F4C962712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
@@ -2610,6 +2788,7 @@
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				A99A972826FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
+				45726331272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */,
 				4589F41F26BF03FE005DF543 /* Fonts.swift in Sources */,
 				45166CDF26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
 				45166D0B26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */,
@@ -2624,13 +2803,15 @@
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CED26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
+				454E0AB22732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48926F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				455A0CFE26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
-				45D712F227031DDE00AC0364 /* SportsViewController.swift in Sources */,
+				45D712F227031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40126BF017A005DF543 /* LoginViewController.swift in Sources */,
 				45166D0F26F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0C26BD9D9000EC572D /* CountryName.swift in Sources */,
 				455C962126FDD66400456F30 /* ProfileViewController.swift in Sources */,
+				454E0AD12734A39800794E0C /* CurrencyHelper.swift in Sources */,
 				45166D2326F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636E26BE94F600690896 /* Theme.swift in Sources */,
 				457816AF2706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
@@ -2658,12 +2839,17 @@
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				455C960C26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4027149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
+				454E0AC3273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
+				454E0AAE2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
 				A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
+				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				45936CAA270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A9B841A626E6557000269B05 /* Location.swift in Sources */,
 				45166D1726F3548D00E69D65 /* SSWampTransport.swift in Sources */,
+				454E0AB42732C58D00794E0C /* TabularBarButton.swift in Sources */,
+				454E0AB02732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B502716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
 				45D527E22720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */,
 				4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */,
@@ -2687,6 +2873,7 @@
 				45166D1126F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				45936CB6270EF04500E8260E /* SportType.swift in Sources */,
 				A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
+				454E0A9C2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */,
 				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA4270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
 				45D871BE270F5B5500F5B87B /* Aggregator.swift in Sources */,
@@ -2700,20 +2887,24 @@
 				455A0CF026BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
 				45D527DC2720534600744D34 /* CompetitionsFiltersView.swift in Sources */,
 				455A0CA226BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
+				454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */,
 				45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				456B342D26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				455A0CEA26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1926F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
+				454E0ABE2732C78300794E0C /* TitleTabularDataSource.swift in Sources */,
 				4589F41426BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
+				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897A26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
+				454E0AA22732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */,
 				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896A26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				455C960626FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */,
@@ -2734,6 +2925,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45D9CBE2270F3C8400B8C321 /* AppSession.swift in Sources */,
+				454E0AB72732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45D728D227158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
@@ -2752,6 +2944,7 @@
 				A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */,
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */,
+				4572633E272C2220002F2959 /* MatchInfo.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */,
 				A9C6023F2716FACB00992E11 /* RadioButton.swift in Sources */,
@@ -2763,7 +2956,7 @@
 				45936CB1270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */,
 				45B0BD32271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */,
-				A9B841AF26E674AA00269B05 /* Match1.swift in Sources */,
+				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
 				45D3DE3B271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
 				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
@@ -2792,6 +2985,7 @@
 				45D712F927033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				457816B62707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
+				454E0A922732A78B00794E0C /* BetslipManager.swift in Sources */,
 				45E5190D270C8B570052794F /* Color+Extensions.swift in Sources */,
 				A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45166CE426F3548D00E69D65 /* TSRouter.swift in Sources */,
@@ -2803,14 +2997,20 @@
 				4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				45B7DAE326F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
+				454E0AC92733FBF200794E0C /* StyleHelpers.swift in Sources */,
+				454E0A972732C01B00794E0C /* BetslipViewController.swift in Sources */,
+				4572633A272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				45A2897126C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
+				454E0AD52735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0826F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
 				A99A972326FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,
 				45166D2226F3548D00E69D65 /* SSWampRole.swift in Sources */,
+				454E0ABB2732C58D00794E0C /* TabularViewController.swift in Sources */,
 				45D728CE2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift in Sources */,
+				454E0ACD2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
 				458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
@@ -2834,6 +3034,7 @@
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				A99A972926FE326200F8D163 /* FullRegisterDocumentsViewController.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
+				45726332272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */,
 				4589F42026BF03FE005DF543 /* Fonts.swift in Sources */,
 				45166CE026F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */,
 				45166D0C26F3548D00E69D65 /* ErrorSSWampMessage.swift in Sources */,
@@ -2848,13 +3049,15 @@
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CEE26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
+				454E0AB32732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48A26F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				455A0CFF26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
-				45D712F327031DDE00AC0364 /* SportsViewController.swift in Sources */,
+				45D712F327031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40226BF017A005DF543 /* LoginViewController.swift in Sources */,
 				45166D1026F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0D26BD9D9000EC572D /* CountryName.swift in Sources */,
 				455C962226FDD66400456F30 /* ProfileViewController.swift in Sources */,
+				454E0AD22734A39800794E0C /* CurrencyHelper.swift in Sources */,
 				45166D2426F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636F26BE94F600690896 /* Theme.swift in Sources */,
 				457816B02706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
@@ -2882,12 +3085,17 @@
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				455C960D26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4127149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
+				454E0AC4273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
+				454E0AAF2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
 				A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
+				45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				45936CAB270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
 				45166D1826F3548D00E69D65 /* SSWampTransport.swift in Sources */,
+				454E0AB52732C58D00794E0C /* TabularBarButton.swift in Sources */,
+				454E0AB12732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B512716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
 				45D527E32720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */,
 				4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */,
@@ -2911,6 +3119,7 @@
 				45166D1226F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				45936CB7270EF04500E8260E /* SportType.swift in Sources */,
 				A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
+				454E0A9D2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */,
 				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA5270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
 				45D871BF270F5B5500F5B87B /* Aggregator.swift in Sources */,
@@ -2924,20 +3133,24 @@
 				455A0CF126BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
 				45D527DD2720534600744D34 /* CompetitionsFiltersView.swift in Sources */,
 				455A0C8626BD904300EC572D /* AppDelegate.swift in Sources */,
+				454E0A8F2731B01F00794E0C /* FailableDecodable.swift in Sources */,
 				45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				456B342E26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				455A0CEB26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1A26F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
+				454E0ABF2732C78300794E0C /* TitleTabularDataSource.swift in Sources */,
 				4589F41526BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
+				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
+				454E0AA32732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */,
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896B26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				455C960726FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */,
@@ -3110,7 +3323,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00206;
+				CURRENT_PROJECT_VERSION = 00207;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3136,7 +3349,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00206;
+				CURRENT_PROJECT_VERSION = 00207;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3332,6 +3545,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		454E0AD62735C76600794E0C /* XCRemoteSwiftPackageReference "CombineExt" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CombineCommunity/CombineExt.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		45D871C02710769600F5B87B /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -3426,6 +3647,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
+		};
+		454E0AD72735C76600794E0C /* CombineExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 454E0AD62735C76600794E0C /* XCRemoteSwiftPackageReference "CombineExt" */;
+			productName = CombineExt;
+		};
+		454E0AD92735C79600794E0C /* CombineExt */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 454E0AD62735C76600794E0C /* XCRemoteSwiftPackageReference "CombineExt" */;
+			productName = CombineExt;
 		};
 		45D871C12710769600F5B87B /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;
