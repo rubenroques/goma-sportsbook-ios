@@ -149,3 +149,8 @@ Terms of use, Privacy Policy and EULA";
 "string_time_range" = "Time Range";
 "string_required_field" = "Required Field";
 "string_profile_updated_success" = "Profile updated succesfully!";
+"string_odds_filter" = "Odds Filter";
+"string_from" = "From";
+"string_to" = "To";
+"string_time_today_only" = "Time (for Today's matches only)";
+"string_default_market" = "Default Market";

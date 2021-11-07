@@ -170,7 +170,9 @@ class PreLiveEventsViewController: UIViewController {
 
         filtersButtonView.backgroundColor = UIColor.App.secondaryBackground
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-
+        let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
+        filtersButtonView.addGestureRecognizer(tapFilterGesture)
+        filtersButtonView.isUserInteractionEnabled = true
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -325,6 +327,10 @@ class PreLiveEventsViewController: UIViewController {
 
     }
 
+    func reloadTableViewData() {
+        self.tableView.reloadData()
+    }
+
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
         let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType)
         sportSelectionVC.delegate = self
@@ -343,6 +349,12 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.mainTint
+    }
+
+    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
+        let homeFilterViewController = HomeFilterViewController(sportsModel: self.viewModel)
+        homeFilterViewController.delegate = self
+        self.present(homeFilterViewController, animated: true, completion: nil)
     }
 
     func applyCompetitionsFiltersWithIds(_ ids: [String]) {
@@ -468,6 +480,7 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
         // update the new position acquired
         self.lastContentOffset = scrollView.contentOffset.y
     }
+
 }
 
 extension PreLiveEventsViewController: UITableViewDataSource, UITableViewDelegate {
@@ -584,5 +597,15 @@ protocol SportTypeSelectionViewDelegate: AnyObject {
 extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     func setSportType(_ sportType: SportType) {
         self.changedSportToType(sportType)
+    }
+}
+
+protocol HomeFilterOptionsViewDelegate: AnyObject {
+    func setHomeFilters(homeFilters: HomeFilterOptions)
+}
+
+extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
+    func setHomeFilters(homeFilters: HomeFilterOptions) {
+        self.viewModel.homeFilterOptions = homeFilters
     }
 }

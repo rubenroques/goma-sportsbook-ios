@@ -28,6 +28,8 @@ struct Environment {
     var timezone = TimeZone.autoupdatingCurrent
     var date: () -> Date = { Date.init() }
 
+    var favoritesManager = FavoritesManager()
+
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }

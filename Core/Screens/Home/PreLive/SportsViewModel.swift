@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 import OrderedCollections
-
+// swiftlint:disable type_body_length
 class SportsViewModel: NSObject {
 
     private var banners: [EveryMatrix.BannerInfo] = []
@@ -53,6 +53,12 @@ class SportsViewModel: NSObject {
         }
         didSet {
             self.fetchData()
+        }
+    }
+    var homeFilterOptions: HomeFilterOptions? = nil {
+        didSet {
+            print("FILTER ON")
+            self.updateContentList()
         }
     }
 
@@ -137,17 +143,153 @@ class SportsViewModel: NSObject {
 
         self.isLoadingMyGamesList.send(false)
 
-        self.myGamesSportsViewModelDataSource.popularMatches = self.popularMatches
+        self.myGamesSportsViewModelDataSource.popularMatches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
+
         self.myGamesSportsViewModelDataSource.userFavoriteMatches = self.userFavoriteMatches
         self.myGamesSportsViewModelDataSource.banners = self.banners
 
-        self.todaySportsViewModelDataSource.todayMatches = self.todayMatches
+        self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
 
-        self.competitionSportsViewModelDataSource.competitions = self.competitions
+        self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
 
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
+    }
+
+    func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
+        guard let filterOptionsValue = filtersOptions else {
+            return matches
+        }
+
+        var filteredMatches: [Match] = []
+        for match in matches {
+            if match.markets.isEmpty {
+                continue
+            }
+            // Check default market order
+            var marketSort: [Market] = []
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+            for market in match.markets {
+                if market.typeId != marketSort[0].typeId {
+                    marketSort.append(market)
+                }
+            }
+
+            // Check odds filter
+            let matchOdds = marketSort[0].outcomes
+            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            for odd in matchOdds {
+                let oddValue = CGFloat(odd.bettingOffer.value)
+                if oddsRange.contains(oddValue) {
+                    var newMatch = match
+                    newMatch.markets = marketSort
+
+                    filteredMatches.append(newMatch)
+                    break
+                }
+            }
+
+        }
+        return filteredMatches
+    }
+
+    func filterTodayMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
+        guard let filterOptionsValue = filtersOptions else {
+            return matches
+        }
+
+        // Check time
+        let timeOptionMin = Int(filtersOptions!.timeRange[0] ?? 0) * 3600
+        let timeOptionMax = Int(filtersOptions!.timeRange[1] ?? 24) * 3600
+        let dateOptionMin = Date().addingTimeInterval(TimeInterval(timeOptionMin))
+        let dateOptionMax = Date().addingTimeInterval(TimeInterval(timeOptionMax))
+        let dateRange = dateOptionMin...dateOptionMax
+
+        var filteredMatches: [Match] = []
+
+        for match in matches {
+            // Check default market order
+            var marketSort: [Market] = []
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+            for market in match.markets {
+                if market.typeId != marketSort[0].typeId {
+                    marketSort.append(market)
+                }
+            }
+            // Check time range
+            var timeInRange = false
+            if dateRange.contains(match.date!) {
+                timeInRange = true
+            }
+
+            // Check odds filter
+            let matchOdds = marketSort[0].outcomes
+            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            var oddsInRange = false
+            for odd in matchOdds {
+                let oddValue = CGFloat(odd.bettingOffer.value)
+                if oddsRange.contains(oddValue) {
+                    oddsInRange = true
+                    break
+                }
+            }
+
+            if oddsInRange && timeInRange {
+                print("\(oddsInRange) + \(timeInRange)")
+                var newMatch = match
+                newMatch.markets = marketSort
+
+                filteredMatches.append(newMatch)
+            }
+        }
+        return filteredMatches
+    }
+
+    func filterCompetitionMatches (with filtersOptions: HomeFilterOptions?, competitions: [Competition]) -> [Competition] {
+
+        guard let filterOptionsValue = filtersOptions else {
+            return competitions
+        }
+
+        var filteredMatches: [Match] = []
+        var filteredCompetitions: [Competition] = []
+        for competition in competitions {
+            if !competition.matches.isEmpty{
+                for match in competition.matches {
+                    // Check default market order
+                    var marketSort: [Market] = []
+                    let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+                    marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+                    for market in match.markets {
+                        if market.typeId != marketSort[0].typeId {
+                            marketSort.append(market)
+                        }
+                    }
+
+                    // Check odds filter
+                    let matchOdds = marketSort[0].outcomes
+                    let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+                    for odd in matchOdds {
+                        let oddValue = CGFloat(odd.bettingOffer.value)
+                        if oddsRange.contains(oddValue) {
+                            var newMatch = match
+                            newMatch.markets = marketSort
+
+                            filteredMatches.append(newMatch)
+                            break
+                        }
+                    }
+
+                }
+                var newCompetition = competition
+                newCompetition.matches = filteredMatches
+                filteredCompetitions.append(newCompetition)
+            }
+        }
+        return filteredCompetitions
     }
 
     private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
@@ -1063,6 +1205,7 @@ class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UIT
         headerView.nameTitleLabel.text = competition.name
         headerView.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
         headerView.sectionIndex = section
+        headerView.competition = competition
         headerView.didToggleHeaderViewAction = { [weak self, weak tableView] section in
             guard
                 let weakSelf = self,

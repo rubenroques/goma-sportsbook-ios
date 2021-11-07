@@ -108,9 +108,24 @@ class HomeViewController: UIViewController {
             .sink { userSession in
                 if let userSession = userSession {
                     self.screenState = .logged(user: userSession)
+
+                    Env.everyMatrixAPIClient.getUserMetadata()
+                        .receive(on: DispatchQueue.main)
+                        .eraseToAnyPublisher()
+                        .sink { _ in
+                        } receiveValue: { [weak self] userMetadata in
+                            if userMetadata.records[0].value != nil {
+                                Env.favoritesManager.favoriteEventsId = userMetadata.records[0].value!
+                            }
+
+                            self?.preLiveViewController.reloadTableViewData()
+
+                        }
+                        .store(in: &self.cancellables)
                 }
                 else {
                     self.screenState = .anonymous
+                    self.preLiveViewController.reloadTableViewData()
                 }
             }
             .store(in: &cancellables)
@@ -139,7 +154,7 @@ class HomeViewController: UIViewController {
                 print(operatorInfo)
             }
             .store(in: &cancellables)
-        
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -444,6 +459,4 @@ extension HomeViewController {
     }
 
 }
-
-
 

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FilterSliderCollapseView" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="checkboxButton" destination="ALn-oS-JVz" id="n3u-PZ-Daz"/>
+                <outlet property="containerStackView" destination="xFS-q4-Jcc" id="Q5v-9W-AwR"/>
+                <outlet property="containerView" destination="Zf5-AI-Ope" id="7yv-LH-QhB"/>
+                <outlet property="contentView" destination="Cgd-z2-Aed" id="JiC-tb-o9E"/>
+                <outlet property="leftContentView" destination="Gdc-cn-nlH" id="6oS-Kn-JeC"/>
+                <outlet property="rightContentView" destination="aNW-Ga-K85" id="vG5-Tl-sW4"/>
+                <outlet property="stackView" destination="2yU-9u-Bum" id="G63-FD-Q24"/>
+                <outlet property="stackViewFullHeightConstraint" destination="WPV-LO-nc3" id="3bQ-IF-51t"/>
+                <outlet property="stackViewHeightConstraint" destination="JSG-FM-wLV" id="2R1-Ar-2U2"/>
+                <outlet property="titleLabel" destination="roA-3Y-Fal" id="ojP-Yw-4fT"/>
+                <outlet property="toggleButton" destination="gAF-KS-EDz" id="Ubo-tM-obp"/>
+                <outlet property="topView" destination="scg-pl-XSn" id="Q2m-75-Ntr"/>
+                <outlet property="topViewBottomConstraint" destination="TC9-nt-lZ1" id="nbu-97-0BW"/>
+                <outlet property="viewHeightConstraint" destination="5Ff-9d-waK" id="CwH-oO-KbU"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="260"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Zf5-AI-Ope">
+                    <rect key="frame" x="10" y="0.0" width="394" height="260"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="scg-pl-XSn">
+                            <rect key="frame" x="8" y="0.0" width="378" height="41"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gAF-KS-EDz">
+                                    <rect key="frame" x="356" y="9.5" width="14" height="22"/>
+                                    <color key="backgroundColor" name="mainBackgroundColor"/>
+                                    <state key="normal" image="arrow_down_icon"/>
+                                    <connections>
+                                        <action selector="toggleCollapseAction" destination="-1" eventType="touchUpInside" id="XrE-BE-2YG"/>
+                                    </connections>
+                                </button>
+                                <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="RDV-kC-yVj">
+                                    <rect key="frame" x="8" y="8" width="74.5" height="25"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ALn-oS-JVz" customClass="CheckboxButton" customModule="ShowcaseBeta" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
+                                            <color key="backgroundColor" name="secondaryBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="25" id="owc-8N-XKM"/>
+                                                <constraint firstAttribute="width" secondItem="ALn-oS-JVz" secondAttribute="height" multiplier="1:1" id="pV5-hR-xWD"/>
+                                            </constraints>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="roA-3Y-Fal">
+                                            <rect key="frame" x="33" y="0.0" width="41.5" height="25"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="bottom" secondItem="roA-3Y-Fal" secondAttribute="bottom" id="Lit-mT-gK1"/>
+                                        <constraint firstAttribute="height" constant="25" id="hdY-gI-5j0"/>
+                                        <constraint firstItem="roA-3Y-Fal" firstAttribute="top" secondItem="RDV-kC-yVj" secondAttribute="top" id="vXo-i0-8aU"/>
+                                    </constraints>
+                                </stackView>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <constraints>
+                                <constraint firstItem="RDV-kC-yVj" firstAttribute="top" secondItem="scg-pl-XSn" secondAttribute="top" constant="8" id="2VZ-YP-r4S"/>
+                                <constraint firstAttribute="trailing" secondItem="gAF-KS-EDz" secondAttribute="trailing" constant="8" id="T6m-WM-3j9"/>
+                                <constraint firstItem="RDV-kC-yVj" firstAttribute="leading" secondItem="scg-pl-XSn" secondAttribute="leading" constant="8" id="aQM-zx-Rw8"/>
+                                <constraint firstItem="RDV-kC-yVj" firstAttribute="centerY" secondItem="scg-pl-XSn" secondAttribute="centerY" id="gH8-Vx-62G"/>
+                                <constraint firstItem="gAF-KS-EDz" firstAttribute="centerY" secondItem="scg-pl-XSn" secondAttribute="centerY" id="zOR-8p-mwu"/>
+                            </constraints>
+                        </view>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="xFS-q4-Jcc">
+                            <rect key="frame" x="16" y="41" width="362" height="211"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cgd-z2-Aed">
+                                    <rect key="frame" x="0.0" y="0.0" width="362" height="143"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" id="Buk-H2-NUG"/>
+                                    </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="Buk-H2-NUG"/>
+                                        </mask>
+                                    </variation>
+                                </view>
+                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="2yU-9u-Bum">
+                                    <rect key="frame" x="0.0" y="151" width="362" height="60"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Gdc-cn-nlH" customClass="FilterSliderInfoView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                            <rect key="frame" x="0.0" y="0.0" width="176" height="60"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aNW-Ga-K85" customClass="FilterSliderInfoView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                            <rect key="frame" x="186" y="0.0" width="176" height="60"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        </view>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="height" id="JSG-FM-wLV"/>
+                                        <constraint firstAttribute="height" constant="60" id="WPV-LO-nc3"/>
+                                    </constraints>
+                                    <variation key="default">
+                                        <mask key="constraints">
+                                            <exclude reference="JSG-FM-wLV"/>
+                                        </mask>
+                                    </variation>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="40" id="5Ff-9d-waK"/>
+                        <constraint firstAttribute="trailing" secondItem="xFS-q4-Jcc" secondAttribute="trailing" constant="16" id="6Yu-Of-mI1"/>
+                        <constraint firstItem="scg-pl-XSn" firstAttribute="top" secondItem="Zf5-AI-Ope" secondAttribute="top" id="JRK-tv-IZ2"/>
+                        <constraint firstAttribute="trailing" secondItem="scg-pl-XSn" secondAttribute="trailing" constant="8" id="NSr-sM-ijA"/>
+                        <constraint firstItem="xFS-q4-Jcc" firstAttribute="leading" secondItem="Zf5-AI-Ope" secondAttribute="leading" constant="16" id="SVU-Es-GIt"/>
+                        <constraint firstItem="scg-pl-XSn" firstAttribute="leading" secondItem="Zf5-AI-Ope" secondAttribute="leading" constant="8" id="T57-eP-L4q"/>
+                        <constraint firstAttribute="bottom" secondItem="scg-pl-XSn" secondAttribute="bottom" id="TC9-nt-lZ1"/>
+                        <constraint firstItem="xFS-q4-Jcc" firstAttribute="top" secondItem="scg-pl-XSn" secondAttribute="bottom" id="gA5-d0-Exb"/>
+                        <constraint firstAttribute="bottom" secondItem="xFS-q4-Jcc" secondAttribute="bottom" constant="8" id="kM8-35-2vp"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="5Ff-9d-waK"/>
+                            <exclude reference="TC9-nt-lZ1"/>
+                        </mask>
+                    </variation>
+                </view>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstItem="Zf5-AI-Ope" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="4jX-UK-2F0"/>
+                <constraint firstItem="Zf5-AI-Ope" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Awx-Sy-M4L"/>
+                <constraint firstAttribute="bottom" secondItem="Zf5-AI-Ope" secondAttribute="bottom" id="Toj-w1-YWU"/>
+                <constraint firstAttribute="trailing" secondItem="Zf5-AI-Ope" secondAttribute="trailing" constant="10" id="qnC-oQ-wkc"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="71.014492753623188" y="-141.29464285714286"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="arrow_down_icon" width="14" height="10"/>
+        <namedColor name="mainBackgroundColor">
+            <color red="0.14117647058823529" green="0.15294117647058825" blue="0.19215686274509805" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="secondaryBackgroundColor">
+            <color red="0.19200000166893005" green="0.20800000429153442" blue="0.2630000114440918" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

@@ -336,7 +336,6 @@ class LoginViewController: UIViewController {
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
-
                 self.showNextViewController()
             })
             .store(in: &cancellables)

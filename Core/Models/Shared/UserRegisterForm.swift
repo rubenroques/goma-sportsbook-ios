@@ -224,4 +224,22 @@ extension EveryMatrix {
         }
     }
 
+    struct UserMetadata: Decodable {
+        var records: [UserMetadataRecords]
+
+        enum CodingKeys: String, CodingKey {
+            case records = "records"
+        }
+    }
+
+    struct UserMetadataRecords: Decodable {
+        var key: String
+        var value: [String]?
+
+        enum CodingKeys: String, CodingKey {
+            case key = "key"
+            case value = "value"
+        }
+    }
+
 }
