@@ -251,11 +251,13 @@ class HomeViewController: UIViewController {
     }
 
     func openBetslipModel() {
+
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadChildViewControllersData()
         }
-        self.present(betslipViewController, animated: true, completion: {
+
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: {
 
         })
     }

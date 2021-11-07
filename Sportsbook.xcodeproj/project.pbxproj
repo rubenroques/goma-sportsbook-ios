@@ -327,6 +327,24 @@
 		457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816B92707632400F66878 /* TitleTableViewHeader.swift */; };
 		457816BD2707632400F66878 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816BA2707632400F66878 /* TitleTableViewHeader.xib */; };
 		457816BE2707632400F66878 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816BA2707632400F66878 /* TitleTableViewHeader.xib */; };
+		457F495C2737C2280047169D /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
+		457F495D2737C2280047169D /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
+		457F49602737C3630047169D /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
+		457F49612737C3630047169D /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
+		457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
+		457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
+		457F49662737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */; };
+		457F49672737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */; };
+		457F496D2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F496B2737F9330047169D /* SubmitedBetTableViewCell.swift */; };
+		457F496E2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F496B2737F9330047169D /* SubmitedBetTableViewCell.swift */; };
+		457F496F2737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */; };
+		457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */; };
+		457F4972273804810047169D /* BetslipHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F4971273804810047169D /* BetslipHistory.swift */; };
+		457F4973273804810047169D /* BetslipHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F4971273804810047169D /* BetslipHistory.swift */; };
+		457F497527383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F497427383A2B0047169D /* SubmitedBetSelectionView.swift */; };
+		457F497627383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F497427383A2B0047169D /* SubmitedBetSelectionView.swift */; };
+		457F497827383A350047169D /* SubmitedBetSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F497727383A350047169D /* SubmitedBetSelectionView.xib */; };
+		457F497927383A350047169D /* SubmitedBetSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F497727383A350047169D /* SubmitedBetSelectionView.xib */; };
 		4589F3F726BF017A005DF543 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */; };
 		4589F3F826BF017A005DF543 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */; };
 		4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */; };
@@ -853,6 +871,15 @@
 		457816B42707631000F66878 /* TournamentTableViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TournamentTableViewHeader.xib; sourceTree = "<group>"; };
 		457816B92707632400F66878 /* TitleTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewHeader.swift; sourceTree = "<group>"; };
 		457816BA2707632400F66878 /* TitleTableViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewHeader.xib; sourceTree = "<group>"; };
+		457F495B2737C2280047169D /* UserBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBalance.swift; sourceTree = "<group>"; };
+		457F495F2737C3630047169D /* BetslipSelectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipSelectionState.swift; sourceTree = "<group>"; };
+		457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSubmissionSuccessViewController.swift; sourceTree = "<group>"; };
+		457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
+		457F496B2737F9330047169D /* SubmitedBetTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetTableViewCell.swift; sourceTree = "<group>"; };
+		457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubmitedBetTableViewCell.xib; sourceTree = "<group>"; };
+		457F4971273804810047169D /* BetslipHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipHistory.swift; sourceTree = "<group>"; };
+		457F497427383A2B0047169D /* SubmitedBetSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetSelectionView.swift; sourceTree = "<group>"; };
+		457F497727383A350047169D /* SubmitedBetSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubmitedBetSelectionView.xib; sourceTree = "<group>"; };
 		4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		4589F3ED26BF017A005DF543 /* WelcomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WelcomeViewController.xib; sourceTree = "<group>"; };
 		4589F3F226BF017A005DF543 /* LoginViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = LoginViewController.xib; sourceTree = "<group>"; };
@@ -1299,11 +1326,9 @@
 			children = (
 				454E0A942732C01B00794E0C /* BetslipViewController.swift */,
 				454E0A952732C01B00794E0C /* BetslipViewController.xib */,
-				454E0A9A2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift */,
-				454E0A9B2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib */,
-				454E0AA02732C10C00794E0C /* SubmitedBetslipViewController.swift */,
-				454E0AA12732C10C00794E0C /* SubmitedBetslipViewController.xib */,
-				454E0AC0273305BE00794E0C /* Cells */,
+				457F49682737F8EB0047169D /* PreSubmission */,
+				457F496A2737F90E0047169D /* SubmitedHistory */,
+				457F49692737F9030047169D /* SubmissionFeedback */,
 			);
 			path = Betslip;
 			sourceTree = "<group>";
@@ -1586,6 +1611,7 @@
 			isa = PBXGroup;
 			children = (
 				455F765026F0EFCE00B9B85D /* LoginAccount.swift */,
+				457F495B2737C2280047169D /* UserBalance.swift */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -1700,6 +1726,47 @@
 				452036D826F09B67000BCFA6 /* Inconsolata */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		457F495E2737C3580047169D /* Betting */ = {
+			isa = PBXGroup;
+			children = (
+				457F495F2737C3630047169D /* BetslipSelectionState.swift */,
+				457F4971273804810047169D /* BetslipHistory.swift */,
+			);
+			path = Betting;
+			sourceTree = "<group>";
+		};
+		457F49682737F8EB0047169D /* PreSubmission */ = {
+			isa = PBXGroup;
+			children = (
+				454E0A9A2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift */,
+				454E0A9B2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib */,
+				454E0AC0273305BE00794E0C /* Cells */,
+			);
+			path = PreSubmission;
+			sourceTree = "<group>";
+		};
+		457F49692737F9030047169D /* SubmissionFeedback */ = {
+			isa = PBXGroup;
+			children = (
+				457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */,
+				457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */,
+			);
+			path = SubmissionFeedback;
+			sourceTree = "<group>";
+		};
+		457F496A2737F90E0047169D /* SubmitedHistory */ = {
+			isa = PBXGroup;
+			children = (
+				454E0AA02732C10C00794E0C /* SubmitedBetslipViewController.swift */,
+				454E0AA12732C10C00794E0C /* SubmitedBetslipViewController.xib */,
+				457F496B2737F9330047169D /* SubmitedBetTableViewCell.swift */,
+				457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */,
+				457F497427383A2B0047169D /* SubmitedBetSelectionView.swift */,
+				457F497727383A350047169D /* SubmitedBetSelectionView.xib */,
+			);
+			path = SubmitedHistory;
 			sourceTree = "<group>";
 		};
 		4589F3E926BF0160005DF543 /* Screens */ = {
@@ -2172,6 +2239,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				457F495E2737C3580047169D /* Betting */,
 				455F764F26F0EFAD00B9B85D /* Account */,
 				A9B841BD26EA5A0100269B05 /* Events */,
 				A9B841B026E9053600269B05 /* Odds */,
@@ -2466,8 +2534,10 @@
 				454E0AA42732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */,
 				4589F3FF26BF017A005DF543 /* LoginViewController.xib in Resources */,
 				455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */,
+				457F49662737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */,
 				45BEA48726F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
+				457F496F2737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
 				45CD7B5A271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
 				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
@@ -2508,6 +2578,7 @@
 				A99A971E26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				457816B12706699900F66878 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				A9B840A726DE831400269B05 /* RequestLocationAccessViewController.xib in Resources */,
+				457F497827383A350047169D /* SubmitedBetSelectionView.xib in Resources */,
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				A9C82FC526F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
@@ -2579,6 +2650,7 @@
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
 				454E0A9F2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
+				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
@@ -2590,6 +2662,7 @@
 				455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45D3DE3D271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
 				45BEA48426F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
+				457F49672737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */,
 				454E0A992732C01B00794E0C /* BetslipViewController.xib in Resources */,
 				A92F5D7D271716B900884BDF /* FilterRowView.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
@@ -2600,6 +2673,7 @@
 				457816AC2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
+				457F497927383A350047169D /* SubmitedBetSelectionView.xib in Resources */,
 				457816BE2707632400F66878 /* TitleTableViewHeader.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
@@ -2678,9 +2752,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				457F4972273804810047169D /* BetslipHistory.swift in Sources */,
 				45D9CBE1270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E0AB62732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
+				457F497527383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45D728D127158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
 				A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
@@ -2815,8 +2891,10 @@
 				45166D2326F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636E26BE94F600690896 /* Theme.swift in Sources */,
 				457816AF2706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
+				457F495C2737C2280047169D /* UserBalance.swift in Sources */,
 				45936CBD270EF14300E8260E /* SportTypeCollectionViewCell.swift in Sources */,
 				45166CF326F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
+				457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
 				4589F41926BF0243005DF543 /* NibView.swift in Sources */,
 				A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */,
 				45166D0926F3548D00E69D65 /* CallSSWampMessage.swift in Sources */,
@@ -2857,6 +2935,7 @@
 				A9B8409826DE65BF00269B05 /* RefusedAccessViewController.swift in Sources */,
 				45166CEF26F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
 				45166CF926F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
+				457F49602737C3630047169D /* BetslipSelectionState.swift in Sources */,
 				45EF5436270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
@@ -2873,6 +2952,7 @@
 				45166D1126F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				45936CB6270EF04500E8260E /* SportType.swift in Sources */,
 				A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
+				457F496D2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */,
 				454E0A9C2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */,
 				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA4270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,
@@ -2924,9 +3004,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				457F4973273804810047169D /* BetslipHistory.swift in Sources */,
 				45D9CBE2270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E0AB72732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
+				457F497627383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45D728D227158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
 				A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
@@ -3061,8 +3143,10 @@
 				45166D2426F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636F26BE94F600690896 /* Theme.swift in Sources */,
 				457816B02706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
+				457F495D2737C2280047169D /* UserBalance.swift in Sources */,
 				45936CBE270EF14300E8260E /* SportTypeCollectionViewCell.swift in Sources */,
 				45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
+				457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
 				4589F41A26BF0243005DF543 /* NibView.swift in Sources */,
 				A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */,
 				45166D0A26F3548D00E69D65 /* CallSSWampMessage.swift in Sources */,
@@ -3103,6 +3187,7 @@
 				A9B8409A26DE6ABB00269B05 /* RefusedAccessViewController.swift in Sources */,
 				45166CF026F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
 				45166CFA26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
+				457F49612737C3630047169D /* BetslipSelectionState.swift in Sources */,
 				45EF5437270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				4515636026BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
@@ -3119,6 +3204,7 @@
 				45166D1226F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				45936CB7270EF04500E8260E /* SportType.swift in Sources */,
 				A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
+				457F496E2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */,
 				454E0A9D2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */,
 				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				45936CA5270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */,

@@ -42,7 +42,13 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     var oddSubscriber: AnyCancellable?
 
-    var currentValue: Int = 0
+    var currentValue: Int = 0 {
+        didSet {
+            if let bettingTicket = bettingTicket {
+                self.didUpdateBettingValueAction?(bettingTicket.id, self.realBetValue)
+            }
+        }
+    }
     var realBetValue: Double {
         if currentValue == 0 {
             return 0
@@ -51,6 +57,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             return Double(currentValue)/Double(100)
         }
     }
+
+    var didUpdateBettingValueAction: ((String, Double) -> ())?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -94,6 +102,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.oddSubscriber?.cancel()
         self.oddSubscriber = nil
 
+        self.didUpdateBettingValueAction = nil
+        
         self.currentValue = 0
 
         self.outcomeNameLabel.text = ""
@@ -186,7 +196,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         }, completion: nil)
     }
 
-    func configureWithBettingTicket(_ bettingTicket: BettingTicket) {
+    func configureWithBettingTicket(_ bettingTicket: BettingTicket, previousBettingAmount: Double? = nil) {
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
         self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
@@ -194,6 +204,11 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.matchDetailLabel.text = bettingTicket.matchDescription
 
         self.currentOddValue = bettingTicket.value
+
+        if let previousBettingAmount = previousBettingAmount {
+            self.currentValue = 0
+            self.addAmountValue(previousBettingAmount)
+        }
 
         self.oddSubscriber = Env.everyMatrixStorage
             .oddPublisherForBettingOfferId(bettingTicket.id)?
@@ -224,15 +239,15 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     }
 
     @IBAction func didTapPlusOneButton() {
-        self.addAmountValue(1)
+        self.addAmountValue(1.0)
     }
 
     @IBAction func didTapPlusFiveButton() {
-        self.addAmountValue(5)
+        self.addAmountValue(5.0)
     }
 
     @IBAction func didTapPlusMaxButton() {
-        self.addAmountValue(100)
+        self.addAmountValue(100.0)
     }
 
 }
@@ -243,8 +258,8 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
         return false
     }
 
-    func addAmountValue(_ value: Int) {
-        currentValue = currentValue + (value * 100)
+    func addAmountValue(_ value: Double) {
+        currentValue = currentValue + Int(value * 100.0)
 
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))

@@ -31,6 +31,8 @@
                 <outlet property="clearBaseView" destination="cEh-jz-3Se" id="vuR-kr-g6Y"/>
                 <outlet property="clearButton" destination="1NK-ag-RHY" id="KEL-kL-XIx"/>
                 <outlet property="emptyBetsBaseView" destination="WLl-sg-9Tv" id="12I-jL-puf"/>
+                <outlet property="loadingBaseView" destination="WId-wH-AbA" id="e6z-KH-C4B"/>
+                <outlet property="loadingView" destination="cMq-CI-620" id="18N-Rk-IcL"/>
                 <outlet property="maxValueButtonView" destination="gFf-QV-h6m" id="qga-Nt-U3P"/>
                 <outlet property="oddsTitleLabel" destination="bev-aJ-ykz" id="5lt-HN-pkd"/>
                 <outlet property="oddsValueLabel" destination="jDg-5s-jBE" id="m1n-PQ-EWk"/>
@@ -48,7 +50,8 @@
                 <outlet property="topSafeArea" destination="aLF-yD-t2E" id="fQP-Bs-Mmg"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="winningsTitleLabel" destination="14q-ly-9tO" id="cjW-D3-rfP"/>
-                <outlet property="winningsValueLabel" destination="vj4-a2-1yz" id="IXE-Xr-xaK"/>
+                <outlet property="winningsValueMultipleLabel" destination="vj4-a2-1yz" id="yuv-Q4-FzH"/>
+                <outlet property="winningsValueSingleLabel" destination="CIP-ee-wYo" id="mfG-eA-vbS"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -56,17 +59,31 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WId-wH-AbA">
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="cMq-CI-620">
+                            <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5491943359375" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstItem="cMq-CI-620" firstAttribute="centerX" secondItem="WId-wH-AbA" secondAttribute="centerX" id="XgE-kY-hdi"/>
+                        <constraint firstItem="cMq-CI-620" firstAttribute="centerY" secondItem="WId-wH-AbA" secondAttribute="centerY" id="yr2-Uf-maF"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WLl-sg-9Tv">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add your first bet." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ldl-f4-u9t">
-                            <rect key="frame" x="50" y="415" width="314" height="24"/>
+                            <rect key="frame" x="50" y="403" width="314" height="24"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="24"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Click on the odds to add bets to your betslip." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DFg-gs-vfx">
-                            <rect key="frame" x="50" y="447" width="314" height="34"/>
+                            <rect key="frame" x="50" y="451" width="314" height="34"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -76,9 +93,9 @@
                     <constraints>
                         <constraint firstItem="Ldl-f4-u9t" firstAttribute="centerX" secondItem="WLl-sg-9Tv" secondAttribute="centerX" id="JRM-wz-vrr"/>
                         <constraint firstItem="DFg-gs-vfx" firstAttribute="leading" secondItem="Ldl-f4-u9t" secondAttribute="leading" id="Vco-9J-Xsf"/>
-                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="centerY" secondItem="WLl-sg-9Tv" secondAttribute="centerY" constant="-21" id="n2B-or-cCn"/>
+                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="bottom" secondItem="WLl-sg-9Tv" secondAttribute="centerY" constant="-21" id="n2B-or-cCn"/>
                         <constraint firstItem="DFg-gs-vfx" firstAttribute="trailing" secondItem="Ldl-f4-u9t" secondAttribute="trailing" id="row-6H-oZa"/>
-                        <constraint firstItem="DFg-gs-vfx" firstAttribute="top" secondItem="Ldl-f4-u9t" secondAttribute="bottom" constant="8" id="wYI-05-79X"/>
+                        <constraint firstItem="DFg-gs-vfx" firstAttribute="top" secondItem="Ldl-f4-u9t" secondAttribute="bottom" constant="24" id="wYI-05-79X"/>
                         <constraint firstAttribute="trailing" secondItem="Ldl-f4-u9t" secondAttribute="trailing" constant="50" id="wZh-gD-0th"/>
                     </constraints>
                 </view>
@@ -93,7 +110,6 @@
                             <segments>
                                 <segment title="Single"/>
                                 <segment title="Multiple"/>
-                                <segment title="System"/>
                             </segments>
                             <color key="selectedSegmentTintColor" name="mainTintColor"/>
                             <connections>
@@ -152,13 +168,22 @@
                                                 <constraint firstAttribute="height" constant="1" id="r8o-bY-Sjw"/>
                                             </constraints>
                                         </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1289,32€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CIP-ee-wYo">
+                                            <rect key="frame" x="163" y="13" width="61.5" height="16"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
+                                            <color key="textColor" name="headingMainColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
                                         <constraint firstItem="jOE-7A-Zqw" firstAttribute="leading" secondItem="dob-5h-mcC" secondAttribute="leading" id="3nM-BU-bL9"/>
                                         <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="vj4-a2-1yz" secondAttribute="trailing" id="3r4-K3-tMh"/>
+                                        <constraint firstItem="CIP-ee-wYo" firstAttribute="centerY" secondItem="14q-ly-9tO" secondAttribute="centerY" id="8B6-VI-tG7"/>
                                         <constraint firstItem="bev-aJ-ykz" firstAttribute="leading" secondItem="dob-5h-mcC" secondAttribute="leading" constant="22" id="Atu-3H-P7v"/>
                                         <constraint firstItem="vj4-a2-1yz" firstAttribute="leading" secondItem="14q-ly-9tO" secondAttribute="trailing" constant="9" id="GQE-0T-L5Z"/>
+                                        <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="CIP-ee-wYo" secondAttribute="trailing" constant="16" id="IH4-UX-wd7"/>
+                                        <constraint firstItem="CIP-ee-wYo" firstAttribute="leading" secondItem="14q-ly-9tO" secondAttribute="trailing" constant="8.5" id="Iuf-2D-sGB"/>
                                         <constraint firstItem="bev-aJ-ykz" firstAttribute="top" secondItem="14q-ly-9tO" secondAttribute="bottom" constant="4" id="IzJ-wZ-2mJ"/>
                                         <constraint firstItem="14q-ly-9tO" firstAttribute="leading" secondItem="dob-5h-mcC" secondAttribute="leading" constant="22" id="J09-kt-JbH"/>
                                         <constraint firstItem="jDg-5s-jBE" firstAttribute="centerY" secondItem="bev-aJ-ykz" secondAttribute="centerY" id="NpY-pL-6ZF"/>
@@ -261,6 +286,9 @@
                                             </constraints>
                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
                                             <state key="normal" title="Place Bet"/>
+                                            <connections>
+                                                <action selector="didTapPlaceBetButton" destination="-1" eventType="primaryActionTriggered" id="MiB-z2-7Oe"/>
+                                            </connections>
                                         </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -324,6 +352,7 @@
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="aLF-yD-t2E" secondAttribute="bottom" id="0wW-MA-Spz"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="TZO-Zq-dgn" secondAttribute="trailing" id="6iz-nP-xVf"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="WId-wH-AbA" secondAttribute="trailing" id="9g6-h3-u9H"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Q4m-H4-Smm" secondAttribute="trailing" id="9hW-sm-FEB"/>
                 <constraint firstItem="7Oi-Vo-9uT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="A3P-F9-55f"/>
                 <constraint firstItem="WLl-sg-9Tv" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="BPY-JX-sfa"/>
@@ -339,12 +368,15 @@
                 <constraint firstItem="TZO-Zq-dgn" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Rs3-Dx-TMe"/>
                 <constraint firstItem="FzO-gE-nAs" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="YaK-nI-GwN"/>
                 <constraint firstItem="aLF-yD-t2E" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ZH1-yP-tXM"/>
+                <constraint firstAttribute="bottom" secondItem="WId-wH-AbA" secondAttribute="bottom" id="dQC-Bm-76C"/>
                 <constraint firstItem="TZO-Zq-dgn" firstAttribute="bottom" secondItem="cEh-jz-3Se" secondAttribute="top" id="ekR-kC-kwF"/>
+                <constraint firstItem="WId-wH-AbA" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="fNq-YG-eD9"/>
                 <constraint firstItem="FzO-gE-nAs" firstAttribute="bottom" secondItem="i5M-Pr-FkT" secondAttribute="bottom" id="iI0-4L-2hJ"/>
                 <constraint firstAttribute="trailing" secondItem="FzO-gE-nAs" secondAttribute="trailing" id="jaO-Di-WnK"/>
                 <constraint firstItem="7Oi-Vo-9uT" firstAttribute="top" secondItem="Q4m-H4-Smm" secondAttribute="bottom" id="kQi-y8-nDJ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="cEh-jz-3Se" secondAttribute="trailing" id="kp5-m8-hTj"/>
                 <constraint firstItem="TZO-Zq-dgn" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="l3j-2W-Ut8"/>
+                <constraint firstItem="WId-wH-AbA" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="s0U-oO-tcV"/>
                 <constraint firstAttribute="trailing" secondItem="aLF-yD-t2E" secondAttribute="trailing" id="tNx-YX-GMm"/>
                 <constraint firstItem="FzO-gE-nAs" firstAttribute="top" secondItem="7Oi-Vo-9uT" secondAttribute="bottom" id="yeu-vb-FaA"/>
             </constraints>

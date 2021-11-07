@@ -37,6 +37,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
 
+        self.baseView.clipsToBounds = true
+        self.baseView.layer.masksToBounds = true
+        self.baseView.layer.cornerRadius = CornerRadius.view
+
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
@@ -46,8 +50,6 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.baseView.clipsToBounds = true
-        self.baseView.layer.masksToBounds = true
         self.baseView.layer.cornerRadius = CornerRadius.view
         self.oddBaseView.layer.cornerRadius = 3
     }

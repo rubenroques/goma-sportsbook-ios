@@ -34,8 +34,8 @@ class BetslipViewController: UIViewController {
 
     var willDismissAction: (() -> ())?
 
-    init() {
 
+    init() {
         preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
         submitedBetslipViewController = SubmitedBetslipViewController()
         viewControllers = [preSubmissionBetslipViewController, submitedBetslipViewController]
@@ -74,6 +74,22 @@ class BetslipViewController: UIViewController {
         self.accountValuePlusView.clipsToBounds = true
 
         self.accountValueLabel.text = "Loading"
+
+        preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
+            self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
+        }
+
+        Env.userSessionStore.userBalanaceWallet
+            .compactMap({$0})
+            .map(\.realMoney)
+            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"} )
+            .receive(on: DispatchQueue.main)
+            .sink { value in
+                self.accountValueLabel.text = value
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.forceWalletUpdate()
 
         self.setupWithTheme()
     }
@@ -114,10 +130,31 @@ class BetslipViewController: UIViewController {
     }
 
     @IBAction func didTapCancelButton() {
-
         self.willDismissAction?()
-
         self.dismiss(animated: true, completion: nil)
+    }
+
+    func showBetPlacedScreen(withBetPlacedDetails betPlacedDetailsArray: [BetPlacedDetails]) {
+
+        var errorCode: String?
+        var errorMessage: String?
+
+        for betPlaced in betPlacedDetailsArray {
+            if let errorCodeValue = betPlaced.response.errorCode {
+                errorCode = errorCodeValue
+                errorMessage = betPlaced.response.errorMessage
+                break
+            }
+        }
+
+        if errorCode != nil {
+            let message = errorMessage != nil ? errorMessage! : "Error placing Bet."
+            UIAlertController.showMessage(title: "Betslipt", message: message, on: self)
+            return
+        }
+
+        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray)
+        self.navigationController?.pushViewController(betSubmissionSuccessViewController, animated: true)
     }
 
 }

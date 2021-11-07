@@ -19,8 +19,6 @@ struct Environment {
 
     let betslipManager = BetslipManager()
 
-    let eventsStore = EventsStore()
-
     let userSessionStore = UserSessionStore()
     let businessSettingsSocket = RealtimeSocketClient()
     let locationManager = GeoLocationManager()

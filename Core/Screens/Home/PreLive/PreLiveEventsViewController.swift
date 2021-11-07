@@ -299,6 +299,7 @@ class PreLiveEventsViewController: UIViewController {
         // swiftlint:disable empty_count
         self.competitionsFiltersView?.selectedIds
             .compactMap({ $0.count == 0 })
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] shouldShowOpen in
                 if shouldShowOpen {
                     self.openCompetitionsFilters()
@@ -309,6 +310,7 @@ class PreLiveEventsViewController: UIViewController {
 
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipValue in
 
                 if betslipValue == 0 {

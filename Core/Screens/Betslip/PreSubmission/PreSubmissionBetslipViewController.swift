@@ -22,7 +22,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
 
     @IBOutlet private weak var winningsTitleLabel: UILabel!
-    @IBOutlet private weak var winningsValueLabel: UILabel!
+    @IBOutlet private weak var winningsValueMultipleLabel: UILabel!
+    @IBOutlet private weak var winningsValueSingleLabel: UILabel!
 
     @IBOutlet private weak var oddsTitleLabel: UILabel!
     @IBOutlet private weak var oddsValueLabel: UILabel!
@@ -46,6 +47,10 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var placeBetBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
+
+    @IBOutlet weak var loadingBaseView: UIView!
+    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
     private var systemBettingTicketDataSource = SystemBettingTicketDataSource()
@@ -58,14 +63,15 @@ class PreSubmissionBetslipViewController: UIViewController {
         case system
     }
 
-    var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
+    private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
-    var displayBetValue: Int = 0 {
+    // Multiple Bets values
+    private var displayBetValue: Int = 0 {
         didSet {
             self.realBetValuePublisher.send(self.realBetValue)
         }
     }
-    var realBetValue: Double {
+    private var realBetValue: Double {
         if displayBetValue == 0 {
             return 0
         }
@@ -74,10 +80,27 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    var maxBetValue: Double = Double.greatestFiniteMagnitude
+    // Simple Bets values
+    private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
+    private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
 
-    var realBetValuePublisher: CurrentValueSubject<Double, Never> = .init(0.0)
-    var multiplierPublisher: CurrentValueSubject<Double, Never> = .init(0.0)
+    private var maxBetValue: Double = Double.greatestFiniteMagnitude
+
+    private var realBetValuePublisher: CurrentValueSubject<Double, Never> = .init(0.0)
+    private var multiplierPublisher: CurrentValueSubject<Double, Never> = .init(0.0)
+
+    private var isLoading = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.alpha = 1.0
+            }
+            else {
+                self.loadingBaseView.alpha = 0.0
+            }
+        }
+    }
+
+    var betPlacedAction: (([BetPlacedDetails]) -> ())?
 
     init() {
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
@@ -93,13 +116,17 @@ class PreSubmissionBetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.loadingBaseView.alpha = 0.0
+
         self.view.bringSubviewToFront(emptyBetsBaseView)
+        self.view.bringSubviewToFront(loadingBaseView)
 
         self.placeBetButtonsBaseView.isHidden = true
         self.placeBetButtonsSeparatorView.alpha = 0.5
 
-        self.winningsValueLabel.text = "--€"
-        self.oddsValueLabel.text = "--"
+        self.winningsValueSingleLabel.text = "-.--€"
+        self.winningsValueMultipleLabel.text = "-.--€"
+        self.oddsValueLabel.text = "-.--"
 
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
@@ -112,10 +139,25 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.amountTextfield.delegate = self
 
+
         if Env.betslipManager.bettingTicketsPublisher.value.count > 1 {
             self.betTypeSegmentControl.selectedSegmentIndex = 1
             self.didChangeSegmentValue(self.betTypeSegmentControl)
         }
+
+
+        singleBettingTicketDataSource.didUpdateBettingValueAction = { id, value in
+            if value == 0 {
+                self.simpleBetsBettingValues.value[id] = nil
+            }
+            else {
+                self.simpleBetsBettingValues.value[id] = value
+            }
+        }
+        singleBettingTicketDataSource.bettingValueForId = { id in
+            self.simpleBetsBettingValues.value[id]
+        }
+
 
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
@@ -123,6 +165,10 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { tickets in
                 self.singleBettingTicketDataSource.bettingTickets = tickets
                 self.multipleBettingTicketDataSource.bettingTickets = tickets
+
+                self.simpleBetPlacedDetails = [:]
+                //self.simpleBetsBettingValues.send([:])
+
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -140,6 +186,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
         self.multiplierPublisher
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
                 self?.oddsValueLabel.text = "\(Double(floor(multiplier * 100)/100))"
             })
@@ -154,6 +201,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
         self.listTypePublisher
+            .receive(on: DispatchQueue.main)
             .map({ $0 == .simple })
             .sink(receiveValue: { [weak self] isSimpleBet in
                 self?.placeBetButtonsBaseView.isHidden = isSimpleBet
@@ -161,13 +209,19 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
         self.listTypePublisher
+            .receive(on: DispatchQueue.main)
             .map({ $0 == .simple })
             .sink(receiveValue: { [weak self] isSimpleBet in
-                self?.placeBetButtonsBaseView.isHidden = isSimpleBet
+                self?.oddsTitleLabel.isHidden = isSimpleBet
+                self?.oddsValueLabel.isHidden = isSimpleBet
+
+                self?.winningsValueSingleLabel.isHidden = !isSimpleBet
+                self?.winningsValueMultipleLabel.isHidden = isSimpleBet
             })
             .store(in: &cancellables)
 
         Publishers.CombineLatest(self.listTypePublisher, self.realBetValuePublisher)
+            .receive(on: DispatchQueue.main)
             .filter { (betslipType, _) in
                 betslipType == .multiple
             }
@@ -179,40 +233,72 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+
         Publishers.CombineLatest(self.multiplierPublisher, self.realBetValuePublisher)
+            .receive(on: DispatchQueue.main)
             .map({ (multiplier, betValue) -> String in
                 if multiplier >= 1 && betValue > 0 {
                     let totalValue = multiplier * betValue
-                    return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-€"
+                    return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
                 }
                 else {
-                    return "-€"
+                    return "-.--€"
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarnings in
-                self?.winningsValueLabel.text = possibleEarnings
+                self?.winningsValueMultipleLabel.text = possibleEarnings
             })
             .store(in: &cancellables)
 
-//        self.realBetValuePublisher
-//            .filter({ [weak self] _ in
-//                self?.listTypePublisher.value == .multiple
-//            })
-//            .map({ [weak self] in
-//                return $0 > 0 && $0 < (self?.maxBetValue ?? 0)
-//            })
-//            .sink(receiveValue: { [weak self] hasValidBettingValue in
-//                self?.placeBetButton.isEnabled = hasValidBettingValue
-//            })
-//            .store(in: &cancellables)
 
-//        self.amountTextfield.textPublisher
-//            .map(Double.init)
-//            .compactMap({ $0 })
+        Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
+            .receive(on: DispatchQueue.main)
+            .filter { (betslipType, _, _) in
+                betslipType == .simple
+            }
+            .map({ (_, simpleBetsBettingValues, tickets) -> String in
+                var expectedReturn = 0.0
+                for ticket in tickets {
+                    if let betValue = simpleBetsBettingValues[ticket.id] {
+                        let expectedTicketReturn = ticket.value * betValue
+                        expectedReturn = expectedReturn + expectedTicketReturn
+                    }
+                }
+                if expectedReturn == 0 {
+                    return "-.--€"
+                }
+                else {
+                    return CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
+                }
+            })
+            .sink(receiveValue: { [weak self] possibleEarningsString in
+                self?.winningsValueSingleLabel.text = possibleEarningsString
+            })
+            .store(in: &cancellables)
+
+
+        Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
+            .receive(on: DispatchQueue.main)
+            .filter { (betslipType, _, _) in
+                betslipType == .simple
+            }
+            .map({ (_, simpleBetsBettingValues, tickets) -> Bool in
+                var hasValidAmounts = true
+                for ticket in tickets {
+                    if simpleBetsBettingValues[ticket.id] == nil {
+                        hasValidAmounts = false
+                        break
+                    }
+                }
+                return hasValidAmounts
+            })
+            .sink(receiveValue: { [weak self] hasValidBettingValue in
+                self?.placeBetButton.isEnabled = hasValidBettingValue
+            })
+            .store(in: &cancellables)
 
         self.addDoneAccessoryView()
         self.setupWithTheme()
-
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -300,7 +386,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.maxValueButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
 
         self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
-        
+
+        self.winningsValueSingleLabel.textColor = UIColor.App.headingMain
+        self.winningsValueMultipleLabel.textColor = UIColor.red
+
         StyleHelper.styleButton(button: self.placeBetButton)
     }
 
@@ -338,6 +427,80 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.layoutIfNeeded()
         self.tableView.setContentOffset(.zero, animated: true)
     }
+
+    @IBAction func didTapPlaceBetButton() {
+
+        self.isLoading = true
+
+        if self.listTypePublisher.value == .simple {
+            let requests = Env.betslipManager.placeSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
+            for request in requests {
+                request
+                    .receive(on: DispatchQueue.main)
+                    .sink { completion in
+                        print(completion)
+                    } receiveValue: { [weak self] betPlacedDetails in
+
+                        if let betId = betPlacedDetails.response.betId {
+                            self?.simpleBetPlacedDetails[betId] = .loaded(betPlacedDetails)
+                        }
+                        self?.checkSubmitedSingles()
+
+                    }
+                    .store(in: &cancellables)
+            }
+        }
+        else if self.listTypePublisher.value == .multiple {
+            Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue)
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    print(completion)
+                    self.isLoading = false
+                } receiveValue: { betPlacedDetails in
+                    self.isLoading = false
+                    self.betPlacedAction?([betPlacedDetails])
+                }
+                .store(in: &cancellables)
+        }
+
+    }
+
+    func checkSubmitedSingles() {
+
+        var betPlacedDetailsArray: [BetPlacedDetails] = []
+        var canProceedToNextScreen = true
+        var stillLoading = false
+
+        if self.simpleBetsBettingValues.value.count != self.simpleBetPlacedDetails.values.count {
+            //Still loading requests
+            return
+        }
+
+        for value in self.simpleBetPlacedDetails.values {
+            switch value {
+            case .loaded(let betPlacedDetails):
+                if !(betPlacedDetails.response.betSucceed ?? false) {
+                    canProceedToNextScreen = false
+                    break
+                }
+                else {
+                    betPlacedDetailsArray.append(betPlacedDetails)
+                }
+            case .loading:
+                stillLoading = true
+                break
+            case .idle:
+                stillLoading = true
+                break
+            }
+        }
+
+        if canProceedToNextScreen && !stillLoading {
+            self.isLoading = false
+            self.betPlacedAction?(betPlacedDetailsArray)
+        }
+    }
+
 
     func currentDataSource() -> UITableViewDelegateDataSource {
         switch self.listTypePublisher.value {
@@ -431,6 +594,9 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
     var bettingTickets: [BettingTicket] = []
 
+    var didUpdateBettingValueAction: ((String, Double) -> ())?
+    var bettingValueForId: ((String) -> (Double?))?
+
     init(bettingTickets: [BettingTicket]) {
         self.bettingTickets = bettingTickets
     }
@@ -446,7 +612,10 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         else {
             fatalError()
         }
-        cell.configureWithBettingTicket(bettingTicket)
+
+        let storedValue = self.bettingValueForId?(bettingTicket.id)
+        cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
+        cell.didUpdateBettingValueAction = self.didUpdateBettingValueAction
         return cell
     }
 
