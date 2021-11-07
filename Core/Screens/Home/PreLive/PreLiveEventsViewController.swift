@@ -604,7 +604,7 @@ protocol HomeFilterOptionsViewDelegate: AnyObject {
     func setHomeFilters(homeFilters: HomeFilterOptions)
 }
 
-extension SportsViewController: HomeFilterOptionsViewDelegate {
+extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
     func setHomeFilters(homeFilters: HomeFilterOptions) {
         self.viewModel.homeFilterOptions = homeFilters
     }

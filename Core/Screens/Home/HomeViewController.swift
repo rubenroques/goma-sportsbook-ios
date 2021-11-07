@@ -118,14 +118,14 @@ class HomeViewController: UIViewController {
                                 Env.favoritesManager.favoriteEventsId = userMetadata.records[0].value!
                             }
 
-                            self?.sportsViewController.reloadTableViewData()
+                            self?.preLiveViewController.reloadTableViewData()
 
                         }
                         .store(in: &self.cancellables)
                 }
                 else {
                     self.screenState = .anonymous
-                    self.sportsViewController.reloadTableViewData()
+                    self.preLiveViewController.reloadTableViewData()
                 }
             }
             .store(in: &cancellables)

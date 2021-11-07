@@ -233,6 +233,7 @@ class LiveEventsViewController: UIViewController {
 
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipValue in
 
                 if betslipValue == 0 {
