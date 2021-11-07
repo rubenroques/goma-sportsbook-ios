@@ -39,5 +39,25 @@ extension EveryMatrix {
             case shortBettingTypeName = "shortBettingTypeName"
             case isAvailable = "isAvailable"
         }
+
+        func bettingOfferUpdated(withOdd odd: Double) -> BettingOffer {
+            return BettingOffer(
+                type: self.type,
+                id: self.id,
+                providerId: self.providerId,
+                outcomeId: self.outcomeId,
+                bettingTypeId: self.bettingTypeId,
+                statusId: self.statusId,
+                isLive: self.isLive,
+                oddsValue: odd,
+                couponKey: self.couponKey,
+                lastChangedTime: self.lastChangedTime,
+                bettingTypeName: self.bettingTypeName,
+                shortBettingTypeName: self.shortBettingTypeName,
+                isAvailable: self.isAvailable
+            )
+        }
     }
+
+
 }

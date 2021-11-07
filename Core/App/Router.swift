@@ -45,7 +45,7 @@ class Router {
         })
         self.rootWindow.rootViewController = splashViewController
 
-        // self.rootWindow.rootViewController = RootViewController()
+         //self.rootWindow.rootViewController = BetslipViewController()
 
         // self.rootWindow.rootViewController = ContainerViewController(containedView: CompetitionsFiltersView(), containerType: .edges)
 
@@ -69,7 +69,7 @@ class Router {
 
     func subscribeToUserActionBlockers() {
         Env.businessSettingsSocket.maintenanceModePublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { message in
                 if let messageValue = message {
                     self.showUnderMaintenanceScreen(withReason: messageValue)
