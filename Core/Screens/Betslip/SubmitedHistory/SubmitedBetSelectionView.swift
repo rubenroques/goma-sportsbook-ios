@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class SubmitedBetSelectionView: NibView {
 
@@ -22,6 +23,9 @@ class SubmitedBetSelectionView: NibView {
     @IBOutlet weak var oddValueLabel: UILabel!
     @IBOutlet weak var upChangeOddValueImage: UIImageView!
     @IBOutlet weak var downChangeOddValueImage: UIImageView!
+
+    var oddSubscriber: AnyCancellable?
+    var currentOddValue: Double?
 
     var betHistoryEntrySelection: BetHistoryEntrySelection
 
@@ -86,6 +90,29 @@ class SubmitedBetSelectionView: NibView {
             self.countryCompetitionFlagImageView.isHidden = true
         }
 
+        if let bettingOffer = Env.everyMatrixStorage.bettingOffers[betHistoryEntrySelection.outcomeId] {
+
+        self.oddSubscriber = Env.everyMatrixStorage
+            .oddPublisherForBettingOfferId(bettingOffer.id)?
+            .map(\.oddsValue)
+            .compactMap({ $0 })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] newOddValue in
+
+                if let currentOddValue = self?.currentOddValue {
+                    if newOddValue > currentOddValue {
+                        self?.highlightOddChangeUp()
+                    }
+                    else if newOddValue < currentOddValue {
+                        self?.highlightOddChangeDown()
+                    }
+                }
+                self?.currentOddValue = newOddValue
+                self?.oddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+            })
+        }
+
+
         self.setupWithTheme()
 
     }
@@ -102,4 +129,39 @@ class SubmitedBetSelectionView: NibView {
         oddValueLabel.textColor = UIColor.App.headingMain
     }
 
+    func highlightOddChangeUp(animated: Bool = true) {
+        self.oddBaseView.layer.borderWidth = 1.5
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
+            self.upChangeOddValueImage.alpha = 1.0
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
+            self.upChangeOddValueImage.alpha = 0.0
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.clear, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+    }
+
+    func highlightOddChangeDown(animated: Bool = true) {
+        self.oddBaseView.layer.borderWidth = 1.5
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
+            self.downChangeOddValueImage.alpha = 1.0
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
+            self.downChangeOddValueImage.alpha = 0.0
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.clear, duration: animated ? 0.4 : 0.0)
+        }, completion: nil)
+    }
+
+    private func animateBorderColor(view: UIView, color: UIColor, duration: Double) {
+        let animation = CABasicAnimation(keyPath: "borderColor")
+        animation.fromValue = layer.borderColor
+        animation.toValue = color.cgColor
+        animation.duration = duration
+        view.layer.add(animation, forKey: "borderColor")
+        view.layer.borderColor = color.cgColor
+    }
+    
 }

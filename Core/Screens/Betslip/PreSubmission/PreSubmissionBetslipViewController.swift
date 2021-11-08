@@ -388,7 +388,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
 
         self.winningsValueSingleLabel.textColor = UIColor.App.headingMain
-        self.winningsValueMultipleLabel.textColor = UIColor.red
+        self.winningsValueMultipleLabel.textColor = UIColor.App.headingMain
 
         StyleHelper.styleButton(button: self.placeBetButton)
     }

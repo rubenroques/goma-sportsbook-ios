@@ -227,15 +227,14 @@ class LiveEventsViewController: UIViewController {
 
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
-            self.tableView.layoutIfNeeded()
-            self.tableView.setContentOffset(.zero, animated: true)
+//            self.tableView.layoutIfNeeded()
+//            self.tableView.setContentOffset(.zero, animated: true)
         }
 
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipValue in
-
                 if betslipValue == 0 {
                     self?.betslipCountLabel.isHidden = true
                 }
@@ -247,7 +246,6 @@ class LiveEventsViewController: UIViewController {
             .store(in: &cancellables)
 
     }
-
 
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground

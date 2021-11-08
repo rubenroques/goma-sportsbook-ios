@@ -82,8 +82,6 @@ class SportSelectionViewController: UIViewController {
         self.searchBar.sizeToFit()
         self.searchBar.isTranslucent = false
         self.searchBar.backgroundImage = UIImage()
-//        self.searchBar.tintColor = .blue
-//        self.searchBar.barTintColor = .red
         self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
         self.searchBar.placeholder = localized("string_search")
 

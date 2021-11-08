@@ -74,6 +74,8 @@ class SubmitedBetTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.oddBaseView.isHidden = false
+
         self.betHistoryEntry = nil
 
         self.oddValueLabel.text = "-.--"
@@ -124,6 +126,10 @@ class SubmitedBetTableViewCell: UITableViewCell {
         }
 
         self.stackView.removeAllArrangedSubviews()
+
+        if (betHistoryEntry.selections ?? []).count == 1 {
+            self.oddBaseView.isHidden = true
+        }
 
         for selection in betHistoryEntry.selections ?? [] {
             let submitedBetSelectionView = SubmitedBetSelectionView(betHistoryEntrySelection: selection)

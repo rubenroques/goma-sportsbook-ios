@@ -2049,9 +2049,9 @@
 		45D712FC27033BF400AC0364 /* LiveEvents */ = {
 			isa = PBXGroup;
 			children = (
+				45726335272C0998002F2959 /* LiveEventsViewModel.swift */,
 				45D712F627033BEF00AC0364 /* LiveEventsViewController.swift */,
 				45D712F727033BEF00AC0364 /* LiveEventsViewController.xib */,
-				45726335272C0998002F2959 /* LiveEventsViewModel.swift */,
 				45726339272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.swift */,
 				45726338272C1A22002F2959 /* LiveMatchWidgetCollectionViewCell.xib */,
 			);
@@ -3467,7 +3467,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00207;
+				CURRENT_PROJECT_VERSION = 00208;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3493,7 +3493,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00207;
+				CURRENT_PROJECT_VERSION = 00208;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
