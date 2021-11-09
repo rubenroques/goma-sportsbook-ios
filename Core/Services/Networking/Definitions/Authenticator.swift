@@ -32,7 +32,7 @@ class Authenticator {
         return queue.sync { [weak self] in
 
             var shouldForceRefresh = forceRefresh
-
+    
             // We're already loading a new token
             if let publisher = self?.refreshPublisher {
                 return publisher
@@ -57,7 +57,8 @@ class Authenticator {
             let bodyJSON = [
                 "device_uuid": deviceId,
                 "device_type": "ios",
-                "type": "anonymous"
+                "type": "anonymous",
+                "device_token": Env.deviceFCMToken
             ]
 
             let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
@@ -68,6 +69,7 @@ class Authenticator {
                 .decode(type: AuthToken.self, decoder: JSONDecoder())
                 .handleEvents(receiveOutput: { token in
                     self?.currentToken = token
+                    print("TOKEN GOMA: \(token)")
                 }, receiveCompletion: { _ in
                     self?.queue.sync {
                         self?.refreshPublisher = nil

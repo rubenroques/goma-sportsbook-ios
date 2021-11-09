@@ -576,6 +576,9 @@
 		A92F5D8B2719D63300884BDF /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
 		A92F5D8D271ED08400884BDF /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		A92F5D8E271ED08400884BDF /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
+		A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A96B70B82739891200FEF07D /* FirebaseMessaging */; };
+		A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
+		A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
 		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
@@ -1004,6 +1007,7 @@
 		A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSliderInfoView.swift; sourceTree = "<group>"; };
 		A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterSliderInfoView.xib; sourceTree = "<group>"; };
 		A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
+		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1110,6 +1114,7 @@
 				45EF542F270C5FC300D1E13E /* MultiSlider in Frameworks */,
 				45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */,
 				A9B841A326E26C0B00269B05 /* Starscream in Frameworks */,
+				A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */,
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
 				45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */,
 			);
@@ -1979,6 +1984,7 @@
 				45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */,
 				45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */,
 				A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */,
+				A96B70BA273A891F00FEF07D /* UserLoginForm.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -2496,6 +2502,7 @@
 				45D871C7271076B800F5B87B /* Collections */,
 				45D871C9271076B800F5B87B /* OrderedCollections */,
 				454E0AD92735C79600794E0C /* CombineExt */,
+				A96B70B82739891200FEF07D /* FirebaseMessaging */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -2774,7 +2781,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  # swiftlint\n  echo \"Disabled\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n   swiftlint\n  echo \"Disabled\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		45B2003026C46294005831CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2791,7 +2798,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#if which swiftlint >/dev/null; then\n  #swiftlint\n#else\n  #echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2921,6 +2928,7 @@
 				455A0CE426BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3127148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
+				A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
@@ -3178,6 +3186,7 @@
 				455A0CE526BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
+				A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
@@ -3851,6 +3860,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */;
 			productName = MultiSlider;
+		};
+		A96B70B82739891200FEF07D /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		A9B8419026E2359800269B05 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;
