@@ -40,6 +40,12 @@ class LiveEventsViewModel: NSObject {
         }
     }
 
+    var homeFilterOptions: HomeFilterOptions? = nil {
+        didSet {
+            print("FILTER ON")
+            self.updateContentList()
+        }
+    }
     var dataDidChangedAction: (() -> ())?
 
     private var cancellables = Set<AnyCancellable>()

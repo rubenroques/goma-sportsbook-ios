@@ -9,7 +9,7 @@ import UIKit
 import MultiSlider
 import OrderedCollections
 
-class HomeFilterViewController: UIViewController {
+class HomeFilterViewController: UIViewController{
     @IBOutlet private var topView: UIView!
     @IBOutlet private var navigationView: UIView!
     @IBOutlet private var navigationLabel: UILabel!
@@ -33,12 +33,18 @@ class HomeFilterViewController: UIViewController {
     var filterValues: HomeFilterOptions?
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
     var sportsModel: SportsViewModel
+    var liveEventsViewModel: LiveEventsViewModel
     weak var delegate: HomeFilterOptionsViewDelegate?
+    var resetIsPressed : Bool = false
 
-    init(sportsModel: SportsViewModel) {
+  
+    init( sportsModel: SportsViewModel = SportsViewModel(selectedSportId: .football) , liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football) ) {
         self.sportsModel = sportsModel
+        self.liveEventsViewModel = liveEventsViewModel
         super.init(nibName: "HomeFilterViewController", bundle: nil)
     }
+
+
 
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
@@ -74,7 +80,7 @@ class HomeFilterViewController: UIViewController {
         navigationCancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
         sortByFilterCollapseView.isHidden = true
-
+        
         setupTimeRangeSection()
 
         setupAvailableMarketsSection(value: "\(String(describing: filterValues!.defaultMarketId))")
@@ -115,11 +121,21 @@ class HomeFilterViewController: UIViewController {
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
         let maxValue: CGFloat = 24
-        let values = filterValues!.timeRange
+        let values : [CGFloat]
+        if delegate?.turnTimeRangeOn == true {
+            timeRangeCollapseView.isUserInteractionEnabled = true
+             values = filterValues!.timeRange
+        }else{
+            timeRangeCollapseView.isUserInteractionEnabled = false
+            values = [minValue , maxValue]
+            timeRangeCollapseView.alpha = 0.3 //para desmaiar as cores
+        
+        }
         timeSliderValues = values
         timeRangeCollapseView.setTitle(title: localized("string_time_today_only"))
         timeRangeCollapseView.hasCheckbox = false
-
+        
+        
         let contentView = timeRangeCollapseView.getContentView()
 
         setupSlider(minValue: minValue, maxValue: maxValue, values: values, steps: 1, hasLabels: true, edges: UIEdgeInsets(top: 8, left: 8, bottom: 16, right: 8), view: contentView, target: #selector(timeSliderChanged))
@@ -258,7 +274,7 @@ class HomeFilterViewController: UIViewController {
         slidersArray[1].value = filterValues!.oddsRange
         oddsCollapseView.updateOddsLabels(fromText: "\(filterValues!.oddsRange[0])", toText: "\(filterValues!.oddsRange[1])")
         oddsSliderValues = [slidersArray[1].value[0].round(to: 1), slidersArray[1].value[1].round(to: 1)]
-
+        
         for view in self.marketViews {
             view.isChecked = false
             // Default market selected
@@ -267,6 +283,9 @@ class HomeFilterViewController: UIViewController {
                 defaultMarketId = view.viewId
             }
         }
+        resetIsPressed = true
+        delegate?.filterIsApplied = false
+        
 
     }
 
@@ -275,10 +294,23 @@ class HomeFilterViewController: UIViewController {
     }
 
     @IBAction private func applyFiltersAction() {
+        
         let homeFilterOptions = HomeFilterOptions(timeRange: timeSliderValues, defaultMarketId: defaultMarketId, oddsRange: oddsSliderValues)
         sportsModel.homeFilterOptions = homeFilterOptions
+        
         delegate?.setHomeFilters(homeFilters: sportsModel.homeFilterOptions!)
+        if resetIsPressed == false {
+            delegate?.filterIsApplied = true
+            resetIsPressed = false
+        }else {
+            delegate?.filterIsApplied = false
+            resetIsPressed = false
+        }
+        
         self.dismiss(animated: true, completion: nil)
+        
+
+        
     }
 
 }

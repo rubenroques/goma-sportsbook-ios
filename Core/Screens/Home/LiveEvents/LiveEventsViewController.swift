@@ -11,7 +11,7 @@ import Combine
 import OrderedCollections
 import SwiftUI
 
-class LiveEventsViewController: UIViewController {
+class LiveEventsViewController: UIViewController  {
 
     @IBOutlet private weak var filtersBarBaseView: UIView!
     @IBOutlet private weak var filtersCollectionView: UICollectionView!
@@ -25,6 +25,11 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
 
+    var filterIsApplied : Bool = true
+    var turnTimeRangeOn : Bool = false
+    
+    var screen : Int = 2
+    
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
         betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
@@ -159,6 +164,10 @@ class LiveEventsViewController: UIViewController {
 
         filtersButtonView.backgroundColor = UIColor.App.secondaryBackground
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
+        filtersButtonView.addGestureRecognizer(tapFilterGesture)
+        filtersButtonView.isUserInteractionEnabled = true
+
 
 
         let flowLayout = UICollectionViewFlowLayout()
@@ -263,6 +272,13 @@ class LiveEventsViewController: UIViewController {
         self.betslipButtonView.backgroundColor = UIColor.App.mainTint
     }
 
+    @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
+        let homeFilterViewController = HomeFilterViewController(  liveEventsViewModel: self.viewModel)
+        homeFilterViewController.delegate = self
+        self.present(homeFilterViewController, animated: true, completion: nil)
+        
+    }
+    
     func reloadData() {
         self.tableView.reloadData()
     }
@@ -383,6 +399,22 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
     }
 
 }
+
+
+extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
+  
+    func setHomeFilters(homeFilters: HomeFilterOptions) {
+        self.viewModel.homeFilterOptions = homeFilters
+    
+        if filterIsApplied == true {
+            filtersButtonView.backgroundColor = .brown
+        }else{
+            filtersButtonView.backgroundColor = .blue
+        }
+    }
+    
+}
+
 
 extension LiveEventsViewController: SportTypeSelectionViewDelegate {
     func setSportType(_ sportType: SportType) {

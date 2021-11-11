@@ -1904,8 +1904,8 @@
 		45A16E112707B69200A95C01 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
-				45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */,
 				45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */,
+				45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */,
 			);
 			path = Filters;
 			sourceTree = "<group>";
@@ -2508,7 +2508,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1310;
 				TargetAttributes = {
 					455A0C4F26BD902C00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -2719,14 +2719,10 @@
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457816AC2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
-				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457F497927383A350047169D /* SubmitedBetSelectionView.xib in Resources */,
 				457816BE2707632400F66878 /* TitleTableViewHeader.xib in Resources */,
-				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
-				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
-				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				A9C6022E2716F41200992E11 /* HomeFilterViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A9C82FC626F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,

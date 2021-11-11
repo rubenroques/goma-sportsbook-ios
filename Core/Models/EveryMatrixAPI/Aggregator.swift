@@ -9,7 +9,7 @@ import Foundation
 
 extension EveryMatrix {
 
-    enum AggregatorContentType: Decodable {
+    enum AggregatorContentType {
         case update(content: [ContentUpdate])
         case initialDump(content: [Content])
     }
