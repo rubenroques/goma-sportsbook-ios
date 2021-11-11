@@ -538,7 +538,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -550,11 +550,13 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle("My Games")
+            cell.setupWithTitle("Popular")
         case 1:
             cell.setupWithTitle("Today")
         case 2:
             cell.setupWithTitle("Competitions")
+        case 3:
+            cell.setupWithTitle("My Games")
         default:
             ()
         }
@@ -580,6 +582,8 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             self.viewModel.setMatchListType(.today)
         case 2:
             self.viewModel.setMatchListType(.competitions)
+        case 3:
+            self.viewModel.setMatchListType(.favoriteGames)
         default:
             ()
         }

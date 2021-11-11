@@ -23,6 +23,8 @@ class SportsViewModel: NSObject {
     private var competitionsMatches: [Match] = []
     private var competitions: [Competition] = []
 
+    private var favoriteMatches: [Match] = []
+
     var competitionGroupsPublisher: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
 
     var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.myGames)
@@ -30,11 +32,13 @@ class SportsViewModel: NSObject {
         case myGames
         case today
         case competitions
+        case favoriteGames
     }
 
     private var myGamesSportsViewModelDataSource = MyGamesSportsViewModelDataSource(banners: [], userFavoriteMatches: [], popularMatches: [])
     private var todaySportsViewModelDataSource = TodaySportsViewModelDataSource(todayMatches: [])
     private var competitionSportsViewModelDataSource = CompetitionSportsViewModelDataSource(competitions: [])
+    private var favoriteGamesSportsViewModelDataSource = FavoriteGamesSportsViewModelDataSource(userFavoriteMatches: [])
 
     private var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
@@ -74,6 +78,7 @@ class SportsViewModel: NSObject {
     private var locationsPublisher: AnyPublisher<[EveryMatrix.Location], EveryMatrix.APIError>?
     private var competitionsMatchesPublisher: AnyCancellable?
     private var bannersInfoPublisher: AnyCancellable?
+    private var favoriteMatchesPublisher: AnyCancellable?
 
     private var popularMatchesRegister: EndpointPublisherIdentifiable?
     private var todayMatchesRegister: EndpointPublisherIdentifiable?
@@ -81,11 +86,14 @@ class SportsViewModel: NSObject {
     private var locationsRegister: EndpointPublisherIdentifiable?
     private var competitionsMatchesRegister: EndpointPublisherIdentifiable?
     private var bannersInfoRegister: EndpointPublisherIdentifiable?
+    private var favoriteMatchesRegister: EndpointPublisherIdentifiable?
 
     private var popularMatchesCount = 10
     private var popularMatchesPage = 1
     private var todayMatchesCount = 10
     private var todayMatchesPage = 1
+    private var favoriteMatchesCount = 10
+    private var favoriteMatchesPage = 1
 
     init(selectedSportId: SportType) {
         self.selectedSportId = selectedSportId
@@ -118,6 +126,7 @@ class SportsViewModel: NSObject {
 
         self.popularMatchesPage = 1
         self.todayMatchesPage = 1
+        self.favoriteMatchesPage = 1
         
         self.competitionsMatches = []
         self.competitions = []
@@ -129,6 +138,7 @@ class SportsViewModel: NSObject {
         self.fetchPopularMatches()
         self.fetchTodayMatches()
         self.fetchCompetitionsFilters()
+        self.fetchFavoriteMatches()
 
         self.isLoadingCompetitions.send(false)
         self.isLoadingMyGamesList.send(false)
@@ -151,6 +161,13 @@ class SportsViewModel: NSObject {
         self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
 
         self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
+
+        self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
+        self.favoriteGamesSportsViewModelDataSource.refetchFavorites = {
+            print("REFETCH FAVORITES")
+            self.fetchFavoriteMatches()
+        }
+
 
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
@@ -292,6 +309,14 @@ class SportsViewModel: NSObject {
         return filteredCompetitions
     }
 
+    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents,
+                                                 shouldClear: true)
+        self.favoriteMatches = Env.everyMatrixStorage.matchesForListType(.favoriteMatchEvents)
+        //self.isLoadingPopularList.send(false)
+        self.updateContentList()
+    }
+
     private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .popularEvents,
                                                  shouldClear: true)
@@ -421,6 +446,10 @@ class SportsViewModel: NSObject {
     }
 
     private func updateCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+    }
+
+    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
     }
 
@@ -703,6 +732,49 @@ class SportsViewModel: NSObject {
 
     }
 
+    private func fetchFavoriteMatches() {
+
+        if let favoriteMatchesRegister = favoriteMatchesRegister {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
+        }
+
+        let userId = Env.userSessionStore.userSessionPublisher.value!.userId
+
+        let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
+                                                      language: "en",
+                                                      userId: userId)
+
+        self.favoriteMatchesPublisher?.cancel()
+        self.favoriteMatchesPublisher = nil
+
+        self.favoriteMatchesPublisher = TSManager.shared
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving Favorite data!")
+
+                case .finished:
+                    print("Favorite Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("SportsViewModel favoriteMatchesPublisher connect")
+                    self?.favoriteMatchesRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("SportsViewModel favoriteMatchesPublisher initialContent")
+                    self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
+                case .updatedContent(let aggregatorUpdates):
+                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
+                case .disconnect:
+                    print("SportsViewModel favoriteMatchesPublisher disconnect")
+                }
+
+            })
+
+    }
+
 }
 
 
@@ -816,6 +888,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.numberOfSections(in: tableView)
         case .competitions:
             return self.competitionSportsViewModelDataSource.numberOfSections(in: tableView)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.numberOfSections(in: tableView)
         }
     }
 
@@ -827,6 +901,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .competitions:
             return self.competitionSportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
         }
     }
 
@@ -839,6 +915,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             cell = self.todaySportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .competitions:
             cell = self.competitionSportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+        case .favoriteGames:
+            cell = self.favoriteGamesSportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
         }
         return cell
     }
@@ -851,6 +929,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         case .competitions:
             return self.competitionSportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         }
     }
 
@@ -862,6 +942,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .competitions:
             return self.competitionSportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
         }
     }
 
@@ -873,6 +955,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .competitions:
             return self.competitionSportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
         }
     }
 
@@ -884,6 +968,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .competitions:
             return self.competitionSportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         }
     }
 
@@ -895,6 +981,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .competitions:
             return self.competitionSportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
         }
     }
 
@@ -906,6 +994,8 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.todaySportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .competitions:
             return self.competitionSportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        case .favoriteGames:
+            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         }
     }
 
@@ -1264,6 +1354,105 @@ class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UIT
         tableView.beginUpdates()
         tableView.reloadRows(at: rows, with: .automatic)
         tableView.endUpdates()
+
+    }
+
+}
+
+class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+
+    var userFavoriteMatches: [Match] = []
+
+    private var matches: [Match] {
+        return userFavoriteMatches
+    }
+
+    var requestNextPage: (() -> ())?
+    var refetchFavorites: (() -> Void)?
+
+    init(userFavoriteMatches: [Match]) {
+        self.userFavoriteMatches = userFavoriteMatches
+
+        super.init()
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch section {
+        case 0:
+            return self.userFavoriteMatches.count
+        default:
+            return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        switch indexPath.section {
+        case 0:
+            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+               let match = self.userFavoriteMatches[safe: indexPath.row] {
+                cell.setupWithMatch(match)
+                cell.isFavoriteLineCell = { value in
+
+                    print("REFETCH")
+                    self.refetchFavorites!()
+                }
+                return cell
+            }
+        default:
+            ()
+        }
+        fatalError()
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
+            as? TitleTableViewHeader {
+            headerView.sectionTitleLabel.text = "My Games"
+            return headerView
+        }
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 54
+        }
+        return 0.01
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        if section == 0 {
+            return 54
+        }
+        return 0.01
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 1:
+            //Loading cell
+            return 70
+        default:
+            return 155
+        }
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        switch indexPath.section {
+        case 1:
+            //Loading cell
+            return 70
+        default:
+            return 155
+        }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 
     }
 

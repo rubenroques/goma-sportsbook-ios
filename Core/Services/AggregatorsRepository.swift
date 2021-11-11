@@ -14,6 +14,7 @@ enum AggregatorListType {
     case todayEvents
     case competitions
     case allLiveEvents
+    case favoriteMatchEvents
 }
 
 class AggregatorsRepository {

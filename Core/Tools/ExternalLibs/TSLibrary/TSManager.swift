@@ -289,7 +289,6 @@ final class TSManager {
 
         swampSession.register(endpoint.procedure, options: args,
         onSuccess: { (registration: Registration) in
-
             subject.send(TSSubscriptionContent.connect(publisherIdentifiable: registration))
 
             if let initialDumpEndpoint = endpoint.intiailDumpRequest {

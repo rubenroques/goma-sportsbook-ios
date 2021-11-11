@@ -44,6 +44,7 @@ enum TSRouter {
     case bannersInfoPublisher(operatorId: String, language: String)
     case locationsPublisher(operatorId: String, language: String, sportId: String)
     case tournamentsPublisher(operatorId: String, language: String, sportId: String)
+    case favoriteMatchesPublisher(operatorId: String, language: String, userId: String)
 
     // Others
     case registrationDismissed
@@ -170,6 +171,9 @@ enum TSRouter {
             return "/sports/\(operatorId)/\(language)/locations/\(sportId)"
         case .tournamentsPublisher(let operatorId, let language, let sportId):
             return "/sports/\(operatorId)/\(language)/tournaments/\(sportId)"
+        case .favoriteMatchesPublisher(let operatorId, let language, let userId):
+            let marketsCount = 5
+            return "/sports/\(operatorId)/\(language)/user-favorite-events-aggregator/\(userId)/\(marketsCount)"
 
         //
         //
@@ -495,6 +499,8 @@ enum TSRouter {
         case .locationsPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .tournamentsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .favoriteMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
 
         default:
