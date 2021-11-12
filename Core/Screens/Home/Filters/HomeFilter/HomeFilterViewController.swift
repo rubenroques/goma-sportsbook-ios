@@ -35,9 +35,8 @@ class HomeFilterViewController: UIViewController{
     var sportsModel: SportsViewModel
     var liveEventsViewModel: LiveEventsViewModel
     weak var delegate: HomeFilterOptionsViewDelegate?
-    var resetIsPressed : Bool = false
-
-  
+    var count : Int = 0
+    
     init( sportsModel: SportsViewModel = SportsViewModel(selectedSportId: .football) , liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football) ) {
         self.sportsModel = sportsModel
         self.liveEventsViewModel = liveEventsViewModel
@@ -67,7 +66,15 @@ class HomeFilterViewController: UIViewController{
     func commonInit() {
         // Test values
         mainMarkets = Env.everyMatrixStorage.mainMarkets
-        filterValues = sportsModel.homeFilterOptions != nil ? sportsModel.homeFilterOptions : HomeFilterOptions()
+    
+        if(sportsModel.homeFilterOptions != nil ){
+            filterValues = sportsModel.homeFilterOptions
+        }else if (liveEventsViewModel.homeFilterOptions != nil){
+            filterValues = liveEventsViewModel.homeFilterOptions
+        }else{
+            filterValues = HomeFilterOptions()
+        }
+        
         defaultMarketId = filterValues!.defaultMarketId
 
         navigationLabel.text = localized("string_filters")
@@ -90,6 +97,13 @@ class HomeFilterViewController: UIViewController{
         applyButton.setTitle(localized("string_apply"), for: .normal)
         applyButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         applyButton.layer.cornerRadius = CornerRadius.button
+        
+        
+        
+        
+        
+        
+        
     }
 
     func setupWithTheme() {
@@ -149,6 +163,8 @@ class HomeFilterViewController: UIViewController{
                 })
             }
         }
+        
+        
 
     }
 
@@ -269,24 +285,25 @@ class HomeFilterViewController: UIViewController{
     }
 
     @IBAction private func resetAction() {
-        slidersArray[0].value = filterValues!.timeRange
-        timeSliderValues = filterValues!.timeRange
-        slidersArray[1].value = filterValues!.oddsRange
-        oddsCollapseView.updateOddsLabels(fromText: "\(filterValues!.oddsRange[0])", toText: "\(filterValues!.oddsRange[1])")
+        let homeFilterOptions = HomeFilterOptions()
+
+        slidersArray[0].value = homeFilterOptions.timeRange
+        
+        slidersArray[1].value = homeFilterOptions.oddsRange
+        
+        oddsCollapseView.updateOddsLabels(fromText: "\(slidersArray[1].value[0])", toText: "\(slidersArray[1].value[1])")
         oddsSliderValues = [slidersArray[1].value[0].round(to: 1), slidersArray[1].value[1].round(to: 1)]
+        
         
         for view in self.marketViews {
             view.isChecked = false
             // Default market selected
-            if view.viewId == filterValues?.defaultMarketId {
+            if view.viewId == homeFilterOptions.defaultMarketId {
                 view.isChecked = true
                 defaultMarketId = view.viewId
             }
         }
-        resetIsPressed = true
-        delegate?.filterIsApplied = false
-        
-
+        count = 0
     }
 
     @IBAction private func cancelAction() {
@@ -295,21 +312,22 @@ class HomeFilterViewController: UIViewController{
 
     @IBAction private func applyFiltersAction() {
         
-        let homeFilterOptions = HomeFilterOptions(timeRange: timeSliderValues, defaultMarketId: defaultMarketId, oddsRange: oddsSliderValues)
-        sportsModel.homeFilterOptions = homeFilterOptions
-        
-        delegate?.setHomeFilters(homeFilters: sportsModel.homeFilterOptions!)
-        if resetIsPressed == false {
-            delegate?.filterIsApplied = true
-            resetIsPressed = false
-        }else {
-            delegate?.filterIsApplied = false
-            resetIsPressed = false
+        if timeSliderValues[0] != 0.0 || timeSliderValues[1] != 24.0{
+            count = count + 1
         }
         
-        self.dismiss(animated: true, completion: nil)
+        if oddsSliderValues[0] != 1.0 || oddsSliderValues[1] != 30.0{
+            count = count + 1
+        }
         
-
+        if defaultMarketId != 69 {
+           count = count + 1
+        }
+        
+        let homeFilterOptions = HomeFilterOptions(timeRange: timeSliderValues, defaultMarketId: defaultMarketId, oddsRange: oddsSliderValues, countFilters : count)
+        delegate?.setHomeFilters(homeFilters: homeFilterOptions)
+        
+        self.dismiss(animated: true, completion: nil)
         
     }
 

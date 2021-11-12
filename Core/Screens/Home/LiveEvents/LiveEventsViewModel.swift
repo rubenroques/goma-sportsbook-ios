@@ -82,6 +82,45 @@ class LiveEventsViewModel: NSObject {
         self.fetchAllMatches()
     }
 
+    func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
+        guard let filterOptionsValue = filtersOptions else {
+            return matches
+        }
+
+        var filteredMatches: [Match] = []
+        for match in matches {
+            if match.markets.isEmpty {
+                continue
+            }
+            // Check default market order
+            var marketSort: [Market] = []
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+            for market in match.markets {
+                if market.typeId != marketSort[0].typeId {
+                    marketSort.append(market)
+                }
+            }
+
+            // Check odds filter
+            let matchOdds = marketSort[0].outcomes
+            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            for odd in matchOdds {
+                let oddValue = CGFloat(odd.bettingOffer.value)
+                if oddsRange.contains(oddValue) {
+                    var newMatch = match
+                    newMatch.markets = marketSort
+
+                    filteredMatches.append(newMatch)
+                    break
+                }
+            }
+
+        }
+        return filteredMatches
+    }
+    
+    
     func setMatchListType(_ matchListType: MatchListType) {
         self.matchListTypePublisher.send(matchListType)
         self.updateContentList()
@@ -89,7 +128,9 @@ class LiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.allMatchesViewModelDataSource.allMatches = self.allMatches
+        self.allMatchesViewModelDataSource.allMatches = filterAllMatches(with: self.homeFilterOptions, matches: self.allMatches)
+        
+       //self.allMatchesViewModelDataSource.allMatches = self.allMatches
         self.allMatchesViewModelDataSource.banners = self.banners
 
         if self.allMatches.isNotEmpty, self.allMatches.count < (self.allMatchesCount * self.allMatchesPage) {

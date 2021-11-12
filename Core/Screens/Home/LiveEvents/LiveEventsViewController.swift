@@ -25,10 +25,8 @@ class LiveEventsViewController: UIViewController  {
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
 
-    var filterIsApplied : Bool = true
+
     var turnTimeRangeOn : Bool = false
-    
-    var screen : Int = 2
     
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
@@ -202,6 +200,8 @@ class LiveEventsViewController: UIViewController  {
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(handleSportsSelectionTap))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
 
+        
+        
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
@@ -278,6 +278,8 @@ class LiveEventsViewController: UIViewController  {
         self.present(homeFilterViewController, animated: true, completion: nil)
         
     }
+    
+    
     
     func reloadData() {
         self.tableView.reloadData()
@@ -401,15 +403,16 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 }
 
 
+
 extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
-  
+
     func setHomeFilters(homeFilters: HomeFilterOptions) {
         self.viewModel.homeFilterOptions = homeFilters
-    
-        if filterIsApplied == true {
-            filtersButtonView.backgroundColor = .brown
+        
+        if homeFilters.countFilters != 0 {
+            filtersButtonView.backgroundColor = .systemPink
         }else{
-            filtersButtonView.backgroundColor = .blue
+            filtersButtonView.backgroundColor =  UIColor.App.secondaryBackground
         }
     }
     

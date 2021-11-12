@@ -24,10 +24,8 @@ class PreLiveEventsViewController: UIViewController {
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
     
-    var filterIsApplied : Bool = true
+
     var turnTimeRangeOn : Bool = false
-    
-    var screen : Int = 1
     
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
     private lazy var betslipButtonView: UIView = {
@@ -612,23 +610,24 @@ extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     }
 }
 
-protocol HomeFilterOptionsViewDelegate: AnyObject {
-    var filterIsApplied: Bool { get set }
-    var turnTimeRangeOn: Bool { get set }
-    var screen : Int { get set }
-    func setHomeFilters(homeFilters: HomeFilterOptions)
 
+protocol HomeFilterOptionsViewDelegate: AnyObject {
+    var turnTimeRangeOn: Bool { get set }
+    func setHomeFilters(homeFilters: HomeFilterOptions)
+    
 }
 
+
+
 extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
-  
+
     func setHomeFilters(homeFilters: HomeFilterOptions) {
         self.viewModel.homeFilterOptions = homeFilters
-        print (filterIsApplied)
-        if filterIsApplied == true {
-            filtersButtonView.backgroundColor = .brown
+        
+        if homeFilters.countFilters != 0 {
+            filtersButtonView.backgroundColor = .systemPink
         }else{
-            filtersButtonView.backgroundColor = .blue
+            filtersButtonView.backgroundColor =  UIColor.App.secondaryBackground
         }
     }
     
