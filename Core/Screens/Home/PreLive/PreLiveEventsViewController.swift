@@ -112,6 +112,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.connectPublishers()
         self.viewModel.fetchData()
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -538,7 +539,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return 5
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -557,6 +558,8 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             cell.setupWithTitle("Competitions")
         case 3:
             cell.setupWithTitle("My Games")
+        case 4:
+            cell.setupWithTitle("My Competitions")
         default:
             ()
         }
@@ -584,12 +587,18 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             self.viewModel.setMatchListType(.competitions)
         case 3:
             self.viewModel.setMatchListType(.favoriteGames)
+        case 4:
+            self.viewModel.setMatchListType(.favoriteCompetitions)
         default:
             ()
         }
-
         self.filtersCollectionView.reloadData()
+        self.filtersCollectionView.layoutIfNeeded()
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+//        let rect = self.filtersCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
+//             self.filtersCollectionView.scrollRectToVisible(rect!, animated: true)
+
+
     }
 
 }

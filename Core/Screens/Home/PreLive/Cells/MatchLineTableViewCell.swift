@@ -181,7 +181,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                 cell.isFavoriteCell = { value in
-                    self.isFavoriteLineCell!(value)
+                    self.isFavoriteLineCell?(value)
                 }
                 return cell
             }

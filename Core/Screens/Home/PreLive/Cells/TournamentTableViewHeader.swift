@@ -37,6 +37,8 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         }
     }
 
+    var isFavoriteTournament: ((Bool) -> Void)?
+
     var didToggleHeaderViewAction: ((Int) -> ())?
 
     override func awakeFromNib() {
@@ -123,11 +125,15 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
             if self.isFavorite {
                 self.isFavorite = false
+                self.isFavoriteTournament?(false)
             }
             else {
                 self.isFavorite = true
 
                 Env.favoritesManager.favoriteEventsId.append(self.competition!.id)
+
+                self.isFavoriteTournament?(true)
+
             }
             Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
         }

@@ -285,7 +285,7 @@ final class TSManager {
 
         let args: [String: Any] = endpoint.kwargs ?? [:]
 
-        Logger.log("subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
+        //Logger.log("subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
 
         swampSession.register(endpoint.procedure, options: args,
         onSuccess: { (registration: Registration) in
