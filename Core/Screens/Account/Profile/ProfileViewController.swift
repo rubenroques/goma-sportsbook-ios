@@ -30,6 +30,9 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var scrollBaseView: UIView!
     @IBOutlet private weak var scrollView: UIScrollView!
 
+    @IBOutlet private var activationStackView: UIStackView!
+    @IBOutlet private var activationView: ActivationAlertView!
+
     @IBOutlet private weak var personalInfoBaseView: UIView!
     @IBOutlet private weak var personalInfoIconBaseView: UIView!
     @IBOutlet private weak var personalInfoIconImageView: UIImageView!
@@ -228,6 +231,7 @@ class ProfileViewController: UIViewController {
 
         currentBalanceLabel.text = "0,00€"
 
+        activationView.layer.cornerRadius = CornerRadius.modal
         //
         personalInfoLabel.text = localized("string_personal_info")
         passwordUpdateLabel.text = localized("string_update_password")

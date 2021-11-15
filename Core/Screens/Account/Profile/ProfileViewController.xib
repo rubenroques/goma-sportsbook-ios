@@ -23,6 +23,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="activationStackView" destination="1bn-gy-5Xw" id="fO1-c2-hEE"/>
+                <outlet property="activationView" destination="zdZ-Yf-qoY" id="uS6-iP-V57"/>
                 <outlet property="appSettingsBaseView" destination="3zn-MA-M6b" id="Z7o-NP-OpQ"/>
                 <outlet property="appSettingsIconBaseView" destination="4Ap-fR-7we" id="HOg-ol-8jO"/>
                 <outlet property="appSettingsIconImageView" destination="Lom-Gm-VeW" id="mLj-T4-idW"/>
@@ -87,10 +89,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2I-4m-Itm">
-                    <rect key="frame" x="0.0" y="419" width="414" height="952"/>
+                    <rect key="frame" x="0.0" y="527" width="414" height="844"/>
                     <subviews>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PyJ-eV-XVy">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="952"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="929"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zVU-2r-bIc">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="747"/>
@@ -603,20 +605,20 @@ Sportsbook® All Rights Reserved</string>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstItem="PyJ-eV-XVy" firstAttribute="top" secondItem="V2I-4m-Itm" secondAttribute="top" id="1D3-ZK-unZ"/>
-                        <constraint firstAttribute="bottom" secondItem="PyJ-eV-XVy" secondAttribute="bottom" id="T6d-1r-yuK"/>
+                        <constraint firstAttribute="bottom" secondItem="PyJ-eV-XVy" secondAttribute="bottom" constant="-85" id="T6d-1r-yuK"/>
                         <constraint firstItem="PyJ-eV-XVy" firstAttribute="leading" secondItem="V2I-4m-Itm" secondAttribute="leading" id="nnI-mA-tLq"/>
                         <constraint firstAttribute="trailing" secondItem="PyJ-eV-XVy" secondAttribute="trailing" id="rFY-ED-x56"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VDW-H2-PFU">
-                    <rect key="frame" x="0.0" y="389" width="414" height="30"/>
+                    <rect key="frame" x="0.0" y="489" width="414" height="30"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="K1M-c2-O3M"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lFI-1X-kZb">
-                    <rect key="frame" x="0.0" y="44" width="414" height="375"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="475"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jbl-ih-uBZ">
                             <rect key="frame" x="159" y="24" width="96" height="96"/>
@@ -697,24 +699,39 @@ Sportsbook® All Rights Reserved</string>
                                 <action selector="didTapCloseButton" destination="-1" eventType="touchUpInside" id="Rui-kH-3cb"/>
                             </connections>
                         </button>
+                        <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bn-gy-5Xw">
+                            <rect key="frame" x="20" y="367" width="374" height="100"/>
+                            <subviews>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zdZ-Yf-qoY" customClass="ActivationAlertView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="100"/>
+                                    <color key="backgroundColor" name="headerTextFieldGrayColor"/>
+                                </view>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="100" id="E8G-oo-ibh"/>
+                            </constraints>
+                        </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="JUz-Fz-k5E" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="2gG-er-dNc"/>
+                        <constraint firstItem="1bn-gy-5Xw" firstAttribute="top" secondItem="JUz-Fz-k5E" secondAttribute="bottom" constant="8" id="7rh-6G-EtX"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="Aph-8U-CXe"/>
                         <constraint firstItem="JUz-Fz-k5E" firstAttribute="top" secondItem="GcN-zo-c6s" secondAttribute="bottom" constant="30" id="CvY-R8-HLk"/>
                         <constraint firstItem="1gg-my-EQA" firstAttribute="top" secondItem="Y8Q-jn-Zp8" secondAttribute="bottom" constant="6" id="GuH-cd-5nm"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="top" secondItem="rcX-bW-GVx" secondAttribute="bottom" constant="16" id="N73-v4-dQT"/>
                         <constraint firstItem="bCK-AS-qFJ" firstAttribute="top" secondItem="1gg-my-EQA" secondAttribute="bottom" constant="33" id="O0R-tR-Mv7"/>
+                        <constraint firstAttribute="trailing" secondItem="1bn-gy-5Xw" secondAttribute="trailing" constant="20" id="Opd-Ek-bJx"/>
                         <constraint firstItem="rcX-bW-GVx" firstAttribute="top" secondItem="lFI-1X-kZb" secondAttribute="top" constant="28" id="PuK-EI-n0i"/>
                         <constraint firstItem="GcN-zo-c6s" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="Qf5-ld-dvM"/>
+                        <constraint firstItem="1bn-gy-5Xw" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="20" id="RZ4-Rj-8bp"/>
                         <constraint firstItem="GcN-zo-c6s" firstAttribute="top" secondItem="bCK-AS-qFJ" secondAttribute="bottom" constant="15" id="U0p-GI-jyH"/>
                         <constraint firstItem="bCK-AS-qFJ" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="XK3-SV-grO"/>
+                        <constraint firstAttribute="bottom" secondItem="1bn-gy-5Xw" secondAttribute="bottom" constant="8" id="aed-gp-qgZ"/>
                         <constraint firstItem="rcX-bW-GVx" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="cJ1-dp-obs"/>
                         <constraint firstItem="1gg-my-EQA" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="dLp-LI-FZV"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="top" secondItem="rcX-bW-GVx" secondAttribute="top" constant="-4" id="eVE-6j-qVi"/>
                         <constraint firstAttribute="trailing" secondItem="wIc-jL-CMS" secondAttribute="trailing" constant="8" id="hoE-jF-4Nn"/>
-                        <constraint firstAttribute="bottom" secondItem="JUz-Fz-k5E" secondAttribute="bottom" constant="16" id="iUc-d1-XQY"/>
                         <constraint firstItem="wIc-jL-CMS" firstAttribute="top" secondItem="lFI-1X-kZb" secondAttribute="top" constant="12" id="iss-5n-Ovz"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="centerY" secondItem="rcX-bW-GVx" secondAttribute="centerY" id="jbU-6S-eiI"/>
                         <constraint firstItem="JUz-Fz-k5E" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="40" id="n1L-d4-gci"/>
@@ -741,12 +758,12 @@ Sportsbook® All Rights Reserved</string>
                 <constraint firstItem="lFI-1X-kZb" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="mgu-fO-4fs"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="fnZ-QT-A08" secondAttribute="trailing" id="n4R-zg-QWI"/>
                 <constraint firstItem="lFI-1X-kZb" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="nJM-Rf-hWi"/>
-                <constraint firstItem="V2I-4m-Itm" firstAttribute="top" secondItem="lFI-1X-kZb" secondAttribute="bottom" id="qG8-ZG-YHH"/>
+                <constraint firstItem="V2I-4m-Itm" firstAttribute="top" secondItem="lFI-1X-kZb" secondAttribute="bottom" constant="8" id="qG8-ZG-YHH"/>
                 <constraint firstItem="fnZ-QT-A08" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="tcS-HQ-oYy"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="fnZ-QT-A08" secondAttribute="bottom" id="tdh-Au-d7b"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="96" y="24"/>
+            <point key="canvasLocation" x="95.652173913043484" y="23.772321428571427"/>
         </view>
     </objects>
     <resources>
@@ -762,11 +779,14 @@ Sportsbook® All Rights Reserved</string>
         <image name="password_profile_icon" width="18" height="20"/>
         <image name="support_profile_icon" width="23" height="23"/>
         <image name="wallet_profile_icon" width="18" height="16"/>
+        <namedColor name="headerTextFieldGrayColor">
+            <color red="0.45490196078431372" green="0.49411764705882355" blue="0.5607843137254902" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="mainTintColor">
-            <color red="0.019999999552965164" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.016000000759959221" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="primaryButtonNormalColor">
-            <color red="0.015686274509803921" green="0.49019607843137253" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.016000000759959221" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
