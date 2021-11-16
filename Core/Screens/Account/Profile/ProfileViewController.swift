@@ -248,6 +248,19 @@ class ProfileViewController: UIViewController {
             self.infoLabel.text = "App Version \(versionNumber)(\(buildNumber))\nSportsbook® All Rights Reserved"
         }
 
+        activationView.setText(title: localized("string_verify_email"), info: localized("string_app_full_potential"), linkText: localized("string_verify_my_account"))
+        activationView.layer.cornerRadius = CornerRadius.button
+        activationView.layer.masksToBounds = true
+        activationView.linkLabelAction = {
+            let emailVerificationViewController = EmailVerificationViewController()
+            self.present(emailVerificationViewController, animated: true, completion: nil)
+        }
+
+        if let userEmailVerified = userSession?.isEmailVerified {
+            if userEmailVerified {
+                activationView.isHidden = true
+            }
+        }
     }
 
     func setupWithTheme() {

@@ -89,10 +89,10 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V2I-4m-Itm">
-                    <rect key="frame" x="0.0" y="527" width="414" height="844"/>
+                    <rect key="frame" x="0.0" y="580" width="414" height="791"/>
                     <subviews>
                         <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PyJ-eV-XVy">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="929"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="876"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zVU-2r-bIc">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="747"/>
@@ -101,7 +101,7 @@
                                             <rect key="frame" x="0.0" y="687" width="414" height="60"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hFx-VW-GNj">
-                                                    <rect key="frame" x="16" y="18" width="382" height="24"/>
+                                                    <rect key="frame" x="16" y="16" width="382" height="28"/>
                                                     <string key="text">App Version 0.0.1 (00100)
 Sportsbook® All Rights Reserved</string>
                                                     <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="12"/>
@@ -121,7 +121,7 @@ Sportsbook® All Rights Reserved</string>
                                             <rect key="frame" x="0.0" y="607" width="414" height="80"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yAA-45-gAr">
-                                                    <rect key="frame" x="149.5" y="16" width="115" height="48"/>
+                                                    <rect key="frame" x="150" y="15.5" width="114" height="49"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <inset key="contentEdgeInsets" minX="15" minY="15" maxX="30" maxY="15"/>
                                                     <inset key="titleEdgeInsets" minX="15" minY="0.0" maxX="-15" maxY="0.0"/>
@@ -164,7 +164,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhZ-WA-eEQ">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -212,7 +212,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="j0H-eU-D4u">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -260,7 +260,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Ha-2B-njH">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -308,7 +308,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Vu-p5-tUK">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -356,7 +356,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DnV-9Q-E0m">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -404,7 +404,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZHV-oS-xg2">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -452,7 +452,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kxc-di-HNp">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -500,7 +500,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HuU-ED-BpT">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -548,7 +548,7 @@ Sportsbook® All Rights Reserved</string>
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3sN-dn-yz7">
-                                                            <rect key="frame" x="62" y="19.5" width="276" height="16"/>
+                                                            <rect key="frame" x="62" y="18" width="276" height="19"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -611,14 +611,14 @@ Sportsbook® All Rights Reserved</string>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VDW-H2-PFU">
-                    <rect key="frame" x="0.0" y="489" width="414" height="30"/>
+                    <rect key="frame" x="0.0" y="542" width="414" height="30"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="30" id="K1M-c2-O3M"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lFI-1X-kZb">
-                    <rect key="frame" x="0.0" y="44" width="414" height="475"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="528"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jbl-ih-uBZ">
                             <rect key="frame" x="159" y="24" width="96" height="96"/>
@@ -633,22 +633,22 @@ Sportsbook® All Rights Reserved</string>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y8Q-jn-Zp8">
-                            <rect key="frame" x="179" y="132" width="56.5" height="22"/>
+                            <rect key="frame" x="180" y="132" width="54" height="26"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="22"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1gg-my-EQA">
-                            <rect key="frame" x="193" y="160" width="28" height="11"/>
+                            <rect key="frame" x="193.5" y="164" width="27" height="13"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GcN-zo-c6s">
-                            <rect key="frame" x="116.5" y="237" width="181" height="42"/>
+                            <rect key="frame" x="111.5" y="246" width="191" height="46"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="49.875.655,59€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQR-iY-klN">
-                                    <rect key="frame" x="12" y="10" width="157" height="24"/>
+                                    <rect key="frame" x="12" y="10" width="167" height="28"/>
                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="24"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
@@ -663,7 +663,7 @@ Sportsbook® All Rights Reserved</string>
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="32" translatesAutoresizingMaskIntoConstraints="NO" id="JUz-Fz-k5E">
-                            <rect key="frame" x="40" y="309" width="334" height="50"/>
+                            <rect key="frame" x="40" y="322" width="334" height="50"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zt3-d0-Abf">
                                     <rect key="frame" x="0.0" y="0.0" width="151" height="50"/>
@@ -684,13 +684,13 @@ Sportsbook® All Rights Reserved</string>
                             </subviews>
                         </stackView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Current Balance" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bCK-AS-qFJ">
-                            <rect key="frame" x="139" y="204" width="136.5" height="18"/>
+                            <rect key="frame" x="142" y="210" width="130.5" height="21"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wIc-jL-CMS">
-                            <rect key="frame" x="348" y="12" width="58" height="32"/>
+                            <rect key="frame" x="349" y="12" width="57" height="35"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                             <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
@@ -700,22 +700,26 @@ Sportsbook® All Rights Reserved</string>
                             </connections>
                         </button>
                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bn-gy-5Xw">
-                            <rect key="frame" x="20" y="367" width="374" height="100"/>
+                            <rect key="frame" x="20" y="402" width="374" height="110"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zdZ-Yf-qoY" customClass="ActivationAlertView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="0.0" y="0.0" width="374" height="100"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="374" height="110"/>
                                     <color key="backgroundColor" name="headerTextFieldGrayColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="110" id="lPC-9r-4So"/>
+                                    </constraints>
                                 </view>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="height" constant="100" id="E8G-oo-ibh"/>
+                                <constraint firstItem="zdZ-Yf-qoY" firstAttribute="centerX" secondItem="1bn-gy-5Xw" secondAttribute="centerX" id="hCa-3d-asq"/>
+                                <constraint firstItem="zdZ-Yf-qoY" firstAttribute="centerY" secondItem="1bn-gy-5Xw" secondAttribute="centerY" id="tve-Gk-f0L"/>
                             </constraints>
                         </stackView>
                     </subviews>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="JUz-Fz-k5E" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="2gG-er-dNc"/>
-                        <constraint firstItem="1bn-gy-5Xw" firstAttribute="top" secondItem="JUz-Fz-k5E" secondAttribute="bottom" constant="8" id="7rh-6G-EtX"/>
+                        <constraint firstItem="1bn-gy-5Xw" firstAttribute="top" secondItem="JUz-Fz-k5E" secondAttribute="bottom" constant="30" id="7rh-6G-EtX"/>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="Aph-8U-CXe"/>
                         <constraint firstItem="JUz-Fz-k5E" firstAttribute="top" secondItem="GcN-zo-c6s" secondAttribute="bottom" constant="30" id="CvY-R8-HLk"/>
                         <constraint firstItem="1gg-my-EQA" firstAttribute="top" secondItem="Y8Q-jn-Zp8" secondAttribute="bottom" constant="6" id="GuH-cd-5nm"/>
@@ -727,7 +731,7 @@ Sportsbook® All Rights Reserved</string>
                         <constraint firstItem="1bn-gy-5Xw" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="20" id="RZ4-Rj-8bp"/>
                         <constraint firstItem="GcN-zo-c6s" firstAttribute="top" secondItem="bCK-AS-qFJ" secondAttribute="bottom" constant="15" id="U0p-GI-jyH"/>
                         <constraint firstItem="bCK-AS-qFJ" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="XK3-SV-grO"/>
-                        <constraint firstAttribute="bottom" secondItem="1bn-gy-5Xw" secondAttribute="bottom" constant="8" id="aed-gp-qgZ"/>
+                        <constraint firstAttribute="bottom" secondItem="1bn-gy-5Xw" secondAttribute="bottom" constant="16" id="aed-gp-qgZ"/>
                         <constraint firstItem="rcX-bW-GVx" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="cJ1-dp-obs"/>
                         <constraint firstItem="1gg-my-EQA" firstAttribute="centerX" secondItem="lFI-1X-kZb" secondAttribute="centerX" id="dLp-LI-FZV"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="top" secondItem="rcX-bW-GVx" secondAttribute="top" constant="-4" id="eVE-6j-qVi"/>

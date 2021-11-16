@@ -63,6 +63,7 @@ class SportsViewModel: NSObject {
     }
 
     var dataDidChangedAction: (() -> ())?
+    var presentEmailVerificationViewController: (() -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -101,6 +102,10 @@ class SportsViewModel: NSObject {
 
         self.myGamesSportsViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchPopularMatchesNextPage()
+        }
+
+        self.myGamesSportsViewModelDataSource.requestPresentViewController = { [weak self] in
+            self?.presentEmailVerificationViewController?()
         }
 
         self.todaySportsViewModelDataSource.requestNextPage = { [weak self] in
@@ -937,6 +942,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     }
 
     var requestNextPage: (() -> ())?
+    var requestPresentViewController: (() -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
         self.banners = banners
@@ -953,9 +959,14 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return banners.isEmpty ? 0 : 1
-        case 1:
+            if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
+                if !loggedUser.isEmailVerified {
+                    return 1
+                }
+            }
             return 0
+        case 1:
+            return banners.isEmpty ? 0 : 1
         case 2:
             return self.matches.count
         case 3:
@@ -968,14 +979,20 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
+            // return UITableViewCell()
+            if let cell = tableView.dequeueCellType(EmailVerificationTableViewCell.self) {
+                cell.activationAlertViewLinkLabelAction = {
+                    self.requestPresentViewController?()
+                }
+                return cell
+            }
+        case 1:
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
                 if let viewModel = self.bannersViewModel {
                     cell.setupWithViewModel(viewModel)
                 }
                 return cell
             }
-        case 1:
-            return UITableViewCell()
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
@@ -1029,6 +1046,8 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 130
         case 3:
             //Loading cell
             return 70
@@ -1039,6 +1058,8 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 130
         case 3:
             //Loading cell
             return 70

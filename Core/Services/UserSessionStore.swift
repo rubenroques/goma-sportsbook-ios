@@ -114,7 +114,8 @@ class UserSessionStore {
                             password: password,
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)",
-                            birthDate: sessionInfo.birthDate
+                            birthDate: sessionInfo.birthDate,
+                            isEmailVerified: sessionInfo.isEmailVerified
                     )
             }
             .handleEvents(receiveOutput: saveUserSession)

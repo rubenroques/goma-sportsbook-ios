@@ -580,6 +580,14 @@
 		A96279EC273ED1E40001E1D5 /* ActivationAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */; };
 		A96279EE273ED2290001E1D5 /* ActivationAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */; };
 		A96279EF273ED2290001E1D5 /* ActivationAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */; };
+		A96279F32743D3AA0001E1D5 /* EmailVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96279F12743D3AA0001E1D5 /* EmailVerificationViewController.swift */; };
+		A96279F42743D3AA0001E1D5 /* EmailVerificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96279F12743D3AA0001E1D5 /* EmailVerificationViewController.swift */; };
+		A96279F52743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
+		A96279F62743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */; };
+		A96279FF27440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96279FD27440F300001E1D5 /* EmailVerificationTableViewCell.swift */; };
+		A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96279FD27440F300001E1D5 /* EmailVerificationTableViewCell.swift */; };
+		A9627A0127440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279FE27440F300001E1D5 /* EmailVerificationTableViewCell.xib */; };
+		A9627A0227440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279FE27440F300001E1D5 /* EmailVerificationTableViewCell.xib */; };
 		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
@@ -1010,6 +1018,10 @@
 		A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
 		A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertView.swift; sourceTree = "<group>"; };
 		A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertView.xib; sourceTree = "<group>"; };
+		A96279F12743D3AA0001E1D5 /* EmailVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerificationViewController.swift; sourceTree = "<group>"; };
+		A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmailVerificationViewController.xib; sourceTree = "<group>"; };
+		A96279FD27440F300001E1D5 /* EmailVerificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerificationTableViewCell.swift; sourceTree = "<group>"; };
+		A96279FE27440F300001E1D5 /* EmailVerificationTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmailVerificationTableViewCell.xib; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2091,6 +2103,8 @@
 				4572632F272B13D7002F2959 /* LoadingMoreTableViewCell.swift */,
 				45726330272B13D7002F2959 /* LoadingMoreTableViewCell.xib */,
 				45CD7B5C27173D81003044C5 /* Banner */,
+				A96279FD27440F300001E1D5 /* EmailVerificationTableViewCell.swift */,
+				A96279FE27440F300001E1D5 /* EmailVerificationTableViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2171,6 +2185,15 @@
 				A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */,
 			);
 			path = ActivationAlertView;
+			sourceTree = "<group>";
+		};
+		A96279F02743D36A0001E1D5 /* EmailVerification */ = {
+			isa = PBXGroup;
+			children = (
+				A96279F12743D3AA0001E1D5 /* EmailVerificationViewController.swift */,
+				A96279F22743D3AA0001E1D5 /* EmailVerificationViewController.xib */,
+			);
+			path = EmailVerification;
 			sourceTree = "<group>";
 		};
 		A98D3B272714817C003BAE6F /* SportSelection */ = {
@@ -2390,6 +2413,7 @@
 		A9C82FB226F3AB3400059DCD /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				A96279F02743D36A0001E1D5 /* EmailVerification */,
 				455C961F26FDD66300456F30 /* ProfileViewController.swift */,
 				455C962026FDD66300456F30 /* ProfileViewController.xib */,
 				A9C82FC026F89B1B00059DCD /* PasswordUpdate */,
@@ -2626,12 +2650,14 @@
 				455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */,
 				455C960E26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45BEA48326F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
+				A9627A0127440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */,
 				A92F5D8A2719D63300884BDF /* FilterSliderInfoView.xib in Resources */,
 				45A16E162707B6C100A95C01 /* ListTypeCollectionViewCell.xib in Resources */,
 				4515637126BE968300690896 /* ThemeColors.xcassets in Resources */,
+				A96279F52743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
 				454E0ACE2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
@@ -2712,6 +2738,7 @@
 				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
+				A96279F62743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
 				454E0A9F2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
@@ -2745,6 +2772,7 @@
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
+				A9627A0227440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
 				A9C6022E2716F41200992E11 /* HomeFilterViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A9C82FC626F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
@@ -2920,6 +2948,7 @@
 				45D728D72715F6DC00EFE04D /* AppModels.swift in Sources */,
 				45166CFF26F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
 				45B0BD37271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */,
+				A96279F32743D3AA0001E1D5 /* EmailVerificationViewController.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
 				45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
@@ -2974,6 +3003,7 @@
 				455A0CF226BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				45A16E142707B6C100A95C01 /* ListTypeCollectionViewCell.swift in Sources */,
 				45ACEEB02721B54E00D0A45F /* BannerCellViewModel.swift in Sources */,
+				A96279FF27440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408626D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
@@ -3178,6 +3208,7 @@
 				45D728D82715F6DC00EFE04D /* AppModels.swift in Sources */,
 				45166D0026F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
 				45B0BD38271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */,
+				A96279F42743D3AA0001E1D5 /* EmailVerificationViewController.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
 				A9C82FBC26F4E50D00059DCD /* EditAlertView.swift in Sources */,
@@ -3232,6 +3263,7 @@
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				45A16E152707B6C100A95C01 /* ListTypeCollectionViewCell.swift in Sources */,
 				45ACEEB12721B54E00D0A45F /* BannerCellViewModel.swift in Sources */,
+				A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,

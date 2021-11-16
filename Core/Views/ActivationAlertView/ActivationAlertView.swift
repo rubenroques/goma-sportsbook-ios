@@ -16,6 +16,18 @@ class ActivationAlertView: NibView {
     @IBOutlet private var linkLabel: UILabel!
     // Variables
     var onClose:(() -> Void)?
+    var linkLabelAction: (() -> Void)?
+
+    var hasCloseAction: Bool = false {
+        didSet {
+            if hasCloseAction {
+                self.closeButton.isHidden = false
+            }
+            else {
+                self.closeButton.isHidden = true
+            }
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -33,6 +45,7 @@ class ActivationAlertView: NibView {
         titleLabel.text = "Lorem Ipsum"
 
         closeButton.setImage(UIImage(named: "small_close_cross_icon"), for: .normal)
+        hasCloseAction = false
 
         infoLabel.text = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
         infoLabel.numberOfLines = 0
@@ -66,7 +79,7 @@ class ActivationAlertView: NibView {
     }
 
     @objc func labelTapped(_ sender: UITapGestureRecognizer) {
-        print("Tapped")
+        self.linkLabelAction?()
     }
 
     @IBAction func closeButtonAction() {
@@ -74,7 +87,7 @@ class ActivationAlertView: NibView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.frame.width, height: 100)
+        return CGSize(width: self.frame.width, height: 110)
     }
 
 }
