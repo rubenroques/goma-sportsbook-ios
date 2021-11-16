@@ -24,7 +24,11 @@ class PreLiveEventsViewController: UIViewController {
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
     
-
+    @IBOutlet private weak var filtersCountView: UIView!
+    
+    @IBOutlet weak var filtersCountLabel: UILabel!
+    
+    
     var turnTimeRangeOn : Bool = false
     
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
@@ -139,6 +143,10 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+        
+        
+        filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
+       
     }
 
     private func commonInit() {
@@ -189,6 +197,10 @@ class PreLiveEventsViewController: UIViewController {
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self
 
+        filtersCountLabel.isHidden = true
+        filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+        filtersCountLabel.layer.masksToBounds = true
+        
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear
         
@@ -250,14 +262,18 @@ class PreLiveEventsViewController: UIViewController {
         self.view.bringSubviewToFront(self.competitionsFiltersDarkBackgroundView)
         self.view.bringSubviewToFront(self.competitionsFiltersBaseView)
         self.view.bringSubviewToFront(self.loadingBaseView)
+        self.view.bringSubviewToFront(self.filtersCountLabel)
 
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
+        
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
+        
+        
     }
 
     func connectPublishers() {
@@ -625,9 +641,13 @@ extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
         self.viewModel.homeFilterOptions = homeFilters
         
         if homeFilters.countFilters != 0 {
-            filtersButtonView.backgroundColor = .systemPink
+            filtersCountLabel.isHidden = false
+            filtersCountLabel.text = String(homeFilters.countFilters)
+           
         }else{
-            filtersButtonView.backgroundColor =  UIColor.App.secondaryBackground
+            filtersCountLabel.isHidden = true
+           
+            
         }
     }
     

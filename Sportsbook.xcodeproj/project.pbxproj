@@ -554,8 +554,6 @@
 		45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5425270C5F8100D1E13E /* FirebaseAuth */; };
 		45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5427270C5F8100D1E13E /* FirebaseCrashlytics */; };
 		45EF542A270C5F8100D1E13E /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5429270C5F8100D1E13E /* FirebaseDatabase */; };
-		45EF542D270C5FB700D1E13E /* MultiSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF542C270C5FB700D1E13E /* MultiSlider */; };
-		45EF542F270C5FC300D1E13E /* MultiSlider in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF542E270C5FC300D1E13E /* MultiSlider */; };
 		45EF5436270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
 		45EF5437270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */; };
 		45EF5438270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
@@ -698,6 +696,20 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
+		F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
+		F4CE68422742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
+		F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683E2742CD8A003413AE /* MultiSlider.swift */; };
+		F4CE68442742CD8A003413AE /* MultiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683E2742CD8A003413AE /* MultiSlider.swift */; };
+		F4CE68452742CD8A003413AE /* MultiSlider+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */; };
+		F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */; };
+		F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
+		F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */; };
+		F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
+		F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E3B74C2742B47100855C58 /* MainMarketType.swift */; };
+		F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B75D2742BF9C00855C58 /* SweeterSwift */; };
+		F4E3B7612742BFB100855C58 /* AvailableHapticFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */; };
+		F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7622742BFE300855C58 /* SweeterSwift */; };
+		F4E3B7652742BFEB00855C58 /* AvailableHapticFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1063,6 +1075,11 @@
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
 		A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpPromotionView.swift; sourceTree = "<group>"; };
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
+		F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Drag.swift"; sourceTree = "<group>"; };
+		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
+		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
+		F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSliderExtensions.swift; sourceTree = "<group>"; };
+		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1071,6 +1088,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				452047B32703597500B277B5 /* FirebaseDatabase in Frameworks */,
+				F4E3B7612742BFB100855C58 /* AvailableHapticFeedback in Frameworks */,
 				A9B8419326E235AD00269B05 /* DictionaryCoding in Frameworks */,
 				4515637826BED19B00690896 /* Reachability in Frameworks */,
 				451B386226FF172C008D49C5 /* Kingfisher in Frameworks */,
@@ -1079,10 +1097,10 @@
 				452047AF2703597500B277B5 /* FirebaseAuth in Frameworks */,
 				45D871C22710769600F5B87B /* Collections in Frameworks */,
 				45166D2C26F3D89B00E69D65 /* CombineCocoa in Frameworks */,
-				45EF542D270C5FB700D1E13E /* MultiSlider in Frameworks */,
 				452047B12703597500B277B5 /* FirebaseCrashlytics in Frameworks */,
 				452047AD2703597500B277B5 /* FirebaseAnalytics in Frameworks */,
 				45D871C62710769600F5B87B /* OrderedCollections in Frameworks */,
+				F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */,
 				A9B841A126E26BEE00269B05 /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1099,6 +1117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45EF542A270C5F8100D1E13E /* FirebaseDatabase in Frameworks */,
+				F4E3B7652742BFEB00855C58 /* AvailableHapticFeedback in Frameworks */,
 				45EF5424270C5F8100D1E13E /* FirebaseAnalytics in Frameworks */,
 				A9B8419126E2359800269B05 /* DictionaryCoding in Frameworks */,
 				4515637D26BED58900690896 /* Reachability in Frameworks */,
@@ -1107,10 +1126,10 @@
 				4515637F26BED58900690896 /* Nuke in Frameworks */,
 				45D871C8271076B800F5B87B /* Collections in Frameworks */,
 				45166D2E26F3D8AC00E69D65 /* CombineCocoa in Frameworks */,
-				45EF542F270C5FC300D1E13E /* MultiSlider in Frameworks */,
 				45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */,
 				A9B841A326E26C0B00269B05 /* Starscream in Frameworks */,
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
+				F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */,
 				45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1121,6 +1140,7 @@
 		45166CA926F3548D00E69D65 /* ExternalLibs */ = {
 			isa = PBXGroup;
 			children = (
+				F4E3B74F2742BE5200855C58 /* MultiSlider */,
 				454E0AA62732C58D00794E0C /* Tabular */,
 				45B0BD2E271EE138009C41FA /* KeychainExtras */,
 				45166CAA26F3548D00E69D65 /* TSLibrary */,
@@ -1979,6 +1999,7 @@
 				45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */,
 				45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */,
 				A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */,
+				F4E3B74C2742B47100855C58 /* MainMarketType.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -2411,6 +2432,17 @@
 			path = Popup;
 			sourceTree = "<group>";
 		};
+		F4E3B74F2742BE5200855C58 /* MultiSlider */ = {
+			isa = PBXGroup;
+			children = (
+				F4CE683E2742CD8A003413AE /* MultiSlider.swift */,
+				F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */,
+				F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */,
+				F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */,
+			);
+			path = MultiSlider;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -2439,10 +2471,11 @@
 				452047AE2703597500B277B5 /* FirebaseAuth */,
 				452047B02703597500B277B5 /* FirebaseCrashlytics */,
 				452047B22703597500B277B5 /* FirebaseDatabase */,
-				45EF542C270C5FB700D1E13E /* MultiSlider */,
 				45D871C12710769600F5B87B /* Collections */,
 				45D871C52710769600F5B87B /* OrderedCollections */,
 				454E0AD72735C76600794E0C /* CombineExt */,
+				F4E3B75D2742BF9C00855C58 /* SweeterSwift */,
+				F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -2492,10 +2525,11 @@
 				45EF5425270C5F8100D1E13E /* FirebaseAuth */,
 				45EF5427270C5F8100D1E13E /* FirebaseCrashlytics */,
 				45EF5429270C5F8100D1E13E /* FirebaseDatabase */,
-				45EF542E270C5FC300D1E13E /* MultiSlider */,
 				45D871C7271076B800F5B87B /* Collections */,
 				45D871C9271076B800F5B87B /* OrderedCollections */,
 				454E0AD92735C79600794E0C /* CombineExt */,
+				F4E3B7622742BFE300855C58 /* SweeterSwift */,
+				F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -2537,9 +2571,10 @@
 				45166D2A26F3D89B00E69D65 /* XCRemoteSwiftPackageReference "CombineCocoa" */,
 				451B386026FF172C008D49C5 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-				45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */,
 				45D871C02710769600F5B87B /* XCRemoteSwiftPackageReference "swift-collections" */,
 				454E0AD62735C76600794E0C /* XCRemoteSwiftPackageReference "CombineExt" */,
+				F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */,
+				F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -2820,6 +2855,7 @@
 				455A0D0A26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898026C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				4572633D272C2220002F2959 /* MatchInfo.swift in Sources */,
+				F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */,
 				A9C6023E2716FACB00992E11 /* RadioButton.swift in Sources */,
@@ -2846,6 +2882,7 @@
 				A9B8409F26DE712500269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42526C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				A9C82FC326F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
+				F4CE68452742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				45936CB9270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
 				45166CE126F3548D00E69D65 /* Notification.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -2900,6 +2937,7 @@
 				45B0BD37271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
+				F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
 				45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				A9C82FBB26F4E50D00059DCD /* EditAlertView.swift in Sources */,
 				4589F42C26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
@@ -2917,6 +2955,7 @@
 				455A0CE426BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3127148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
+				F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
@@ -2956,6 +2995,7 @@
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
+				F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
@@ -3077,6 +3117,7 @@
 				455A0D0B26BD9D9000EC572D /* FadeInCenterHorizontalFlowLayout.swift in Sources */,
 				45A2898126C3E74B00BCD5DA /* AuthToken.swift in Sources */,
 				4572633E272C2220002F2959 /* MatchInfo.swift in Sources */,
+				F4CE68422742CD8A003413AE /* MultiSlider+Drag.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixAPIClient.swift in Sources */,
 				A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */,
 				A9C6023F2716FACB00992E11 /* RadioButton.swift in Sources */,
@@ -3103,6 +3144,7 @@
 				A9B840A126DE749000269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42626C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				A9C82FC426F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
+				F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				45936CBA270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
 				45166CE226F3548D00E69D65 /* Notification.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -3157,6 +3199,7 @@
 				45B0BD38271F1007009C41FA /* CompetitionFilterTableViewCell.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
+				F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
 				A9C82FBC26F4E50D00059DCD /* EditAlertView.swift in Sources */,
 				45166CF826F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				4589F42D26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
@@ -3174,6 +3217,7 @@
 				455A0CE526BD9D9000EC572D /* NotEmpty.swift in Sources */,
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
+				F4CE68442742CD8A003413AE /* MultiSlider.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
@@ -3213,6 +3257,7 @@
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
+				F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
@@ -3701,14 +3746,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/yonat/MultiSlider";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.11.2;
-			};
-		};
 		A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding.git";
@@ -3723,6 +3760,22 @@
 			requirement = {
 				kind = upToNextMinorVersion;
 				minimumVersion = 3.1.1;
+			};
+		};
+		F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yonat/SweeterSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/yonat/AvailableHapticFeedback";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -3838,16 +3891,6 @@
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
 		};
-		45EF542C270C5FB700D1E13E /* MultiSlider */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */;
-			productName = MultiSlider;
-		};
-		45EF542E270C5FC300D1E13E /* MultiSlider */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 45EF542B270C5FB700D1E13E /* XCRemoteSwiftPackageReference "MultiSlider" */;
-			productName = MultiSlider;
-		};
 		A9B8419026E2359800269B05 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */;
@@ -3867,6 +3910,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A9B8419F26E26BEE00269B05 /* XCRemoteSwiftPackageReference "Starscream" */;
 			productName = Starscream;
+		};
+		F4E3B75D2742BF9C00855C58 /* SweeterSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */;
+			productName = SweeterSwift;
+		};
+		F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */;
+			productName = AvailableHapticFeedback;
+		};
+		F4E3B7622742BFE300855C58 /* SweeterSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */;
+			productName = SweeterSwift;
+		};
+		F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */;
+			productName = AvailableHapticFeedback;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

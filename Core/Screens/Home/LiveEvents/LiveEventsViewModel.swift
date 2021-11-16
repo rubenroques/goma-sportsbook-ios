@@ -94,7 +94,7 @@ class LiveEventsViewModel: NSObject {
             }
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
             for market in match.markets {
                 if market.typeId != marketSort[0].typeId {
@@ -104,7 +104,7 @@ class LiveEventsViewModel: NSObject {
 
             // Check odds filter
             let matchOdds = marketSort[0].outcomes
-            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             for odd in matchOdds {
                 let oddValue = CGFloat(odd.bettingOffer.value)
                 if oddsRange.contains(oddValue) {

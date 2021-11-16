@@ -9,15 +9,27 @@ import Foundation
 import CoreGraphics
 
 struct HomeFilterOptions {
-    let timeRange: [CGFloat]
-    let defaultMarketId: Int
-    let oddsRange: [CGFloat]
+
+    let lowerBoundTimeRange : CGFloat
+    let highBoundTimeRange : CGFloat
+    let defaultMarket: MainMarketType
+ 
+    let lowerBoundOddsRange : CGFloat
+    let highBoundOddsRange : CGFloat
     let countFilters: Int
 
-    init(timeRange: [CGFloat] = [0, 24], defaultMarketId: Int = 69, oddsRange: [CGFloat] = [1.0, 30.0], countFilters: Int = 0) {
-        self.timeRange = timeRange
-        self.defaultMarketId = defaultMarketId
-        self.oddsRange = oddsRange
+    init(lowerBoundTimeRange: CGFloat = 0.0,
+         highBoundTimeRange: CGFloat = 24.0,
+         defaultMarket: MainMarketType = MainMarketType.homeDrawAway,
+         lowerBoundOddsRange: CGFloat = 1.0,
+         highBoundOddsRange: CGFloat = 30.0,
+         countFilters: Int = 0) {
+        
+        self.lowerBoundTimeRange = lowerBoundTimeRange
+        self.highBoundTimeRange = highBoundTimeRange
+        self.defaultMarket = defaultMarket
+        self.lowerBoundOddsRange = lowerBoundOddsRange
+        self.highBoundOddsRange = highBoundOddsRange
         self.countFilters = countFilters
     }
 }

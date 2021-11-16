@@ -25,7 +25,8 @@ class LiveEventsViewController: UIViewController  {
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
 
-
+    @IBOutlet weak var filtersCountLabel: UILabel!
+    
     var turnTimeRangeOn : Bool = false
     
     private lazy var betslipButtonView: UIView = {
@@ -179,7 +180,10 @@ class LiveEventsViewController: UIViewController  {
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self
-
+        
+        filtersCountLabel.isHidden = true
+        filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+        
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear
 
@@ -273,7 +277,7 @@ class LiveEventsViewController: UIViewController  {
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        let homeFilterViewController = HomeFilterViewController(  liveEventsViewModel: self.viewModel)
+        let homeFilterViewController = HomeFilterViewController(liveEventsViewModel: self.viewModel)
         homeFilterViewController.delegate = self
         self.present(homeFilterViewController, animated: true, completion: nil)
         
@@ -410,9 +414,15 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
         self.viewModel.homeFilterOptions = homeFilters
         
         if homeFilters.countFilters != 0 {
-            filtersButtonView.backgroundColor = .systemPink
+            filtersCountLabel.isHidden = false
+            self.view.bringSubviewToFront(filtersCountLabel)
+            filtersCountLabel.text = String(homeFilters.countFilters)
+            filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
+            filtersCountLabel.layer.masksToBounds = true
         }else{
-            filtersButtonView.backgroundColor =  UIColor.App.secondaryBackground
+            filtersCountLabel.isHidden = true
+           
+            
         }
     }
     
