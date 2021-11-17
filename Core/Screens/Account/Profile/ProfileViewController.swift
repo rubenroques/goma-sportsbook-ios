@@ -31,7 +31,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var scrollView: UIScrollView!
 
     @IBOutlet private var activationStackView: UIStackView!
-    @IBOutlet private var activationView: ActivationAlertView!
+    @IBOutlet private var activationAlertScrollableView: ActivationAlertScrollableView!
 
     @IBOutlet private weak var personalInfoBaseView: UIView!
     @IBOutlet private weak var personalInfoIconBaseView: UIView!
@@ -91,6 +91,7 @@ class ProfileViewController: UIViewController {
         case anonymous
     }
     var pageMode: PageMode
+    var alertsArray: [ActivationAlertData] = []
 
     init(userSession: UserSession? = nil) {
 
@@ -231,7 +232,6 @@ class ProfileViewController: UIViewController {
 
         currentBalanceLabel.text = "0,00€"
 
-        activationView.layer.cornerRadius = CornerRadius.modal
         //
         personalInfoLabel.text = localized("string_personal_info")
         passwordUpdateLabel.text = localized("string_update_password")
@@ -248,17 +248,35 @@ class ProfileViewController: UIViewController {
             self.infoLabel.text = "App Version \(versionNumber)(\(buildNumber))\nSportsbook® All Rights Reserved"
         }
 
-        activationView.setText(title: localized("string_verify_email"), info: localized("string_app_full_potential"), linkText: localized("string_verify_my_account"))
-        activationView.layer.cornerRadius = CornerRadius.button
-        activationView.layer.masksToBounds = true
-        activationView.linkLabelAction = {
-            let emailVerificationViewController = EmailVerificationViewController()
-            self.present(emailVerificationViewController, animated: true, completion: nil)
-        }
+
+        activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
+        activationAlertScrollableView.layer.masksToBounds = true
+
+
+        let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+
 
         if let userEmailVerified = userSession?.isEmailVerified {
-            if userEmailVerified {
-                activationView.isHidden = true
+            if !userEmailVerified {
+                //activationView.isHidden = true
+                let emailActivationAlertData = ActivationAlertData(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+                alertsArray.append(emailActivationAlertData)
+
+            }
+        }
+
+        alertsArray.append(completeProfileAlertData)
+
+        activationAlertScrollableView.setAlertArrayData(arrayData: alertsArray)
+
+        activationAlertScrollableView.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+            if alertType == ActivationAlertType.email {
+                let emailVerificationViewController = EmailVerificationViewController()
+                self.present(emailVerificationViewController, animated: true, completion: nil)
+            }
+            else if alertType == ActivationAlertType.profile {
+                let fullRegisterViewController = FullRegisterPersonalInfoViewController()
+                self.present(fullRegisterViewController, animated: true, completion: nil)
             }
         }
     }

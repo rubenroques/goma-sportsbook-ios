@@ -87,7 +87,7 @@ class ActivationAlertView: NibView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.frame.width, height: 110)
+        return CGSize(width: self.frame.width, height: 100)
     }
 
 }

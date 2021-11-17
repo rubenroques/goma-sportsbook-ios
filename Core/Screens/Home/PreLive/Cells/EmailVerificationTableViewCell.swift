@@ -11,7 +11,7 @@ class EmailVerificationTableViewCell: UITableViewCell {
 
 
     @IBOutlet private var activationAlertView: ActivationAlertView!
-    // Varibales
+    // Variables
     var activationAlertViewLinkLabelAction: (() -> Void)?
 
     override func awakeFromNib() {

@@ -21,6 +21,7 @@ class UserSessionStore {
     var userBalanaceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
 
     var shouldRecordUserSession = true
+    var isUserProfileIncomplete: Bool = true
 
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
@@ -115,8 +116,7 @@ class UserSessionStore {
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)",
                             birthDate: sessionInfo.birthDate,
-                            isEmailVerified: sessionInfo.isEmailVerified
-                    )
+                            isEmailVerified: sessionInfo.isEmailVerified                    )
             }
             .handleEvents(receiveOutput: saveUserSession)
             .eraseToAnyPublisher()

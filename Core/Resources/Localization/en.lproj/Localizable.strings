@@ -161,3 +161,6 @@ Terms of use, Privacy Policy and EULA";
 "string_verify_email_description" = "Looks like you haven't checked your email yet. In order to use this App on its full potential, you need to verify your Email.";
 "string_activate_account" = "Activate Account";
 "string_choose_email" = "Choose Email";
+"string_complete_your_profile" = "Complete your Profile";
+"string_complete_profile_description" = "To get the most of this app please finisht setting up your profile";
+"string_finish_up_profile" = "Finish up Profile >";
