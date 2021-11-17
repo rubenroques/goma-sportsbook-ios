@@ -147,6 +147,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
 
+        
         self.setupWithTheme()
     }
 
@@ -208,6 +209,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.image = nil
 
         self.oddsStackView.alpha = 1.0
+        
+        self.awayBaseView.isHidden = false
     }
 
     func setupWithTheme() {
@@ -351,6 +354,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         weakSelf.currentAwayOddValue = newOddValue
                         weakSelf.awayOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
                     })
+            }
+            if market.outcomes.count == 2 {
+               
+                awayBaseView.isHidden = true
             }
         }
         else {

@@ -245,7 +245,7 @@ class HomeFilterViewController: UIViewController{
         
         if let defaultMarketInit = MainMarketType.init(rawValue: String(viewTapped.viewId)) {
             defaultMarket = defaultMarketInit
-            oddsCollapseView.setTitle(title: localized("string_odds_filter") + " " + String(defaultMarket.marketName))
+            oddsCollapseView.setTitleWithBold(title: localized("string_odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
         }
         
     }
@@ -257,7 +257,7 @@ class HomeFilterViewController: UIViewController{
         
         lowerBoundOddsRange = filterValues!.lowerBoundOddsRange
         highBoundOddsRange = filterValues!.highBoundOddsRange
-        oddsCollapseView.setTitle(title: localized("string_odds_filter") + " " + String(defaultMarket.marketName))
+        oddsCollapseView.setTitleWithBold(title: localized("string_odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
         oddsCollapseView.hasCheckbox = false
         let contentView = oddsCollapseView.getContentView()
   
@@ -298,8 +298,6 @@ class HomeFilterViewController: UIViewController{
             }
         }
     }
-
-
 
     @objc func timeSliderChanged(_ slider: MultiSlider) {
         // Get time slider values
