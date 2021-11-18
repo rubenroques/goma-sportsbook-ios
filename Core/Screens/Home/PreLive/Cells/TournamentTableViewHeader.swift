@@ -37,8 +37,6 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         }
     }
 
-    var isFavoriteTournament: ((Bool) -> Void)?
-
     var didToggleHeaderViewAction: ((Int) -> ())?
 
     override func awakeFromNib() {
@@ -114,28 +112,18 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     @objc func didTapFavoriteImageView() {
         if UserDefaults.standard.userSession != nil {
 
-            var favoriteCompetitionExists = false
-
-            for competitionId in Env.favoritesManager.favoriteEventsId {
-                if self.competition!.id == competitionId {
-                    favoriteCompetitionExists = true
-                    Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.competition!.id}
-                }
+            if let competitionId = self.competition?.id {
+                Env.favoritesManager.checkFavorites(eventId: competitionId)
             }
 
             if self.isFavorite {
                 self.isFavorite = false
-                self.isFavoriteTournament?(false)
             }
             else {
                 self.isFavorite = true
 
-                Env.favoritesManager.favoriteEventsId.append(self.competition!.id)
-
-                self.isFavoriteTournament?(true)
-
             }
-            Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
+
         }
     }
 }

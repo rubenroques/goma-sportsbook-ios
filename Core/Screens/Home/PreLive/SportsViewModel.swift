@@ -124,6 +124,16 @@ class SportsViewModel: NSObject {
 
     }
 
+    func setupPublishers() {
+        Env.favoritesManager.favoriteEventsIdPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] favoriteEvents in
+                self?.fetchFavoriteMatches()
+                self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
+            })
+            .store(in: &cancellables)
+    }
+
     func fetchData() {
         self.isLoadingPopularList.send(true)
         self.isLoadingTodayList.send(true)
@@ -145,10 +155,8 @@ class SportsViewModel: NSObject {
         self.fetchPopularMatches()
         self.fetchTodayMatches()
         self.fetchCompetitionsFilters()
-        self.fetchFavoriteMatches()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.fetchFavoriteCompetitionsMatchesWithIds(Env.favoritesManager.favoriteEventsId)
-        }
+
+        self.setupPublishers()
 
         self.isLoadingCompetitions.send(false)
         self.isLoadingMyGamesList.send(false)
@@ -164,38 +172,17 @@ class SportsViewModel: NSObject {
         self.isLoadingMyGamesList.send(false)
 
         self.myGamesSportsViewModelDataSource.popularMatches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
-        self.myGamesSportsViewModelDataSource.refetchFavorites = {
-            self.fetchFavoriteMatches()
-        }
 
         self.myGamesSportsViewModelDataSource.userFavoriteMatches = self.userFavoriteMatches
         self.myGamesSportsViewModelDataSource.banners = self.banners
 
         self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
-        self.todaySportsViewModelDataSource.refetchFavorites = {
-            self.fetchFavoriteMatches()
-        }
 
         self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
-        self.competitionSportsViewModelDataSource.refetchFavorites = {
-            self.fetchFavoriteMatches()
-        }
-        self.competitionSportsViewModelDataSource.refetchFavoriteCompetitions = {
-            self.fetchFavoriteCompetitionsMatchesWithIds(Env.favoritesManager.favoriteEventsId)
-        }
 
         self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
-        self.favoriteGamesSportsViewModelDataSource.refetchFavorites = {
-            self.fetchFavoriteMatches()
-        }
 
         self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
-        self.favoriteCompetitionSportsViewModelDataSource.refetchFavorites = {
-            self.fetchFavoriteMatches()
-        }
-        self.favoriteCompetitionSportsViewModelDataSource.refetchFavoriteCompetitions = {
-            self.fetchFavoriteCompetitionsMatchesWithIds(Env.favoritesManager.favoriteEventsId)
-        }
 
 
         DispatchQueue.main.async {
@@ -1156,7 +1143,6 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     }
     var userFavoriteMatches: [Match] = []
     var popularMatches: [Match] = []
-    var refetchFavorites: (() -> Void)?
 
     private var bannersViewModel: BannerLineCellViewModel?
 
@@ -1208,10 +1194,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
-                cell.isFavoriteLineCell = { value in
-                    print("REFETCH: \(value)")
-                    self.refetchFavorites?()
-                }
+
                 return cell
             }
         case 3:
@@ -1295,7 +1278,6 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     var todayMatches: [Match] = []
 
     var requestNextPage: (() -> ())?
-    var refetchFavorites: (() -> Void)?
 
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
@@ -1323,11 +1305,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.todayMatches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
-                cell.isFavoriteLineCell = { value in
 
-                    print("REFETCH: \(value)")
-                    self.refetchFavorites?()
-                }
                 return cell
             }
         case 1:
@@ -1396,9 +1374,6 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
 
 class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var refetchFavorites: (() -> Void)?
-    var refetchFavoriteCompetitions: (() -> Void)?
-
     var competitions: [Competition] = [] {
         didSet {
             self.collapsedCompetitionsSections = []
@@ -1430,10 +1405,7 @@ class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UIT
             fatalError()
         }
         cell.setupWithMatch(match)
-        cell.isFavoriteLineCell = { value in
-            print("REFETCH: \(value)")
-            self.refetchFavorites?()
-        }
+
         cell.shouldShowCountryFlag(false)
         return cell
     }
@@ -1471,10 +1443,7 @@ class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UIT
         else {
             headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
         }
-        headerView.isFavoriteTournament = { value in
-            print("REFETCH COMPETITION: \(value)")
-            self.refetchFavoriteCompetitions?()
-        }
+
         return headerView
     }
 
@@ -1527,7 +1496,6 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
     }
 
     var requestNextPage: (() -> ())?
-    var refetchFavorites: (() -> Void)?
 
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
@@ -1555,11 +1523,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.userFavoriteMatches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
-                cell.isFavoriteLineCell = { value in
 
-                    print("REFETCH: \(value)")
-                    self.refetchFavorites?()
-                }
                 return cell
             }
         default:
@@ -1619,9 +1583,6 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
 
 class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var refetchFavorites: (() -> Void)?
-    var refetchFavoriteCompetitions: (() -> Void)?
-
     var competitions: [Competition] = [] {
         didSet {
             self.collapsedCompetitionsSections = []
@@ -1653,10 +1614,7 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
             fatalError()
         }
         cell.setupWithMatch(match)
-        cell.isFavoriteLineCell = { value in
-            print("REFETCH: \(value)")
-            self.refetchFavorites?()
-        }
+
         cell.shouldShowCountryFlag(false)
         return cell
     }
@@ -1694,10 +1652,7 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
         else {
             headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
         }
-        headerView.isFavoriteTournament = { value in
-            print("REFETCH COMPETITION: \(value)")
-            self.refetchFavoriteCompetitions?()
-        }
+
         return headerView
     }
 

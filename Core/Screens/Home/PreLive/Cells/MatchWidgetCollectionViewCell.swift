@@ -92,8 +92,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
 
-    var isFavoriteCell: ((Bool) -> Void)?
-
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
@@ -395,28 +393,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBAction func didTapFavoritesButton(_ sender: Any) {
         if UserDefaults.standard.userSession != nil {
 
-            var favoriteMatchExists = false
-
-            for matchId in Env.favoritesManager.favoriteEventsId {
-                if self.match!.id == matchId {
-                    favoriteMatchExists = true
-                    Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.match!.id}
-                }
+            if let matchId = self.match?.id {
+                Env.favoritesManager.checkFavorites(eventId: matchId)
             }
 
             if self.isFavorite {
                 self.isFavorite = false
-                self.isFavoriteCell!(false)
             }
             else {
                 self.isFavorite = true
-
-                Env.favoritesManager.favoriteEventsId.append(self.match!.id)
-                self.isFavoriteCell!(true)
-
-
             }
-            Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
         }
     }
 

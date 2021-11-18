@@ -21,8 +21,6 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private var liveMatch: Bool = false
 
-    var isFavoriteLineCell: ((Bool) -> Void)?
-
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -180,9 +178,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     cell.setupWithMatch(match)
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
-                cell.isFavoriteCell = { value in
-                    self.isFavoriteLineCell?(value)
-                }
+
                 return cell
             }
             else {
