@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ProfileViewController: UIViewController {
 
@@ -85,6 +86,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var infoLabel: UILabel!
 
     var userSession: UserSession?
+    var cancellables = Set<AnyCancellable>()
 
     enum PageMode {
         case user
@@ -126,6 +128,16 @@ class ProfileViewController: UIViewController {
             self.usernameLabel.text = user.username
             self.userIdLabel.text = user.userId
         }
+
+        Env.everyMatrixAPIClient.getProfileStatus()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+
+            } receiveValue: { profileStatus in
+                print("PROFILE STATUS: \(profileStatus)")
+            }
+        .store(in: &cancellables)
 
     }
 
@@ -252,33 +264,49 @@ class ProfileViewController: UIViewController {
         activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
         activationAlertScrollableView.layer.masksToBounds = true
 
+        self.verifyUserActivationConditions()
 
-        let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+    }
 
+    func verifyUserActivationConditions() {
+
+        var showActivationAlertScrollableView = false
 
         if let userEmailVerified = userSession?.isEmailVerified {
             if !userEmailVerified {
-                //activationView.isHidden = true
                 let emailActivationAlertData = ActivationAlertData(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
                 alertsArray.append(emailActivationAlertData)
-
+                showActivationAlertScrollableView = true
             }
         }
 
-        alertsArray.append(completeProfileAlertData)
+        if let userSession = userSession {
+            if Env.userSessionStore.isUserProfileIncomplete {
+                let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
 
-        activationAlertScrollableView.setAlertArrayData(arrayData: alertsArray)
-
-        activationAlertScrollableView.activationAlertCollectionViewCellLinkLabelAction = { alertType in
-            if alertType == ActivationAlertType.email {
-                let emailVerificationViewController = EmailVerificationViewController()
-                self.present(emailVerificationViewController, animated: true, completion: nil)
-            }
-            else if alertType == ActivationAlertType.profile {
-                let fullRegisterViewController = FullRegisterPersonalInfoViewController()
-                self.present(fullRegisterViewController, animated: true, completion: nil)
+                alertsArray.append(completeProfileAlertData)
+                showActivationAlertScrollableView = true
             }
         }
+
+        if showActivationAlertScrollableView {
+            activationAlertScrollableView.setAlertArrayData(arrayData: alertsArray)
+
+            activationAlertScrollableView.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+                if alertType == ActivationAlertType.email {
+                    let emailVerificationViewController = EmailVerificationViewController()
+                    self.present(emailVerificationViewController, animated: true, completion: nil)
+                }
+                else if alertType == ActivationAlertType.profile {
+                    let fullRegisterViewController = FullRegisterPersonalInfoViewController()
+                    self.present(fullRegisterViewController, animated: true, completion: nil)
+                }
+            }
+        }
+        else {
+            activationAlertScrollableView.isHidden = true
+        }
+
     }
 
     func setupWithTheme() {

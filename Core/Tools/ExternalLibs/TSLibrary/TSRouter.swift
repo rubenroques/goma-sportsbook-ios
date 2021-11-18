@@ -29,6 +29,7 @@ enum TSRouter {
     case changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?)
     case getUserMetaData
     case postUserMetadata(favoriteEvents: [String])
+    case getProfileStatus
     case getUserBalance
     case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
     case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
@@ -129,6 +130,8 @@ enum TSRouter {
             return "/sports#getUserMetadata"
         case .postUserMetadata:
             return "/sports#postUserMetadata"
+        case .getProfileStatus:
+            return "/user/account#getProfileStatus"
         case .getBetslipSelectionInfo:
             return "/sports#bettingOptionsV2"
         case .placeBet:
@@ -337,7 +340,8 @@ enum TSRouter {
         case .postUserMetadata(let favoriteEvents):
             return ["key": "favoriteEvents",
                     "value": favoriteEvents]
-
+        case .getProfileStatus:
+            return [:]
         case .getBetslipSelectionInfo(let language, let stakeAmount, let betType, let tickets):
             var selection: [Any] = []
             for ticket in tickets {
