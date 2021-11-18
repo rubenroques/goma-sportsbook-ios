@@ -147,6 +147,8 @@ extension EveryMatrix {
         var phone: String
         var phonePrefix: String
         var personalID: String
+        var securityQuestion: String
+        var securityAnswer: String
 
         enum CodingKeys: String, CodingKey {
             case username = "username"
@@ -165,6 +167,8 @@ extension EveryMatrix {
             case phone = "phone"
             case phonePrefix = "phonePrefix"
             case personalID = "personalID"
+            case securityQuestion = "securityQuestion"
+            case securityAnswer = "securityAnswer"
         }
     }
 
