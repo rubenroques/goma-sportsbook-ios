@@ -162,7 +162,6 @@ extension EveryMatrix {
         var phone: String
         var phonePrefix: String
         var personalID: String
-        var isProfileIncomplete: Bool
 
         enum CodingKeys: String, CodingKey {
             case username = "username"
@@ -181,7 +180,6 @@ extension EveryMatrix {
             case phone = "phone"
             case phonePrefix = "phonePrefix"
             case personalID = "personalID"
-            case isProfileIncomplete = "isProfileIncomplete"
         }
     }
 

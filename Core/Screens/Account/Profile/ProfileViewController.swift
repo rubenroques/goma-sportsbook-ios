@@ -299,7 +299,8 @@ class ProfileViewController: UIViewController {
                 }
                 else if alertType == ActivationAlertType.profile {
                     let fullRegisterViewController = FullRegisterPersonalInfoViewController()
-                    self.present(fullRegisterViewController, animated: true, completion: nil)
+                    //self.present(fullRegisterViewController, animated: true, completion: nil)
+                    self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
                 }
             }
         }
