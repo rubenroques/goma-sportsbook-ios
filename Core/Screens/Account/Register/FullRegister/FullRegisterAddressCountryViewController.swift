@@ -160,7 +160,8 @@ class FullRegisterAddressCountryViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
-        self.navigationController?.pushViewController(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true)
+        //self.navigationController?.pushViewController(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true)
+        self.present(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true, completion: nil)
     }
 
     @objc func didTapBackground() {

@@ -185,6 +185,8 @@ extension EveryMatrix {
         var phone: String
         var phonePrefix: String
         var personalID: String
+        var securityQuestion: String?
+        var securityAnswer: String?
     }
 
     struct ProfileUpdateResponse: Codable {

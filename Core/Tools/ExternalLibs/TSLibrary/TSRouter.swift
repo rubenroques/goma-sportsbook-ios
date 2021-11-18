@@ -296,6 +296,8 @@ enum TSRouter {
                     "city": form.city,
                     "postalCode": form.postalCode,
                     "personalID": form.personalID,
+                    "securityQuestion": form.securityQuestion ?? "",
+                    "securityAnswer": form.securityAnswer ?? "",
                     "userConsents": ["termsandconditions": true, "sms": false]]            
         case .getLocations(let language, let sortByPopularity):
             let sortByPopularityString = String(sortByPopularity)

@@ -299,7 +299,8 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
-        self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
+        //self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
+        self.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true, completion: nil)
     }
 
     @objc func didTapBackground() {
