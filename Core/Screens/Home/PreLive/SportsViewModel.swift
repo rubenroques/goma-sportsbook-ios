@@ -63,6 +63,7 @@ class SportsViewModel: NSObject {
     }
 
     var dataDidChangedAction: (() -> ())?
+    var presentViewControllerAction: ((ActivationAlertType) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -101,6 +102,10 @@ class SportsViewModel: NSObject {
 
         self.myGamesSportsViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchPopularMatchesNextPage()
+        }
+
+        self.myGamesSportsViewModelDataSource.requestPresentViewController = { [weak self] alertType in
+            self?.presentViewControllerAction?(alertType)
         }
 
         self.todaySportsViewModelDataSource.requestNextPage = { [weak self] in
@@ -169,7 +174,7 @@ class SportsViewModel: NSObject {
             }
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
             for market in match.markets {
                 if market.typeId != marketSort[0].typeId {
@@ -179,7 +184,7 @@ class SportsViewModel: NSObject {
 
             // Check odds filter
             let matchOdds = marketSort[0].outcomes
-            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             for odd in matchOdds {
                 let oddValue = CGFloat(odd.bettingOffer.value)
                 if oddsRange.contains(oddValue) {
@@ -201,8 +206,8 @@ class SportsViewModel: NSObject {
         }
 
         // Check time
-        let timeOptionMin = Int(filtersOptions!.timeRange[0] ?? 0) * 3600
-        let timeOptionMax = Int(filtersOptions!.timeRange[1] ?? 24) * 3600
+        let timeOptionMin = Int(filtersOptions!.lowerBoundTimeRange ?? 0) * 3600
+        let timeOptionMax = Int(filtersOptions!.highBoundTimeRange ?? 24) * 3600
         let dateOptionMin = Date().addingTimeInterval(TimeInterval(timeOptionMin))
         let dateOptionMax = Date().addingTimeInterval(TimeInterval(timeOptionMax))
         let dateRange = dateOptionMin...dateOptionMax
@@ -212,7 +217,7 @@ class SportsViewModel: NSObject {
         for match in matches {
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
             for market in match.markets {
                 if market.typeId != marketSort[0].typeId {
@@ -227,7 +232,7 @@ class SportsViewModel: NSObject {
 
             // Check odds filter
             let matchOdds = marketSort[0].outcomes
-            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             var oddsInRange = false
             for odd in matchOdds {
                 let oddValue = CGFloat(odd.bettingOffer.value)
@@ -261,7 +266,7 @@ class SportsViewModel: NSObject {
                 for match in competition.matches {
                     // Check default market order
                     var marketSort: [Market] = []
-                    let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+                    let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
                     marketSort.append(match.markets[favoriteMarketIndex ?? 0])
                     for market in match.markets {
                         if market.typeId != marketSort[0].typeId {
@@ -271,7 +276,7 @@ class SportsViewModel: NSObject {
 
                     // Check odds filter
                     let matchOdds = marketSort[0].outcomes
-                    let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+                    let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
                     for odd in matchOdds {
                         let oddValue = CGFloat(odd.bettingOffer.value)
                         if oddsRange.contains(oddValue) {
@@ -936,12 +941,34 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
         return userFavoriteMatches + popularMatches
     }
 
+    var alertsArray: [ActivationAlertData] = []
+
     var requestNextPage: (() -> ())?
+    var requestPresentViewController: ((ActivationAlertType) -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
         self.banners = banners
         self.userFavoriteMatches = userFavoriteMatches
         self.popularMatches = popularMatches
+
+        if let userSession = UserSessionStore.loggedUserSession() {
+            if !userSession.isEmailVerified {
+
+                let emailActivationAlertData = ActivationAlertData(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+
+                alertsArray.append(emailActivationAlertData)
+            }
+
+            if Env.userSessionStore.isUserProfileIncomplete {
+                let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+
+                alertsArray.append(completeProfileAlertData)
+            }
+        }
+
+
+
+
 
         super.init()
     }
@@ -953,9 +980,14 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return banners.isEmpty ? 0 : 1
-        case 1:
+            if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
+                if !loggedUser.isEmailVerified || Env.userSessionStore.isUserProfileIncomplete {
+                    return 1
+                }
+            }
             return 0
+        case 1:
+            return banners.isEmpty ? 0 : 1
         case 2:
             return self.matches.count
         case 3:
@@ -968,14 +1000,21 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
+            // return UITableViewCell()
+            if let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self) {
+                cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+                    self.requestPresentViewController?(alertType)
+                }
+                cell.setAlertArrayData(arrayData: alertsArray)
+                return cell
+            }
+        case 1:
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
                 if let viewModel = self.bannersViewModel {
                     cell.setupWithViewModel(viewModel)
                 }
                 return cell
             }
-        case 1:
-            return UITableViewCell()
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
@@ -1029,6 +1068,8 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 140
         case 3:
             //Loading cell
             return 70
@@ -1039,6 +1080,8 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 130
         case 3:
             //Loading cell
             return 70

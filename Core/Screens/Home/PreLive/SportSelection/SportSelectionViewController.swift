@@ -37,7 +37,7 @@ class SportSelectionViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        AnalyticsClient.sendEvent(event: .changedSport)
         self.commonInit()
         self.setupWithTheme()
     }
@@ -171,6 +171,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         delegate?.setSportType(self.defaultSport)
 
         self.dismiss(animated: true, completion: nil)
+        AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport ))
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

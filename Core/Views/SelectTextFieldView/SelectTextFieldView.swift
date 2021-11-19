@@ -31,6 +31,10 @@ class SelectTextFieldView: NibView {
     var isIconArray: Bool = false
     var didTapReturn: (() -> Void)?
 
+    var textPublisher: AnyPublisher<String?, Never> {
+        return self.textField.textPublisher
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 

@@ -16,6 +16,20 @@ struct UserRegisterForm {
     let deviceToken: String
 }
 
+struct FullRegisterUserInfo {
+    var title: String
+    var firstName: String
+    var lastName: String
+    var country: String
+    var address1: String
+    var address2: String
+    var city: String
+    var postalCode: String
+    var securityQuestion: String
+    var securityAnswer: String
+    var personalID: String
+}
+
 extension EveryMatrix {
 
     struct SimpleRegisterForm {
@@ -163,6 +177,8 @@ extension EveryMatrix {
         var phone: String
         var phonePrefix: String
         var personalID: String
+        var securityQuestion: String
+        var securityAnswer: String
 
         enum CodingKeys: String, CodingKey {
             case username = "username"
@@ -181,6 +197,8 @@ extension EveryMatrix {
             case phone = "phone"
             case phonePrefix = "phonePrefix"
             case personalID = "personalID"
+            case securityQuestion = "securityQuestion"
+            case securityAnswer = "securityAnswer"
         }
     }
 
@@ -201,6 +219,8 @@ extension EveryMatrix {
         var phone: String
         var phonePrefix: String
         var personalID: String
+        var securityQuestion: String?
+        var securityAnswer: String?
     }
 
     struct ProfileUpdateResponse: Codable {
@@ -240,6 +260,14 @@ extension EveryMatrix {
         enum CodingKeys: String, CodingKey {
             case key = "key"
             case value = "value"
+        }
+    }
+
+    struct ProfileStatus: Decodable {
+        var isProfileIncomplete: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case isProfileIncomplete = "isProfileIncomplete"
         }
     }
 
