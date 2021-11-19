@@ -76,7 +76,6 @@ struct GomaGamingServiceClient {
         let endpoint = GomaGamingService.login(username: loginForm.username,
                                                password: loginForm.password,
                                                deviceToken: loginForm.deviceToken)
-
         let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }

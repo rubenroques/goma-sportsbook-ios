@@ -83,8 +83,8 @@ class SplashViewController: UIViewController {
                 switch completion {
                 case .finished:
                     Env.favoritesManager.getUserMetadata()
-                    //self.loginGomaAPI(username: user.username, password: user.userId)
-                    self.checkGomaLogin(username: user.username, password: user.userId)
+                    self.loginGomaAPI(username: user.username, password: user.userId)
+                    //self.checkGomaLogin(username: user.username, password: user.userId)
                     self.splashLoadingCompleted()
                 case .failure(let error):
                     print("error \(error)")
@@ -100,10 +100,17 @@ class SplashViewController: UIViewController {
     }
 
     func loginGomaAPI(username: String, password: String) {
-        print("TRYING GOMA LOGIN")
         let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
-        let gomaLogin = Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
-        print("GOMA LOGIN: \(gomaLogin)")
+
+        Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
+            .replaceError(with: MessageNetworkResponse.failed)
+            .sink { login in
+                print("GOMA LOGIN: \(login)")
+            } receiveValue: { value in
+                print("GOMA LOGIN VALUE: \(value)")
+            }
+            .store(in: &cancellables)
+
     }
 
 //    func checkFCMAuth() {
@@ -139,7 +146,6 @@ class SplashViewController: UIViewController {
 //    }
 
     func checkGomaLogin(username: String, password: String) {
-        print("TRYING GOMA LOGIN")
         print("USER: \(username)")
         let endpointUrl = URL(string: "https://sportsbook-api.gomagaming.com/api/auth/v1/login")!
         var request = URLRequest(url: endpointUrl)
@@ -150,7 +156,6 @@ class SplashViewController: UIViewController {
             "password": password,
             "device_token": Env.deviceFCMToken
         ]
-
 
         let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
         request.httpBody = jsonData
