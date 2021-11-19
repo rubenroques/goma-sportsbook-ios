@@ -13,6 +13,9 @@
         <array key="Gilroy-Bold.ttf">
             <string>Gilroy-Bold</string>
         </array>
+        <array key="Gilroy-SemiBold.ttf">
+            <string>Gilroy-Semibold</string>
+        </array>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PreLiveEventsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
@@ -27,6 +30,8 @@
                 <outlet property="leftGradientBaseView" destination="Ond-vd-nhl" id="4CI-b7-Yno"/>
                 <outlet property="loadingBaseView" destination="kGb-Bw-Z5y" id="DzJ-v2-UsN"/>
                 <outlet property="loadingView" destination="R1v-pN-KYj" id="l8c-Hq-phP"/>
+                <outlet property="noResultsLabel" destination="DHA-D0-i7j" id="Gid-lq-hb6"/>
+                <outlet property="noResultsView" destination="Nj2-1Z-eLq" id="kec-XW-i9Q"/>
                 <outlet property="openedCompetitionsFiltersConstraint" destination="QEY-gK-pFr" id="9vt-3h-1zZ"/>
                 <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
                 <outlet property="sportTypeIconImageView" destination="iOi-Sv-wfK" id="bdC-qr-Mbb"/>
@@ -40,6 +45,22 @@
             <rect key="frame" x="0.0" y="0.0" width="346" height="793"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" id="Nj2-1Z-eLq">
+                    <rect key="frame" x="-34" y="-52" width="414" height="896"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Click on the odds to add bets to your betslip." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHA-D0-i7j">
+                            <rect key="frame" x="50" y="451" width="314" height="34"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" red="1" green="0.51372549020000002" blue="0.59607843140000005" alpha="1" colorSpace="calibratedRGB"/>
+                            <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="17"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <viewLayoutGuide key="safeArea" id="1BH-r3-27m"/>
+                    <color key="backgroundColor" systemColor="systemGrayColor"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kGb-Bw-Z5y">
                     <rect key="frame" x="0.0" y="70" width="346" height="723"/>
                     <subviews>
@@ -229,6 +250,9 @@
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGrayColor">
+            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

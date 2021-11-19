@@ -28,6 +28,8 @@ class PreLiveEventsViewController: UIViewController {
     
     @IBOutlet weak var filtersCountLabel: UILabel!
     
+    @IBOutlet weak var noResultsView: UIView!
+    @IBOutlet weak var noResultsLabel: UILabel!
     
     var turnTimeRangeOn : Bool = false
     
@@ -217,7 +219,11 @@ class PreLiveEventsViewController: UIViewController {
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
-
+        
+        noResultsView.isHidden = true
+        
+        
+        
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(self.handleSportsSelectionTap(_:)))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
 
@@ -287,6 +293,8 @@ class PreLiveEventsViewController: UIViewController {
 
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
+            
+            
         }
 
         self.viewModel.matchListTypePublisher
@@ -348,6 +356,14 @@ class PreLiveEventsViewController: UIViewController {
 
     func reloadTableViewData() {
         self.tableView.reloadData()
+        
+        if self.tableView.numberOfSections == 0 {
+            noResultsView.isHidden = false
+            print(self.tableView.numberOfSections)
+        }else{
+            print(self.tableView.numberOfSections)
+            noResultsView.isHidden = false
+        }
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -509,10 +525,12 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
 extension PreLiveEventsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
+    
         return self.viewModel.numberOfSections(in: tableView)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(self.viewModel.tableView(tableView, numberOfRowsInSection: section))
         return self.viewModel.tableView(tableView, numberOfRowsInSection: section)
     }
 
