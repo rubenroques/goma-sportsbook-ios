@@ -25,10 +25,10 @@
                 <outlet property="liveTitleLabel" destination="0RE-N3-etL" id="WPx-mN-ddE"/>
                 <outlet property="loginButton" destination="paS-oq-fLH" id="Nxt-Si-Q1c"/>
                 <outlet property="logoImageView" destination="RMW-wP-BFm" id="dLz-AD-UpZ"/>
+                <outlet property="preLiveBaseView" destination="kSr-MY-svK" id="457-S1-5b0"/>
                 <outlet property="profilePictureBaseView" destination="9OD-Ud-62c" id="M7j-yR-EXn"/>
                 <outlet property="profilePictureImageView" destination="lyV-4f-rcf" id="dNJ-g4-bIr"/>
                 <outlet property="searchButton" destination="xUd-4d-bYt" id="Ccp-aZ-u4D"/>
-                <outlet property="sportsBaseView" destination="kSr-MY-svK" id="TNM-WE-j2C"/>
                 <outlet property="sportsButtonBaseView" destination="0dg-mr-47t" id="MFR-Ib-N8F"/>
                 <outlet property="sportsIconImageView" destination="jq1-az-paT" id="3U6-cL-XwF"/>
                 <outlet property="sportsTitleLabel" destination="8B6-32-WvK" id="wC8-vd-YHb"/>
@@ -103,7 +103,7 @@
                             <state key="normal" image="search_bar_icon"/>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="paS-oq-fLH">
-                            <rect key="frame" x="490" y="13" width="65" height="38"/>
+                            <rect key="frame" x="490" y="14.5" width="65" height="35"/>
                             <color key="backgroundColor" name="primaryButtonNormalColor"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="13"/>
                             <inset key="contentEdgeInsets" minX="16" minY="11" maxX="16" maxY="11"/>

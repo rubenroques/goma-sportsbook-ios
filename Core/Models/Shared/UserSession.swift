@@ -15,5 +15,5 @@ struct UserSession: Codable {
     var email: String
     var userId: String
     var birthDate: String
-    
+    var isEmailVerified: Bool
 }

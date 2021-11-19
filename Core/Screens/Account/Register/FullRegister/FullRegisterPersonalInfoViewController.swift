@@ -149,6 +149,11 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(), animated: true)
     }
 
+    @IBAction func closeAction() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+
     @objc func didTapBackground() {
         self.resignFirstResponder()
 

@@ -11,15 +11,16 @@ import UIKit
 class FilterCollapseView: NibView {
 
     @IBOutlet private var containerView: UIView!
+    @IBOutlet private var topView: UIView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var toggleButton: UIButton!
     @IBOutlet private var stackView: UIStackView!
     @IBOutlet private var checkboxButton: CheckboxButton!
     //Constraints
-    @IBOutlet var viewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var stackViewHeightConstraint: NSLayoutConstraint!
-    @IBOutlet var labelLeadingButtonConstraint: NSLayoutConstraint!
-    @IBOutlet var labelLeadingViewConstraint: NSLayoutConstraint!
+    @IBOutlet private var viewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var stackViewHeightConstraint: NSLayoutConstraint!
+    @IBOutlet private var topViewBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private var topViewStackConstraints: NSLayoutConstraint!
     // Variables
     var isCollapsed = false {
         didSet {
@@ -27,14 +28,32 @@ class FilterCollapseView: NibView {
                 toggleButton.setImage(UIImage(named: "arrow_up_icon"), for: .normal)
                 stackViewHeightConstraint.isActive = true
                 viewHeightConstraint.isActive = true
-                self.stackView.isHidden = true
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                    self.stackView.alpha = 0
+                }, completion: { _ in
+                    self.stackView.isHidden = true
+                })
+                topViewBottomConstraint.isActive = true
+                topViewStackConstraints.isActive = false
                 animateView(hiddenFlow: true)
             }
             else {
                 toggleButton.setImage(UIImage(named: "arrow_down_icon"), for: .normal)
                 stackViewHeightConstraint.isActive = false
                 viewHeightConstraint.isActive = false
-                self.stackView.isHidden = false
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                    print(self.stackView.alpha)
+                    if self.stackView.alpha != self.enabledAlpha && self.stackView.alpha != 0 {
+                        self.stackView.alpha = self.disabledAlpha
+                    }
+                    else {
+                        self.stackView.alpha = self.enabledAlpha
+                    }
+                    self.stackView.isHidden = false
+                }, completion: { _ in
+                })
+                topViewBottomConstraint.isActive = false
+                topViewStackConstraints.isActive = true
                 animateView(hiddenFlow: false)
             }
         }
@@ -42,17 +61,22 @@ class FilterCollapseView: NibView {
     var hasCheckbox = false {
         didSet {
             if hasCheckbox {
-                labelLeadingButtonConstraint.isActive = true
-                labelLeadingViewConstraint.isActive = false
                 checkboxButton.isHidden = false
+                stackView.isUserInteractionEnabled = false
+                stackView.alpha = disabledAlpha
+                self.layoutIfNeeded()
             }
             else {
-                labelLeadingButtonConstraint.isActive = false
-                labelLeadingViewConstraint.isActive = true
                 checkboxButton.isHidden = true
+                stackView.alpha = enabledAlpha
+                self.layoutIfNeeded()
             }
         }
     }
+    var disabledAlpha: CGFloat = 0.7
+    var enabledAlpha: CGFloat = 1.0
+
+    var didToggle: ((Bool) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -73,6 +97,9 @@ class FilterCollapseView: NibView {
 
         containerView.layer.cornerRadius = CornerRadius.modal
 
+        topView.backgroundColor = UIColor.App.secondaryBackground
+        topView.layer.cornerRadius = CornerRadius.modal
+
         titleLabel.text = "Test"
         titleLabel.font = AppFont.with(type: .bold, size: 16)
         titleLabel.textColor = UIColor.App.headingMain
@@ -81,7 +108,26 @@ class FilterCollapseView: NibView {
 
         checkboxButton.isHidden = true
 
+        checkboxButton.didTapCheckbox = { value in
+            if value {
+                self.stackView.isUserInteractionEnabled = true
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+                    self.stackView.alpha = self.enabledAlpha
+                }, completion: { _ in
+                })
+            }
+            else {
+                self.stackView.isUserInteractionEnabled = false
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                    self.stackView.alpha = self.disabledAlpha
+                }, completion: { _ in
+                })
+            }
+        }
+
         stackView.backgroundColor = UIColor.App.secondaryBackground
+        stackView.alpha = enabledAlpha
+
     }
 
     func setTitle(title: String) {
@@ -90,6 +136,14 @@ class FilterCollapseView: NibView {
 
     func setCheckboxSelected(selected: Bool) {
         checkboxButton.isChecked = selected
+        if selected {
+            stackView.isUserInteractionEnabled = true
+            stackView.alpha = enabledAlpha
+        }
+        else {
+            stackView.isUserInteractionEnabled = false
+            stackView.alpha = disabledAlpha
+        }
     }
 
     func addViewtoStack(view: UIView) {
@@ -98,19 +152,17 @@ class FilterCollapseView: NibView {
 
     func animateView(hiddenFlow: Bool) {
         if hiddenFlow {
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn ,animations: {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
                 self.stackView.layoutIfNeeded()
                 self.layoutIfNeeded()
             }, completion: { _ in
-
             })
         }
         else {
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut ,animations: {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
                 self.stackView.layoutIfNeeded()
                 self.layoutIfNeeded()
             }, completion: { _ in
-
             })
         }
 
@@ -118,6 +170,7 @@ class FilterCollapseView: NibView {
 
     @IBAction private func toggleCollapseAction() {
         isCollapsed = !isCollapsed
+        didToggle?(isCollapsed)
     }
 
 }

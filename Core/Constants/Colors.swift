@@ -22,6 +22,7 @@ extension UIColor {
         
         static let separatorLine = UIColor(named: "separatorLineColor")!
         static let fadeOutHeading = UIColor(named: "fadeOutHeadingColor")!
+        static let fadedGrayLine = UIColor(named: "fadedGrayLineColor")!
 
         static let headingMain = UIColor(named: "headingMainColor")!
         static let headingSecondary = UIColor(named: "headingSecondaryColor")!
