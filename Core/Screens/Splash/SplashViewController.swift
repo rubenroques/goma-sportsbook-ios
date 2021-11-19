@@ -103,13 +103,7 @@ class SplashViewController: UIViewController {
 
         Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("GOMA Login Error: \(error)")
-                case .finished:
-                    print("GOMA Login Finished")
-                }
+            .sink(receiveCompletion: { _ in
                 self.splashLoadingCompleted()
             }, receiveValue: { value in
                 Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
