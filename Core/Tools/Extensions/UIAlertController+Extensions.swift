@@ -20,6 +20,13 @@ extension UIAlertController {
 //        viewController.present(alertViewController, animated: true, completion: nil)
 //    }
 
+    static func showMessage(title: String, message: String, on viewController: UIViewController) {
+        let alertViewController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        let cancelAction = UIAlertAction(title: localized("string_ok"), style: .cancel, handler: nil)
+        alertViewController.addAction(cancelAction)
+        viewController.present(alertViewController, animated: true, completion: nil)
+    }
+
     static func showServerErrorMessage(on viewController: UIViewController) {
         let alert = UIAlertController(title: localized("string_login_error_title"),
                                       message: localized("string_server_error_message"),

@@ -27,6 +27,35 @@ extension EveryMatrix {
         let emailVerificationURL: String
     }
 
+    struct BetslipTicketSelection: Decodable {
+
+        var id: String
+        var currentOdd: Double
+
+        init(id: String, currentOdd: Double) {
+            self.id = id
+            self.currentOdd = currentOdd
+        }
+        enum CodingKeys: String, CodingKey {
+            case id = "bettingOfferId"
+            case currentOdd = "priceValue"
+        }
+    }
+
+    enum BetslipSubmitionType {
+        case single
+        case multiple
+
+        var typeKeyword: String {
+            switch self {
+            case .single:
+                return "SINGLE"
+            case .multiple:
+                return "MULTIPLE"
+            }
+        }
+    }
+
     struct CompleteRegisterForm {
 
     }
@@ -192,6 +221,32 @@ extension EveryMatrix {
 
         enum CodingKeys: String, CodingKey {
             case isCaptchaEnabled = "isCaptchaEnabled"
+        }
+    }
+
+    struct UserMetadata: Decodable {
+        var records: [UserMetadataRecords]
+
+        enum CodingKeys: String, CodingKey {
+            case records = "records"
+        }
+    }
+
+    struct UserMetadataRecords: Decodable {
+        var key: String
+        var value: [String]?
+
+        enum CodingKeys: String, CodingKey {
+            case key = "key"
+            case value = "value"
+        }
+    }
+
+    struct ProfileStatus: Decodable {
+        var isProfileIncomplete: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case isProfileIncomplete = "isProfileIncomplete"
         }
     }
 

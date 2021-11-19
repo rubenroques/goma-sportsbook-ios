@@ -17,7 +17,7 @@ struct Environment {
     let everyMatrixAPIClient = EveryMatrixAPIClient()
     let everyMatrixStorage = AggregatorsRepository()
 
-    let eventsStore = EventsStore()
+    let betslipManager = BetslipManager()
 
     let userSessionStore = UserSessionStore()
     let businessSettingsSocket = RealtimeSocketClient()
@@ -27,6 +27,8 @@ struct Environment {
     var locale = Locale.autoupdatingCurrent
     var timezone = TimeZone.autoupdatingCurrent
     var date: () -> Date = { Date.init() }
+
+    var favoritesManager = FavoritesManager()
 
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""

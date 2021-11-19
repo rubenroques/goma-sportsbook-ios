@@ -169,7 +169,6 @@ final class TSManager {
                         }
                         promise(.failure(.requestError(value: desc.isEmpty ? error : desc)))
                     })
-
                 }
                 else {
                     promise(.failure(.notConnected))

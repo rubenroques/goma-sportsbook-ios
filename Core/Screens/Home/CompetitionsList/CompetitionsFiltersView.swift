@@ -123,8 +123,8 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.sizeToFit()
         self.searchBarView.isTranslucent = false
         self.searchBarView.backgroundImage = UIImage()
-        self.searchBarView.tintColor = .blue
-        self.searchBarView.barTintColor = .red
+        self.searchBarView.tintColor = .white
+        self.searchBarView.barTintColor = .white
         self.searchBarView.backgroundImage = UIColor.App.mainBackground.image()
         //self.searchBarView.placeholder = localized("string_search")
 
