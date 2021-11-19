@@ -174,7 +174,7 @@ class SportsViewModel: NSObject {
             }
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
             for market in match.markets {
                 if market.typeId != marketSort[0].typeId {
@@ -184,7 +184,7 @@ class SportsViewModel: NSObject {
 
             // Check odds filter
             let matchOdds = marketSort[0].outcomes
-            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             for odd in matchOdds {
                 let oddValue = CGFloat(odd.bettingOffer.value)
                 if oddsRange.contains(oddValue) {
@@ -206,8 +206,8 @@ class SportsViewModel: NSObject {
         }
 
         // Check time
-        let timeOptionMin = Int(filtersOptions!.timeRange[0] ?? 0) * 3600
-        let timeOptionMax = Int(filtersOptions!.timeRange[1] ?? 24) * 3600
+        let timeOptionMin = Int(filtersOptions!.lowerBoundTimeRange ?? 0) * 3600
+        let timeOptionMax = Int(filtersOptions!.highBoundTimeRange ?? 24) * 3600
         let dateOptionMin = Date().addingTimeInterval(TimeInterval(timeOptionMin))
         let dateOptionMax = Date().addingTimeInterval(TimeInterval(timeOptionMax))
         let dateRange = dateOptionMin...dateOptionMax
@@ -217,7 +217,7 @@ class SportsViewModel: NSObject {
         for match in matches {
             // Check default market order
             var marketSort: [Market] = []
-            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
             for market in match.markets {
                 if market.typeId != marketSort[0].typeId {
@@ -232,7 +232,7 @@ class SportsViewModel: NSObject {
 
             // Check odds filter
             let matchOdds = marketSort[0].outcomes
-            let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
             var oddsInRange = false
             for odd in matchOdds {
                 let oddValue = CGFloat(odd.bettingOffer.value)
@@ -266,7 +266,7 @@ class SportsViewModel: NSObject {
                 for match in competition.matches {
                     // Check default market order
                     var marketSort: [Market] = []
-                    let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == "\(filtersOptions!.defaultMarketId)" })
+                    let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
                     marketSort.append(match.markets[favoriteMarketIndex ?? 0])
                     for market in match.markets {
                         if market.typeId != marketSort[0].typeId {
@@ -276,7 +276,7 @@ class SportsViewModel: NSObject {
 
                     // Check odds filter
                     let matchOdds = marketSort[0].outcomes
-                    let oddsRange = filtersOptions!.oddsRange[0]...filtersOptions!.oddsRange[1]
+                    let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
                     for odd in matchOdds {
                         let oddValue = CGFloat(odd.bettingOffer.value)
                         if oddsRange.contains(oddValue) {
