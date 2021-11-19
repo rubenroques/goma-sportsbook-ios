@@ -242,4 +242,12 @@ extension EveryMatrix {
         }
     }
 
+    struct ProfileStatus: Decodable {
+        var isProfileIncomplete: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case isProfileIncomplete = "isProfileIncomplete"
+        }
+    }
+
 }

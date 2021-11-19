@@ -63,6 +63,7 @@ class SportsViewModel: NSObject {
     }
 
     var dataDidChangedAction: (() -> ())?
+    var presentViewControllerAction: ((ActivationAlertType) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -101,6 +102,10 @@ class SportsViewModel: NSObject {
 
         self.myGamesSportsViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchPopularMatchesNextPage()
+        }
+
+        self.myGamesSportsViewModelDataSource.requestPresentViewController = { [weak self] alertType in
+            self?.presentViewControllerAction?(alertType)
         }
 
         self.todaySportsViewModelDataSource.requestNextPage = { [weak self] in
@@ -936,12 +941,34 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
         return userFavoriteMatches + popularMatches
     }
 
+    var alertsArray: [ActivationAlertData] = []
+
     var requestNextPage: (() -> ())?
+    var requestPresentViewController: ((ActivationAlertType) -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
         self.banners = banners
         self.userFavoriteMatches = userFavoriteMatches
         self.popularMatches = popularMatches
+
+        if let userSession = UserSessionStore.loggedUserSession() {
+            if !userSession.isEmailVerified {
+
+                let emailActivationAlertData = ActivationAlertData(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+
+                alertsArray.append(emailActivationAlertData)
+            }
+
+            if Env.userSessionStore.isUserProfileIncomplete {
+                let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+
+                alertsArray.append(completeProfileAlertData)
+            }
+        }
+
+
+
+
 
         super.init()
     }
@@ -953,9 +980,14 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return banners.isEmpty ? 0 : 1
-        case 1:
+            if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
+                if !loggedUser.isEmailVerified || Env.userSessionStore.isUserProfileIncomplete {
+                    return 1
+                }
+            }
             return 0
+        case 1:
+            return banners.isEmpty ? 0 : 1
         case 2:
             return self.matches.count
         case 3:
@@ -968,14 +1000,21 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
+            // return UITableViewCell()
+            if let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self) {
+                cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+                    self.requestPresentViewController?(alertType)
+                }
+                cell.setAlertArrayData(arrayData: alertsArray)
+                return cell
+            }
+        case 1:
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
                 if let viewModel = self.bannersViewModel {
                     cell.setupWithViewModel(viewModel)
                 }
                 return cell
             }
-        case 1:
-            return UITableViewCell()
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
@@ -1029,6 +1068,8 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 140
         case 3:
             //Loading cell
             return 70
@@ -1039,6 +1080,8 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 130
         case 3:
             //Loading cell
             return 70

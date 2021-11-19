@@ -119,6 +119,18 @@ class PreLiveEventsViewController: UIViewController {
 
         self.connectPublishers()
         self.viewModel.fetchData()
+        self.viewModel.presentViewControllerAction = { alertType in
+            if alertType == ActivationAlertType.email {
+                let emailVerificationViewController = EmailVerificationViewController()
+                self.present(emailVerificationViewController, animated: true, completion: nil)
+            }
+            else if alertType == ActivationAlertType.profile {
+                let fullRegisterViewController = FullRegisterPersonalInfoViewController()
+                self.present(fullRegisterViewController, animated: true, completion: nil)
+            }
+
+        }
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -210,6 +222,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         
         tableView.delegate = self
         tableView.dataSource = self

@@ -78,6 +78,7 @@ class SplashViewController: UIViewController {
                 }
             } receiveValue: { account in
                 print(account)
+                Env.userSessionStore.isUserProfileIncomplete = account.isProfileIncomplete
             }
             .store(in: &cancellables)
     }
