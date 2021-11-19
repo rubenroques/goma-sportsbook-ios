@@ -171,7 +171,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         delegate?.setSportType(self.defaultSport)
 
         self.dismiss(animated: true, completion: nil)
-        AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport ))
+        AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport.id ))
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
