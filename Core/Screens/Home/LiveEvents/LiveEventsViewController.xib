@@ -9,12 +9,18 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Gilroy-Bold.ttf">
+            <string>Gilroy-Bold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveEventsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="filtersBarBaseView" destination="paD-vp-Qmi" id="blG-Hq-1cG"/>
                 <outlet property="filtersButtonView" destination="ah2-Y0-zPN" id="xZW-BL-XzS"/>
                 <outlet property="filtersCollectionView" destination="7Te-67-lXU" id="hEg-ZU-JqA"/>
+                <outlet property="filtersCountLabel" destination="9gt-bD-PLF" id="kRK-9V-AKi"/>
                 <outlet property="filtersSeparatorLineView" destination="X95-AQ-boc" id="PEo-w7-ZNO"/>
                 <outlet property="leftGradientBaseView" destination="av1-cX-BKP" id="mb8-XN-XOE"/>
                 <outlet property="loadingBaseView" destination="MFb-Vr-zVA" id="Msz-v6-6xG"/>
@@ -75,6 +81,18 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ah2-Y0-zPN">
                             <rect key="frame" x="306" y="15" width="40" height="40"/>
                             <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9gt-bD-PLF">
+                                    <rect key="frame" x="18" y="-6" width="16" height="16"/>
+                                    <color key="backgroundColor" red="0.015686274510000001" green="0.49019607840000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="16" id="13j-dm-2g2"/>
+                                        <constraint firstAttribute="width" constant="16" id="taq-wO-OdC"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="10"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                    <size key="shadowOffset" width="1" height="-1"/>
+                                </label>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="Jgw-2R-Qzy">
                                     <rect key="frame" x="8.5" y="9.5" width="23" height="21"/>
                                     <constraints>
@@ -85,8 +103,10 @@
                             </subviews>
                             <color key="backgroundColor" name="secundaryBackgroundColor"/>
                             <constraints>
+                                <constraint firstAttribute="trailing" secondItem="9gt-bD-PLF" secondAttribute="trailing" constant="6" id="0WY-Y1-NNu"/>
                                 <constraint firstItem="Jgw-2R-Qzy" firstAttribute="centerY" secondItem="ah2-Y0-zPN" secondAttribute="centerY" id="MBQ-nw-tKJ"/>
                                 <constraint firstItem="Jgw-2R-Qzy" firstAttribute="centerX" secondItem="ah2-Y0-zPN" secondAttribute="centerX" id="Tdb-iv-jnD"/>
+                                <constraint firstItem="9gt-bD-PLF" firstAttribute="top" secondItem="ah2-Y0-zPN" secondAttribute="top" constant="-6" id="brq-kY-Hhu"/>
                                 <constraint firstAttribute="width" constant="40" id="bw9-y8-xkE"/>
                                 <constraint firstAttribute="height" constant="40" id="w4g-af-tfO"/>
                             </constraints>
