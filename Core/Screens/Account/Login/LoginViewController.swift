@@ -46,6 +46,9 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        AnalyticsClient.sendEvent(event: .loginScreen)
+       
+        
         self.title = "SplashViewController"
 
         commonInit()
@@ -363,6 +366,7 @@ class LoginViewController: UIViewController {
     }
 
     private func showNextViewController() {
+        AnalyticsClient.sendEvent(event: .userLogin)
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
         }

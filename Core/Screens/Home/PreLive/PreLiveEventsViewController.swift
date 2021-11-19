@@ -611,12 +611,15 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
+            AnalyticsClient.sendEvent(event: .myGamesScreen)
             self.viewModel.setMatchListType(.myGames)
             turnTimeRangeOn = false
         case 1:
+            AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.today)
             turnTimeRangeOn = true
         case 2:
+            AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
             turnTimeRangeOn = false
         default:

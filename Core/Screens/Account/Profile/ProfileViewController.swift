@@ -407,6 +407,7 @@ extension ProfileViewController {
     }
 
     @IBAction private func didTapLogoutButton() {
+        AnalyticsClient.sendEvent(event: .userLogout)
         Env.userSessionStore.logout()
         Env.favoritesManager.favoriteEventsId = []
         self.didTapCloseButton()
