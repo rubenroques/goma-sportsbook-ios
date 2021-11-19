@@ -9,6 +9,8 @@ import UIKit
 
 class CheckboxButton: UIButton {
 
+    var didTapCheckbox: ((Bool) -> Void)?
+
     var isChecked: Bool = false {
         didSet {
             if isChecked {
@@ -17,8 +19,8 @@ class CheckboxButton: UIButton {
                 self.layer.borderColor = UIColor.App.mainTint.cgColor
             } else {
                 self.setImage(nil, for: .normal)
-                self.backgroundColor = UIColor.App.mainBackground
-                self.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+                self.backgroundColor = UIColor.App.secondaryBackground
+                self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
             }
         }
     }
@@ -26,10 +28,10 @@ class CheckboxButton: UIButton {
     override func awakeFromNib() {
         self.addTarget(self, action:#selector(buttonClicked(sender:)), for: UIControl.Event.touchUpInside)
 
-        self.backgroundColor = UIColor.App.mainBackground
+        self.backgroundColor = UIColor.App.secondaryBackground
 
         self.layer.borderWidth = 2
-        self.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+        self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
         self.layer.cornerRadius = 4
 
         self.tintColor = UIColor.App.headingMain
@@ -39,6 +41,7 @@ class CheckboxButton: UIButton {
     @objc func buttonClicked(sender: UIButton) {
         if sender == self {
             isChecked = !isChecked
+            didTapCheckbox?(isChecked)
         }
     }
 }

@@ -303,6 +303,11 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         //self.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true, completion: nil)
     }
 
+    @IBAction func closeAction() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+
     @objc func didTapBackground() {
         self.resignFirstResponder()
 

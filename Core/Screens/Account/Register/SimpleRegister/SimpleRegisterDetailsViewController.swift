@@ -29,6 +29,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var signUpButton: UIButton!
 
     @IBOutlet private var loadingUsernameValidityView: UIActivityIndicatorView!
+    var spinnerViewController = SpinnerViewController()
 
     var cancellables = Set<AnyCancellable>()
     
@@ -326,6 +327,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                                   mobilePrefix: mobilePrefixTextual,
                                                   mobileNumber: mobile,
                                                   emailVerificationURL: emailVerificationURL)
+        self.showLoadingSpinner()
         self.registerUser(form: form)
 
     }
@@ -369,6 +371,24 @@ class SimpleRegisterDetailsViewController: UIViewController {
         self.phoneHeaderTextView.resignFirstResponder()
         self.passwordHeaderTextView.resignFirstResponder()
         self.confirmPasswordHeaderTextView.resignFirstResponder()
+    }
+
+    func showLoadingSpinner() {
+
+        view.addSubview(spinnerViewController.view)
+        spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        spinnerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        spinnerViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        spinnerViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        spinnerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        spinnerViewController.didMove(toParent: self)
+
+    }
+
+    func hideLoadingSpinner() {
+        spinnerViewController.willMove(toParent: nil)
+        spinnerViewController.removeFromParent()
+        spinnerViewController.view.removeFromSuperview()
     }
 
 }
@@ -426,6 +446,7 @@ extension SimpleRegisterDetailsViewController {
             .breakpointOnError()
             .receive(on: DispatchQueue.main)
             .sink { completion in
+                self.hideLoadingSpinner()
                 switch completion {
                 case .failure(let error):
                     switch error {

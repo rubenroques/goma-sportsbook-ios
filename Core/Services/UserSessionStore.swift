@@ -18,8 +18,10 @@ class UserSessionStore {
     var cancellables = Set<AnyCancellable>()
 
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
+    var userBalanaceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
 
     var shouldRecordUserSession = true
+    var isUserProfileIncomplete: Bool = true
 
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
@@ -113,8 +115,8 @@ class UserSessionStore {
                             password: password,
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)",
-                            birthDate: sessionInfo.birthDate
-                    )
+                            birthDate: sessionInfo.birthDate,
+                            isEmailVerified: sessionInfo.isEmailVerified                    )
             }
             .handleEvents(receiveOutput: saveUserSession)
             .eraseToAnyPublisher()
@@ -159,6 +161,21 @@ class UserSessionStore {
             }, receiveValue: { userId in
                 self.registrationOnGomaAPI(form: form, userId: userId)
             })
+            .store(in: &cancellables)
+    }
+
+}
+
+extension UserSessionStore {
+
+    func forceWalletUpdate() {
+        let route = TSRouter.getUserBalance
+        TSManager.shared.getModel(router: route, decodingType: EveryMatrix.UserBalanceWallet.self)
+            .sink { completion in
+                print(completion)
+            } receiveValue: { userBalanceWallet in
+                self.userBalanaceWallet.send(userBalanceWallet)
+            }
             .store(in: &cancellables)
     }
 

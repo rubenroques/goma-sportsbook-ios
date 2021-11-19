@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FilterSliderInfoView" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="bottomLabel" destination="P96-dQ-VgC" id="w5Z-UO-aDy"/>
+                <outlet property="containerView" destination="VaA-Jd-eHs" id="TW6-dh-zOm"/>
+                <outlet property="topLabel" destination="bZz-k4-YkP" id="6xf-v9-hFg"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="200" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VaA-Jd-eHs">
+                    <rect key="frame" x="0.0" y="0.0" width="200" height="80"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bZz-k4-YkP">
+                            <rect key="frame" x="8" y="8" width="42" height="35"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="P96-dQ-VgC">
+                            <rect key="frame" x="8" y="51" width="42" height="21"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="bZz-k4-YkP" firstAttribute="leading" secondItem="P96-dQ-VgC" secondAttribute="leading" id="1oe-IC-her"/>
+                        <constraint firstItem="bZz-k4-YkP" firstAttribute="top" secondItem="VaA-Jd-eHs" secondAttribute="top" constant="8" id="CB1-q5-5rf"/>
+                        <constraint firstItem="P96-dQ-VgC" firstAttribute="top" secondItem="bZz-k4-YkP" secondAttribute="bottom" constant="8" id="ddw-5d-oRm"/>
+                        <constraint firstItem="P96-dQ-VgC" firstAttribute="leading" secondItem="VaA-Jd-eHs" secondAttribute="leading" constant="8" id="tXJ-03-ypm"/>
+                        <constraint firstAttribute="bottom" secondItem="P96-dQ-VgC" secondAttribute="bottom" constant="8" id="xdA-rN-lDB"/>
+                    </constraints>
+                </view>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="VaA-Jd-eHs" secondAttribute="bottom" id="77L-eN-MEa"/>
+                <constraint firstItem="VaA-Jd-eHs" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="EaA-EG-YON"/>
+                <constraint firstItem="VaA-Jd-eHs" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="WLS-00-WtV"/>
+                <constraint firstAttribute="trailing" secondItem="VaA-Jd-eHs" secondAttribute="trailing" id="sSF-47-sxN"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="-81.159420289855078" y="-201.5625"/>
+        </view>
+    </objects>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

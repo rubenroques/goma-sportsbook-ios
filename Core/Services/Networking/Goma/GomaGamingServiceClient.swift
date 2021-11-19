@@ -43,7 +43,6 @@ struct GomaGamingServiceClient {
             .map { simpleResponse -> Bool in
                 return simpleResponse.message.lowercased() == accessGrantedMessage
             }
-            .print()
             .eraseToAnyPublisher()
 
     }
@@ -57,7 +56,6 @@ struct GomaGamingServiceClient {
     func requestPopUpInfo(deviceId: String) -> AnyPublisher<PopUpDetails?, Never> {
         let endpoint = GomaGamingService.modalPopUpDetails
         let requestPublisher: AnyPublisher<PopUpDetails?, Never> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
-            .print()
             .replaceError(with: nil)
             .eraseToAnyPublisher()
         return requestPublisher

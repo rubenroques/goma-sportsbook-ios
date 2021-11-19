@@ -32,6 +32,10 @@ public typealias UnregisterCallback = () -> Void
 
 public typealias EventCallback = (_ details: [String: Any], _ results: [Any]?, _ kwResults: [String: Any]?) -> Void
 
+protocol EndpointPublisherIdentifiable {
+    var identificationCode: Int { get }
+}
+
 open class Subscription {
     fileprivate weak var session: SSWampSession?
     internal let subscription: Int
@@ -53,6 +57,12 @@ open class Subscription {
             onError([:], "Subscription already inactive.")
         }
         self.session?.unsubscribe(self.subscription, onSuccess: onSuccess, onError: onError)
+    }
+}
+
+extension Subscription: EndpointPublisherIdentifiable {
+    var identificationCode: Int {
+        return self.subscription
     }
 }
 
@@ -81,6 +91,12 @@ open class Registration {
     }
 }
 
+
+extension Registration: EndpointPublisherIdentifiable {
+    var identificationCode: Int {
+        return self.registration
+    }
+}
 
 
 
@@ -134,6 +150,16 @@ open class SSWampSession: SSWampTransportDelegate {
 
     final public func isConnected() -> Bool {
         return self.sessionId != nil
+    }
+
+    public func printMemoryLogs() {
+        print("------------- SSWampSession - Memory Logs ------------")
+        print("SubscribeRequests \(subscribeRequests.count)" )
+        print("Subscriptions \(subscriptions.count)" )
+        print("RegisterRequests  \(registerRequests.count)" )
+        print("Registers  \(registers.count)" )
+        print("------------  ------------  ------------  ------------")
+
     }
 
     final public func connect() {
@@ -426,6 +452,7 @@ open class SSWampSession: SSWampTransportDelegate {
         case let message as SubscribeSSWampMessage:
             print(message)
             return
+
         case let message as YieldSSWampMessage:
             print(message)
             return
@@ -436,8 +463,6 @@ open class SSWampSession: SSWampTransportDelegate {
             print(message)
             return
         case let message as InvocationSSWampMessage:
-            print(message)
-
             if let registration = self.registers[message.registration] {
                 registration.eventCallback(message.details, message.args, message.kwargs)
 
@@ -446,8 +471,8 @@ open class SSWampSession: SSWampTransportDelegate {
             }
             else {
                 // log this erroneous situation
+                print("InvocationSSWampMessage cannot found a register \(message) ")
             }
-
             // send YieldSSWampMessage
             return
         case let message as CallSSWampMessage:

@@ -32,6 +32,8 @@ class LoginViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
+    let spinnerViewController = SpinnerViewController()
+
     init() {
         super.init(nibName: "LoginViewController", bundle: nil)
     }
@@ -49,7 +51,7 @@ class LoginViewController: UIViewController {
         commonInit()
         setupWithTheme()
 
-        //Default value
+        // Default value
         Env.userSessionStore.shouldRecordUserSession = true
 
         Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
@@ -105,7 +107,6 @@ class LoginViewController: UIViewController {
 
         self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
         self.passwordHeaderTextFieldView.setPlaceholderText("Password")
-
 
         self.usernameHeaderTextFieldView.highlightColor = .white
         self.passwordHeaderTextFieldView.highlightColor = .white
@@ -215,7 +216,6 @@ class LoginViewController: UIViewController {
         termsLabel.numberOfLines = 0
         termsLabel.font = font
 
-
         let underlineAttriString = NSMutableAttributedString(string: termsText)
 
         let range1 = (termsText as NSString).range(of: localized("string_terms"))
@@ -299,7 +299,6 @@ class LoginViewController: UIViewController {
         self.passwordHeaderTextFieldView.resignFirstResponder()
     }
 
-
     @IBAction private func didTapDismissButton() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -319,9 +318,12 @@ class LoginViewController: UIViewController {
 
         self.loginButton.isEnabled = false
 
+        self.showLoadingSpinner()
+
         Env.userSessionStore.loginUser(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
+                self.hideLoadingSpinner()
                 switch completion {
                 case .failure(let error):
                     if case error = UserSessionError.invalidEmailPassword {
@@ -336,19 +338,28 @@ class LoginViewController: UIViewController {
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
-
                 self.showNextViewController()
             })
             .store(in: &cancellables)
 
-//        let username = "andrelascas@hotmail.com"
-//        let input = self.usernameHeaderTextFieldView.text
-//        print(input)
-//
-//        if username != input {
-//            self.usernameHeaderTextFieldView.showErrorOnField(text: "Error", color: UIColor.App.error)
-//        }
+    }
 
+    func showLoadingSpinner() {
+
+        view.addSubview(spinnerViewController.view)
+        spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        spinnerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        spinnerViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        spinnerViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        spinnerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        spinnerViewController.didMove(toParent: self)
+
+    }
+
+    func hideLoadingSpinner() {
+        spinnerViewController.willMove(toParent: nil)
+        spinnerViewController.removeFromParent()
+        spinnerViewController.view.removeFromSuperview()
     }
 
     private func showNextViewController() {

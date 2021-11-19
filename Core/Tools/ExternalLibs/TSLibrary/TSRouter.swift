@@ -7,7 +7,7 @@
 //
 
 import Foundation
-
+// swiftlint:disable type_body_length
 enum TSRouter {
 
     case login(username: String, password: String)
@@ -23,20 +23,28 @@ enum TSRouter {
     case getTournaments(language: String, sportId: String)
     case getPopularTournaments(language: String, sportId: String)
     case profileUpdate(form: EveryMatrix.ProfileForm)
-    // GOMA EveryMatrix Subscriptions tests
     case oddsMatch(operatorId: String, language: String, matchId: String)
     case sportsStatus(operatorId: String, language: String, sportId: String)
     case getPolicy
     case changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?)
+    case getUserMetaData
+    case postUserMetadata(favoriteEvents: [String])
+    case getProfileStatus
+    case getUserBalance
+    case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
+    case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
+    case getOpenBets(language: String, records: Int, page: Int)
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
-    case popularMatchesPublisher(operatorId: String, language: String, sportId: String)
-    case todayMatchesPublisher(operatorId: String, language: String, sportId: String)
+    case liveMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
+    case popularMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
+    case todayMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
-
+    case locationsPublisher(operatorId: String, language: String, sportId: String)
+    case tournamentsPublisher(operatorId: String, language: String, sportId: String)
 
     // Others
     case registrationDismissed
@@ -118,6 +126,20 @@ enum TSRouter {
             return "/sports#popularTournaments"
         case .profileUpdate:
             return "/user/account#updateProfile"
+        case .getUserMetaData:
+            return "/sports#getUserMetadata"
+        case .postUserMetadata:
+            return "/sports#postUserMetadata"
+        case .getProfileStatus:
+            return "/user/account#getProfileStatus"
+        case .getBetslipSelectionInfo:
+            return "/sports#bettingOptionsV2"
+        case .placeBet:
+            return "/sports#placeBetV2"
+        case .getUserBalance:
+            return "/user#getBalance"
+        case .getOpenBets:
+            return "/sports#betHistoryV2"
         //
         //
         // EM Subscription
@@ -131,16 +153,15 @@ enum TSRouter {
         case .sportsPublisher(let operatorId):
             return "/sports/\(operatorId)/en/disciplines/BOTH/BOTH"
 
-        case .popularMatchesPublisher(let operatorId, let language, let sportId):
+        case .liveMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
-            let eventsCount = 10
-            return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
-
-        case .todayMatchesPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/live-matches-aggregator-main/\(sportId)/all-locations/default-event-info/\(matchesCount)/\(marketsCount)"
+        case .popularMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
-            let eventsCount = 10
-            return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(eventsCount)/\(marketsCount)"
-
+            return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
+        case .todayMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
+            let marketsCount = 5
+            return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
         case .competitionsMatchesPublisher(let operatorId, let language, _, let events):
             let marketsCount = 5
             let eventsIds = events.joined(separator: ",")
@@ -148,8 +169,11 @@ enum TSRouter {
         
         case .bannersInfoPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/sportsBannerData"
+        case .locationsPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/locations/\(sportId)"
+        case .tournamentsPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/tournaments/\(sportId)"
 
-        //
         //
         //
         //
@@ -312,6 +336,52 @@ enum TSRouter {
         case .getPopularTournaments(let language, let sportId):
             return ["lang": language,
                     "sportId": sportId]
+        case .getUserMetaData:
+            return ["keys": ["favoriteEvents"]]
+        case .postUserMetadata(let favoriteEvents):
+            return ["key": "favoriteEvents",
+                    "value": favoriteEvents]
+        case .getProfileStatus:
+            return [:]
+        case .getBetslipSelectionInfo(let language, let stakeAmount, let betType, let tickets):
+            var selection: [Any] = []
+            for ticket in tickets {
+                selection.append([
+                    "bettingOfferId": "\(ticket.id)",
+                    "priceValue": ticket.currentOdd
+                ])
+            }
+            let params: [String: Any] = ["lang": language,
+                    "terminalType": "MOBILE",
+                    "stakeAmount": stakeAmount,
+                    "eachWay": false,
+                    "type": betType.typeKeyword,
+                          "selections": selection]
+            return params
+
+        case .placeBet(let language, let amount, let betType, let tickets):
+            var selection: [Any] = []
+            for ticket in tickets {
+                selection.append([
+                    "bettingOfferId": "\(ticket.id)",
+                    "priceValue": ticket.currentOdd
+                ])
+            }
+            let params: [String: Any] = ["lang": language,
+                    "terminalType": "MOBILE",
+                    "amount": amount,
+                    "eachWay": false,
+                    "type": betType.typeKeyword,
+                    "oddsValidationType" : "ACCEPT_ANY",
+                    "selections": selection]
+            return params
+
+        case .getOpenBets(let language, let records, let page):
+            return ["lang": language,
+                    "betStatuses": ["OPEN"],
+                    "nrOfRecords": records,
+                    "page": page
+            ]
 
         //
         //
@@ -417,6 +487,8 @@ enum TSRouter {
 
     var intiailDumpRequest: TSRouter? {
         switch self {
+        case .liveMatchesPublisher:
+            return .sportsInitialDump(topic: self.procedure)
         case .popularMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesPublisher:
@@ -425,6 +497,11 @@ enum TSRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .competitionsMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
+        case .locationsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .tournamentsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+
         default:
             return nil
         }

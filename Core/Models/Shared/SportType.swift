@@ -39,11 +39,49 @@ enum SportType: String, Identifiable, Hashable, CaseIterable {
     case volleyball = "20"
     case eSports = "96"
 
+    init?(id: String) {
+        switch id {
+        case "1": self = .football
+        case "8": self = .basketball
+        case "3": self = .tennis
+        case "49": self = .futsal
+        case "140": self = .footballSimulated
+        case "141": self = .tennisSimulated
+        case "5": self = .americanFootball
+        case "9": self = .baseball
+        case "52": self = .chess
+        case "26": self = .cricket
+        case "37": self = .cycling
+        case "45": self = .darts
+        case "25": self = .fighting
+        case "2": self = .golf
+        case "27": self = .greyhounds
+        case "7": self = .handball
+        case "74": self = .harnessRacing
+        case "24": self = .horseRacing
+        case "6": self = .iceHockey
+        case "155": self = .kabaddi
+        case "23": self = .motorRacing
+        case "28": self = .rugbyLeague
+        case "39": self = .rugbyUnion
+        case "36": self = .snooker
+        case "34": self = .specials
+        case "63": self = .tableTennis
+        case "20": self = .volleyball
+        case "96": self = .eSports
+        default: return nil
+        }
+    }
+
     var id: RawValue {
         rawValue
     }
     var typeId: String {
         rawValue
+    }
+
+    var intValue: Int {
+        Int(rawValue)!
     }
 
     var iconName: String {

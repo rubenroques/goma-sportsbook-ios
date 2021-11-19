@@ -10,10 +10,8 @@ import Foundation
 struct CompetitionGroup {
     var id: String
     var name: String
-
     var aggregationType: AggregationType
     var competitions: [Competition]
-
     
     enum AggregationType {
         case popular
@@ -24,10 +22,20 @@ struct CompetitionGroup {
 struct Competition {
     var id: String
     var name: String
+    var matches: [Match]
+    var venue: Location?
+
+    init(id: String, name: String, matches: [Match] = [], venue: Location? = nil) {
+        self.id = id
+        self.name = name
+        self.matches = matches
+        self.venue = venue
+    }
 }
 
 struct Match {
     var id: String
+    var competitionId: String
     var competitionName: String
     var homeParticipant: Participant
     var awayParticipant: Participant
@@ -59,7 +67,8 @@ struct Market {
 struct Outcome {
     var id: String
     var codeName: String
-    var translatedName: String
+    var typeName: String
+    var teamName: String
     var nameDigit1: Double?
     var nameDigit2: Double?
     var nameDigit3: Double?
