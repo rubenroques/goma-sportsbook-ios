@@ -600,6 +600,8 @@
 		A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */; };
 		A9627A17274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		A9627A18274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
+		A92F5D912729731F00884BDF /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		A92F5D92272973E600884BDF /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };	
 		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
@@ -1055,6 +1057,7 @@
 		A9627A10274553700001E1D5 /* ActivationAlertData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertData.swift; sourceTree = "<group>"; };
 		A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertScrollableTableViewCell.swift; sourceTree = "<group>"; };
 		A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertScrollableTableViewCell.xib; sourceTree = "<group>"; };
+		A92F5D902729731E00884BDF /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1854,6 +1857,7 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
+				A92F5D8F2729730100884BDF /* Spinner */,
 				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
 				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
 				452047BE27036D4600B277B5 /* Splash */,
@@ -2251,6 +2255,14 @@
 				A9627A07274529BD0001E1D5 /* ActivationAlertScrollableView.xib */,
 			);
 			path = ActivationAlertScrollableView;
+			sourceTree = "<group>";
+		};
+		A92F5D8F2729730100884BDF /* Spinner */ = {
+			isa = PBXGroup;
+			children = (
+				A92F5D902729731E00884BDF /* SpinnerViewController.swift */,
+			);
+			path = Spinner;
 			sourceTree = "<group>";
 		};
 		A98D3B272714817C003BAE6F /* SportSelection */ = {
@@ -3071,6 +3083,7 @@
 				454E0AD12734A39800794E0C /* CurrencyHelper.swift in Sources */,
 				45166D2326F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636E26BE94F600690896 /* Theme.swift in Sources */,
+				A92F5D912729731F00884BDF /* SpinnerViewController.swift in Sources */,
 				457816AF2706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457F495C2737C2280047169D /* UserBalance.swift in Sources */,
 				45936CBD270EF14300E8260E /* SportTypeCollectionViewCell.swift in Sources */,
@@ -3340,6 +3353,7 @@
 				454E0AD22734A39800794E0C /* CurrencyHelper.swift in Sources */,
 				45166D2426F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636F26BE94F600690896 /* Theme.swift in Sources */,
+				A92F5D92272973E600884BDF /* SpinnerViewController.swift in Sources */,
 				457816B02706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457F495D2737C2280047169D /* UserBalance.swift in Sources */,
 				45936CBE270EF14300E8260E /* SportTypeCollectionViewCell.swift in Sources */,
