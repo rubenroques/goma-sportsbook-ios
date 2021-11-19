@@ -64,6 +64,32 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var match: Match?
+
+    private var leftOutcome: Outcome?
+    private var middleOutcome: Outcome?
+    private var rightOutcome: Outcome?
+
+    private var leftOddButtonSubscriber: AnyCancellable?
+    private var middleOddButtonSubscriber: AnyCancellable?
+    private var rightOddButtonSubscriber: AnyCancellable?
+
+    private var isLeftOutcomeButtonSelected: Bool = false {
+        didSet {
+            self.isLeftOutcomeButtonSelected ? self.selectLeftOddButton() : self.deselectLeftOddButton()
+        }
+    }
+    private var isMiddleOutcomeButtonSelected: Bool = false {
+        didSet {
+            self.isMiddleOutcomeButtonSelected ? self.selectMiddleOddButton() : self.deselectMiddleOddButton()
+        }
+    }
+    private var isRightOutcomeButtonSelected: Bool = false {
+        didSet {
+            self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -88,6 +114,15 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.awayParticipantNameLabel.text = ""
         self.dateLabel.text = ""
         self.timeLabel.text = ""
+
+        let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
+        self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
+
+//        let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
+//        self.drawBaseView.addGestureRecognizer(tapMiddleOddButton)
+//
+//        let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
+//        self.awayBaseView.addGestureRecognizer(tapRightOddButton)
 
         self.setupWithTheme()
     }
@@ -182,6 +217,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 .receive(on: DispatchQueue.main)
                 .compactMap({$0}).sink { [weak self] match in
                     self?.matchViewModel = MatchWidgetCellViewModel(match: match)
+                    self?.match = self?.match
                 }
                 .store(in: &cancellables)
 
@@ -191,5 +227,192 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 self.imageView.kf.setImage(with: url)
             }
         }
+    }
+
+    func setupWithMatch(_ match: Match) {
+        self.match = match
+
+        let viewModel = MatchWidgetCellViewModel(match: match)
+
+        //self.eventNameLabel.text = "\(viewModel.competitionName)"
+        self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
+        self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
+        self.dateLabel.text = "\(viewModel.startDateString)"
+        self.timeLabel.text = "\(viewModel.startTimeString)"
+
+       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        //self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+
+        if viewModel.isToday {
+            self.dateLabel.isHidden = true
+        }
+
+        if let market = match.markets.first {
+            if let outcome = market.outcomes[safe: 0] {
+                self.homeOddTitleLabel.text = outcome.typeName
+                self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+                //self.currentHomeOddValue = outcome.bettingOffer.value
+                self.leftOutcome = outcome
+
+                self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                self.leftOddButtonSubscriber = Env.everyMatrixStorage
+                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                    .map(\.oddsValue)
+                    .compactMap({ $0 })
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] newOddValue in
+
+                        guard let weakSelf = self else { return }
+
+//                        if let currentOddValue = weakSelf.currentHomeOddValue {
+//                            if newOddValue > currentOddValue {
+//                                weakSelf.highlightOddChangeUp(animated: true,
+//                                                           upChangeOddValueImage: weakSelf.homeUpChangeOddValueImage,
+//                                                           baseView: weakSelf.homeBaseView)
+//                            }
+//                            else if newOddValue < currentOddValue {
+//                                weakSelf.highlightOddChangeDown(animated: true,
+//                                                           downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
+//                                                           baseView: weakSelf.homeBaseView)
+//                            }
+//                        }
+//                        weakSelf.currentHomeOddValue = newOddValue
+                        weakSelf.homeOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                    })
+
+            }
+            if let outcome = market.outcomes[safe: 1] {
+                self.drawOddTitleLabel.text = outcome.typeName
+                self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+                //self.currentDrawOddValue = outcome.bettingOffer.value
+                self.middleOutcome = outcome
+
+                self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                self.middleOddButtonSubscriber = Env.everyMatrixStorage
+                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                    .map(\.oddsValue)
+                    .compactMap({ $0 })
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] newOddValue in
+
+                        guard let weakSelf = self else { return }
+
+//                        if let currentOddValue = weakSelf.currentDrawOddValue {
+//                            if newOddValue > currentOddValue {
+//                                weakSelf.highlightOddChangeUp(animated: true,
+//                                                           upChangeOddValueImage: weakSelf.drawUpChangeOddValueImage,
+//                                                           baseView: weakSelf.drawBaseView)
+//                            }
+//                            else if newOddValue < currentOddValue {
+//                                weakSelf.highlightOddChangeDown(animated: true,
+//                                                           downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
+//                                                           baseView: weakSelf.drawBaseView)
+//                            }
+//                        }
+//                        weakSelf.currentDrawOddValue = newOddValue
+                        weakSelf.drawOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                    })
+            }
+            if let outcome = market.outcomes[safe: 2] {
+                self.awayOddTitleLabel.text = outcome.typeName
+                self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+                //self.currentAwayOddValue = outcome.bettingOffer.value
+                self.rightOutcome = outcome
+
+                self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                self.rightOddButtonSubscriber = Env.everyMatrixStorage
+                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                    .map(\.oddsValue)
+                    .compactMap({ $0 })
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] newOddValue in
+
+                        guard let weakSelf = self else { return }
+
+//                        if let currentOddValue = weakSelf.currentAwayOddValue {
+//                            if newOddValue > currentOddValue {
+//                                weakSelf.highlightOddChangeUp(animated: true,
+//                                                           upChangeOddValueImage: weakSelf.awayUpChangeOddValueImage,
+//                                                           baseView: weakSelf.awayBaseView)
+//                            }
+//                            else if newOddValue < currentOddValue {
+//                                weakSelf.highlightOddChangeDown(animated: true,
+//                                                           downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
+//                                                           baseView: weakSelf.awayBaseView)
+//                            }
+//                        }
+//
+//                        weakSelf.currentAwayOddValue = newOddValue
+                        weakSelf.awayOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                    })
+
+            }
+        }
+        else {
+            Logger.log("No markets found")
+            oddsStackView.alpha = 0.2
+
+            self.homeOddValueLabel.text = "---"
+            self.drawOddValueLabel.text = "---"
+            self.awayOddValueLabel.text = "---"
+        }
+
+    }
+
+    func selectLeftOddButton() {
+        self.homeBaseView.backgroundColor = UIColor.App.mainTint
+    }
+    func deselectLeftOddButton() {
+        self.homeBaseView.backgroundColor = UIColor.App.tertiaryBackground
+    }
+
+    @objc func didTapLeftOddButton() {
+        print("TAPPED")
+        guard
+            let match = self.match,
+            let firstMarket = self.match?.markets.first,
+            let outcome = self.leftOutcome
+        else {
+            return
+        }
+
+        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
+        let marketDescription = firstMarket.name
+        let outcomeDescription = outcome.teamName
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          matchId: match.id,
+                                          value: outcome.bettingOffer.value,
+                                          matchDescription: matchDescription,
+                                          marketDescription: marketDescription,
+                                          outcomeDescription: outcomeDescription)
+
+        if Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+            self.isLeftOutcomeButtonSelected = false
+        }
+        else {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+            self.isLeftOutcomeButtonSelected = true
+        }
+
+    }
+
+    func selectMiddleOddButton() {
+        self.drawBaseView.backgroundColor = UIColor.App.mainTint
+    }
+    func deselectMiddleOddButton() {
+        self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
+    }
+
+    func selectRightOddButton() {
+        self.awayBaseView.backgroundColor = UIColor.App.mainTint
+    }
+    func deselectRightOddButton() {
+        self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
     }
 }
