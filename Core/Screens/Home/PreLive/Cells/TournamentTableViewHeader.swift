@@ -96,7 +96,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     func setupCompetition() {
-        for competitionId in Env.favoritesManager.favoriteEventsId {
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value {
             if competitionId == self.competition!.id {
                 self.isFavorite = true
             }

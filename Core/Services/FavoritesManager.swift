@@ -10,12 +10,10 @@ import Combine
 
 class FavoritesManager {
 
-    var favoriteEventsId: [String]
     var favoriteEventsIdPublisher: CurrentValueSubject<[String], Never>
     var cancellables = Set<AnyCancellable>()
 
     init(eventsId: [String] = []) {
-        self.favoriteEventsId = eventsId
         self.favoriteEventsIdPublisher = .init(eventsId)
     }
 
@@ -27,7 +25,6 @@ class FavoritesManager {
             } receiveValue: { [weak self] userMetadata in
                 if let userMetadataRecords = userMetadata.records[0].value{
 
-                    self?.favoriteEventsId = userMetadataRecords
                     self?.favoriteEventsIdPublisher.send(userMetadataRecords)
                 }
             }
@@ -47,19 +44,24 @@ class FavoritesManager {
 
     func checkFavorites(eventId: String) {
         var favoriteMatchExists = false
+        var favoriteEventsId = self.favoriteEventsIdPublisher.value
 
-        for favoriteEventId in self.favoriteEventsId {
+        for favoriteEventId in favoriteEventsId {
+            // Remove from favorite
             if eventId == favoriteEventId {
                 favoriteMatchExists = true
-                self.favoriteEventsId = self.favoriteEventsId.filter {$0 != eventId}
-                self.favoriteEventsIdPublisher.send(self.favoriteEventsId)
+                favoriteEventsId = favoriteEventsId.filter {$0 != eventId}
+
+                self.favoriteEventsIdPublisher.send(favoriteEventsId)
             }
         }
+
+        // Add to favorite
         if !favoriteMatchExists{
-            self.favoriteEventsId.append(eventId)
-            self.favoriteEventsIdPublisher.send(self.favoriteEventsId)
+            favoriteEventsId.append(eventId)
+            self.favoriteEventsIdPublisher.send(favoriteEventsId)
         }
 
-        self.postUserMetadata(favoriteEvents: self.favoriteEventsId)
+        self.postUserMetadata(favoriteEvents: favoriteEventsId)
     }
 }

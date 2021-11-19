@@ -344,7 +344,7 @@ extension ProfileViewController {
 
     @IBAction private func didTapLogoutButton() {
         Env.userSessionStore.logout()
-        Env.favoritesManager.favoriteEventsId = []
+        Env.favoritesManager.favoriteEventsIdPublisher.send([])
         self.didTapCloseButton()
     }
 }

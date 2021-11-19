@@ -378,7 +378,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.awayOddValueLabel.text = "---"
         }
 
-        for matchId in Env.favoritesManager.favoriteEventsId{
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value{
             if matchId == match.id {
                 self.isFavorite = true
             }

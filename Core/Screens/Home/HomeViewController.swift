@@ -114,8 +114,9 @@ class HomeViewController: UIViewController {
                         .eraseToAnyPublisher()
                         .sink { _ in
                         } receiveValue: { [weak self] userMetadata in
-                            if userMetadata.records[0].value != nil {
-                                Env.favoritesManager.favoriteEventsId = userMetadata.records[0].value!
+                            if let userMetadataFavorites = userMetadata.records[0].value {
+                                //Env.favoritesManager.favoriteEventsId =
+                                Env.favoritesManager.favoriteEventsIdPublisher.send(userMetadataFavorites)
                             }
 
                             self?.preLiveViewController.reloadTableViewData()
