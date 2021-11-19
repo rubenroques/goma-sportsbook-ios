@@ -614,6 +614,9 @@
 		A92F5DAB272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */; };
 		A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		A92F5DAD272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
+		A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A96B70B82739891200FEF07D /* FirebaseMessaging */; };
+		A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
+		A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
 		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
@@ -1072,6 +1075,7 @@
 		A92F5DA3272C44A000884BDF /* UploadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
 		A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
 		A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
+		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1182,6 +1186,7 @@
 				45166D2E26F3D8AC00E69D65 /* CombineCocoa in Frameworks */,
 				45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */,
 				A9B841A326E26C0B00269B05 /* Starscream in Frameworks */,
+				A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */,
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */,
 				45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */,
@@ -2060,6 +2065,7 @@
 				A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */,
 				A9627A10274553700001E1D5 /* ActivationAlertData.swift */,
 				F4E3B74C2742B47100855C58 /* MainMarketType.swift */,
+				A96B70BA273A891F00FEF07D /* UserLoginForm.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -2650,6 +2656,7 @@
 				454E0AD92735C79600794E0C /* CombineExt */,
 				F4E3B7622742BFE300855C58 /* SweeterSwift */,
 				F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */,
+				A96B70B82739891200FEF07D /* FirebaseMessaging */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -2949,7 +2956,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  # swiftlint\n  echo \"Disabled\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n   swiftlint\n  echo \"Disabled\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		45B2003026C46294005831CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3102,6 +3109,7 @@
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3127148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
 				F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */,
+				A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -3374,6 +3382,7 @@
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
 				F4CE68442742CD8A003413AE /* MultiSlider.swift in Sources */,
+				A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -4054,6 +4063,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
+		};
+		A96B70B82739891200FEF07D /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		A9B8419026E2359800269B05 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;

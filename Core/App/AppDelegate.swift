@@ -7,9 +7,10 @@
 
 import UIKit
 import Firebase
+import FirebaseMessaging
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
     // TODO: Integrate fastlane
     var window: UIWindow?
@@ -36,6 +37,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let uid = user.uid
             print("FirebaseCore Auth UID \(uid) [isAnonymous:\(isAnonymous)]")
         }
+
+        // FCM
+        UNUserNotificationCenter.current().delegate = self
+
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: { _, _ in }
+        )
+
+        application.registerForRemoteNotifications()
+
+        Messaging.messaging().delegate = self
 
         self.window = UIWindow()
 

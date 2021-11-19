@@ -143,7 +143,8 @@ class UserSessionStore {
                                                 email: form.email,
                                                 mobile: form.mobileNumber,
                                                 birthDate: form.birthDate,
-                                                userProviderId: userId)
+                                                userProviderId: userId,
+                                                deviceToken: Env.deviceFCMToken)
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)

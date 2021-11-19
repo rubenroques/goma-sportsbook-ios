@@ -13,6 +13,7 @@ struct UserRegisterForm {
     let mobile: String
     let birthDate: String
     let userProviderId: String
+    let deviceToken: String
 }
 
 struct FullRegisterUserInfo {

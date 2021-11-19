@@ -11,8 +11,9 @@ enum GomaGamingService {
     case test
     case geolocation(latitude: String, longitude: String)
     case settings
-    case simpleRegister(username: String, email: String, phone: String, birthDate: String, userProviderId: String)
+    case simpleRegister(username: String, email: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
     case modalPopUpDetails
+    case login(username: String, password: String, deviceToken: String)
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
 }
 
@@ -37,6 +38,8 @@ extension GomaGamingService: Endpoint {
             return "/api/users/\(apiVersion)/register"
         case .modalPopUpDetails:
             return "/api/settings/\(apiVersion)/info-popup"
+        case .login:
+            return "/api/auth/\(apiVersion)/login"
 //        case .xpto, .foo:
 //            return "/api/v1/abcd"
 //        default:
@@ -51,7 +54,7 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .settings, .simpleRegister, .modalPopUpDetails:
+        case .settings, .simpleRegister, .modalPopUpDetails, .login:
             return nil
 
             
@@ -87,7 +90,7 @@ extension GomaGamingService: Endpoint {
             return .get
         case .geolocation, .settings, .modalPopUpDetails:
             return .get
-        case .simpleRegister:
+        case .simpleRegister, .login:
             return .post
 //        case .xpto, .foo, .bar:
 //            return .post
@@ -99,20 +102,31 @@ extension GomaGamingService: Endpoint {
     var body: Data? {
 
         switch self {
-        case .simpleRegister(let username, let email, let phone, let birthDate, let userProviderId):
+        case .simpleRegister(let username, let email, let phone, let birthDate, let userProviderId, let deviceToken):
             let body = """
                        {"type": "small_register",
                         "email": "\(email)",
                         "username": "\(username)",
                         "phone_number": "\(phone)",
                         "birthdate": "\(birthDate)",
-                        "user_provider_id": "\(userProviderId)"}
+                        "user_provider_id": "\(userProviderId)",
+                        "device_token": "\(deviceToken)"
+                       }
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .login(let username, let password, let deviceToken):
+            let body = """
+                       {"username": "\(username)",
+                        "password": "\(password)",
+                        "device_token": "\(deviceToken)"}
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:
             return nil
         }
+
     }
 
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import FirebaseMessaging
 
 class SplashViewController: UIViewController {
 
@@ -65,6 +66,16 @@ class SplashViewController: UIViewController {
         }
         Env.userSessionStore.loadLoggedUser()
 
+        //Get and store FCM token
+        Messaging.messaging().token { token, error in
+          if let error = error {
+            print("Error fetching FCM registration token: \(error)")
+          } else if let token = token {
+            print("FCM registration token: \(token)")
+            Env.deviceFCMToken = token
+          }
+        }
+
         TSManager.shared
             .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
             .receive(on: RunLoop.main)
@@ -72,7 +83,7 @@ class SplashViewController: UIViewController {
                 switch completion {
                 case .finished:
                     Env.favoritesManager.getUserMetadata()
-                    self.splashLoadingCompleted()
+                    self.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
                     print("error \(error)")
                 }
@@ -85,6 +96,20 @@ class SplashViewController: UIViewController {
 
     func splashLoadingCompleted() {
         self.loadingCompleted()
+    }
+
+    func loginGomaAPI(username: String, password: String) {
+        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
+
+        Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                self.splashLoadingCompleted()
+            }, receiveValue: { value in
+                Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
+            })
+            .store(in: &cancellables)
+
     }
 
 }
