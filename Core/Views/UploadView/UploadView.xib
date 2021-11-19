@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="UploadView" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="closeButton" destination="hmo-P2-lxa" id="Y8h-be-jVo"/>
+                <outlet property="fileLabel" destination="w1z-mA-0VP" id="fLz-YP-TYO"/>
+                <outlet property="progressLabel" destination="mWd-Zc-L5Y" id="iZg-qe-xWo"/>
+                <outlet property="progressView" destination="nNr-f6-PX1" id="Kig-Ca-jb3"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w1z-mA-0VP">
+                    <rect key="frame" x="2" y="0.0" width="42" height="25"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hmo-P2-lxa">
+                    <rect key="frame" x="389" y="0.0" width="25" height="25"/>
+                    <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="25" id="R1z-ZW-VNp"/>
+                        <constraint firstAttribute="width" constant="25" id="bWr-tv-jrk"/>
+                    </constraints>
+                    <state key="normal" image="x_white">
+                        <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </state>
+                    <connections>
+                        <action selector="closeAction" destination="-1" eventType="touchUpInside" id="e0y-kS-6Ph"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mWd-Zc-L5Y">
+                    <rect key="frame" x="0.0" y="33" width="414" height="27"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nNr-f6-PX1">
+                    <rect key="frame" x="0.0" y="68" width="414" height="4"/>
+                </progressView>
+            </subviews>
+            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="hmo-P2-lxa" secondAttribute="trailing" id="5Go-R7-OK1"/>
+                <constraint firstAttribute="trailing" secondItem="nNr-f6-PX1" secondAttribute="trailing" id="8Mo-Fg-aLO"/>
+                <constraint firstItem="w1z-mA-0VP" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="N7V-ds-1ml"/>
+                <constraint firstItem="mWd-Zc-L5Y" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="VQn-nU-RVn"/>
+                <constraint firstAttribute="trailing" secondItem="mWd-Zc-L5Y" secondAttribute="trailing" id="XFL-c5-3wL"/>
+                <constraint firstAttribute="bottom" secondItem="nNr-f6-PX1" secondAttribute="bottom" constant="8" id="b9Q-cf-5xd"/>
+                <constraint firstItem="w1z-mA-0VP" firstAttribute="centerY" secondItem="hmo-P2-lxa" secondAttribute="centerY" id="cGs-zY-5a9"/>
+                <constraint firstItem="nNr-f6-PX1" firstAttribute="top" secondItem="mWd-Zc-L5Y" secondAttribute="bottom" constant="8" id="nIX-Rr-M4u"/>
+                <constraint firstItem="hmo-P2-lxa" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="pX5-QB-R2t"/>
+                <constraint firstItem="w1z-mA-0VP" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="2" id="sZe-of-BCO"/>
+                <constraint firstItem="nNr-f6-PX1" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="z5a-Yr-Gdc"/>
+                <constraint firstItem="mWd-Zc-L5Y" firstAttribute="top" secondItem="w1z-mA-0VP" secondAttribute="bottom" constant="8" id="zQS-eU-dxc"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="76.811594202898561" y="-217.63392857142856"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="x_white" width="12" height="12"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

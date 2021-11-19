@@ -20,6 +20,8 @@ class BannerScrollTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
+        AnalyticsClient.sendEvent(event: .promoBannerClicked)
+
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear

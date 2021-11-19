@@ -21,6 +21,7 @@ class UserSessionStore {
     var userBalanaceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
 
     var shouldRecordUserSession = true
+    var isUserProfileIncomplete: Bool = true
 
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
@@ -114,8 +115,8 @@ class UserSessionStore {
                             password: password,
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)",
-                            birthDate: sessionInfo.birthDate
-                    )
+                            birthDate: sessionInfo.birthDate,
+                            isEmailVerified: sessionInfo.isEmailVerified                    )
             }
             .handleEvents(receiveOutput: saveUserSession)
             .eraseToAnyPublisher()
@@ -142,7 +143,8 @@ class UserSessionStore {
                                                 email: form.email,
                                                 mobile: form.mobileNumber,
                                                 birthDate: form.birthDate,
-                                                userProviderId: userId)
+                                                userProviderId: userId,
+                                                deviceToken: Env.deviceFCMToken)
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)
