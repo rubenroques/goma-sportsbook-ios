@@ -28,6 +28,10 @@ class Authenticator {
         self.endpointURL = authEndpointURL
     }
 
+    func refreshAuthTokenWithGomaLogin(token: AuthToken) {
+        self.currentToken = token
+    }
+
     func validToken(deviceId: String, forceRefresh: Bool = false) -> AnyPublisher<AuthToken, Error> {
         return queue.sync { [weak self] in
 
@@ -69,7 +73,6 @@ class Authenticator {
                 .decode(type: AuthToken.self, decoder: JSONDecoder())
                 .handleEvents(receiveOutput: { token in
                     self?.currentToken = token
-                    print("TOKEN GOMA: \(token)")
                 }, receiveCompletion: { _ in
                     self?.queue.sync {
                         self?.refreshPublisher = nil

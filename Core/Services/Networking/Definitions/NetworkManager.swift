@@ -21,6 +21,10 @@ struct NetworkManager {
         self.authenticator = Authenticator(session: session, authEndpointURL: authEndpointURL)
     }
 
+    func refreshAuthToken(token: AuthToken) {
+        self.authenticator.refreshAuthTokenWithGomaLogin(token: token)
+    }
+
     func requestEndpoint<T: Decodable>(deviceId: String, endpoint: Endpoint) -> AnyPublisher<T, NetworkError> {
 
         guard

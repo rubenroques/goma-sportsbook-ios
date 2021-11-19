@@ -84,8 +84,6 @@ class SplashViewController: UIViewController {
                 case .finished:
                     Env.favoritesManager.getUserMetadata()
                     self.loginGomaAPI(username: user.username, password: user.userId)
-                    //self.checkGomaLogin(username: user.username, password: user.userId)
-                    self.splashLoadingCompleted()
                 case .failure(let error):
                     print("error \(error)")
                 }
@@ -103,80 +101,20 @@ class SplashViewController: UIViewController {
         let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
 
         Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
-            .replaceError(with: MessageNetworkResponse.failed)
-            .sink { login in
-                print("GOMA LOGIN: \(login)")
-            } receiveValue: { value in
-                print("GOMA LOGIN VALUE: \(value)")
-            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("GOMA Login Error: \(error)")
+                case .finished:
+                    print("GOMA Login Finished")
+                }
+                self.splashLoadingCompleted()
+            }, receiveValue: { value in
+                Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
+            })
             .store(in: &cancellables)
 
-    }
-
-//    func checkFCMAuth() {
-//        let authEndpointURL = URL(string: TargetVariables.gomaGamingAuthEndpoint)!
-//        var request = URLRequest(url: authEndpointURL)
-//        request.httpMethod = "POST"
-//        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-//        let bodyJSON = [
-//            "device_uuid": Env.deviceId,
-//            "device_type": "ios",
-//            "type": "anonymous",
-//            "device_token": Env.deviceFCMToken
-//        ]
-//
-//
-//        let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
-//        request.httpBody = jsonData
-//        let session = URLSession.shared
-//
-//        session.dataTask(with: request) { (data, response, error) in
-//                if let response = response {
-//                    print("RESPONSE: \(response)")
-//                }
-//                if let data = data {
-//                    do {
-//                        let json = try JSONSerialization.jsonObject(with: data, options: [])
-//                        print("JSON TOKEN: \(json)")
-//                    } catch {
-//                        print("ERROR: \(error)")
-//                    }
-//                }
-//            }.resume()
-//    }
-
-    func checkGomaLogin(username: String, password: String) {
-        print("USER: \(username)")
-        let endpointUrl = URL(string: "https://sportsbook-api.gomagaming.com/api/auth/v1/login")!
-        var request = URLRequest(url: endpointUrl)
-        request.httpMethod = "POST"
-        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        let bodyJSON = [
-            "username": username,
-            "password": password,
-            "device_token": Env.deviceFCMToken
-        ]
-
-        let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
-        request.httpBody = jsonData
-        let session = URLSession.shared
-
-        session.dataTask(with: request) { (data, response, error) in
-            if let response = response {
-                print("RESPONSE: \(response)")
-            }
-            if let data = data {
-                do {
-                    let json = try JSONSerialization.jsonObject(with: data, options: .allowFragments)
-                    print("JSON: \(json)")
-                } catch {
-                    print("ERROR: \(error)")
-                }
-            }
-            if let error = error {
-                print("LOGIN ERROR: \(error)")
-            }
-        }.resume()
     }
 
 }

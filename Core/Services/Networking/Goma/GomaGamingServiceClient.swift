@@ -72,11 +72,11 @@ struct GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestLogin(deviceId: String, loginForm: UserLoginForm) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
+    func requestLogin(deviceId: String, loginForm: UserLoginForm) -> AnyPublisher<AuthToken, NetworkError> {
         let endpoint = GomaGamingService.login(username: loginForm.username,
                                                password: loginForm.password,
                                                deviceToken: loginForm.deviceToken)
-        let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<AuthToken, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 
