@@ -23,7 +23,14 @@ class PreLiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
-
+    
+    @IBOutlet private weak var filtersCountView: UIView!
+    
+    @IBOutlet weak var filtersCountLabel: UILabel!
+    
+    
+    var turnTimeRangeOn : Bool = false
+    
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
@@ -112,6 +119,18 @@ class PreLiveEventsViewController: UIViewController {
 
         self.connectPublishers()
         self.viewModel.fetchData()
+        self.viewModel.presentViewControllerAction = { alertType in
+            if alertType == ActivationAlertType.email {
+                let emailVerificationViewController = EmailVerificationViewController()
+                self.present(emailVerificationViewController, animated: true, completion: nil)
+            }
+            else if alertType == ActivationAlertType.profile {
+                let fullRegisterViewController = FullRegisterPersonalInfoViewController()
+                self.present(fullRegisterViewController, animated: true, completion: nil)
+            }
+
+        }
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -136,6 +155,10 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+        
+        
+        filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
+       
     }
 
     private func commonInit() {
@@ -186,6 +209,10 @@ class PreLiveEventsViewController: UIViewController {
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self
 
+        filtersCountLabel.isHidden = true
+        filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+        filtersCountLabel.layer.masksToBounds = true
+        
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear
         
@@ -195,6 +222,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -247,14 +275,18 @@ class PreLiveEventsViewController: UIViewController {
         self.view.bringSubviewToFront(self.competitionsFiltersDarkBackgroundView)
         self.view.bringSubviewToFront(self.competitionsFiltersBaseView)
         self.view.bringSubviewToFront(self.loadingBaseView)
+        self.view.bringSubviewToFront(self.filtersCountLabel)
 
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
+        
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
+        
+        
     }
 
     func connectPublishers() {
@@ -355,11 +387,15 @@ class PreLiveEventsViewController: UIViewController {
         let homeFilterViewController = HomeFilterViewController(sportsModel: self.viewModel)
         homeFilterViewController.delegate = self
         self.present(homeFilterViewController, animated: true, completion: nil)
+        
     }
 
     func applyCompetitionsFiltersWithIds(_ ids: [String]) {
         self.viewModel.fetchCompetitionsMatchesWithIds(ids)
         self.showBottomBarCompetitionsFilters()
+        
+        
+        
     }
 
     func reloadData() {
@@ -575,11 +611,17 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
+            AnalyticsClient.sendEvent(event: .myGamesScreen)
             self.viewModel.setMatchListType(.myGames)
+            turnTimeRangeOn = false
         case 1:
+            AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.today)
+            turnTimeRangeOn = true
         case 2:
+            AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
+            turnTimeRangeOn = false
         default:
             ()
         }
@@ -600,12 +642,29 @@ extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     }
 }
 
+
 protocol HomeFilterOptionsViewDelegate: AnyObject {
+    var turnTimeRangeOn: Bool { get set }
     func setHomeFilters(homeFilters: HomeFilterOptions)
+    
 }
 
+
+
 extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
+
     func setHomeFilters(homeFilters: HomeFilterOptions) {
         self.viewModel.homeFilterOptions = homeFilters
+        
+        if homeFilters.countFilters != 0 {
+            filtersCountLabel.isHidden = false
+            filtersCountLabel.text = String(homeFilters.countFilters)
+           
+        }else{
+            filtersCountLabel.isHidden = true
+           
+            
+        }
     }
+    
 }

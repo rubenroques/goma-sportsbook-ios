@@ -11,20 +11,17 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FullRegisterAddressCountryViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
-                <outlet property="address1HeaderTextFieldView" destination="aTi-mc-IAZ" id="0ff-VX-DQe"/>
-                <outlet property="address2HeaderTextFieldView" destination="PXn-Qv-zLQ" id="0Ws-bU-e52"/>
                 <outlet property="backButton" destination="Y9i-nM-4U3" id="TgM-xm-crU"/>
-                <outlet property="cityHeaderTextFieldView" destination="bSt-Kz-i0Z" id="7Vy-GX-Z1J"/>
                 <outlet property="closeButton" destination="2Ie-63-WDF" id="cgv-gh-SLc"/>
                 <outlet property="containerView" destination="a9N-Cr-jma" id="PQZ-vH-vcl"/>
                 <outlet property="continueButton" destination="uRP-Im-u3j" id="CbE-85-WAf"/>
-                <outlet property="countrySelectTextFieldView" destination="wmj-as-IKC" id="BeO-To-vT9"/>
                 <outlet property="navigationView" destination="GYk-k1-jlS" id="zyn-N5-n4Y"/>
-                <outlet property="postalCodeHeaderTextFieldView" destination="bUp-QY-39K" id="wmC-mc-Sxo"/>
                 <outlet property="progressImageView" destination="OcT-33-zv2" id="ijw-b9-hsG"/>
                 <outlet property="progressLabel" destination="kub-ge-hYa" id="kKq-hY-eHr"/>
                 <outlet property="progressView" destination="oe2-bW-VA9" id="ia9-ef-Ow5"/>
                 <outlet property="scrollView" destination="AKC-MD-GcH" id="Ez6-IC-NHo"/>
+                <outlet property="securityAnswerHeaderTextFieldView" destination="aTi-mc-IAZ" id="0ff-VX-DQe"/>
+                <outlet property="securityQuestionTextFieldView" destination="wmj-as-IKC" id="QHm-kE-2Lg"/>
                 <outlet property="titleLabel" destination="DRL-no-yP1" id="lP3-Wu-YaT"/>
                 <outlet property="topView" destination="y6H-gZ-zAo" id="qns-nm-0Xf"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -73,7 +70,7 @@
                     <rect key="frame" x="0.0" y="88" width="414" height="774"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a9N-Cr-jma">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="671"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="715"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="oe2-bW-VA9">
                                     <rect key="frame" x="16" y="8" width="382" height="80"/>
@@ -108,43 +105,22 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wmj-as-IKC" customClass="SelectTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="165" width="382" height="60"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wmj-as-IKC" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                    <rect key="frame" x="16" y="165" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="60" id="GaX-ho-f44"/>
+                                        <constraint firstAttribute="height" constant="80" id="GaX-ho-f44"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aTi-mc-IAZ" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="245" width="382" height="80"/>
+                                    <rect key="frame" x="16" y="265" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="80" id="hgc-nX-ZA3"/>
                                     </constraints>
                                 </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PXn-Qv-zLQ" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="333" width="382" height="80"/>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="80" id="fjZ-VY-yB0"/>
-                                    </constraints>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bSt-Kz-i0Z" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="421" width="183" height="80"/>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="80" id="Ziu-8C-cB0"/>
-                                    </constraints>
-                                </view>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bUp-QY-39K" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="215" y="421" width="183" height="80"/>
-                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="80" id="rPr-oA-k0e"/>
-                                    </constraints>
-                                </view>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uRP-Im-u3j" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
-                                    <rect key="frame" x="16" y="601" width="382" height="50"/>
+                                    <rect key="frame" x="16" y="645" width="382" height="50"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="50" id="rF3-oE-bpL"/>
                                     </constraints>
@@ -158,26 +134,17 @@
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="wmj-as-IKC" secondAttribute="trailing" constant="16" id="2ax-ly-OIF"/>
                                 <constraint firstItem="oe2-bW-VA9" firstAttribute="leading" secondItem="a9N-Cr-jma" secondAttribute="leading" constant="16" id="3FF-c2-dN0"/>
-                                <constraint firstItem="bUp-QY-39K" firstAttribute="width" secondItem="bSt-Kz-i0Z" secondAttribute="width" id="5O3-3V-MUo"/>
                                 <constraint firstAttribute="trailing" secondItem="aTi-mc-IAZ" secondAttribute="trailing" constant="16" id="7KT-Qg-lRb"/>
-                                <constraint firstAttribute="trailing" secondItem="bUp-QY-39K" secondAttribute="trailing" constant="16" id="7XR-02-1ow"/>
                                 <constraint firstItem="uRP-Im-u3j" firstAttribute="leading" secondItem="a9N-Cr-jma" secondAttribute="leading" constant="16" id="BUx-Io-eoz"/>
-                                <constraint firstItem="bSt-Kz-i0Z" firstAttribute="leading" secondItem="a9N-Cr-jma" secondAttribute="leading" constant="16" id="Dhu-bV-HhU"/>
-                                <constraint firstItem="uRP-Im-u3j" firstAttribute="top" secondItem="bSt-Kz-i0Z" secondAttribute="bottom" constant="100" id="EJ9-wY-Sg2"/>
-                                <constraint firstItem="bUp-QY-39K" firstAttribute="top" secondItem="PXn-Qv-zLQ" secondAttribute="bottom" constant="8" id="Ert-JT-B0i"/>
                                 <constraint firstAttribute="trailing" secondItem="oe2-bW-VA9" secondAttribute="trailing" constant="16" id="FqW-yS-niH"/>
                                 <constraint firstAttribute="bottom" secondItem="uRP-Im-u3j" secondAttribute="bottom" constant="20" id="GIz-XO-36g"/>
                                 <constraint firstItem="wmj-as-IKC" firstAttribute="top" secondItem="DRL-no-yP1" secondAttribute="bottom" constant="16" id="H5q-t7-se6"/>
+                                <constraint firstItem="uRP-Im-u3j" firstAttribute="top" secondItem="aTi-mc-IAZ" secondAttribute="bottom" constant="300" id="HmZ-2E-K4u"/>
                                 <constraint firstItem="DRL-no-yP1" firstAttribute="leading" secondItem="a9N-Cr-jma" secondAttribute="leading" constant="16" id="NbC-gq-MEg"/>
                                 <constraint firstItem="aTi-mc-IAZ" firstAttribute="leading" secondItem="a9N-Cr-jma" secondAttribute="leading" constant="16" id="R8O-vA-DLW"/>
-                                <constraint firstItem="PXn-Qv-zLQ" firstAttribute="top" secondItem="aTi-mc-IAZ" secondAttribute="bottom" constant="8" id="S9M-13-S14"/>
                                 <constraint firstAttribute="trailing" secondItem="DRL-no-yP1" secondAttribute="trailing" constant="16" id="Vh5-aO-iqU"/>
                                 <constraint firstItem="DRL-no-yP1" firstAttribute="top" secondItem="oe2-bW-VA9" secondAttribute="bottom" constant="40" id="YsN-VZ-sbG"/>
                                 <constraint firstItem="aTi-mc-IAZ" firstAttribute="top" secondItem="wmj-as-IKC" secondAttribute="bottom" constant="20" id="aE0-xT-jQ1"/>
-                                <constraint firstItem="bSt-Kz-i0Z" firstAttribute="top" secondItem="PXn-Qv-zLQ" secondAttribute="bottom" constant="8" id="hTa-dR-jx2"/>
-                                <constraint firstItem="PXn-Qv-zLQ" firstAttribute="leading" secondItem="a9N-Cr-jma" secondAttribute="leading" constant="16" id="iJY-xD-C7w"/>
-                                <constraint firstAttribute="trailing" secondItem="PXn-Qv-zLQ" secondAttribute="trailing" constant="16" id="mwd-EE-cBv"/>
-                                <constraint firstItem="bUp-QY-39K" firstAttribute="leading" secondItem="bSt-Kz-i0Z" secondAttribute="trailing" constant="16" id="olv-FM-HAx"/>
                                 <constraint firstAttribute="trailing" secondItem="uRP-Im-u3j" secondAttribute="trailing" constant="16" id="tGf-yo-xXH"/>
                                 <constraint firstItem="oe2-bW-VA9" firstAttribute="top" secondItem="a9N-Cr-jma" secondAttribute="top" constant="8" id="u42-V7-cZg"/>
                                 <constraint firstItem="wmj-as-IKC" firstAttribute="leading" secondItem="a9N-Cr-jma" secondAttribute="leading" constant="16" id="zHq-Ws-9z0"/>
