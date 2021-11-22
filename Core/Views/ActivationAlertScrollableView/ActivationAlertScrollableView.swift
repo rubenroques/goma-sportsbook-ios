@@ -40,12 +40,9 @@ class ActivationAlertScrollableView: NibView {
         let flowLayout = FadeInCenterHorizontalFlowLayout()
         flowLayout.alpha = 0.0
         flowLayout.minimumScale = 1.0
-        //flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = flowLayout
 
-        let screenWidth = UIScreen.main.bounds.size.width
-        //let inset = (screenWidth - cellWidth) / 2
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 
     }

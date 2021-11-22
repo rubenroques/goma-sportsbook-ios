@@ -24,7 +24,7 @@ struct AnalyticsClient {
         case todayScreen
         case competitionsScreen
         case changedSport
-        case selectedSport(sportId : String)
+        case selectedSport(sportId: String)
         case appliedFilterSports
         case appliedFilterLive
         case promoBannerClicked
@@ -80,7 +80,7 @@ struct AnalyticsClient {
             
         case .selectedSport(sportId: let sportId):
             eventTypeKey = "selected_sport_id"
-            parameters = ["sportId" : sportId]
+            parameters = ["sportId": sportId]
             
         case .appliedFilterSports:
             eventTypeKey = "applied_filter_sports"

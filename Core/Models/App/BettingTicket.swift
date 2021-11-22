@@ -22,7 +22,7 @@ struct BettingTicket: Hashable {
     var marketDescription: String
     var outcomeDescription: String
     
-    static func ==(lhs: BettingTicket, rhs: BettingTicket) -> Bool {
+    static func == (lhs: BettingTicket, rhs: BettingTicket) -> Bool {
         return lhs.bettingId == rhs.bettingId
     }
 

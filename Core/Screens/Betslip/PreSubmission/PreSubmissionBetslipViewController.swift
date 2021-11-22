@@ -47,9 +47,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var placeBetBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
-
-    @IBOutlet weak var loadingBaseView: UIView!
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet private weak var loadingBaseView: UIView!
+    @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -100,7 +99,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    var betPlacedAction: (([BetPlacedDetails]) -> ())?
+    var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
     init() {
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
@@ -139,12 +138,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.amountTextfield.delegate = self
 
-
         if Env.betslipManager.bettingTicketsPublisher.value.count > 1 {
             self.betTypeSegmentControl.selectedSegmentIndex = 1
             self.didChangeSegmentValue(self.betTypeSegmentControl)
         }
-
 
         singleBettingTicketDataSource.didUpdateBettingValueAction = { id, value in
             if value == 0 {
@@ -158,7 +155,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.simpleBetsBettingValues.value[id]
         }
 
-
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .map(Array.init)
@@ -167,7 +163,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self.multipleBettingTicketDataSource.bettingTickets = tickets
 
                 self.simpleBetPlacedDetails = [:]
-                //self.simpleBetsBettingValues.send([:])
+                // self.simpleBetsBettingValues.send([:])
 
                 self.tableView.reloadData()
             }
@@ -222,10 +218,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Publishers.CombineLatest(self.listTypePublisher, self.realBetValuePublisher)
             .receive(on: DispatchQueue.main)
-            .filter { (betslipType, _) in
+            .filter { betslipType, _ in
                 betslipType == .multiple
             }
-            .map({ [weak self] (_, bettingValue) in
+            .map({ [weak self] _, bettingValue in
                 return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
@@ -233,10 +229,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-
         Publishers.CombineLatest(self.multiplierPublisher, self.realBetValuePublisher)
             .receive(on: DispatchQueue.main)
-            .map({ (multiplier, betValue) -> String in
+            .map({ multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
                     let totalValue = multiplier * betValue
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
@@ -250,18 +245,17 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
-            .filter { (betslipType, _, _) in
+            .filter { betslipType, _, _ in
                 betslipType == .simple
             }
-            .map({ (_, simpleBetsBettingValues, tickets) -> String in
+            .map({ _, simpleBetsBettingValues, tickets -> String in
                 var expectedReturn = 0.0
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
                         let expectedTicketReturn = ticket.value * betValue
-                        expectedReturn = expectedReturn + expectedTicketReturn
+                        expectedReturn += expectedTicketReturn
                     }
                 }
                 if expectedReturn == 0 {
@@ -276,13 +270,12 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
-            .filter { (betslipType, _, _) in
+            .filter { betslipType, _, _ in
                 betslipType == .simple
             }
-            .map({ (_, simpleBetsBettingValues, tickets) -> Bool in
+            .map({ _, simpleBetsBettingValues, tickets -> Bool in
                 var hasValidAmounts = true
                 for ticket in tickets {
                     if simpleBetsBettingValues[ticket.id] == nil {
@@ -321,8 +314,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -350,7 +341,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.bottomSafeArea.backgroundColor = UIColor.App.mainBackground
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.mainBackground
 
-
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.amountTextfield.textColor = UIColor.App.headingMain
         self.amountTextfield.attributedPlaceholder = NSAttributedString(string: "Amount", attributes: [
@@ -362,7 +352,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackground
         self.tableView.backgroundColor = UIColor.App.mainBackground
         self.tableView.contentInset.bottom = 12
-
 
         self.placeBetBaseView.backgroundColor = UIColor.App.mainBackground
         self.placeBetValuesBaseView.backgroundColor = UIColor.App.mainBackground
@@ -406,11 +395,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.endEditing(true)
     }
 
-    @IBAction func didTapClearButton() {
+    @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
     }
 
-    @IBAction func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
+    @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
 
         switch segmentControl.selectedSegmentIndex {
         case 0:
@@ -428,7 +417,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.setContentOffset(.zero, animated: true)
     }
 
-    @IBAction func didTapPlaceBetButton() {
+    @IBAction private func didTapPlaceBetButton() {
 
         self.isLoading = true
 
@@ -472,7 +461,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         var stillLoading = false
 
         if self.simpleBetsBettingValues.value.count != self.simpleBetPlacedDetails.values.count {
-            //Still loading requests
+            // Still loading requests
             return
         }
 
@@ -488,10 +477,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             case .loading:
                 stillLoading = true
-                break
+                // break
             case .idle:
                 stillLoading = true
-                break
+                // break
             }
         }
 
@@ -500,7 +489,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.betPlacedAction?(betPlacedDetailsArray)
         }
     }
-
 
     func currentDataSource() -> UITableViewDelegateDataSource {
         switch self.listTypePublisher.value {
@@ -513,7 +501,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.tableView.contentInset.bottom = (keyboardSize.height - placeBetBaseView.frame.size.height)
@@ -523,17 +510,16 @@ class PreSubmissionBetslipViewController: UIViewController {
     @objc func keyboardWillHide(notification: NSNotification) {
         self.tableView.contentInset.bottom = 12
     }
-    
 
-    @IBAction func didTapPlusOneButton() {
+    @IBAction private func didTapPlusOneButton() {
         self.addAmountValue(1)
     }
 
-    @IBAction func didTapPlusFiveButton() {
+    @IBAction private func didTapPlusFiveButton() {
         self.addAmountValue(5)
     }
 
-    @IBAction func didTapPlusMaxButton() {
+    @IBAction private func didTapPlusMaxButton() {
         self.addAmountValue(100)
     }
 
@@ -546,7 +532,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     }
 
     func addAmountValue(_ value: Int) {
-        displayBetValue = displayBetValue + (value * 100)
+        displayBetValue += (value * 100)
 
         let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
@@ -557,7 +543,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
             displayBetValue = displayBetValue * 10 + insertedDigit
         }
         if newValue == "" {
-            displayBetValue = displayBetValue/10
+            displayBetValue /= 10
         }
         let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
@@ -594,7 +580,7 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
     var bettingTickets: [BettingTicket] = []
 
-    var didUpdateBettingValueAction: ((String, Double) -> ())?
+    var didUpdateBettingValueAction: ((String, Double) -> Void)?
     var bettingValueForId: ((String) -> (Double?))?
 
     init(bettingTickets: [BettingTicket]) {
@@ -619,7 +605,6 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         return cell
     }
 
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -628,7 +613,6 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         return 160
     }
 }
-
 
 class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
 

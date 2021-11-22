@@ -26,10 +26,9 @@ class PreLiveEventsViewController: UIViewController {
     
     @IBOutlet private weak var filtersCountView: UIView!
     
-    @IBOutlet weak var filtersCountLabel: UILabel!
-    
-    
-    var turnTimeRangeOn : Bool = false
+    @IBOutlet private weak var filtersCountLabel: UILabel!
+
+    var turnTimeRangeOn: Bool = false
     
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
     private lazy var betslipButtonView: UIView = {
@@ -72,9 +71,8 @@ class PreLiveEventsViewController: UIViewController {
         return betslipCountLabel
     }()
 
-
-    @IBOutlet weak var loadingBaseView: UIView!
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet private weak var loadingBaseView: UIView!
+    @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     @IBOutlet private weak var openedCompetitionsFiltersConstraint: NSLayoutConstraint!
     @IBOutlet private weak var competitionsFiltersBaseView: UIView!
@@ -94,8 +92,8 @@ class PreLiveEventsViewController: UIViewController {
         }
     }
 
-    var didChangeSportType: ((SportType) -> ())?
-    var didTapBetslipButtonAction: (() -> ())?
+    var didChangeSportType: ((SportType) -> Void)?
+    var didTapBetslipButtonAction: (() -> Void)?
 
     private var lastContentOffset: CGFloat = 0
     private var shouldDetectScrollMovement = false
@@ -155,8 +153,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-        
-        
+
         filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
        
     }
@@ -277,16 +274,12 @@ class PreLiveEventsViewController: UIViewController {
         self.view.bringSubviewToFront(self.loadingBaseView)
         self.view.bringSubviewToFront(self.filtersCountLabel)
 
-
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
-        
-
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
-        
-        
+
     }
 
     func connectPublishers() {
@@ -341,7 +334,6 @@ class PreLiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
             .receive(on: DispatchQueue.main)
@@ -393,9 +385,7 @@ class PreLiveEventsViewController: UIViewController {
     func applyCompetitionsFiltersWithIds(_ ids: [String]) {
         self.viewModel.fetchCompetitionsMatchesWithIds(ids)
         self.showBottomBarCompetitionsFilters()
-        
-        
-        
+
     }
 
     func reloadData() {
@@ -419,14 +409,13 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.4
             self.openedCompetitionsFiltersConstraint.constant = 0
             self.tableView.contentInset.bottom = 16
-            //competitionsFiltersView.openedBarHeaderViewSize()
+            // competitionsFiltersView.openedBarHeaderViewSize()
             competitionsFiltersView.state = .opened
 
             self.betslipButtonViewBottomConstraint?.constant = -self.tableView.contentInset.bottom
 
             self.view.layoutIfNeeded()
         }, completion: nil)
-
 
     }
 
@@ -439,7 +428,7 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 52)
             self.tableView.contentInset.bottom = 54+16
-            //competitionsFiltersView.closedBarHeaderViewSize()
+            // competitionsFiltersView.closedBarHeaderViewSize()
             competitionsFiltersView.state = .bar
 
             self.betslipButtonViewBottomConstraint?.constant = -60
@@ -457,7 +446,7 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 18)
             self.tableView.contentInset.bottom = 24
-            //competitionsFiltersView.lineHeaderViewSize()
+            // competitionsFiltersView.lineHeaderViewSize()
             competitionsFiltersView.state = .line
 
             self.betslipButtonViewBottomConstraint?.constant = -self.tableView.contentInset.bottom
@@ -465,7 +454,6 @@ class PreLiveEventsViewController: UIViewController {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
-
 
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
@@ -504,11 +492,11 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
             return
         }
 
-        if (self.lastContentOffset > scrollView.contentOffset.y) {
+        if self.lastContentOffset > scrollView.contentOffset.y {
             // moving up
             self.showBottomBarCompetitionsFilters()
         }
-        else if (self.lastContentOffset < scrollView.contentOffset.y) {
+        else if self.lastContentOffset < scrollView.contentOffset.y {
             // move down
             self.showBottomLineCompetitionsFilters()
         }
@@ -642,14 +630,11 @@ extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     }
 }
 
-
 protocol HomeFilterOptionsViewDelegate: AnyObject {
     var turnTimeRangeOn: Bool { get set }
     func setHomeFilters(homeFilters: HomeFilterOptions)
     
 }
-
-
 
 extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
 
@@ -660,10 +645,10 @@ extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
             filtersCountLabel.isHidden = false
             filtersCountLabel.text = String(homeFilters.countFilters)
            
-        }else{
+        }
+        else {
             filtersCountLabel.isHidden = true
-           
-            
+
         }
     }
     

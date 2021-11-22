@@ -82,7 +82,7 @@ class ActivationAlertView: NibView {
         self.linkLabelAction?()
     }
 
-    @IBAction func closeButtonAction() {
+    @IBAction private func closeButtonAction() {
         self.onClose?()
     }
 

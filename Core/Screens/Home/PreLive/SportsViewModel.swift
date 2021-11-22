@@ -55,14 +55,13 @@ class SportsViewModel: NSObject {
             self.fetchData()
         }
     }
-    var homeFilterOptions: HomeFilterOptions? = nil {
+    var homeFilterOptions: HomeFilterOptions? {
         didSet {
-            print("FILTER ON")
             self.updateContentList()
         }
     }
 
-    var dataDidChangedAction: (() -> ())?
+    var dataDidChangedAction: (() -> Void)?
     var presentViewControllerAction: ((ActivationAlertType) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
@@ -92,7 +91,7 @@ class SportsViewModel: NSObject {
         self.selectedSportId = selectedSportId
         
         isLoading = Publishers.CombineLatest4(isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions)
-            .map({ (isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions) in
+            .map({ isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions in
                 let isLoading = isLoadingTodayList || isLoadingPopularList || isLoadingMyGamesList || isLoadingCompetitions
                 return isLoading
             })
@@ -206,8 +205,8 @@ class SportsViewModel: NSObject {
         }
 
         // Check time
-        let timeOptionMin = Int(filtersOptions!.lowerBoundTimeRange ?? 0) * 3600
-        let timeOptionMax = Int(filtersOptions!.highBoundTimeRange ?? 24) * 3600
+        let timeOptionMin = Int(filterOptionsValue.lowerBoundTimeRange) * 3600
+        let timeOptionMax = Int(filterOptionsValue.highBoundTimeRange) * 3600
         let dateOptionMin = Date().addingTimeInterval(TimeInterval(timeOptionMin))
         let dateOptionMax = Date().addingTimeInterval(TimeInterval(timeOptionMax))
         let dateRange = dateOptionMin...dateOptionMax
@@ -333,13 +332,12 @@ class SportsViewModel: NSObject {
                                                         competitions: popularCompetitions)
         var popularCompetitionGroups = [popularCompetitionGroup]
 
-
         var competitionsGroups = [CompetitionGroup]()
         for location in Env.everyMatrixStorage.locations.values {
 
             var locationCompetitions = [Competition]()
 
-            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? [])  {
+            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? []) {
 
                 guard
                     let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
@@ -395,7 +393,7 @@ class SportsViewModel: NSObject {
         for competitionId in competitionsMatches.keys {
             if let tournament = Env.everyMatrixStorage.tournaments[competitionId] {
 
-                var location: Location? = nil
+                var location: Location?
                 if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                     name: rawLocation.name ?? "",
@@ -435,7 +433,7 @@ class SportsViewModel: NSObject {
     //
 
     private func fetchPopularMatchesNextPage() {
-        self.popularMatchesPage = self.popularMatchesPage + 1
+        self.popularMatchesPage += 1
         self.fetchPopularMatches()
     }
 
@@ -483,7 +481,7 @@ class SportsViewModel: NSObject {
     }
 
     private func fetchTodayMatchesNextPage() {
-        self.todayMatchesPage = self.todayMatchesPage + 1
+        self.todayMatchesPage += 1
         self.fetchTodayMatches()
     }
 
@@ -630,7 +628,6 @@ class SportsViewModel: NSObject {
         //
     }
 
-
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
         self.isLoadingCompetitions.send(true)
@@ -709,7 +706,6 @@ class SportsViewModel: NSObject {
     }
 
 }
-
 
 extension SportsViewModel {
 //
@@ -809,7 +805,6 @@ extension SportsViewModel {
 //    }
 
 }
-
 
 extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
 
@@ -924,7 +919,6 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
 
 }
 
-
 class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var banners: [EveryMatrix.BannerInfo] = [] {
@@ -943,7 +937,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     var alertsArray: [ActivationAlertData] = []
 
-    var requestNextPage: (() -> ())?
+    var requestNextPage: (() -> Void)?
     var requestPresentViewController: ((ActivationAlertType) -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
@@ -965,10 +959,6 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
                 alertsArray.append(completeProfileAlertData)
             }
         }
-
-
-
-
 
         super.init()
     }
@@ -1071,7 +1061,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
         case 0:
             return 140
         case 3:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1083,7 +1073,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
         case 0:
             return 130
         case 3:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1105,7 +1095,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
 
     var todayMatches: [Match] = []
 
-    var requestNextPage: (() -> ())?
+    var requestNextPage: (() -> Void)?
 
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
@@ -1172,7 +1162,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 1:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1182,7 +1172,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 1:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155

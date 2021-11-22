@@ -210,7 +210,6 @@ class PersonalInfoViewController: UIViewController {
 
     }
 
-
     private func setupPublishers() {
 
         Env.everyMatrixAPIClient.getCountries()

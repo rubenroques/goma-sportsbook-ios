@@ -55,8 +55,8 @@ class UserSessionStore {
                 shouldRecordUserSession = false
             }
         }
-    }
 
+    }
 
     func loadLoggedUser() {
         if let user = UserSessionStore.loggedUserSession() {
@@ -86,7 +86,6 @@ class UserSessionStore {
 
         UserDefaults.standard.userSession = nil
         userSessionPublisher.send(nil)
-
 
         Env.everyMatrixAPIClient
             .logout()

@@ -86,11 +86,10 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
         self.checkEmailButton.tintColor = UIColor.App.headingMain
     }
 
-    @IBAction func closeAction() {
+    @IBAction private func closeAction() {
         self.dismiss(animated: true, completion: nil)
     }
-    @IBAction func activateAccountAction() {
-        print("Tap")
+    @IBAction private func activateAccountAction() {
         chooseEmailActionSheet = setupChooseEmailActionSheet()
 
         show(chooseEmailActionSheet ?? UIAlertController(), sender: self)
@@ -136,8 +135,8 @@ extension ChooseEmailActionSheetPresenter {
          guard let url = URL(string: withURL), UIApplication.shared.canOpenURL(url) else {
               return nil
          }
-         let action = UIAlertAction(title: andTitleActionTitle, style: .default) { (action) in
-             UIApplication.shared.openURL(url)
+         let action = UIAlertAction(title: andTitleActionTitle, style: .default) { _ in
+             UIApplication.shared.open(url)
          }
          return action
     }

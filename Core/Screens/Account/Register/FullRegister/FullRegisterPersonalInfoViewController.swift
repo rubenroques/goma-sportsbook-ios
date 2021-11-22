@@ -179,7 +179,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let firstNameText = firstNameHeaderTextFieldView.text == "" ? false : true
         let lastNameText = lastNameHeaderTextFieldView.text == "" ? false : true
         let address1Text = address1HeaderTextFieldView.text == "" ? false : true
-        let address2Text = address2HeaderTextFieldView.text == "" ? false : true
         let cityText = cityHeaderTextFieldView.text == "" ? false : true
         let postalCodeText = postalCodeHeaderTextFieldView.text == "" ? false : true
 
@@ -291,7 +290,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             securityQuestion: "",
             securityAnswer: "",
             personalID: "")
-        print(fullRegisterUserInfo)
     }
 
     @IBAction private func backAction() {
@@ -300,13 +298,12 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     @IBAction private func continueAction() {
         self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
-        //self.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true, completion: nil)
+        // self.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true, completion: nil)
     }
 
-    @IBAction func closeAction() {
+    @IBAction private func closeAction() {
         self.dismiss(animated: true, completion: nil)
     }
-
 
     @objc func didTapBackground() {
         self.resignFirstResponder()

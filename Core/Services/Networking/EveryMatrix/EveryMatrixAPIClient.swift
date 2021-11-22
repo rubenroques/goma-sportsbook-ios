@@ -14,7 +14,7 @@ class EveryMatrixAPIClient: ObservableObject {
     var manager: TSManager!
 
     init() {
-        //The singleton init below is used to start up TS connection
+        // The singleton init below is used to start up TS connection
         manager = TSManager.shared
 
         NotificationCenter.default.publisher(for: .wampSocketConnected)
@@ -52,14 +52,12 @@ class EveryMatrixAPIClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-
     func loginComplete(username: String, password: String) -> AnyPublisher<SessionInfo, EveryMatrix.APIError> {
         return self.login(username: username, password: password).flatMap { _ in
             return self.getSessionInfo()
         }
         .eraseToAnyPublisher()
     }
-
 
     func logout() -> AnyPublisher<Bool, EveryMatrix.APIError> {
         return TSManager.shared
@@ -73,7 +71,6 @@ class EveryMatrixAPIClient: ObservableObject {
             .getModel(router: .getSessionInfo, decodingType: SessionInfo.self)
             .eraseToAnyPublisher()
     }
-
 
     func getOperatorInfo() -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> {
         return TSManager.shared
@@ -146,16 +143,9 @@ class EveryMatrixAPIClient: ObservableObject {
     func getDisciplines(payload: [String: Any]?) {
         TSManager.shared.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+            .sink(receiveCompletion: { _ in
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-
-            }, receiveValue: { value in
+            }, receiveValue: { _ in
 
             })
             .store(in: &cancellable)
@@ -164,16 +154,9 @@ class EveryMatrixAPIClient: ObservableObject {
     func getLocations(payload: [String: Any]?) {
         TSManager.shared.getModel(router: .locations(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+            .sink(receiveCompletion: { _ in
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-
-            }, receiveValue: { value in
+            }, receiveValue: { _ in
 
             })
             .store(in: &cancellable)
@@ -182,16 +165,9 @@ class EveryMatrixAPIClient: ObservableObject {
     func getTournaments(payload: [String: Any]?) {
         TSManager.shared.getModel(router: .tournaments(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+            .sink(receiveCompletion: { _ in
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-
-            }, receiveValue: { value in
+            }, receiveValue: { _ in
 
             })
             .store(in: &cancellable)
@@ -200,42 +176,28 @@ class EveryMatrixAPIClient: ObservableObject {
     func getPopularTournaments(payload: [String: Any]?) {
         TSManager.shared.getModel(router: .popularTournaments(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+            .sink(receiveCompletion: { _ in
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-
-            }, receiveValue: { value in
+            }, receiveValue: { _ in
 
             })
             .store(in: &cancellable)
     }
 
-    func getMatches(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError>  {
+    func getMatches(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError> {
         return TSManager.shared.getModel(router: .matches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
     }
 
-    func getMatchDetails(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError>  {
-        return TSManager.shared.getModel(router: .getMatchDetails(language: language, matchId: matchId) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
+    func getMatchDetails(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .getMatchDetails(language: language, matchId: matchId), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
     }
 
     func getPopularMatches(payload: [String: Any]?) {
         TSManager.shared.getModel(router: .popularMatches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+            .sink(receiveCompletion: { _ in
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-
-            }, receiveValue: { value in
+            }, receiveValue: { _ in
 
             })
             .store(in: &cancellable)
@@ -244,16 +206,9 @@ class EveryMatrixAPIClient: ObservableObject {
     func getTodayMatches(payload: [String: Any]?) {
         TSManager.shared.getModel(router: .todayMatches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+            .sink(receiveCompletion: { _ in
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-
-            }, receiveValue: { value in
+            }, receiveValue: { _ in
 
             })
             .store(in: &cancellable)
@@ -262,16 +217,9 @@ class EveryMatrixAPIClient: ObservableObject {
     func getNextMatches(payload: [String: Any]?) {
         TSManager.shared.getModel(router: .nextMatches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+            .sink(receiveCompletion: { _ in
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-
-            }, receiveValue: { value in
+            }, receiveValue: { _ in
 
             })
             .store(in: &cancellable)
@@ -363,7 +311,7 @@ class EveryMatrixAPIClient: ObservableObject {
 
     }
 
-    func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrix.APIError>  {
+    func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrix.APIError> {
         return TSManager.shared.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
     }
 

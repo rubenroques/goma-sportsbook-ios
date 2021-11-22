@@ -47,8 +47,7 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         AnalyticsClient.sendEvent(event: .loginScreen)
-       
-        
+
         self.title = "SplashViewController"
 
         commonInit()
@@ -264,7 +263,6 @@ class LoginViewController: UIViewController {
         Env.userSessionStore.loginUser(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
-                self.hideLoadingSpinner()
                 switch completion {
                 case .failure(let error):
                     if case error = UserSessionError.invalidEmailPassword {
@@ -279,10 +277,22 @@ class LoginViewController: UIViewController {
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
-                self.showNextViewController()
+                self.getProfileStatus()
             })
             .store(in: &cancellables)
 
+    }
+
+    func getProfileStatus() {
+        Env.everyMatrixAPIClient.getProfileStatus()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                self.hideLoadingSpinner()
+            }, receiveValue: { value in
+                Env.userSessionStore.isUserProfileIncomplete = value.isProfileIncomplete
+                self.showNextViewController()
+            })
+            .store(in: &cancellables)
     }
 
     func showLoadingSpinner() {

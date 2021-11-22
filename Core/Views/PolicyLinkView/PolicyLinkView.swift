@@ -75,9 +75,11 @@ class PolicyLinkView: NibView {
 
             if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
                 didTapTerms?()
-            } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
+            }
+            else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
                 didTapPrivacy?()
-            } else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
+            }
+            else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
                 didTapEula?()
             }
         }

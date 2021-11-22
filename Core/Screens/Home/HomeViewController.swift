@@ -348,9 +348,7 @@ extension HomeViewController {
     }
 
     func showPopUp(_ details: PopUpDetails) {
-        
-       
-        
+
         if !PopUpStore.shouldShowPopUp(withId: details.id) {
             return
         }
@@ -466,4 +464,3 @@ extension HomeViewController {
     }
 
 }
-

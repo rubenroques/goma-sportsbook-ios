@@ -9,7 +9,6 @@ import UIKit
 
 class EmailVerificationTableViewCell: UITableViewCell {
 
-
     @IBOutlet private var activationAlertView: ActivationAlertView!
     // Variables
     var activationAlertViewLinkLabelAction: (() -> Void)?

@@ -12,7 +12,7 @@ import FirebaseMessaging
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 
-    // TODO: Integrate fastlane
+    // TO-DO: Integrate fastlane
     var window: UIWindow?
     var bootstrap: Bootstrap!
 
