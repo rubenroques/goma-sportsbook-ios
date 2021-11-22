@@ -79,5 +79,40 @@ extension EveryMatrix {
         mutating func setAsMainMarket() {
             self.isMainMarket = true
         }
+
+        func martketUpdated(withAvailability isAvailable: Bool?, isCLosed: Bool?) -> Self {
+
+            return Self(type: self.type,
+                        id: self.id,
+                        name: self.name,
+                        shortName: self.shortName,
+                        displayKey: self.displayKey,
+                        displayName: self.displayName,
+                        displayShortName: self.displayShortName,
+                        eventId: self.eventId,
+                        eventPartId: self.eventPartId,
+                        bettingTypeId: self.bettingTypeId,
+                        sportId: self.sportId,
+                        numberOfOutcomes: self.numberOfOutcomes,
+                        scoringUnitId: self.scoringUnitId,
+                        isComplete: self.isComplete,
+                        isClosed: isCLosed ?? self.isClosed,
+                        bettingTypeName: self.bettingTypeName,
+                        shortBettingTypeName: self.shortBettingTypeName,
+                        eventPartName: self.eventPartName,
+                        mainLine: self.mainLine,
+                        liveMarket: self.liveMarket,
+                        isAvailable: isAvailable ?? self.isAvailable,
+                        shortEventPartName: self.shortEventPartName,
+                        scoringUnitName: self.scoringUnitName,
+                        asianLine: self.asianLine,
+                        paramFloat1: self.paramFloat1,
+                        paramFloat2: self.paramFloat2,
+                        paramFloat3: self.paramFloat3,
+                        paramParticipantId1: self.paramParticipantId1,
+                        paramParticipantId2: self.paramParticipantId2,
+                        paramParticipantId3: self.paramParticipantId3
+            )
+        }
     }
 }

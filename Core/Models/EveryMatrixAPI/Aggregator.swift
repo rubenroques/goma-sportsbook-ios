@@ -72,7 +72,8 @@ extension EveryMatrix {
 
     enum ContentUpdate: Decodable {
 
-        case bettingOfferUpdate(id: String, odd: Double)
+        case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
+        case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
         case unknown
 
         enum CodingKeys: String, CodingKey {
@@ -82,6 +83,21 @@ extension EveryMatrix {
             case contentId = "id"
             case oddValue = "odds"
             case changedProperties = "changedProperties"
+        }
+
+        enum BettingOfferCodingKeys: String, CodingKey {
+            case contentId = "id"
+            case oddValue = "odds"
+            case isAvailable = "isAvailable"
+            case isLive = "isLive"
+            case changedProperties = "changedProperties"
+        }
+
+        enum MarketCodingKeys: String, CodingKey {
+            case contentId = "id"
+            case changedProperties = "changedProperties"
+            case isAvailable = "isAvailable"
+            case isClosed = "isClosed"
         }
 
         init(from decoder: Decoder) throws {
@@ -95,18 +111,39 @@ extension EveryMatrix {
             }
 
             if changeTypeString == "UPDATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
-                if entityTypeString == "BETTING_OFFER",
-                   let changedPropertiesContainer = try? container.nestedContainer(keyedBy: CodingKeys.self, forKey: .changedProperties),
-                   let newOddValue = try? changedPropertiesContainer.decode(Double.self, forKey: .oddValue) {
-                    self = .bettingOfferUpdate(id: contentId, odd: newOddValue)
+
+                if entityTypeString == "BETTING_OFFER" {
+                    if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: BettingOfferCodingKeys.self, forKey: .changedProperties) {
+
+                        let newOddValue = try? changedPropertiesContainer.decode(Double.self, forKey: .oddValue)
+                        let isAvailableValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isAvailable)
+                        let isLiveValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isLive)
+
+                        if newOddValue != nil || isAvailableValue != nil || isLiveValue != nil {
+                            self = .bettingOfferUpdate(id: contentId,
+                                                   odd: newOddValue,
+                                                   isLive: isLiveValue,
+                                                   isAvailable: isAvailableValue)
+                        }
+                    }
                 }
-                else {
-                    self = .unknown
+                else if entityTypeString == "MARKET" {
+                    if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: MarketCodingKeys.self, forKey: .changedProperties) {
+
+                        let isAvailableValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isAvailable)
+                        let isClosedValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isClosed)
+                        if isAvailableValue != nil || isClosedValue != nil {
+                            self = .marketUpdate(id: contentId, isAvailable: isAvailableValue, isClosed: isClosedValue)
+                        }
+                    }
+                }
+                else if entityTypeString == "MATCH" {
+                    print("AggregatorUpdates - MATCH")
+
                 }
             }
-            else {
-                self = .unknown
-            }
+
+            self = .unknown
         }
 
     }
