@@ -44,7 +44,7 @@ class BetslipManager: NSObject {
             }
             .store(in: &cancellable)
 
-        bettingTicketsDictionaryPublisher.filter(\.isEmpty).sink { dictionary in
+        bettingTicketsDictionaryPublisher.filter(\.isEmpty).sink { _ in
             self.simpleBetslipSelectionState.send(nil)
             self.multipleBetslipSelectionState.send(nil)
         }
@@ -55,7 +55,7 @@ class BetslipManager: NSObject {
             .removeDuplicates()
             .debounce(for: 1.0, scheduler: DispatchQueue.main)
             .eraseToAnyPublisher()
-            .map({ tickets -> Void in
+            .map({ _ -> Void in
                 return ()
             })
             .sink { [weak self] in
@@ -240,6 +240,5 @@ extension BetslipManager {
             })
             .eraseToAnyPublisher()
     }
-
 
 }

@@ -40,7 +40,12 @@ class LiveEventsViewModel: NSObject {
         }
     }
 
-    var dataDidChangedAction: (() -> ())?
+    var homeFilterOptions: HomeFilterOptions? {
+        didSet {
+            self.updateContentList()
+        }
+    }
+    var dataDidChangedAction: (() -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -76,6 +81,44 @@ class LiveEventsViewModel: NSObject {
         self.fetchAllMatches()
     }
 
+    func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
+        guard let filterOptionsValue = filtersOptions else {
+            return matches
+        }
+
+        var filteredMatches: [Match] = []
+        for match in matches {
+            if match.markets.isEmpty {
+                continue
+            }
+            // Check default market order
+            var marketSort: [Market] = []
+            let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+            marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+            for market in match.markets {
+                if market.typeId != marketSort[0].typeId {
+                    marketSort.append(market)
+                }
+            }
+
+            // Check odds filter
+            let matchOdds = marketSort[0].outcomes
+            let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
+            for odd in matchOdds {
+                let oddValue = CGFloat(odd.bettingOffer.value)
+                if oddsRange.contains(oddValue) {
+                    var newMatch = match
+                    newMatch.markets = marketSort
+
+                    filteredMatches.append(newMatch)
+                    break
+                }
+            }
+
+        }
+        return filteredMatches
+    }
+
     func setMatchListType(_ matchListType: MatchListType) {
         self.matchListTypePublisher.send(matchListType)
         self.updateContentList()
@@ -83,7 +126,8 @@ class LiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.allMatchesViewModelDataSource.allMatches = self.allMatches
+        self.allMatchesViewModelDataSource.allMatches = filterAllMatches(with: self.homeFilterOptions, matches: self.allMatches)
+
         self.allMatchesViewModelDataSource.banners = self.banners
 
         if self.allMatches.isNotEmpty, self.allMatches.count < (self.allMatchesCount * self.allMatchesPage) {
@@ -108,7 +152,6 @@ class LiveEventsViewModel: NSObject {
         self.updateContentList()
     }
 
-
     private func updateAllmatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
     }
@@ -118,7 +161,7 @@ class LiveEventsViewModel: NSObject {
     //
     //
     private func fetchAllMatchesNextPage() {
-        self.allMatchesPage = self.allMatchesPage + 1
+        self.allMatchesPage += 1
         self.fetchAllMatches()
     }
 
@@ -281,11 +324,10 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
 }
 
-
 class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var allMatches: [Match] = []
-    var requestNextPage: (() -> ())?
+    var requestNextPage: (() -> Void)?
 
     var shouldShowLoadingCell = true
 
@@ -310,7 +352,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 0 //banners.isEmpty ? 0 : 1
+            return 0 // banners.isEmpty ? 0 : 1
         case 1:
             return 0
         case 2:
@@ -387,7 +429,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 3:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -397,7 +439,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 3:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155

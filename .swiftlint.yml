@@ -48,6 +48,9 @@ disabled_rules:
   - trailing_comma
   - trailing_closure
   - file_length
+  - cyclomatic_complexity
+  - function_body_length
+  - type_body_length
 
 opt_in_rules:
   - private_outlet

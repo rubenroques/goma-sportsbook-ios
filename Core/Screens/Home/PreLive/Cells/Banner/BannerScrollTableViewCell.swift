@@ -11,7 +11,7 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     let cellWidth: CGFloat = 331
 
-    @IBOutlet var pageControl: UIPageControl!
+    @IBOutlet private var pageControl: UIPageControl!
     @IBOutlet private var collectionBaseView: UIView!
     @IBOutlet private var collectionView: UICollectionView!
 
@@ -19,6 +19,8 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        AnalyticsClient.sendEvent(event: .promoBannerClicked)
 
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
@@ -35,12 +37,12 @@ class BannerScrollTableViewCell: UITableViewCell {
         let flowLayout = FadeInCenterHorizontalFlowLayout()
         flowLayout.alpha = 0.0
         flowLayout.minimumScale = 1.0
-        //flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        // flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = flowLayout
 
-        //let screenWidth = UIScreen.main.bounds.size.width
-        //let inset = (screenWidth - cellWidth) / 2
+        // let screenWidth = UIScreen.main.bounds.size.width
+        // let inset = (screenWidth - cellWidth) / 2
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 
         self.setupWithTheme()
@@ -67,7 +69,7 @@ class BannerScrollTableViewCell: UITableViewCell {
         self.collectionView.backgroundView?.backgroundColor = .clear
     }
 
-    func setupWithViewModel(_ viewModel : BannerLineCellViewModel) {
+    func setupWithViewModel(_ viewModel: BannerLineCellViewModel) {
         self.viewModel = viewModel
         self.collectionView.reloadData()
     }
@@ -135,4 +137,3 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
     }
 
 }
-

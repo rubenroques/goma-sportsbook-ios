@@ -25,10 +25,11 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var emailHeaderTextView: HeaderTextFieldView!
     @IBOutlet private var passwordHeaderTextView: HeaderTextFieldView!
     @IBOutlet private var confirmPasswordHeaderTextView: HeaderTextFieldView!
-    @IBOutlet private var termsLabel: UILabel!
     @IBOutlet private var signUpButton: UIButton!
+    @IBOutlet private var policyLinkView: PolicyLinkView!
 
     @IBOutlet private var loadingUsernameValidityView: UIActivityIndicatorView!
+    var spinnerViewController = SpinnerViewController()
 
     var cancellables = Set<AnyCancellable>()
     
@@ -153,12 +154,12 @@ class SimpleRegisterDetailsViewController: UIViewController {
         passwordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
         passwordHeaderTextView.setSecureField(true)
 
+        checkPolicyLinks()
+
         confirmPasswordHeaderTextView.backgroundColor = UIColor.App.mainBackground
         confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
         confirmPasswordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
         confirmPasswordHeaderTextView.setSecureField(true)
-
-        underlineTextLabel()
 
         signUpButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         signUpButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
@@ -170,6 +171,23 @@ class SimpleRegisterDetailsViewController: UIViewController {
         signUpButton.layer.cornerRadius = CornerRadius.button
         signUpButton.layer.masksToBounds = true
     }
+
+    func checkPolicyLinks() {
+            policyLinkView.didTapTerms = {
+                print("Tapped Terms")
+                // TO-DO: Call VC to register
+            }
+
+            policyLinkView.didTapPrivacy = {
+                print("Tapped Privacy")
+                // TO-DO: Call VC to register
+            }
+
+            policyLinkView.didTapEula = {
+                print("Tapped EULA")
+                // TO-DO: Call VC to register
+            }
+        }
 
     private func setupPublishers() {
 
@@ -228,66 +246,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
-    func underlineTextLabel() {
-        let termsText = localized("string_agree_terms_conditions")
-
-        termsLabel.text = termsText
-        termsLabel.numberOfLines = 0
-        termsLabel.font = AppFont.with(type: .regular, size: 14.0)
-
-        self.termsLabel.textColor = UIColor.App.headingMain
-
-        let underlineAttriString = NSMutableAttributedString(string: termsText)
-
-        let range1 = (termsText as NSString).range(of: localized("string_terms"))
-        let range2 = (termsText as NSString).range(of: localized("string_privacy_policy"))
-        let range3 = (termsText as NSString).range(of: localized("string_eula"))
-
-        let paragraphStyle = NSMutableParagraphStyle()
-
-        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
-        paragraphStyle.alignment = .center
-
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range1)
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range2)
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range3)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
-        underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, underlineAttriString.length))
-
-        termsLabel.attributedText = underlineAttriString
-        termsLabel.isUserInteractionEnabled = true
-        termsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapUnderlineLabel(gesture:))))
-    }
-
-    @objc private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
-        let text = localized("string_agree_terms_conditions")
-
-        let termsRange = (text as NSString).range(of: localized("string_terms"))
-        let privacyRange = (text as NSString).range(of: localized("string_privacy_policy"))
-        let eulaRange = (text as NSString).range(of: localized("string_eula"))
-
-        if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
-            print("Tapped Terms")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
-        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
-            print("Tapped Privacy")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
-        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
-            print("Tapped EULA")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
-        else {
-            print("Tapped none")
-        }
-    }
-
     @IBAction private func signUpAction() {
 
         var validFields = true
@@ -326,6 +284,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
                                                   mobilePrefix: mobilePrefixTextual,
                                                   mobileNumber: mobile,
                                                   emailVerificationURL: emailVerificationURL)
+        self.showLoadingSpinner()
         self.registerUser(form: form)
 
     }
@@ -350,8 +309,10 @@ class SimpleRegisterDetailsViewController: UIViewController {
     func getDateFromTextFieldString(string: String) -> Date {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy/MM/dd"
-        let textDate = dateFormatter.date(from: string)!
-        return textDate
+        if let textDate = dateFormatter.date(from: string) {
+            return textDate
+        }
+        return Date()
     }
 
     func pushRegisterNextViewController(email: String) {
@@ -369,6 +330,24 @@ class SimpleRegisterDetailsViewController: UIViewController {
         self.phoneHeaderTextView.resignFirstResponder()
         self.passwordHeaderTextView.resignFirstResponder()
         self.confirmPasswordHeaderTextView.resignFirstResponder()
+    }
+
+    func showLoadingSpinner() {
+
+        view.addSubview(spinnerViewController.view)
+        spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        spinnerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        spinnerViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        spinnerViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        spinnerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        spinnerViewController.didMove(toParent: self)
+
+    }
+
+    func hideLoadingSpinner() {
+        spinnerViewController.willMove(toParent: nil)
+        spinnerViewController.removeFromParent()
+        spinnerViewController.view.removeFromSuperview()
     }
 
 }
@@ -426,6 +405,7 @@ extension SimpleRegisterDetailsViewController {
             .breakpointOnError()
             .receive(on: DispatchQueue.main)
             .sink { completion in
+                self.hideLoadingSpinner()
                 switch completion {
                 case .failure(let error):
                     switch error {
@@ -438,11 +418,13 @@ extension SimpleRegisterDetailsViewController {
                     default:
                         self.showServerErrorStatus()
                     }
+                    AnalyticsClient.sendEvent(event: .userSignUpFail)
                 case .finished:
                     ()
                 }
             } receiveValue: { _ in
                 Logger.log("User registered \(form.email)")
+                AnalyticsClient.sendEvent(event: .userSignUpSuccess)
                 self.pushRegisterNextViewController(email: form.email)
             }
             .store(in: &cancellables)

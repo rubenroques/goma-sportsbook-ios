@@ -28,11 +28,15 @@ class Authenticator {
         self.endpointURL = authEndpointURL
     }
 
+    func refreshAuthTokenWithGomaLogin(token: AuthToken) {
+        self.currentToken = token
+    }
+
     func validToken(deviceId: String, forceRefresh: Bool = false) -> AnyPublisher<AuthToken, Error> {
         return queue.sync { [weak self] in
 
             var shouldForceRefresh = forceRefresh
-
+    
             // We're already loading a new token
             if let publisher = self?.refreshPublisher {
                 return publisher
@@ -57,7 +61,8 @@ class Authenticator {
             let bodyJSON = [
                 "device_uuid": deviceId,
                 "device_type": "ios",
-                "type": "anonymous"
+                "type": "anonymous",
+                "device_token": Env.deviceFCMToken
             ]
 
             let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try

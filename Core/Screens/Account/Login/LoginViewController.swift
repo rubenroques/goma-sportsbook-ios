@@ -25,12 +25,14 @@ class LoginViewController: UIViewController {
     @IBOutlet private var forgotButton: UIButton!
     @IBOutlet private var loginButton: UIButton!
     @IBOutlet private var registerLabel: UILabel!
-    @IBOutlet private var termsLabel: UILabel!
+    @IBOutlet private var policyLinkView: PolicyLinkView!
 
     // Variables
     var shouldRememberUser: Bool = true
 
     var cancellables = Set<AnyCancellable>()
+
+    let spinnerViewController = SpinnerViewController()
 
     init() {
         super.init(nibName: "LoginViewController", bundle: nil)
@@ -44,12 +46,14 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        AnalyticsClient.sendEvent(event: .loginScreen)
+
         self.title = "SplashViewController"
 
         commonInit()
         setupWithTheme()
 
-        //Default value
+        // Default value
         Env.userSessionStore.shouldRecordUserSession = true
 
         Publishers.CombineLatest(self.usernameHeaderTextFieldView.textPublisher, self.passwordHeaderTextFieldView.textPublisher)
@@ -106,7 +110,6 @@ class LoginViewController: UIViewController {
         self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
         self.passwordHeaderTextFieldView.setPlaceholderText("Password")
 
-
         self.usernameHeaderTextFieldView.highlightColor = .white
         self.passwordHeaderTextFieldView.highlightColor = .white
 
@@ -133,10 +136,10 @@ class LoginViewController: UIViewController {
         rememberView.isUserInteractionEnabled = true
         rememberView.addGestureRecognizer(tapImageGestureRecognizer)
 
-        // Label with highlighted text area
-        highlightTextLabel()
-        // Label with underline and highlighted text area
-        underlineTextLabel()
+        registerLabel.highlightTextLabel(fullString: localized("string_new_create_account"), highlightString: localized("string_create_account"))
+        registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
+
+        checkPolicyLinks()
 
         if self.isModal {
             self.skipButton.isHidden = true
@@ -185,88 +188,25 @@ class LoginViewController: UIViewController {
         loginButton.layer.cornerRadius = CornerRadius.button
         loginButton.layer.masksToBounds = true
 
-        termsLabel.textColor = UIColor.App.headingMain
-
     }
 
-    func highlightTextLabel() {
-        let accountText = localized("string_new_create_account")
+    func checkPolicyLinks() {
+            policyLinkView.didTapTerms = {
+                // TO-DO: Terms link
+            }
 
-        registerLabel.text = accountText
-        registerLabel.font = AppFont.with(type: .bold, size: 14.0)
+            policyLinkView.didTapPrivacy = {
+                // TO-DO: Privacy link
+            }
 
-        self.registerLabel.textColor =  UIColor.white
-
-        let highlightAttriString = NSMutableAttributedString(string: accountText)
-        let range1 = (accountText as NSString).range(of: localized("string_create_account"))
-        highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .bold, size: 14), range: range1)
-        highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.mainTint, range: range1)
-
-        registerLabel.attributedText = highlightAttriString
-        registerLabel.isUserInteractionEnabled = true
-        registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
-    }
-
-    func underlineTextLabel() {
-        let termsText = localized("string_agree_terms_conditions")
-
-        let font = AppFont.with(type: .semibold, size: 11.0)
-        termsLabel.text = termsText
-        termsLabel.numberOfLines = 0
-        termsLabel.font = font
-
-
-        let underlineAttriString = NSMutableAttributedString(string: termsText)
-
-        let range1 = (termsText as NSString).range(of: localized("string_terms"))
-        let range2 = (termsText as NSString).range(of: localized("string_privacy_policy"))
-        let range3 = (termsText as NSString).range(of: localized("string_eula"))
-
-        let paragraphStyle = NSMutableParagraphStyle()
-
-        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
-        paragraphStyle.alignment = .center
-
-        underlineAttriString.addAttribute(.font, value: font, range: range1)
-        underlineAttriString.addAttribute(.font, value: font, range: range2)
-        underlineAttriString.addAttribute(.font, value: font, range: range3)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range3)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
-        underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, underlineAttriString.length))
-
-        termsLabel.attributedText = underlineAttriString
-        termsLabel.isUserInteractionEnabled = true
-        termsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapUnderlineLabel(gesture:))))
-    }
+            policyLinkView.didTapEula = {
+                // TO-DO: EULA link
+            }
+        }
 
     @objc private func didTapCreateAccount() {
         let smallRegisterViewController = SimpleRegisterEmailCheckViewController()
         self.navigationController?.pushViewController(smallRegisterViewController, animated: true)
-    }
-
-    @IBAction private func didTapUnderlineLabel(gesture: UITapGestureRecognizer) {
-        let text = localized("string_agree_terms_conditions")
-
-        let termsRange = (text as NSString).range(of: localized("string_terms"))
-        let privacyRange = (text as NSString).range(of: localized("string_privacy_policy"))
-        let eulaRange = (text as NSString).range(of: localized("string_eula"))
-
-        if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
-            print("Tapped Terms")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
-        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
-            print("Tapped Privacy")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
-        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
-            print("Tapped EULA")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
     }
 
     @objc func rememberUserOptionTapped() {
@@ -299,7 +239,6 @@ class LoginViewController: UIViewController {
         self.passwordHeaderTextFieldView.resignFirstResponder()
     }
 
-
     @IBAction private func didTapDismissButton() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -319,6 +258,8 @@ class LoginViewController: UIViewController {
 
         self.loginButton.isEnabled = false
 
+        self.showLoadingSpinner()
+
         Env.userSessionStore.loginUser(withUsername: username, password: password)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -336,21 +277,44 @@ class LoginViewController: UIViewController {
                 self.loginButton.isEnabled = true
             }, receiveValue: { userSession in
                 print("userSession: \(userSession)")
-                self.showNextViewController()
+                self.getProfileStatus()
             })
             .store(in: &cancellables)
 
-//        let username = "andrelascas@hotmail.com"
-//        let input = self.usernameHeaderTextFieldView.text
-//        print(input)
-//
-//        if username != input {
-//            self.usernameHeaderTextFieldView.showErrorOnField(text: "Error", color: UIColor.App.error)
-//        }
+    }
+
+    func getProfileStatus() {
+        Env.everyMatrixAPIClient.getProfileStatus()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                self.hideLoadingSpinner()
+            }, receiveValue: { value in
+                Env.userSessionStore.isUserProfileIncomplete = value.isProfileIncomplete
+                self.showNextViewController()
+            })
+            .store(in: &cancellables)
+    }
+
+    func showLoadingSpinner() {
+
+        view.addSubview(spinnerViewController.view)
+        spinnerViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        spinnerViewController.view.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        spinnerViewController.view.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        spinnerViewController.view.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        spinnerViewController.view.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        spinnerViewController.didMove(toParent: self)
 
     }
 
+    func hideLoadingSpinner() {
+        spinnerViewController.willMove(toParent: nil)
+        spinnerViewController.removeFromParent()
+        spinnerViewController.view.removeFromSuperview()
+    }
+
     private func showNextViewController() {
+        AnalyticsClient.sendEvent(event: .userLogin)
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
         }

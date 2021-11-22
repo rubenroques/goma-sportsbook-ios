@@ -9,6 +9,11 @@
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Gilroy-Bold.ttf">
+            <string>Gilroy-Bold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PreLiveEventsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
@@ -17,6 +22,7 @@
                 <outlet property="filtersBarBaseView" destination="vRj-e2-Szx" id="GDJ-9C-fEL"/>
                 <outlet property="filtersButtonView" destination="6zP-Po-yfR" id="5I1-zh-JcS"/>
                 <outlet property="filtersCollectionView" destination="bdq-E7-Xtb" id="BQH-oR-m5A"/>
+                <outlet property="filtersCountLabel" destination="qjl-vo-aTc" id="nGh-ol-PSU"/>
                 <outlet property="filtersSeparatorLineView" destination="B0m-AP-ENY" id="9xu-In-76T"/>
                 <outlet property="leftGradientBaseView" destination="Ond-vd-nhl" id="4CI-b7-Yno"/>
                 <outlet property="loadingBaseView" destination="kGb-Bw-Z5y" id="DzJ-v2-UsN"/>
@@ -78,8 +84,20 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6zP-Po-yfR">
                             <rect key="frame" x="306" y="15" width="40" height="40"/>
                             <subviews>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="zbv-kg-RfQ">
-                                    <rect key="frame" x="8.5" y="9.5" width="23" height="21"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qjl-vo-aTc">
+                                    <rect key="frame" x="18" y="-5" width="16" height="16"/>
+                                    <color key="backgroundColor" red="0.015686274510000001" green="0.49019607840000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="16" id="JGl-bF-Nxp"/>
+                                        <constraint firstAttribute="height" constant="16" id="bOR-Pr-xfc"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="10"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    <nil key="highlightedColor"/>
+                                    <size key="shadowOffset" width="1" height="-1"/>
+                                </label>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="zbv-kg-RfQ">
+                                    <rect key="frame" x="8.5" y="7.5" width="23" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="23" id="8Xv-MM-kpc"/>
                                         <constraint firstAttribute="height" constant="21" id="UhU-iB-bGo"/>
@@ -91,6 +109,8 @@
                                 <constraint firstItem="zbv-kg-RfQ" firstAttribute="centerX" secondItem="6zP-Po-yfR" secondAttribute="centerX" id="0Xq-hH-8fs"/>
                                 <constraint firstAttribute="height" constant="40" id="6o4-Ha-Ygm"/>
                                 <constraint firstItem="zbv-kg-RfQ" firstAttribute="centerY" secondItem="6zP-Po-yfR" secondAttribute="centerY" id="IUj-7a-OBh"/>
+                                <constraint firstAttribute="trailing" secondItem="qjl-vo-aTc" secondAttribute="trailing" constant="6" id="MLB-vV-RmX"/>
+                                <constraint firstItem="qjl-vo-aTc" firstAttribute="top" secondItem="6zP-Po-yfR" secondAttribute="top" constant="-5" id="QQV-cX-6SP"/>
                                 <constraint firstAttribute="width" constant="40" id="cuh-Fm-lkN"/>
                             </constraints>
                         </view>

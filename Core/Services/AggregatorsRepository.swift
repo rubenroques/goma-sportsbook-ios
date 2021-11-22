@@ -132,9 +132,9 @@ class AggregatorsRepository {
                 self.locations[location.id] = location
                 
             case .event:
-                () //print("Events aren't processed")
+                () // print("Events aren't processed")
             case .unknown:
-                () //print("Unknown type ignored")
+                () // print("Unknown type ignored")
             }
         }
 
@@ -272,7 +272,6 @@ class AggregatorsRepository {
 
         return matchesList
     }
-
 
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]

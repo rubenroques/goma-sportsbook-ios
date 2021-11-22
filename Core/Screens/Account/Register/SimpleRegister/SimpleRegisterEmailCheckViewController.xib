@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19162" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19144"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -16,12 +16,12 @@
                 <outlet property="emailHeadertextFieldView" destination="9tz-Rj-uM1" id="MJA-Xd-yKM"/>
                 <outlet property="loadingEmailValidityView" destination="6kO-xi-T9O" id="f00-Ds-4U7"/>
                 <outlet property="logoImageView" destination="cWG-bi-r9T" id="RQi-JE-e5k"/>
+                <outlet property="policyLinkView" destination="5F1-tt-NuZ" id="AZE-1c-Iqo"/>
                 <outlet property="registerButton" destination="xrL-Nf-KAU" id="v2G-m3-mbu"/>
                 <outlet property="registerTitleLabel" destination="OVR-cc-uFz" id="Aep-GA-0ZH"/>
                 <outlet property="scrollView" destination="CPe-9w-OVt" id="ezX-WV-XcI"/>
                 <outlet property="skipButton" destination="cTM-4K-uEp" id="6HB-BV-oxE"/>
                 <outlet property="skipView" destination="qhW-3R-JIm" id="myd-wE-yV3"/>
-                <outlet property="termsLabel" destination="gT2-sC-ogn" id="iAb-s9-uHr"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -102,33 +102,34 @@
                                         <action selector="didTapRegisterButton" destination="-1" eventType="primaryActionTriggered" id="bjI-mm-EXF"/>
                                     </connections>
                                 </button>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gT2-sC-ogn">
-                                    <rect key="frame" x="16" y="757" width="382" height="21"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <nil key="textColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5F1-tt-NuZ" customClass="PolicyLinkView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                    <rect key="frame" x="16" y="748" width="382" height="30"/>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="gBt-2D-J0v"/>
+                                    </constraints>
+                                </view>
                             </subviews>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="cWG-bi-r9T" firstAttribute="top" secondItem="qhW-3R-JIm" secondAttribute="bottom" constant="76" id="2R5-Tz-YZ2"/>
+                                <constraint firstItem="5F1-tt-NuZ" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" constant="16" id="5Tk-nL-jL7"/>
                                 <constraint firstAttribute="trailing" secondItem="cWG-bi-r9T" secondAttribute="trailing" constant="70" id="FKg-a2-DBz"/>
                                 <constraint firstItem="9tz-Rj-uM1" firstAttribute="top" secondItem="OVR-cc-uFz" secondAttribute="bottom" constant="16" id="GJk-g7-4IQ"/>
-                                <constraint firstAttribute="bottom" secondItem="gT2-sC-ogn" secondAttribute="bottom" constant="40" id="HUp-w7-s4d"/>
                                 <constraint firstItem="OVR-cc-uFz" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" constant="28" id="LHn-hH-oYp"/>
                                 <constraint firstItem="xrL-Nf-KAU" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" constant="28" id="NqX-5L-xJY"/>
                                 <constraint firstItem="OVR-cc-uFz" firstAttribute="top" secondItem="cWG-bi-r9T" secondAttribute="bottom" constant="80" id="PFc-Zf-o2C"/>
                                 <constraint firstItem="cWG-bi-r9T" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" constant="70" id="Plj-K9-xSo"/>
-                                <constraint firstItem="gT2-sC-ogn" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" constant="16" id="Tud-6z-xpT"/>
                                 <constraint firstAttribute="trailing" secondItem="9tz-Rj-uM1" secondAttribute="trailing" constant="28" id="UXD-Fe-ILl"/>
                                 <constraint firstAttribute="trailing" secondItem="OVR-cc-uFz" secondAttribute="trailing" constant="28" id="WZn-jY-Sh9"/>
                                 <constraint firstItem="qhW-3R-JIm" firstAttribute="top" secondItem="omU-Eo-iKe" secondAttribute="top" id="er8-mN-pae"/>
                                 <constraint firstItem="6kO-xi-T9O" firstAttribute="trailing" secondItem="9tz-Rj-uM1" secondAttribute="trailing" constant="-12" id="fP8-mY-ea0"/>
                                 <constraint firstItem="xrL-Nf-KAU" firstAttribute="top" secondItem="9tz-Rj-uM1" secondAttribute="bottom" constant="28" id="fTK-IF-g80"/>
                                 <constraint firstItem="qhW-3R-JIm" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" id="hOi-rj-g2c"/>
+                                <constraint firstAttribute="trailing" secondItem="5F1-tt-NuZ" secondAttribute="trailing" constant="16" id="ll3-Jy-Qfq"/>
+                                <constraint firstAttribute="bottom" secondItem="5F1-tt-NuZ" secondAttribute="bottom" constant="40" id="m4K-vP-ZaD"/>
                                 <constraint firstAttribute="trailing" secondItem="xrL-Nf-KAU" secondAttribute="trailing" constant="28" id="rNv-Ks-FR0"/>
                                 <constraint firstItem="6kO-xi-T9O" firstAttribute="centerY" secondItem="9tz-Rj-uM1" secondAttribute="centerY" constant="-9" id="s8L-kq-pH5"/>
-                                <constraint firstAttribute="trailing" secondItem="gT2-sC-ogn" secondAttribute="trailing" constant="16" id="u7T-h6-VVz"/>
                                 <constraint firstAttribute="trailing" secondItem="qhW-3R-JIm" secondAttribute="trailing" id="xEC-oc-aA9"/>
                                 <constraint firstItem="9tz-Rj-uM1" firstAttribute="leading" secondItem="omU-Eo-iKe" secondAttribute="leading" constant="28" id="zcW-vw-zcG"/>
                             </constraints>
