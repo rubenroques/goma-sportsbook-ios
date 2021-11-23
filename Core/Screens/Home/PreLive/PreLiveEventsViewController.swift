@@ -123,7 +123,7 @@ class PreLiveEventsViewController: UIViewController {
                 self.present(emailVerificationViewController, animated: true, completion: nil)
             }
             else if alertType == ActivationAlertType.profile {
-                let fullRegisterViewController = FullRegisterPersonalInfoViewController()
+                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
                 self.present(fullRegisterViewController, animated: true, completion: nil)
             }
 
