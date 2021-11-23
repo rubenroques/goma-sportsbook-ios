@@ -174,17 +174,14 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     func checkPolicyLinks() {
             policyLinkView.didTapTerms = {
-                print("Tapped Terms")
                 // TO-DO: Call VC to register
             }
 
             policyLinkView.didTapPrivacy = {
-                print("Tapped Privacy")
                 // TO-DO: Call VC to register
             }
 
             policyLinkView.didTapEula = {
-                print("Tapped EULA")
                 // TO-DO: Call VC to register
             }
         }

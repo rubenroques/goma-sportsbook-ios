@@ -229,7 +229,6 @@ class PersonalInfoViewController: UIViewController {
             .sink { _ in
 
             } receiveValue: { profile in
-                print("PROFILE: \(profile)")
                 self.setupProfile(profile: profile)
             }
         .store(in: &cancellables)

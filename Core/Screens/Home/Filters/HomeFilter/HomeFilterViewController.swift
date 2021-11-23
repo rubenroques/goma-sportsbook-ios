@@ -179,7 +179,6 @@ class HomeFilterViewController: UIViewController {
         }
 
         timeRangeCollapseView.didToggle = { value in
-            print(value)
             if value {
                 UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
                     self.view.layoutIfNeeded()

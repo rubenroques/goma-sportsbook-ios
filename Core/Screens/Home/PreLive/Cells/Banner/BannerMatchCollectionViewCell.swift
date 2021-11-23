@@ -396,7 +396,6 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     @objc func didTapLeftOddButton() {
-        print("TAPPED")
         guard
             let match = self.match,
             let firstMarket = self.match?.markets.first,

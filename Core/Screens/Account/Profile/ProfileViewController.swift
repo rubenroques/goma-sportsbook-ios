@@ -134,8 +134,7 @@ class ProfileViewController: UIViewController {
             .eraseToAnyPublisher()
             .sink { _ in
 
-            } receiveValue: { profileStatus in
-                print("PROFILE STATUS: \(profileStatus)")
+            } receiveValue: { _ in
             }
         .store(in: &cancellables)
 
