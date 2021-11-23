@@ -21,6 +21,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private var liveMatch: Bool = false
 
+    var tappedMatchLineAction: (() -> Void)?
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -175,6 +177,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
                 if let match = self.match {
                     cell.setupWithMatch(match)
+                    cell.tappedMatchWidgetAction = {
+                        self.tappedMatchLineAction?()
+                    }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                 return cell

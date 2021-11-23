@@ -105,6 +105,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var tappedMatchWidgetAction: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -150,6 +151,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
+
+        let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
+        self.addGestureRecognizer(tapMatchView)
 
         self.setupWithTheme()
     }
@@ -374,6 +378,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
+    @IBAction func didTapMatchView(_ sender: Any) {
+        tappedMatchWidgetAction?()
+    }
 
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
