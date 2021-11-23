@@ -36,8 +36,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
     var countries: EveryMatrix.CountryListing?
     var fullRegisterUserInfo: FullRegisterUserInfo?
+    var isBackButtonDisabled: Bool
 
-    init() {
+    init(isBackButtonDisabled: Bool = false) {
+        self.isBackButtonDisabled = isBackButtonDisabled
         super.init(nibName: "FullRegisterPersonalInfoViewController", bundle: nil)
     }
 
@@ -110,6 +112,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        if isBackButtonDisabled {
+            self.backButton.isHidden = true
+        }
     }
 
     func setupWithTheme() {
