@@ -1002,6 +1002,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
                 if let viewModel = self.bannersViewModel {
                     cell.setupWithViewModel(viewModel)
+                    cell.storePopularMatches(popularMatches: self.matches)
                 }
                 return cell
             }

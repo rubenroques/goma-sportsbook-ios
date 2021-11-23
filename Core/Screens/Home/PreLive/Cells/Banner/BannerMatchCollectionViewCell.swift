@@ -118,11 +118,11 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
 
-//        let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
-//        self.drawBaseView.addGestureRecognizer(tapMiddleOddButton)
-//
-//        let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
-//        self.awayBaseView.addGestureRecognizer(tapRightOddButton)
+        let tapMiddleOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapMiddleOddButton))
+        self.drawBaseView.addGestureRecognizer(tapMiddleOddButton)
+
+        let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
+        self.awayBaseView.addGestureRecognizer(tapRightOddButton)
 
         self.setupWithTheme()
     }
@@ -155,6 +155,28 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.awayParticipantNameLabel.text = ""
         self.dateLabel.text = ""
         self.timeLabel.text = ""
+
+        self.viewModel = nil
+        self.match = nil
+
+        self.leftOutcome = nil
+        self.middleOutcome = nil
+        self.rightOutcome = nil
+
+        self.leftOddButtonSubscriber?.cancel()
+        self.leftOddButtonSubscriber = nil
+        self.middleOddButtonSubscriber?.cancel()
+        self.middleOddButtonSubscriber = nil
+        self.rightOddButtonSubscriber?.cancel()
+        self.rightOddButtonSubscriber = nil
+
+        self.isLeftOutcomeButtonSelected = false
+        self.isMiddleOutcomeButtonSelected = false
+        self.isRightOutcomeButtonSelected = false
+
+        self.homeOddValueLabel.text = ""
+        self.drawOddValueLabel.text = ""
+        self.awayOddValueLabel.text = ""
     }
 
     func setupWithTheme() {
@@ -217,7 +239,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 .receive(on: DispatchQueue.main)
                 .compactMap({$0}).sink { [weak self] match in
                     self?.matchViewModel = MatchWidgetCellViewModel(match: match)
-                    self?.match = self?.match
+                    //self?.match = self?.match
                 }
                 .store(in: &cancellables)
 
@@ -230,9 +252,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithMatch(_ match: Match) {
-        self.match = match
 
-        let viewModel = MatchWidgetCellViewModel(match: match)
+        //let viewModel = MatchWidgetCellViewModel(match: match)
+        guard let viewModel = self.matchViewModel else {
+            return
+        }
+
+        self.match = match
 
         //self.eventNameLabel.text = "\(viewModel.competitionName)"
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
@@ -409,10 +435,72 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
     }
 
+    @objc func didTapMiddleOddButton() {
+        guard
+            let match = self.match,
+            let firstMarket = self.match?.markets.first,
+            let outcome = self.middleOutcome
+        else {
+            return
+        }
+
+        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
+        let marketDescription = firstMarket.name
+        let outcomeDescription = outcome.teamName
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          matchId: match.id,
+                                          value: outcome.bettingOffer.value,
+                                          matchDescription: matchDescription,
+                                          marketDescription: marketDescription,
+                                          outcomeDescription: outcomeDescription)
+
+        if Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+            self.isMiddleOutcomeButtonSelected = false
+        }
+        else {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+            self.isMiddleOutcomeButtonSelected = true
+        }
+    }
+
     func selectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.mainTint
     }
     func deselectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
+    }
+
+    @objc func didTapRightOddButton() {
+        guard
+            let match = self.match,
+            let firstMarket = self.match?.markets.first,
+            let outcome = self.rightOutcome
+        else {
+            return
+        }
+
+        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
+        let marketDescription = firstMarket.name
+        let outcomeDescription = outcome.teamName
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          matchId: match.id,
+                                          value: outcome.bettingOffer.value,
+                                          matchDescription: matchDescription,
+                                          marketDescription: marketDescription,
+                                          outcomeDescription: outcomeDescription)
+
+        if Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+            self.isRightOutcomeButtonSelected = false
+        }
+        else {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+            self.isRightOutcomeButtonSelected = true
+        }
     }
 }
