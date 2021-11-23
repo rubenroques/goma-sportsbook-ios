@@ -44,7 +44,7 @@
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nEU-e4-On6">
-                    <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                    <rect key="frame" x="0.0" y="56" width="414" height="44"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GrX-22-Bxz">
                             <rect key="frame" x="16" y="2" width="40" height="40"/>
@@ -62,6 +62,9 @@
                             <state key="normal" title="Close">
                                 <color key="titleColor" systemColor="systemBlueColor"/>
                             </state>
+                            <connections>
+                                <action selector="closeAction" destination="-1" eventType="touchUpInside" id="Ryh-ac-pVN"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -84,7 +87,7 @@
                     </connections>
                 </button>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGo-ph-rLE">
-                    <rect key="frame" x="0.0" y="88" width="414" height="834"/>
+                    <rect key="frame" x="0.0" y="100" width="414" height="822"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Hur-Ts-wGu">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="803.5"/>
@@ -243,7 +246,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="vDO-br-lFd" secondAttribute="bottom" id="g2U-p0-ygj"/>
                 <constraint firstItem="vDO-br-lFd" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="lV1-VW-6tW"/>
                 <constraint firstItem="vDO-br-lFd" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="mk6-9F-m5Z"/>
-                <constraint firstItem="nEU-e4-On6" firstAttribute="top" secondItem="vDO-br-lFd" secondAttribute="bottom" id="qcH-PZ-6ja"/>
+                <constraint firstItem="nEU-e4-On6" firstAttribute="top" secondItem="vDO-br-lFd" secondAttribute="bottom" constant="12" id="qcH-PZ-6ja"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="27.536231884057973" y="92.410714285714278"/>
