@@ -329,10 +329,17 @@ class PreLiveEventsViewController: UIViewController {
                 self.competitionsFiltersView?.competitions = competitions
             }
             .store(in: &cancellables)
-        
-        // swiftlint:disable empty_count
+
+
+        self.viewModel.isLoadingCompetitionGroups
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoadingGroups in
+                self?.competitionsFiltersView?.isLoading = isLoadingGroups
+            })
+            .store(in: &cancellables)
+
         self.competitionsFiltersView?.selectedIds
-            .compactMap({ $0.count == 0 })
+            .compactMap({ $0.isEmpty })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] shouldShowOpen in
                 if shouldShowOpen {

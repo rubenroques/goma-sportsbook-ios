@@ -31,12 +31,24 @@ struct BetslipForbiddenCombination: Decodable {
     }
 }
 
+struct BetslipWinningsInfo: Decodable {
+
+    var maxWinningNetto: Double?
+    var totalBetAmountNetto: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case maxWinningNetto = "maxWinningNetto"
+        case totalBetAmountNetto = "totalBetAmountNetto"
+    }
+}
+
 struct BetslipSelectionState: Decodable {
 
     var minStake: Double?
     var maxStake: Double?
     var priceValueFactor: Double?
     var availableForManualBetRequest: Bool?
+    var winnings: BetslipWinningsInfo?
     var forbiddenCombinations: [BetslipForbiddenCombination]
 
     enum CodingKeys: String, CodingKey {
@@ -45,6 +57,7 @@ struct BetslipSelectionState: Decodable {
         case priceValueFactor = "priceValueFactor"
         case availableForManualBetRequest = "availableForManualBetRequest"
         case forbiddenCombinations = "forbiddenCombinations"
+        case winnings = "maxWinningAndTaxes"
     }
 
     init(from decoder: Decoder) throws {
@@ -55,6 +68,7 @@ struct BetslipSelectionState: Decodable {
         self.priceValueFactor = try? container.decode(Double.self, forKey: .priceValueFactor)
         self.availableForManualBetRequest = try? container.decode(Bool.self, forKey: .availableForManualBetRequest)
         self.forbiddenCombinations = (try? container.decode([BetslipForbiddenCombination].self, forKey: .forbiddenCombinations)) ?? []
+        self.winnings = try? container.decode(BetslipWinningsInfo.self, forKey: .winnings)
     }
 }
 

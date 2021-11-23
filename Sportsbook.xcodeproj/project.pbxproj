@@ -560,6 +560,9 @@
 		45EF5439270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */; };
 		45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
 		45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF543A270C664100D1E13E /* CollapsibleView.swift */; };
+		45F8B154274BC3B60087652B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 45F8B153274BC3B60087652B /* FirebaseMessaging */; };
+		45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
+		45F8B158274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
 		A92F5D792717169900884BDF /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
 		A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
 		A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -574,6 +577,20 @@
 		A92F5D8B2719D63300884BDF /* FilterSliderInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */; };
 		A92F5D8D271ED08400884BDF /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
 		A92F5D8E271ED08400884BDF /* CGFloat+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */; };
+		A92F5D912729731F00884BDF /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		A92F5D92272973E600884BDF /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
+		A92F5D96272C410400884BDF /* DocumentPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D94272C410400884BDF /* DocumentPickerView.xib */; };
+		A92F5D97272C410400884BDF /* DocumentPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D94272C410400884BDF /* DocumentPickerView.xib */; };
+		A92F5D98272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
+		A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
+		A92F5DA4272C44A000884BDF /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
+		A92F5DA5272C44A000884BDF /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
+		A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA3272C44A000884BDF /* UploadView.swift */; };
+		A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA3272C44A000884BDF /* UploadView.swift */; };
+		A92F5DAA272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */; };
+		A92F5DAB272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */; };
+		A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
+		A92F5DAD272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		A96279EB273ED1E40001E1D5 /* ActivationAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */; };
 		A96279EC273ED1E40001E1D5 /* ActivationAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */; };
 		A96279EE273ED2290001E1D5 /* ActivationAlertView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */; };
@@ -600,20 +617,6 @@
 		A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */; };
 		A9627A17274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
 		A9627A18274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
-		A92F5D912729731F00884BDF /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };
-		A92F5D92272973E600884BDF /* SpinnerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D902729731E00884BDF /* SpinnerViewController.swift */; };	
-		A92F5D96272C410400884BDF /* DocumentPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D94272C410400884BDF /* DocumentPickerView.xib */; };
-		A92F5D97272C410400884BDF /* DocumentPickerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D94272C410400884BDF /* DocumentPickerView.xib */; };
-		A92F5D98272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
-		A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D95272C410400884BDF /* DocumentPickerView.swift */; };
-		A92F5DA4272C44A000884BDF /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		A92F5DA5272C44A000884BDF /* UploadView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA2272C44A000884BDF /* UploadView.xib */; };
-		A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA3272C44A000884BDF /* UploadView.swift */; };
-		A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA3272C44A000884BDF /* UploadView.swift */; };
-		A92F5DAA272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */; };
-		A92F5DAB272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */; };
-		A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
-		A92F5DAD272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */; };
 		A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A96B70B82739891200FEF07D /* FirebaseMessaging */; };
 		A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
 		A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
@@ -1048,6 +1051,7 @@
 		45EF5434270C603D00D1E13E /* MatchFiltersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFiltersViewController.swift; sourceTree = "<group>"; };
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
+		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
 		A92F5D782717169900884BDF /* FilterRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRowView.swift; sourceTree = "<group>"; };
 		A92F5D7B271716B900884BDF /* FilterRowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterRowView.xib; sourceTree = "<group>"; };
 		A92F5D7F2718384900884BDF /* FilterSliderCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSliderCollapseView.swift; sourceTree = "<group>"; };
@@ -1055,6 +1059,13 @@
 		A92F5D862719D5E600884BDF /* FilterSliderInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSliderInfoView.swift; sourceTree = "<group>"; };
 		A92F5D892719D63300884BDF /* FilterSliderInfoView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterSliderInfoView.xib; sourceTree = "<group>"; };
 		A92F5D8C271ED08400884BDF /* CGFloat+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+Extensions.swift"; sourceTree = "<group>"; };
+		A92F5D902729731E00884BDF /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
+		A92F5D94272C410400884BDF /* DocumentPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerView.xib; sourceTree = "<group>"; };
+		A92F5D95272C410400884BDF /* DocumentPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerView.swift; sourceTree = "<group>"; };
+		A92F5DA2272C44A000884BDF /* UploadView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadView.xib; sourceTree = "<group>"; };
+		A92F5DA3272C44A000884BDF /* UploadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
+		A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
+		A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
 		A96279EA273ED1E40001E1D5 /* ActivationAlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertView.swift; sourceTree = "<group>"; };
 		A96279ED273ED2290001E1D5 /* ActivationAlertView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertView.xib; sourceTree = "<group>"; };
 		A96279F12743D3AA0001E1D5 /* EmailVerificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerificationViewController.swift; sourceTree = "<group>"; };
@@ -1068,13 +1079,6 @@
 		A9627A10274553700001E1D5 /* ActivationAlertData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertData.swift; sourceTree = "<group>"; };
 		A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertScrollableTableViewCell.swift; sourceTree = "<group>"; };
 		A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertScrollableTableViewCell.xib; sourceTree = "<group>"; };
-		A92F5D902729731E00884BDF /* SpinnerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerViewController.swift; sourceTree = "<group>"; };
-		A92F5D94272C410400884BDF /* DocumentPickerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DocumentPickerView.xib; sourceTree = "<group>"; };
-		A92F5D95272C410400884BDF /* DocumentPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentPickerView.swift; sourceTree = "<group>"; };
-		A92F5DA2272C44A000884BDF /* UploadView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UploadView.xib; sourceTree = "<group>"; };
-		A92F5DA3272C44A000884BDF /* UploadView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UploadView.swift; sourceTree = "<group>"; };
-		A92F5DA8272C44CD00884BDF /* FullRegisterDocumentsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullRegisterDocumentsViewController.swift; sourceTree = "<group>"; };
-		A92F5DA9272C44CD00884BDF /* FullRegisterDocumentsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FullRegisterDocumentsViewController.xib; sourceTree = "<group>"; };
 		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
@@ -1145,6 +1149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45F8B154274BC3B60087652B /* FirebaseMessaging in Frameworks */,
 				452047B32703597500B277B5 /* FirebaseDatabase in Frameworks */,
 				F4E3B7612742BFB100855C58 /* AvailableHapticFeedback in Frameworks */,
 				A9B8419326E235AD00269B05 /* DictionaryCoding in Frameworks */,
@@ -1835,6 +1840,7 @@
 			children = (
 				457F495F2737C3630047169D /* BetslipSelectionState.swift */,
 				457F4971273804810047169D /* BetslipHistory.swift */,
+				45F8B156274BFF710087652B /* SystemBetResponse.swift */,
 			);
 			path = Betting;
 			sourceTree = "<group>";
@@ -2250,6 +2256,32 @@
 			path = FilterSliderInfoView;
 			sourceTree = "<group>";
 		};
+		A92F5D8F2729730100884BDF /* Spinner */ = {
+			isa = PBXGroup;
+			children = (
+				A92F5D902729731E00884BDF /* SpinnerViewController.swift */,
+			);
+			path = Spinner;
+			sourceTree = "<group>";
+		};
+		A92F5D93272C410400884BDF /* DocumentPickerView */ = {
+			isa = PBXGroup;
+			children = (
+				A92F5D94272C410400884BDF /* DocumentPickerView.xib */,
+				A92F5D95272C410400884BDF /* DocumentPickerView.swift */,
+			);
+			path = DocumentPickerView;
+			sourceTree = "<group>";
+		};
+		A92F5DA1272C44A000884BDF /* UploadView */ = {
+			isa = PBXGroup;
+			children = (
+				A92F5DA2272C44A000884BDF /* UploadView.xib */,
+				A92F5DA3272C44A000884BDF /* UploadView.swift */,
+			);
+			path = UploadView;
+			sourceTree = "<group>";
+		};
 		A96279E9273ED1AB0001E1D5 /* ActivationAlertView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2275,32 +2307,6 @@
 				A9627A07274529BD0001E1D5 /* ActivationAlertScrollableView.xib */,
 			);
 			path = ActivationAlertScrollableView;
-			sourceTree = "<group>";
-		};
-		A92F5D8F2729730100884BDF /* Spinner */ = {
-			isa = PBXGroup;
-			children = (
-				A92F5D902729731E00884BDF /* SpinnerViewController.swift */,
-			);
-			path = Spinner;
-			sourceTree = "<group>";
-		};
-		A92F5D93272C410400884BDF /* DocumentPickerView */ = {
-			isa = PBXGroup;
-			children = (
-				A92F5D94272C410400884BDF /* DocumentPickerView.xib */,
-				A92F5D95272C410400884BDF /* DocumentPickerView.swift */,
-			);
-			path = DocumentPickerView;
-			sourceTree = "<group>";
-		};
-		A92F5DA1272C44A000884BDF /* UploadView */ = {
-			isa = PBXGroup;
-			children = (
-				A92F5DA2272C44A000884BDF /* UploadView.xib */,
-				A92F5DA3272C44A000884BDF /* UploadView.swift */,
-			);
-			path = UploadView;
 			sourceTree = "<group>";
 		};
 		A98D3B272714817C003BAE6F /* SportSelection */ = {
@@ -2602,6 +2608,7 @@
 				454E0AD72735C76600794E0C /* CombineExt */,
 				F4E3B75D2742BF9C00855C58 /* SweeterSwift */,
 				F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */,
+				45F8B153274BC3B60087652B /* FirebaseMessaging */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -2750,7 +2757,7 @@
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
 				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */,
-				45D712F427031DDE00AC0364 /* SportsViewController.xib in Resources */,
+				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				45D728D327158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */,
 				45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
@@ -2837,7 +2844,6 @@
 				454E0AA52732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */,
 				45D712FB27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */,
-				A99A972B26FE326200F8D163 /* FullRegisterDocumentsViewController.xib in Resources */,
 				454E0ACF2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45D728D427158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				45D3DE4327149BE800717124 /* BannerTopCollectionViewCell.xib in Resources */,
@@ -2894,17 +2900,14 @@
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457816AC2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
-
 				A96279EF273ED2290001E1D5 /* ActivationAlertView.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457F497927383A350047169D /* SubmitedBetSelectionView.xib in Resources */,
 				457816BE2707632400F66878 /* TitleTableViewHeader.xib in Resources */,
 				A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
-
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				A9627A0227440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
-
 				A9C6022E2716F41200992E11 /* HomeFilterViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A9C82FC626F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
@@ -2924,7 +2927,7 @@
 				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
 				454E0AC6273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */,
 				45D712F527031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
-				45D712F527031DDE00AC0364 /* SportsViewController.xib in Resources */,
+				45D712F527031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				A92F5DA5272C44A000884BDF /* UploadView.xib in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				45B0BD49271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
@@ -2956,7 +2959,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n   swiftlint\n  echo \"Disabled\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n# swiftlint\n  echo \"Disabled\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		45B2003026C46294005831CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3067,6 +3070,7 @@
 				454E0A962732C01B00794E0C /* BetslipViewController.swift in Sources */,
 				4572633B272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				45A2897026C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
+				45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */,
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				454E0AD42735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
@@ -3340,6 +3344,7 @@
 				454E0A972732C01B00794E0C /* BetslipViewController.swift in Sources */,
 				4572633A272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				45A2897126C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
+				45F8B158274BFF710087652B /* SystemBetResponse.swift in Sources */,
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				454E0AD52735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
@@ -4063,6 +4068,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
+		};
+		45F8B153274BC3B60087652B /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		A96B70B82739891200FEF07D /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;

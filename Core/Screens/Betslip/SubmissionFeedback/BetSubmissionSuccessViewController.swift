@@ -25,6 +25,8 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     var betPlacedDetailsArray: [BetPlacedDetails]
 
+    var willDismissAction: (() -> ())?
+
     init(betPlacedDetailsArray: [BetPlacedDetails]) {
 
         self.betPlacedDetailsArray = betPlacedDetailsArray
@@ -78,6 +80,7 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBAction private func didTapContinueButton(){
         if self.isModal {
+            self.willDismissAction?()
             self.dismiss(animated: true, completion: nil)
         }
     }

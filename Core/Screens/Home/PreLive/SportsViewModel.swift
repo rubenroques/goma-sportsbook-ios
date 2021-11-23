@@ -40,7 +40,8 @@ class SportsViewModel: NSObject {
     private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingMyGamesList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingCompetitions: CurrentValueSubject<Bool, Never> = .init(true)
-    private var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
+
+    var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
 
     var isLoading: AnyPublisher<Bool, Never>
 
@@ -366,7 +367,6 @@ class SportsViewModel: NSObject {
         popularCompetitionGroups.append(contentsOf: competitionsGroups)
 
         self.competitionGroupsPublisher.send(popularCompetitionGroups)
-        self.isLoadingCompetitionGroups.send(false)
 
         self.updateContentList()
     }
@@ -608,6 +608,7 @@ class SportsViewModel: NSObject {
                 }
 
                 self?.isLoadingCompetitionGroups.send(false)
+
                 self?.zip3Publisher?.cancel()
                 self?.zip3Publisher = nil
 

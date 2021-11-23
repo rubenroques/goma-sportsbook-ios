@@ -52,14 +52,12 @@ class EveryMatrixAPIClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-
     func loginComplete(username: String, password: String) -> AnyPublisher<SessionInfo, EveryMatrix.APIError> {
         return self.login(username: username, password: password).flatMap { _ in
             return self.getSessionInfo()
         }
         .eraseToAnyPublisher()
     }
-
 
     func logout() -> AnyPublisher<Bool, EveryMatrix.APIError> {
         return TSManager.shared
@@ -73,7 +71,6 @@ class EveryMatrixAPIClient: ObservableObject {
             .getModel(router: .getSessionInfo, decodingType: SessionInfo.self)
             .eraseToAnyPublisher()
     }
-
 
     func getOperatorInfo() -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> {
         return TSManager.shared

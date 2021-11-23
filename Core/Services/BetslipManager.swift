@@ -21,6 +21,7 @@ class BetslipManager: NSObject {
 
     private var simpleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     private var multipleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
+    private var systemBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
 
     private var cancellable: Set<AnyCancellable> = []
 
@@ -32,6 +33,7 @@ class BetslipManager: NSObject {
         self.bettingTicketsPublisher = .init([])
         self.simpleBetslipSelectionState = .init(nil)
         self.multipleBetslipSelectionState = .init(nil)
+        self.systemBetslipSelectionState = .init(nil)
 
         super.init()
 
@@ -156,6 +158,9 @@ extension BetslipManager {
 
         TSManager.shared
             .getModel(router: route, decodingType: BetslipSelectionState.self)
+            .handleEvents(receiveOutput: { betslipSelectionState in
+                self.simpleBetslipSelectionState.send(betslipSelectionState)
+            })
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print("completed simple: \(completion)")
@@ -184,6 +189,26 @@ extension BetslipManager {
                 self.multipleBetslipSelectionState.send(betslipSelectionState)
             }
             .store(in: &cancellable)
+
+    }
+
+    func requestSystemBetslipSelectionState(withSkateAmount amount: Double, systemBetType: SystemBetType)
+    -> AnyPublisher<BetslipSelectionState, EveryMatrix.APIError> {
+
+        let ticketSelections = self.updatedBettingTicketsOdds()
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+
+        let route = TSRouter.getSystemBetSelectionInfo(language: "en",
+                                                       stakeAmount: amount,
+                                                       systemBetType: systemBetType,
+                                                       tickets: ticketSelections)
+
+        return TSManager.shared
+            .getModel(router: route, decodingType: BetslipSelectionState.self)
+            .handleEvents(receiveOutput: { betslipSelectionState in
+                self.simpleBetslipSelectionState.send(betslipSelectionState)
+            })
+            .eraseToAnyPublisher()
 
     }
 
@@ -241,5 +266,26 @@ extension BetslipManager {
             .eraseToAnyPublisher()
     }
 
+    func placeSystemBet(withSkateAmount amount: Double, systemBetType: SystemBetType) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
+
+        let updatedTicketSelections = self.updatedBettingTicketsOdds()
+        let ticketSelections = updatedTicketSelections
+            .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+
+        let route = TSRouter.placeSystemBet(language: "en",
+                                            amount: amount,
+                                            systemBetType: systemBetType,
+                                            tickets: ticketSelections)
+
+        return TSManager.shared
+            .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
+            .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
+            .handleEvents(receiveOutput: { betslipPlaceBetResponse in
+                if betslipPlaceBetResponse.response.betSucceed ?? false {
+                    self.clearAllBettingTickets()
+                }
+            })
+            .eraseToAnyPublisher()
+    }
 
 }

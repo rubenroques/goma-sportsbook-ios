@@ -167,6 +167,9 @@ final class TSManager {
                         if !error.isEmpty && desc == "User is not logged in" {
                             // TODO: handle logout
                         }
+                        if desc == "You must be logged in to perform this action!" {
+
+                        }
                         promise(.failure(.requestError(value: desc.isEmpty ? error : desc)))
                     })
                 }

@@ -67,7 +67,7 @@ class EditAlertView: NibView {
         alertTextLabel.numberOfLines = 0
 
         closeButton.setTitle("", for: .normal)
-        closeButton.setImage(UIImage(named: "small_close_cross_icon"), for: .normal)
+        closeButton.setImage(UIImage(named: "small_close_cross_light_icon"), for: .normal)
 
     }
 

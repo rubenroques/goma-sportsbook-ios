@@ -18,7 +18,7 @@ class UserSessionStore {
     var cancellables = Set<AnyCancellable>()
 
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
-    var userBalanaceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
+    var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
 
     var shouldRecordUserSession = true
     var isUserProfileIncomplete: Bool = true
@@ -171,11 +171,18 @@ extension UserSessionStore {
 
     func forceWalletUpdate() {
         let route = TSRouter.getUserBalance
-        TSManager.shared.getModel(router: route, decodingType: EveryMatrix.UserBalanceWallet.self)
+        TSManager.shared.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
             .sink { completion in
                 print(completion)
-            } receiveValue: { userBalanceWallet in
-                self.userBalanaceWallet.send(userBalanceWallet)
+            } receiveValue: { userBalance in
+                var realWallet: EveryMatrix.UserBalanceWallet?
+                for wallet in userBalance.wallets {
+                    if wallet.vendor == "CasinoWallet" {
+                        realWallet = wallet
+                        break
+                    }
+                }
+                self.userBalanceWallet.send(realWallet)
             }
             .store(in: &cancellables)
     }

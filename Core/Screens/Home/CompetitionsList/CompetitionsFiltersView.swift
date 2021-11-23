@@ -24,6 +24,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     @IBOutlet private weak var applyButton: UIButton!
 
     @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     var applyFiltersAction: (([String]) -> Void)?
     var tapHeaderViewAction: (() -> Void)?
@@ -33,6 +34,17 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var selectedIds: CurrentValueSubject<Set<String>, Never> = .init([])
     var expandedCellsDictionary: [String: Bool] = [:]
 
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingView.startAnimating()
+            }
+            else {
+                self.loadingView.stopAnimating()
+            }
+        }
+    }
+    
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             self.expandedCellsDictionary = [:]
@@ -103,6 +115,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     func commonInit() {
 
         self.translatesAutoresizingMaskIntoConstraints = false
+
+        self.loadingView.hidesWhenStopped = true
+        self.loadingView.stopAnimating()
 
         self.tableView.backgroundView?.backgroundColor = .clear
         self.tableView.backgroundColor = .clear

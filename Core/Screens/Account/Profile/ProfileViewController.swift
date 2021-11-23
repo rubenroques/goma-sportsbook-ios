@@ -139,6 +139,20 @@ class ProfileViewController: UIViewController {
             }
         .store(in: &cancellables)
 
+
+        Env.userSessionStore.userBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"} )
+            .receive(on: DispatchQueue.main)
+            .sink { value in
+                self.currentBalanceLabel.text = value
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.forceWalletUpdate()
+
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -242,7 +256,7 @@ class ProfileViewController: UIViewController {
         let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
         supportBaseView.addGestureRecognizer(supportTapGesture)
 
-        currentBalanceLabel.text = "0,00€"
+        currentBalanceLabel.text = "Loading"
 
         //
         personalInfoLabel.text = localized("string_personal_info")
