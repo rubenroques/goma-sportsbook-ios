@@ -156,3 +156,20 @@ Terms of use, Privacy Policy and EULA";
 "string_add_file" = "Add File";
 "string_submit" = "Submit";
 "string_upload_complete" = "Upload Complete";
+
+"string_odds_filter" = "Odds Filter";
+"string_from" = "From";
+"string_to" = "To";
+"string_time_today_only" = "Time (for Today's matches only)";
+"string_default_market" = "Default Market";
+
+"string_verify_email" = "Verify your Email";
+"string_app_full_potential" = "In order to use this App on its full potential, you need to verify your Email.";
+"string_verify_my_account" = "Verify my Account >";
+"string_email_verification" = "Email Verification";
+"string_verify_email_description" = "Looks like you haven't checked your email yet. In order to use this App on its full potential, you need to verify your Email.";
+"string_activate_account" = "Activate Account";
+"string_choose_email" = "Choose Email";
+"string_complete_your_profile" = "Complete your Profile";
+"string_complete_profile_description" = "To get the most of this app please finish setting up your profile";
+"string_finish_up_profile" = "Finish up Profile >";
