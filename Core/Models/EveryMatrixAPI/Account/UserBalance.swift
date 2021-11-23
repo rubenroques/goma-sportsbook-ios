@@ -12,28 +12,26 @@ extension EveryMatrix {
         var wallets: [UserBalanceWallet]
 
         enum CodingKeys: String, CodingKey {
-            case wallets = "wallets"
+            case wallets = "accounts"
         }
     }
 
     struct UserBalanceWallet: Decodable {
 
-        var name: String
-        var realMoney: Double
-        var realMoneyCurrency: String
-        var bonusMoney: Double
-        var bonusMoneyCurrency: String
-        var lockedMoney: Double
-        var lockedMoneyCurrency: String
+        var id: Int
+        var name: String?
+        var currency: String
+        var amount: Double
+        var vendor: String
+        var isBonus: Bool
 
         enum CodingKeys: String, CodingKey {
+            case id = "id"
             case name = "name"
-            case realMoney = "realMoney"
-            case realMoneyCurrency = "realMoneyCurrency"
-            case bonusMoney = "bonusMoney"
-            case bonusMoneyCurrency = "bonusMoneyCurrency"
-            case lockedMoney = "lockedMoney"
-            case lockedMoneyCurrency = "lockedMoneyCurrency"
+            case currency = "currency"
+            case amount = "amount"
+            case vendor = "vendor"
+            case isBonus = "isBonusAccount"
         }
     }
 }

@@ -34,7 +34,6 @@ class BetslipViewController: UIViewController {
 
     var willDismissAction: (() -> ())?
 
-
     init() {
         preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
         submitedBetslipViewController = SubmitedBetslipViewController()
@@ -79,9 +78,9 @@ class BetslipViewController: UIViewController {
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
         }
 
-        Env.userSessionStore.userBalanaceWallet
+        Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
-            .map(\.realMoney)
+            .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"} )
             .receive(on: DispatchQueue.main)
             .sink { value in
@@ -154,6 +153,7 @@ class BetslipViewController: UIViewController {
         }
 
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray)
+        betSubmissionSuccessViewController.willDismissAction = self.willDismissAction
         self.navigationController?.pushViewController(betSubmissionSuccessViewController, animated: true)
     }
 
