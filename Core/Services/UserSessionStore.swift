@@ -18,9 +18,10 @@ class UserSessionStore {
     var cancellables = Set<AnyCancellable>()
 
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
-    var userBalanaceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
+    var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
 
     var shouldRecordUserSession = true
+    var isUserProfileIncomplete: Bool = true
 
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
@@ -54,8 +55,8 @@ class UserSessionStore {
                 shouldRecordUserSession = false
             }
         }
-    }
 
+    }
 
     func loadLoggedUser() {
         if let user = UserSessionStore.loggedUserSession() {
@@ -86,7 +87,6 @@ class UserSessionStore {
         UserDefaults.standard.userSession = nil
         userSessionPublisher.send(nil)
 
-
         Env.everyMatrixAPIClient
             .logout()
             .sink(receiveCompletion: { completion in
@@ -114,8 +114,8 @@ class UserSessionStore {
                             password: password,
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)",
-                            birthDate: sessionInfo.birthDate
-                    )
+                            birthDate: sessionInfo.birthDate,
+                            isEmailVerified: sessionInfo.isEmailVerified                    )
             }
             .handleEvents(receiveOutput: saveUserSession)
             .eraseToAnyPublisher()
@@ -142,7 +142,8 @@ class UserSessionStore {
                                                 email: form.email,
                                                 mobile: form.mobileNumber,
                                                 birthDate: form.birthDate,
-                                                userProviderId: userId)
+                                                userProviderId: userId,
+                                                deviceToken: Env.deviceFCMToken)
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)
@@ -169,11 +170,18 @@ extension UserSessionStore {
 
     func forceWalletUpdate() {
         let route = TSRouter.getUserBalance
-        TSManager.shared.getModel(router: route, decodingType: EveryMatrix.UserBalanceWallet.self)
+        TSManager.shared.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
             .sink { completion in
                 print(completion)
-            } receiveValue: { userBalanceWallet in
-                self.userBalanaceWallet.send(userBalanceWallet)
+            } receiveValue: { userBalance in
+                var realWallet: EveryMatrix.UserBalanceWallet?
+                for wallet in userBalance.wallets {
+                    if wallet.vendor == "CasinoWallet" {
+                        realWallet = wallet
+                        break
+                    }
+                }
+                self.userBalanceWallet.send(realWallet)
             }
             .store(in: &cancellables)
     }

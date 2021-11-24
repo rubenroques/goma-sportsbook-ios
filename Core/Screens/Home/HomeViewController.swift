@@ -94,6 +94,8 @@ class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        AnalyticsClient.sendEvent(event: .appStart)
 
         self.view.sendSubviewToBack(topBarView)
         self.view.sendSubviewToBack(tabBarView)
@@ -365,13 +367,16 @@ extension HomeViewController {
         popUpPromotionView.alpha = 0
         popUpPromotionView.didTapCloseButton = { [weak self] in
             PopUpStore.didHidePopUp(withId: details.id, withTimeout: details.intervalMinutes ?? 0)
+            
             self?.closePopUp()
+            
         }
         popUpPromotionView.didTapPromotionButton = { [weak self] link in
             if let link = link, let url = URL(string: link) {
                 UIApplication.shared.open(url)
             }
             PopUpStore.didHidePopUp(withId: details.id, withTimeout: details.intervalMinutes ?? 0)
+            AnalyticsClient.sendEvent(event: .infoDialogButtonClicked)
             self?.closePopUp()
         }
 
@@ -459,4 +464,3 @@ extension HomeViewController {
     }
 
 }
-

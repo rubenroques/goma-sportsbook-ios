@@ -24,6 +24,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     @IBOutlet private weak var applyButton: UIButton!
 
     @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     var applyFiltersAction: (([String]) -> Void)?
     var tapHeaderViewAction: (() -> Void)?
@@ -33,6 +34,17 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var selectedIds: CurrentValueSubject<Set<String>, Never> = .init([])
     var expandedCellsDictionary: [String: Bool] = [:]
 
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingView.startAnimating()
+            }
+            else {
+                self.loadingView.stopAnimating()
+            }
+        }
+    }
+    
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             self.expandedCellsDictionary = [:]
@@ -104,6 +116,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
         self.translatesAutoresizingMaskIntoConstraints = false
 
+        self.loadingView.hidesWhenStopped = true
+        self.loadingView.stopAnimating()
+
         self.tableView.backgroundView?.backgroundColor = .clear
         self.tableView.backgroundColor = .clear
         self.tableView.delegate = self
@@ -123,8 +138,8 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.sizeToFit()
         self.searchBarView.isTranslucent = false
         self.searchBarView.backgroundImage = UIImage()
-        self.searchBarView.tintColor = .blue
-        self.searchBarView.barTintColor = .red
+        self.searchBarView.tintColor = .white
+        self.searchBarView.barTintColor = .white
         self.searchBarView.backgroundImage = UIColor.App.mainBackground.image()
         //self.searchBarView.placeholder = localized("string_search")
 

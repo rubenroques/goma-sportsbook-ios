@@ -29,10 +29,15 @@ enum TSRouter {
     case changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?)
     case getUserMetaData
     case postUserMetadata(favoriteEvents: [String])
+    case getProfileStatus
     case getUserBalance
     case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
     case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
     case getOpenBets(language: String, records: Int, page: Int)
+
+    case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
+    case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
+    case placeSystemBet(language: String, amount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -129,14 +134,25 @@ enum TSRouter {
             return "/sports#getUserMetadata"
         case .postUserMetadata:
             return "/sports#postUserMetadata"
+        case .getProfileStatus:
+            return "/user/account#getProfileStatus"
         case .getBetslipSelectionInfo:
             return "/sports#bettingOptionsV2"
         case .placeBet:
             return "/sports#placeBetV2"
         case .getUserBalance:
-            return "/user#getBalance"
+            return "/user/account#getGamingAccounts"
         case .getOpenBets:
             return "/sports#betHistoryV2"
+
+        case .getSystemBetTypes:
+            return "/sports#systemBetCalculationV2"
+        case .getSystemBetSelectionInfo:
+            return "/sports#bettingOptionsV2"
+        case .placeSystemBet:
+            return "/sports#placeBetV2"
+
+
         //
         //
         // EM Subscription
@@ -317,8 +333,9 @@ enum TSRouter {
                     "city": form.city,
                     "postalCode": form.postalCode,
                     "personalID": form.personalID,
-                    "userConsents": ["termsandconditions": true, "sms": false]]
-
+                    "securityQuestion": form.securityQuestion ?? "",
+                    "securityAnswer": form.securityAnswer ?? "",
+                    "userConsents": ["termsandconditions": true, "sms": false]]            
         case .getLocations(let language, let sortByPopularity):
             let sortByPopularityString = String(sortByPopularity)
             return ["lang": language,
@@ -337,7 +354,12 @@ enum TSRouter {
         case .postUserMetadata(let favoriteEvents):
             return ["key": "favoriteEvents",
                     "value": favoriteEvents]
-
+        case .getProfileStatus:
+            return [:]
+        case .getUserBalance:
+            return ["expectBalance": true,
+                    "expectBonus": true]
+            
         case .getBetslipSelectionInfo(let language, let stakeAmount, let betType, let tickets):
             var selection: [Any] = []
             for ticket in tickets {
@@ -377,6 +399,52 @@ enum TSRouter {
                     "nrOfRecords": records,
                     "page": page
             ]
+
+        case .getSystemBetTypes(let tickets):
+            var selection: [Any] = []
+            for ticket in tickets {
+                selection.append([
+                    "bettingOfferId": "\(ticket.id)"
+                ])
+            }
+            let params: [String: Any] = ["selections": selection]
+            return params
+
+        case .getSystemBetSelectionInfo(let language, let stakeAmount, let systemBetType, let tickets):
+            var selection: [Any] = []
+            for ticket in tickets {
+                selection.append([
+                    "bettingOfferId": "\(ticket.id)",
+                    "priceValue": ticket.currentOdd
+                ])
+            }
+            let params: [String: Any] = ["lang": language,
+                    "terminalType": "MOBILE",
+                    "stakeAmount": stakeAmount,
+                    "eachWay": false,
+                    "type": "SYSTEM",
+                    "systemBetType": systemBetType.id,
+                    "selections": selection]
+
+            return params
+
+        case .placeSystemBet(let language, let amount, let systemBetType, let tickets):
+            var selection: [Any] = []
+            for ticket in tickets {
+                selection.append([
+                    "bettingOfferId": "\(ticket.id)",
+                    "priceValue": ticket.currentOdd
+                ])
+            }
+            let params: [String: Any] = ["lang": language,
+                    "terminalType": "MOBILE",
+                    "amount": amount,
+                    "eachWay": false,
+                    "type": "SYSTEM",
+                    "systemBetType": systemBetType.id,
+                    "oddsValidationType" : "ACCEPT_ANY",
+                    "selections": selection]
+            return params
 
         //
         //

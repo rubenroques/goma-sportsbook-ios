@@ -119,7 +119,7 @@
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Xx-GG-CEj">
-                    <rect key="frame" x="0.0" y="44" width="46" height="44"/>
+                    <rect key="frame" x="0.0" y="64" width="46" height="44"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="46" id="GgO-9v-9zW"/>
                         <constraint firstAttribute="width" secondItem="0Xx-GG-CEj" secondAttribute="height" multiplier="23:22" id="UpT-sx-Nix"/>
@@ -146,7 +146,7 @@
                 <constraint firstItem="rwT-YU-CvN" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="Vn4-He-IOw"/>
                 <constraint firstItem="iW1-Ih-khd" firstAttribute="top" secondItem="y6t-I2-XSj" secondAttribute="bottom" id="YHX-dV-HZA"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="y6t-I2-XSj" secondAttribute="trailing" constant="24" id="ZUI-Eg-Taj"/>
-                <constraint firstItem="0Xx-GG-CEj" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="dmX-lQ-NLP"/>
+                <constraint firstItem="0Xx-GG-CEj" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="20" id="dmX-lQ-NLP"/>
                 <constraint firstItem="9bz-3m-KwI" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="12" id="lzY-66-MqY"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="9bz-3m-KwI" secondAttribute="trailing" constant="40" id="yep-O2-id6"/>
             </constraints>

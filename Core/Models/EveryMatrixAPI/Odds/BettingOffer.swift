@@ -8,6 +8,7 @@
 import Foundation
 
 extension EveryMatrix {
+
     struct BettingOffer: Decodable {
         
         let type: String
@@ -40,7 +41,9 @@ extension EveryMatrix {
             case isAvailable = "isAvailable"
         }
 
-        func bettingOfferUpdated(withOdd odd: Double) -> BettingOffer {
+        func bettingOfferUpdated(withOdd odd: Double?,
+                                 isLive: Bool?,
+                                 isAvailable: Bool?) -> BettingOffer {
             return BettingOffer(
                 type: self.type,
                 id: self.id,
@@ -48,13 +51,13 @@ extension EveryMatrix {
                 outcomeId: self.outcomeId,
                 bettingTypeId: self.bettingTypeId,
                 statusId: self.statusId,
-                isLive: self.isLive,
-                oddsValue: odd,
+                isLive: isLive ?? self.isLive,
+                oddsValue: odd ?? self.oddsValue,
                 couponKey: self.couponKey,
                 lastChangedTime: self.lastChangedTime,
                 bettingTypeName: self.bettingTypeName,
                 shortBettingTypeName: self.shortBettingTypeName,
-                isAvailable: self.isAvailable
+                isAvailable: isAvailable ?? self.isAvailable
             )
         }
     }

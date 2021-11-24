@@ -9,7 +9,7 @@ import UIKit
 
 import OrderedCollections
 
-class HomeFilterViewController: UIViewController{
+class HomeFilterViewController: UIViewController {
     @IBOutlet private var topView: UIView!
     @IBOutlet private var navigationView: UIView!
     @IBOutlet private var navigationLabel: UILabel!
@@ -28,11 +28,11 @@ class HomeFilterViewController: UIViewController{
     var oddRangeMultiSlider: MultiSlider?
     
     // Variables
-    //var timeSliderValues: [CGFloat] = []
-    var lowerBoundTimeRange : CGFloat = 0.0
-    var highBoundTimeRange : CGFloat = 24.0
-    var lowerBoundOddsRange : CGFloat = 1.0
-    var highBoundOddsRange : CGFloat = 30.0
+    // var timeSliderValues: [CGFloat] = []
+    var lowerBoundTimeRange: CGFloat = 0.0
+    var highBoundTimeRange: CGFloat = 24.0
+    var lowerBoundOddsRange: CGFloat = 1.0
+    var highBoundOddsRange: CGFloat = 30.0
     var defaultMarket: MainMarketType = .homeDrawAway
     var marketViews: [FilterRowView] = []
     var filterValues: HomeFilterOptions?
@@ -40,16 +40,13 @@ class HomeFilterViewController: UIViewController{
     var sportsModel: SportsViewModel
     var liveEventsViewModel: LiveEventsViewModel
     weak var delegate: HomeFilterOptionsViewDelegate?
-    var countFilters : Int = 0
-    
-    
-    init( sportsModel: SportsViewModel = SportsViewModel(selectedSportId: .football) , liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football) ) {
+    var countFilters: Int = 0
+
+    init(sportsModel: SportsViewModel = SportsViewModel(selectedSportId: .football), liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football)) {
         self.sportsModel = sportsModel
         self.liveEventsViewModel = liveEventsViewModel
         super.init(nibName: "HomeFilterViewController", bundle: nil)
     }
-
-
 
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
@@ -73,11 +70,13 @@ class HomeFilterViewController: UIViewController{
         // Test values
         mainMarkets = Env.everyMatrixStorage.mainMarkets
     
-        if(sportsModel.homeFilterOptions != nil ){
+        if sportsModel.homeFilterOptions != nil {
             filterValues = sportsModel.homeFilterOptions
-        }else if (liveEventsViewModel.homeFilterOptions != nil){
+        }
+        else if liveEventsViewModel.homeFilterOptions != nil {
             filterValues = liveEventsViewModel.homeFilterOptions
-        }else{
+        }
+        else {
             filterValues = HomeFilterOptions()
         }
         
@@ -105,8 +104,7 @@ class HomeFilterViewController: UIViewController{
         applyButton.setTitle(localized("string_apply"), for: .normal)
         applyButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         applyButton.layer.cornerRadius = CornerRadius.button
-        
-        
+
     }
 
     func setupWithTheme() {
@@ -138,23 +136,22 @@ class HomeFilterViewController: UIViewController{
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
         let maxValue: CGFloat = 24
-        let values : [CGFloat]
+        let values: [CGFloat]
         if delegate?.turnTimeRangeOn == true {
             timeRangeCollapseView.isUserInteractionEnabled = true
             
-             values = [filterValues!.lowerBoundTimeRange , filterValues!.highBoundTimeRange]
-        }else{
+             values = [filterValues!.lowerBoundTimeRange, filterValues!.highBoundTimeRange]
+        }
+        else {
             timeRangeCollapseView.isUserInteractionEnabled = false
-            values = [minValue , maxValue]
-            timeRangeCollapseView.alpha = 0.3 //para desmaiar as cores
-        
+            values = [minValue, maxValue]
+            timeRangeCollapseView.alpha = 0.3 // para desmaiar as cores
         }
         lowerBoundTimeRange = values[0]
         highBoundTimeRange = values[1]
         timeRangeCollapseView.setTitle(title: localized("string_time_today_only"))
         timeRangeCollapseView.hasCheckbox = false
-        
-        
+
         let contentView = timeRangeCollapseView.getContentView()
         self.timeRangeMultiSlider = MultiSlider()
         timeRangeMultiSlider?.backgroundColor = UIColor.App.secondaryBackground
@@ -174,18 +171,14 @@ class HomeFilterViewController: UIViewController{
         timeRangeMultiSlider?.valueLabelPosition = .bottom
         timeRangeMultiSlider?.valueLabelColor = UIColor.App.headingMain
         timeRangeMultiSlider?.valueLabelFont = AppFont.with(type: .bold, size: 14)
-   
 
-   
         if let timeRangeMultiSlider = timeRangeMultiSlider {
             contentView.addConstrainedSubview(timeRangeMultiSlider, constrain: .leftMargin, .rightMargin, .bottomMargin, .topMargin)
             contentView.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 16, right: 8)
-        
-            
+
         }
 
         timeRangeCollapseView.didToggle = { value in
-            print(value)
             if value {
                 UIView.animate(withDuration: 0.2, delay: 0.2, options: .curveEaseIn, animations: {
                     self.view.layoutIfNeeded()
@@ -193,8 +186,6 @@ class HomeFilterViewController: UIViewController{
                 })
             }
         }
-        
-        
 
     }
 
@@ -253,8 +244,7 @@ class HomeFilterViewController: UIViewController{
     func setupOddsSection() {
         let minValue: CGFloat = 1.0
         let maxValue: CGFloat = 30.0
-       
-        
+
         lowerBoundOddsRange = filterValues!.lowerBoundOddsRange
         highBoundOddsRange = filterValues!.highBoundOddsRange
         oddsCollapseView.setTitleWithBold(title: localized("string_odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
@@ -268,7 +258,7 @@ class HomeFilterViewController: UIViewController{
         oddRangeMultiSlider?.minimumValue = minValue
         oddRangeMultiSlider?.maximumValue = maxValue
         oddRangeMultiSlider?.outerTrackColor = UIColor.App.fadedGrayLine
-        oddRangeMultiSlider?.value = [lowerBoundOddsRange,highBoundOddsRange]
+        oddRangeMultiSlider?.value = [lowerBoundOddsRange, highBoundOddsRange]
         oddRangeMultiSlider?.snapStepSize = 0.1
         oddRangeMultiSlider?.thumbImage = UIImage(named: "slider_thumb_icon")
         oddRangeMultiSlider?.tintColor = UIColor.App.mainTint
@@ -284,8 +274,7 @@ class HomeFilterViewController: UIViewController{
             contentView.layoutMargins = UIEdgeInsets(top: 8, left: 8, bottom: 0, right: 8)
           
         }
-        
-        
+
         oddsCollapseView.hasSliderInfo = true
         oddsCollapseView.updateOddsLabels(fromText: "\(lowerBoundOddsRange)", toText: "\(highBoundOddsRange)")
 
@@ -321,7 +310,7 @@ class HomeFilterViewController: UIViewController{
         lowerBoundTimeRange = homeFilterOptions.lowerBoundTimeRange
         highBoundTimeRange = homeFilterOptions.highBoundTimeRange
         timeRangeMultiSlider?.value = [homeFilterOptions.lowerBoundTimeRange, homeFilterOptions.highBoundTimeRange]
-        oddRangeMultiSlider?.value = [homeFilterOptions.lowerBoundOddsRange ,homeFilterOptions.highBoundOddsRange]
+        oddRangeMultiSlider?.value = [homeFilterOptions.lowerBoundOddsRange, homeFilterOptions.highBoundOddsRange]
         
         if let oddRangeMultiSlider = oddRangeMultiSlider {
             lowerBoundOddsRange = oddRangeMultiSlider.value[0].round(to: 1)
@@ -335,7 +324,7 @@ class HomeFilterViewController: UIViewController{
             if view.viewId == Int(homeFilterOptions.defaultMarket.marketId) {
                 view.isChecked = true
                 
-                if let defaultMarketInit = MainMarketType.init(rawValue: String(view.viewId)){
+                if let defaultMarketInit = MainMarketType.init(rawValue: String(view.viewId)) {
                     defaultMarket = defaultMarketInit
                 }
                 
@@ -350,19 +339,19 @@ class HomeFilterViewController: UIViewController{
 
     @IBAction private func applyFiltersAction() {
         
-        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 24.0{
-            countFilters = countFilters + 1
+        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 24.0 {
+            countFilters += 1
         }
         
-        if lowerBoundOddsRange != 1.0 || highBoundOddsRange != 30.0{
-            countFilters = countFilters + 1
+        if lowerBoundOddsRange != 1.0 || highBoundOddsRange != 30.0 {
+            countFilters += 1
         }
         
         if defaultMarket.marketId != MainMarketType.homeDrawAway.marketId {
-           countFilters = countFilters + 1
+           countFilters += 1
         }
         
-        let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange, highBoundTimeRange: highBoundTimeRange ,defaultMarket: defaultMarket, lowerBoundOddsRange: lowerBoundOddsRange, highBoundOddsRange: highBoundOddsRange, countFilters : countFilters)
+        let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange, highBoundTimeRange: highBoundTimeRange, defaultMarket: defaultMarket, lowerBoundOddsRange: lowerBoundOddsRange, highBoundOddsRange: highBoundOddsRange, countFilters: countFilters)
         delegate?.setHomeFilters(homeFilters: homeFilterOptions)
         
         self.dismiss(animated: true, completion: nil)

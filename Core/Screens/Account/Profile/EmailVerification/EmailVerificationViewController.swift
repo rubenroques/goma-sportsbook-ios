@@ -1,0 +1,144 @@
+//
+//  EmailVerificationViewController.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 16/11/2021.
+//
+
+import UIKit
+
+class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetPresenter {
+
+    @IBOutlet private var topSafeView: UIView!
+    @IBOutlet private var containerView: UIView!
+    @IBOutlet private var navigationView: UIView!
+    @IBOutlet private var navigationTitleLabel: UILabel!
+    @IBOutlet private var navigationCloseButton: UIButton!
+    @IBOutlet private var logoImageView: UIImageView!
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var descriptionLabel: UILabel!
+    @IBOutlet private var checkEmailButton: RoundButton!
+    // Variables
+    var chooseEmailActionSheet: UIAlertController?
+
+
+    init() {
+        super.init(nibName: "EmailVerificationViewController", bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        commonInit()
+        setupWithTheme()
+
+    }
+
+    func commonInit() {
+
+        self.navigationTitleLabel.text = localized("string_email_verification")
+
+        self.navigationCloseButton.setTitle(localized("string_close"), for: .normal)
+
+        self.logoImageView.image = UIImage(named: "check_email_box_icon")
+        self.logoImageView.contentMode = .center
+
+        self.titleLabel.text = localized("string_verify_email")
+
+        self.descriptionLabel.text = localized("string_verify_email_description")
+        self.descriptionLabel.numberOfLines = 0
+
+        self.checkEmailButton.setTitle(localized("string_activate_account"), for: .normal)
+
+    }
+
+    func setupWithTheme() {
+        self.view.backgroundColor = UIColor.App.mainBackground
+
+        self.topSafeView.backgroundColor = UIColor.App.mainBackground
+
+        self.navigationView.backgroundColor = UIColor.App.mainBackground
+
+        self.navigationTitleLabel.textColor = UIColor.App.headingMain
+        self.navigationTitleLabel.font = AppFont.with(type: .bold, size: 17)
+
+        self.navigationCloseButton.tintColor = UIColor.App.mainTint
+        self.navigationCloseButton.backgroundColor = UIColor.App.mainBackground
+        self.navigationCloseButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+
+        self.containerView.backgroundColor = UIColor.App.mainBackground
+
+        self.logoImageView.backgroundColor = UIColor.App.mainBackground
+
+        self.titleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.font = AppFont.with(type: .bold, size: 22)
+
+        self.descriptionLabel.textColor = UIColor.App.headingMain
+        self.descriptionLabel.font = AppFont.with(type: .semibold, size: 16)
+
+        self.checkEmailButton.backgroundColor = UIColor.App.mainTint
+        self.checkEmailButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
+        self.checkEmailButton.tintColor = UIColor.App.headingMain
+    }
+
+    @IBAction private func closeAction() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    @IBAction private func activateAccountAction() {
+        chooseEmailActionSheet = setupChooseEmailActionSheet()
+
+        show(chooseEmailActionSheet ?? UIAlertController(), sender: self)
+
+    }
+
+}
+
+protocol ChooseEmailActionSheetPresenter {
+   var chooseEmailActionSheet: UIAlertController? { get }
+   func setupChooseEmailActionSheet(withTitle title: String?) -> UIAlertController
+}
+
+extension ChooseEmailActionSheetPresenter {
+
+    func setupChooseEmailActionSheet(withTitle title: String? = localized("string_choose_email")) -> UIAlertController {
+        let emailActionSheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
+        emailActionSheet.addAction(UIAlertAction(title: localized("string_cancel"), style: .cancel, handler: nil))
+        if let action = openAction(withURL: "mailto:", andTitleActionTitle: "Mail") {
+            emailActionSheet.addAction(action)
+        }
+
+         if let action = openAction(withURL: "googlegmail:///", andTitleActionTitle: "Gmail") {
+            emailActionSheet.addAction(action)
+         }
+
+         if let action = openAction(withURL: "inbox-gmail://", andTitleActionTitle: "Inbox") {
+            emailActionSheet.addAction(action)
+         }
+
+         if let action = openAction(withURL: "ms-outlook://", andTitleActionTitle: "Outlook") {
+            emailActionSheet.addAction(action)
+         }
+
+         if let action = openAction(withURL: "x-dispatch:///", andTitleActionTitle: "Dispatch") {
+            emailActionSheet.addAction(action)
+         }
+
+        return emailActionSheet
+    }
+
+    fileprivate func openAction(withURL: String, andTitleActionTitle: String) -> UIAlertAction? {
+         guard let url = URL(string: withURL), UIApplication.shared.canOpenURL(url) else {
+              return nil
+         }
+         let action = UIAlertAction(title: andTitleActionTitle, style: .default) { _ in
+             UIApplication.shared.open(url)
+         }
+         return action
+    }
+
+}

@@ -33,7 +33,8 @@ public extension Collection {
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: self, options: [])
             return String(data: jsonData, encoding: .utf8) ?? "{}"
-        } catch {
+        }
+        catch {
             print("json serialization error: \(error)")
             return "{}"
         }

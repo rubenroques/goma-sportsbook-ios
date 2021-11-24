@@ -42,5 +42,22 @@ extension UILabel {
         attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
         self.attributedText = attributedString
     }
+
+    func highlightTextLabel(fullString: String, highlightString: String) {
+            let accountText = fullString
+
+            self.text = accountText
+            self.font = AppFont.with(type: .semibold, size: 14.0)
+
+            self.textColor =  UIColor.white
+
+            let highlightAttriString = NSMutableAttributedString(string: accountText)
+            let range1 = (accountText as NSString).range(of: highlightString)
+            highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .semibold, size: 14), range: range1)
+            highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.mainTint, range: range1)
+
+            self.attributedText = highlightAttriString
+            self.isUserInteractionEnabled = true
+        }
 }
 

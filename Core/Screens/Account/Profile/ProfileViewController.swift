@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ProfileViewController: UIViewController {
 
@@ -29,6 +30,9 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var scrollBaseView: UIView!
     @IBOutlet private weak var scrollView: UIScrollView!
+
+    @IBOutlet private var activationStackView: UIStackView!
+    @IBOutlet private var activationAlertScrollableView: ActivationAlertScrollableView!
 
     @IBOutlet private weak var personalInfoBaseView: UIView!
     @IBOutlet private weak var personalInfoIconBaseView: UIView!
@@ -82,12 +86,14 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var infoLabel: UILabel!
 
     var userSession: UserSession?
+    var cancellables = Set<AnyCancellable>()
 
     enum PageMode {
         case user
         case anonymous
     }
     var pageMode: PageMode
+    var alertsArray: [ActivationAlertData] = []
 
     init(userSession: UserSession? = nil) {
 
@@ -122,6 +128,29 @@ class ProfileViewController: UIViewController {
             self.usernameLabel.text = user.username
             self.userIdLabel.text = user.userId
         }
+
+        Env.everyMatrixAPIClient.getProfileStatus()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+
+            } receiveValue: { _ in
+            }
+        .store(in: &cancellables)
+
+
+        Env.userSessionStore.userBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"} )
+            .receive(on: DispatchQueue.main)
+            .sink { value in
+                self.currentBalanceLabel.text = value
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.forceWalletUpdate()
+
 
     }
 
@@ -226,7 +255,7 @@ class ProfileViewController: UIViewController {
         let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
         supportBaseView.addGestureRecognizer(supportTapGesture)
 
-        currentBalanceLabel.text = "0,00€"
+        currentBalanceLabel.text = "Loading"
 
         //
         personalInfoLabel.text = localized("string_personal_info")
@@ -242,6 +271,54 @@ class ProfileViewController: UIViewController {
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
             self.infoLabel.text = "App Version \(versionNumber)(\(buildNumber))\nSportsbook® All Rights Reserved"
+        }
+
+
+        activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
+        activationAlertScrollableView.layer.masksToBounds = true
+
+        self.verifyUserActivationConditions()
+
+    }
+
+    func verifyUserActivationConditions() {
+
+        var showActivationAlertScrollableView = false
+
+        if let userEmailVerified = userSession?.isEmailVerified {
+            if !userEmailVerified {
+                let emailActivationAlertData = ActivationAlertData(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+                alertsArray.append(emailActivationAlertData)
+                showActivationAlertScrollableView = true
+            }
+        }
+
+        if let userSession = userSession {
+            if Env.userSessionStore.isUserProfileIncomplete {
+                let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+
+                alertsArray.append(completeProfileAlertData)
+                showActivationAlertScrollableView = true
+            }
+        }
+
+        if showActivationAlertScrollableView {
+            activationAlertScrollableView.setAlertArrayData(arrayData: alertsArray)
+
+            activationAlertScrollableView.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+                if alertType == ActivationAlertType.email {
+                    let emailVerificationViewController = EmailVerificationViewController()
+                    self.present(emailVerificationViewController, animated: true, completion: nil)
+                }
+                else if alertType == ActivationAlertType.profile {
+                    let fullRegisterViewController = FullRegisterPersonalInfoViewController()
+                    //self.present(fullRegisterViewController, animated: true, completion: nil)
+                    self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
+                }
+            }
+        }
+        else {
+            activationAlertScrollableView.isHidden = true
         }
 
     }
@@ -343,6 +420,7 @@ extension ProfileViewController {
     }
 
     @IBAction private func didTapLogoutButton() {
+        AnalyticsClient.sendEvent(event: .userLogout)
         Env.userSessionStore.logout()
         Env.favoritesManager.favoriteEventsId = []
         self.didTapCloseButton()

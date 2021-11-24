@@ -40,7 +40,8 @@ class SportsViewModel: NSObject {
     private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingMyGamesList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingCompetitions: CurrentValueSubject<Bool, Never> = .init(true)
-    private var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
+
+    var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
 
     var isLoading: AnyPublisher<Bool, Never>
 
@@ -55,14 +56,14 @@ class SportsViewModel: NSObject {
             self.fetchData()
         }
     }
-    var homeFilterOptions: HomeFilterOptions? = nil {
+    var homeFilterOptions: HomeFilterOptions? {
         didSet {
-            print("FILTER ON")
             self.updateContentList()
         }
     }
 
-    var dataDidChangedAction: (() -> ())?
+    var dataDidChangedAction: (() -> Void)?
+    var presentViewControllerAction: ((ActivationAlertType) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -91,7 +92,7 @@ class SportsViewModel: NSObject {
         self.selectedSportId = selectedSportId
         
         isLoading = Publishers.CombineLatest4(isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions)
-            .map({ (isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions) in
+            .map({ isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions in
                 let isLoading = isLoadingTodayList || isLoadingPopularList || isLoadingMyGamesList || isLoadingCompetitions
                 return isLoading
             })
@@ -101,6 +102,10 @@ class SportsViewModel: NSObject {
 
         self.myGamesSportsViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchPopularMatchesNextPage()
+        }
+
+        self.myGamesSportsViewModelDataSource.requestPresentViewController = { [weak self] alertType in
+            self?.presentViewControllerAction?(alertType)
         }
 
         self.todaySportsViewModelDataSource.requestNextPage = { [weak self] in
@@ -201,8 +206,8 @@ class SportsViewModel: NSObject {
         }
 
         // Check time
-        let timeOptionMin = Int(filtersOptions!.lowerBoundTimeRange ?? 0) * 3600
-        let timeOptionMax = Int(filtersOptions!.highBoundTimeRange ?? 24) * 3600
+        let timeOptionMin = Int(filterOptionsValue.lowerBoundTimeRange) * 3600
+        let timeOptionMax = Int(filterOptionsValue.highBoundTimeRange) * 3600
         let dateOptionMin = Date().addingTimeInterval(TimeInterval(timeOptionMin))
         let dateOptionMax = Date().addingTimeInterval(TimeInterval(timeOptionMax))
         let dateRange = dateOptionMin...dateOptionMax
@@ -328,13 +333,12 @@ class SportsViewModel: NSObject {
                                                         competitions: popularCompetitions)
         var popularCompetitionGroups = [popularCompetitionGroup]
 
-
         var competitionsGroups = [CompetitionGroup]()
         for location in Env.everyMatrixStorage.locations.values {
 
             var locationCompetitions = [Competition]()
 
-            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? [])  {
+            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? []) {
 
                 guard
                     let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
@@ -361,7 +365,6 @@ class SportsViewModel: NSObject {
         popularCompetitionGroups.append(contentsOf: competitionsGroups)
 
         self.competitionGroupsPublisher.send(popularCompetitionGroups)
-        self.isLoadingCompetitionGroups.send(false)
 
         self.updateContentList()
     }
@@ -390,7 +393,7 @@ class SportsViewModel: NSObject {
         for competitionId in competitionsMatches.keys {
             if let tournament = Env.everyMatrixStorage.tournaments[competitionId] {
 
-                var location: Location? = nil
+                var location: Location?
                 if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                     name: rawLocation.name ?? "",
@@ -430,7 +433,7 @@ class SportsViewModel: NSObject {
     //
 
     private func fetchPopularMatchesNextPage() {
-        self.popularMatchesPage = self.popularMatchesPage + 1
+        self.popularMatchesPage += 1
         self.fetchPopularMatches()
     }
 
@@ -478,7 +481,7 @@ class SportsViewModel: NSObject {
     }
 
     private func fetchTodayMatchesNextPage() {
-        self.todayMatchesPage = self.todayMatchesPage + 1
+        self.todayMatchesPage += 1
         self.fetchTodayMatches()
     }
 
@@ -603,6 +606,7 @@ class SportsViewModel: NSObject {
                 }
 
                 self?.isLoadingCompetitionGroups.send(false)
+
                 self?.zip3Publisher?.cancel()
                 self?.zip3Publisher = nil
 
@@ -624,7 +628,6 @@ class SportsViewModel: NSObject {
         //
         //
     }
-
 
     func fetchCompetitionsMatchesWithIds(_ ids: [String]) {
 
@@ -704,7 +707,6 @@ class SportsViewModel: NSObject {
     }
 
 }
-
 
 extension SportsViewModel {
 //
@@ -804,7 +806,6 @@ extension SportsViewModel {
 //    }
 
 }
-
 
 extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
 
@@ -943,7 +944,6 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
 
 }
 
-
 class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var banners: [EveryMatrix.BannerInfo] = [] {
@@ -960,12 +960,30 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
         return userFavoriteMatches + popularMatches
     }
 
-    var requestNextPage: (() -> ())?
+    var alertsArray: [ActivationAlertData] = []
+
+    var requestNextPage: (() -> Void)?
+    var requestPresentViewController: ((ActivationAlertType) -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
         self.banners = banners
         self.userFavoriteMatches = userFavoriteMatches
         self.popularMatches = popularMatches
+
+        if let userSession = UserSessionStore.loggedUserSession() {
+            if !userSession.isEmailVerified {
+
+                let emailActivationAlertData = ActivationAlertData(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+
+                alertsArray.append(emailActivationAlertData)
+            }
+
+            if Env.userSessionStore.isUserProfileIncomplete {
+                let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+
+                alertsArray.append(completeProfileAlertData)
+            }
+        }
 
         super.init()
     }
@@ -977,9 +995,14 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return banners.isEmpty ? 0 : 1
-        case 1:
+            if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
+                if !loggedUser.isEmailVerified || Env.userSessionStore.isUserProfileIncomplete {
+                    return 1
+                }
+            }
             return 0
+        case 1:
+            return banners.isEmpty ? 0 : 1
         case 2:
             return self.matches.count
         case 3:
@@ -992,14 +1015,22 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
-                if let viewModel = self.bannersViewModel {
-                    cell.setupWithViewModel(viewModel)
+            // return UITableViewCell()
+            if let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self) {
+                cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+                    self.requestPresentViewController?(alertType)
                 }
+                cell.setAlertArrayData(arrayData: alertsArray)
                 return cell
             }
         case 1:
-            return UITableViewCell()
+            if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
+                if let viewModel = self.bannersViewModel {
+                    cell.setupWithViewModel(viewModel)
+                    cell.storePopularMatches(popularMatches: self.matches)
+                }
+                return cell
+            }
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
@@ -1053,8 +1084,10 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 140
         case 3:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1063,8 +1096,10 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
+        case 0:
+            return 130
         case 3:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1086,7 +1121,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
 
     var todayMatches: [Match] = []
 
-    var requestNextPage: (() -> ())?
+    var requestNextPage: (() -> Void)?
 
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
@@ -1153,7 +1188,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 1:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1163,7 +1198,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 1:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155

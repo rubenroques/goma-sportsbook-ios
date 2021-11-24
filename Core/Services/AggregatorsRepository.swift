@@ -26,6 +26,7 @@ class AggregatorsRepository {
     var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
     var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
 
+    var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
     var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
 
     var bettingOutcomesForMarket: [String: Set<String>] = [:]
@@ -89,7 +90,10 @@ class AggregatorsRepository {
                 }
 
             case .market(let marketContent):
+
                 markets[marketContent.id] = marketContent
+                marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
+
                 if let matchId = marketContent.eventId {
                     if var marketsForIterationMatch = marketsForMatch[matchId] {
                         marketsForIterationMatch.insert(marketContent.id)
@@ -103,6 +107,7 @@ class AggregatorsRepository {
                 }
             case .betOutcome(let betOutcomeContent):
                 betOutcomes[betOutcomeContent.id] = betOutcomeContent
+
             case .bettingOffer(let bettingOfferContent):
                 if let outcomeIdValue = bettingOfferContent.outcomeId {
                     bettingOffers[outcomeIdValue] = bettingOfferContent
@@ -132,9 +137,9 @@ class AggregatorsRepository {
                 self.locations[location.id] = location
                 
             case .event:
-                () //print("Events aren't processed")
+                () // print("Events aren't processed")
             case .unknown:
-                () //print("Unknown type ignored")
+                () // print("Unknown type ignored")
             }
         }
 
@@ -150,11 +155,19 @@ class AggregatorsRepository {
 
         for update in contentUpdates {
             switch update {
-            case .bettingOfferUpdate(let id, let odd):
+            case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
                     let bettingOffer = publisher.value
-                    let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd)
+                    let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
+                                                                               isLive: isLive,
+                                                                               isAvailable: isAvailable)
                     publisher.send(updatedBettingOffer)
+                }
+            case .marketUpdate(let id, let isAvailable, let isClosed):
+                if let marketPublisher = marketsPublishers[id] {
+                    let market = marketPublisher.value
+                    let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
+                    marketPublisher.send(updatedMarket)
                 }
             case .unknown:
                 print("uknown")
@@ -272,7 +285,6 @@ class AggregatorsRepository {
 
         return matchesList
     }
-
 
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]

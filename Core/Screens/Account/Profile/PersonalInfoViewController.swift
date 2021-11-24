@@ -210,7 +210,6 @@ class PersonalInfoViewController: UIViewController {
 
     }
 
-
     private func setupPublishers() {
 
         Env.everyMatrixAPIClient.getCountries()
@@ -230,7 +229,6 @@ class PersonalInfoViewController: UIViewController {
             .sink { _ in
 
             } receiveValue: { profile in
-                print("PROFILE: \(profile)")
                 self.setupProfile(profile: profile)
             }
         .store(in: &cancellables)
@@ -281,6 +279,8 @@ class PersonalInfoViewController: UIViewController {
         let city = cityHeaderTextFieldView.text
         let postalCode = postalCodeHeaderTextFieldView.text
         let personalId = cardIdHeaderTextFieldView.text
+        let securityQuestion = profile?.securityQuestion ?? ""
+        let securityAnswer = profile?.securityAnswer ?? ""
 
         // Verify required fields
         if firstName == "" {
@@ -319,7 +319,9 @@ class PersonalInfoViewController: UIViewController {
                                                mobile: mobile,
                                                mobilePrefix: mobilePrefix,
                                                phone: phone,
-                                               phonePrefix: phonePrefix, personalID: personalId)
+                                               phonePrefix: phonePrefix, personalID: personalId,
+                                               securityQuestion: securityQuestion,
+                                               securityAnswer: securityAnswer)
 
             self.updateProfile(form: form)
         }

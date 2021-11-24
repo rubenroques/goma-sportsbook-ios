@@ -26,13 +26,11 @@ class PreLiveEventsViewController: UIViewController {
     
     @IBOutlet private weak var filtersCountView: UIView!
     
+
     @IBOutlet weak var filtersCountLabel: UILabel!
-    
-    @IBOutlet weak var noResultsView: UIView!
-    @IBOutlet weak var noResultsLabel: UILabel!
-    
+
     var turnTimeRangeOn : Bool = false
-    
+
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
@@ -74,9 +72,8 @@ class PreLiveEventsViewController: UIViewController {
         return betslipCountLabel
     }()
 
-
-    @IBOutlet weak var loadingBaseView: UIView!
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet private weak var loadingBaseView: UIView!
+    @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     @IBOutlet private weak var openedCompetitionsFiltersConstraint: NSLayoutConstraint!
     @IBOutlet private weak var competitionsFiltersBaseView: UIView!
@@ -96,8 +93,8 @@ class PreLiveEventsViewController: UIViewController {
         }
     }
 
-    var didChangeSportType: ((SportType) -> ())?
-    var didTapBetslipButtonAction: (() -> ())?
+    var didChangeSportType: ((SportType) -> Void)?
+    var didTapBetslipButtonAction: (() -> Void)?
 
     private var lastContentOffset: CGFloat = 0
     private var shouldDetectScrollMovement = false
@@ -121,6 +118,18 @@ class PreLiveEventsViewController: UIViewController {
 
         self.connectPublishers()
         self.viewModel.fetchData()
+        self.viewModel.presentViewControllerAction = { alertType in
+            if alertType == ActivationAlertType.email {
+                let emailVerificationViewController = EmailVerificationViewController()
+                self.present(emailVerificationViewController, animated: true, completion: nil)
+            }
+            else if alertType == ActivationAlertType.profile {
+                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
+                self.present(fullRegisterViewController, animated: true, completion: nil)
+            }
+
+        }
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -145,8 +154,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-        
-        
+
         filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
        
     }
@@ -212,6 +220,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -220,7 +229,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         
-        noResultsView.isHidden = true
+       
         
         
         
@@ -270,16 +279,12 @@ class PreLiveEventsViewController: UIViewController {
         self.view.bringSubviewToFront(self.loadingBaseView)
         self.view.bringSubviewToFront(self.filtersCountLabel)
 
-
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
-        
-
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
-        
-        
+
     }
 
     func connectPublishers() {
@@ -324,10 +329,17 @@ class PreLiveEventsViewController: UIViewController {
                 self.competitionsFiltersView?.competitions = competitions
             }
             .store(in: &cancellables)
-        
-        // swiftlint:disable empty_count
+
+
+        self.viewModel.isLoadingCompetitionGroups
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoadingGroups in
+                self?.competitionsFiltersView?.isLoading = isLoadingGroups
+            })
+            .store(in: &cancellables)
+
         self.competitionsFiltersView?.selectedIds
-            .compactMap({ $0.count == 0 })
+            .compactMap({ $0.isEmpty })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [unowned self] shouldShowOpen in
                 if shouldShowOpen {
@@ -335,7 +347,6 @@ class PreLiveEventsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
-
 
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
@@ -356,14 +367,6 @@ class PreLiveEventsViewController: UIViewController {
 
     func reloadTableViewData() {
         self.tableView.reloadData()
-        
-        if self.tableView.numberOfSections == 0 {
-            noResultsView.isHidden = false
-            print(self.tableView.numberOfSections)
-        }else{
-            print(self.tableView.numberOfSections)
-            noResultsView.isHidden = false
-        }
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -396,9 +399,7 @@ class PreLiveEventsViewController: UIViewController {
     func applyCompetitionsFiltersWithIds(_ ids: [String]) {
         self.viewModel.fetchCompetitionsMatchesWithIds(ids)
         self.showBottomBarCompetitionsFilters()
-        
-        
-        
+
     }
 
     func reloadData() {
@@ -422,14 +423,13 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.4
             self.openedCompetitionsFiltersConstraint.constant = 0
             self.tableView.contentInset.bottom = 16
-            //competitionsFiltersView.openedBarHeaderViewSize()
+            // competitionsFiltersView.openedBarHeaderViewSize()
             competitionsFiltersView.state = .opened
 
             self.betslipButtonViewBottomConstraint?.constant = -self.tableView.contentInset.bottom
 
             self.view.layoutIfNeeded()
         }, completion: nil)
-
 
     }
 
@@ -442,7 +442,7 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 52)
             self.tableView.contentInset.bottom = 54+16
-            //competitionsFiltersView.closedBarHeaderViewSize()
+            // competitionsFiltersView.closedBarHeaderViewSize()
             competitionsFiltersView.state = .bar
 
             self.betslipButtonViewBottomConstraint?.constant = -60
@@ -460,7 +460,7 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(competitionsFiltersView.frame.size.height - 18)
             self.tableView.contentInset.bottom = 24
-            //competitionsFiltersView.lineHeaderViewSize()
+            // competitionsFiltersView.lineHeaderViewSize()
             competitionsFiltersView.state = .line
 
             self.betslipButtonViewBottomConstraint?.constant = -self.tableView.contentInset.bottom
@@ -468,7 +468,6 @@ class PreLiveEventsViewController: UIViewController {
             self.view.layoutIfNeeded()
         }, completion: nil)
     }
-
 
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
@@ -507,11 +506,11 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
             return
         }
 
-        if (self.lastContentOffset > scrollView.contentOffset.y) {
+        if self.lastContentOffset > scrollView.contentOffset.y {
             // moving up
             self.showBottomBarCompetitionsFilters()
         }
-        else if (self.lastContentOffset < scrollView.contentOffset.y) {
+        else if self.lastContentOffset < scrollView.contentOffset.y {
             // move down
             self.showBottomLineCompetitionsFilters()
         }
@@ -616,12 +615,15 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
+            AnalyticsClient.sendEvent(event: .myGamesScreen)
             self.viewModel.setMatchListType(.myGames)
             turnTimeRangeOn = false
         case 1:
+            AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.today)
             turnTimeRangeOn = true
         case 2:
+            AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
             turnTimeRangeOn = false
         default:
@@ -644,14 +646,11 @@ extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     }
 }
 
-
 protocol HomeFilterOptionsViewDelegate: AnyObject {
     var turnTimeRangeOn: Bool { get set }
     func setHomeFilters(homeFilters: HomeFilterOptions)
     
 }
-
-
 
 extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
 
@@ -662,10 +661,10 @@ extension PreLiveEventsViewController: HomeFilterOptionsViewDelegate {
             filtersCountLabel.isHidden = false
             filtersCountLabel.text = String(homeFilters.countFilters)
            
-        }else{
+        }
+        else {
             filtersCountLabel.isHidden = true
-           
-            
+
         }
     }
     

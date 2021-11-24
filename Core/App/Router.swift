@@ -45,7 +45,7 @@ class Router {
         })
         self.rootWindow.rootViewController = splashViewController
 
-         //self.rootWindow.rootViewController = BetslipViewController()
+         // self.rootWindow.rootViewController = BetslipViewController()
 
         // self.rootWindow.rootViewController = ContainerViewController(containedView: CompetitionsFiltersView(), containerType: .edges)
 
@@ -231,7 +231,6 @@ extension Router {
 
 }
 
-
 extension Router {
 
     static func createDebugFeatureNavigation() -> UIViewController {
@@ -256,8 +255,6 @@ extension Router {
 
 }
 
-
-
 extension UIWindow {
     open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
         if motion == .motionShake {
@@ -266,7 +263,6 @@ extension UIWindow {
         }
     }
 }
-
 
 extension Router {
     func showDebugView() {
@@ -289,8 +285,6 @@ extension Router {
         }
     }
 }
-
-
 
 class ContainerViewController<T: UIView>: UIViewController {
 
@@ -335,8 +329,6 @@ class ContainerViewController<T: UIView>: UIViewController {
                 self.view.centerYAnchor.constraint(equalTo: containedView.centerYAnchor),
             ])
         }
-
-
     }
 
 }

@@ -74,6 +74,8 @@ class SubmitedBetTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.oddBaseView.isHidden = false
+
         self.betHistoryEntry = nil
 
         self.oddValueLabel.text = "-.--"
@@ -110,9 +112,15 @@ class SubmitedBetTableViewCell: UITableViewCell {
         if betHistoryEntry.type == "MULTIPLE" {
             let betCount = betHistoryEntry.selections?.count ?? 1
             self.betTypeLabel.text = "Multiple (\(betCount))"
+            self.oddBaseView.isHidden = true
         }
         else if betHistoryEntry.type == "SINGLE" {
             self.betTypeLabel.text = "Simple"
+            self.oddBaseView.isHidden = true
+        }
+        else if betHistoryEntry.type == "SYSTEM" {
+            self.betTypeLabel.text = "System"
+            self.oddBaseView.isHidden = true
         }
 
         if let maxWinnings = betHistoryEntry.maxWinning {
@@ -124,6 +132,10 @@ class SubmitedBetTableViewCell: UITableViewCell {
         }
 
         self.stackView.removeAllArrangedSubviews()
+
+//        if (betHistoryEntry.selections ?? []).count == 1 {
+//            self.oddBaseView.isHidden = true
+//        }
 
         for selection in betHistoryEntry.selections ?? [] {
             let submitedBetSelectionView = SubmitedBetSelectionView(betHistoryEntrySelection: selection)

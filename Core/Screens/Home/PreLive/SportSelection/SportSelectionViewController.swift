@@ -37,7 +37,7 @@ class SportSelectionViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        AnalyticsClient.sendEvent(event: .changedSport)
         self.commonInit()
         self.setupWithTheme()
     }
@@ -82,8 +82,6 @@ class SportSelectionViewController: UIViewController {
         self.searchBar.sizeToFit()
         self.searchBar.isTranslucent = false
         self.searchBar.backgroundImage = UIImage()
-//        self.searchBar.tintColor = .blue
-//        self.searchBar.barTintColor = .red
         self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
         self.searchBar.placeholder = localized("string_search")
 
@@ -173,6 +171,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         delegate?.setSportType(self.defaultSport)
 
         self.dismiss(animated: true, completion: nil)
+        AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport.id ))
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {

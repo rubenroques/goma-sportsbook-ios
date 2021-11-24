@@ -12,48 +12,47 @@ import Combine
 
 class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
-    //
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
-    @IBOutlet weak var favoritesIconImageView: UIImageView!
+    @IBOutlet private weak var favoritesIconImageView: UIImageView!
 
-    @IBOutlet weak var numberOfBetsLabels: UILabel!
+    @IBOutlet private weak var numberOfBetsLabels: UILabel!
     
-    @IBOutlet weak var eventNameLabel: UILabel!
-    @IBOutlet weak var locationFlagImageView: UIImageView!
+    @IBOutlet private weak var eventNameLabel: UILabel!
+    @IBOutlet private weak var locationFlagImageView: UIImageView!
 
-    @IBOutlet weak var favoritesButton: UIButton!
+    @IBOutlet private weak var favoritesButton: UIButton!
 
-    @IBOutlet weak var participantsBaseView: UIView!
+    @IBOutlet private weak var participantsBaseView: UIView!
 
-    @IBOutlet weak var homeParticipantNameLabel: UILabel!
-    @IBOutlet weak var awayParticipantNameLabel: UILabel!
+    @IBOutlet private weak var homeParticipantNameLabel: UILabel!
+    @IBOutlet private weak var awayParticipantNameLabel: UILabel!
 
-    @IBOutlet weak var resultLabel: UILabel!
-    @IBOutlet weak var matchTimeLabel: UILabel!
+    @IBOutlet private weak var resultLabel: UILabel!
+    @IBOutlet private weak var matchTimeLabel: UILabel!
 
-    @IBOutlet weak var oddsStackView: UIStackView!
+    @IBOutlet private weak var oddsStackView: UIStackView!
 
-    @IBOutlet weak var homeBaseView: UIView!
-    @IBOutlet weak var homeOddTitleLabel: UILabel!
-    @IBOutlet weak var homeOddValueLabel: UILabel!
-    @IBOutlet weak var homeUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var homeDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var homeBaseView: UIView!
+    @IBOutlet private weak var homeOddTitleLabel: UILabel!
+    @IBOutlet private weak var homeOddValueLabel: UILabel!
+    @IBOutlet private weak var homeUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var homeDownChangeOddValueImage: UIImageView!
 
-    @IBOutlet weak var drawBaseView: UIView!
-    @IBOutlet weak var drawOddTitleLabel: UILabel!
-    @IBOutlet weak var drawOddValueLabel: UILabel!
-    @IBOutlet weak var drawUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var drawDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var drawBaseView: UIView!
+    @IBOutlet private weak var drawOddTitleLabel: UILabel!
+    @IBOutlet private weak var drawOddValueLabel: UILabel!
+    @IBOutlet private weak var drawUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var drawDownChangeOddValueImage: UIImageView!
 
-    @IBOutlet weak var awayBaseView: UIView!
-    @IBOutlet weak var awayOddTitleLabel: UILabel!
-    @IBOutlet weak var awayOddValueLabel: UILabel!
-    @IBOutlet weak var awayUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var awayDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var awayBaseView: UIView!
+    @IBOutlet private weak var awayOddTitleLabel: UILabel!
+    @IBOutlet private weak var awayOddValueLabel: UILabel!
+    @IBOutlet private weak var awayUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var awayDownChangeOddValueImage: UIImageView!
 
-    @IBOutlet weak var suspendedBaseView: UIView!
-    @IBOutlet weak var suspendedLabel: UILabel!
+    @IBOutlet private weak var suspendedBaseView: UIView!
+    @IBOutlet private weak var suspendedLabel: UILabel!
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -62,7 +61,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     private var currentHomeOddValue: Double?
     private var currentDrawOddValue: Double?
     private var currentAwayOddValue: Double?
-
 
     private var isLeftOutcomeButtonSelected: Bool = false {
         didSet {
@@ -79,7 +77,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
         }
     }
-
 
     var viewModel: MatchWidgetCellViewModel? {
         didSet {
@@ -369,7 +366,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.awayOddValueLabel.text = "---"
         }
 
-
         var homeGoals = ""
         var awayGoals = ""
         var minutes = ""
@@ -379,7 +375,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             for matchInfoId in matchInfoArray {
                 if let matchInfo = Env.everyMatrixStorage.matchesInfo[matchInfoId] {
                     if (matchInfo.typeId ?? "") == "1" {
-                        //Goals
+                        // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
                             if self.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
                                 homeGoals = "\(homeGoalsFloat)"
@@ -398,11 +394,11 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                         }
                     }
                     else if (matchInfo.typeId ?? "") == "95", let awayGoalsFloat = matchInfo.paramFloat1 {
-                        //Match Minutes
+                        // Match Minutes
                         minutes = "\(awayGoalsFloat)"
                     }
                     else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
-                        //Status
+                        // Status
                         matchPart = eventPartName
                     }
                 }
@@ -461,15 +457,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         view.layer.borderColor = color.cgColor
     }
 
-
     func shouldShowCountryFlag(_ show: Bool) {
         self.locationFlagImageView.isHidden = !show
     }
 
-    @IBAction func didTapFavoritesButton(_ sender: Any) {
+    @IBAction private func didTapFavoritesButton(_ sender: Any) {
 
     }
-
 
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.mainTint
@@ -510,7 +504,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
-
     func selectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App.mainTint
     }
@@ -547,7 +540,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.isMiddleOutcomeButtonSelected = true
         }
     }
-
 
     func selectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.mainTint

@@ -19,7 +19,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     @IBOutlet private var registerTitleLabel: UILabel!
     @IBOutlet private var emailHeadertextFieldView: HeaderTextFieldView!
     @IBOutlet private var registerButton: UIButton!
-    @IBOutlet private var termsLabel: UILabel!
+    @IBOutlet private var policyLinkView: PolicyLinkView!
 
     @IBOutlet private var loadingEmailValidityView: UIActivityIndicatorView!
 
@@ -36,7 +36,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        AnalyticsClient.sendEvent(event: .signupScreen)
         commonInit()
         setupWithTheme()
     }
@@ -85,6 +85,8 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
             .sink(receiveValue: requestValidEmailCheck)
             .store(in: &cancellables)
 
+        checkPolicyLinks()
+
         if self.isModal {
             self.skipButton.isHidden = true
         }
@@ -121,67 +123,21 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         registerButton.layer.cornerRadius = CornerRadius.button
         registerButton.layer.masksToBounds = true
 
-        underlineTextLabel()
     }
 
-    func underlineTextLabel() {
-        let termsText = localized("string_agree_terms_conditions")
+    func checkPolicyLinks() {
+            policyLinkView.didTapTerms = {
+                // TO-DO: Call VC to register
+            }
 
-        termsLabel.text = termsText
-        termsLabel.numberOfLines = 0
-        termsLabel.font = AppFont.with(type: .regular, size: 14.0)
-        self.termsLabel.textColor =  UIColor.App.headingMain
+            policyLinkView.didTapPrivacy = {
+                // TO-DO: Call VC to register
+            }
 
-        let underlineAttriString = NSMutableAttributedString(string: termsText)
-
-        let range1 = (termsText as NSString).range(of: localized("string_terms"))
-        let range2 = (termsText as NSString).range(of: localized("string_privacy_policy"))
-        let range3 = (termsText as NSString).range(of: localized("string_eula"))
-
-        let paragraphStyle = NSMutableParagraphStyle()
-
-        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
-        paragraphStyle.alignment = .center
-
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range1)
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range2)
-        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range3)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
-        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
-        underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSMakeRange(0, underlineAttriString.length))
-
-        termsLabel.attributedText = underlineAttriString
-        termsLabel.isUserInteractionEnabled = true
-        termsLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapUnderlineLabel(gesture:))))
-    }
-
-    @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
-        let text = localized("string_agree_terms_conditions")
-
-        let termsRange = (text as NSString).range(of: localized("string_terms"))
-        let privacyRange = (text as NSString).range(of: localized("string_privacy_policy"))
-        let eulaRange = (text as NSString).range(of: localized("string_eula"))
-
-        if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
-            print("Tapped Terms")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
+            policyLinkView.didTapEula = {
+                // TO-DO: Call VC to register
+            }
         }
-        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: privacyRange) {
-            print("Tapped Privacy")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
-        else if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: eulaRange) {
-            print("Tapped EULA")
-            UIApplication.shared.open(NSURL(string: "https://gomadevelopment.pt/")! as URL, options: [:], completionHandler: nil)
-        }
-        else {
-            print("Tapped none")
-        }
-    }
 
     @objc func didTapBackground() {
         self.resignFirstResponder()
@@ -216,9 +172,11 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
             receiveValue: { value in
                 if !value.isAvailable {
                     self.showEmailUsedError()
+                    AnalyticsClient.sendEvent(event: .userSignUpFail)
                 }
                 else {
                     self.pushRegisterNextViewController()
+                    AnalyticsClient.sendEvent(event: .userSignUpSuccess)
                 }
                 self.loadingEmailValidityView.stopAnimating()
             }

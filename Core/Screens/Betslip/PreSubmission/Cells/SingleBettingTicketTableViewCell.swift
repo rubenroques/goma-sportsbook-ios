@@ -10,32 +10,32 @@ import Combine
 
 class SingleBettingTicketTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
-    @IBOutlet weak var topBaseView: UIView!
-    @IBOutlet weak var outcomeNameLabel: UILabel!
-    @IBOutlet weak var oddBaseView: UIView!
-    @IBOutlet weak var oddValueLabel: UILabel!
+    @IBOutlet private weak var topBaseView: UIView!
+    @IBOutlet private weak var outcomeNameLabel: UILabel!
+    @IBOutlet private weak var oddBaseView: UIView!
+    @IBOutlet private weak var oddValueLabel: UILabel!
 
-    @IBOutlet weak var upChangeOddValueImage: UIImageView!
-    @IBOutlet weak var downChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var upChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
-    @IBOutlet weak var deleteBetButton: UIButton!
+    @IBOutlet private weak var deleteBetButton: UIButton!
 
-    @IBOutlet weak var separatorView: UIView!
+    @IBOutlet private weak var separatorView: UIView!
 
-    @IBOutlet weak var bottomBaseView: UIView!
-    @IBOutlet weak var marketNameLabel: UILabel!
-    @IBOutlet weak var matchDetailLabel: UILabel!
-    @IBOutlet weak var returnsValueLabel: UILabel!
+    @IBOutlet private weak var bottomBaseView: UIView!
+    @IBOutlet private weak var marketNameLabel: UILabel!
+    @IBOutlet private weak var matchDetailLabel: UILabel!
+    @IBOutlet private weak var returnsValueLabel: UILabel!
 
-    @IBOutlet weak var amountBaseView: UIView!
-    @IBOutlet weak var amountTextfield: UITextField!
+    @IBOutlet private weak var amountBaseView: UIView!
+    @IBOutlet private weak var amountTextfield: UITextField!
 
-    @IBOutlet weak var buttonsBaseView: UIView!
-    @IBOutlet weak var plusOneButtonView: UIButton!
-    @IBOutlet weak var plusFiveButtonView: UIButton!
-    @IBOutlet weak var maxValueButtonView: UIButton!
+    @IBOutlet private weak var buttonsBaseView: UIView!
+    @IBOutlet private weak var plusOneButtonView: UIButton!
+    @IBOutlet private weak var plusFiveButtonView: UIButton!
+    @IBOutlet private weak var maxValueButtonView: UIButton!
 
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
@@ -58,7 +58,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         }
     }
 
-    var didUpdateBettingValueAction: ((String, Double) -> ())?
+    var didUpdateBettingValueAction: ((String, Double) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -232,21 +232,21 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     }
 
-    @IBAction func didTapDeleteButton() {
+    @IBAction private func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
         }
     }
 
-    @IBAction func didTapPlusOneButton() {
+    @IBAction private func didTapPlusOneButton() {
         self.addAmountValue(1.0)
     }
 
-    @IBAction func didTapPlusFiveButton() {
+    @IBAction private func didTapPlusFiveButton() {
         self.addAmountValue(5.0)
     }
 
-    @IBAction func didTapPlusMaxButton() {
+    @IBAction private func didTapPlusMaxButton() {
         self.addAmountValue(100.0)
     }
 
@@ -259,7 +259,7 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
     }
 
     func addAmountValue(_ value: Double) {
-        currentValue = currentValue + Int(value * 100.0)
+        currentValue += Int(value * 100.0)
 
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
@@ -270,7 +270,7 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
             currentValue = currentValue * 10 + insertedDigit
         }
         if newValue == "" {
-            currentValue = currentValue/10
+            currentValue /= 10
         }
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
