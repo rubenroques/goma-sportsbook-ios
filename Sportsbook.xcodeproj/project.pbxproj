@@ -696,10 +696,6 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
-		F40B2104274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F40B2103274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard */; };
-		F40B2105274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F40B2103274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard */; };
-		F40B2107274BBD2100A4F324 /* NoPreLiveEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B2106274BBD2100A4F324 /* NoPreLiveEventsViewController.swift */; };
-		F40B2108274BBD2100A4F324 /* NoPreLiveEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F40B2106274BBD2100A4F324 /* NoPreLiveEventsViewController.swift */; };
 		F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68422742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683E2742CD8A003413AE /* MultiSlider.swift */; };
@@ -1079,8 +1075,6 @@
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
 		A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpPromotionView.swift; sourceTree = "<group>"; };
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
-		F40B2103274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = NoPreLiveEventsViewController.storyboard; sourceTree = "<group>"; };
-		F40B2106274BBD2100A4F324 /* NoPreLiveEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoPreLiveEventsViewController.swift; sourceTree = "<group>"; };
 		F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Drag.swift"; sourceTree = "<group>"; };
 		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
@@ -2064,8 +2058,6 @@
 			children = (
 				45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */,
 				45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */,
-				F40B2106274BBD2100A4F324 /* NoPreLiveEventsViewController.swift */,
-				F40B2103274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard */,
 				458F4C912712AB1900AC13DB /* SportsViewModel.swift */,
 				45D728CC2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift */,
 				A98D3B272714817C003BAE6F /* SportSelection */,
@@ -2687,7 +2679,6 @@
 				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
-				F40B2104274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard in Resources */,
 				455C962A26FE11CA00456F30 /* HomeViewController.xib in Resources */,
 				45CD7B542716F5CB003044C5 /* OddTripleCollectionViewCell.xib in Resources */,
 			);
@@ -2791,7 +2782,6 @@
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
-				F40B2105274BBD0200A4F324 /* NoPreLiveEventsViewController.storyboard in Resources */,
 				455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */,
 				A92F5D8B2719D63300884BDF /* FilterSliderInfoView.xib in Resources */,
 			);
@@ -3079,7 +3069,6 @@
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
-				F40B2107274BBD2100A4F324 /* NoPreLiveEventsViewController.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
@@ -3342,7 +3331,6 @@
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
-				F40B2108274BBD2100A4F324 /* NoPreLiveEventsViewController.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
