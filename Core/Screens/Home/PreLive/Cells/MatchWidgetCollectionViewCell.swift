@@ -147,7 +147,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
-
+        self.awayBaseView.isHidden = false
         self.setupWithTheme()
     }
 
@@ -204,6 +204,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.image = nil
 
         self.oddsStackView.alpha = 1.0
+        
+        self.awayBaseView.isHidden = false
     }
 
     func setupWithTheme() {
@@ -320,8 +322,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.text = outcome.typeName
                 self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 self.currentAwayOddValue = outcome.bettingOffer.value
+              
+               
+    
+                
                 self.rightOutcome = outcome
-
+                
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
                 self.rightOddButtonSubscriber = Env.everyMatrixStorage
@@ -351,6 +357,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     })
 
             }
+            
+            if market.outcomes.count == 2 {
+               
+                awayBaseView.isHidden = true
+            }
+            
         }
         else {
             Logger.log("No markets found")
@@ -359,6 +371,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.homeOddValueLabel.text = "---"
             self.drawOddValueLabel.text = "---"
             self.awayOddValueLabel.text = "---"
+           
         }
 
     }

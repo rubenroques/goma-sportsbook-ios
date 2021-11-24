@@ -819,6 +819,30 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.competitionSportsViewModelDataSource.numberOfSections(in: tableView)
         }
     }
+    func hasGames(in tableView: UITableView) -> Bool {
+        switch self.matchListTypePublisher.value {
+        case .myGames:
+            
+            if self.myGamesSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
+                return true
+            }else{
+                return false
+            }
+        case .today:
+            if self.todaySportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
+                return true
+            }else{
+                return false
+            }
+           
+        case .competitions:
+            if self.competitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
+                return true
+            }else{
+                return false
+            }
+        }
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {

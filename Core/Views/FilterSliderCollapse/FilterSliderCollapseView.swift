@@ -147,8 +147,21 @@ class FilterSliderCollapseView: NibView {
     }
 
     func setTitle(title: String) {
-       boldPartOfString(title: title, charToSplit: ":")
+        titleLabel.text = title
         
+    }
+    
+    func setTitleWithBold(title : String , charToSplit : String.Element){
+        let boldText = title.split(separator: charToSplit)
+        let attrs = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 15)]
+        if boldText.count > 1 {
+            let normalString = NSMutableAttributedString(string:String(boldText[0]+": "), attributes:attrs)
+            let boldString = NSMutableAttributedString(string:String(boldText[1]))
+            normalString.append(boldString)
+            titleLabel.attributedText = normalString
+        }else {
+            titleLabel.text = title
+        }
     }
 
     func setCheckboxSelected(selected: Bool) {
@@ -194,18 +207,7 @@ class FilterSliderCollapseView: NibView {
 
     }
 
-    func boldPartOfString(title : String , charToSplit : String.Element){
-        let boldText = title.split(separator: charToSplit)
-        let attrs = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 15)]
-        if boldText.count > 1 {
-            let normalString = NSMutableAttributedString(string:String(boldText[0]+": "), attributes:attrs)
-            let boldString = NSMutableAttributedString(string:String(boldText[1]))
-            normalString.append(boldString)
-            titleLabel.attributedText = normalString
-        }else {
-            titleLabel.text = title
-        }
-    }
+
     @IBAction private func toggleCollapseAction() {
         isCollapsed = !isCollapsed
         didToggle?(isCollapsed)

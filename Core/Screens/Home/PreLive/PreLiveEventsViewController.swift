@@ -26,10 +26,11 @@ class PreLiveEventsViewController: UIViewController {
     
     @IBOutlet private weak var filtersCountView: UIView!
     
-    @IBOutlet private weak var filtersCountLabel: UILabel!
 
-    var turnTimeRangeOn: Bool = false
-    
+    @IBOutlet weak var filtersCountLabel: UILabel!
+
+    var turnTimeRangeOn : Bool = false
+
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
@@ -227,7 +228,11 @@ class PreLiveEventsViewController: UIViewController {
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
-
+        
+       
+        
+        
+        
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(self.handleSportsSelectionTap(_:)))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
 
@@ -293,6 +298,8 @@ class PreLiveEventsViewController: UIViewController {
 
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
+            
+            
         }
 
         self.viewModel.matchListTypePublisher
@@ -517,10 +524,12 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
 extension PreLiveEventsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
+    
         return self.viewModel.numberOfSections(in: tableView)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        print(self.viewModel.tableView(tableView, numberOfRowsInSection: section))
         return self.viewModel.tableView(tableView, numberOfRowsInSection: section)
     }
 

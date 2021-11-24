@@ -96,8 +96,8 @@
                                     <nil key="highlightedColor"/>
                                     <size key="shadowOffset" width="1" height="-1"/>
                                 </label>
-                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="zbv-kg-RfQ">
-                                    <rect key="frame" x="8.5" y="7.5" width="23" height="21"/>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="match_filters_icons" translatesAutoresizingMaskIntoConstraints="NO" id="zbv-kg-RfQ">
+                                    <rect key="frame" x="8.5" y="9.5" width="23" height="21"/>
                                     <constraints>
                                         <constraint firstAttribute="width" constant="23" id="8Xv-MM-kpc"/>
                                         <constraint firstAttribute="height" constant="21" id="UhU-iB-bGo"/>
