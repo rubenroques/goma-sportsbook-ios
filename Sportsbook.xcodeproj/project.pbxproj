@@ -1734,7 +1734,6 @@
 		455C962526FE11B300456F30 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				A9BCF438274FB558006DD528 /* MatchDetails */,
 				455C962626FE11CA00456F30 /* HomeViewController.swift */,
 				455C962726FE11CA00456F30 /* HomeViewController.xib */,
 				45D712EC27031C4F00AC0364 /* PreLive */,
@@ -1742,8 +1741,6 @@
 				45EF5430270C5FD600D1E13E /* Filters */,
 				45936CA8270E1BF600E8260E /* SportTypeSelection */,
 				45B0BD2F271EED24009C41FA /* CompetitionsList */,
-				A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */,
-				A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1919,6 +1916,7 @@
 				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Home */,
+				A9BCF438274FB558006DD528 /* MatchDetails */,
 				A9B8409426DE44BF00269B05 /* GeoLocation */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
@@ -2541,9 +2539,20 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		A9BCF42B274BBE55006DD528 /* PolicyLinkView */ = {
+			isa = PBXGroup;
+			children = (
+				A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */,
+				A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */,
+			);
+			path = PolicyLinkView;
+			sourceTree = "<group>";
+		};
 		A9BCF438274FB558006DD528 /* MatchDetails */ = {
 			isa = PBXGroup;
 			children = (
+				A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */,
+				A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */,
 				A9BCF43A274FB589006DD528 /* Cells */,
 			);
 			path = MatchDetails;
@@ -2558,15 +2567,6 @@
 				A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */,
 			);
 			path = Cells;
-			sourceTree = "<group>";
-		};
-		A9BCF42B274BBE55006DD528 /* PolicyLinkView */ = {
-			isa = PBXGroup;
-			children = (
-				A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */,
-				A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */,
-			);
-			path = PolicyLinkView;
 			sourceTree = "<group>";
 		};
 		A9C602282716F11A00992E11 /* HomeFilter */ = {
