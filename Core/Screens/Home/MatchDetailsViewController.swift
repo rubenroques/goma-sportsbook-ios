@@ -34,6 +34,8 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailLiveTopLabel: UILabel!
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
 
+    @IBOutlet private var marketTypesCollectionView: UICollectionView!
+
     enum MatchMode {
         case preLive
         case live
@@ -52,6 +54,7 @@ class MatchDetailsViewController: UIViewController {
     }
 
     var match: Match
+    var marketTypeSelectedOption: Int = 0
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchMode = matchMode
@@ -115,6 +118,19 @@ class MatchDetailsViewController: UIViewController {
         }
 
         setupHeaderDetails()
+
+        // Market Types CollectionView
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        flowLayout.scrollDirection = .horizontal
+        self.marketTypesCollectionView.collectionViewLayout = flowLayout
+        self.marketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        self.marketTypesCollectionView.showsVerticalScrollIndicator = false
+        self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
+        self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
+                                       forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
+        self.marketTypesCollectionView.delegate = self
+        self.marketTypesCollectionView.dataSource = self
         
     }
 
@@ -153,6 +169,10 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveView.backgroundColor = UIColor.App.secondaryBackground
         self.headerDetailLiveTopLabel.textColor = UIColor.App.headingMain
         self.headerDetailLiveBottomLabel.textColor = UIColor.App.headingMain.withAlphaComponent(0.5)
+
+        // Market List CollectionView
+        self.marketTypesCollectionView.backgroundColor = .clear
+
     }
 
     func setupHeaderDetails() {
@@ -180,5 +200,71 @@ class MatchDetailsViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
+}
+
+extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 4
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
+        else {
+            fatalError()
+        }
+
+        switch indexPath.row {
+        case 0:
+            cell.setupWithTitle("Popular")
+        case 1:
+            cell.setupWithTitle("Goals")
+        case 2:
+            cell.setupWithTitle("Results")
+        case 3:
+            cell.setupWithTitle("Handycap")
+        default:
+            ()
+        }
+
+        if marketTypeSelectedOption == indexPath.row {
+            cell.setSelectedType(true)
+        }
+        else {
+            cell.setSelectedType(false)
+        }
+
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
+        self.marketTypeSelectedOption = indexPath.row
+
+        switch indexPath.row {
+        case 0:
+            // Model for tab
+            break
+        case 1:
+            // Model for tab
+            break
+        case 2:
+            // Model for tab
+            break
+        case 3:
+            // Model for tab
+            break
+        default:
+            ()
+        }
+
+        self.marketTypesCollectionView.reloadData()
+        self.marketTypesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+    }
 
 }

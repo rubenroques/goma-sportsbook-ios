@@ -30,6 +30,7 @@
                 <outlet property="headerDetailStackView" destination="j7O-NU-JjV" id="lgu-ZF-B1U"/>
                 <outlet property="headerDetailTopView" destination="BWt-ze-64e" id="Dcp-Uc-8PQ"/>
                 <outlet property="headerDetailView" destination="fdu-WM-VjI" id="tmd-Zp-bDj"/>
+                <outlet property="marketTypesCollectionView" destination="bBf-el-85E" id="ECQ-NU-tsR"/>
                 <outlet property="topView" destination="9vu-0T-T83" id="EDG-Lw-beK"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -204,7 +205,7 @@
                                     </constraints>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemTealColor"/>
+                            <color key="backgroundColor" systemColor="systemGray2Color"/>
                         </stackView>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -219,17 +220,33 @@
                         <constraint firstItem="BWt-ze-64e" firstAttribute="top" secondItem="fdu-WM-VjI" secondAttribute="top" id="f89-qC-uvm"/>
                     </constraints>
                 </view>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bBf-el-85E">
+                    <rect key="frame" x="0.0" y="174" width="414" height="70"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="70" id="dsG-q0-bQm"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="F81-9A-dV6">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="9vu-0T-T83" secondAttribute="trailing" id="6OB-So-iGD"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bBf-el-85E" secondAttribute="trailing" id="7LD-oJ-Dcu"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="9vu-0T-T83" secondAttribute="bottom" id="8JS-RN-RXu"/>
+                <constraint firstItem="bBf-el-85E" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="JRH-E4-Lkx"/>
                 <constraint firstItem="9vu-0T-T83" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="W27-0D-9Hm"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="fdu-WM-VjI" secondAttribute="trailing" id="WlH-Wy-eeF"/>
                 <constraint firstItem="9vu-0T-T83" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bGN-ax-JhY"/>
                 <constraint firstItem="fdu-WM-VjI" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="bUd-G2-N7C"/>
                 <constraint firstItem="fdu-WM-VjI" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="kws-oS-H2A"/>
+                <constraint firstItem="bBf-el-85E" firstAttribute="top" secondItem="fdu-WM-VjI" secondAttribute="bottom" id="nN9-Kq-9Kb"/>
             </constraints>
             <point key="canvasLocation" x="24.637681159420293" y="63.616071428571423"/>
         </view>
@@ -240,11 +257,11 @@
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
+        <systemColor name="systemGray2Color">
+            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemGrayColor">
             <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemTealColor">
-            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
