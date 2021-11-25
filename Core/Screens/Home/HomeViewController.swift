@@ -10,6 +10,8 @@ import Combine
 
 class HomeViewController: UIViewController {
 
+    let test = MatchDetailsAggregatorRepository(matchId: "155447218572152832")
+
     @IBOutlet private weak var topSafeAreaView: UIView!
     @IBOutlet private weak var topBarView: UIView!
     @IBOutlet private weak var contentView: UIView!
@@ -156,6 +158,7 @@ class HomeViewController: UIViewController {
                 print(operatorInfo)
             }
             .store(in: &cancellables)
+
 
     }
 

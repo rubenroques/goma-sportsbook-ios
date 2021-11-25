@@ -69,12 +69,7 @@ class BetslipManager: NSObject {
     }
 
     func addBettingTicket(_ bettingTicket: BettingTicket) {
-//        var currentValue = self.bettingTicketsPublisher.value
-//        currentValue.append(bettingTicket)
-//        bettingTicketsPublisher.send(currentValue)
-
         bettingTicketsDictionaryPublisher.value[bettingTicket.id] = bettingTicket
-
     }
 
     func removeBettingTicket(_ bettingTicket: BettingTicket) {
@@ -83,9 +78,6 @@ class BetslipManager: NSObject {
 
         oddsCancellableDictionary[bettingTicket.id]?.cancel()
         oddsCancellableDictionary[bettingTicket.id] = nil
-//        var currentValue = self.bettingTicketsPublisher.value
-//        currentValue.remove(bettingTicket)
-//        bettingTicketsPublisher.send(currentValue)
     }
 
     func removeBettingTicket(withId id: String) {
@@ -94,14 +86,6 @@ class BetslipManager: NSObject {
 
         oddsCancellableDictionary[id]?.cancel()
         oddsCancellableDictionary[id] = nil
-//        var orderedSet: OrderedSet<BettingTicket> = []
-//        for ticket in self.bettingTicketsPublisher.value {
-//            if ticket.id == id {
-//                continue
-//            }
-//            orderedSet.append(ticket)
-//        }
-//        bettingTicketsPublisher.send(orderedSet)
     }
 
     func hasBettingTicket(_ bettingTicket: BettingTicket) -> Bool {
@@ -110,14 +94,6 @@ class BetslipManager: NSObject {
 
     func hasBettingTicket(withId id: String) -> Bool {
         return bettingTicketsDictionaryPublisher.value[id] != nil
-//        var hasValue = false
-//        for ticket in self.bettingTicketsPublisher.value {
-//            if ticket.id == id {
-//                hasValue = true
-//                break
-//            }
-//        }
-//        return hasValue
     }
 
     func clearAllBettingTickets() {

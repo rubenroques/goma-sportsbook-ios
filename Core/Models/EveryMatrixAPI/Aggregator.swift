@@ -160,6 +160,7 @@ extension EveryMatrix {
         case market(EveryMatrix.Market)
         case mainMarket(EveryMatrix.Market)
         case marketOutcomeRelation(EveryMatrix.MarketOutcomeRelation)
+        case marketGroup(EveryMatrix.MarketGroup)
         case location(EveryMatrix.Location)
         case unknown
 
@@ -178,6 +179,7 @@ extension EveryMatrix {
             case market = "MARKET"
             case mainMarket = "MAIN_MARKET"
             case marketOutcomeRelation = "MARKET_OUTCOME_RELATION"
+            case marketGroup = "MARKET_GROUP"
             case location = "LOCATION"
             case unknown
 
@@ -233,6 +235,9 @@ extension EveryMatrix {
             case .marketOutcomeRelation:
                 let marketOutcomeRelation = try objectContainer.decode(EveryMatrix.MarketOutcomeRelation.self)
                 self = .marketOutcomeRelation(marketOutcomeRelation)
+            case .marketGroup:
+                let marketGroup = try objectContainer.decode(EveryMatrix.MarketGroup.self)
+                self = .marketGroup(marketGroup)
             case .location:
                 let location = try objectContainer.decode(EveryMatrix.Location.self)
                 self = .location(location)

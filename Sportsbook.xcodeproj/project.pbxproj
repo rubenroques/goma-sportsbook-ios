@@ -30,8 +30,8 @@
 		45166CDE26F3548D00E69D65 /* TSParams.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAB26F3548D00E69D65 /* TSParams.swift */; };
 		45166CDF26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */; };
 		45166CE026F3548D00E69D65 /* EveryMatrixSocketAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */; };
-		45166CE126F3548D00E69D65 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAD26F3548D00E69D65 /* Notification.swift */; };
-		45166CE226F3548D00E69D65 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAD26F3548D00E69D65 /* Notification.swift */; };
+		45166CE126F3548D00E69D65 /* TSNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAD26F3548D00E69D65 /* TSNotification.swift */; };
+		45166CE226F3548D00E69D65 /* TSNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAD26F3548D00E69D65 /* TSNotification.swift */; };
 		45166CE326F3548D00E69D65 /* TSRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAE26F3548D00E69D65 /* TSRouter.swift */; };
 		45166CE426F3548D00E69D65 /* TSRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CAE26F3548D00E69D65 /* TSRouter.swift */; };
 		45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45166CB126F3548D00E69D65 /* SSWampMessage.swift */; };
@@ -405,6 +405,10 @@
 		45936CBE270EF14300E8260E /* SportTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45936CBB270EF14300E8260E /* SportTypeCollectionViewCell.swift */; };
 		45936CBF270EF14300E8260E /* SportTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45936CBC270EF14300E8260E /* SportTypeCollectionViewCell.xib */; };
 		45936CC0270EF14300E8260E /* SportTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45936CBC270EF14300E8260E /* SportTypeCollectionViewCell.xib */; };
+		45A0B2FF274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
+		45A0B300274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */; };
+		45A0B302274FA3B800211A85 /* MarketGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B301274FA3B800211A85 /* MarketGroup.swift */; };
+		45A0B303274FA3B800211A85 /* MarketGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A0B301274FA3B800211A85 /* MarketGroup.swift */; };
 		45A16E142707B6C100A95C01 /* ListTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */; };
 		45A16E152707B6C100A95C01 /* ListTypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */; };
 		45A16E162707B6C100A95C01 /* ListTypeCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */; };
@@ -786,7 +790,7 @@
 		45166CA526F28D2E00E69D65 /* Bootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bootstrap.swift; sourceTree = "<group>"; };
 		45166CAB26F3548D00E69D65 /* TSParams.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSParams.swift; sourceTree = "<group>"; };
 		45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EveryMatrixSocketAPIError.swift; sourceTree = "<group>"; };
-		45166CAD26F3548D00E69D65 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		45166CAD26F3548D00E69D65 /* TSNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSNotification.swift; sourceTree = "<group>"; };
 		45166CAE26F3548D00E69D65 /* TSRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSRouter.swift; sourceTree = "<group>"; };
 		45166CB126F3548D00E69D65 /* SSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSWampMessage.swift; sourceTree = "<group>"; };
 		45166CB326F3548D00E69D65 /* AuthenticateSSWampMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthenticateSSWampMessage.swift; sourceTree = "<group>"; };
@@ -981,6 +985,8 @@
 		45936CB8270EF08B00E8260E /* SportsTypeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsTypeStore.swift; sourceTree = "<group>"; };
 		45936CBB270EF14300E8260E /* SportTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		45936CBC270EF14300E8260E /* SportTypeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportTypeCollectionViewCell.xib; sourceTree = "<group>"; };
+		45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsAggregatorRepository.swift; sourceTree = "<group>"; };
+		45A0B301274FA3B800211A85 /* MarketGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroup.swift; sourceTree = "<group>"; };
 		45A16E122707B6C100A95C01 /* ListTypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		45A16E132707B6C100A95C01 /* ListTypeCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ListTypeCollectionViewCell.xib; sourceTree = "<group>"; };
 		45A2896626C32D3F00BCD5DA /* NetworkModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkModels.swift; sourceTree = "<group>"; };
@@ -1223,7 +1229,7 @@
 			children = (
 				45166CAB26F3548D00E69D65 /* TSParams.swift */,
 				45166CAC26F3548D00E69D65 /* EveryMatrixSocketAPIError.swift */,
-				45166CAD26F3548D00E69D65 /* Notification.swift */,
+				45166CAD26F3548D00E69D65 /* TSNotification.swift */,
 				45166CAE26F3548D00E69D65 /* TSRouter.swift */,
 				45166CAF26F3548D00E69D65 /* WAMP */,
 				45166CDC26F3548D00E69D65 /* TSManager.swift */,
@@ -1681,6 +1687,7 @@
 				45DDBAB926F2406100A73E45 /* UserSessionStore.swift */,
 				45D871CF2710995700F5B87B /* AggregatorsRepository.swift */,
 				A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */,
+				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				456B341226C13AE1009D7D27 /* Networking */,
 				45D9CBE4270F444000B8C321 /* Helpers */,
 			);
@@ -2500,6 +2507,7 @@
 				A9B841B726E91BBC00269B05 /* BettingOffer.swift */,
 				A9B841BA26EA1A7600269B05 /* MarketOutcomeRelation.swift */,
 				A9B841C126EB5D5900269B05 /* Odd.swift */,
+				45A0B301274FA3B800211A85 /* MarketGroup.swift */,
 			);
 			path = Odds;
 			sourceTree = "<group>";
@@ -3058,7 +3066,7 @@
 				A9C82FC326F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
 				F4CE68452742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				45936CB9270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
-				45166CE126F3548D00E69D65 /* Notification.swift in Sources */,
+				45166CE126F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0CA826BD973C00EC572D /* TargetVariables.swift in Sources */,
 				455A0D1026BD9D9000EC572D /* Changeable.swift in Sources */,
@@ -3084,6 +3092,7 @@
 				4589F42926C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				45B7DAE226F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
 				455A0CE626BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
+				45A0B302274FA3B800211A85 /* MarketGroup.swift in Sources */,
 				454E0AC82733FBF200794E0C /* StyleHelpers.swift in Sources */,
 				454E0A962732C01B00794E0C /* BetslipViewController.swift in Sources */,
 				4572633B272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
@@ -3137,6 +3146,7 @@
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CE926F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
+				45A0B2FF274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				45B0BD3B271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
@@ -3333,7 +3343,7 @@
 				A9C82FC426F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
 				F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				45936CBA270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
-				45166CE226F3548D00E69D65 /* Notification.swift in Sources */,
+				45166CE226F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0C9726BD943900EC572D /* TargetVariables.swift in Sources */,
 				455A0D1126BD9D9000EC572D /* Changeable.swift in Sources */,
@@ -3359,6 +3369,7 @@
 				4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				45B7DAE326F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
+				45A0B303274FA3B800211A85 /* MarketGroup.swift in Sources */,
 				454E0AC92733FBF200794E0C /* StyleHelpers.swift in Sources */,
 				454E0A972732C01B00794E0C /* BetslipViewController.swift in Sources */,
 				4572633A272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
@@ -3412,6 +3423,7 @@
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CEA26F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
+				45A0B300274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				45B0BD3C271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
@@ -3706,7 +3718,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00209;
+				CURRENT_PROJECT_VERSION = 00210;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3732,7 +3744,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00209;
+				CURRENT_PROJECT_VERSION = 00210;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

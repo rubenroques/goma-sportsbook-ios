@@ -21,7 +21,7 @@ class AggregatorsRepository {
     var matchesForType: [AggregatorListType: [String] ] = [:]
 
     var matches: [String: EveryMatrix.Match] = [:]
-    var markets: [String: EveryMatrix.Market] = [:]
+    //var markets: [String: EveryMatrix.Market] = [:]
     var marketsForMatch: [String: Set<String>] = [:]   // [Match ID: [Markets IDs] ]
     var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
     var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
@@ -91,7 +91,7 @@ class AggregatorsRepository {
 
             case .market(let marketContent):
 
-                markets[marketContent.id] = marketContent
+                //markets[marketContent.id] = marketContent
                 marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
 
                 if let matchId = marketContent.eventId {
@@ -132,7 +132,9 @@ class AggregatorsRepository {
                         bettingOutcomesForMarket[marketId] = newSet
                     }
                 }
-
+            case .marketGroup:
+                ()
+                
             case .location(let location):
                 self.locations[location.id] = location
                 
@@ -211,7 +213,7 @@ class AggregatorsRepository {
 
             let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
             let rawMarketsList = marketsIds.map { id in
-                return self.markets[id]
+                return self.marketsPublishers[id]?.value
             }
             .compactMap({$0})
 

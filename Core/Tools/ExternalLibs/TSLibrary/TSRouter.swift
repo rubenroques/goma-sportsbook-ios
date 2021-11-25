@@ -39,6 +39,10 @@ enum TSRouter {
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
     case placeSystemBet(language: String, amount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
 
+    case matchDetailsPublisher(operatorId: String, language: String, matchId: String)
+    case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
+    case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
+
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
@@ -152,8 +156,13 @@ enum TSRouter {
         case .placeSystemBet:
             return "/sports#placeBetV2"
 
+        case .matchDetailsPublisher(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
+        case .matchMarketGroupsPublisher(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/event/\(matchId)/market-groups"
+        case .matchMarketGroupDetailsPublisher(let operatorId, let language, let matchId, let marketGroupName):
+            return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/market-group/\(marketGroupName)"
 
-        //
         //
         // EM Subscription
         // Sports
@@ -549,6 +558,7 @@ enum TSRouter {
     }
 
     var intiailDumpRequest: TSRouter? {
+
         switch self {
         case .liveMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
@@ -563,6 +573,12 @@ enum TSRouter {
         case .locationsPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .tournamentsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .matchDetailsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .matchMarketGroupsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .matchMarketGroupDetailsPublisher:
             return .sportsInitialDump(topic: self.procedure)
 
         default:
