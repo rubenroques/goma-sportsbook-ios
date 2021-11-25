@@ -28,6 +28,14 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet weak var marketNameLabel: UILabel!
     @IBOutlet weak var matchDetailLabel: UILabel!
 
+    @IBOutlet private var stackView: UIStackView!
+
+    @IBOutlet private var errorView: UIView!
+    @IBOutlet private var errorLabel: UILabel!
+
+    @IBOutlet private var errorLateralTopView: UIView!
+    @IBOutlet private var errorLateralBottomView: UIView!
+
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
 
@@ -37,21 +45,25 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
 
-        self.baseView.clipsToBounds = true
-        self.baseView.layer.masksToBounds = true
-        self.baseView.layer.cornerRadius = CornerRadius.view
-
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
         self.setupWithTheme()
+
+        self.stackView.layer.cornerRadius = CornerRadius.view
+        self.stackView.layer.masksToBounds = true
+
+        self.errorView.isHidden = true
+
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.baseView.layer.cornerRadius = CornerRadius.view
         self.oddBaseView.layer.cornerRadius = 3
+
+        self.stackView.layer.cornerRadius = CornerRadius.view
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -88,6 +100,16 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.marketNameLabel.textColor = UIColor.App.headingMain
         self.matchDetailLabel.textColor = UIColor.App.headingDisabled
 
+        self.stackView.backgroundColor = UIColor.App.secondaryBackground
+
+        self.errorView.backgroundColor = UIColor.App.secondaryBackground
+
+        self.errorLabel.textColor = UIColor.App.headingMain
+        self.errorLabel.font = AppFont.with(type: .bold, size: 15)
+
+        self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
+        self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
+
     }
 
     func highlightOddChangeUp(animated: Bool = true) {
@@ -117,7 +139,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     }
 
 
-    func configureWithBettingTicket(_ bettingTicket: BettingTicket) {
+    func configureWithBettingTicket(_ bettingTicket: BettingTicket, errorBetting: String? = nil) {
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
         self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
@@ -145,6 +167,15 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
                 self?.currentOddValue = newOddValue
                 self?.oddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
             })
+
+        if let errorBetting = errorBetting {
+            self.errorView.isHidden = false
+
+            self.errorLabel.text = errorBetting
+
+            self.errorLateralTopView.backgroundColor = UIColor.App.alertError
+            self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
+        }
         
     }
 

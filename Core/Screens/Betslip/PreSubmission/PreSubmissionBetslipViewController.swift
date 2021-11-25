@@ -724,6 +724,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             case .loaded(let betPlacedDetails):
                 if !(betPlacedDetails.response.betSucceed ?? false) {
                     canProceedToNextScreen = false
+                    print("BET SINGLE: \(betPlacedDetails.response)")
+                    self.singleBettingTicketDataSource.bettingTicketErrors.append(betPlacedDetails.response)
+                    self.tableView.reloadData()
                     break
                 }
                 else {
@@ -741,6 +744,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         if canProceedToNextScreen && !stillLoading {
             self.isLoading = false
             self.betPlacedAction?(betPlacedDetailsArray)
+        }
+        else if !canProceedToNextScreen {
+            self.isLoading = false
         }
     }
 
@@ -858,6 +864,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
     var didUpdateBettingValueAction: ((String, Double) -> Void)?
     var bettingValueForId: ((String) -> (Double?))?
 
+    var bettingTicketErrors: [BetslipPlaceBetResponse] = []
+
     init(bettingTickets: [BettingTicket]) {
         self.bettingTickets = bettingTickets
     }
@@ -875,7 +883,22 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         }
 
         let storedValue = self.bettingValueForId?(bettingTicket.id)
-        cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
+
+        if !self.bettingTicketErrors.isEmpty {
+            for bettingError in self.bettingTicketErrors {
+                if let bettingSelections = bettingError.selections {
+                    for selection in bettingSelections {
+                        if selection.id == bettingTicket.bettingId {
+                            cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: bettingError.errorMessage)
+                        }
+                    }
+                }
+            }
+
+        } else {
+            cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
+        }
+
         cell.didUpdateBettingValueAction = self.didUpdateBettingValueAction
         return cell
     }
