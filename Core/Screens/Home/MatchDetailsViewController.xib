@@ -31,6 +31,7 @@
                 <outlet property="headerDetailTopView" destination="BWt-ze-64e" id="Dcp-Uc-8PQ"/>
                 <outlet property="headerDetailView" destination="fdu-WM-VjI" id="tmd-Zp-bDj"/>
                 <outlet property="marketTypesCollectionView" destination="bBf-el-85E" id="ECQ-NU-tsR"/>
+                <outlet property="tableView" destination="jEG-kW-DaM" id="G6k-fo-ZuD"/>
                 <outlet property="topView" destination="9vu-0T-T83" id="EDG-Lw-beK"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -233,10 +234,15 @@
                         <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                     </collectionViewFlowLayout>
                 </collectionView>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jEG-kW-DaM">
+                    <rect key="frame" x="0.0" y="252" width="414" height="610"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="jEG-kW-DaM" secondAttribute="trailing" id="4WK-xj-35q"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="9vu-0T-T83" secondAttribute="trailing" id="6OB-So-iGD"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bBf-el-85E" secondAttribute="trailing" id="7LD-oJ-Dcu"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="9vu-0T-T83" secondAttribute="bottom" id="8JS-RN-RXu"/>
@@ -245,8 +251,11 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="fdu-WM-VjI" secondAttribute="trailing" id="WlH-Wy-eeF"/>
                 <constraint firstItem="9vu-0T-T83" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bGN-ax-JhY"/>
                 <constraint firstItem="fdu-WM-VjI" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="bUd-G2-N7C"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="jEG-kW-DaM" secondAttribute="bottom" id="c6C-7a-V88"/>
                 <constraint firstItem="fdu-WM-VjI" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="kws-oS-H2A"/>
+                <constraint firstItem="jEG-kW-DaM" firstAttribute="top" secondItem="bBf-el-85E" secondAttribute="bottom" constant="8" id="nGm-a3-nwM"/>
                 <constraint firstItem="bBf-el-85E" firstAttribute="top" secondItem="fdu-WM-VjI" secondAttribute="bottom" id="nN9-Kq-9Kb"/>
+                <constraint firstItem="jEG-kW-DaM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="tgb-6V-df0"/>
             </constraints>
             <point key="canvasLocation" x="24.637681159420293" y="63.616071428571423"/>
         </view>

@@ -35,6 +35,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
 
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
+    @IBOutlet private var tableView: UITableView!
 
     enum MatchMode {
         case preLive
@@ -72,6 +73,12 @@ class MatchDetailsViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.tableView.reloadData()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -131,6 +138,16 @@ class MatchDetailsViewController: UIViewController {
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         self.marketTypesCollectionView.delegate = self
         self.marketTypesCollectionView.dataSource = self
+
+        // TableView
+        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundView?.backgroundColor = .clear
+
+        self.tableView.separatorStyle = .none
+        tableView.register(MatchDetailMarketTableViewCell.nib, forCellReuseIdentifier: MatchDetailMarketTableViewCell.identifier)
+
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         
     }
 
@@ -172,6 +189,9 @@ class MatchDetailsViewController: UIViewController {
 
         // Market List CollectionView
         self.marketTypesCollectionView.backgroundColor = .clear
+
+        // TableView
+        self.tableView.backgroundColor = .clear
 
     }
 
@@ -266,5 +286,59 @@ extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionView
         self.marketTypesCollectionView.reloadData()
         self.marketTypesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
+
+}
+
+extension MatchDetailsViewController: UITableViewDataSource, UITableViewDelegate {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
+        guard let cell = tableView.dequeueCellType(MatchDetailMarketTableViewCell.self) else { return UITableViewCell() }
+        return cell
+
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        //return self.viewModel.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+    }
+
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
+//    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        //return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
+        //return UITableView.automaticDimension
+        return 120
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        //return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        return 120
+    }
+//
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
+//    }
+
+//    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+//        return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
+//    }
+
+//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return 0.01
+//    }
+//
+//    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+//        return 0.01
+//    }
 
 }

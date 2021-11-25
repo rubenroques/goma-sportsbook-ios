@@ -707,6 +707,14 @@
 		A9BCF435274D1A77006DD528 /* MatchDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */; };
 		A9BCF436274D1A77006DD528 /* MatchDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */; };
 		A9BCF437274D1A77006DD528 /* MatchDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */; };
+		A9BCF43D274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */; };
+		A9BCF43E274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */; };
+		A9BCF43F274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */; };
+		A9BCF440274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */; };
+		A9BCF443274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */; };
+		A9BCF444274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */; };
+		A9BCF445274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */; };
+		A9BCF446274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */; };
 		A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
 		A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
@@ -1123,6 +1131,10 @@
 		A9B841C126EB5D5900269B05 /* Odd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Odd.swift; sourceTree = "<group>"; };
 		A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewController.swift; sourceTree = "<group>"; };
 		A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchDetailsViewController.xib; sourceTree = "<group>"; };
+		A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailMarketTableViewCell.swift; sourceTree = "<group>"; };
+		A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchDetailMarketTableViewCell.xib; sourceTree = "<group>"; };
+		A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketDetailCollectionViewCell.swift; sourceTree = "<group>"; };
+		A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketDetailCollectionViewCell.xib; sourceTree = "<group>"; };
 		A9C602292716F13F00992E11 /* HomeFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterViewController.swift; sourceTree = "<group>"; };
 		A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeFilterViewController.xib; sourceTree = "<group>"; };
 		A9C602342716F7BE00992E11 /* FilterCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollapseView.swift; sourceTree = "<group>"; };
@@ -1704,6 +1716,7 @@
 		455C962526FE11B300456F30 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				A9BCF438274FB558006DD528 /* MatchDetails */,
 				455C962626FE11CA00456F30 /* HomeViewController.swift */,
 				455C962726FE11CA00456F30 /* HomeViewController.xib */,
 				45D712EC27031C4F00AC0364 /* PreLive */,
@@ -2507,6 +2520,25 @@
 			path = Events;
 			sourceTree = "<group>";
 		};
+		A9BCF438274FB558006DD528 /* MatchDetails */ = {
+			isa = PBXGroup;
+			children = (
+				A9BCF43A274FB589006DD528 /* Cells */,
+			);
+			path = MatchDetails;
+			sourceTree = "<group>";
+		};
+		A9BCF43A274FB589006DD528 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */,
+				A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */,
+				A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */,
+				A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		A9C602282716F11A00992E11 /* HomeFilter */ = {
 			isa = PBXGroup;
 			children = (
@@ -2753,6 +2785,7 @@
 				45BEA48726F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				457F496F2737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
+				A9BCF43F274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */,
 				A9627A17274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45CD7B5A271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
@@ -2795,6 +2828,7 @@
 				A96279F52743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
 				454E0ACE2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
+				A9BCF445274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
 				A9BCF436274D1A77006DD528 /* MatchDetailsViewController.xib in Resources */,
 				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
@@ -2862,6 +2896,7 @@
 				455C960926FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */,
 				456B343B26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
 				4589F40026BF017A005DF543 /* LoginViewController.xib in Resources */,
+				A9BCF440274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */,
 				45CD7B552716F5CB003044C5 /* OddTripleCollectionViewCell.xib in Resources */,
 				455A0C8A26BD904300EC572D /* LaunchScreen.storyboard in Resources */,
 				45BEA48826F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
@@ -2925,6 +2960,7 @@
 				45DDBA9926F2146100A73E45 /* Gilroy-Heavy.ttf in Resources */,
 				A9C82FBF26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				454990CD2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
+				A9BCF446274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				A9627A09274529BD0001E1D5 /* ActivationAlertScrollableView.xib in Resources */,
 				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
@@ -3090,6 +3126,7 @@
 				A9B840A626DE831400269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B226E9054700269B05 /* Market.swift in Sources */,
 				45CD7B58271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
+				A9BCF43D274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */,
 				45B7DADB26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				45D728D72715F6DC00EFE04D /* AppModels.swift in Sources */,
@@ -3180,6 +3217,7 @@
 				45936CAA270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A9B841A626E6557000269B05 /* Location.swift in Sources */,
 				45166D1726F3548D00E69D65 /* SSWampTransport.swift in Sources */,
+				A9BCF443274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
 				454E0AB42732C58D00794E0C /* TabularBarButton.swift in Sources */,
 				454E0AB02732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B502716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
@@ -3364,6 +3402,7 @@
 				A9B840A926DE86BE00269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B326E9054700269B05 /* Market.swift in Sources */,
 				45CD7B59271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
+				A9BCF43E274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */,
 				45B7DADC26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				45D728D82715F6DC00EFE04D /* AppModels.swift in Sources */,
@@ -3454,6 +3493,7 @@
 				45936CAB270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
 				45166D1826F3548D00E69D65 /* SSWampTransport.swift in Sources */,
+				A9BCF444274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
 				454E0AB52732C58D00794E0C /* TabularBarButton.swift in Sources */,
 				454E0AB12732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B512716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
