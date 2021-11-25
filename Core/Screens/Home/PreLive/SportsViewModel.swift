@@ -64,6 +64,7 @@ class SportsViewModel: NSObject {
 
     var dataDidChangedAction: (() -> Void)?
     var presentViewControllerAction: ((ActivationAlertType) -> Void)?
+    var presentMatchDetailViewControllerAction: ((Match) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -108,8 +109,16 @@ class SportsViewModel: NSObject {
             self?.presentViewControllerAction?(alertType)
         }
 
+        self.myGamesSportsViewModelDataSource.requestMatchDetailViewController = { [weak self] match in
+            self?.presentMatchDetailViewControllerAction?(match)
+        }
+
         self.todaySportsViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchTodayMatchesNextPage()
+        }
+
+        self.todaySportsViewModelDataSource.requestMatchDetailViewController = { [weak self] match in
+            self?.presentMatchDetailViewControllerAction?(match)
         }
 
     }
@@ -940,6 +949,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
 
     var requestNextPage: (() -> Void)?
     var requestPresentViewController: ((ActivationAlertType) -> Void)?
+    var requestMatchDetailViewController: ((Match) -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
         self.banners = banners
@@ -1011,6 +1021,9 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
+                cell.tappedMatchLineAction = {
+                    self.requestMatchDetailViewController?(match)
+                }
                 return cell
             }
         case 3:
@@ -1098,6 +1111,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     var todayMatches: [Match] = []
 
     var requestNextPage: (() -> Void)?
+    var requestMatchDetailViewController: ((Match) -> Void)?
 
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
@@ -1125,6 +1139,9 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.todayMatches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
+                cell.tappedMatchLineAction = {
+                    self.requestMatchDetailViewController?(match)
+                }
                 return cell
             }
         case 1:
