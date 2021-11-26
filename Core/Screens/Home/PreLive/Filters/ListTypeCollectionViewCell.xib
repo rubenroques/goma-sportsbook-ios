@@ -30,7 +30,7 @@
                                 <rect key="frame" x="2" y="2" width="78" height="36"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Today" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7wz-xG-xE1">
-                                        <rect key="frame" x="12" y="10" width="54" height="16.5"/>
+                                        <rect key="frame" x="12" y="11" width="54" height="14"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="45" id="4Ac-aQ-Pcc"/>
                                         </constraints>

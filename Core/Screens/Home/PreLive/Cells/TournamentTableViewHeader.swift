@@ -96,7 +96,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     func setupCompetition() {
-        for competitionId in Env.favoritesManager.favoriteEventsId {
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value {
             if competitionId == self.competition!.id {
                 self.isFavorite = true
             }
@@ -112,13 +112,8 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     @objc func didTapFavoriteImageView() {
         if UserDefaults.standard.userSession != nil {
 
-            var favoriteCompetitionExists = false
-
-            for competitionId in Env.favoritesManager.favoriteEventsId {
-                if self.competition!.id == competitionId {
-                    favoriteCompetitionExists = true
-                    Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.competition!.id}
-                }
+            if let competitionId = self.competition?.id {
+                Env.favoritesManager.checkFavorites(eventId: competitionId)
             }
 
             if self.isFavorite {
@@ -127,9 +122,8 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
             else {
                 self.isFavorite = true
 
-                Env.favoritesManager.favoriteEventsId.append(self.competition!.id)
             }
-            Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
+
         }
     }
 }

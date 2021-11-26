@@ -231,6 +231,9 @@ class LiveEventsViewController: UIViewController  {
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
+
+        let homeFilterVC = HomeFilterViewController(liveEventsViewModel: self.viewModel)
+        homeFilterVC.delegate = self
     }
 
 
@@ -409,8 +412,6 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 
 }
 
-
-
 extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
 
     func setHomeFilters(homeFilters: HomeFilterOptions) {
@@ -430,7 +431,6 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
     }
     
 }
-
 
 extension LiveEventsViewController: SportTypeSelectionViewDelegate {
     func setSportType(_ sportType: SportType) {

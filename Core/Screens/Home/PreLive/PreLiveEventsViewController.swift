@@ -583,7 +583,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 5
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -595,11 +595,15 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle("My Games")
+            cell.setupWithTitle("Popular")
         case 1:
             cell.setupWithTitle("Today")
         case 2:
             cell.setupWithTitle("Competitions")
+        case 3:
+            cell.setupWithTitle("My Games")
+        case 4:
+            cell.setupWithTitle("My Competitions")
         default:
             ()
         }
@@ -631,12 +635,20 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
             turnTimeRangeOn = false
+        case 3:
+            self.viewModel.setMatchListType(.favoriteGames)
+        case 4:
+            self.viewModel.setMatchListType(.favoriteCompetitions)
         default:
             ()
         }
-
         self.filtersCollectionView.reloadData()
+        self.filtersCollectionView.layoutIfNeeded()
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+//        let rect = self.filtersCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
+//             self.filtersCollectionView.scrollRectToVisible(rect!, animated: true)
+
+
     }
 
 }

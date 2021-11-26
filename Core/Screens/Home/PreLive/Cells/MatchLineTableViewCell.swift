@@ -172,6 +172,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             if !liveMatch {
                 guard
                     let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
+
                 else {
                     fatalError()
                 }
@@ -182,6 +183,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
                 return cell
             }
             else {
