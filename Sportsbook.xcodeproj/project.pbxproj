@@ -615,8 +615,8 @@
 		A9627A0D274548610001E1D5 /* ActivationAlertCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */; };
 		A9627A0E274548610001E1D5 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A0B274548610001E1D5 /* ActivationAlertCollectionViewCell.xib */; };
 		A9627A0F274548610001E1D5 /* ActivationAlertCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A0B274548610001E1D5 /* ActivationAlertCollectionViewCell.xib */; };
-		A9627A11274553700001E1D5 /* ActivationAlertData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A10274553700001E1D5 /* ActivationAlertData.swift */; };
-		A9627A12274553700001E1D5 /* ActivationAlertData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A10274553700001E1D5 /* ActivationAlertData.swift */; };
+		A9627A11274553700001E1D5 /* ActivationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A10274553700001E1D5 /* ActivationAlert.swift */; };
+		A9627A12274553700001E1D5 /* ActivationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A10274553700001E1D5 /* ActivationAlert.swift */; };
 		A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */; };
 		A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */; };
 		A9627A17274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */; };
@@ -1098,7 +1098,7 @@
 		A9627A07274529BD0001E1D5 /* ActivationAlertScrollableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertScrollableView.xib; sourceTree = "<group>"; };
 		A9627A0A274548610001E1D5 /* ActivationAlertCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9627A0B274548610001E1D5 /* ActivationAlertCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertCollectionViewCell.xib; sourceTree = "<group>"; };
-		A9627A10274553700001E1D5 /* ActivationAlertData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertData.swift; sourceTree = "<group>"; };
+		A9627A10274553700001E1D5 /* ActivationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlert.swift; sourceTree = "<group>"; };
 		A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivationAlertScrollableTableViewCell.swift; sourceTree = "<group>"; };
 		A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ActivationAlertScrollableTableViewCell.xib; sourceTree = "<group>"; };
 		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
@@ -2102,7 +2102,7 @@
 				45B7DADA26F8FF130032C1C3 /* PopUpDetails.swift */,
 				45B7DAE126F92CF30032C1C3 /* UserRegisterForm.swift */,
 				A99DFBE92731A2F700002CDB /* HomeFilterOptions.swift */,
-				A9627A10274553700001E1D5 /* ActivationAlertData.swift */,
+				A9627A10274553700001E1D5 /* ActivationAlert.swift */,
 				F4E3B74C2742B47100855C58 /* MainMarketType.swift */,
 				A96B70BA273A891F00FEF07D /* UserLoginForm.swift */,
 			);
@@ -3306,7 +3306,7 @@
 				45166D1926F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				454E0ABE2732C78300794E0C /* TitleTabularDataSource.swift in Sources */,
 				4589F41426BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
-				A9627A11274553700001E1D5 /* ActivationAlertData.swift in Sources */,
+				A9627A11274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
@@ -3586,7 +3586,7 @@
 				45166D1A26F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				454E0ABF2732C78300794E0C /* TitleTabularDataSource.swift in Sources */,
 				4589F41526BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
-				A9627A12274553700001E1D5 /* ActivationAlertData.swift in Sources */,
+				A9627A12274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,

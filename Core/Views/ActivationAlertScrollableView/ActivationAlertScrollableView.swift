@@ -12,7 +12,7 @@ class ActivationAlertScrollableView: NibView {
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet private var pageControl: UIPageControl!
     // Variables
-    var alertDataArray: [ActivationAlertData] = []
+    var alertDataArray: [ActivationAlert] = []
     var activationAlertCollectionViewCellLinkLabelAction: ((ActivationAlertType) -> Void)?
 
     override init(frame: CGRect) {
@@ -52,7 +52,7 @@ class ActivationAlertScrollableView: NibView {
         self.collectionView.backgroundColor = UIColor.App.mainBackground
     }
 
-    func setAlertArrayData(arrayData: [ActivationAlertData]) {
+    func setAlertArrayData(arrayData: [ActivationAlert]) {
         self.alertDataArray = arrayData
         self.collectionView.reloadData()
     }

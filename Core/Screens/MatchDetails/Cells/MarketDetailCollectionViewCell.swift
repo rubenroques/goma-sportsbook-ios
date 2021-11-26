@@ -16,14 +16,23 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.commonInit()
+        self.marketTypeLabel.text = "Market Type"
+        self.marketOddLabel.text = "1.0"
+
         self.setupWithTheme()
     }
 
-    func commonInit() {
-        self.marketTypeLabel.text = "Market Type"
+    override func prepareForReuse() {
+        super.prepareForReuse()
 
-        self.marketOddLabel.text = "1.0"
+        //self.marketTypeLabel.text = ""
+        //self.marketOddLabel.text = ""
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
@@ -37,24 +46,10 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.marketOddLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        self.setupWithTheme()
-    }
-
     func setupDetails(marketType: String, marketOdd: String) {
         self.marketTypeLabel.text = marketType
 
         self.marketOddLabel.text = marketOdd
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        //self.marketTypeLabel.text = ""
-
-        //self.marketOddLabel.text = ""
     }
 
 }

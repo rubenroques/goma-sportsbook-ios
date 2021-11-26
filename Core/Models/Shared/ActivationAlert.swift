@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ActivationAlertData {
+struct ActivationAlert {
     var title: String
     var description: String
     var linkLabel: String

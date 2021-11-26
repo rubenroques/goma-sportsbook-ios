@@ -377,7 +377,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction func didTapMatchView(_ sender: Any) {
-        tappedMatchWidgetAction?()
+        self.tappedMatchWidgetAction?()
     }
 
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
@@ -416,12 +416,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         view.layer.borderColor = color.cgColor
     }
 
+    //
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.mainTint
     }
+
     func deselectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.tertiaryBackground
     }
+
     @objc func didTapLeftOddButton() {
 
         guard
@@ -455,12 +458,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
+    //
     func selectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App.mainTint
     }
+
     func deselectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
     }
+
     @objc func didTapMiddleOddButton() {
         guard
             let match = self.match,
@@ -492,12 +498,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    //
     func selectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.mainTint
     }
+
     func deselectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
     }
+
     @objc func didTapRightOddButton() {
         guard
             let match = self.match,

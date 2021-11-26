@@ -12,7 +12,7 @@ class ActivationAlertScrollableTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet var pageControl: UIPageControl!
     // Variables
-    var alertDataArray: [ActivationAlertData] = []
+    var alertDataArray: [ActivationAlert] = []
     var activationAlertCollectionViewCellLinkLabelAction: ((ActivationAlertType) -> Void)?
 
     override func awakeFromNib() {
@@ -42,7 +42,7 @@ class ActivationAlertScrollableTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = UIColor.App.mainBackground
     }
 
-    func setAlertArrayData(arrayData: [ActivationAlertData]) {
+    func setAlertArrayData(arrayData: [ActivationAlert]) {
         self.alertDataArray = arrayData
         self.collectionView.reloadData()
     }

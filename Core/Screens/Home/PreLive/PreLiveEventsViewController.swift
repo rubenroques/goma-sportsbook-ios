@@ -117,7 +117,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.connectPublishers()
         self.viewModel.fetchData()
-        self.viewModel.presentViewControllerAction = { alertType in
+        self.viewModel.didSelectActivationAlertAction = { alertType in
             if alertType == ActivationAlertType.email {
                 let emailVerificationViewController = EmailVerificationViewController()
                 self.present(emailVerificationViewController, animated: true, completion: nil)
@@ -128,7 +128,7 @@ class PreLiveEventsViewController: UIViewController {
             }
 
         }
-        self.viewModel.presentMatchDetailViewControllerAction = { match in
+        self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }

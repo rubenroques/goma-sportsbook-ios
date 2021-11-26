@@ -63,8 +63,8 @@ class SportsViewModel: NSObject {
     }
 
     var dataDidChangedAction: (() -> Void)?
-    var presentViewControllerAction: ((ActivationAlertType) -> Void)?
-    var presentMatchDetailViewControllerAction: ((Match) -> Void)?
+    var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -101,24 +101,24 @@ class SportsViewModel: NSObject {
 
         super.init()
 
-        self.myGamesSportsViewModelDataSource.requestNextPage = { [weak self] in
+        self.myGamesSportsViewModelDataSource.requestNextPageAction = { [weak self] in
             self?.fetchPopularMatchesNextPage()
         }
 
-        self.myGamesSportsViewModelDataSource.requestPresentViewController = { [weak self] alertType in
-            self?.presentViewControllerAction?(alertType)
+        self.myGamesSportsViewModelDataSource.didSelectActivationAlertAction = { [weak self] alertType in
+            self?.didSelectActivationAlertAction?(alertType)
         }
 
-        self.myGamesSportsViewModelDataSource.requestMatchDetailViewController = { [weak self] match in
-            self?.presentMatchDetailViewControllerAction?(match)
+        self.myGamesSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
 
-        self.todaySportsViewModelDataSource.requestNextPage = { [weak self] in
+        self.todaySportsViewModelDataSource.requestNextPageAction = { [weak self] in
             self?.fetchTodayMatchesNextPage()
         }
 
-        self.todaySportsViewModelDataSource.requestMatchDetailViewController = { [weak self] match in
-            self?.presentMatchDetailViewControllerAction?(match)
+        self.todaySportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
 
     }
@@ -945,11 +945,11 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
         return userFavoriteMatches + popularMatches
     }
 
-    var alertsArray: [ActivationAlertData] = []
+    var alertsArray: [ActivationAlert] = []
 
-    var requestNextPage: (() -> Void)?
-    var requestPresentViewController: ((ActivationAlertType) -> Void)?
-    var requestMatchDetailViewController: ((Match) -> Void)?
+    var requestNextPageAction: (() -> Void)?
+    var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
         self.banners = banners
@@ -959,13 +959,13 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
 
-                let emailActivationAlertData = ActivationAlertData(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
 
                 alertsArray.append(emailActivationAlertData)
             }
 
             if Env.userSessionStore.isUserProfileIncomplete {
-                let completeProfileAlertData = ActivationAlertData(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
             }
@@ -1004,7 +1004,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
             // return UITableViewCell()
             if let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self) {
                 cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
-                    self.requestPresentViewController?(alertType)
+                    self.didSelectActivationAlertAction?(alertType)
                 }
                 cell.setAlertArrayData(arrayData: alertsArray)
                 return cell
@@ -1022,7 +1022,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
                let match = self.matches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
                 cell.tappedMatchLineAction = {
-                    self.requestMatchDetailViewController?(match)
+                    self.didSelectMatchAction?(match)
                 }
                 return cell
             }
@@ -1100,7 +1100,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.activityIndicatorView.startAnimating()
             }
-            self.requestNextPage?()
+            self.requestNextPageAction?()
         }
     }
 
@@ -1110,8 +1110,8 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
 
     var todayMatches: [Match] = []
 
-    var requestNextPage: (() -> Void)?
-    var requestMatchDetailViewController: ((Match) -> Void)?
+    var requestNextPageAction: (() -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
@@ -1140,7 +1140,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
                let match = self.todayMatches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
                 cell.tappedMatchLineAction = {
-                    self.requestMatchDetailViewController?(match)
+                    self.didSelectMatchAction?(match)
                 }
                 return cell
             }
@@ -1203,7 +1203,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.activityIndicatorView.startAnimating()
             }
-            self.requestNextPage?()
+            self.requestNextPageAction?()
         }
     }
 }
