@@ -710,6 +710,10 @@
 		A9BCF42E274BBE7B006DD528 /* PolicyLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */; };
 		A9BCF430274BBE8D006DD528 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
 		A9BCF431274BBE8D006DD528 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
+		A9BCF4492750FC89006DD528 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
+		A9BCF44A2750FC8A006DD528 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
+		A9BCF44C2750FCA5006DD528 /* BetslipErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */; };
+		A9BCF44D2750FCA5006DD528 /* BetslipErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */; };
 		A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
 		A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
@@ -1127,6 +1131,8 @@
 		A9B841C126EB5D5900269B05 /* Odd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Odd.swift; sourceTree = "<group>"; };
 		A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyLinkView.swift; sourceTree = "<group>"; };
 		A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PolicyLinkView.xib; sourceTree = "<group>"; };
+		A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipErrorView.swift; sourceTree = "<group>"; };
+		A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetslipErrorView.xib; sourceTree = "<group>"; };
 		A9C602292716F13F00992E11 /* HomeFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterViewController.swift; sourceTree = "<group>"; };
 		A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeFilterViewController.xib; sourceTree = "<group>"; };
 		A9C602342716F7BE00992E11 /* FilterCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollapseView.swift; sourceTree = "<group>"; };
@@ -1953,6 +1959,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A9BCF4472750FC51006DD528 /* BetslipErrorView */,
 				A9BCF42B274BBE55006DD528 /* PolicyLinkView */,
 				A9627A03274520EC0001E1D5 /* ActivationAlertScrollableView */,
 				A96279E9273ED1AB0001E1D5 /* ActivationAlertView */,
@@ -2521,6 +2528,15 @@
 			path = PolicyLinkView;
 			sourceTree = "<group>";
 		};
+		A9BCF4472750FC51006DD528 /* BetslipErrorView */ = {
+			isa = PBXGroup;
+			children = (
+				A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */,
+				A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */,
+			);
+			path = BetslipErrorView;
+			sourceTree = "<group>";
+		};
 		A9C602282716F11A00992E11 /* HomeFilter */ = {
 			isa = PBXGroup;
 			children = (
@@ -2743,6 +2759,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				454990CC2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
+				A9BCF44C2750FCA5006DD528 /* BetslipErrorView.xib in Resources */,
 				45BEA47F26F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				455A0D2026BDE7AE00EC572D /* DebugViewController.xib in Resources */,
 				45D871CC27108F5900F5B87B /* CountryFlags.xcassets in Resources */,
@@ -2888,6 +2905,7 @@
 				45D871CD27108F5900F5B87B /* CountryFlags.xcassets in Resources */,
 				A9BCF431274BBE8D006DD528 /* PolicyLinkView.xib in Resources */,
 				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
+				A9BCF44D2750FCA5006DD528 /* BetslipErrorView.xib in Resources */,
 				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
 				A96279F62743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
@@ -3137,6 +3155,7 @@
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CE926F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
+				A9BCF4492750FC89006DD528 /* BetslipErrorView.swift in Sources */,
 				45B0BD3B271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
@@ -3412,6 +3431,7 @@
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CEA26F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
+				A9BCF44A2750FC8A006DD528 /* BetslipErrorView.swift in Sources */,
 				45B0BD3C271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,

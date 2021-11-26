@@ -425,6 +425,39 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.betslipManager.removeAllPlacedDetailsError()
+        Env.betslipManager.removeAllBetslipPlacedBetErrorResponse()
+
+        Env.betslipManager.betPlacedDetailsErrorsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print(completion)
+                //self.isLoading = false
+            } receiveValue: { betPlacedDetails in
+                //self.isLoading = false
+                //print("BET PLACED DETAILS: \(betPlacedDetails)")
+                if !betPlacedDetails.isEmpty {
+                    let errorMessage = betPlacedDetails[0].response.errorMessage
+                    let response = betPlacedDetails[0].response
+                    self.showErrorView(errorMessage: errorMessage)
+
+                    Env.betslipManager.addBetslipPlacedBetErrorResponse(betPlacedError: [response])
+
+                }
+
+            }
+            .store(in: &cancellables)
+
+        Env.betslipManager.betslipPlaceBetResponseErrorsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                print(completion)
+                //self.isLoading = false
+            } receiveValue: { betslipPlaceBetResponse in
+                self.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+
         self.addDoneAccessoryView()
         self.setupWithTheme()
 
@@ -432,6 +465,23 @@ class PreSubmissionBetslipViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         self.placeBetButton.isEnabled = false
+    }
+
+    func showErrorView(errorMessage: String?) {
+        let errorView = BetslipErrorView()
+        errorView.setDescription(description: errorMessage ?? "Error")
+        errorView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(errorView)
+
+        NSLayoutConstraint.activate([
+            errorView.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            errorView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            errorView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
+        ])
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            errorView.removeFromSuperview()
+        }
     }
 
     override func viewDidLayoutSubviews() {
@@ -724,9 +774,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             case .loaded(let betPlacedDetails):
                 if !(betPlacedDetails.response.betSucceed ?? false) {
                     canProceedToNextScreen = false
-                    print("BET SINGLE: \(betPlacedDetails.response)")
-                    self.singleBettingTicketDataSource.bettingTicketErrors.append(betPlacedDetails.response)
-                    self.tableView.reloadData()
+
+                    Env.betslipManager.addBetslipPlacedBetErrorResponse(betPlacedError: [betPlacedDetails.response])
+
                     break
                 }
                 else {
@@ -864,8 +914,6 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
     var didUpdateBettingValueAction: ((String, Double) -> Void)?
     var bettingValueForId: ((String) -> (Double?))?
 
-    var bettingTicketErrors: [BetslipPlaceBetResponse] = []
-
     init(bettingTickets: [BettingTicket]) {
         self.bettingTickets = bettingTickets
     }
@@ -884,15 +932,26 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
         let storedValue = self.bettingValueForId?(bettingTicket.id)
 
-        if !self.bettingTicketErrors.isEmpty {
-            for bettingError in self.bettingTicketErrors {
+        if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
+            let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
+            var hasFoundCorrespondingId = false
+            var errorMessage = "Error"
+            for bettingError in bettingTicketErrors {
                 if let bettingSelections = bettingError.selections {
                     for selection in bettingSelections {
                         if selection.id == bettingTicket.bettingId {
-                            cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: bettingError.errorMessage)
+                            hasFoundCorrespondingId = true
+                            errorMessage = bettingError.errorMessage ?? "Error"
                         }
                     }
                 }
+            }
+
+            if hasFoundCorrespondingId {
+                cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: errorMessage)
+            }
+            else {
+                cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
             }
 
         } else {
@@ -931,7 +990,51 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
         else {
             fatalError()
         }
-        cell.configureWithBettingTicket(bettingTicket)
+        if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
+            let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
+            var hasFoundCorrespondingId = false
+            var errorMessage = ""
+            print("BETTING TICKET ERROR: \(bettingTicketErrors)")
+            for bettingError in bettingTicketErrors {
+                if let bettingErrorCode = bettingError.errorCode {
+                    // Error code with corresponding id
+                    if bettingErrorCode == "107" {
+                        if let bettingErrorMessage = bettingError.errorMessage {
+                            if bettingErrorMessage.contains(bettingTicket.bettingId) {
+                                hasFoundCorrespondingId = true
+                                errorMessage = bettingError.errorMessage ?? "Error"
+                                break
+                            }
+
+                        }
+                    }
+                    else {
+                        if let bettingSelections = bettingError.selections {
+                            for selection in bettingSelections {
+
+                                if selection.id == bettingTicket.bettingId {
+                                    hasFoundCorrespondingId = true
+                                    errorMessage = bettingError.errorMessage ?? "Error"
+                                    break
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            if hasFoundCorrespondingId{
+                cell.configureWithBettingTicket(bettingTicket, errorBetting: errorMessage)
+            }
+            else {
+                cell.configureWithBettingTicket(bettingTicket)
+            }
+
+        } else {
+            cell.configureWithBettingTicket(bettingTicket)
+        }
+
         return cell
     }
 

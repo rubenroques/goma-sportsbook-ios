@@ -40,6 +40,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private var stackView: UIStackView!
     @IBOutlet private var errorView: UIView!
     @IBOutlet private var errorLabel: UILabel!
+    @IBOutlet private var errorLogoImageView: UIImageView!
 
     @IBOutlet private var errorLateralTopView: UIView!
     @IBOutlet private var errorLateralBottomView: UIView!
@@ -168,13 +169,17 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.stackView.backgroundColor = .clear
 
-        self.errorView.backgroundColor = UIColor.App.secondaryBackground
+        self.errorView.backgroundColor = UIColor.App.contentBackground
 
         self.errorLabel.textColor = UIColor.App.headingMain
         self.errorLabel.font = AppFont.with(type: .bold, size: 15)
+        self.errorLabel.numberOfLines = 0
+
+        self.errorLogoImageView.image = UIImage(named: "warning_alert_icon")
+        self.errorLogoImageView.contentMode = .scaleAspectFit
 
         self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
-        self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
+        self.errorLateralBottomView.backgroundColor = UIColor.App.contentBackground
     }
 
     func addDoneAccessoryView() {
@@ -256,6 +261,15 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
             self.errorLateralTopView.backgroundColor = UIColor.App.alertError
             self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
+
+            NSLayoutConstraint(item: self.errorView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.errorLabel, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 24).isActive = true
+        }
+        else {
+            self.errorLabel.text = ""
+            self.errorView.isHidden = true
+
+            self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
+            self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
         }
 
     }
@@ -263,6 +277,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     @IBAction private func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
+            Env.betslipManager.removeAllPlacedDetailsError()
+            Env.betslipManager.removeAllBetslipPlacedBetErrorResponse()
         }
     }
 

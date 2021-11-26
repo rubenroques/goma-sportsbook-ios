@@ -40,16 +40,16 @@
                                         <rect key="frame" x="0.0" y="0.0" width="347" height="45"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uxt-tt-rUj">
-                                                <rect key="frame" x="12" y="14" width="37" height="17.5"/>
+                                                <rect key="frame" x="12" y="15" width="38.5" height="15"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="15"/>
                                                 <color key="textColor" name="headingMainColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNx-OA-6Xp">
-                                                <rect key="frame" x="262.5" y="10" width="50.5" height="25"/>
+                                                <rect key="frame" x="261" y="10" width="52" height="25"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DUb-Mw-uFF">
-                                                        <rect key="frame" x="8" y="5.5" width="34.5" height="16.5"/>
+                                                        <rect key="frame" x="8" y="6.5" width="36" height="14"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="14"/>
                                                         <color key="textColor" name="headingMainColor"/>
                                                         <nil key="highlightedColor"/>
@@ -64,14 +64,14 @@
                                                 </constraints>
                                             </view>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="odd_up_icon" translatesAutoresizingMaskIntoConstraints="NO" id="lKa-Xq-fYv">
-                                                <rect key="frame" x="246.5" y="17.5" width="11" height="9"/>
+                                                <rect key="frame" x="245" y="17.5" width="11" height="9"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="11" id="j7S-Vz-hgC"/>
                                                     <constraint firstAttribute="height" constant="9" id="kdx-NK-Jj5"/>
                                                 </constraints>
                                             </imageView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="odd_down_icon" translatesAutoresizingMaskIntoConstraints="NO" id="4mZ-5D-Iql">
-                                                <rect key="frame" x="246.5" y="20.5" width="11" height="9"/>
+                                                <rect key="frame" x="245" y="20.5" width="11" height="9"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="9" id="HOi-lG-n9f"/>
                                                     <constraint firstAttribute="width" constant="11" id="Raw-Cd-9B5"/>
@@ -115,19 +115,19 @@
                                         <rect key="frame" x="0.0" y="46" width="347" height="54"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CS0-Ub-bbm">
-                                                <rect key="frame" x="12" y="9" width="34.5" height="16.5"/>
+                                                <rect key="frame" x="12" y="9" width="36" height="14"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                                                 <color key="textColor" name="headingMainColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZcZ-Bq-usf">
-                                                <rect key="frame" x="12" y="28.5" width="29.5" height="14"/>
+                                                <rect key="frame" x="12" y="26" width="31" height="12"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                 <color key="textColor" name="headingDisabledColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5lh-bi-eep">
-                                                <rect key="frame" x="12" y="45.5" width="29.5" height="14"/>
+                                                <rect key="frame" x="12" y="41" width="31" height="12"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                 <color key="textColor" name="headingDisabledColor"/>
                                                 <nil key="highlightedColor"/>
@@ -150,7 +150,7 @@
                                                 <rect key="frame" x="8" y="6" width="96" height="38"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Amount.." textAlignment="right" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="s7F-Sx-011">
-                                                        <rect key="frame" x="8" y="10" width="80" height="18"/>
+                                                        <rect key="frame" x="8" y="11.5" width="80" height="15.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="80" id="FS8-lr-ybz"/>
                                                         </constraints>
@@ -247,7 +247,7 @@
                                 <rect key="frame" x="0.0" y="150" width="347" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vZk-Wn-EaC">
-                                        <rect key="frame" x="12" y="10" width="41.5" height="20.5"/>
+                                        <rect key="frame" x="45" y="10" width="286" height="20"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" name="headingMainColor"/>
                                         <nil key="highlightedColor"/>
@@ -259,15 +259,25 @@
                                             <constraint firstAttribute="width" constant="5" id="WOT-1d-vae"/>
                                         </constraints>
                                     </view>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="warning_alert_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Gwl-iz-1LH">
+                                        <rect key="frame" x="12" y="8" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="25" id="hbi-7N-E7L"/>
+                                            <constraint firstAttribute="height" constant="25" id="zJX-Rm-SOF"/>
+                                        </constraints>
+                                    </imageView>
                                 </subviews>
-                                <color key="backgroundColor" name="secondaryBackgroundColor"/>
+                                <color key="backgroundColor" name="contentBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstItem="vZk-Wn-EaC" firstAttribute="leading" secondItem="dkR-FI-6Ut" secondAttribute="leading" constant="12" id="EP9-fU-kj1"/>
+                                    <constraint firstAttribute="trailing" secondItem="vZk-Wn-EaC" secondAttribute="trailing" constant="16" id="9Bx-wp-pqv"/>
+                                    <constraint firstItem="vZk-Wn-EaC" firstAttribute="leading" secondItem="Gwl-iz-1LH" secondAttribute="trailing" constant="8" id="KgT-Np-Zfd"/>
                                     <constraint firstItem="vZk-Wn-EaC" firstAttribute="centerY" secondItem="dkR-FI-6Ut" secondAttribute="centerY" id="X1a-YO-Rqx"/>
+                                    <constraint firstItem="vZk-Wn-EaC" firstAttribute="top" secondItem="dkR-FI-6Ut" secondAttribute="top" constant="10" id="Xxp-pw-ySH"/>
                                     <constraint firstAttribute="bottom" secondItem="nQj-lH-8JZ" secondAttribute="bottom" id="dGl-gk-8gb"/>
                                     <constraint firstItem="nQj-lH-8JZ" firstAttribute="top" secondItem="dkR-FI-6Ut" secondAttribute="top" id="kic-7u-dPr"/>
-                                    <constraint firstAttribute="height" constant="40" id="qOd-Y4-7HF"/>
+                                    <constraint firstItem="Gwl-iz-1LH" firstAttribute="leading" secondItem="dkR-FI-6Ut" secondAttribute="leading" constant="12" id="mBo-Yv-DTZ"/>
                                     <constraint firstItem="nQj-lH-8JZ" firstAttribute="leading" secondItem="dkR-FI-6Ut" secondAttribute="leading" id="sou-Zr-Xeu"/>
+                                    <constraint firstItem="Gwl-iz-1LH" firstAttribute="top" secondItem="dkR-FI-6Ut" secondAttribute="top" constant="8" id="tFE-sz-hJ4"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -293,6 +303,7 @@
                 <outlet property="errorLabel" destination="vZk-Wn-EaC" id="t1n-vJ-ohm"/>
                 <outlet property="errorLateralBottomView" destination="nQj-lH-8JZ" id="ifG-gD-sRV"/>
                 <outlet property="errorLateralTopView" destination="NuM-Bq-crm" id="hqM-DR-hK5"/>
+                <outlet property="errorLogoImageView" destination="Gwl-iz-1LH" id="bvr-YR-tXy"/>
                 <outlet property="errorView" destination="dkR-FI-6Ut" id="NW8-bY-5dq"/>
                 <outlet property="marketNameLabel" destination="CS0-Ub-bbm" id="HhT-GP-RIs"/>
                 <outlet property="matchDetailLabel" destination="ZcZ-Bq-usf" id="C3m-3e-Jrx"/>
@@ -315,6 +326,7 @@
         <image name="odd_down_icon" width="10" height="5"/>
         <image name="odd_up_icon" width="10" height="5"/>
         <image name="thin_close_cross_icon" width="13" height="13"/>
+        <image name="warning_alert_icon" width="33" height="33"/>
         <namedColor name="contentBackgroundColor">
             <color red="0.11372549019607843" green="0.12156862745098039" blue="0.14901960784313725" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

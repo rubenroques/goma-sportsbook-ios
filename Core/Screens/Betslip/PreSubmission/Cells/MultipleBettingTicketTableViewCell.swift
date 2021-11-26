@@ -169,12 +169,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             })
 
         if let errorBetting = errorBetting {
-            self.errorView.isHidden = false
-
-            self.errorLabel.text = errorBetting
 
             self.errorLateralTopView.backgroundColor = UIColor.App.alertError
             self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
+        }
+        else {
+            self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
+            self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
         }
         
     }
@@ -183,6 +184,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     @IBAction func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
+            Env.betslipManager.removeAllPlacedDetailsError()
+            Env.betslipManager.removeAllBetslipPlacedBetErrorResponse()
         }
     }
 
