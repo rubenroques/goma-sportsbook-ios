@@ -23,6 +23,10 @@ class BetslipManager: NSObject {
     private var multipleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     private var systemBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
 
+    var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
+
+    var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
+
     private var cancellable: Set<AnyCancellable> = []
 
     private var oddsCancellableDictionary: [String: AnyCancellable] = [:]
@@ -34,6 +38,8 @@ class BetslipManager: NSObject {
         self.simpleBetslipSelectionState = .init(nil)
         self.multipleBetslipSelectionState = .init(nil)
         self.systemBetslipSelectionState = .init(nil)
+        self.betPlacedDetailsErrorsPublisher = .init([])
+        self.betslipPlaceBetResponseErrorsPublisher = .init([])
 
         super.init()
 
@@ -127,6 +133,22 @@ class BetslipManager: NSObject {
             }
         }
         return updatedTickets
+    }
+
+    func addBetPlacedDetailsError(betPlacedDetails: [BetPlacedDetails]) {
+        self.betPlacedDetailsErrorsPublisher.send(betPlacedDetails)
+    }
+
+    func removeAllPlacedDetailsError() {
+        self.betPlacedDetailsErrorsPublisher.send([])
+    }
+
+    func addBetslipPlacedBetErrorResponse(betPlacedError: [BetslipPlaceBetResponse]) {
+        self.betslipPlaceBetResponseErrorsPublisher.send(betPlacedError)
+    }
+
+    func removeAllBetslipPlacedBetErrorResponse() {
+        self.betslipPlaceBetResponseErrorsPublisher.send([])
     }
 }
 

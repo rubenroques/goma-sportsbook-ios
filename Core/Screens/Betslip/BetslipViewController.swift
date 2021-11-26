@@ -139,18 +139,24 @@ class BetslipViewController: UIViewController {
 
         var errorCode: String?
         var errorMessage: String?
+        var errorBetPlaced: BetPlacedDetails?
 
         for betPlaced in betPlacedDetailsArray {
             if let errorCodeValue = betPlaced.response.errorCode {
                 errorCode = errorCodeValue
                 errorMessage = betPlaced.response.errorMessage
+                errorBetPlaced = betPlaced
                 break
             }
         }
 
         if errorCode != nil {
             let message = errorMessage != nil ? errorMessage! : "Error placing Bet."
-            UIAlertController.showMessage(title: "Betslipt", message: message, on: self)
+
+            if let betPlaced = errorBetPlaced {
+                Env.betslipManager.addBetPlacedDetailsError(betPlacedDetails: [betPlaced])
+            }
+
             return
         }
        

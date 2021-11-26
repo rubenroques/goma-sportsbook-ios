@@ -37,6 +37,14 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var plusFiveButtonView: UIButton!
     @IBOutlet private weak var maxValueButtonView: UIButton!
 
+    @IBOutlet private var stackView: UIStackView!
+    @IBOutlet private var errorView: UIView!
+    @IBOutlet private var errorLabel: UILabel!
+    @IBOutlet private var errorLogoImageView: UIImageView!
+
+    @IBOutlet private var errorLateralTopView: UIView!
+    @IBOutlet private var errorLateralBottomView: UIView!
+
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
 
@@ -70,6 +78,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.addDoneAccessoryView()
 
         self.setupWithTheme()
+
+        self.errorView.isHidden = true
     }
 
     override func layoutSubviews() {
@@ -82,9 +92,11 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.maxValueButtonView.layer.cornerRadius = CornerRadius.view
         self.maxValueButtonView.clipsToBounds = true
 
-        self.baseView.layer.cornerRadius = CornerRadius.view
+        //self.baseView.layer.cornerRadius = CornerRadius.view
         self.oddBaseView.layer.cornerRadius = 3
         self.amountBaseView.layer.cornerRadius = CornerRadius.view
+        self.stackView.layer.cornerRadius = CornerRadius.view
+        self.stackView.layer.masksToBounds = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -155,6 +167,19 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.maxValueButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
         self.maxValueButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
 
+        self.stackView.backgroundColor = .clear
+
+        self.errorView.backgroundColor = UIColor.App.contentBackground
+
+        self.errorLabel.textColor = UIColor.App.headingMain
+        self.errorLabel.font = AppFont.with(type: .bold, size: 15)
+        self.errorLabel.numberOfLines = 0
+
+        self.errorLogoImageView.image = UIImage(named: "warning_alert_icon")
+        self.errorLogoImageView.contentMode = .scaleAspectFit
+
+        self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
+        self.errorLateralBottomView.backgroundColor = UIColor.App.contentBackground
     }
 
     func addDoneAccessoryView() {
@@ -196,7 +221,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         }, completion: nil)
     }
 
-    func configureWithBettingTicket(_ bettingTicket: BettingTicket, previousBettingAmount: Double? = nil) {
+    func configureWithBettingTicket(_ bettingTicket: BettingTicket, previousBettingAmount: Double? = nil, errorBetting: String? = nil) {
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
         self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
@@ -230,11 +255,30 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 self?.oddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
             })
 
+        if let errorBetting = errorBetting {
+            self.errorLabel.text = errorBetting
+            self.errorView.isHidden = false
+
+            self.errorLateralTopView.backgroundColor = UIColor.App.alertError
+            self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
+
+            NSLayoutConstraint(item: self.errorView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.errorLabel, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 24).isActive = true
+        }
+        else {
+            self.errorLabel.text = ""
+            self.errorView.isHidden = true
+
+            self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
+            self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
+        }
+
     }
 
     @IBAction private func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
+            Env.betslipManager.removeAllPlacedDetailsError()
+            Env.betslipManager.removeAllBetslipPlacedBetErrorResponse()
         }
     }
 

@@ -28,13 +28,15 @@ class SubmitedBetSelectionView: NibView {
     var currentOddValue: Double?
 
     var betHistoryEntrySelection: BetHistoryEntrySelection
+    var betHistoryEntry: BetHistoryEntry
 
-    convenience init(betHistoryEntrySelection: BetHistoryEntrySelection) {
-        self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection)
+    convenience init(betHistoryEntrySelection: BetHistoryEntrySelection, betHistoryEntry: BetHistoryEntry) {
+        self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection, betHistoryEntry: betHistoryEntry)
     }
 
-    init(frame: CGRect, betHistoryEntrySelection: BetHistoryEntrySelection) {
+    init(frame: CGRect, betHistoryEntrySelection: BetHistoryEntrySelection, betHistoryEntry: BetHistoryEntry) {
         self.betHistoryEntrySelection = betHistoryEntrySelection
+        self.betHistoryEntry = betHistoryEntry
         super.init(frame: frame)
 
         self.commonInit()
@@ -55,8 +57,14 @@ class SubmitedBetSelectionView: NibView {
 
         self.countryCompetitionFlagImageView.clipsToBounds = true
         self.countryCompetitionFlagImageView.layer.masksToBounds = true
+        if let maxWinning = betHistoryEntry.maxWinning, let amount = betHistoryEntry.amount {
+            self.oddValueLabel.text = "\(maxWinning/amount)"
+        }
+        else {
+            self.oddValueLabel.text = "-.--"
+        }
 
-        self.oddValueLabel.text = "-.--"
+
         self.eventTimeLabel.text = ""
 
         self.upChangeOddValueImage.alpha = 0.0
@@ -108,7 +116,7 @@ class SubmitedBetSelectionView: NibView {
                     }
                 }
                 self?.currentOddValue = newOddValue
-                self?.oddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                //self?.oddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
             })
         }
 
