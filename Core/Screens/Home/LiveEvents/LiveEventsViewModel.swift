@@ -46,7 +46,8 @@ class LiveEventsViewModel: NSObject {
         }
     }
     var dataDidChangedAction: (() -> Void)?
-
+    var didSelectMatchAction: ((Match) -> Void)?
+    
     private var cancellables = Set<AnyCancellable>()
 
     private var allMatchesPublisher: AnyCancellable?
@@ -68,6 +69,10 @@ class LiveEventsViewModel: NSObject {
 
         self.allMatchesViewModelDataSource.requestNextPage = { [weak self] in
             self?.fetchAllMatchesNextPage()
+        }
+
+        self.allMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
     }
 
@@ -328,6 +333,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
 
     var allMatches: [Match] = []
     var requestNextPage: (() -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     var shouldShowLoadingCell = true
 
@@ -379,6 +385,10 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.allMatches[safe: indexPath.row] {
                 cell.setupWithMatch(match, liveMatch: true)
+                cell.tappedMatchLineAction = {
+                    self.didSelectMatchAction?(match)
+                }
+
                 return cell
             }
         case 3:

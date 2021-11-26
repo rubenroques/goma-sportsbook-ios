@@ -169,6 +169,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
             self.leftOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+
             self.currentLeftOddValue = outcome.bettingOffer.value
             self.leftOutcome = outcome
 
@@ -298,7 +299,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
@@ -339,7 +340,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,

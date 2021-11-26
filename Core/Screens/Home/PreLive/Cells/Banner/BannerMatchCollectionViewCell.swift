@@ -406,7 +406,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
@@ -445,7 +445,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
@@ -483,7 +483,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,

@@ -13,11 +13,26 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     @IBOutlet private var marketTypeLabel: UILabel!
     @IBOutlet private var marketOddLabel: UILabel!
 
+    var match: Match?
+    var market: Market?
+    var outcome: Outcome?
+    var bettingOffer: BettingOffer?
+
+    private var isOutcomeButtonSelected: Bool = false {
+        didSet {
+            self.isOutcomeButtonSelected ? self.selectButton() : self.deselectButton()
+        }
+    }
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.marketTypeLabel.text = "Market Type"
-        self.marketOddLabel.text = "1.0"
+        self.marketTypeLabel.text = ""
+        self.marketOddLabel.text = ""
+
+        let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
+        self.containerView.addGestureRecognizer(tapOddButton)
+
 
         self.setupWithTheme()
     }
@@ -25,8 +40,15 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        //self.marketTypeLabel.text = ""
-        //self.marketOddLabel.text = ""
+        self.marketTypeLabel.text = ""
+        self.marketOddLabel.text = ""
+
+        self.match = nil
+        self.market = nil
+        self.outcome = nil
+        self.bettingOffer = nil
+
+        self.isOutcomeButtonSelected = false
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -46,10 +68,56 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.marketOddLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    func setupDetails(marketType: String, marketOdd: String) {
-        self.marketTypeLabel.text = marketType
+    func configureWith(outcome: Outcome) {
 
-        self.marketOddLabel.text = marketOdd
+        self.outcome = outcome
+        self.bettingOffer = outcome.bettingOffer
+
+        self.marketTypeLabel.text = outcome.translatedName
+        self.marketOddLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+
+        self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+    }
+
+
+    func selectButton() {
+        self.containerView.backgroundColor = UIColor.App.mainTint
+    }
+    func deselectButton() {
+        self.containerView.backgroundColor = UIColor.App.mainBackground
+    }
+    @objc func didTapOddButton() {
+
+        guard
+            let match = self.match,
+            let market = self.market,
+            let outcome = self.outcome
+        else {
+            return
+        }
+
+        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
+        let marketDescription = market.name
+        let outcomeDescription = outcome.translatedName
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          matchId: match.id,
+                                          value: outcome.bettingOffer.value,
+                                          matchDescription: matchDescription,
+                                          marketDescription: marketDescription,
+                                          outcomeDescription: outcomeDescription)
+
+
+        if Env.betslipManager.hasBettingTicket(bettingTicket) {
+            Env.betslipManager.removeBettingTicket(bettingTicket)
+            self.isOutcomeButtonSelected = false
+        }
+        else {
+            Env.betslipManager.addBettingTicket(bettingTicket)
+            self.isOutcomeButtonSelected = true
+        }
     }
 
 }

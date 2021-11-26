@@ -360,7 +360,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
@@ -399,7 +399,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
@@ -437,7 +437,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,

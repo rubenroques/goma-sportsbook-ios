@@ -107,6 +107,11 @@ class LiveEventsViewController: UIViewController  {
         self.setupWithTheme()
         self.connectPublishers()
         self.viewModel.fetchData()
+
+        self.viewModel.didSelectMatchAction = { match in
+            let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {

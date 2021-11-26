@@ -270,7 +270,7 @@ class HomeViewController: UIViewController {
         }
     }
 
-    func openBetslipModel() {
+    func openBetslipModal() {
 
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
@@ -301,7 +301,7 @@ extension HomeViewController {
                 self?.didChangedPreLiveSportType(sportType: newSportType)
             }
             self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
-                self?.openBetslipModel()
+                self?.openBetslipModal()
             }
             preLiveViewControllerLoaded = true
         }
@@ -312,7 +312,7 @@ extension HomeViewController {
                 self?.didChangedLiveSportType(sportType: newSportType)
             }
             self.liveEventsViewController.didTapBetslipButtonAction = { [weak self] in
-                self?.openBetslipModel()
+                self?.openBetslipModal()
             }
             liveEventsViewControllerLoaded = true
         }

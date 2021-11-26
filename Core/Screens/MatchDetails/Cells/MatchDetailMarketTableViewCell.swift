@@ -13,16 +13,20 @@ class MatchDetailMarketTableViewCell: UITableViewCell {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var collectionView: UICollectionView!
+    @IBOutlet private var collectionViewHeightContraint: NSLayoutConstraint!
+
+    enum ColumnType {
+        case double
+        case triple
+    }
+
+    var columnType = ColumnType.double
+
+    var match: Match?
+    var market: Market?
 
     override func awakeFromNib() {
         super.awakeFromNib()
-
-        self.commonInit()
-        self.setupWithTheme()
-
-    }
-
-    func commonInit() {
 
         self.containerView.layer.cornerRadius = CornerRadius.button
 
@@ -37,16 +41,18 @@ class MatchDetailMarketTableViewCell: UITableViewCell {
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
 
-        //self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        self.setupWithTheme()
     }
 
     override func prepareForReuse() {
         super.prepareForReuse()
 
         self.selectionStyle = .none
+        self.collectionViewHeightContraint.constant = 48
+        self.columnType = ColumnType.double
 
-        //self.titleLabel.text = ""
-
+        self.match = nil
+        self.market = nil
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -65,9 +71,44 @@ class MatchDetailMarketTableViewCell: UITableViewCell {
         self.titleLabel.textColor = UIColor.App.headingMain
 
         self.collectionView.backgroundColor = .clear
-
     }
-    
+
+    func configure(withMarket market: Market) {
+        self.market = market
+
+        self.titleLabel.text = market.name
+
+        //calculate number of lines
+        let lineHeight: CGFloat = 50
+
+        //calculate number of lines
+        let outcomes = market.outcomes.count
+
+        let useTriple = outcomes % 3 == 0
+
+        if useTriple {
+            var numberOfLines = Int(outcomes / 3)
+            numberOfLines = numberOfLines < 4 ? numberOfLines : 4
+
+            self.columnType = ColumnType.triple
+            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
+        }
+        else {
+            //Use double
+            var numberOfLines = Int(outcomes / 2)
+            numberOfLines = numberOfLines < 3 ? numberOfLines : 3
+
+            self.columnType = ColumnType.double
+            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
+        }
+
+        // each line is 50 including space
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+        
+        self.collectionView.reloadData()
+    }
+
 }
 
 extension MatchDetailMarketTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
@@ -77,13 +118,22 @@ extension MatchDetailMarketTableViewCell: UICollectionViewDelegate, UICollection
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return self.market?.outcomes.count ?? 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
 
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MarketDetailCollectionViewCell", for: indexPath) as! MarketDetailCollectionViewCell
-        cell.setupDetails(marketType: "Market", marketOdd: "1.0")
+        guard
+            let cell = collectionView.dequeueCellType(MarketDetailCollectionViewCell.self, indexPath: indexPath),
+            let market = self.market,
+            let outcomeItem = market.outcomes[safe: indexPath.row]
+        else {
+            return UICollectionViewCell()
+        }
+
+        cell.match = self.match
+        cell.market = self.market
+        cell.configureWith(outcome: outcomeItem)
 
         return cell
     }
@@ -92,13 +142,9 @@ extension MatchDetailMarketTableViewCell: UICollectionViewDelegate, UICollection
 
     }
 
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-//        return 40
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-//        return -4
-//    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 0
+    }
 
     func collectionView(_ collectionView: UICollectionView,
                         layout collectionViewLayout: UICollectionViewLayout,
@@ -107,10 +153,14 @@ extension MatchDetailMarketTableViewCell: UICollectionViewDelegate, UICollection
 
         //let screenWidth = UIScreen.main.bounds.size.width
         let containerWidth = collectionView.bounds.size.width
-        // 2 Columns
-        // let width = (containerWidth/2) - 5
-        // 3 Columns
-        let width = (containerWidth/3) - 5
+
+        var width: CGFloat = 0.0
+        if self.columnType == .double {
+            width  = (containerWidth/2) - 5
+        }
+        else {
+            width  = (containerWidth/3) - 5
+        }
 
         return CGSize(width: width, height: 50) // design width: 331
 

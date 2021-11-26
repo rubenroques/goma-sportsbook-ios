@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class MatchDetailsViewController: UIViewController {
 
@@ -37,6 +38,48 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
 
+    @IBOutlet private var loadingView: UIActivityIndicatorView!
+
+    private lazy var betslipButtonView: UIView = {
+        var betslipButtonView = UIView()
+        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        var iconImageView = UIImageView()
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        betslipButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
+            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 30),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+
+            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
+        ])
+
+        return betslipButtonView
+    }()
+    private lazy var betslipCountLabel: UILabel = {
+        var betslipCountLabel = UILabel()
+        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        betslipCountLabel.textColor = .white
+        betslipCountLabel.backgroundColor = UIColor.App.alertError
+        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
+        betslipCountLabel.textAlignment = .center
+        betslipCountLabel.clipsToBounds = true
+        betslipCountLabel.layer.masksToBounds = true
+        betslipCountLabel.text = "0"
+        NSLayoutConstraint.activate([
+            betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            betslipCountLabel.widthAnchor.constraint(equalTo: betslipCountLabel.heightAnchor),
+        ])
+        return betslipCountLabel
+    }()
+    
     enum MatchMode {
         case preLive
         case live
@@ -55,11 +98,16 @@ class MatchDetailsViewController: UIViewController {
     }
 
     var match: Match
-    var marketTypeSelectedOption: Int = 0
+
+    var viewModel: MatchDetailsViewModel
+
+    private var cancellables = Set<AnyCancellable>()
 
     init(matchMode: MatchMode = .preLive, match: Match) {
         self.matchMode = matchMode
         self.match = match
+        self.viewModel = MatchDetailsViewModel(match: match)
+
         super.init(nibName: "MatchDetailsViewController", bundle: nil)
     }
 
@@ -73,12 +121,53 @@ class MatchDetailsViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
+
+        self.viewModel.marketGroupsTypesDataChanged = { [weak self] in
+            self?.marketTypesCollectionView.reloadData()
+        }
+
+        self.viewModel.marketGroupDataChanged = {[weak self] in
+            self?.tableView.reloadData()
+        }
+
+        self.viewModel.isLoadingData
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.loadingView.startAnimating()
+                }
+                else {
+                    self?.loadingView.stopAnimating()
+                }
+            }
+            .store(in: &cancellables)
+
+
+        Env.betslipManager.bettingTicketsPublisher
+            .map(\.count)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipValue in
+
+                if betslipValue == 0 {
+                    self?.betslipCountLabel.isHidden = true
+                }
+                else {
+                    self?.betslipCountLabel.text = "\(betslipValue)"
+                    self?.betslipCountLabel.isHidden = false
+                }
+            })
+            .store(in: &cancellables)
+        
+        self.marketTypesCollectionView.reloadData()
+        self.tableView.reloadData()
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+    }
 
-        self.tableView.reloadData()
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -87,7 +176,17 @@ class MatchDetailsViewController: UIViewController {
         self.setupWithTheme()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
+        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+    }
+
     func commonInit() {
+
+        self.loadingView.hidesWhenStopped = true
+        self.loadingView.stopAnimating()
+
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
 
         self.headerCompetitionLabel.text = "Primeira Liga"
@@ -118,10 +217,12 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
 
         if self.matchMode == .preLive {
-            self.headerDetailLiveView.isHidden = true
+            self.headerDetailLiveTopLabel.isHidden = true
+            self.headerDetailLiveBottomLabel.isHidden = true
         }
         else {
-            self.headerDetailPreliveView.isHidden = true
+            self.headerDetailPreliveTopLabel.isHidden = true
+            self.headerDetailPreliveBottomLabel.isHidden = true
         }
 
         setupHeaderDetails()
@@ -136,8 +237,8 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
         self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        self.marketTypesCollectionView.delegate = self
-        self.marketTypesCollectionView.dataSource = self
+        self.marketTypesCollectionView.delegate = self.viewModel
+        self.marketTypesCollectionView.dataSource = self.viewModel
 
         // TableView
         self.tableView.backgroundColor = .clear
@@ -146,17 +247,35 @@ class MatchDetailsViewController: UIViewController {
         self.tableView.separatorStyle = .none
         tableView.register(MatchDetailMarketTableViewCell.nib, forCellReuseIdentifier: MatchDetailMarketTableViewCell.identifier)
 
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        
+        self.tableView.delegate = self.viewModel
+        self.tableView.dataSource = self.viewModel
+
+        self.betslipButtonView.addSubview(self.betslipCountLabel)
+
+        self.view.addSubview(self.betslipButtonView)
+        self.betslipCountLabel.isHidden = true
+
+        NSLayoutConstraint.activate([
+            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
+            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
+
+            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12)
+        ])
+
+        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
+        betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+
     }
 
     func setupWithTheme() {
 
         self.view.backgroundColor = UIColor.App.mainBackground
 
-        self.topView.backgroundColor = UIColor.App.mainBackground
-
+        self.topView.backgroundColor = UIColor.App.secondaryBackground
         self.headerDetailView.backgroundColor = UIColor.App.secondaryBackground
 
         self.headerDetailTopView.backgroundColor = UIColor.App.secondaryBackground
@@ -165,7 +284,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.headerCompetitionDetailView.backgroundColor = UIColor.App.secondaryBackground
 
-        self.headerCompetitionLabel.textColor = UIColor.App.headingMain.withAlphaComponent(0.5)
+        self.headerCompetitionLabel.textColor = UIColor.App.headingDisabled
 
         self.headerDetailStackView.backgroundColor = UIColor.App.secondaryBackground
 
@@ -193,22 +312,20 @@ class MatchDetailsViewController: UIViewController {
         // TableView
         self.tableView.backgroundColor = .clear
 
+        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
+        self.betslipButtonView.backgroundColor = UIColor.App.mainTint
     }
 
     func setupHeaderDetails() {
         let viewModel = MatchWidgetCellViewModel(match: self.match)
 
         self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-
         self.headerCompetitionLabel.text = viewModel.competitionName
-
         self.headerDetailHomeLabel.text = viewModel.homeTeamName
-
         self.headerDetailAwayLabel.text = viewModel.awayTeamName
 
         if matchMode == .preLive {
             self.headerDetailPreliveTopLabel.text = viewModel.startDateString
-
             self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
         }
         else {
@@ -216,129 +333,26 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    @IBAction func backAction() {
+    @objc func didTapBetslipView() {
+        self.openBetslipModal()
+    }
+
+    func openBetslipModal() {
+
+        let betslipViewController = BetslipViewController()
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.marketTypesCollectionView.reloadData()
+            self?.tableView.reloadData()
+        }
+
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: {
+
+        })
+
+    }
+    
+    @IBAction func didTapBackAction() {
         self.navigationController?.popViewController(animated: true)
     }
-
-}
-
-extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
-        else {
-            fatalError()
-        }
-
-        switch indexPath.row {
-        case 0:
-            cell.setupWithTitle("Popular")
-        case 1:
-            cell.setupWithTitle("Goals")
-        case 2:
-            cell.setupWithTitle("Results")
-        case 3:
-            cell.setupWithTitle("Handycap")
-        default:
-            ()
-        }
-
-        if marketTypeSelectedOption == indexPath.row {
-            cell.setSelectedType(true)
-        }
-        else {
-            cell.setSelectedType(false)
-        }
-
-        return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        self.marketTypeSelectedOption = indexPath.row
-
-        switch indexPath.row {
-        case 0:
-            // Model for tab
-            break
-        case 1:
-            // Model for tab
-            break
-        case 2:
-            // Model for tab
-            break
-        case 3:
-            // Model for tab
-            break
-        default:
-            ()
-        }
-
-        self.marketTypesCollectionView.reloadData()
-        self.marketTypesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-    }
-
-}
-
-extension MatchDetailsViewController: UITableViewDataSource, UITableViewDelegate {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        //return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
-        guard let cell = tableView.dequeueCellType(MatchDetailMarketTableViewCell.self) else { return UITableViewCell() }
-        return cell
-
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        //return self.viewModel.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
-    }
-
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
-//    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        //return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
-        //return UITableView.automaticDimension
-        return 120
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        //return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
-        return 120
-    }
-//
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
-//    }
-
-//    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-//        return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
-//    }
-
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return 0.01
-//    }
-//
-//    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-//        return 0.01
-//    }
 
 }

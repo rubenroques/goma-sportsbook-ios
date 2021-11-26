@@ -11,7 +11,7 @@ extension EveryMatrix {
 struct MarketGroup: Codable {
 
     let type: String
-    let id: String?
+    let id: String
     let groupKey: String?
     let translatedName: String?
     let position: Int?

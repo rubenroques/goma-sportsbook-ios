@@ -21,15 +21,18 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gzC-Wx-rsw">
                         <rect key="frame" x="16" y="8" width="288" height="104"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iC8-cf-KmV">
-                                <rect key="frame" x="0.0" y="12" width="288" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Label" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iC8-cf-KmV">
+                                <rect key="frame" x="8" y="12" width="272" height="26"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="t2W-Ve-ZMA">
-                                <rect key="frame" x="12" y="41" width="264" height="55"/>
+                                <rect key="frame" x="12" y="46" width="264" height="50"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="9Ub-KP-1iQ"/>
+                                </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="5" id="Okx-sZ-Rbg">
                                     <size key="itemSize" width="128" height="128"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -40,8 +43,8 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="iC8-cf-KmV" secondAttribute="trailing" id="FvT-qM-d5h"/>
-                            <constraint firstItem="iC8-cf-KmV" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" id="LjH-ZQ-KWh"/>
+                            <constraint firstAttribute="trailing" secondItem="iC8-cf-KmV" secondAttribute="trailing" constant="8" id="FvT-qM-d5h"/>
+                            <constraint firstItem="iC8-cf-KmV" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="8" id="LjH-ZQ-KWh"/>
                             <constraint firstAttribute="trailing" secondItem="t2W-Ve-ZMA" secondAttribute="trailing" constant="12" id="Mlu-cJ-K8T"/>
                             <constraint firstItem="t2W-Ve-ZMA" firstAttribute="leading" secondItem="gzC-Wx-rsw" secondAttribute="leading" constant="12" id="ZgK-BC-4hy"/>
                             <constraint firstAttribute="bottom" secondItem="t2W-Ve-ZMA" secondAttribute="bottom" constant="8" id="pNh-GN-ct4"/>
@@ -60,6 +63,7 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="collectionView" destination="t2W-Ve-ZMA" id="JdN-xK-PVC"/>
+                <outlet property="collectionViewHeightContraint" destination="9Ub-KP-1iQ" id="aH7-mf-hxJ"/>
                 <outlet property="containerView" destination="gzC-Wx-rsw" id="OpZ-GN-rak"/>
                 <outlet property="titleLabel" destination="iC8-cf-KmV" id="8SF-VP-pdE"/>
             </connections>

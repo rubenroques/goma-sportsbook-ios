@@ -192,6 +192,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
                 if let match = self.match {
                     cell.setupWithMatch(match)
+                    cell.tappedMatchWidgetAction = {
+                        self.tappedMatchLineAction?()
+                    }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                 return cell

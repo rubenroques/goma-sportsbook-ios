@@ -68,7 +68,7 @@ struct Outcome {
     var id: String
     var codeName: String
     var typeName: String
-    var teamName: String
+    var translatedName: String
     var nameDigit1: Double?
     var nameDigit2: Double?
     var nameDigit3: Double?

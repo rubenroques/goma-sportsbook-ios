@@ -236,7 +236,7 @@ class AggregatorsRepository {
                         let outcome = Outcome(id: rawOutcome.id,
                                               codeName: rawOutcome.headerNameKey ?? "",
                                               typeName: rawOutcome.headerName ?? "",
-                                              teamName: rawOutcome.translatedName ?? "",
+                                              translatedName: rawOutcome.translatedName ?? "",
                                               nameDigit1: rawOutcome.paramFloat1,
                                               nameDigit2: rawOutcome.paramFloat2,
                                               nameDigit3: rawOutcome.paramFloat3,

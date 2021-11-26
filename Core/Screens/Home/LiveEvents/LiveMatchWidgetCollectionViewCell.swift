@@ -92,6 +92,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var tappedMatchWidgetAction: (() -> Void)?
+    
     var match: Match?
 
     private var leftOutcome: Outcome?
@@ -143,6 +145,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
+
+        let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
+        self.addGestureRecognizer(tapMatchView)
 
         
         self.setupWithTheme()
@@ -465,6 +470,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
+    @IBAction func didTapMatchView(_ sender: Any) {
+        self.tappedMatchWidgetAction?()
+    }
+    
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.mainTint
     }
@@ -483,7 +492,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
@@ -521,7 +530,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
@@ -558,7 +567,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.teamName
+        let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,

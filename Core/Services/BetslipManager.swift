@@ -114,6 +114,17 @@ class BetslipManager: NSObject {
                                               outcomeDescription: ticket.outcomeDescription)
                 updatedTickets.append(newTicket)
             }
+            else {
+//#warning TODO: The ticket value is not updated
+                let newTicket = BettingTicket(id: ticket.id,
+                                              outcomeId: ticket.outcomeId,
+                                              matchId: ticket.matchId,
+                                              value: ticket.value,
+                                              matchDescription: ticket.matchDescription,
+                                              marketDescription: ticket.marketDescription,
+                                              outcomeDescription: ticket.outcomeDescription)
+                updatedTickets.append(newTicket)
+            }
         }
         return updatedTickets
     }

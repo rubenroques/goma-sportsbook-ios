@@ -129,6 +129,7 @@ class PreLiveEventsViewController: UIViewController {
             }
 
         }
+
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)

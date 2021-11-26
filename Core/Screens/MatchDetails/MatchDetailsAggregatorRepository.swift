@@ -8,21 +8,22 @@
 import Foundation
 import Combine
 import OrderedCollections
-import UIKit
 
 class MatchDetailsAggregatorRepository: NSObject {
 
     var matchId: String
 
-    var marketGroupsCountPublisher: CurrentValueSubject<Int, Never> = .init(0)
+    var marketGroupsPublisher: CurrentValueSubject<[EveryMatrix.MarketGroup], Never> = .init([])
+    var totalMarketsPublisher: CurrentValueSubject<Int, Never> = .init(0)
 
     // Caches
-    private var marketGroups: OrderedDictionary<String, EveryMatrix.MarketGroup> = [:]
+    var marketGroups: OrderedDictionary<String, EveryMatrix.MarketGroup> = [:]
 
-    private var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
+    var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
 
-    private var marketsForGroup: [String: Set<String>] = [:]   // [Match ID: [Markets IDs] ]
+    private var marketsForGroup: [String: OrderedSet<String>] = [:]   // [Group ID: [Markets IDs] ]
     private var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
+    private var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
 
     private var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
     private var bettingOutcomesForMarket: [String: Set<String>] = [:]
@@ -54,6 +55,18 @@ class MatchDetailsAggregatorRepository: NSObject {
     }
 
     func connectMarketGroupsPublisher() {
+
+        self.marketGroups = [:]
+        self.marketsPublishers = [:]
+        self.marketsForGroup = [:]
+        self.betOutcomes = [:]
+        self.bettingOfferPublishers = [:]
+        self.bettingOutcomesForMarket = [:]
+        self.marketOutcomeRelations = [:]
+
+        self.totalMarketsPublisher.send(marketsPublishers.count)
+
+        self.isLoadingMarketGroups.send(true)
 
         let language = "en"
         let mainMarketsEndpoint = TSRouter.matchMarketGroupsPublisher(operatorId: Env.appSession.operatorId,
@@ -116,21 +129,17 @@ class MatchDetailsAggregatorRepository: NSObject {
         self.marketGroupsDetailsCancellable = []
         self.marketGroupsDetailsRegisters = []
 
-        self.marketGroups = [:]
-        self.marketsPublishers = [:]
-        self.marketsForGroup = [:]
-        self.betOutcomes = [:]
-        self.bettingOfferPublishers = [:]
-        self.bettingOutcomesForMarket = [:]
-        self.marketOutcomeRelations = [:]
-
         //
         // Request new market groups info
         let language = "en"
 
         for marketGroup in self.marketGroups.values {
 
-            guard let marketGroupKey = marketGroup.groupKey else { continue }
+            guard
+                let marketGroupKey = marketGroup.groupKey
+            else {
+                continue
+            }
 
 
             let endpoint = TSRouter.matchMarketGroupDetailsPublisher(operatorId: Env.appSession.operatorId,
@@ -154,7 +163,6 @@ class MatchDetailsAggregatorRepository: NSObject {
                     case .finished:
                         print("Data retrieved!")
                     }
-                    self?.isLoadingMarketGroups.send(false)
 
                 }, receiveValue: { [weak self] state in
                     switch state {
@@ -196,6 +204,9 @@ class MatchDetailsAggregatorRepository: NSObject {
                 ()
             }
         }
+
+        let marketGroupsArray = Array(marketGroups.values)
+        self.marketGroupsPublisher.send(marketGroupsArray)
     }
 
 
@@ -222,12 +233,12 @@ class MatchDetailsAggregatorRepository: NSObject {
                 marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
 
                 if var marketsForIterationMatch = marketsForGroup[marketGroupKey] {
-                    marketsForIterationMatch.insert(marketContent.id)
+                    marketsForIterationMatch.append(marketContent.id)
                     marketsForGroup[marketGroupKey] = marketsForIterationMatch
                 }
                 else {
-                    var newSet = Set<String>.init()
-                    newSet.insert(marketContent.id)
+                    var newSet = OrderedSet<String>.init()
+                    newSet.append(marketContent.id)
                     marketsForGroup[marketGroupKey] = newSet
                 }
 
@@ -235,6 +246,9 @@ class MatchDetailsAggregatorRepository: NSObject {
                 betOutcomes[betOutcomeContent.id] = betOutcomeContent
 
             case .bettingOffer(let bettingOfferContent):
+                if let outcomeIdValue = bettingOfferContent.outcomeId {
+                    bettingOffers[outcomeIdValue] = bettingOfferContent
+                }
                 bettingOfferPublishers[bettingOfferContent.id] = CurrentValueSubject<EveryMatrix.BettingOffer, Never>.init(bettingOfferContent)
 
             case .marketOutcomeRelation(let marketOutcomeRelationContent):
@@ -257,7 +271,7 @@ class MatchDetailsAggregatorRepository: NSObject {
             }
         }
 
-        self.marketGroupsCountPublisher.send(marketsPublishers.count)
+        self.totalMarketsPublisher.send(marketsPublishers.count)
     }
 
     func updateMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator) {
@@ -307,16 +321,58 @@ class MatchDetailsAggregatorRepository: NSObject {
 
      */
 
-}
 
-extension MatchDetailsAggregatorRepository: UITableViewDelegate, UITableViewDataSource {
+    func marketsForGroup(withGroupKey key: String) -> [Market] {
+        guard let marketsIds = self.marketsForGroup[key] else { return [] }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        var markets: [Market] = []
+
+        let rawMarketsList = marketsIds.map { id in
+            return self.marketsPublishers[id]?.value
+        }
+        .compactMap({$0})
+
+        for rawMarket  in rawMarketsList {
+
+            let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
+
+            let rawOutcomesList = rawOutcomeIds.map { id in
+                return self.betOutcomes[id]
+            }
+            .compactMap({$0})
+
+            var outcomes: [Outcome] = []
+            for rawOutcome in rawOutcomesList {
+
+                if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
+                    let bettingOffer = BettingOffer(id: rawBettingOffer.id,
+                                                    value: rawBettingOffer.oddsValue ?? 0.0)
+
+                    let outcome = Outcome(id: rawOutcome.id,
+                                          codeName: rawOutcome.headerNameKey ?? "",
+                                          typeName: rawOutcome.headerName ?? "",
+                                          translatedName: rawOutcome.translatedName ?? "",
+                                          nameDigit1: rawOutcome.paramFloat1,
+                                          nameDigit2: rawOutcome.paramFloat2,
+                                          nameDigit3: rawOutcome.paramFloat3,
+                                          bettingOffer: bettingOffer)
+                    outcomes.append(outcome)
+                }
+            }
+
+            let sortedOutcomes = outcomes.sorted { out1, out2 in
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+                return out1Value < out2Value
+            }
+
+            let market = Market(id: rawMarket.id,
+                                typeId: rawMarket.bettingTypeId ?? "",
+                                name: rawMarket.shortName ?? "",
+                                outcomes: sortedOutcomes)
+            markets.append(market)
+        }
+
+        return markets
     }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
-    }
-
 }
