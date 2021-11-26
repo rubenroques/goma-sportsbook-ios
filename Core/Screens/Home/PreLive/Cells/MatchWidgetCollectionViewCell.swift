@@ -128,6 +128,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.backgroundColor = .clear
         self.awayBaseView.backgroundColor = .clear
 
+        self.awayBaseView.isHidden = false
+
         self.suspendedBaseView.layer.cornerRadius = 4.5
         self.homeBaseView.layer.cornerRadius = 4.5
         self.drawBaseView.layer.cornerRadius = 4.5
@@ -152,6 +154,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
+
+        
 
         self.setupWithTheme()
     }
@@ -209,6 +213,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.image = nil
 
         self.oddsStackView.alpha = 1.0
+        
+        self.awayBaseView.isHidden = false
     }
 
     func setupWithTheme() {
@@ -325,8 +331,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayOddTitleLabel.text = outcome.typeName
                 self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 self.currentAwayOddValue = outcome.bettingOffer.value
+              
                 self.rightOutcome = outcome
-
+                
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
                 self.rightOddButtonSubscriber = Env.everyMatrixStorage
@@ -356,6 +363,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     })
 
             }
+            
+            if market.outcomes.count == 2 {
+                awayBaseView.isHidden = true
+            }
+            
         }
         else {
             Logger.log("No markets found")
@@ -364,6 +376,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.homeOddValueLabel.text = "---"
             self.drawOddValueLabel.text = "---"
             self.awayOddValueLabel.text = "---"
+           
         }
 
     }
