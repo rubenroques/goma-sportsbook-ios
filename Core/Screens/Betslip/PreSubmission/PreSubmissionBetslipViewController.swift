@@ -994,7 +994,6 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
             let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
             var hasFoundCorrespondingId = false
             var errorMessage = ""
-            print("BETTING TICKET ERROR: \(bettingTicketErrors)")
             for bettingError in bettingTicketErrors {
                 if let bettingErrorCode = bettingError.errorCode {
                     // Error code with corresponding id

@@ -13,11 +13,11 @@ class SubmitedBetSelectionView: NibView {
     @IBOutlet private weak var topSeparatorLineView: UIView!
     @IBOutlet private weak var countryCompetitionFlagImageView: UIImageView!
 
-    @IBOutlet private weak var eventNameLabel: UILabel!
+    @IBOutlet private weak var betNameLabel: UILabel!
     @IBOutlet private weak var eventTimeLabel: UILabel!
 
     @IBOutlet private weak var marketNameLabel: UILabel!
-    @IBOutlet private weak var betNameLabel: UILabel!
+    @IBOutlet private weak var eventNameLabel: UILabel!
 
     @IBOutlet weak var oddBaseView: UIView!
     @IBOutlet weak var oddValueLabel: UILabel!
@@ -28,15 +28,13 @@ class SubmitedBetSelectionView: NibView {
     var currentOddValue: Double?
 
     var betHistoryEntrySelection: BetHistoryEntrySelection
-    var betHistoryEntry: BetHistoryEntry
 
-    convenience init(betHistoryEntrySelection: BetHistoryEntrySelection, betHistoryEntry: BetHistoryEntry) {
-        self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection, betHistoryEntry: betHistoryEntry)
+    convenience init(betHistoryEntrySelection: BetHistoryEntrySelection) {
+        self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection)
     }
 
-    init(frame: CGRect, betHistoryEntrySelection: BetHistoryEntrySelection, betHistoryEntry: BetHistoryEntry) {
+    init(frame: CGRect, betHistoryEntrySelection: BetHistoryEntrySelection) {
         self.betHistoryEntrySelection = betHistoryEntrySelection
-        self.betHistoryEntry = betHistoryEntry
         super.init(frame: frame)
 
         self.commonInit()
@@ -57,8 +55,9 @@ class SubmitedBetSelectionView: NibView {
 
         self.countryCompetitionFlagImageView.clipsToBounds = true
         self.countryCompetitionFlagImageView.layer.masksToBounds = true
-        if let maxWinning = betHistoryEntry.maxWinning, let amount = betHistoryEntry.amount {
-            self.oddValueLabel.text = "\(maxWinning/amount)"
+        if let oddValue = betHistoryEntrySelection.priceValue {
+            let oddValueString = String(format: "%.2f", oddValue)
+            self.oddValueLabel.text = "\(oddValueString)"
         }
         else {
             self.oddValueLabel.text = "-.--"
@@ -130,10 +129,10 @@ class SubmitedBetSelectionView: NibView {
 
         topSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         
-        eventNameLabel.textColor = UIColor.App.headingMain
+        betNameLabel.textColor = UIColor.App.headingMain
         eventTimeLabel.textColor = UIColor.App.headingSecondary
         marketNameLabel.textColor = UIColor.App.headingMain
-        betNameLabel.textColor = UIColor.App.headingSecondary
+        eventNameLabel.textColor = UIColor.App.headingSecondary
         oddValueLabel.textColor = UIColor.App.headingMain
     }
 
