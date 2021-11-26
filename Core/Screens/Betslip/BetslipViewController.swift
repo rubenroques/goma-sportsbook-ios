@@ -36,6 +36,8 @@ class BetslipViewController: UIViewController {
 
     init() {
         preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
+        
+  
         submitedBetslipViewController = SubmitedBetslipViewController()
         viewControllers = [preSubmissionBetslipViewController, submitedBetslipViewController]
         
@@ -77,7 +79,7 @@ class BetslipViewController: UIViewController {
         preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
         }
-
+       
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
@@ -151,8 +153,13 @@ class BetslipViewController: UIViewController {
             UIAlertController.showMessage(title: "Betslipt", message: message, on: self)
             return
         }
-
-        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray)
+       
+        let totalOddsBet = (preSubmissionBetslipViewController.totalPossibleEarnings / preSubmissionBetslipViewController.totalBetValue )
+       let totalOddsBetString =  String(format: "%.2f", totalOddsBet)
+      
+       let possibleEarningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: preSubmissionBetslipViewController.totalPossibleEarnings )) ?? "-.--€"
+        
+        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray, totalOddsValue: totalOddsBetString, possibleEarningsValue: possibleEarningsString, numberOfBets: preSubmissionBetslipViewController.numberOfBets)
         betSubmissionSuccessViewController.willDismissAction = self.willDismissAction
         self.navigationController?.pushViewController(betSubmissionSuccessViewController, animated: true)
     }

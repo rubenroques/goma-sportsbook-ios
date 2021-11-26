@@ -333,8 +333,6 @@
 		457F49612737C3630047169D /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
 		457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
 		457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */; };
-		457F49662737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */; };
-		457F49672737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */; };
 		457F496D2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F496B2737F9330047169D /* SubmitedBetTableViewCell.swift */; };
 		457F496E2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F496B2737F9330047169D /* SubmitedBetTableViewCell.swift */; };
 		457F496F2737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */; };
@@ -742,6 +740,8 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
+		F4A438E5274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
+		F4A438E6274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68422742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683E2742CD8A003413AE /* MultiSlider.swift */; };
@@ -946,7 +946,6 @@
 		457F495B2737C2280047169D /* UserBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBalance.swift; sourceTree = "<group>"; };
 		457F495F2737C3630047169D /* BetslipSelectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipSelectionState.swift; sourceTree = "<group>"; };
 		457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSubmissionSuccessViewController.swift; sourceTree = "<group>"; };
-		457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
 		457F496B2737F9330047169D /* SubmitedBetTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetTableViewCell.swift; sourceTree = "<group>"; };
 		457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SubmitedBetTableViewCell.xib; sourceTree = "<group>"; };
 		457F4971273804810047169D /* BetslipHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipHistory.swift; sourceTree = "<group>"; };
@@ -1143,6 +1142,7 @@
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
 		A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpPromotionView.swift; sourceTree = "<group>"; };
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
+		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
 		F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Drag.swift"; sourceTree = "<group>"; };
 		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
@@ -1864,8 +1864,8 @@
 		457F49692737F9030047169D /* SubmissionFeedback */ = {
 			isa = PBXGroup;
 			children = (
+				F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */,
 				457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */,
-				457F49632737D9110047169D /* BetSubmissionSuccessViewController.xib */,
 			);
 			path = SubmissionFeedback;
 			sourceTree = "<group>";
@@ -2748,6 +2748,7 @@
 				45D871CC27108F5900F5B87B /* CountryFlags.xcassets in Resources */,
 				A92F5D832718388500884BDF /* FilterSliderCollapseView.xib in Resources */,
 				457816B72707631000F66878 /* TournamentTableViewHeader.xib in Resources */,
+				F4A438E5274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */,
 				452047BC27036D3900B277B5 /* SplashViewController.xib in Resources */,
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				454E0AC5273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */,
@@ -2764,7 +2765,6 @@
 				4589F3FF26BF017A005DF543 /* LoginViewController.xib in Resources */,
 				A9627A0E274548610001E1D5 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */,
-				457F49662737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */,
 				45BEA48726F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				457F496F2737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
@@ -2907,7 +2907,7 @@
 				455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45D3DE3D271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
 				45BEA48426F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
-				457F49672737D9120047169D /* BetSubmissionSuccessViewController.xib in Resources */,
+				F4A438E6274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */,
 				454E0A992732C01B00794E0C /* BetslipViewController.xib in Resources */,
 				A92F5D7D271716B900884BDF /* FilterRowView.xib in Resources */,
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,

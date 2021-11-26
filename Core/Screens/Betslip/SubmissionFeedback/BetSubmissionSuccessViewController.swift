@@ -15,22 +15,34 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var messageTitleLabel: UILabel!
     @IBOutlet private weak var messageSubtitleLabel: UILabel!
 
-    @IBOutlet private weak var tableView: UITableView!
+
 
     @IBOutlet private weak var bottomView: UIView!
     @IBOutlet private weak var bottomSeparatorView: UIView!
     @IBOutlet private weak var continueButton: UIButton!
 
     @IBOutlet private weak var safeAreaBottomView: UIView!
+    
+    
+    @IBOutlet weak var possibleEarningsLabel: UILabel!
+    @IBOutlet weak var totalOddsLabel: UILabel!
+    @IBOutlet weak var betsMadeLabel: UILabel!
+    
+    
 
     var betPlacedDetailsArray: [BetPlacedDetails]
-
+    var totalOddsValue : String
+    var possibleEarningsValue : String
+    var numberOfbets : Int
     var willDismissAction: (() -> ())?
 
-    init(betPlacedDetailsArray: [BetPlacedDetails]) {
+    init(betPlacedDetailsArray: [BetPlacedDetails], totalOddsValue : String ,  possibleEarningsValue  : String, numberOfBets : Int ) {
 
         self.betPlacedDetailsArray = betPlacedDetailsArray
-
+        self.possibleEarningsValue = possibleEarningsValue
+        self.totalOddsValue = totalOddsValue
+        self.numberOfbets = numberOfBets
+        
         super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
     }
 
@@ -42,9 +54,6 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
 
         self.setupWithTheme()
     }
@@ -67,10 +76,12 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.mainBackground
 
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackground
-        self.tableView.backgroundColor = UIColor.App.mainBackground
-        self.tableView.contentInset.bottom = 12
-
+        self.possibleEarningsLabel.text = possibleEarningsValue
+        //self.possibleEarningsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
+        self.totalOddsLabel.text = totalOddsValue
+        //self.totalOddsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
+        self.betsMadeLabel.text = String(numberOfbets)
+       // self.betsMadeLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
         self.messageTitleLabel.textColor = UIColor.App.headingMain
         self.messageSubtitleLabel.textColor = UIColor.App.headingMain
 
