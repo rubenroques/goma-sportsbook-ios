@@ -109,12 +109,12 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     // Multiple Bets values
-    private var displayBetValue: Int = 0 {
+     var displayBetValue: Int = 0 {
         didSet {
             self.realBetValuePublisher.send(self.realBetValue)
         }
     }
-    private var realBetValue: Double {
+     var realBetValue: Double {
         if displayBetValue == 0 {
             return 0
         }
@@ -122,7 +122,11 @@ class PreSubmissionBetslipViewController: UIViewController {
             return Double(displayBetValue)/Double(100)
         }
     }
-
+    var numberOfBets: Int = 1
+    var totalPossibleEarnings : Double = 0.0
+    var totalBetValue : Double = 0.0
+    
+ 
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -369,6 +373,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
                     let totalValue = multiplier * betValue
+                    self.totalBetValue = betValue
+                    self.totalPossibleEarnings =  totalValue
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
                 }
                 else {
@@ -379,7 +385,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.multipleWinningsValueLabel.text = possibleEarnings
             })
             .store(in: &cancellables)
-
+       
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
@@ -387,9 +393,11 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .map({ _, simpleBetsBettingValues, tickets -> String in
                 var expectedReturn = 0.0
+                
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
                         let expectedTicketReturn = ticket.value * betValue
+                        self.totalBetValue = betValue
                         expectedReturn += expectedTicketReturn
                     }
                 }
@@ -397,6 +405,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return "-.--€"
                 }
                 else {
+                    
+                    self.totalPossibleEarnings = expectedReturn
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
                 }
             })
@@ -412,6 +422,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .map({ _, simpleBetsBettingValues, tickets -> Bool in
                 var hasValidAmounts = true
+                
                 for ticket in tickets {
                     if simpleBetsBettingValues[ticket.id] == nil {
                         hasValidAmounts = false
@@ -651,6 +662,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
         if let maxWinningNetto = selectedSystemBetWinnings.maxWinningNetto, maxWinningNetto != 0 {
+            self.totalPossibleEarnings = maxWinningNetto
             self.systemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
         }
         else {
