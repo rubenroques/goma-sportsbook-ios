@@ -58,7 +58,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App.mainBackground
+        self.containerView.backgroundColor = UIColor.App.tertiaryBackground
         self.containerView.layer.cornerRadius = CornerRadius.button
 
         self.marketTypeLabel.textColor = UIColor.App.headingMain
@@ -85,7 +85,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.containerView.backgroundColor = UIColor.App.mainTint
     }
     func deselectButton() {
-        self.containerView.backgroundColor = UIColor.App.mainBackground
+        self.containerView.backgroundColor = UIColor.App.tertiaryBackground
     }
     @objc func didTapOddButton() {
 

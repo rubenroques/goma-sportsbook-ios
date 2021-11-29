@@ -39,7 +39,7 @@ class SportsViewModel: NSObject {
         case favoriteCompetitions
     }
 
-    private var myGamesSportsViewModelDataSource = MyGamesSportsViewModelDataSource(banners: [], userFavoriteMatches: [], popularMatches: [])
+    private var popularMatchesViewModelDataSource = PopularMatchesViewModelDataSource(banners: [], matches: [])
     private var todaySportsViewModelDataSource = TodaySportsViewModelDataSource(todayMatches: [])
     private var competitionSportsViewModelDataSource = CompetitionSportsViewModelDataSource(competitions: [])
     private var favoriteGamesSportsViewModelDataSource = FavoriteGamesSportsViewModelDataSource(userFavoriteMatches: [])
@@ -116,23 +116,36 @@ class SportsViewModel: NSObject {
 
         super.init()
 
-        self.myGamesSportsViewModelDataSource.requestNextPageAction = { [weak self] in
-            self?.fetchPopularMatchesNextPage()
-        }
-
-        self.myGamesSportsViewModelDataSource.didSelectActivationAlertAction = { [weak self] alertType in
+        // ActivationAlertAction
+        //
+        self.popularMatchesViewModelDataSource.didSelectActivationAlertAction = { [weak self] alertType in
             self?.didSelectActivationAlertAction?(alertType)
         }
 
-        self.myGamesSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
+        // NextPage
+        //
+        self.popularMatchesViewModelDataSource.requestNextPageAction = { [weak self] in
+            self?.fetchPopularMatchesNextPage()
         }
-
         self.todaySportsViewModelDataSource.requestNextPageAction = { [weak self] in
             self?.fetchTodayMatchesNextPage()
         }
 
+        // didSelectMatchA
+        //
+        self.popularMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
+        }
         self.todaySportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
+        }
+        self.competitionSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
+        }
+        self.favoriteGamesSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
+        }
+        self.favoriteCompetitionSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
 
@@ -185,10 +198,9 @@ class SportsViewModel: NSObject {
 
         self.isLoadingMyGamesList.send(false)
 
-        self.myGamesSportsViewModelDataSource.popularMatches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
+        self.popularMatchesViewModelDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
 
-        self.myGamesSportsViewModelDataSource.userFavoriteMatches = self.userFavoriteMatches
-        self.myGamesSportsViewModelDataSource.banners = self.banners
+        self.popularMatchesViewModelDataSource.banners = self.banners
 
         self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
 
@@ -197,7 +209,6 @@ class SportsViewModel: NSObject {
         self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
 
         self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
-
 
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
@@ -997,7 +1008,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.numberOfSections(in: tableView)
+            return self.popularMatchesViewModelDataSource.numberOfSections(in: tableView)
         case .today:
             return self.todaySportsViewModelDataSource.numberOfSections(in: tableView)
         case .competitions:
@@ -1013,7 +1024,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
         switch self.matchListTypePublisher.value {
         case .myGames:
             
-            if self.myGamesSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
+            if self.popularMatchesViewModelDataSource.numberOfSections(in: tableView) != 0 {
                 return true
             }else{
                 return false
@@ -1050,7 +1061,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+            return self.popularMatchesViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .today:
             return self.todaySportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .competitions:
@@ -1066,7 +1077,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
         var cell: UITableViewCell
         switch self.matchListTypePublisher.value {
         case .myGames:
-            cell = self.myGamesSportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+            cell = self.popularMatchesViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .today:
             cell = self.todaySportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .competitions:
@@ -1082,7 +1093,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+            return self.popularMatchesViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         case .today:
             return self.todaySportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         case .competitions:
@@ -1097,7 +1108,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+            return self.popularMatchesViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .today:
             return self.todaySportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .competitions:
@@ -1112,7 +1123,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+            return self.popularMatchesViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .today:
             return self.todaySportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .competitions:
@@ -1127,7 +1138,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+            return self.popularMatchesViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .today:
             return self.todaySportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .competitions:
@@ -1142,7 +1153,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+            return self.popularMatchesViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .today:
             return self.todaySportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .competitions:
@@ -1157,7 +1168,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.myGamesSportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+            return self.popularMatchesViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .today:
             return self.todaySportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .competitions:
@@ -1179,21 +1190,17 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
 
 }
 
-class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var banners: [EveryMatrix.BannerInfo] = [] {
         didSet {
             self.bannersViewModel = self.createBannersViewModel()
         }
     }
-    var userFavoriteMatches: [Match] = []
-    var popularMatches: [Match] = []
 
     private var bannersViewModel: BannerLineCellViewModel?
 
-    private var matches: [Match] {
-        return userFavoriteMatches + popularMatches
-    }
+    var matches: [Match] = []
 
     var alertsArray: [ActivationAlert] = []
 
@@ -1201,10 +1208,9 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
-    init(banners: [EveryMatrix.BannerInfo], userFavoriteMatches: [Match], popularMatches: [Match]) {
+    init(banners: [EveryMatrix.BannerInfo], matches: [Match]) {
         self.banners = banners
-        self.userFavoriteMatches = userFavoriteMatches
-        self.popularMatches = popularMatches
+        self.matches = matches
 
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
@@ -1347,7 +1353,7 @@ class MyGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITable
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 3, self.popularMatches.isNotEmpty {
+        if indexPath.section == 3, self.matches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.activityIndicatorView.startAnimating()
             }
@@ -1390,7 +1396,6 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.todayMatches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
-
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }
@@ -1469,6 +1474,8 @@ class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UIT
     }
     var collapsedCompetitionsSections: Set<Int> = []
 
+    var didSelectMatchAction: ((Match) -> Void)?
+
     init(competitions: [Competition]) {
         self.competitions = competitions
     }
@@ -1493,8 +1500,11 @@ class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UIT
             fatalError()
         }
         cell.setupWithMatch(match)
-
         cell.shouldShowCountryFlag(false)
+        cell.tappedMatchLineAction = {
+            self.didSelectMatchAction?(match)
+        }
+
         return cell
     }
 
@@ -1579,11 +1589,8 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
 
     var userFavoriteMatches: [Match] = []
 
-    private var matches: [Match] {
-        return userFavoriteMatches
-    }
-
     var requestNextPage: (() -> ())?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
@@ -1611,6 +1618,9 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.userFavoriteMatches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
+                cell.tappedMatchLineAction = {
+                    self.didSelectMatchAction?(match)
+                }
 
                 return cell
             }
@@ -1678,6 +1688,9 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     }
     var collapsedCompetitionsSections: Set<Int> = []
 
+    var didSelectMatchAction: ((Match) -> Void)?
+
+
     init(favoriteCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions
     }
@@ -1702,8 +1715,11 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
             fatalError()
         }
         cell.setupWithMatch(match)
-
         cell.shouldShowCountryFlag(false)
+        cell.tappedMatchLineAction = {
+            self.didSelectMatchAction?(match)
+        }
+
         return cell
     }
 
