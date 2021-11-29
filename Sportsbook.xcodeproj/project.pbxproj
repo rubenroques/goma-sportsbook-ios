@@ -730,6 +730,10 @@
 		A9BCF44A2750FC8A006DD528 /* BetslipErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */; };
 		A9BCF44C2750FCA5006DD528 /* BetslipErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */; };
 		A9BCF44D2750FCA5006DD528 /* BetslipErrorView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */; };
+		A9BCF45027552851006DD528 /* Cashout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF44F27552851006DD528 /* Cashout.swift */; };
+		A9BCF45127552851006DD528 /* Cashout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF44F27552851006DD528 /* Cashout.swift */; };
+		A9BCF45627554E88006DD528 /* CashoutSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF45527554E88006DD528 /* CashoutSubmission.swift */; };
+		A9BCF45727554E88006DD528 /* CashoutSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF45527554E88006DD528 /* CashoutSubmission.swift */; };
 		A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
 		A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */; };
 		A9C6022D2716F40300992E11 /* HomeFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C602292716F13F00992E11 /* HomeFilterViewController.swift */; };
@@ -1159,6 +1163,8 @@
 		A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketDetailCollectionViewCell.xib; sourceTree = "<group>"; };
 		A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipErrorView.swift; sourceTree = "<group>"; };
 		A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetslipErrorView.xib; sourceTree = "<group>"; };
+		A9BCF44F27552851006DD528 /* Cashout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cashout.swift; sourceTree = "<group>"; };
+		A9BCF45527554E88006DD528 /* CashoutSubmission.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutSubmission.swift; sourceTree = "<group>"; };
 		A9C602292716F13F00992E11 /* HomeFilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFilterViewController.swift; sourceTree = "<group>"; };
 		A9C6022A2716F13F00992E11 /* HomeFilterViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeFilterViewController.xib; sourceTree = "<group>"; };
 		A9C602342716F7BE00992E11 /* FilterCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterCollapseView.swift; sourceTree = "<group>"; };
@@ -2477,6 +2483,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				A9BCF44E2755283B006DD528 /* Cashouts */,
 				457F495E2737C3580047169D /* Betting */,
 				455F764F26F0EFAD00B9B85D /* Account */,
 				A9B841BD26EA5A0100269B05 /* Events */,
@@ -2587,6 +2594,15 @@
 				A9BCF44B2750FCA5006DD528 /* BetslipErrorView.xib */,
 			);
 			path = BetslipErrorView;
+			sourceTree = "<group>";
+		};
+		A9BCF44E2755283B006DD528 /* Cashouts */ = {
+			isa = PBXGroup;
+			children = (
+				A9BCF44F27552851006DD528 /* Cashout.swift */,
+				A9BCF45527554E88006DD528 /* CashoutSubmission.swift */,
+			);
+			path = Cashouts;
 			sourceTree = "<group>";
 		};
 		A9C602282716F11A00992E11 /* HomeFilter */ = {
@@ -3134,6 +3150,7 @@
 				4589F42526C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				A9C82FC326F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
 				F4CE68452742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
+				A9BCF45027552851006DD528 /* Cashout.swift in Sources */,
 				45936CB9270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
 				45166CE126F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -3313,6 +3330,7 @@
 				A99DFBEA2731A2F700002CDB /* HomeFilterOptions.swift in Sources */,
 				45D871BE270F5B5500F5B87B /* Aggregator.swift in Sources */,
 				45B0BD34271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
+				A9BCF45627554E88006DD528 /* CashoutSubmission.swift in Sources */,
 				A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -3416,6 +3434,7 @@
 				4589F42626C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				A9C82FC426F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
 				F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
+				A9BCF45127552851006DD528 /* Cashout.swift in Sources */,
 				45936CBA270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
 				45166CE226F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -3595,6 +3614,7 @@
 				A99DFBEB2731A2F700002CDB /* HomeFilterOptions.swift in Sources */,
 				45D871BF270F5B5500F5B87B /* Aggregator.swift in Sources */,
 				45B0BD35271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
+				A9BCF45727554E88006DD528 /* CashoutSubmission.swift in Sources */,
 				A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
