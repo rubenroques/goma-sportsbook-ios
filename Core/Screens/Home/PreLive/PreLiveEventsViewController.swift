@@ -597,7 +597,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         case 0:
             cell.setupWithTitle("Popular")
         case 1:
-            cell.setupWithTitle("Today")
+            cell.setupWithTitle("Upcoming")
         case 2:
             cell.setupWithTitle("Competitions")
         case 3:
