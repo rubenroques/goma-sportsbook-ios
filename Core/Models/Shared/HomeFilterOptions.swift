@@ -19,7 +19,7 @@ struct HomeFilterOptions {
     let countFilters: Int
 
     init(lowerBoundTimeRange: CGFloat = 0.0,
-         highBoundTimeRange: CGFloat = 24.0,
+         highBoundTimeRange: CGFloat = 48.0,
          defaultMarket: MainMarketType = MainMarketType.homeDrawAway,
          lowerBoundOddsRange: CGFloat = 1.0,
          highBoundOddsRange: CGFloat = 30.0,
