@@ -197,7 +197,7 @@ class MatchDetailsAggregatorRepository: NSObject {
         for content in aggregator.content ?? [] {
             switch content {
             case .marketGroup(let marketGroup):
-                if let groupKey = marketGroup.groupKey {
+                if let groupKey = marketGroup.groupKey, groupKey != "Bet_Builder" {
                     marketGroups[groupKey] = marketGroup
                 }
             default:
