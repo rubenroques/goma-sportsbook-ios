@@ -138,7 +138,7 @@ class SubmitedBetTableViewCell: UITableViewCell {
 //        }
 
         for selection in betHistoryEntry.selections ?? [] {
-            let submitedBetSelectionView = SubmitedBetSelectionView(betHistoryEntrySelection: selection, betHistoryEntry: betHistoryEntry)
+            let submitedBetSelectionView = SubmitedBetSelectionView(betHistoryEntrySelection: selection)
             self.stackView.addArrangedSubview(submitedBetSelectionView)
             NSLayoutConstraint.activate([
                 submitedBetSelectionView.heightAnchor.constraint(equalToConstant: 88)
