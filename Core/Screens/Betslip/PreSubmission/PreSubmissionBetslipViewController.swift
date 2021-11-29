@@ -577,10 +577,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         switch segmentControl.selectedSegmentIndex {
         case 0:
             self.listTypePublisher.value = .simple
+ 
         case 1:
             self.listTypePublisher.value = .multiple
+            self.numberOfBets = 1
         case 2:
             self.listTypePublisher.value = .system
+            self.numberOfBets = 1
         default:
             ()
         }
@@ -730,7 +733,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             // Still loading requests
             return
         }
-
+        self.numberOfBets = self.simpleBetPlacedDetails.values.count
         for value in self.simpleBetPlacedDetails.values {
             switch value {
             case .loaded(let betPlacedDetails):

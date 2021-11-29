@@ -30,7 +30,7 @@ class HomeFilterViewController: UIViewController {
     // Variables
     // var timeSliderValues: [CGFloat] = []
     var lowerBoundTimeRange: CGFloat = 0.0
-    var highBoundTimeRange: CGFloat = 24.0
+    var highBoundTimeRange: CGFloat = 48.0
     var lowerBoundOddsRange: CGFloat = 1.0
     var highBoundOddsRange: CGFloat = 30.0
     var defaultMarket: MainMarketType = .homeDrawAway
@@ -135,7 +135,7 @@ class HomeFilterViewController: UIViewController {
 
     func setupTimeRangeSection() {
         let minValue: CGFloat = 0
-        let maxValue: CGFloat = 24
+        let maxValue: CGFloat = 48
         let values: [CGFloat]
         if delegate?.turnTimeRangeOn == true {
             timeRangeCollapseView.isUserInteractionEnabled = true
@@ -339,7 +339,8 @@ class HomeFilterViewController: UIViewController {
 
     @IBAction private func applyFiltersAction() {
         
-        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 24.0 {
+        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 48.0
+{
             countFilters += 1
         }
         
