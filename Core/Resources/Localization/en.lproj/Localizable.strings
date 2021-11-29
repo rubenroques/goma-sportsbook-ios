@@ -173,3 +173,6 @@ Terms of use, Privacy Policy and EULA";
 "string_complete_your_profile" = "Complete your Profile";
 "string_complete_profile_description" = "To get the most of this app please finish setting up your profile";
 "string_finish_up_profile" = "Finish up Profile >";
+
+"string_cashout_available" = "Cashout Available";
+"string_cashout" = "Cashout";

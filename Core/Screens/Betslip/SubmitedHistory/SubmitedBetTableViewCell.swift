@@ -32,9 +32,19 @@ class SubmitedBetTableViewCell: UITableViewCell {
     @IBOutlet private weak var possibleWinningsTitleLabel: UILabel!
     @IBOutlet private weak var possibleWinningsValueLabel: UILabel!
 
+    @IBOutlet private var cashoutStackView: UIStackView!
+    @IBOutlet private var cashoutView: UIView!
+    @IBOutlet private var cashoutLogoImageView: UIImageView!
+    @IBOutlet private var cashoutTitleLabel: UILabel!
+    @IBOutlet private var cashoutValueLabel: UILabel!
+    @IBOutlet private var cashoutButton: UIButton!
+    @IBOutlet private var cashoutSeparatorView: UIView!
+
     private var cancellables = Set<AnyCancellable>()
 
     var betHistoryEntry: BetHistoryEntry?
+
+    var cashoutAction: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -51,6 +61,21 @@ class SubmitedBetTableViewCell: UITableViewCell {
         
         self.betAmountTitleLabel.text = "Bet Amount"
         self.possibleWinningsTitleLabel.text = "Possible Winnings"
+
+        self.cashoutLogoImageView.image = UIImage(systemName: "info.circle")
+
+        self.cashoutTitleLabel.text = localized("string_cashout_available")
+        self.cashoutTitleLabel.font = AppFont.with(type: .semibold, size: 12)
+
+        self.cashoutValueLabel.text = "-.--"
+        self.cashoutValueLabel.font = AppFont.with(type: .semibold, size: 14)
+
+        self.cashoutButton.setTitle(localized("string_cashout"), for: .normal)
+        self.cashoutButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+        StyleHelper.styleButton(button: self.cashoutButton)
+        self.cashoutButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+
+        self.cashoutView.isHidden = true
 
         self.setupWithTheme()
     }
@@ -83,6 +108,8 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.possibleWinningsValueLabel.text = ""
 
         self.stackView.removeAllArrangedSubviews()
+
+        self.cashoutValueLabel.text = "-.--"
     }
 
     func setupWithTheme() {
@@ -102,6 +129,19 @@ class SubmitedBetTableViewCell: UITableViewCell {
                 typedView.setupWithTheme()
             }
         }
+
+        self.cashoutStackView.backgroundColor = UIColor.App.secondaryBackground
+
+        self.cashoutView.backgroundColor = UIColor.App.secondaryBackground
+
+        self.cashoutLogoImageView.backgroundColor = .clear
+
+        self.cashoutTitleLabel.textColor = UIColor.App.headingSecondary
+
+        self.cashoutValueLabel.textColor = UIColor.App.headingMain
+
+        self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
+
     }
 
     func configureWithBetHistoryEntry(_ betHistoryEntry: BetHistoryEntry) {
@@ -146,5 +186,15 @@ class SubmitedBetTableViewCell: UITableViewCell {
         }
 
     }
+
+    func setupCashout(cashout: String) {
+        self.cashoutValueLabel.text = cashout
+        self.cashoutView.isHidden = false
+    }
+
+    @IBAction func cashoutButtonAction(_ sender: Any) {
+        self.cashoutAction?()
+    }
+
 
 }

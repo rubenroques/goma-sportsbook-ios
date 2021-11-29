@@ -16,6 +16,7 @@ enum AggregatorListType {
     case allLiveEvents
     case favoriteMatchEvents
     case favoriteCompetitionEvents
+    case cashouts
 }
 
 class AggregatorsRepository {
@@ -38,6 +39,7 @@ class AggregatorsRepository {
     var mainMarketsOrder: OrderedSet<String> = []
 
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
+    var cashouts: OrderedDictionary<String, EveryMatrix.Cashout> = [:]
     var tournamentsForLocation: [String: [String] ] = [:]
 
     var tournaments: [String: EveryMatrix.Tournament] = [:]
@@ -139,6 +141,9 @@ class AggregatorsRepository {
                 
             case .location(let location):
                 self.locations[location.id] = location
+
+            case .cashout(let cashout):
+                self.cashouts[cashout.id] = cashout
                 
             case .event:
                 () // print("Events aren't processed")

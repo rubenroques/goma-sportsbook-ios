@@ -166,6 +166,7 @@ extension EveryMatrix {
         case marketOutcomeRelation(EveryMatrix.MarketOutcomeRelation)
         case marketGroup(EveryMatrix.MarketGroup)
         case location(EveryMatrix.Location)
+        case cashout(EveryMatrix.Cashout)
         case unknown
 
         enum CodingKeys: String, CodingKey {
@@ -185,6 +186,7 @@ extension EveryMatrix {
             case marketOutcomeRelation = "MARKET_OUTCOME_RELATION"
             case marketGroup = "MARKET_GROUP"
             case location = "LOCATION"
+            case cashout = "CASHOUT"
             case unknown
 
             init(from decoder: Decoder) throws {
@@ -245,6 +247,10 @@ extension EveryMatrix {
             case .location:
                 let location = try objectContainer.decode(EveryMatrix.Location.self)
                 self = .location(location)
+            case .cashout:
+                let cashout = try objectContainer.decode(EveryMatrix.Cashout.self)
+                print("CASHOUT DECODE: \(cashout)")
+                self = .cashout(cashout)
             case .unknown:
                 self = .unknown
             }
