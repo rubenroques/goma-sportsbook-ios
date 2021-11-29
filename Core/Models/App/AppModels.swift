@@ -72,6 +72,7 @@ struct Outcome {
     var nameDigit1: Double?
     var nameDigit2: Double?
     var nameDigit3: Double?
+    var marketName: String?
     var bettingOffer: BettingOffer
 }
 

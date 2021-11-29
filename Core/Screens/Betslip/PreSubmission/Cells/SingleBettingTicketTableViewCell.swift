@@ -252,7 +252,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 }
                 
                 self?.currentOddValue = newOddValue
-                self?.oddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
             })
 
         if let errorBetting = errorBetting {

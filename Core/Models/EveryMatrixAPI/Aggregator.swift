@@ -74,7 +74,7 @@ extension EveryMatrix {
 
         case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
         case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
-        case unknown
+        case unknown(typeName: String)
 
         enum CodingKeys: String, CodingKey {
             case type = "_type"
@@ -110,6 +110,8 @@ extension EveryMatrix {
                 throw ContentUpdateError.uknownUpdateType
             }
 
+            var contentUpdateType: ContentUpdate?
+
             if changeTypeString == "UPDATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
 
                 if entityTypeString == "BETTING_OFFER" {
@@ -120,7 +122,7 @@ extension EveryMatrix {
                         let isLiveValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isLive)
 
                         if newOddValue != nil || isAvailableValue != nil || isLiveValue != nil {
-                            self = .bettingOfferUpdate(id: contentId,
+                            contentUpdateType = .bettingOfferUpdate(id: contentId,
                                                    odd: newOddValue,
                                                    isLive: isLiveValue,
                                                    isAvailable: isAvailableValue)
@@ -133,17 +135,19 @@ extension EveryMatrix {
                         let isAvailableValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isAvailable)
                         let isClosedValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isClosed)
                         if isAvailableValue != nil || isClosedValue != nil {
-                            self = .marketUpdate(id: contentId, isAvailable: isAvailableValue, isClosed: isClosedValue)
+                            contentUpdateType = .marketUpdate(id: contentId, isAvailable: isAvailableValue, isClosed: isClosedValue)
                         }
                     }
                 }
-                else if entityTypeString == "MATCH" {
-                    print("AggregatorUpdates - MATCH")
-
-                }
             }
 
-            self = .unknown
+            if let contentUpdateTypeValue = contentUpdateType {
+                self = contentUpdateTypeValue
+            }
+            else {
+                self = .unknown(typeName: entityTypeString)
+            }
+
         }
 
     }

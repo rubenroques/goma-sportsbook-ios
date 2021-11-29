@@ -157,7 +157,7 @@ class LiveEventsViewModel: NSObject {
         self.updateContentList()
     }
 
-    private func updateAllmatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+    private func updateAllMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
     }
 
@@ -205,7 +205,7 @@ class LiveEventsViewModel: NSObject {
                     print("SportsViewModel popularMatchesPublisher initialContent")
                     self?.setupAllMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
-                    self?.updateAllmatchesAggregatorProcessor(aggregator: aggregatorUpdates)
+                    self?.updateAllMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
                     print("SportsViewModel popularMatchesPublisher updatedContent")
                 case .disconnect:
                     print("SportsViewModel popularMatchesPublisher disconnect")

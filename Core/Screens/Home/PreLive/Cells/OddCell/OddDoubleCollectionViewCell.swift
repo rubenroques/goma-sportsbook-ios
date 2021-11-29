@@ -197,7 +197,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         }
                     }
                     weakSelf.currentLeftOddValue = newOddValue
-                    weakSelf.leftOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                    weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                 })
         }
 
@@ -232,7 +232,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                     }
 
                     weakSelf.currentRightOddValue = newOddValue
-                    weakSelf.rightOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                    weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                 })
         }
 

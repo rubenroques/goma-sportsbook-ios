@@ -1,5 +1,5 @@
 //
-//  MatchDetailMarketTableViewCell.swift
+//  SimpleListMarketDetailTableViewCell.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 25/11/2021.
@@ -7,8 +7,7 @@
 
 import UIKit
 
-class MatchDetailMarketTableViewCell: UITableViewCell {
-
+class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var titleLabel: UILabel!
@@ -24,6 +23,8 @@ class MatchDetailMarketTableViewCell: UITableViewCell {
 
     var match: Match?
     var market: Market?
+
+    private let lineHeight: CGFloat = 56
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -79,7 +80,6 @@ class MatchDetailMarketTableViewCell: UITableViewCell {
         self.titleLabel.text = market.name
 
         //calculate number of lines
-        let lineHeight: CGFloat = 50
 
         //calculate number of lines
         let outcomes = market.outcomes.count
@@ -87,16 +87,16 @@ class MatchDetailMarketTableViewCell: UITableViewCell {
         let useTriple = outcomes % 3 == 0
 
         if useTriple {
-            var numberOfLines = Int(outcomes / 3)
-            numberOfLines = numberOfLines < 4 ? numberOfLines : 4
+            let numberOfLines = Int(outcomes / 3)
+            //numberOfLines = numberOfLines < 4 ? numberOfLines : 4
 
             self.columnType = ColumnType.triple
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
         }
         else {
             //Use double
-            var numberOfLines = Int(outcomes / 2)
-            numberOfLines = numberOfLines < 3 ? numberOfLines : 3
+            let numberOfLines = Int(outcomes / 2)
+            //numberOfLines = numberOfLines < 3 ? numberOfLines : 3
 
             self.columnType = ColumnType.double
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
@@ -111,7 +111,7 @@ class MatchDetailMarketTableViewCell: UITableViewCell {
 
 }
 
-extension MatchDetailMarketTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension SimpleListMarketDetailTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -162,7 +162,7 @@ extension MatchDetailMarketTableViewCell: UICollectionViewDelegate, UICollection
             width  = (containerWidth/3) - 5
         }
 
-        return CGSize(width: width, height: 50) // design width: 331
+        return CGSize(width: width, height: lineHeight) // design width: 331
 
     }
 }

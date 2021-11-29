@@ -281,6 +281,20 @@
 		455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962726FE11CA00456F30 /* HomeViewController.xib */; };
 		455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455F765026F0EFCE00B9B85D /* LoginAccount.swift */; };
 		455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455F765026F0EFCE00B9B85D /* LoginAccount.swift */; };
+		45626E34275530990069B89B /* OddFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E33275530990069B89B /* OddFormatter.swift */; };
+		45626E35275530990069B89B /* OddFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E33275530990069B89B /* OddFormatter.swift */; };
+		45626E38275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */; };
+		45626E39275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */; };
+		45626E3A275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
+		45626E3B275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */; };
+		45626E3D2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E3C2755445A0069B89B /* OutcomeSelectionButtonView.swift */; };
+		45626E3E2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E3C2755445A0069B89B /* OutcomeSelectionButtonView.swift */; };
+		45626E40275544620069B89B /* OutcomeSelectionButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E3F275544620069B89B /* OutcomeSelectionButtonView.xib */; };
+		45626E41275544620069B89B /* OutcomeSelectionButtonView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E3F275544620069B89B /* OutcomeSelectionButtonView.xib */; };
+		45626E442755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E422755599D0069B89B /* OverUnderMarketDetailTableViewCell.swift */; };
+		45626E452755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E422755599D0069B89B /* OverUnderMarketDetailTableViewCell.swift */; };
+		45626E462755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */; };
+		45626E472755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */; };
 		456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342026C17DF4009D7D27 /* Optional+Extensions.swift */; };
@@ -718,10 +732,10 @@
 		A9BCF435274D1A77006DD528 /* MatchDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */; };
 		A9BCF436274D1A77006DD528 /* MatchDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */; };
 		A9BCF437274D1A77006DD528 /* MatchDetailsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */; };
-		A9BCF43D274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */; };
-		A9BCF43E274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */; };
-		A9BCF43F274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */; };
-		A9BCF440274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */; };
+		A9BCF43D274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF43B274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift */; };
+		A9BCF43E274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF43B274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift */; };
+		A9BCF43F274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
+		A9BCF440274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */; };
 		A9BCF443274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */; };
 		A9BCF444274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */; };
 		A9BCF445274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */; };
@@ -942,6 +956,13 @@
 		455C962626FE11CA00456F30 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		455C962726FE11CA00456F30 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
 		455F765026F0EFCE00B9B85D /* LoginAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAccount.swift; sourceTree = "<group>"; };
+		45626E33275530990069B89B /* OddFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddFormatter.swift; sourceTree = "<group>"; };
+		45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeAwayMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
+		45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ThreeAwayMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
+		45626E3C2755445A0069B89B /* OutcomeSelectionButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutcomeSelectionButtonView.swift; sourceTree = "<group>"; };
+		45626E3F275544620069B89B /* OutcomeSelectionButtonView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OutcomeSelectionButtonView.xib; sourceTree = "<group>"; };
+		45626E422755599D0069B89B /* OverUnderMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverUnderMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
+		45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverUnderMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
 		456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
 		456B342026C17DF4009D7D27 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		456B342326C17E83009D7D27 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -1153,8 +1174,8 @@
 		A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PolicyLinkView.xib; sourceTree = "<group>"; };
 		A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewController.swift; sourceTree = "<group>"; };
 		A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchDetailsViewController.xib; sourceTree = "<group>"; };
-		A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailMarketTableViewCell.swift; sourceTree = "<group>"; };
-		A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchDetailMarketTableViewCell.xib; sourceTree = "<group>"; };
+		A9BCF43B274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleListMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
+		A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SimpleListMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
 		A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketDetailCollectionViewCell.swift; sourceTree = "<group>"; };
 		A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MarketDetailCollectionViewCell.xib; sourceTree = "<group>"; };
 		A9BCF4482750FC89006DD528 /* BetslipErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipErrorView.swift; sourceTree = "<group>"; };
@@ -2245,6 +2266,7 @@
 				456B342626C18257009D7D27 /* Logger.swift */,
 				454E0AC72733FBF200794E0C /* StyleHelpers.swift */,
 				454E0AD02734A39800794E0C /* CurrencyHelper.swift */,
+				45626E33275530990069B89B /* OddFormatter.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -2572,10 +2594,16 @@
 		A9BCF43A274FB589006DD528 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				A9BCF43B274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift */,
-				A9BCF43C274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib */,
+				45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */,
+				45626E37275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib */,
+				45626E422755599D0069B89B /* OverUnderMarketDetailTableViewCell.swift */,
+				45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */,
+				A9BCF43B274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift */,
+				A9BCF43C274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib */,
 				A9BCF441274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift */,
 				A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */,
+				45626E3C2755445A0069B89B /* OutcomeSelectionButtonView.swift */,
+				45626E3F275544620069B89B /* OutcomeSelectionButtonView.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2837,8 +2865,9 @@
 				45BEA48726F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				457F496F2737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
-				A9BCF43F274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */,
+				A9BCF43F274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				A9627A17274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
+				45626E3A275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				45CD7B5A271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
 				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
@@ -2909,8 +2938,10 @@
 				A9627A08274529BD0001E1D5 /* ActivationAlertScrollableView.xib in Resources */,
 				45DDBA9426F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
 				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
+				45626E40275544620069B89B /* OutcomeSelectionButtonView.xib in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
+				45626E462755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				455C962A26FE11CA00456F30 /* HomeViewController.xib in Resources */,
 				45CD7B542716F5CB003044C5 /* OddTripleCollectionViewCell.xib in Resources */,
 			);
@@ -2931,6 +2962,7 @@
 				45D527E02720535400744D34 /* CompetitionsFiltersView.xib in Resources */,
 				45BEA48026F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
 				454E0AA52732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */,
+				45626E41275544620069B89B /* OutcomeSelectionButtonView.xib in Resources */,
 				45D712FB27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */,
 				454E0ACF2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
@@ -2949,7 +2981,7 @@
 				455C960926FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */,
 				456B343B26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
 				4589F40026BF017A005DF543 /* LoginViewController.xib in Resources */,
-				A9BCF440274FB5CC006DD528 /* MatchDetailMarketTableViewCell.xib in Resources */,
+				A9BCF440274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				45CD7B552716F5CB003044C5 /* OddTripleCollectionViewCell.xib in Resources */,
 				455A0C8A26BD904300EC572D /* LaunchScreen.storyboard in Resources */,
 				45BEA48826F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
@@ -2966,8 +2998,10 @@
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
 				A96279F62743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
 				454E0A9F2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */,
+				45626E3B275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
+				45626E472755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
@@ -3184,7 +3218,7 @@
 				A9B840A626DE831400269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B226E9054700269B05 /* Market.swift in Sources */,
 				45CD7B58271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
-				A9BCF43D274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */,
+				A9BCF43D274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				45B7DADB26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				45D728D72715F6DC00EFE04D /* AppModels.swift in Sources */,
@@ -3193,6 +3227,7 @@
 				A96279F32743D3AA0001E1D5 /* EmailVerificationViewController.swift in Sources */,
 				456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636826BE0AB200690896 /* ClientVariables.swift in Sources */,
+				45626E3D2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */,
 				F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
 				45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				A9C82FBB26F4E50D00059DCD /* EditAlertView.swift in Sources */,
@@ -3213,6 +3248,7 @@
 				F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */,
 				A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
+				45626E442755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
@@ -3255,6 +3291,7 @@
 				45ACEEB02721B54E00D0A45F /* BannerCellViewModel.swift in Sources */,
 				A96279FF27440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408626D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
+				45626E34275530990069B89B /* OddFormatter.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
@@ -3263,6 +3300,7 @@
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
+				45626E38275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
@@ -3466,7 +3504,7 @@
 				A9B840A926DE86BE00269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B326E9054700269B05 /* Market.swift in Sources */,
 				45CD7B59271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
-				A9BCF43E274FB5CC006DD528 /* MatchDetailMarketTableViewCell.swift in Sources */,
+				A9BCF43E274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				45B7DADC26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				45D728D82715F6DC00EFE04D /* AppModels.swift in Sources */,
@@ -3475,6 +3513,7 @@
 				A96279F42743D3AA0001E1D5 /* EmailVerificationViewController.swift in Sources */,
 				456B342226C17DF4009D7D27 /* Optional+Extensions.swift in Sources */,
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
+				45626E3E2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */,
 				F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
 				A9C82FBC26F4E50D00059DCD /* EditAlertView.swift in Sources */,
 				45166CF826F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
@@ -3495,6 +3534,7 @@
 				F4CE68442742CD8A003413AE /* MultiSlider.swift in Sources */,
 				A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
+				45626E452755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
@@ -3537,6 +3577,7 @@
 				45ACEEB12721B54E00D0A45F /* BannerCellViewModel.swift in Sources */,
 				A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
+				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
@@ -3545,6 +3586,7 @@
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */,
+				45626E39275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0E26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,

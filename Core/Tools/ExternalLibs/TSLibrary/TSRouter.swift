@@ -46,6 +46,7 @@ enum TSRouter {
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
+    case bettingOfferPublisher(operatorId: String, language: String, bettingOfferId: String)
     case liveMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case popularMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
@@ -175,6 +176,9 @@ enum TSRouter {
             return "/sports/\(operatorId)/\(language)/sport/\(sportId)"
         case .sportsPublisher(let operatorId):
             return "/sports/\(operatorId)/en/disciplines/BOTH/BOTH"
+
+        case .bettingOfferPublisher(let operatorId, let language, let bettingOfferId):
+            return "/sports/\(operatorId)/\(language)/bettingOffers/\(bettingOfferId)"
 
         case .liveMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
@@ -564,6 +568,8 @@ enum TSRouter {
     var intiailDumpRequest: TSRouter? {
 
         switch self {
+        case .bettingOfferPublisher:
+            return .sportsInitialDump(topic: self.procedure)
         case .liveMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .popularMatchesPublisher:

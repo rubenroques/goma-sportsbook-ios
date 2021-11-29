@@ -245,7 +245,9 @@ class MatchDetailsViewController: UIViewController {
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.tableView.separatorStyle = .none
-        tableView.register(MatchDetailMarketTableViewCell.nib, forCellReuseIdentifier: MatchDetailMarketTableViewCell.identifier)
+        self.tableView.register(SimpleListMarketDetailTableViewCell.nib, forCellReuseIdentifier: SimpleListMarketDetailTableViewCell.identifier)
+        self.tableView.register(ThreeAwayMarketDetailTableViewCell.nib, forCellReuseIdentifier: ThreeAwayMarketDetailTableViewCell.identifier)
+        self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
 
         self.tableView.delegate = self.viewModel
         self.tableView.dataSource = self.viewModel

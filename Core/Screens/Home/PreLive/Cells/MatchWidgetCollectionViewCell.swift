@@ -304,7 +304,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                             }
                         }
                         weakSelf.currentHomeOddValue = newOddValue
-                        weakSelf.homeOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                        weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                     })
                 
             }
@@ -338,7 +338,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                             }
                         }
                         weakSelf.currentDrawOddValue = newOddValue
-                        weakSelf.drawOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                        weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                     })
             }
             if let outcome = market.outcomes[safe: 2] {
@@ -373,7 +373,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         }
 
                         weakSelf.currentAwayOddValue = newOddValue
-                        weakSelf.awayOddValueLabel.text = "\(Double(floor(newOddValue * 100)/100))"
+                        weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                     })
 
             }

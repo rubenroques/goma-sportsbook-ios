@@ -55,7 +55,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     open func sendData(_ data: Data) {
         if mode == .text {
             let textData = String(data: data, encoding: .utf8)!
-            print("TSWebSocketClient sendData \(textData)")
+            //print("TSWebSocketClient sendData \(textData)")
             socket?.write(string: textData)
         }
         else {
@@ -74,7 +74,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(20))")
+        //print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(20))")
         messageCounter += 1
         if let data = text.data(using: .utf8) {
             websocketDidReceiveData(socket: socket, data: data)

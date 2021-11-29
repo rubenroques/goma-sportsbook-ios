@@ -322,10 +322,14 @@ class MatchDetailsAggregatorRepository: NSObject {
      */
 
 
-    func marketsForGroup(withGroupKey key: String) -> [Market] {
+    func marketsForGroup(withGroupKey key: String) -> [MergedMarketGroup] {
         guard let marketsIds = self.marketsForGroup[key] else { return [] }
 
-        var markets: [Market] = []
+        var allMarkets: [Market] = []
+
+        var similarMarkets: [String : [Market]] = [:]
+        var similarMarketsNames: [String : String] = [:]
+        var similarMarketsOrder: OrderedSet<String> = []
 
         let rawMarketsList = marketsIds.map { id in
             return self.marketsPublishers[id]?.value
@@ -355,6 +359,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                                           nameDigit1: rawOutcome.paramFloat1,
                                           nameDigit2: rawOutcome.paramFloat2,
                                           nameDigit3: rawOutcome.paramFloat3,
+                                          marketName: rawMarket.shortName ?? "",
                                           bettingOffer: bettingOffer)
                     outcomes.append(outcome)
                 }
@@ -366,13 +371,77 @@ class MatchDetailsAggregatorRepository: NSObject {
                 return out1Value < out2Value
             }
 
+            let similarMarketKey = "\(rawMarket.eventPartId ?? "000")-\(rawMarket.bettingTypeId ?? "000")"
+
             let market = Market(id: rawMarket.id,
                                 typeId: rawMarket.bettingTypeId ?? "",
-                                name: rawMarket.shortName ?? "",
+                                name: rawMarket.displayShortName ?? "",
                                 outcomes: sortedOutcomes)
-            markets.append(market)
+            allMarkets.append(market)
+            similarMarketsOrder.append(similarMarketKey)
+
+            if var similarMarketsList = similarMarkets[similarMarketKey] {
+                similarMarketsList.append(market)
+                similarMarkets[similarMarketKey] = similarMarketsList
+            }
+            else {
+                similarMarkets[similarMarketKey] = [market]
+            }
+
+            similarMarketsNames[similarMarketKey] = rawMarket.displayShortName ?? ""
+
         }
 
-        return markets
+        var mergedMarketGroups: [MergedMarketGroup] = []
+
+        for marketKey in similarMarketsOrder {
+
+            if marketKey == "3-47" {
+                print("break")
+            }
+
+            if let value = similarMarkets[marketKey] {
+
+                guard let firstMarket = value.first else { continue }
+
+                let allOutcomes = value.flatMap({ $0.outcomes })
+                var outcomesDictionary: [String: [Outcome]] = [:]
+
+                for outcomeIt in allOutcomes {
+                    let outcomeTypeName = outcomeIt.typeName
+                    if outcomeTypeName == "under" {
+                        print("break")
+                    }
+                    if var outcomesList = outcomesDictionary[outcomeTypeName] {
+                        outcomesList.append(outcomeIt)
+                        outcomesDictionary[outcomeTypeName] = outcomesList
+                    }
+                    else {
+                        outcomesDictionary[outcomeTypeName] = [outcomeIt]
+                    }
+                }
+
+
+                let marketGroupName = similarMarketsNames[marketKey] ?? ""
+
+                let mergedMarketGroup = MergedMarketGroup(id: firstMarket.id,
+                                                            typeId: firstMarket.typeId,
+                                                            name: marketGroupName,
+                                                            index: 0,
+                                                            outcomes: outcomesDictionary)
+                mergedMarketGroups.append(mergedMarketGroup)
+            }
+        }
+
+        return mergedMarketGroups
     }
+}
+
+
+struct MergedMarketGroup {
+    var id: String
+    var typeId: String
+    var name: String
+    var index: Int
+    var outcomes: [String: [Outcome] ]
 }

@@ -242,6 +242,7 @@ class AggregatorsRepository {
                                               nameDigit1: rawOutcome.paramFloat1,
                                               nameDigit2: rawOutcome.paramFloat2,
                                               nameDigit3: rawOutcome.paramFloat3,
+                                              marketName: rawMarket.shortName ?? "",
                                               bettingOffer: bettingOffer)
                         outcomes.append(outcome)
                     }

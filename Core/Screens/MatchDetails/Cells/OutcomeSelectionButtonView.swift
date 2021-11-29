@@ -1,14 +1,14 @@
 //
-//  MarketDetailCollectionViewCell.swift
+//  OutcomeSelectionButtonView.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 25/11/2021.
+//  Created by Ruben Roques on 29/11/2021.
 //
 
 import UIKit
 import Combine
 
-class MarketDetailCollectionViewCell: UICollectionViewCell {
+class OutcomeSelectionButtonView: NibView {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var marketTypeLabel: UILabel!
@@ -18,7 +18,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var downChangeOddValueImage: UIImageView!
 
     var match: Match?
-    var market: Market?
     var outcome: Outcome?
     var bettingOffer: BettingOffer?
 
@@ -33,9 +32,25 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
     private var oddUpdatesPublisher: AnyCancellable?
     private var oddUpdatesRegister: EndpointPublisherIdentifiable?
+    
+    convenience init() {
+        self.init(frame: .zero)
+    }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+
+    override func commonInit() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+
+        self.backgroundColor = .clear
 
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
@@ -46,35 +61,17 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
         self.containerView.addGestureRecognizer(tapOddButton)
 
-
         self.setupWithTheme()
     }
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        self.marketTypeLabel.text = ""
-        self.marketOddLabel.text = ""
-
-        self.match = nil
-        self.market = nil
-        self.outcome = nil
-        self.bettingOffer = nil
-
-        self.oddValue = nil
-        self.isAvailableForBet = nil
-
-        self.oddUpdatesPublisher?.cancel()
-        self.oddUpdatesPublisher = nil
-
+    deinit {
         if let oddUpdatesRegister = oddUpdatesRegister {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
         }
+    }
 
-        self.isOutcomeButtonSelected = false
-
-        self.isUserInteractionEnabled = true
-        self.containerView.alpha = 1.0
+    override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: 56)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -100,6 +97,24 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.bettingOffer = outcome.bettingOffer
 
         self.marketTypeLabel.text = outcome.typeName
+        if let nameDigit1 = outcome.nameDigit1, let nameDigit2 = outcome.nameDigit2 {
+
+            var digit1String = "\(nameDigit1)"
+            digit1String = digit1String.replacingOccurrences(of: ".00", with: "")
+            digit1String = digit1String.replacingOccurrences(of: ".0", with: "")
+
+            var digit2String = "\(nameDigit2)"
+            digit2String = digit2String.replacingOccurrences(of: ".00", with: "")
+            digit2String = digit2String.replacingOccurrences(of: ".0", with: "")
+
+            self.marketTypeLabel.text = "\(outcome.typeName) \(digit1String)-\(digit2String)"
+        }
+        else if let nameDigit1 = outcome.nameDigit1 {
+            var digitString = "\(nameDigit1)"
+            digitString = digitString.replacingOccurrences(of: ".00", with: "")
+            digitString = digitString.replacingOccurrences(of: ".0", with: "")
+            self.marketTypeLabel.text = "\(outcome.typeName) \(digitString)"
+        }
 
         self.updateBettingOffer(value: outcome.bettingOffer.value, isAvailableForBetting: true)
 
@@ -129,10 +144,8 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
                     if let content = aggregator.content {
                         for contentType in content {
                             if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
-
                                 self?.oddValue =  nil
                                 self?.updateBettingOffer(value: oddsValue, isAvailableForBetting: true)
-
                                 break
                             }
                         }
@@ -200,14 +213,13 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.match,
-            let market = self.market,
             let outcome = self.outcome
         else {
             return
         }
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = market.name
+        let marketDescription = outcome.marketName ?? ""
         let outcomeDescription = outcome.translatedName
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
@@ -265,6 +277,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
+
 
 
 }

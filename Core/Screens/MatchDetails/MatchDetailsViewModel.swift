@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 import Combine
 
+
 class MatchDetailsViewModel: NSObject {
 
     var marketGroupsTypesDataChanged: (() -> Void)?
@@ -20,12 +21,20 @@ class MatchDetailsViewModel: NSObject {
     private var store: MatchDetailsAggregatorRepository
 
     private var marketTypeSelectedOptionIndex: Int?
+//
+//    private var marketsForGroup: [Market] = [] {
+//        didSet {
+//            self.isLoadingData.send(marketsForGroup.isEmpty)
+//        }
+//    }
 
-    private var marketsForGroup: [Market] = [] {
+    private var mergedMarketGroups: [MergedMarketGroup] = [] {
         didSet {
-            self.isLoadingData.send(marketsForGroup.isEmpty)
+            self.isLoadingData.send(mergedMarketGroups.isEmpty)
         }
     }
+
+
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -84,7 +93,9 @@ class MatchDetailsViewModel: NSObject {
             return
         }
 
-        self.marketsForGroup = store.marketsForGroup(withGroupKey: groupKey)
+        //self.marketsForGroup = store.marketsForGroup(withGroupKey: groupKey)
+
+        self.mergedMarketGroups = store.marketsForGroup(withGroupKey: groupKey)
 
         self.marketGroupDataChanged?()
     }
@@ -97,21 +108,46 @@ extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate  {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.marketsForGroup.count
+        return self.mergedMarketGroups.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         guard
-            let cell = tableView.dequeueCellType(MatchDetailMarketTableViewCell.self),
-            let item = self.marketsForGroup[safe: indexPath.row]
+            let item = self.mergedMarketGroups[safe: indexPath.row]
         else {
             return UITableViewCell()
         }
 
-        cell.match = self.match
-        cell.configure(withMarket: item)
-
-        return cell
+        if item.outcomes.keys.count == 3 {
+            guard
+                let cell = tableView.dequeueCellType(ThreeAwayMarketDetailTableViewCell.self)
+            else {
+                return UITableViewCell()
+            }
+            cell.match = self.match
+            cell.configure(withMergedMarketGroup: item)
+            return cell
+        }
+        else if item.outcomes.keys.count == 2 {
+            guard
+                let cell = tableView.dequeueCellType(OverUnderMarketDetailTableViewCell.self)
+            else {
+                return UITableViewCell()
+            }
+            cell.match = self.match
+            cell.configure(withMergedMarketGroup: item)
+            return cell
+        }
+        else {
+            guard
+                let cell = tableView.dequeueCellType(SimpleListMarketDetailTableViewCell.self)
+            else {
+                return UITableViewCell()
+            }
+            cell.match = self.match
+            return cell
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
