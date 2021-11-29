@@ -2578,7 +2578,7 @@
 				A9BCF442274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib */,
 			);
 			path = Cells;
-				sourceTree = "<group>";
+			sourceTree = "<group>";
 		};
 		A9BCF4472750FC51006DD528 /* BetslipErrorView */ = {
 			isa = PBXGroup;
@@ -3796,7 +3796,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00210;
+				CURRENT_PROJECT_VERSION = 00211;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3822,7 +3822,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00210;
+				CURRENT_PROJECT_VERSION = 00211;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

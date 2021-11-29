@@ -566,7 +566,7 @@ class SportsViewModel: NSObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                self?.isLoadingTodayList.send(false)
+                self?.isLoadingPopularList.send(false)
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
@@ -775,7 +775,6 @@ class SportsViewModel: NSObject {
 
     func fetchFavoriteCompetitionsMatchesWithIds(_ ids: [String]) {
 
-        self.isLoadingCompetitions.send(true)
 
         if let favoriteCompetitionsMatchesRegister = favoriteCompetitionsMatchesRegister {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
@@ -795,7 +794,6 @@ class SportsViewModel: NSObject {
                 case .finished:
                     print("Data retrieved!")
                 }
-                self?.isLoadingCompetitions.send(false)
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
@@ -1010,6 +1008,7 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.favoriteCompetitionSportsViewModelDataSource.numberOfSections(in: tableView)
         }
     }
+
     func hasGames(in tableView: UITableView) -> Bool {
         switch self.matchListTypePublisher.value {
         case .myGames:
@@ -1025,11 +1024,24 @@ extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
             }else{
                 return false
             }
-           
         case .competitions:
             if self.competitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
                 return true
             }else{
+                return false
+            }
+        case .favoriteGames:
+            if self.favoriteGamesSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
+                return true
+            }
+            else{
+                return false
+            }
+        case .favoriteCompetitions:
+            if self.favoriteCompetitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
+                return true
+            }
+            else{
                 return false
             }
         }
