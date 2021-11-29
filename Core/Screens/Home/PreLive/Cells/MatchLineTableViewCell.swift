@@ -55,7 +55,7 @@ class MatchLineTableViewCell: UITableViewCell {
         //        let inset = (screenWidth - cellWidth) / 2
         //        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
 
-        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 300)
 
         self.backSliderView.layer.cornerRadius = 6
 
@@ -165,6 +165,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             if let match = self.match {
                 cell.subtitleLabel.text = "\(match.numberTotalOfMarkets) Markets"
             }
+            cell.tappedAction = {
+                self.tappedMatchLineAction?()
+            }
             return cell
         }
 
@@ -203,8 +206,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             }
         }
         else {
-            if let match = self.match,
-               let market = self.match?.markets[safe: indexPath.row] {
+            if let match = self.match, let market = match.markets[safe: indexPath.row] {
 
                 //\(match.competitionName) 
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
@@ -214,6 +216,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+                        cell.tappedMatchWidgetAction = {
+                            self.tappedMatchLineAction?()
+                        }
                         return cell
                     }
                 }
@@ -221,6 +226,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+                        cell.tappedMatchWidgetAction = {
+                            self.tappedMatchLineAction?()
+                        }
                         return cell
                     }
                 }
@@ -251,7 +259,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         if indexPath.section == 1 {
-            return CGSize(width: 97, height: 128)
+            return CGSize(width: 99, height: 128)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width

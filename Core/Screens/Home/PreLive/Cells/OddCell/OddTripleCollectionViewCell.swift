@@ -72,6 +72,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    var tappedMatchWidgetAction: (() -> Void)?
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -109,6 +111,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.rightBaseView.addGestureRecognizer(tapRightOddButton)
 
+
+        let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
+        self.addGestureRecognizer(tapMatchView)
 
         self.setupWithTheme()
     }
@@ -299,6 +304,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     }
 
+
+    @IBAction func didTapMatchView(_ sender: Any) {
+        self.tappedMatchWidgetAction?()
+    }
 
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5

@@ -14,6 +14,9 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
 
+
+    var tappedAction: (() -> Void)?
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -22,6 +25,11 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
         self.titleLabel.text = "See All"
         self.setupWithTheme()
+
+
+        let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
+        self.addGestureRecognizer(tapMatchView)
+
     }
 
     override func prepareForReuse() {
@@ -45,6 +53,10 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
         self.titleLabel.textColor = UIColor.App.headingMain
         self.subtitleLabel.textColor = UIColor.App.headingSecondary
+    }
+
+    @IBAction func didTapMatchView(_ sender: Any) {
+        self.tappedAction?()
     }
 
 }
