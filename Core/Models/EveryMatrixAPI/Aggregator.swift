@@ -74,6 +74,7 @@ extension EveryMatrix {
 
         case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
         case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
+        case cashoutUpdate(id: String, value: Double?, stake: Double?)
         case unknown
 
         enum CodingKeys: String, CodingKey {
@@ -98,6 +99,13 @@ extension EveryMatrix {
             case changedProperties = "changedProperties"
             case isAvailable = "isAvailable"
             case isClosed = "isClosed"
+        }
+
+        enum CashoutCodingKeys: String, CodingKey {
+            case contentId = "id"
+            case value = "value"
+            case stake = "stake"
+            case changedProperties = "changedProperties"
         }
 
         init(from decoder: Decoder) throws {
@@ -140,6 +148,15 @@ extension EveryMatrix {
                 else if entityTypeString == "MATCH" {
                     print("AggregatorUpdates - MATCH")
 
+                }
+                else if entityTypeString == "CASHOUT" {
+                    if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: CashoutCodingKeys.self, forKey: .changedProperties) {
+
+                        let value = try? changedPropertiesContainer.decode(Double.self, forKey: .value)
+                        let stake = try? changedPropertiesContainer.decode(Double.self, forKey: .stake)
+                        self = .cashoutUpdate(id: contentId, value: value, stake: stake)
+
+                    }
                 }
             }
 

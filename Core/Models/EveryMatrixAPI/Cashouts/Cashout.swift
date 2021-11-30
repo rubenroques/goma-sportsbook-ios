@@ -13,8 +13,8 @@ extension EveryMatrix {
         let id: String
         let type: String?
         let betId: String?
-        let value: Double
-        let stake: Double
+        let value: Double?
+        let stake: Double?
 
         enum CodingKeys: String, CodingKey {
             case type = "_type"
@@ -22,6 +22,16 @@ extension EveryMatrix {
             case betId = "betId"
             case value = "value"
             case stake = "stake"
+        }
+
+        func cashoutUpdated(value: Double?, stake: Double?) -> Self {
+
+            return Self(id: self.id,
+                        type: self.type,
+                        betId: self.betId,
+                        value: value,
+                        stake: stake
+            )
         }
     }
 }

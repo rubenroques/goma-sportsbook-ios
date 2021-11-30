@@ -134,5 +134,16 @@ Terms of use, Privacy Policy and EULA";
 "string_close" = "Close";
 "string_address_country" = "Address and Country";
 
+"string_odds_filter" = "Odds Filter";
+"string_from" = "From";
+"string_to" = "To";
+"string_time_today_only" = "Time (for Today's matches only)";
+"string_default_market" = "Default Market";
+
 "string_cashout_available" = "Cashout Available";
 "string_cashout" = "Cashout";
+"string_return_money" = "Your return money will be ";
+"string_cashout_verification" = "Are you sure you want to cashout?";
+"string_cashout_info" = "Get a percentage of your bet back before the game is over";
+
+"string_country" = "Country";
