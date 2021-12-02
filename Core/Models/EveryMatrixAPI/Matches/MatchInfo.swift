@@ -58,10 +58,38 @@ extension EveryMatrix {
             case shortParamEventPartName1 = "shortParamEventPartName1"
             case eventPartRelativePosition = "eventPartRelativePosition"
         }
+
+        func matchInfoUpdated(paramFloat1: Int?) -> MatchInfo {
+            return MatchInfo(
+                id: self.id,
+                typeId: self.typeId,
+                matchId: self.matchId,
+                providerId: self.providerId,
+                statusId: self.statusId,
+                eventPartId: self.eventPartId,
+
+                paramFloat1: paramFloat1 ?? self.paramFloat1,
+                paramFloat2: self.paramFloat2,
+                paramParticipantId1: self.paramParticipantId1,
+                paramParticipantId2: self.paramParticipantId2,
+                paramScoringUnitId1: self.paramScoringUnitId1,
+                paramScoringUnitName1: self.paramScoringUnitName1,
+
+                paramEventPartId1: self.paramEventPartId1,
+                paramEventStatusId1: self.paramEventStatusId1,
+                paramEventPartName1: self.paramEventPartName1,
+                paramEventStatusName1: self.paramEventStatusName1,
+                eventPartName: self.eventPartName,
+                shortEventPartName: self.shortEventPartName,
+                shortParamEventPartName1: self.shortParamEventPartName1,
+                eventPartRelativePosition: self.eventPartRelativePosition
+            )
+        }
     }
 
     func updateWith(newMatchInfo: MatchInfo) -> MatchInfo {
 
         return newMatchInfo
     }
+
 }

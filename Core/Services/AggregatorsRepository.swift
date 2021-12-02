@@ -17,6 +17,7 @@ enum AggregatorListType {
     case favoriteMatchEvents
     case favoriteCompetitionEvents
     case cashouts
+    case matchDetails
 }
 
 class AggregatorsRepository {
@@ -178,6 +179,15 @@ class AggregatorsRepository {
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
                 }
+            case .matchInfo(let id, let paramFloat1):
+                for matchInfoForMatch in matchesInfoForMatch {
+                    for matchInfoId in matchInfoForMatch.value {
+                        if let matchInfo = matchesInfo[id] {
+                            matchesInfo[id] = matchInfo.matchInfoUpdated(paramFloat1: paramFloat1)
+                        }
+                    }
+                }
+
             case .unknown:
                 print("uknown")
             }

@@ -74,6 +74,7 @@ extension EveryMatrix {
 
         case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
         case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
+        case matchInfo(id: String, paramFloat1: Int?)
         case unknown(typeName: String)
 
         enum CodingKeys: String, CodingKey {
@@ -98,6 +99,13 @@ extension EveryMatrix {
             case changedProperties = "changedProperties"
             case isAvailable = "isAvailable"
             case isClosed = "isClosed"
+        }
+
+        enum MatchInfoCodingKeys: String, CodingKey {
+            case contentId = "id"
+            case paramFloat1 = "paramFloat1"
+            case paramFloat2 = "paramFloat2"
+            case eventPartName = "eventPartName"
         }
 
         init(from decoder: Decoder) throws {
@@ -137,6 +145,18 @@ extension EveryMatrix {
                         if isAvailableValue != nil || isClosedValue != nil {
                             contentUpdateType = .marketUpdate(id: contentId, isAvailable: isAvailableValue, isClosed: isClosedValue)
                         }
+                    }
+                }
+                else if entityTypeString == "EVENT_INFO" {
+                    if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: MatchInfoCodingKeys.self, forKey: .changedProperties) {
+
+                        let paramFloat1 = try? changedPropertiesContainer.decode(Int.self, forKey: .paramFloat1)
+
+                        if paramFloat1 != nil {
+                            contentUpdateType = .matchInfo(id: contentId,
+                                                                              paramFloat1: paramFloat1)
+                        }
+
                     }
                 }
             }

@@ -101,6 +101,11 @@ class MatchDetailsViewController: UIViewController {
 
     var viewModel: MatchDetailsViewModel
 
+    var matchDetails: [Match] = []
+
+    private var matchDetailsRegister: EndpointPublisherIdentifiable?
+    var matchDetailsAggregatorPublisher: AnyCancellable?
+
     private var cancellables = Set<AnyCancellable>()
 
     init(matchMode: MatchMode = .preLive, match: Match) {
@@ -225,6 +230,8 @@ class MatchDetailsViewController: UIViewController {
             self.headerDetailPreliveBottomLabel.isHidden = true
         }
 
+        setupMatchDetailPublisher()
+
         setupHeaderDetails()
 
         // Market Types CollectionView
@@ -318,6 +325,58 @@ class MatchDetailsViewController: UIViewController {
         self.betslipButtonView.backgroundColor = UIColor.App.mainTint
     }
 
+    func setupMatchDetailPublisher() {
+        if let matchDetailsRegister = matchDetailsRegister {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+        }
+
+
+        let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
+                                                                language: "en", matchId: match.id)
+        print("ENDPOINT: \(endpoint)")
+        self.matchDetailsAggregatorPublisher?.cancel()
+        self.matchDetailsAggregatorPublisher = nil
+
+        self.matchDetailsAggregatorPublisher = TSManager.shared
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher connect")
+                    self?.matchDetailsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher initialContent")
+                    self?.setupMatchDetailAggregatorProcessor(aggregator: aggregator)
+                    print("MATCH DETAIL AGG: \(aggregator)")
+                case .updatedContent(let aggregatorUpdates):
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher updatedContent")
+                    self?.updateMatchDetailAggregatorProcessor(aggregator: aggregatorUpdates)
+                case .disconnect:
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher disconnect")
+                }
+            })
+    }
+
+    private func setupMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .matchDetails,
+                                                 shouldClear: true)
+    }
+
+    private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        print("UPDATE MATCH DETAIL: \(aggregator)")
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+        DispatchQueue.main.async {
+            self.setupHeaderDetails()
+        }
+    }
+
     func setupHeaderDetails() {
         let viewModel = MatchWidgetCellViewModel(match: self.match)
 
@@ -331,7 +390,58 @@ class MatchDetailsViewController: UIViewController {
             self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
         }
         else {
-            //TO-DO Live match
+            var homeGoals = ""
+            var awayGoals = ""
+            var minutes = ""
+            var matchPart = ""
+
+            if let matchInfoArray = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+                for matchInfoId in matchInfoArray {
+                    if let matchInfo = Env.everyMatrixStorage.matchesInfo[matchInfoId] {
+                        if (matchInfo.typeId ?? "") == "1" {
+                            // Goals
+                            if let homeGoalsFloat = matchInfo.paramFloat1 {
+                                if self.match.homeParticipant.id == matchInfo.paramParticipantId1 {
+                                    homeGoals = "\(homeGoalsFloat)"
+                                }
+                                else if self.match.awayParticipant.id == matchInfo.paramParticipantId1 {
+                                    awayGoals = "\(homeGoalsFloat)"
+                                }
+                            }
+                            if let awayGoalsFloat = matchInfo.paramFloat2 {
+                                if self.match.homeParticipant.id == matchInfo.paramParticipantId2 {
+                                    homeGoals = "\(awayGoalsFloat)"
+                                }
+                                else if self.match.awayParticipant.id == matchInfo.paramParticipantId2 {
+                                    awayGoals = "\(awayGoalsFloat)"
+                                }
+                            }
+                        }
+                        else if (matchInfo.typeId ?? "") == "95", let minutesFloat = matchInfo.paramFloat1 {
+                            // Match Minutes
+                            minutes = "\(minutesFloat)"
+                        }
+                        else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
+                            // Status
+                            matchPart = eventPartName
+                        }
+                    }
+                }
+            }
+
+            if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
+                self.headerDetailLiveTopLabel.text = "\(homeGoals) - \(awayGoals)"
+            }
+
+            if minutes.isNotEmpty && matchPart.isNotEmpty {
+                self.headerDetailLiveBottomLabel.text = "\(minutes)' - \(matchPart)"
+            }
+            else if minutes.isNotEmpty {
+                self.headerDetailLiveBottomLabel.text = "\(minutes)'"
+            }
+            else if matchPart.isNotEmpty {
+                self.headerDetailLiveBottomLabel.text = "\(matchPart)"
+            }
         }
     }
 

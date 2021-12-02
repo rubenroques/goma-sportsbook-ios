@@ -298,6 +298,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
                 }
+            case .matchInfo(let id, let paramFloat1):
+                print("")
             case .unknown:
                 print("uknown")
             }
