@@ -294,7 +294,7 @@ class ProfileViewController: UIViewController {
         }
 
         if let userSession = userSession {
-            if !Env.userSessionStore.isUserProfileIncomplete {
+            if Env.userSessionStore.isUserProfileIncomplete {
                 let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
