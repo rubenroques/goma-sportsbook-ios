@@ -189,6 +189,20 @@ class AggregatorsRepository {
                         }
                     }
                 }
+            case .fullMatchInfoUpdate(let matchInfo):
+                matchesInfo[matchInfo.id] = matchInfo
+
+                if let matchId = matchInfo.matchId {
+                    if var matchInfoForIterationMatch = matchesInfoForMatch[matchId] {
+                        matchInfoForIterationMatch.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = matchInfoForIterationMatch
+                    }
+                    else {
+                        var newSet = Set<String>.init()
+                        newSet.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = newSet
+                    }
+                }
 
             case .unknown:
                 print("uknown")

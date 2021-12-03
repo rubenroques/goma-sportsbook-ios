@@ -75,6 +75,7 @@ extension EveryMatrix {
         case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
         case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
         case matchInfo(id: String, paramFloat1: Int?, paramFloat2: Int?, paramEventPartName1: String?)
+        case fullMatchInfoUpdate(matchInfo: EveryMatrix.MatchInfo)
         case unknown(typeName: String)
 
         enum CodingKeys: String, CodingKey {
@@ -84,6 +85,7 @@ extension EveryMatrix {
             case contentId = "id"
             case oddValue = "odds"
             case changedProperties = "changedProperties"
+            case entity = "entity"
         }
 
         enum BettingOfferCodingKeys: String, CodingKey {
@@ -164,6 +166,16 @@ extension EveryMatrix {
 
                     }
                 }
+            }
+            else if changeTypeString == "CREATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
+                if entityTypeString == "EVENT_INFO" {
+
+                    if let matchInfo = try? container.decode(EveryMatrix.MatchInfo.self, forKey: .entity) {
+                        contentUpdateType = .fullMatchInfoUpdate(matchInfo: matchInfo)
+
+                    }
+                }
+
             }
 
             if let contentUpdateTypeValue = contentUpdateType {

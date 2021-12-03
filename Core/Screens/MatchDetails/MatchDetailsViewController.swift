@@ -90,10 +90,18 @@ class MatchDetailsViewController: UIViewController {
             if matchMode == .preLive {
                 self.headerDetailLiveView.isHidden = true
 
+                self.headerDetailPreliveView.isHidden = false
+
             }
             else {
                 self.headerDetailPreliveView.isHidden = true
+
+                self.headerDetailLiveView.isHidden = false
+
             }
+
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
         }
     }
 
@@ -224,17 +232,17 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveTopLabel.text = "0 - 0"
         self.headerDetailLiveTopLabel.font = AppFont.with(type: .bold, size: 16)
 
-        self.headerDetailLiveBottomLabel.text = "Part Time"
+        self.headerDetailLiveBottomLabel.text = "Match Start"
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
 
         if self.matchMode == .preLive {
-            self.headerDetailLiveTopLabel.isHidden = true
-            self.headerDetailLiveBottomLabel.isHidden = true
+            self.headerDetailLiveView.isHidden = true
+            self.headerDetailPreliveView.isHidden = false
         }
         else {
-            self.headerDetailPreliveTopLabel.isHidden = true
-            self.headerDetailPreliveBottomLabel.isHidden = true
+            self.headerDetailPreliveView.isHidden = true
+            self.headerDetailLiveView.isHidden = false
         }
 
         setupMatchDetailPublisher()
@@ -379,9 +387,15 @@ class MatchDetailsViewController: UIViewController {
     private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         print("UPDATE MATCH DETAIL: \(aggregator)")
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+
         DispatchQueue.main.async {
+            if !Env.everyMatrixStorage.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
+                self.matchMode = .live
+            }
             self.updateHeaderDetails()
         }
+
+
     }
 
     func setupHeaderDetails() {

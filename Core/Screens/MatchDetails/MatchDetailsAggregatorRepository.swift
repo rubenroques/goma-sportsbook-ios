@@ -299,7 +299,9 @@ class MatchDetailsAggregatorRepository: NSObject {
                     marketPublisher.send(updatedMarket)
                 }
             case .matchInfo(let id, let paramFloat1, let paramFloat2, let shortParamEventPartName1):
-                print("")
+                print("match update")
+            case .fullMatchInfoUpdate(let matchInfo):
+                print("full match update")
             case .unknown:
                 print("uknown")
             }
