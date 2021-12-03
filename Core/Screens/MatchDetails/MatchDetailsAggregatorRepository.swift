@@ -304,24 +304,6 @@ class MatchDetailsAggregatorRepository: NSObject {
         }
     }
 
-    /*
-    Replace the call above with the following aggregator:
-    /sports/{operatorId}/{lang}/match-aggregator-groups-overview/{matchId}/1
-
-     /sports/2474/en/match-aggregator-groups-overview/155503665771237376/1  -> match and event-infos
-     example matchid: 155503665771237376
-
-    Market Groups (Subscribe):
-    /sports/{operatorId}/{lang}/event/{matchId}/market-groups
-    /sports/2474/en/event/155503665771237376/market-groups
-
-    List Market Groups Markets (Aggregator) (Subscribe):
-    /sports/{operatorId}/{lang}/{matchId}/match-odds/market-group/Main
-    /sports/2474/en/155503665771237376/match-odds/market-group/Sets
-
-     */
-
-
     func marketsForGroup(withGroupKey key: String) -> [MergedMarketGroup] {
         guard let marketsIds = self.marketsForGroup[key] else { return [] }
 
@@ -354,7 +336,7 @@ class MatchDetailsAggregatorRepository: NSObject {
 
                     let outcome = Outcome(id: rawOutcome.id,
                                           codeName: rawOutcome.headerNameKey ?? "",
-                                          typeName: rawOutcome.headerName ?? "",
+                                          typeName: rawOutcome.headerName ?? "Draw",
                                           translatedName: rawOutcome.translatedName ?? "",
                                           nameDigit1: rawOutcome.paramFloat1,
                                           nameDigit2: rawOutcome.paramFloat2,
@@ -396,10 +378,6 @@ class MatchDetailsAggregatorRepository: NSObject {
 
         for marketKey in similarMarketsOrder {
 
-            if marketKey == "3-47" {
-                print("break")
-            }
-
             if let value = similarMarkets[marketKey] {
 
                 guard let firstMarket = value.first else { continue }
@@ -409,9 +387,6 @@ class MatchDetailsAggregatorRepository: NSObject {
 
                 for outcomeIt in allOutcomes {
                     let outcomeTypeName = outcomeIt.typeName
-                    if outcomeTypeName == "under" {
-                        print("break")
-                    }
                     if var outcomesList = outcomesDictionary[outcomeTypeName] {
                         outcomesList.append(outcomeIt)
                         outcomesDictionary[outcomeTypeName] = outcomesList

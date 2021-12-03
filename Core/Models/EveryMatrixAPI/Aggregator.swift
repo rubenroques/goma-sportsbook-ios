@@ -196,7 +196,7 @@ extension EveryMatrix {
                     self = contentTypeKey
                 }
                 else {
-                    print("Aggregator ContentTypeKey unknown [\(type)]")
+                    //print("Aggregator ContentTypeKey unknown [\(type)]")
                     self = .unknown
                 }
             }
@@ -249,7 +249,6 @@ extension EveryMatrix {
                 self = .location(location)
             case .cashout:
                 let cashout = try objectContainer.decode(EveryMatrix.Cashout.self)
-                print("CASHOUT DECODE: \(cashout)")
                 self = .cashout(cashout)
             case .unknown:
                 self = .unknown

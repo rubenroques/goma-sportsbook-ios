@@ -265,10 +265,8 @@ final class TSManager {
             return
         }
 
-        print("UnregisterFromEndpoint withId \(endpointPublisherIdentifiable.identificationCode)")
-
         swampSession.unregister(endpointPublisherIdentifiable.identificationCode) {
-            print("UnregisterFromEndpoint ok")
+            ()
         } onError: { details, error in
             print("UnregisterFromEndpoint error \(details) \(error)")
         }

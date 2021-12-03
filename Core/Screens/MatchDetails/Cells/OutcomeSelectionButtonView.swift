@@ -137,9 +137,7 @@ class OutcomeSelectionButtonView: NibView {
                 switch state {
                 case .connect(let oddUpdatesRegister):
                     self?.oddUpdatesRegister = oddUpdatesRegister
-                    print("MarketDetailCell odd update - connect")
                 case .initialContent(let aggregator):
-                    print("MarketDetailCell odd update - initialContent")
 
                     if let content = aggregator.content {
                         for contentType in content {
@@ -152,7 +150,6 @@ class OutcomeSelectionButtonView: NibView {
                     }
 
                 case .updatedContent(let aggregatorUpdates):
-                    print("MarketDetailCell odd update - updatedContent")
                     if let content = aggregatorUpdates.contentUpdates {
                         for contentType in content {
                             if case let .bettingOfferUpdate(_, odd, _, isAvailable) = contentType {

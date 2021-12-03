@@ -395,8 +395,8 @@
 		4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		4589F42C26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */; };
 		4589F42D26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */; };
-		458F4C922712AB1900AC13DB /* SportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* SportsViewModel.swift */; };
-		458F4C932712AB1900AC13DB /* SportsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* SportsViewModel.swift */; };
+		458F4C922712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */; };
+		458F4C932712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */; };
 		458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871CF2710995700F5B87B /* AggregatorsRepository.swift */; };
 		458F4C962712B6B800AC13DB /* AggregatorsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871CF2710995700F5B87B /* AggregatorsRepository.swift */; };
 		45936CA4270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45936CA2270E1BCE00E8260E /* SportTypeSelectionViewController.swift */; };
@@ -1017,7 +1017,7 @@
 		4589F42426C02DF3005DF543 /* TableViewDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDescriptor.swift; sourceTree = "<group>"; };
 		4589F42826C02EAA005DF543 /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTableViewDescription.swift; sourceTree = "<group>"; };
-		458F4C912712AB1900AC13DB /* SportsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsViewModel.swift; sourceTree = "<group>"; };
+		458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveEventsViewModel.swift; sourceTree = "<group>"; };
 		45936CA2270E1BCE00E8260E /* SportTypeSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeSelectionViewController.swift; sourceTree = "<group>"; };
 		45936CA3270E1BCE00E8260E /* SportTypeSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportTypeSelectionViewController.xib; sourceTree = "<group>"; };
 		45936CA9270E1C1A00E8260E /* SportTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeSelectorView.swift; sourceTree = "<group>"; };
@@ -1924,8 +1924,8 @@
 		457F49692737F9030047169D /* SubmissionFeedback */ = {
 			isa = PBXGroup;
 			children = (
-				F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */,
 				457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */,
+				F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */,
 			);
 			path = SubmissionFeedback;
 			sourceTree = "<group>";
@@ -2199,7 +2199,7 @@
 			children = (
 				45D712F027031DDE00AC0364 /* PreLiveEventsViewController.swift */,
 				45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */,
-				458F4C912712AB1900AC13DB /* SportsViewModel.swift */,
+				458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */,
 				45D728CC2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift */,
 				A98D3B272714817C003BAE6F /* SportSelection */,
 				45D871CE271098F100F5B87B /* Cells */,
@@ -3147,7 +3147,7 @@
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				A92F5DAA272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */,
 				45EF540A2709E81C00D1E13E /* PopUpStore.swift in Sources */,
-				458F4C922712AB1900AC13DB /* SportsViewModel.swift in Sources */,
+				458F4C922712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				45166D1D26F3548D00E69D65 /* SSWampError.swift in Sources */,
 				A9C82FB526F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */,
@@ -3435,7 +3435,7 @@
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				A92F5DAB272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */,
 				45EF540B2709E81C00D1E13E /* PopUpStore.swift in Sources */,
-				458F4C932712AB1900AC13DB /* SportsViewModel.swift in Sources */,
+				458F4C932712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */,
 				45166D1E26F3548D00E69D65 /* SSWampError.swift in Sources */,
 				A9C82FB626F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */,
 				4589F41726BF0203005DF543 /* HeaderTextFieldView.swift in Sources */,
@@ -3858,7 +3858,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00212;
+				CURRENT_PROJECT_VERSION = 00213;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3884,7 +3884,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00212;
+				CURRENT_PROJECT_VERSION = 00213;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

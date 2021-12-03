@@ -37,12 +37,12 @@ class HomeFilterViewController: UIViewController {
     var marketViews: [FilterRowView] = []
     var filterValues: HomeFilterOptions?
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
-    var sportsModel: SportsViewModel
+    var sportsModel: PreLiveEventsViewModel
     var liveEventsViewModel: LiveEventsViewModel
     weak var delegate: HomeFilterOptionsViewDelegate?
     var countFilters: Int = 0
 
-    init(sportsModel: SportsViewModel = SportsViewModel(selectedSportId: .football), liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football)) {
+    init(sportsModel: PreLiveEventsViewModel = PreLiveEventsViewModel(selectedSportId: .football), liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football)) {
         self.sportsModel = sportsModel
         self.liveEventsViewModel = liveEventsViewModel
         super.init(nibName: "HomeFilterViewController", bundle: nil)

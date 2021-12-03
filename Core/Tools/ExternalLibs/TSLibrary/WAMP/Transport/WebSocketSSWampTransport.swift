@@ -55,7 +55,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     open func sendData(_ data: Data) {
         if mode == .text {
             let textData = String(data: data, encoding: .utf8)!
-            //print("TSWebSocketClient sendData \(textData)")
+            print("TSWebSocketClient sendData \(textData)")
             socket?.write(string: textData)
         }
         else {

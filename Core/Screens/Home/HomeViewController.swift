@@ -154,9 +154,9 @@ class HomeViewController: UIViewController {
         Env.everyMatrixAPIClient.getOperatorInfo()
             .receive(on: DispatchQueue.main)
             .sink { completed in
-                print(completed)
+                print("getOperatorInfo \(completed)")
             } receiveValue: { operatorInfo in
-                print(operatorInfo)
+                print("getOperatorInfo \(operatorInfo)")
             }
             .store(in: &cancellables)
 
