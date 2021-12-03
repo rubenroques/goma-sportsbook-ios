@@ -30,7 +30,9 @@ class BetslipManager: NSObject {
     private var cancellable: Set<AnyCancellable> = []
 
     private var oddsCancellableDictionary: [String: AnyCancellable] = [:]
-
+    private var  amounts: [String: Double] = [:]
+    var requests: [AnyPublisher<BetPlacedDetails, EveryMatrix.APIError>] = []
+    var cancellables = Set<AnyCancellable>()
     override init() {
 
         self.bettingTicketsDictionaryPublisher = .init([:])
@@ -40,7 +42,7 @@ class BetslipManager: NSObject {
         self.systemBetslipSelectionState = .init(nil)
         self.betPlacedDetailsErrorsPublisher = .init([])
         self.betslipPlaceBetResponseErrorsPublisher = .init([])
-
+        
         super.init()
 
         bettingTicketsDictionaryPublisher
@@ -220,16 +222,99 @@ extension BetslipManager {
             .eraseToAnyPublisher()
 
     }
+    /////////
+    func placeAllSingleBets(withSkateAmount amounts: [String: Double], completion: @escaping (Bool) -> Void){
 
-    func placeSingleBets(withSkateAmount amounts: [String: Double]) -> [AnyPublisher<BetPlacedDetails, EveryMatrix.APIError>] {
+        self.amounts = amounts
+        self.requestNextBet(completionDoCiclo: completion)
+    }
+    
+    func requestNextBet(completionDoCiclo: @escaping (Bool) -> Void){
+        let ticketSelections = self.updatedBettingTicketsOdds()
+            
+        
+        if ticketSelections.isEmpty {
+            completionDoCiclo(true)
+            return
+        }
+        
+        if let lastTicket = ticketSelections.last, let lastTicketAmount = self.amounts[lastTicket.id] {
+            
+            placeSingleBet(betTicketId: lastTicket.id , amount: lastTicketAmount)
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    print(completion)
+                } receiveValue: { betPlacedDetails in
+                    if let response = betPlacedDetails.response.betSucceed {
+                        self.removeBettingTicket(withId: lastTicket.id)
+                        self.requestNextBet(completionDoCiclo: completionDoCiclo)
+                    }else{
+                        completionDoCiclo(false)
+                    }
+                }
+                .store(in: &cancellables)
 
+        }
+    }
+    
+    
+    func placeSingleBet(betTicketId: String, amount: Double) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
+        let updatedTicketSelections = self.updatedBettingTicketsOdds()
+        let ticketSelections = updatedTicketSelections.filter({ bettingTicket in
+            bettingTicket.id == betTicketId
+        }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+
+        let route = TSRouter.placeBet(language: "en",
+                                      amount: amount,
+                                      betType: .single,
+                                      tickets: ticketSelections)
+
+        return TSManager.shared
+            .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
+            .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
+            .handleEvents(receiveOutput: { betslipPlaceBetResponse in
+                if betslipPlaceBetResponse.response.betSucceed ?? false {
+                    self.clearAllBettingTickets()
+                }
+            })
+            .eraseToAnyPublisher()
+        
+    }
+
+    /*func placeSingleBets(withSkateAmount amounts: [String: Double]) -> [AnyPublisher<BetPlacedDetails, EveryMatrix.APIError>] {
+        
+        if betAmounts.count == 0 {
+            for (key, value) in amounts {
+                betAmounts.append(value)
+            }
+        }
+        
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
 
         var requests: [AnyPublisher<BetPlacedDetails, EveryMatrix.APIError>] = []
+        
         for selection in ticketSelections {
+            
+            if amount = amounts[selection.id] {
+                let route = TSRouter.placeBet(language: "en",
+                                              amount: amount,
+                                              betType: .single,
+                                              tickets: [selection])
 
+                let request = TSManager.shared
+                    .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
+                    .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
+                    .handleEvents(receiveOutput: { betslipPlaceBetResponse in
+                        if betslipPlaceBetResponse.response.betSucceed ?? false,
+                           let firstSelection = betslipPlaceBetResponse.response.selections?.first {
+                            self.removeBettingTicket(withId: firstSelection.id)
+                        }
+                    })
+                    .eraseToAnyPublisher()
+            }
+        
             guard let amount = amounts[selection.id] else { continue }
 
             let route = TSRouter.placeBet(language: "en",
@@ -253,6 +338,7 @@ extension BetslipManager {
         return requests
     }
 
+    */
     func placeMultipleBet(withSkateAmount amount: Double) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
 
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
