@@ -865,7 +865,7 @@ class SportsViewModel: NSObject {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
         }
 
-        let userId = Env.userSessionStore.userSessionPublisher.value!.userId
+        guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
 
         let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                       language: "en",

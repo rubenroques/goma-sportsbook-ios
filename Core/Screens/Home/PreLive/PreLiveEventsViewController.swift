@@ -529,12 +529,10 @@ extension PreLiveEventsViewController: UIScrollViewDelegate {
 extension PreLiveEventsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-    
         return self.viewModel.numberOfSections(in: tableView)
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(self.viewModel.tableView(tableView, numberOfRowsInSection: section))
         return self.viewModel.tableView(tableView, numberOfRowsInSection: section)
     }
 

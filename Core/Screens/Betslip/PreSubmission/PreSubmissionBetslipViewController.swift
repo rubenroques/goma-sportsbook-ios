@@ -679,21 +679,21 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isLoading = true
 
         if self.listTypePublisher.value == .simple {
-         
-            Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value, completion: { betsSubmitted in
-                if betsSubmitted {
-                    self.isLoading = false
-                    print("esconde o loading")
-                }
-                else {
-                    self.isLoading = true
-                    print("erro na submissão")
-                }
-            })
 
-           
-            self.betPlacedAction?([])
-            //checkSubmitedSingles()
+            Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    switch completion {
+                    case .failure(let error):
+                        print(error)
+                    default: ()
+                    }
+                    //
+                    self.isLoading = false
+                } receiveValue: { betPlacedDetails in
+                    self.betPlacedAction?(betPlacedDetails)
+                }
+                .store(in: &cancellables)
         }
         else if self.listTypePublisher.value == .multiple {
             Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue)
