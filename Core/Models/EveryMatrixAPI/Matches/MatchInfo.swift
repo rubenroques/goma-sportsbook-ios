@@ -59,7 +59,7 @@ extension EveryMatrix {
             case eventPartRelativePosition = "eventPartRelativePosition"
         }
 
-        func matchInfoUpdated(paramFloat1: Int?) -> MatchInfo {
+        func matchInfoUpdated(paramFloat1: Int?, paramFloat2: Int?, paramEventPartName1: String?) -> MatchInfo {
             return MatchInfo(
                 id: self.id,
                 typeId: self.typeId,
@@ -69,7 +69,7 @@ extension EveryMatrix {
                 eventPartId: self.eventPartId,
 
                 paramFloat1: paramFloat1 ?? self.paramFloat1,
-                paramFloat2: self.paramFloat2,
+                paramFloat2: paramFloat2 ?? self.paramFloat2,
                 paramParticipantId1: self.paramParticipantId1,
                 paramParticipantId2: self.paramParticipantId2,
                 paramScoringUnitId1: self.paramScoringUnitId1,
@@ -77,7 +77,7 @@ extension EveryMatrix {
 
                 paramEventPartId1: self.paramEventPartId1,
                 paramEventStatusId1: self.paramEventStatusId1,
-                paramEventPartName1: self.paramEventPartName1,
+                paramEventPartName1: paramEventPartName1 ?? self.paramEventPartName1,
                 paramEventStatusName1: self.paramEventStatusName1,
                 eventPartName: self.eventPartName,
                 shortEventPartName: self.shortEventPartName,

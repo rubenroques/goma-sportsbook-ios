@@ -179,11 +179,13 @@ class AggregatorsRepository {
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
                 }
-            case .matchInfo(let id, let paramFloat1):
+            case .matchInfo(let id, let paramFloat1, let paramFloat2, let paramEventPartName1):
                 for matchInfoForMatch in matchesInfoForMatch {
                     for matchInfoId in matchInfoForMatch.value {
                         if let matchInfo = matchesInfo[id] {
-                            matchesInfo[id] = matchInfo.matchInfoUpdated(paramFloat1: paramFloat1)
+                            matchesInfo[id] = matchInfo.matchInfoUpdated(paramFloat1: paramFloat1,
+                                                                         paramFloat2: paramFloat2,
+                                                                         paramEventPartName1: paramEventPartName1)
                         }
                     }
                 }

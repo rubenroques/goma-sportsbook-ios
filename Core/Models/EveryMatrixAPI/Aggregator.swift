@@ -74,7 +74,7 @@ extension EveryMatrix {
 
         case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
         case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
-        case matchInfo(id: String, paramFloat1: Int?)
+        case matchInfo(id: String, paramFloat1: Int?, paramFloat2: Int?, paramEventPartName1: String?)
         case unknown(typeName: String)
 
         enum CodingKeys: String, CodingKey {
@@ -105,7 +105,7 @@ extension EveryMatrix {
             case contentId = "id"
             case paramFloat1 = "paramFloat1"
             case paramFloat2 = "paramFloat2"
-            case eventPartName = "eventPartName"
+            case paramEventPartName1 = "paramEventPartName1"
         }
 
         init(from decoder: Decoder) throws {
@@ -152,9 +152,14 @@ extension EveryMatrix {
 
                         let paramFloat1 = try? changedPropertiesContainer.decode(Int.self, forKey: .paramFloat1)
 
-                        if paramFloat1 != nil {
+                        let paramFloat2 = try? changedPropertiesContainer.decode(Int.self, forKey: .paramFloat2)
+
+                        let paramEventPartName1 = try? changedPropertiesContainer.decode(String.self, forKey: .paramEventPartName1)
+
+                        if paramFloat1 != nil || paramFloat2 != nil || paramEventPartName1 != nil {
                             contentUpdateType = .matchInfo(id: contentId,
-                                                                              paramFloat1: paramFloat1)
+                                                           paramFloat1: paramFloat1, paramFloat2: paramFloat2,
+                                                           paramEventPartName1: paramEventPartName1)
                         }
 
                     }
