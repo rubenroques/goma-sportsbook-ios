@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import OrderedCollections
+import nanopb
 
 struct BetPlacedDetails {
     var response: BetslipPlaceBetResponse
@@ -231,7 +232,8 @@ extension BetslipManager {
     func placeAllSingleBets(withSkateAmount amounts: [String: Double]) -> AnyPublisher<[BetPlacedDetails], EveryMatrix.APIError> {
 
         self.amounts = amounts
-
+        
+        
         let future = Future<[BetPlacedDetails], EveryMatrix.APIError>.init({ promise in
             self.placeNextSingleBet(betPlacedDetailsList: [], completion: { result in
                 switch result {
@@ -267,15 +269,18 @@ extension BetslipManager {
                     default: ()
                     }
                 }, receiveValue: { (betPlacedDetails: BetPlacedDetails) -> Void in
-                    if let _ = betPlacedDetails.response.betSucceed {
-                        self.removeBettingTicket(withId: lastTicket.id)
-                        var newList = betPlacedDetailsList
-                        newList.append(betPlacedDetails)
-                        self.placeNextSingleBet(betPlacedDetailsList: newList,  completion: completion)
+                    if let response = betPlacedDetails.response.betSucceed, response == true {
+                       
+                            self.removeBettingTicket(withId: lastTicket.id)
+                            var newList = betPlacedDetailsList
+                            newList.append(betPlacedDetails)
+                            self.placeNextSingleBet(betPlacedDetailsList: newList,  completion: completion)
+                        
+                        
                     } else {
                         var newList = betPlacedDetailsList
                         newList.append(betPlacedDetails)
-                        completion( .success(betPlacedDetailsList) )
+                        completion( .success(newList) )
                     }
                 })
                 .store(in: &cancellables)
