@@ -124,7 +124,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
     var numberOfBets: Int = 1
     var totalPossibleEarnings : Double = 0.0
-    var totalBetValue : Double = 0.0
+    var totalBetOdds : Double = 0.0
     
  
     // Simple Bets values
@@ -373,7 +373,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
                     let totalValue = multiplier * betValue
-                    self.totalBetValue = betValue
+                    self.totalBetOdds = betValue
                     self.totalPossibleEarnings =  totalValue
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
                 }
@@ -397,8 +397,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
                         let expectedTicketReturn = ticket.value * betValue
-                        self.totalBetValue = betValue
+                        
                         expectedReturn += expectedTicketReturn
+                        
                     }
                 }
                 if expectedReturn == 0 {
@@ -728,6 +729,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isLoading = true
 
         if self.listTypePublisher.value == .simple {
+            
+           
+            self.numberOfBets = self.simpleBetsBettingValues.value.count
             Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
@@ -739,9 +743,18 @@ class PreSubmissionBetslipViewController: UIViewController {
                     //
                     self.isLoading = false
                 } receiveValue: { betPlacedDetails in
+                    for t in betPlacedDetails {
+                        for bet in t.tickets{
+                            self.totalBetOdds =  self.totalBetOdds + bet.value
+                        }
+                    }
+                    
                     self.betPlacedAction?(betPlacedDetails)
                 }
                 .store(in: &cancellables)
+            
+        
+            
 
         }
         else if self.listTypePublisher.value == .multiple {
@@ -782,7 +795,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             // Still loading requests
             return
         }
-        self.numberOfBets = self.simpleBetPlacedDetails.values.count
         for value in self.simpleBetPlacedDetails.values {
             switch value {
             case .loaded(let betPlacedDetails):

@@ -232,8 +232,6 @@ extension BetslipManager {
     func placeAllSingleBets(withSkateAmount amounts: [String: Double]) -> AnyPublisher<[BetPlacedDetails], EveryMatrix.APIError> {
 
         self.amounts = amounts
-        
-        
         let future = Future<[BetPlacedDetails], EveryMatrix.APIError>.init({ promise in
             self.placeNextSingleBet(betPlacedDetailsList: [], completion: { result in
                 switch result {
