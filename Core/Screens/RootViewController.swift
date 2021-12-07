@@ -88,125 +88,10 @@ class RootViewController: UIViewController {
     }
 
     @IBAction private func testEveryMatrixAPI() {
-        // let payload = ["lang":"en", "maxResults":"10"]
-        // let payloadToday = ["lang":"en", "userTimezoneOffsetInMinutes":"0", "maxResults":"10"]
-        // let payloadNext = ["lang":"en", "hoursTillLive":"2", "maxResults":"10", "disciplineId":"1"]
-//        let payloadOdd: [String: Any] = ["lang": "en",
-//                          "matchId": "148056830725115904",
-//                          "tournamentId": "",
-//                          "bettingOfferId": "",
-//                          "bettingOfferIds": [],
-//                          "eventIds": []] // as [String : Any?]
-//
-//        //Env.everyMatrixAPIClient.getOdds(payload: payloadOdd)
+
     }
 
     @IBAction private func testSubscription() {
-//
-//        Env.everyMatrixAPIClient.subscribeOdds(language: "EN", matchId: "150328598296842240")
-//            .receive(on: DispatchQueue.main)
-//            .sink { completion in
-//                print("")
-//            } receiveValue: { everyMatrixSocketResponseOdd in
-//                print("")
-//            }
-//            .store(in: &cancellables)
-
-
-
-//        Env.everyMatrixAPIClient.subscribeSportsStatus(language: "en", sportType: .football)
-//            .receive(on: DispatchQueue.main)
-//            .sink { completion in
-//                print("")
-//            } receiveValue: { disciplines in
-//                print("")
-//            }
-//            .store(in: &cancellables)
-
-
-//        let operatorId = "\(Env.operatorId)"
-//        TSManager.shared.subscribeProcedure(procedure: .sportsStatus(operatorId: operatorId,
-//                                                                     language: "en",
-//                                                                     sportId: "1"))
-//            .sink { completion in
-//                print("")
-//            } receiveValue: { value in
-//                print("")
-//            }
-//            .store(in: &cancellables)
-
-
-
-
-
-//
-//        TSManager.shared.swampSession?.subscribe("/sports/2474/en/sport/1", options: [:], onSuccess: { subscription in
-//
-//            print("subscribe")
-//            print(subscription)
-//
-//            TSManager.shared.swampSession?.call("/sports#initialDump",
-//                                                options: [:],
-//                                                args: [],
-//                                                kwargs: ["topic": "/sports/2474/en/sport/1"],
-//            onSuccess: { details, results, kwResults, arrResults in
-//                print("call onSuccess")
-//                print(details, results, kwResults, arrResults)
-//
-//            }, onError: { details, error, args, kwargs in
-//                print("call onError")
-//                print(details, error, args, kwargs)
-//            })
-//
-//        }, onError: { details, error in
-//
-//            print(details, error)
-//        }, onEvent: { details, results, kwResults in
-//            print(details, results, kwResults)
-//        })
-
-
-
-
-
-        TSManager.shared.swampSession?.register("/sports/2474/en/sport/1", options: [:], onSuccess: { registration in
-
-            self.savedRegistration = registration
-
-            print("registration")
-            print(registration)
-
-            TSManager.shared.swampSession?.call("/sports#initialDump",
-                                                options: [:],
-                                                args: [],
-                                                kwargs: ["topic": "/sports/2474/en/sport/1"],
-            onSuccess: { details, results, kwResults, arrResults in
-                print("call onSuccess")
-                //print(details, results, kwResults, arrResults)
-
-            }, onError: { details, error, args, kwargs in
-                print("call onError")
-                //print(details, error, args, kwargs)
-            })
-
-        }, onError: { details, error in
-
-            print(details, error)
-        }, onEvent: { details, results, kwResults in
-            print("call Register Event")
-            //print(details, results, kwResults)
-        })
-
-
-
-//        Env.everyMatrixAPIClient.registerOnSportsStatus(language: "en", sportType: .football)
-//            .receive(on: DispatchQueue.main)
-//            .sink { completion in
-//                print("")
-//            } receiveValue: { disciplines in
-//                print("")
-//            }
-//            .store(in: &cancellables)
 
     }
 
@@ -219,14 +104,6 @@ class RootViewController: UIViewController {
                 self.savedRegistration = nil
             })
         }
-
-//
-//        Env.everyMatrixAPIClient.requestInitialDump(topic: "/sports/2474/en/sport/1").sink { completion in
-//
-//        } receiveValue: { string in
-//
-//        }
-//        .store(in: &cancellables)
 
     }
 

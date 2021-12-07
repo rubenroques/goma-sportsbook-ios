@@ -82,7 +82,7 @@ class PreLiveEventsViewController: UIViewController {
 
     var cancellables = Set<AnyCancellable>()
 
-    var viewModel: SportsViewModel
+    var viewModel: PreLiveEventsViewModel
 
     var filterSelectedOption: Int = 0
     var selectedSportType: SportType {
@@ -101,7 +101,7 @@ class PreLiveEventsViewController: UIViewController {
 
     init(selectedSportType: SportType = .football) {
         self.selectedSportType = selectedSportType
-        self.viewModel = SportsViewModel(selectedSportId: self.selectedSportType)
+        self.viewModel = PreLiveEventsViewModel(selectedSportId: self.selectedSportType)
         super.init(nibName: "PreLiveEventsViewController", bundle: nil)
     }
 

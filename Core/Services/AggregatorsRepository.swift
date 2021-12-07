@@ -340,6 +340,7 @@ struct OddOutcomesSortingHelper {
         case "home": return 10
         case "draw": return 20
         case "none": return 21
+        case "": return 22
         case "away": return 30
 
         case "home_draw": return 10
