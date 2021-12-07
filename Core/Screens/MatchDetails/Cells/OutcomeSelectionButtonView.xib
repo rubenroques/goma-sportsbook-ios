@@ -55,16 +55,16 @@
                             </constraints>
                         </view>
                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="hMw-bH-0pz">
-                            <rect key="frame" x="0.0" y="6" width="103" height="28"/>
+                            <rect key="frame" x="2" y="6" width="99" height="28"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Laeblpqw9" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jVl-Vv-xZj">
-                                    <rect key="frame" x="0.0" y="0.0" width="103" height="14"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="99" height="14"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lia-Ch-bbe">
-                                    <rect key="frame" x="0.0" y="14" width="103" height="14"/>
+                                    <rect key="frame" x="0.0" y="14" width="99" height="14"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -74,9 +74,9 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
-                        <constraint firstItem="hMw-bH-0pz" firstAttribute="leading" secondItem="vtf-a7-hBv" secondAttribute="leading" id="1OI-Iu-mlr"/>
+                        <constraint firstItem="hMw-bH-0pz" firstAttribute="leading" secondItem="vtf-a7-hBv" secondAttribute="leading" constant="2" id="1OI-Iu-mlr"/>
                         <constraint firstItem="hMw-bH-0pz" firstAttribute="top" secondItem="vtf-a7-hBv" secondAttribute="top" constant="6" id="EQi-yr-Jaz"/>
-                        <constraint firstAttribute="trailing" secondItem="hMw-bH-0pz" secondAttribute="trailing" id="REZ-9V-ag2"/>
+                        <constraint firstAttribute="trailing" secondItem="hMw-bH-0pz" secondAttribute="trailing" constant="2" id="REZ-9V-ag2"/>
                         <constraint firstAttribute="trailing" secondItem="4US-gk-Yt4" secondAttribute="trailing" constant="6" id="fmP-8c-nY3"/>
                         <constraint firstAttribute="bottom" secondItem="hMw-bH-0pz" secondAttribute="bottom" constant="6" id="pid-63-Om9"/>
                         <constraint firstItem="4US-gk-Yt4" firstAttribute="centerY" secondItem="vtf-a7-hBv" secondAttribute="centerY" id="xQX-Sx-b4T"/>
@@ -91,7 +91,7 @@
                 <constraint firstAttribute="trailing" secondItem="vtf-a7-hBv" secondAttribute="trailing" constant="5" id="Y13-qa-wGf"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-14" y="-98"/>
+            <point key="canvasLocation" x="-18" y="-86"/>
         </view>
     </objects>
     <resources>
