@@ -35,6 +35,7 @@ enum TSRouter {
     case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
     case getOpenBets(language: String, records: Int, page: Int)
     case cashoutBet(language: String, betId: String)
+    case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
@@ -155,6 +156,8 @@ enum TSRouter {
             return "/sports#betHistoryV2"
         case .cashoutBet:
             return "/sports#cashOut"
+        case .getMatchOdds:
+            return "/sports#odds"
 
         case .getSystemBetTypes:
             return "/sports#systemBetCalculationV2"
@@ -429,6 +432,11 @@ enum TSRouter {
         case .cashoutBet(let language,let betId):
             return ["lang": language,
                     "betId": betId]
+
+        case .getMatchOdds(let language, let matchId, let bettingTypeId):
+            return ["lang": language,
+                    "matchId": matchId,
+                    "bettingTypeId": bettingTypeId]
 
         case .getSystemBetTypes(let tickets):
             var selection: [Any] = []
