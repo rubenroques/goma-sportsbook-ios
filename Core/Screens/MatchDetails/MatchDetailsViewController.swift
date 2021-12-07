@@ -129,13 +129,6 @@ class MatchDetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-    deinit {
-
-
-
-    }
-
-
     override func viewDidLoad() {
         super.viewDidLoad()
 

@@ -35,6 +35,8 @@ class AggregatorsRepository {
 
     var bettingOutcomesForMarket: [String: Set<String>] = [:]
 
+    var cashoutsPublisher: [String: CurrentValueSubject<EveryMatrix.Cashout, Never>] = [:]
+
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
     var mainMarketsOrder: OrderedSet<String> = []
@@ -145,6 +147,7 @@ class AggregatorsRepository {
 
             case .cashout(let cashout):
                 self.cashouts[cashout.id] = cashout
+                cashoutsPublisher[cashout.id] = CurrentValueSubject<EveryMatrix.Cashout, Never>.init(cashout)
                 
             case .event:
                 () // print("Events aren't processed")
@@ -179,6 +182,12 @@ class AggregatorsRepository {
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
                 }
+            case .cashoutUpdate(let id, let value, let stake):
+                if let cashoutsPublisher = cashoutsPublisher[id] {
+                    let cashout = cashoutsPublisher.value
+                    let updatedCashout = cashout.cashoutUpdated(value: value, stake: stake)
+                    cashoutsPublisher.send(updatedCashout)
+                }
             case .matchInfo(let id, let paramFloat1, let paramFloat2, let paramEventPartName1):
                 for matchInfoForMatch in matchesInfoForMatch {
                     for matchInfoId in matchInfoForMatch.value {
@@ -203,7 +212,6 @@ class AggregatorsRepository {
                         matchesInfoForMatch[matchId] = newSet
                     }
                 }
-
             case .unknown:
                 print("uknown")
             }

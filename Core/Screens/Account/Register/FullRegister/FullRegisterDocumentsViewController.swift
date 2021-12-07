@@ -233,6 +233,7 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     @IBAction private func closeAction() {
+        self.dismiss(animated: true, completion: nil)
     }
 
     @IBAction func submitAction() {

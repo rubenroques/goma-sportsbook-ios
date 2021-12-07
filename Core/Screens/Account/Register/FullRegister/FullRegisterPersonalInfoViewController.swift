@@ -90,7 +90,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
         lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextField)
 
-        countryHeaderTextFieldView.setPlaceholderText(localized("Title"))
+        countryHeaderTextFieldView.setPlaceholderText(localized("string_country"))
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))

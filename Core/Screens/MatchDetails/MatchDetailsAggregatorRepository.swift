@@ -302,6 +302,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                 print("match update")
             case .fullMatchInfoUpdate(let matchInfo):
                 print("full match update")
+            case .cashoutUpdate(let id, let value, let stake):
+                print("Cashout Update")
             case .unknown:
                 print("uknown")
             }
