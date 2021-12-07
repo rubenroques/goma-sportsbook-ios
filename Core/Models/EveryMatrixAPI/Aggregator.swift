@@ -74,6 +74,8 @@ extension EveryMatrix {
 
         case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
         case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
+        case matchInfo(id: String, paramFloat1: Int?, paramFloat2: Int?, paramEventPartName1: String?)
+        case fullMatchInfoUpdate(matchInfo: EveryMatrix.MatchInfo)
         case unknown(typeName: String)
 
         enum CodingKeys: String, CodingKey {
@@ -83,6 +85,7 @@ extension EveryMatrix {
             case contentId = "id"
             case oddValue = "odds"
             case changedProperties = "changedProperties"
+            case entity = "entity"
         }
 
         enum BettingOfferCodingKeys: String, CodingKey {
@@ -98,6 +101,13 @@ extension EveryMatrix {
             case changedProperties = "changedProperties"
             case isAvailable = "isAvailable"
             case isClosed = "isClosed"
+        }
+
+        enum MatchInfoCodingKeys: String, CodingKey {
+            case contentId = "id"
+            case paramFloat1 = "paramFloat1"
+            case paramFloat2 = "paramFloat2"
+            case paramEventPartName1 = "paramEventPartName1"
         }
 
         init(from decoder: Decoder) throws {
@@ -139,6 +149,33 @@ extension EveryMatrix {
                         }
                     }
                 }
+                else if entityTypeString == "EVENT_INFO" {
+                    if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: MatchInfoCodingKeys.self, forKey: .changedProperties) {
+
+                        let paramFloat1 = try? changedPropertiesContainer.decode(Int.self, forKey: .paramFloat1)
+
+                        let paramFloat2 = try? changedPropertiesContainer.decode(Int.self, forKey: .paramFloat2)
+
+                        let paramEventPartName1 = try? changedPropertiesContainer.decode(String.self, forKey: .paramEventPartName1)
+
+                        if paramFloat1 != nil || paramFloat2 != nil || paramEventPartName1 != nil {
+                            contentUpdateType = .matchInfo(id: contentId,
+                                                           paramFloat1: paramFloat1, paramFloat2: paramFloat2,
+                                                           paramEventPartName1: paramEventPartName1)
+                        }
+
+                    }
+                }
+            }
+            else if changeTypeString == "CREATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
+                if entityTypeString == "EVENT_INFO" {
+
+                    if let matchInfo = try? container.decode(EveryMatrix.MatchInfo.self, forKey: .entity) {
+                        contentUpdateType = .fullMatchInfoUpdate(matchInfo: matchInfo)
+
+                    }
+                }
+
             }
 
             if let contentUpdateTypeValue = contentUpdateType {

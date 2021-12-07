@@ -96,5 +96,3 @@ struct BannerInfo {
     let imageURL: String?
     let priorityOrder: Int?
 }
-
-

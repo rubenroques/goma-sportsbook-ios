@@ -46,6 +46,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     var cancellables = Set<AnyCancellable>()
 
     var viewModel: BannerCellViewModel?
+
     var matchViewModel: MatchWidgetCellViewModel? {
         didSet {
             if let matchViewModelValue = self.matchViewModel {
@@ -64,7 +65,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    var match: Match?
+    var completeMatch: Match?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -157,7 +158,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = ""
 
         self.viewModel = nil
-        self.match = nil
+        self.completeMatch = nil
 
         self.leftOutcome = nil
         self.middleOutcome = nil
@@ -239,7 +240,14 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 .receive(on: DispatchQueue.main)
                 .compactMap({$0}).sink { [weak self] match in
                     self?.matchViewModel = MatchWidgetCellViewModel(match: match)
-                    //self?.match = self?.match
+                }
+                .store(in: &cancellables)
+
+            viewModel.completeMatch
+                .receive(on: DispatchQueue.main)
+                .compactMap({$0}).sink { [weak self] completeMatch in
+                    self?.completeMatch = completeMatch
+                    self?.setupWithMatch(completeMatch)
                 }
                 .store(in: &cancellables)
 
@@ -249,6 +257,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                 self.imageView.kf.setImage(with: url)
             }
         }
+
     }
 
     func setupWithMatch(_ match: Match) {
@@ -258,7 +267,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             return
         }
 
-        self.match = match
+        guard let cellViewModel = self.viewModel else {
+            return
+        }
 
         //self.eventNameLabel.text = "\(viewModel.competitionName)"
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
@@ -282,8 +293,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                self.leftOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = cellViewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -316,8 +326,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                self.middleOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = cellViewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -349,8 +358,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                self.rightOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = cellViewModel.oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -397,8 +405,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapLeftOddButton() {
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.completeMatch,
+            let firstMarket = self.completeMatch?.markets.first,
             let outcome = self.leftOutcome
         else {
             return
@@ -436,8 +444,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapMiddleOddButton() {
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.completeMatch,
+            let firstMarket = self.completeMatch?.markets.first,
             let outcome = self.middleOutcome
         else {
             return
@@ -474,8 +482,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapRightOddButton() {
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.completeMatch,
+            let firstMarket = self.completeMatch?.markets.first,
             let outcome = self.rightOutcome
         else {
             return

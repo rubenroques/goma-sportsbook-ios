@@ -110,12 +110,7 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
         else {
             fatalError()
         }
-
-        for match in self.popularMatches {
-            if match.id == cellViewModel.matchId {
-                cell.setupWithMatch(match)
-            }
-        }
+        
         cell.setupWithViewModel(cellViewModel)
 
         return cell

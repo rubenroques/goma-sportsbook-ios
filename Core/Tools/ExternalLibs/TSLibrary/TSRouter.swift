@@ -35,6 +35,7 @@ enum TSRouter {
     case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
     case getOpenBets(language: String, records: Int, page: Int)
     case cashoutBet(language: String, betId: String)
+    case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
@@ -57,6 +58,7 @@ enum TSRouter {
     case tournamentsPublisher(operatorId: String, language: String, sportId: String)
     case favoriteMatchesPublisher(operatorId: String, language: String, userId: String)
     case cashoutPublisher(operatorId: String, language: String, betId: String)
+    case matchDetailsAggregatorPublisher(operatorId: String, language: String, matchId: String)
 
     // Others
     case registrationDismissed
@@ -154,6 +156,8 @@ enum TSRouter {
             return "/sports#betHistoryV2"
         case .cashoutBet:
             return "/sports#cashOut"
+        case .getMatchOdds:
+            return "/sports#odds"
 
         case .getSystemBetTypes:
             return "/sports#systemBetCalculationV2"
@@ -168,6 +172,9 @@ enum TSRouter {
             return "/sports/\(operatorId)/\(language)/event/\(matchId)/market-groups"
         case .matchMarketGroupDetailsPublisher(let operatorId, let language, let matchId, let marketGroupName):
             return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/market-group/\(marketGroupName)"
+
+        case .matchDetailsAggregatorPublisher(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
 
         //
         // EM Subscription
@@ -426,6 +433,11 @@ enum TSRouter {
             return ["lang": language,
                     "betId": betId]
 
+        case .getMatchOdds(let language, let matchId, let bettingTypeId):
+            return ["lang": language,
+                    "matchId": matchId,
+                    "bettingTypeId": bettingTypeId]
+
         case .getSystemBetTypes(let tickets):
             var selection: [Any] = []
             for ticket in tickets {
@@ -602,6 +614,8 @@ enum TSRouter {
         case .favoriteMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .cashoutPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .matchDetailsAggregatorPublisher:
             return .sportsInitialDump(topic: self.procedure)
 
         default:
