@@ -248,6 +248,7 @@ class AggregatorsRepository {
                                               nameDigit2: rawOutcome.paramFloat2,
                                               nameDigit3: rawOutcome.paramFloat3,
                                               marketName: rawMarket.shortName ?? "",
+                                              marketId: rawMarket.id,
                                               bettingOffer: bettingOffer)
                         outcomes.append(outcome)
                     }
@@ -340,6 +341,7 @@ struct OddOutcomesSortingHelper {
         case "home": return 10
         case "draw": return 20
         case "none": return 21
+        case "": return 22
         case "away": return 30
 
         case "home_draw": return 10

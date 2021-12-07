@@ -133,6 +133,8 @@ final class TSManager {
                     return
                 }
 
+                Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+
                 if swampSession.isConnected() {
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
 
@@ -156,7 +158,7 @@ final class TSManager {
                             }
                         }
                         catch {
-                            print("TSManager Decoding Error: \(error)")
+                            //print("TSManager Decoding Error: \(error)")
                             promise(.failure(.decodingError))
                         }
                     }, onError: { _, error, _, kwargs in
@@ -229,7 +231,7 @@ final class TSManager {
 
         let args: [String: Any] = endpoint.kwargs ?? [:]
 
-        Logger.log("subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
+        Logger.log("TSManager subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
 
         swampSession.subscribe(endpoint.procedure, options: args,
         onSuccess: { (subscription: Subscription) in
@@ -265,12 +267,12 @@ final class TSManager {
             return
         }
 
-        print("UnregisterFromEndpoint withId \(endpointPublisherIdentifiable.identificationCode)")
+        //print("UnregisterFromEndpoint withId \(endpointPublisherIdentifiable.identificationCode)")
 
         swampSession.unregister(endpointPublisherIdentifiable.identificationCode) {
-            print("UnregisterFromEndpoint ok")
+            //print("UnregisterFromEndpoint ok")
         } onError: { details, error in
-            print("UnregisterFromEndpoint error \(details) \(error)")
+            //print("UnregisterFromEndpoint error \(details) \(error)")
         }
     }
 
@@ -288,7 +290,7 @@ final class TSManager {
 
         let args: [String: Any] = endpoint.kwargs ?? [:]
 
-        //Logger.log("subscribeEndpoint - url:\(endpoint.procedure), args:\(args)")
+        Logger.log("TSManager registerOnEndpoint - url:\(endpoint.procedure), args:\(args)")
 
         swampSession.register(endpoint.procedure, options: args,
         onSuccess: { (registration: Registration) in
@@ -325,7 +327,7 @@ final class TSManager {
                 }
             }
             catch {
-                print("TSManager Decoding Error: \(error)")
+                //print("TSManager Decoding Error: \(error)")
                 subject.send(completion: .failure(.decodingError))
             }
         })

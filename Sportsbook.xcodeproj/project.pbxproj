@@ -2591,8 +2591,8 @@
 			children = (
 				A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */,
 				A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */,
-				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */,
+				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				A9BCF43A274FB589006DD528 /* Cells */,
 			);
 			path = MatchDetails;

@@ -65,6 +65,47 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.titleLabel.textColor = UIColor.App.headingMain
     }
 
+    func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer) {
+
+        #if DEBUG
+        self.containerView.backgroundColor = UIColor.systemBlue
+        #endif
+
+        self.titleLabel.text = marketGroupOrganizer.marketName
+
+        for line in 0 ..< marketGroupOrganizer.numberOfLines {
+            for column in 0 ..< marketGroupOrganizer.numberOfColumns {
+
+                let outcome = marketGroupOrganizer.outcomeFor(column: column, line: line)
+
+                var columnStackView: UIStackView?
+                switch column {
+                case 0:
+                    columnStackView = leftColumnsStackView
+                case 1:
+                    columnStackView = rightColumnsStackView
+                default: ()
+                }
+
+                if let stackView = columnStackView {
+                    if let outcomeValue = outcome {
+                        let outcomeSelectionButtonView = OutcomeSelectionButtonView()
+                        outcomeSelectionButtonView.match = self.match
+                        outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
+                        stackView.addArrangedSubview(outcomeSelectionButtonView)
+                    }
+                    else {
+                        let clearView = UIView()
+                        clearView.backgroundColor = .clear
+                        clearView.translatesAutoresizingMaskIntoConstraints = false
+
+                        stackView.addArrangedSubview(clearView)
+                    }
+                }
+            }
+        }
+    }
+
     func configure(withMergedMarketGroup mergedMarketGroup: MergedMarketGroup) {
         self.mergedMarketGroup = mergedMarketGroup
 

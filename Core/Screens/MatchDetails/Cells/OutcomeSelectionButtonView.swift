@@ -96,7 +96,7 @@ class OutcomeSelectionButtonView: NibView {
         self.outcome = outcome
         self.bettingOffer = outcome.bettingOffer
 
-        self.marketTypeLabel.text = outcome.typeName
+        self.marketTypeLabel.text = outcome.translatedName
         if let nameDigit1 = outcome.nameDigit1, let nameDigit2 = outcome.nameDigit2 {
 
             var digit1String = "\(nameDigit1)"
@@ -107,13 +107,13 @@ class OutcomeSelectionButtonView: NibView {
             digit2String = digit2String.replacingOccurrences(of: ".00", with: "")
             digit2String = digit2String.replacingOccurrences(of: ".0", with: "")
 
-            self.marketTypeLabel.text = "\(outcome.typeName) \(digit1String)-\(digit2String)"
+            self.marketTypeLabel.text = "\(outcome.translatedName)" // \(digit1String)-\(digit2String)"
         }
         else if let nameDigit1 = outcome.nameDigit1 {
             var digitString = "\(nameDigit1)"
             digitString = digitString.replacingOccurrences(of: ".00", with: "")
             digitString = digitString.replacingOccurrences(of: ".0", with: "")
-            self.marketTypeLabel.text = "\(outcome.typeName) \(digitString)"
+            self.marketTypeLabel.text = "\(outcome.translatedName)" //" \(digitString)"
         }
 
         self.updateBettingOffer(value: outcome.bettingOffer.value, isAvailableForBetting: true)
