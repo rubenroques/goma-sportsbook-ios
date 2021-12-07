@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +11,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SubmitedBetslipViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="activityIndicatorBaseView" destination="EnH-Tc-qS9" id="oP1-Lz-CkF"/>
+                <outlet property="activityIndicatorView" destination="zwu-Pf-n99" id="gk5-3e-q85"/>
                 <outlet property="tableView" destination="2p6-BP-q63" id="JQl-jC-Cyw"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -24,13 +26,30 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EnH-Tc-qS9">
+                    <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                    <subviews>
+                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="zwu-Pf-n99">
+                            <rect key="frame" x="188.5" y="390.5" width="37" height="37"/>
+                        </activityIndicatorView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.6335031107169431" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="zwu-Pf-n99" firstAttribute="centerX" secondItem="EnH-Tc-qS9" secondAttribute="centerX" id="IWK-aH-HBT"/>
+                        <constraint firstItem="zwu-Pf-n99" firstAttribute="centerY" secondItem="EnH-Tc-qS9" secondAttribute="centerY" id="yIg-06-NsV"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fH2-Vz-eya"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="2p6-BP-q63" secondAttribute="bottom" id="Bga-y6-li6"/>
+                <constraint firstItem="EnH-Tc-qS9" firstAttribute="leading" secondItem="fH2-Vz-eya" secondAttribute="leading" id="aY1-am-Gli"/>
+                <constraint firstItem="EnH-Tc-qS9" firstAttribute="top" secondItem="fH2-Vz-eya" secondAttribute="top" id="bsL-qD-0aD"/>
+                <constraint firstItem="fH2-Vz-eya" firstAttribute="bottom" secondItem="EnH-Tc-qS9" secondAttribute="bottom" id="g38-sx-K9w"/>
                 <constraint firstItem="2p6-BP-q63" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="gJf-4R-4SI"/>
                 <constraint firstItem="2p6-BP-q63" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="gjb-24-9Wi"/>
+                <constraint firstItem="fH2-Vz-eya" firstAttribute="trailing" secondItem="EnH-Tc-qS9" secondAttribute="trailing" id="hDE-6k-Ked"/>
                 <constraint firstAttribute="trailing" secondItem="2p6-BP-q63" secondAttribute="trailing" id="uDN-Gh-fd1"/>
             </constraints>
             <point key="canvasLocation" x="141" y="154"/>

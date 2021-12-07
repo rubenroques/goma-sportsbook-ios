@@ -12,6 +12,9 @@ import OrderedCollections
 class SubmitedBetslipViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private var activityIndicatorBaseView: UIView!
+    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+
 
     private var cancellables = Set<AnyCancellable>()
     private var betHistoryEntries: [BetHistoryEntry] = []
@@ -42,6 +45,9 @@ class SubmitedBetslipViewController: UIViewController {
         
         self.requestHistory()
         self.setupWithTheme()
+
+        self.activityIndicatorBaseView.isHidden = true
+        self.view.bringSubviewToFront(self.activityIndicatorBaseView)
 
     }
 
@@ -115,35 +121,19 @@ class SubmitedBetslipViewController: UIViewController {
                 case .updatedContent(let aggregatorUpdates):
                     print("MyBets cashoutPublisher updatedContent")
                     self?.updateCashoutAggregatorProcessor(aggregator: aggregatorUpdates)
+
                     print("UPDATE CASHOUT: \(Env.everyMatrixStorage.cashoutsPublisher.values)")
                 case .disconnect:
                     print("My Games cashoutPublisher disconnect")
                 }
             })
             .store(in: &cancellables)
+
     }
 
     private func setupCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .cashouts,
                                                  shouldClear: true)
-//        let cashouts = Env.everyMatrixStorage.cashouts
-//        self.cashouts = cashouts
-        let cashouts = Env.everyMatrixStorage.cashoutsPublisher.values
-
-        for cashout in cashouts {
-
-            self.cashouts[cashout.value.id] = cashout.value
-            cashout.sink(receiveValue: { cashoutValue in
-                print("UPDATING CASHOUTS")
-                self.cashouts[cashout.value.id] = cashout.value
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            })
-            .store(in: &self.cancellables)
-
-        }
-
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -152,22 +142,23 @@ class SubmitedBetslipViewController: UIViewController {
 
     private func updateCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-        let cashouts = Env.everyMatrixStorage.cashoutsPublisher.values
 
-        for cashout in cashouts {
 
-            self.cashouts[cashout.value.id] = cashout.value
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
         }
-
     }
 
     func submitCashout(betCashout: EveryMatrix.Cashout) {
+
         guard let betCashoutValue = betCashout.value else {
             return
         }
         let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"), message: localized("string_return_money") + "€\(betCashoutValue)", preferredStyle: UIAlertController.Style.alert)
 
         submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { (action: UIAlertAction!) in
+            self.activityIndicatorBaseView.isHidden = false
+
             let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
 
             let request = TSManager.shared
@@ -177,8 +168,15 @@ class SubmitedBetslipViewController: UIViewController {
                 }, receiveValue: { value in
                     print(value)
                     if value.cashoutSucceed {
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.requestHistory()
+                            self.activityIndicatorBaseView.isHidden = true
+
+                        }
+                    }
+                    else {
+                        DispatchQueue.main.async {
+                            self.activityIndicatorBaseView.isHidden = true
                         }
                     }
 
@@ -223,12 +221,15 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
         }
 
         cell.configureWithBetHistoryEntry(entry)
-        if let betCashout = self.cashouts[entry.betId] {
-            if let cashoutValue = betCashout.value {
-                cell.setupCashout(cashout: betCashout)
-            }
+
+        var cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
+
+        if let betCashout = cashoutsPublisher[entry.betId].value {
+            let cashoutValue = betCashout.value
+            cell.setupCashout(cashout: betCashout.value)
+
             cell.cashoutAction = {
-                self.submitCashout(betCashout: betCashout)
+                self.submitCashout(betCashout: betCashout.value)
             }
             cell.infoAction = {
                 self.showCashoutInfo()

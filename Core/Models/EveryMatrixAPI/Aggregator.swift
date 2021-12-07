@@ -105,7 +105,6 @@ extension EveryMatrix {
             case contentId = "id"
             case value = "value"
             case stake = "stake"
-            case changedProperties = "changedProperties"
         }
 
         init(from decoder: Decoder) throws {
@@ -117,6 +116,7 @@ extension EveryMatrix {
             else {
                 throw ContentUpdateError.uknownUpdateType
             }
+            self = .unknown
 
             if changeTypeString == "UPDATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
 
@@ -158,9 +158,9 @@ extension EveryMatrix {
 
                     }
                 }
+
             }
 
-            self = .unknown
         }
 
     }
@@ -262,7 +262,6 @@ extension EveryMatrix {
                 self = .location(location)
             case .cashout:
                 let cashout = try objectContainer.decode(EveryMatrix.Cashout.self)
-                print("CASHOUT DECODE: \(cashout)")
                 self = .cashout(cashout)
             case .unknown:
                 self = .unknown
