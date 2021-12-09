@@ -165,7 +165,7 @@ class BetslipViewController: UIViewController {
 
         let possibleEarningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: preSubmissionBetslipViewController.totalPossibleEarnings )) ?? "-.--€"
 
-        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray, totalOddsValue: totalOddsBetString, possibleEarningsValue: possibleEarningsString, numberOfBets: preSubmissionBetslipViewController.numberOfBets)
+        let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray, totalOddsValue: possibleEarningsString, possibleEarningsValue: totalOddsBetString, numberOfBets: preSubmissionBetslipViewController.numberOfBets)
         betSubmissionSuccessViewController.willDismissAction = self.willDismissAction
         self.navigationController?.pushViewController(betSubmissionSuccessViewController, animated: true)
     }

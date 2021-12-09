@@ -716,7 +716,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
         if let maxWinningNetto = selectedSystemBetWinnings.maxWinningNetto, maxWinningNetto != 0 {
-            self.totalPossibleEarnings = maxWinningNetto
+            //self.totalPossibleEarnings = maxWinningNetto
             self.systemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
         }
         else {
