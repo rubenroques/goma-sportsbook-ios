@@ -171,7 +171,6 @@ class SubmitedBetslipViewController: UIViewController {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.requestHistory()
                             self.activityIndicatorBaseView.isHidden = true
-
                         }
                     }
                     else {

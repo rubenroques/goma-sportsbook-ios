@@ -149,6 +149,12 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
+    private var suggestedBetsRegister: EndpointPublisherIdentifiable?
+    private var suggestedBetsPublisher: AnyCancellable?
+
+    var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
+    var suggestedBetsArray: [Int: [Match]] = [:]
+
     init() {
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
@@ -299,6 +305,10 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map(\.isEmpty)
             .sink(receiveValue: { isEmpty in
                 self.emptyBetsBaseView.isHidden = !isEmpty
+
+                if isEmpty {
+                    self.getSuggestedBets()
+                }
             })
             .store(in: &cancellables)
 
@@ -477,6 +487,97 @@ class PreSubmissionBetslipViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
         self.placeBetButton.isEnabled = false
+    }
+
+    func getSuggestedBets() {
+        Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving suggested bets!")
+
+                case .finished:
+                    print("Suggested bets retrieved!")
+                }
+
+                print("Received suggested bets completion: \(completion).")
+
+            },
+            receiveValue: { gomaBetsArray in
+
+                guard let betsArray = gomaBetsArray else {return}
+
+                print("Received Goma Suggested Bets - data: \(betsArray).")
+
+                for (index, betArray) in betsArray.enumerated() {
+                    if index == 0 {
+                    print("INDEX ARRAY: \(index)")
+                    self.subscribeSuggestedBet(betArray: betArray, index: index)
+                    }
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+    func subscribeSuggestedBet(betArray: [GomaSuggestedBets], index: Int) {
+
+//        guard let bet = betArray[safe: 0] else {return}
+//        print("GOMA SUGGESTED BET: \(bet)")
+
+        for bet in betArray {
+
+            if let suggestedBetsRegister = suggestedBetsRegister {
+                TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetsRegister)
+            }
+
+            let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
+
+            TSManager.shared
+                .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+                .sink(receiveCompletion: { [weak self] completion in
+                    switch completion {
+                    case .failure:
+                        print("Error retrieving data!")
+                    case .finished:
+                        print("Data retrieved!")
+                    }
+                }, receiveValue: { [weak self] state in
+                    switch state {
+                    case .connect(let publisherIdentifiable):
+                        print("MyBets suggestedBets connect")
+                        self?.suggestedBetsRegister = publisherIdentifiable
+                    case .initialContent(let aggregator):
+                        print("MyBets suggestedBets initialContent")
+                        self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
+                    case .updatedContent(let aggregatorUpdates):
+                        print("MyBets suggestedBets updatedContent")
+                    case .disconnect:
+                        print("MyBets suggestedBets disconnect")
+                    }
+                })
+                .store(in: &cancellables)
+        }
+
+    }
+
+    private func setupSuggestedMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator, index: Int) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .suggestedMatches,
+                                                 shouldClear: true)
+        let suggestedMatchArray = Env.everyMatrixStorage.matchesForListType(.suggestedMatches)
+
+        if let suggestedMatch = suggestedMatchArray[safe: 0] {
+
+            if self.suggestedBetsArray[index] != nil {
+                self.suggestedBetsArray[index]?.append(suggestedMatch)
+            }
+            else {
+                self.suggestedBetsArray[index] = [suggestedMatch]
+            }
+        }
+
+        print("FINAL SUGGESTED \(index): \(self.suggestedBetsArray[index])")
+
     }
 
     func showErrorView(errorMessage: String?) {
