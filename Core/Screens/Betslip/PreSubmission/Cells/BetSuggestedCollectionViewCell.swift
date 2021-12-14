@@ -64,11 +64,13 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
             }
             print("GAME: \(value)")
             if let betOutcomes = value.markets.first?.outcomes {
+                var foundOutcome = false
 
                 for betOutcome in betOutcomes {
                     for gomaBet in gomaValues {
 
                         if value.id == "\(gomaBet.matchId)" {
+
                             if betOutcome.codeName == gomaBet.bettingOption {
 
                                 if firstOdd {
@@ -78,9 +80,21 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                 else {
                                     totalOdd *= betOutcome.bettingOffer.value
                                 }
+                                foundOutcome = true
 
                             }
+
                         }
+                    }
+
+                }
+                if !foundOutcome {
+                    if firstOdd {
+                        totalOdd = betOutcomes[0].bettingOffer.value
+                        firstOdd = false
+                    }
+                    else {
+                        totalOdd *= betOutcomes[0].bettingOffer.value
                     }
                 }
             }
@@ -110,6 +124,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
     @IBAction func betNowAction() {
 
+        var foundOutcome = false
+
         for bet in betsArray {
             guard
                 let firstMarket = bet.markets.first,
@@ -118,49 +134,50 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                 return
             }
 
-                for outcome in outcomes {
+            for outcome in outcomes {
 
-                    for gomaBet in self.gomaArray {
+                for gomaBet in self.gomaArray {
 
-                        if bet.id == "\(gomaBet.matchId)" {
+                    if bet.id == "\(gomaBet.matchId)" {
 
-                            if outcome.codeName == gomaBet.bettingOption {
-                                let matchDescription = "\(bet.homeParticipant.name) x \(bet.awayParticipant.name)"
-                                let marketDescription = firstMarket.name
-                                let outcomeDescription = outcome.translatedName
+                        if outcome.codeName == gomaBet.bettingOption {
+                            let matchDescription = "\(bet.homeParticipant.name) x \(bet.awayParticipant.name)"
+                            let marketDescription = firstMarket.name
+                            let outcomeDescription = outcome.translatedName
 
-                                let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                                                  outcomeId: outcome.id,
-                                                                  matchId: bet.id,
-                                                                  value: outcome.bettingOffer.value,
-                                                                  matchDescription: matchDescription,
-                                                                  marketDescription: marketDescription,
-                                                                  outcomeDescription: outcomeDescription)
+                            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                                              outcomeId: outcome.id,
+                                                              matchId: bet.id,
+                                                              value: outcome.bettingOffer.value,
+                                                              matchDescription: matchDescription,
+                                                              marketDescription: marketDescription,
+                                                              outcomeDescription: outcomeDescription)
 
 
-                                Env.betslipManager.addBettingTicket(bettingTicket)
-                            }
-
+                            Env.betslipManager.addBettingTicket(bettingTicket)
+                            foundOutcome = true
                         }
                     }
-
                 }
-//            if let outcome = bet.markets.first?.outcomes[0] {
-//                let matchDescription = "\(bet.homeParticipant.name) x \(bet.awayParticipant.name)"
-//                let marketDescription = firstMarket.name
-//                let outcomeDescription = outcome.translatedName
-//
-//                let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-//                                                  outcomeId: outcome.id,
-//                                                  matchId: bet.id,
-//                                                  value: outcome.bettingOffer.value,
-//                                                  matchDescription: matchDescription,
-//                                                  marketDescription: marketDescription,
-//                                                  outcomeDescription: outcomeDescription)
-//
-//
-//                Env.betslipManager.addBettingTicket(bettingTicket)
-//            }
+
+            }
+            if !foundOutcome {
+                let matchDescription = "\(bet.homeParticipant.name) x \(bet.awayParticipant.name)"
+                let marketDescription = firstMarket.name
+                let outcomeDescription = outcomes[0].translatedName
+
+                let bettingTicket = BettingTicket(id: outcomes[0].bettingOffer.id,
+                                                  outcomeId: outcomes[0].id,
+                                                  matchId: bet.id,
+                                                  value: outcomes[0].bettingOffer.value,
+                                                  matchDescription: matchDescription,
+                                                  marketDescription: marketDescription,
+                                                  outcomeDescription: outcomeDescription)
+
+
+                Env.betslipManager.addBettingTicket(bettingTicket)
+                foundOutcome = true
+            }
 
         }
 
