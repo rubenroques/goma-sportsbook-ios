@@ -9,6 +9,7 @@ import UIKit
 import Combine
 
 class PreSubmissionBetslipViewController: UIViewController {
+  
 
     @IBOutlet private weak var topSafeArea: UIView!
     @IBOutlet private weak var bottomSafeArea: UIView!
@@ -74,6 +75,9 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
+    @IBOutlet weak var betSuggestedCollectionView: UICollectionView!
+    
+    
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
     private var systemBettingTicketDataSource = SystemBettingTicketDataSource(bettingTickets: [])
@@ -85,6 +89,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         case multiple
         case system
     }
+    var betInfo: [[String]] = [["teste 1", "teste 2", "teste 3"], ["a", "b", "c"], ["1", "2", "3"]]
+
 
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
@@ -168,7 +174,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.commonInit()
+        
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
 
@@ -176,6 +183,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
 
+        self.betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
+                                       forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
+        self.betSuggestedCollectionView.delegate = self
+        self.betSuggestedCollectionView.dataSource = self
+        
+        
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
 
@@ -625,6 +638,21 @@ class PreSubmissionBetslipViewController: UIViewController {
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
+    
+    private func commonInit(){
+        //let flowLayout = UICollectionViewFlowLayout()
+        //flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        //flowLayout.scrollDirection = .horizontal
+       // betSuggestedCollectionView.collectionViewLayout = flowLayout
+        //betSuggestedCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        betSuggestedCollectionView.showsVerticalScrollIndicator = false
+        betSuggestedCollectionView.showsHorizontalScrollIndicator = true
+        betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
+                                       forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
+        betSuggestedCollectionView.delegate = self
+        betSuggestedCollectionView.dataSource = self
+
+    }
 
     func setupWithTheme() {
 
@@ -1013,6 +1041,7 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
 
 typealias UITableViewDelegateDataSource = UITableViewDelegate & UITableViewDataSource
 
+
 extension PreSubmissionBetslipViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -1035,6 +1064,62 @@ extension PreSubmissionBetslipViewController: UITableViewDelegate, UITableViewDa
         return self.currentDataSource().tableView?(tableView, heightForRowAt: indexPath) ?? 0.0
     }
 }
+
+extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 10
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
+        return 16
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
+        return 16
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueCellType(BetSuggestedCollectionViewCell.self, indexPath: indexPath)
+                
+        else {
+            fatalError()
+        }
+       
+     //passar para variavel array de arrays
+        cell.setupStackBetView(betValues: betInfo)
+        cell.setupInfoBetValues(betValues: betInfo)
+  
+        return cell
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let bottomBarHeigth = 60.0
+        
+     
+    
+        
+        return CGSize(width: collectionView.frame.size.width*0.85, height: bottomBarHeigth + Double(betInfo.count) * 60  )
+        
+        }
+    
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+   
+        self.betSuggestedCollectionView.reloadData()
+       // self.betSuggestedCollectionView.layoutIfNeeded()
+        self.betSuggestedCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+        // let rect = self.betSuggestedCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
+        //    self.betSuggestedCollectionView.scrollRectToVisible(rect!, animated: true)
+
+
+    }
+
+}
+
 
 class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
 

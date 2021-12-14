@@ -784,6 +784,14 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
+		F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
+		F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
+		F47BF2662763986300648440 /* GameSuggestedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47BF2652763986300648440 /* GameSuggestedView.xib */; };
+		F47BF2672763986300648440 /* GameSuggestedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47BF2652763986300648440 /* GameSuggestedView.xib */; };
+		F48CB9A027628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */; };
+		F48CB9A127628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */; };
+		F48CB9A227628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */; };
+		F48CB9A327628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */; };
 		F4A438E5274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4A438E6274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
@@ -1208,6 +1216,10 @@
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
 		A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpPromotionView.swift; sourceTree = "<group>"; };
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
+		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
+		F47BF2652763986300648440 /* GameSuggestedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameSuggestedView.xib; sourceTree = "<group>"; };
+		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
+		F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetSuggestedCollectionViewCell.xib; sourceTree = "<group>"; };
 		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
 		F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Drag.swift"; sourceTree = "<group>"; };
 		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
@@ -1536,10 +1548,14 @@
 		454E0AC0273305BE00794E0C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */,
+				F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */,
 				454E0AC1273305E200794E0C /* SingleBettingTicketTableViewCell.swift */,
 				454E0AC2273305E200794E0C /* SingleBettingTicketTableViewCell.xib */,
 				454E0ACA2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift */,
 				454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */,
+				F47BF2622763953900648440 /* GameSuggestedView.swift */,
+				F47BF2652763986300648440 /* GameSuggestedView.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2965,6 +2981,8 @@
 				45626E40275544620069B89B /* OutcomeSelectionButtonView.xib in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343C26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
+				F48CB9A227628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */,
+				F47BF2662763986300648440 /* GameSuggestedView.xib in Resources */,
 				45626E462755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				455C962A26FE11CA00456F30 /* HomeViewController.xib in Resources */,
 				45CD7B542716F5CB003044C5 /* OddTripleCollectionViewCell.xib in Resources */,
@@ -2988,6 +3006,7 @@
 				454E0AA52732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */,
 				45626E41275544620069B89B /* OutcomeSelectionButtonView.xib in Resources */,
 				45D712FB27033BEF00AC0364 /* LiveEventsViewController.xib in Resources */,
+				F48CB9A327628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */,
 				A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */,
 				454E0ACF2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45D728D427158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
@@ -3027,6 +3046,7 @@
 				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
 				45626E472755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
+				F47BF2672763986300648440 /* GameSuggestedView.xib in Resources */,
 				A9A836B526C6B56200508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA926F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
 				45BEA48C26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib in Resources */,
@@ -3128,7 +3148,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n#if which swiftlint >/dev/null; then\n  #swiftlint\n#else\n # echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\n#fi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3237,6 +3257,7 @@
 				45166D2126F3548D00E69D65 /* SSWampRole.swift in Sources */,
 				454E0ABA2732C58D00794E0C /* TabularViewController.swift in Sources */,
 				45D728CD2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift in Sources */,
+				F48CB9A027628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */,
 				454E0ACC2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
 				458F4C962712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
@@ -3263,6 +3284,7 @@
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
+				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				45726331272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */,
 				4589F41F26BF03FE005DF543 /* Fonts.swift in Sources */,
@@ -3527,6 +3549,7 @@
 				45166D2226F3548D00E69D65 /* SSWampRole.swift in Sources */,
 				454E0ABB2732C58D00794E0C /* TabularViewController.swift in Sources */,
 				45D728CE2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift in Sources */,
+				F48CB9A127628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */,
 				454E0ACD2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
 				458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
@@ -3553,6 +3576,7 @@
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
+				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				45726332272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */,
 				4589F42026BF03FE005DF543 /* Fonts.swift in Sources */,
