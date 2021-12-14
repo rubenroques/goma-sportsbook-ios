@@ -489,20 +489,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.placeBetButton.isEnabled = false
     }
 
-    /* NOTA TERESA: Aqui vou fazer uma chamada à API da GOMA para ir buscar os jogos sugeridos. No caso da chamada vem algo assim:
-     [
-        [Match,
-        Match,
-        Match, etc
-        ],
-        [Match,
-        Match,
-        Match, etc
-        ]
-
-     ]
-     Com este array depois, vou fazer um subscribe na func subscribeSuggestedBet, que vai buscar a info do jogo à EM
-     */
     func getSuggestedBets() {
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
             .sink(receiveCompletion: { completion in
@@ -536,7 +522,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    // NOTA TERESA: Aqui é onde se vai buscar a info com as odds do jogo sugerido, neste caso é passado um array com as bets (o array vai ser o card com os 1-4 jogos), e para cada uma das bets sugeridas vai-se buscar o valor das odds
     func subscribeSuggestedBet(betArray: [GomaSuggestedBets], index: Int) {
 
 //        guard let bet = betArray[safe: 0] else {return}
@@ -550,7 +535,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
 
-            // NOTA TERESA: Aqui é onde fazemos o subscribe para cada bet que queremos do jogo. O que temos para já é o InitialContent que traz o initialdump. Ao receber esse initialdump faz-se o processamento dos dados
             TSManager.shared
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
                 .sink(receiveCompletion: { [weak self] completion in
@@ -579,7 +563,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     }
 
-    // NOTA TERESA: Aqui é onde se processa o initialdump que vem da resposta da EM. Basicamente isto coloca a info do initialdump num objecto Match, já com os mercados definidos e associados a essa match. Ele por norma retorna uma lista de matches, neste caso como a chamada é feita match a match, retorna um array com uma posição só (daí o acesso à posição 0 do array ([safe: 0]). Tendo a match processada é adicionada ao dicionário final que vai ter todas as matches processadas para ser usada depois na collectionview, onde cada key do dicionário vai ser usada para cada card a mostrar.
     private func setupSuggestedMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator, index: Int) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .suggestedMatches,
                                                  shouldClear: true)
