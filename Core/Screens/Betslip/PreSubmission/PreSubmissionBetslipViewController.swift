@@ -89,6 +89,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         case multiple
         case system
     }
+    var betInfo: [[String]] = [["teste 1", "teste 2", "teste 3"], ["a", "b", "c"], ["1", "2", "3"]]
+
 
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
@@ -960,30 +962,50 @@ extension PreSubmissionBetslipViewController: UITableViewDelegate, UITableViewDa
     }
 }
 
-extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return 10
     }
-
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
+        return 16
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
+        return 16
+    }
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(BetSuggestedCollectionViewCell.self, indexPath: indexPath)
+                
         else {
             fatalError()
         }
        
-        cell.setupBetInfo(numberOfSelections: 2, totalOdd: 4.50)
-       
+     //passar para variavel array de arrays
+        cell.setupStackBetView(betValues: betInfo)
+        cell.setupInfoBetValues(betValues: betInfo)
+  
         return cell
     }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let bottomBarHeigth = 60.0
+        
+     
+    
+        
+        return CGSize(width: collectionView.frame.size.width*0.85, height: bottomBarHeigth + Double(betInfo.count) * 60  )
+        
+        }
+    
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
+   
         self.betSuggestedCollectionView.reloadData()
        // self.betSuggestedCollectionView.layoutIfNeeded()
         self.betSuggestedCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)

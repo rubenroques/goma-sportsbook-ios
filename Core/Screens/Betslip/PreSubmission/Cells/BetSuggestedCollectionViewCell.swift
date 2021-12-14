@@ -10,10 +10,8 @@ import UIKit
 class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var betsStackView: UIStackView!
-    @IBOutlet weak var betView: UIView!
     @IBOutlet weak var competitionTitleLabel: UILabel!
-    @IBOutlet weak var otherInfoCompetitionLabel: UILabel!
-    @IBOutlet weak var competitionImage: UIImageView!
+   
    
     @IBOutlet weak var informationBetView: UIView!
     
@@ -34,35 +32,36 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
         
     }
-  
     
     func setupWithTheme() {
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
+        self.betsStackView.removeAllArrangedSubviews()
 
     }
     
-    private func setupBetView(competitionTitle : String, otherInfoCompetition : String) -> UIView{
-        self.competitionTitleLabel.text = competitionTitle
-        self.otherInfoCompetitionLabel.text = otherInfoCompetition
-        //self.competitionImage.image = competitionImage
+    func setupStackBetView(betValues : [[String]]) {
+     
+         betsStackView.removeAllArrangedSubviews()
         
-
-        return self.betView
-    }
-
-    func setupBetInfo(numberOfSelections : Int , totalOdd : Double){
-        self.numberOfSelectionsValueLabel.text = String(numberOfSelections)
-        self.totalOddValueLabel.text = String(totalOdd)
-    }
+         for value in betValues {
+             let gameSuggestedView = GameSuggestedView(gameTitle: value[0], gameInfo: value[1])
+             betsStackView.addArrangedSubview(gameSuggestedView)
+         }
+        
+        
+        
+     }
     
-    func addNewView(competitionTitle : String, otherInfoCompetition : String) -> UIView{
-       let view = setupBetView(competitionTitle: competitionTitle, otherInfoCompetition: competitionTitle)
+    func setupInfoBetValues(betValues : [[String]]) {
+     
+        totalOddValueLabel.text = String("---")
+        numberOfSelectionsValueLabel.text = String(betValues.count)
         
-       let infoView = GameSuggestedView()
-       return infoView
         
-    }
-
+     }
+    
 }
+
+

@@ -18,53 +18,66 @@ class GameSuggestedView: NibView {
     @IBOutlet weak var gameInfoLabel: UILabel!
     
     
-    // Variables
-    var onClose:(() -> Void)?
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-        setupWithTheme()
+    var gameTitle: String
+    var gameInfo: String
+    
+    convenience init(gameTitle: String, gameInfo : String) {
+        self.init(frame: .zero, gameTitle: gameTitle, gameInfo : gameInfo)
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-        setupWithTheme()
+    init(frame: CGRect, gameTitle: String, gameInfo : String) {
+        self.gameTitle = gameTitle
+        self.gameInfo = gameInfo
+        super.init(frame: frame)
+
+        self.commonInit()
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
+    }
+    
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.gameImageView.layer.cornerRadius = self.gameImageView.frame.size.height/2
+
     }
 
     override func commonInit() {
 
-     
-        gameTitleLabel.text = "Alert"
-
-        gameInfoLabel.text = "Lorem ipsum dolor."
+        self.gameTitleLabel.text = self.gameTitle
+        self.gameInfoLabel.text = self.gameInfo
+        
+        self.gameImageView.image = UIImage(named: "country_flag_yt")
+        self.gameImageView.clipsToBounds = true
+        self.gameImageView.layer.masksToBounds = true
+  
+        self.setupWithTheme()
+        
+    }
+    
+    override var intrinsicContentSize: CGSize{
+        return CGSize(width: UIView.noIntrinsicMetric, height: 54)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        self.setupWithTheme()
         
     }
 
     func setupWithTheme() {
-        self.alpha = 0
+    
+        self.gameInfoLabel.textColor = UIColor.App.headingMain
+       // self.gameInfoLabel.font = AppFont.with(type: .medium, size: 11)
 
-        gameView.backgroundColor = UIColor.App.mainBackground
-
-        gameTitleLabel.textColor = UIColor.App.headingMain
-        gameInfoLabel.textColor = UIColor.App.headingMain
+        self.gameTitleLabel.textColor = UIColor.App.headingMain
+        //self.gameTitleLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
-    func setAlertTitle(_ title: String) {
-        gameTitleLabel.text = title
-    }
-
-    func setAlertText(_ text: String) {
-        gameInfoLabel.text = text
-    }
-
-    @IBAction private func closeView() {
-        onClose?()
-    }
-
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.frame.width, height: 100)
-    }
 
 }
