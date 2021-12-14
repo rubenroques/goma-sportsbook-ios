@@ -79,5 +79,10 @@ class GameSuggestedView: NibView {
         //self.gameTitleLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
+    func setMatchFlag(isoCode: String) {
+        self.gameImageView.image = UIImage(named: Assets.flagName(withCountryCode: isoCode))
+
+    }
+
 
 }

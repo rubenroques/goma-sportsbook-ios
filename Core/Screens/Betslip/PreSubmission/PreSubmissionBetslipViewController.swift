@@ -76,7 +76,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     @IBOutlet weak var betSuggestedCollectionView: UICollectionView!
-    
+    @IBOutlet var suggestedBetsActivityIndicator: UIActivityIndicatorView!
     
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -178,6 +178,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
+
+        self.suggestedBetsActivityIndicator.isHidden = true
 
         self.view.bringSubviewToFront(systemBetTypeSelectorBaseView)
         self.view.bringSubviewToFront(emptyBetsBaseView)
@@ -320,6 +322,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self.emptyBetsBaseView.isHidden = !isEmpty
 
                 if isEmpty {
+                    self.isSuggestedBetsLoading(true)
                     self.getSuggestedBets()
                 }
             })
@@ -502,6 +505,15 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.placeBetButton.isEnabled = false
     }
 
+    func isSuggestedBetsLoading(_ loading: Bool) {
+        if loading {
+            self.suggestedBetsActivityIndicator.isHidden = false
+        }
+        else {
+            self.suggestedBetsActivityIndicator.isHidden = true
+        }
+    }
+
     func getSuggestedBets() {
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
             .sink(receiveCompletion: { completion in
@@ -519,26 +531,24 @@ class PreSubmissionBetslipViewController: UIViewController {
             receiveValue: { gomaBetsArray in
 
                 guard let betsArray = gomaBetsArray else {return}
-
-                print("Received Goma Suggested Bets - data: \(betsArray).")
+                print("GOMA SUGGESTED BETS: \(betsArray)")
+                self.gomaSuggestedBetsResponse = betsArray
 
                 for (index, betArray) in betsArray.enumerated() {
-                    print("INDEX ARRAY: \(index)")
                     self.subscribeSuggestedBet(betArray: betArray, index: index)
                 }
 
             })
             .store(in: &cancellables)
 
+        // Needs to be changed
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            print("FULL SUGGESTED: \(self.suggestedBetsArray[1])")
+            self.betSuggestedCollectionView.reloadData()
+            self.isSuggestedBetsLoading(false)
         }
     }
 
     func subscribeSuggestedBet(betArray: [GomaSuggestedBets], index: Int) {
-
-//        guard let bet = betArray[safe: 0] else {return}
-//        print("GOMA SUGGESTED BET: \(bet)")
 
         for bet in betArray {
 
@@ -590,8 +600,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self.suggestedBetsArray[index] = [suggestedMatch]
             }
         }
-
-//        print("FINAL SUGGESTED \(index): \(self.suggestedBetsArray[index])")
 
     }
 
@@ -752,6 +760,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
+        self.gomaSuggestedBetsResponse = []
+        self.suggestedBetsArray = [:]
+        self.betSuggestedCollectionView.reloadData()
     }
 
     @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
@@ -874,9 +885,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     //
                     self.isLoading = false
                 } receiveValue: { betPlacedDetails in
-                    for t in betPlacedDetails {
-                        for bet in t.tickets{
-                            self.totalBetOdds =  self.totalBetOdds + bet.value
+                    for betDetail in betPlacedDetails {
+                        for bet in betDetail.tickets{
+                            self.totalBetOdds += bet.value
                         }
                     }
                     
@@ -1072,7 +1083,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return self.gomaSuggestedBetsResponse.count
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
         return 16
@@ -1089,9 +1100,11 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
             fatalError()
         }
        
-     //passar para variavel array de arrays
-        cell.setupStackBetView(betValues: betInfo)
-        cell.setupInfoBetValues(betValues: betInfo)
+        if let suggestedBetCard = self.suggestedBetsArray[indexPath.row] {
+            cell.setupStackBetView(betValues: suggestedBetCard, gomaValues: self.gomaSuggestedBetsResponse[indexPath.row])
+            //cell.setupInfoBetValues(betValues: betInfo)
+        }
+
   
         return cell
     }
@@ -1102,7 +1115,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
      
     
         
-        return CGSize(width: collectionView.frame.size.width*0.85, height: bottomBarHeigth + Double(betInfo.count) * 60  )
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(betInfo.count) * 60  )
         
         }
     
