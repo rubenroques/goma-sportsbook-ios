@@ -173,6 +173,7 @@ class MatchDetailsViewController: UIViewController {
         
         self.marketTypesCollectionView.reloadData()
         self.tableView.reloadData()
+
     }
 
     override func viewDidAppear(_ animated: Bool) {

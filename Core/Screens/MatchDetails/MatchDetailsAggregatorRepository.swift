@@ -351,6 +351,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                                           nameDigit1: rawOutcome.paramFloat1,
                                           nameDigit2: rawOutcome.paramFloat2,
                                           nameDigit3: rawOutcome.paramFloat3,
+                                          paramBoolean1: rawOutcome.paramBoolean1,
                                           marketName: rawMarket.shortName ?? "",
                                           marketId: rawMarket.id,
                                           bettingOffer: bettingOffer)
@@ -364,11 +365,14 @@ class MatchDetailsAggregatorRepository: NSObject {
                 return out1Value < out2Value
             }
 
-            let similarMarketKey = "\(rawMarket.eventPartId ?? "000")-\(rawMarket.bettingTypeId ?? "000")"
+            let similarMarketKey = "\(rawMarket.eventPartId ?? "000")-\(rawMarket.bettingTypeId ?? "000")-\(rawMarket.paramParticipantId1 ?? "x")-\(rawMarket.paramParticipantId2 ?? "x")"
 
             let market = Market(id: rawMarket.id,
                                 typeId: rawMarket.bettingTypeId ?? "",
                                 name: rawMarket.displayShortName ?? "",
+                                nameDigit1: rawMarket.paramFloat1,
+                                nameDigit2: rawMarket.paramFloat2,
+                                nameDigit3: rawMarket.paramFloat3,
                                 outcomes: sortedOutcomes)
             allMarkets.append(market)
             similarMarketsOrdered.append(similarMarketKey)
@@ -439,7 +443,7 @@ class MatchDetailsAggregatorRepository: NSObject {
     func marketGroupOrganizers(withGroupKey key: String) -> [MarketGroupOrganizer] {
         guard let marketsIds = self.marketsForGroup[key] else { return [] }
 
-        var allMarkets: [Market] = []
+        var allMarkets: [String: Market] = [:]
 
         var similarMarkets: [String : [Market]] = [:]
         var similarMarketsNames: [String : String] = [:]
@@ -473,6 +477,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                                           nameDigit1: rawOutcome.paramFloat1,
                                           nameDigit2: rawOutcome.paramFloat2,
                                           nameDigit3: rawOutcome.paramFloat3,
+                                          paramBoolean1: rawOutcome.paramBoolean1,
                                           marketName: rawMarket.shortName ?? "",
                                           marketId: rawMarket.id,
                                           bettingOffer: bettingOffer)
@@ -486,13 +491,17 @@ class MatchDetailsAggregatorRepository: NSObject {
                 return out1Value < out2Value
             }
 
-            let similarMarketKey = "\(rawMarket.eventPartId ?? "000")-\(rawMarket.bettingTypeId ?? "000")"
+            let similarMarketKey = "\(rawMarket.eventPartId ?? "000")-\(rawMarket.bettingTypeId ?? "000")-\(rawMarket.paramParticipantId1 ?? "x")-\(rawMarket.paramParticipantId2 ?? "x")"
 
             let market = Market(id: rawMarket.id,
                                 typeId: rawMarket.bettingTypeId ?? "",
                                 name: rawMarket.displayShortName ?? "",
+                                nameDigit1: rawMarket.paramFloat1,
+                                nameDigit2: rawMarket.paramFloat2,
+                                nameDigit3: rawMarket.paramFloat3,
                                 outcomes: sortedOutcomes)
-            allMarkets.append(market)
+
+            allMarkets[rawMarket.id] = market
             similarMarketsOrdered.append(similarMarketKey)
 
             if var similarMarketsList = similarMarkets[similarMarketKey] {
@@ -513,13 +522,16 @@ class MatchDetailsAggregatorRepository: NSObject {
 
             if let value = similarMarkets[marketKey] {
 
+
                 guard let firstMarket = value.first else { continue }
+
+                let marketGroupName = similarMarketsNames[marketKey] ?? ""
 
                 let allOutcomes = value.flatMap({ $0.outcomes })
                 var outcomesDictionary: [String: [Outcome]] = [:]
 
                 for outcomeIt in allOutcomes {
-                    let outcomeTypeName = outcomeIt.codeName
+                    let outcomeTypeName = outcomeIt.headerCodeName
                     if var outcomesList = outcomesDictionary[outcomeTypeName] {
                         outcomesList.append(outcomeIt)
                         outcomesDictionary[outcomeTypeName] = outcomesList
@@ -529,15 +541,65 @@ class MatchDetailsAggregatorRepository: NSObject {
                     }
                 }
 
-                let marketGroupName = similarMarketsNames[marketKey] ?? ""
 
-                let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
-                                                                                        typeId: firstMarket.typeId,
+                //
+                // Select the correct organizer
+                //
+                if outcomesDictionary.keys.count == 1 && (outcomesDictionary.keys.first == "" || outcomesDictionary.keys.first == "exact") {
+
+                    // Undefined markets without keys for outcomes grouping
+                    let sequentialMarketGroupOrganizer = SequentialMarketGroupOrganizer(id: firstMarket.id,
                                                                                         name: marketGroupName,
-                                                                                        outcomes: outcomesDictionary)
+                                                                                        market: firstMarket)
+                    marketGroupOrganizers.append(sequentialMarketGroupOrganizer)
+                    
+                }
+                else if value.count == 1 {
 
-                marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+                    // One Market with multiples outcomes
+                    let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
+                                                                                            name: marketGroupName,
+                                                                                            outcomes: outcomesDictionary)
 
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+
+                }
+                else if outcomesDictionary.keys.contains("exact") || outcomesDictionary.keys.contains("range") || outcomesDictionary.keys.contains("more_than") {
+
+                    // Each market is a column
+                    let columnListedMarketGroupOrganizer = MarketColumnsMarketGroupOrganizer(id: firstMarket.id,
+                                                                                             name: marketGroupName,
+                                                                                             markets: value,
+                                                                                             outcomes: outcomesDictionary)
+
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+                }
+                else if marketKey.hasPrefix("3-163") {
+                    // over under 1.5, 2.5, 3.5, 4.5  for each team and draw
+                    // 4 markets, 3 vetical groups
+
+                    let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
+                                                                                            name: marketGroupName,
+                                                                                            outcomes: outcomesDictionary)
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+                }
+                else if outcomesDictionary.keys.count == 3 || outcomesDictionary.keys.count == 2 {
+
+                    // Groups Of Markets with 2 or three columns
+                    let marketLinesMarketGroupOrganizer = MarketLinesMarketGroupOrganizer(id: firstMarket.id,
+                                                                                          name: marketGroupName,
+                                                                                          markets: value,
+                                                                                          outcomes: outcomesDictionary)
+
+                    marketGroupOrganizers.append(marketLinesMarketGroupOrganizer)
+                }
+                else {
+                    //Fall back
+                    let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
+                                                                                            name: marketGroupName,
+                                                                                            outcomes: outcomesDictionary)
+                    marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
+                }
             }
         }
 
@@ -545,78 +607,3 @@ class MatchDetailsAggregatorRepository: NSObject {
     }
 }
 
-
-struct MergedMarketGroup {
-
-    var id: String
-    var typeId: String
-    var name: String
-    var index: Int
-    var numberOfMarkets: Int
-    var outcomes: [String: [Outcome] ]
-
-}
-
-struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
-
-    var id: String
-    var typeId: String
-    var name: String
-    var outcomes: [String: [Outcome] ]
-
-    var sortedOutcomeKeys: [String]
-    var maxLineValue: Int
-
-    init(id: String, typeId: String, name: String, outcomes: [String: [Outcome]] ) {
-
-        self.id = id
-        self.typeId = typeId
-        self.name = name
-        self.outcomes = outcomes
-
-        self.sortedOutcomeKeys = []
-        self.sortedOutcomeKeys = self.outcomes.keys.sorted { out1Name, out2Name in
-            let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1Name)
-            let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2Name)
-            return out1Value < out2Value
-        }
-
-        var maxLineValue = 0
-        for outcomeArray in outcomes.values {
-            maxLineValue = max(maxLineValue, outcomeArray.count)
-        }
-        self.maxLineValue = maxLineValue
-    }
-
-    var marketName: String {
-        return name
-    }
-    
-    var numberOfColumns: Int {
-        return outcomes.keys.count
-    }
-
-    var numberOfLines: Int {
-        return self.maxLineValue
-    }
-
-    func outcomeFor(column: Int, line: Int) -> Outcome? {
-        if let columnKey = self.sortedOutcomeKeys[safe: column] {
-            if let outcomesForKey = self.outcomes[columnKey], let outcome = outcomesForKey[safe: line] {
-                return outcome
-            }
-        }
-        return nil
-    }
-
-}
-
-protocol MarketGroupOrganizer {
-
-    var marketName: String { get }
-    var numberOfColumns: Int { get }
-    var numberOfLines: Int { get }
-
-    func outcomeFor(column: Int, line: Int) -> Outcome?
-
-}

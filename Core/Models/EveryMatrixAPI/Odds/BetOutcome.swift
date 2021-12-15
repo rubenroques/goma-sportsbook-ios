@@ -28,6 +28,8 @@ extension EveryMatrix {
         let paramFloat1: Double?
         let paramFloat2: Double?
         let paramFloat3: Double?
+        let paramBoolean1: Bool?
+        let paramBoolean2: Bool?
         let paramParticipantId1: String?
         let paramParticipantId2: String?
         let paramParticipantId3: String?
@@ -59,6 +61,8 @@ extension EveryMatrix {
             case paramFloat1 = "paramFloat1"
             case paramFloat2 = "paramFloat2"
             case paramFloat3 = "paramFloat3"
+            case paramBoolean1 = "paramBoolean1"
+            case paramBoolean2 = "paramBoolean2"
             case paramParticipantId1 = "paramParticipantId1"
             case paramParticipantId2 = "paramParticipantId2"
             case paramParticipantId3 = "paramParticipantId3"
