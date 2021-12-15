@@ -1113,7 +1113,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         let bottomBarHeigth = 60.0
 
         
-        return CGSize(width: collectionView.frame.size.width*0.85, height: bottomBarHeigth + Double(betInfo.count) * 55  )
+        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(betInfo.count) * 55)
         
         }
     

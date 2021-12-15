@@ -41,6 +41,9 @@
                                 <state key="normal" title="Bet Now">
                                     <color key="titleShadowColor" red="0.015686274509803921" green="0.49019607843137253" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="betNowAction" destination="gTV-IL-0wX" eventType="touchUpInside" id="PfL-jq-F1x"/>
+                                </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="BEA-Q0-sNg">
                                 <rect key="frame" x="8" y="8" width="591" height="52"/>
