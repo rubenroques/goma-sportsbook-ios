@@ -441,26 +441,26 @@ open class SSWampSession: SSWampTransportDelegate {
             }
 
         case let message as AuthenticateSSWampMessage:
-            print(message)
+            ()
             return
         case let message as PublishSSWampMessage:
-            print(message)
+            ()
             return
         case let message as UnsubscribeSSWampMessage:
-            print(message)
+            ()
             return
         case let message as SubscribeSSWampMessage:
-            print(message)
+            ()
             return
 
         case let message as YieldSSWampMessage:
-            print(message)
+            ()
             return
         case let message as UnregisterSSWampMessage:
-            print(message)
+            ()
             return
         case let message as RegisterSSWampMessage:
-            print(message)
+            ()
             return
         case let message as InvocationSSWampMessage:
             if let registration = self.registers[message.registration] {
@@ -476,10 +476,10 @@ open class SSWampSession: SSWampTransportDelegate {
             // send YieldSSWampMessage
             return
         case let message as CallSSWampMessage:
-            print(message)
+            ()
             return
         case let message as HelloSSWampMessage:
-            print(message)
+            ()
             return
         default:
             print("message default fallback")

@@ -45,6 +45,7 @@ class SubmitedBetTableViewCell: UITableViewCell {
     var betHistoryEntry: BetHistoryEntry?
 
     var cashoutAction: (() -> Void)?
+    var infoAction: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -63,6 +64,9 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.possibleWinningsTitleLabel.text = "Possible Winnings"
 
         self.cashoutLogoImageView.image = UIImage(systemName: "info.circle")
+        let logoGesture = UITapGestureRecognizer(target: self, action: #selector(self.showPopover))
+        self.cashoutLogoImageView.addGestureRecognizer(logoGesture)
+        self.cashoutLogoImageView.isUserInteractionEnabled = true
 
         self.cashoutTitleLabel.text = localized("string_cashout_available")
         self.cashoutTitleLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -131,15 +135,11 @@ class SubmitedBetTableViewCell: UITableViewCell {
         }
 
         self.cashoutStackView.backgroundColor = UIColor.App.secondaryBackground
-
         self.cashoutView.backgroundColor = UIColor.App.secondaryBackground
-
         self.cashoutLogoImageView.backgroundColor = .clear
-
         self.cashoutTitleLabel.textColor = UIColor.App.headingSecondary
-
         self.cashoutValueLabel.textColor = UIColor.App.headingMain
-
+        self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
         self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
 
     }
@@ -173,10 +173,6 @@ class SubmitedBetTableViewCell: UITableViewCell {
 
         self.stackView.removeAllArrangedSubviews()
 
-//        if (betHistoryEntry.selections ?? []).count == 1 {
-//            self.oddBaseView.isHidden = true
-//        }
-
         for selection in betHistoryEntry.selections ?? [] {
             let submitedBetSelectionView = SubmitedBetSelectionView(betHistoryEntrySelection: selection)
             self.stackView.addArrangedSubview(submitedBetSelectionView)
@@ -187,14 +183,18 @@ class SubmitedBetTableViewCell: UITableViewCell {
 
     }
 
-    func setupCashout(cashout: String) {
-        self.cashoutValueLabel.text = cashout
+    func setupCashout(cashout: EveryMatrix.Cashout) {
+        guard let cashoutValue = cashout.value else {return}
+        self.cashoutValueLabel.text = "\(cashoutValue)"
         self.cashoutView.isHidden = false
     }
 
-    @IBAction func cashoutButtonAction(_ sender: Any) {
-        self.cashoutAction?()
+    @objc private func showPopover(sender: UITapGestureRecognizer) {
+        self.infoAction?()
     }
 
+    @IBAction private func cashoutButtonAction(_ sender: Any) {
+        self.cashoutAction?()
+    }
 
 }

@@ -12,6 +12,9 @@ import OrderedCollections
 class SubmitedBetslipViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet private var activityIndicatorBaseView: UIView!
+    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+
 
     private var cancellables = Set<AnyCancellable>()
     private var betHistoryEntries: [BetHistoryEntry] = []
@@ -42,6 +45,10 @@ class SubmitedBetslipViewController: UIViewController {
         
         self.requestHistory()
         self.setupWithTheme()
+
+        self.activityIndicatorBaseView.isHidden = true
+        self.view.bringSubviewToFront(self.activityIndicatorBaseView)
+
     }
 
 
@@ -79,7 +86,6 @@ class SubmitedBetslipViewController: UIViewController {
                 for bet in self.betHistoryEntries {
                     self.requestCashout(betHistoryEntry: bet)
                 }
-                print("BETS: \(self.betHistoryEntries)")
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -96,7 +102,7 @@ class SubmitedBetslipViewController: UIViewController {
 
         TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
@@ -114,60 +120,82 @@ class SubmitedBetslipViewController: UIViewController {
 
                 case .updatedContent(let aggregatorUpdates):
                     print("MyBets cashoutPublisher updatedContent")
-                    //self?.updatePopularAggregatorProcessor(aggregator: aggregatorUpdates)
+                    self?.updateCashoutAggregatorProcessor(aggregator: aggregatorUpdates)
+
+                    print("UPDATE CASHOUT: \(Env.everyMatrixStorage.cashoutsPublisher.values)")
                 case .disconnect:
                     print("My Games cashoutPublisher disconnect")
                 }
             })
             .store(in: &cancellables)
+
     }
 
     private func setupCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .cashouts,
                                                  shouldClear: true)
-        let cashouts = Env.everyMatrixStorage.cashouts
-        self.cashouts = cashouts
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+
+    }
+
+    private func updateCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
     }
 
-    func submitCashout(betId: String) {
-        let route = TSRouter.cashoutBet(language: "en", betId: betId)
+    func submitCashout(betCashout: EveryMatrix.Cashout) {
 
-        let request = TSManager.shared
-            .getModel(router: route, decodingType: CashoutSubmission.self)
-            .sink(receiveCompletion: { completion in
+        guard let betCashoutValue = betCashout.value else {
+            return
+        }
+        let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"), message: localized("string_return_money") + "€\(betCashoutValue)", preferredStyle: UIAlertController.Style.alert)
 
-            }, receiveValue: { value in
-                print(value)
-                if value.cashoutSucceed {
-                    self.showCashoutAlert(success: true)
-                }
-                else {
-                    self.showCashoutAlert(success: false)
-                }
-            })
-            .store(in: &cancellables)
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { _ in
+            self.activityIndicatorBaseView.isHidden = false
+
+            let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
+
+            // TODO: Code Review - se faz store não precisa guardar a variavel, muito menos numa variavel local que é desalocada no fim da func
+            let request = TSManager.shared
+                .getModel(router: route, decodingType: CashoutSubmission.self)
+                .sink(receiveCompletion: { _ in
+
+                }, receiveValue: { value in
+                    print(value)
+                    if value.cashoutSucceed {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            self.requestHistory()
+                            self.activityIndicatorBaseView.isHidden = true
+
+                        }
+                    }
+                    else {
+                        DispatchQueue.main.async {
+                            self.activityIndicatorBaseView.isHidden = true
+                        }
+                    }
+                })
+                .store(in: &self.cancellables)
+        }))
+
+        submitCashoutAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        present(submitCashoutAlert, animated: true, completion: nil)
 
     }
 
-    func showCashoutAlert(success: Bool) {
-        DispatchQueue.main.async {
-            if success {
-                let cashoutAlert = UIAlertController(title: "Cashout", message: "Cashout Succesfull!", preferredStyle: UIAlertController.Style.alert)
-                cashoutAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                self.present(cashoutAlert, animated: true, completion: {
-                    self.requestHistory()
-                    print("CASHOUT COMPLETE!")
-                })
-            }
-            else {
-                let cashoutAlert = UIAlertController(title: "Cashout", message: "Cashout Failed. Please try again in some time.", preferredStyle: UIAlertController.Style.alert)
-                cashoutAlert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-                self.present(cashoutAlert, animated: true, completion: nil)
-            }
-        }
+    func showCashoutInfo() {
+        let infoCashoutAlert = UIAlertController(title: localized("string_cashout"), message: localized("string_cashout_info"), preferredStyle: UIAlertController.Style.alert)
+
+        infoCashoutAlert.addAction(UIAlertAction(title: "OK", style: .default))
+
+        present(infoCashoutAlert, animated: true, completion: nil)
+
     }
 
 }
@@ -192,10 +220,16 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
         }
 
         cell.configureWithBetHistoryEntry(entry)
-        if let betCashout = self.cashouts[entry.betId] {
-            cell.setupCashout(cashout: "€\(betCashout.value)")
+
+        let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
+
+        if let betCashout = cashoutsPublisher[entry.betId].value {
+            cell.setupCashout(cashout: betCashout.value)
             cell.cashoutAction = {
-                self.submitCashout(betId: betCashout.id)
+                self.submitCashout(betCashout: betCashout.value)
+            }
+            cell.infoAction = {
+                self.showCashoutInfo()
             }
         }
         return cell

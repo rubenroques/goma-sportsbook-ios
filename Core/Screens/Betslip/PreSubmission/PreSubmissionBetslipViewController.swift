@@ -737,7 +737,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isLoading = true
 
         if self.listTypePublisher.value == .simple {
+<<<<<<< HEAD
            
+=======
+
+>>>>>>> develop
             self.numberOfBets = self.simpleBetsBettingValues.value.count
             Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
                 .receive(on: DispatchQueue.main)
@@ -747,17 +751,17 @@ class PreSubmissionBetslipViewController: UIViewController {
                         print(error)
                     default: ()
                     }
-                    //
                     self.isLoading = false
-                } receiveValue: { betPlacedDetails in
-                   
-                    
-                    self.betPlacedAction?(betPlacedDetails)
+                } receiveValue: { betPlacedDetailsArray in
+                    for betPlacedDetails in betPlacedDetailsArray {
+                        for bet in betPlacedDetails.tickets {
+                            self.totalBetOdds += bet.value
+                        }
+                    }
+                    self.betPlacedAction?(betPlacedDetailsArray)
+
                 }
                 .store(in: &cancellables)
-            
-        
-            
 
         }
         else if self.listTypePublisher.value == .multiple {

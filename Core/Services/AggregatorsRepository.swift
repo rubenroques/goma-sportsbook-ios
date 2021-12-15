@@ -17,6 +17,7 @@ enum AggregatorListType {
     case favoriteMatchEvents
     case favoriteCompetitionEvents
     case cashouts
+    case matchDetails
 }
 
 class AggregatorsRepository {
@@ -33,6 +34,8 @@ class AggregatorsRepository {
     var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
 
     var bettingOutcomesForMarket: [String: Set<String>] = [:]
+
+    var cashoutsPublisher: [String: CurrentValueSubject<EveryMatrix.Cashout, Never>] = [:]
 
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
@@ -144,6 +147,7 @@ class AggregatorsRepository {
 
             case .cashout(let cashout):
                 self.cashouts[cashout.id] = cashout
+                cashoutsPublisher[cashout.id] = CurrentValueSubject<EveryMatrix.Cashout, Never>.init(cashout)
                 
             case .event:
                 () // print("Events aren't processed")
@@ -177,6 +181,36 @@ class AggregatorsRepository {
                     let market = marketPublisher.value
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
+                }
+            case .cashoutUpdate(let id, let value, let stake):
+                if let cashoutsPublisher = cashoutsPublisher[id] {
+                    let cashout = cashoutsPublisher.value
+                    let updatedCashout = cashout.cashoutUpdated(value: value, stake: stake)
+                    cashoutsPublisher.send(updatedCashout)
+                }
+            case .matchInfo(let id, let paramFloat1, let paramFloat2, let paramEventPartName1):
+                for matchInfoForMatch in matchesInfoForMatch {
+                    for matchInfoId in matchInfoForMatch.value {
+                        if let matchInfo = matchesInfo[id] {
+                            matchesInfo[id] = matchInfo.matchInfoUpdated(paramFloat1: paramFloat1,
+                                                                         paramFloat2: paramFloat2,
+                                                                         paramEventPartName1: paramEventPartName1)
+                        }
+                    }
+                }
+            case .fullMatchInfoUpdate(let matchInfo):
+                matchesInfo[matchInfo.id] = matchInfo
+
+                if let matchId = matchInfo.matchId {
+                    if var matchInfoForIterationMatch = matchesInfoForMatch[matchId] {
+                        matchInfoForIterationMatch.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = matchInfoForIterationMatch
+                    }
+                    else {
+                        var newSet = Set<String>.init()
+                        newSet.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = newSet
+                    }
                 }
             case .unknown:
                 print("uknown")
@@ -247,7 +281,9 @@ class AggregatorsRepository {
                                               nameDigit1: rawOutcome.paramFloat1,
                                               nameDigit2: rawOutcome.paramFloat2,
                                               nameDigit3: rawOutcome.paramFloat3,
+                                              paramBoolean1: rawOutcome.paramBoolean1,
                                               marketName: rawMarket.shortName ?? "",
+                                              marketId: rawMarket.id,
                                               bettingOffer: bettingOffer)
                         outcomes.append(outcome)
                     }
@@ -262,6 +298,9 @@ class AggregatorsRepository {
                 let market = Market(id: rawMarket.id,
                                     typeId: rawMarket.bettingTypeId ?? "",
                                     name: rawMarket.shortName ?? "",
+                                    nameDigit1: rawMarket.paramFloat1,
+                                    nameDigit2: rawMarket.paramFloat2,
+                                    nameDigit3: rawMarket.paramFloat3,
                                     outcomes: sortedOutcomes)
                 matchMarkets.append(market)
             }
@@ -340,6 +379,7 @@ struct OddOutcomesSortingHelper {
         case "home": return 10
         case "draw": return 20
         case "none": return 21
+        case "": return 22
         case "away": return 30
 
         case "home_draw": return 10
@@ -352,9 +392,50 @@ struct OddOutcomesSortingHelper {
         case "odd": return 10
         case "even": return 20
 
+        case "exact": return 10
+        case "range": return 20
+        case "more_than": return 30
+
+        case "in_90_minutes": return 10
+        case "on_penalties": return 30
+
+        case "home-true": return 10
+        case "home-false": return 15
+        case "-true": return 20
+        case "-false": return 25
+        case "away-true": return 30
+        case "away-false": return 35
+
+        case "home_draw-true": return 10
+        case "home_draw-false": return 15
+        case "home_away-true": return 20
+        case "home_away-false": return 25
+        case "away_draw-true": return 30
+        case "away_draw-false": return 35
+
+        case "over-true": return 10
+        case "over-false": return 15
+        case "under-true": return 20
+        case "under-false": return 25
+
+        case "odd-true": return 10
+        case "odd-false": return 15
+        case "even-true": return 20
+        case "even-false": return 25
+
+        case "yes-true": return 10
+        case "yes-false": return 15
+        case "no-true": return 20
+        case "no-false": return 25
+
+        case "true": return 10
+        case "false": return 20
+
         default:
             return 1000
         }
     }
 
 }
+
+

@@ -34,6 +34,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     var totalOddsValue : String
     var possibleEarningsValue : String
     var numberOfbets : Int
+
     var willDismissAction: (() -> ())?
 
     init(betPlacedDetailsArray: [BetPlacedDetails], totalOddsValue : String ,  possibleEarningsValue  : String, numberOfBets : Int ) {

@@ -21,20 +21,14 @@ class MatchDetailsViewModel: NSObject {
     private var store: MatchDetailsAggregatorRepository
 
     private var marketTypeSelectedOptionIndex: Int?
-//
-//    private var marketsForGroup: [Market] = [] {
-//        didSet {
-//            self.isLoadingData.send(marketsForGroup.isEmpty)
-//        }
-//    }
 
-    private var mergedMarketGroups: [MergedMarketGroup] = [] {
+    private var expandedMarketGroupIds: Set<String> = []
+
+    private var marketGroupOrganizers: [MarketGroupOrganizer] = [] {
         didSet {
-            self.isLoadingData.send(mergedMarketGroups.isEmpty)
+            self.isLoadingData.send(marketGroupOrganizers.isEmpty)
         }
     }
-
-
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -59,7 +53,7 @@ class MatchDetailsViewModel: NSObject {
                         defaultFound = true
                         break
                     }
-                    index = index + 1
+                    index += 1
                 }
                 return defaultFound ? index : 0
             }
@@ -93,50 +87,82 @@ class MatchDetailsViewModel: NSObject {
             return
         }
 
-        //self.marketsForGroup = store.marketsForGroup(withGroupKey: groupKey)
-
-        self.mergedMarketGroups = store.marketsForGroup(withGroupKey: groupKey)
+        self.marketGroupOrganizers = store.marketGroupOrganizers(withGroupKey: groupKey)
 
         self.marketGroupDataChanged?()
     }
 }
 
-extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate  {
+extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.mergedMarketGroups.count
+        return self.marketGroupOrganizers.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         guard
-            let item = self.mergedMarketGroups[safe: indexPath.row]
+            let marketGroupOrganizer = self.marketGroupOrganizers[safe: indexPath.row]
         else {
             return UITableViewCell()
         }
 
-        if item.outcomes.keys.count == 3 {
+        if marketGroupOrganizer.numberOfColumns == 3 {
             guard
                 let cell = tableView.dequeueCellType(ThreeAwayMarketDetailTableViewCell.self)
             else {
                 return UITableViewCell()
             }
             cell.match = self.match
-            cell.configure(withMergedMarketGroup: item)
+            cell.didExpandCellAction = { marketGroupOrganizerId in
+                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
+                self.marketGroupDataChanged?()
+            }
+            cell.didColapseCellAction = { marketGroupOrganizerId in
+                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
+                self.marketGroupDataChanged?()
+            }
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
             return cell
         }
-        else if item.outcomes.keys.count == 2 {
+        else if marketGroupOrganizer.numberOfColumns == 2 {
             guard
                 let cell = tableView.dequeueCellType(OverUnderMarketDetailTableViewCell.self)
             else {
                 return UITableViewCell()
             }
             cell.match = self.match
-            cell.configure(withMergedMarketGroup: item)
+            cell.didExpandCellAction = { marketGroupOrganizerId in
+                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
+                self.marketGroupDataChanged?()
+            }
+            cell.didColapseCellAction = { marketGroupOrganizerId in
+                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
+                self.marketGroupDataChanged?()
+            }
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
+            return cell
+        }
+        else if marketGroupOrganizer.numberOfColumns == 1 {
+            guard
+                let cell = tableView.dequeueCellType(OverUnderMarketDetailTableViewCell.self)
+            else {
+                return UITableViewCell()
+            }
+            cell.match = self.match
+            cell.didExpandCellAction = { marketGroupOrganizerId in
+                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
+                self.marketGroupDataChanged?()
+            }
+            cell.didColapseCellAction = { marketGroupOrganizerId in
+                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
+                self.marketGroupDataChanged?()
+            }
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
             return cell
         }
         else {
@@ -146,8 +172,10 @@ extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate  {
                 return UITableViewCell()
             }
             cell.match = self.match
+            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
             return cell
         }
+
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -158,7 +186,6 @@ extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate  {
         return 120
     }
 }
-
 
 extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDelegate {
 

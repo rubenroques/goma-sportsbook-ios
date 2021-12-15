@@ -1,5 +1,5 @@
 //
-//  SportsViewModel.swift
+//  PreLiveEventsViewModel.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 10/10/2021.
@@ -9,7 +9,8 @@ import UIKit
 import Combine
 import OrderedCollections
 // swiftlint:disable type_body_length
-class SportsViewModel: NSObject {
+
+class PreLiveEventsViewModel: NSObject {
 
     private var banners: [EveryMatrix.BannerInfo] = []
     private var bannersViewModel: BannerLineCellViewModel?
@@ -581,18 +582,21 @@ class SportsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("SportsViewModel popularMatchesPublisher connect")
+                    print("PreLiveEventsViewModel popularMatchesPublisher connect")
                     self?.popularMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("SportsViewModel popularMatchesPublisher initialContent")
+                    
+                    print("PreLiveEventsViewModel popularMatchesPublisher initialContent")
                     self?.setupPopularAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
-                    print("SportsViewModel popularMatchesPublisher updatedContent")
+                    print("PreLiveEventsViewModel popularMatchesPublisher updatedContent")
                     self?.updatePopularAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
-                    print("SportsViewModel popularMatchesPublisher disconnect")
+                    print("PreLiveEventsViewModel popularMatchesPublisher disconnect")
                 }
             })
+
+
     }
 
     private func fetchTodayMatchesNextPage() {
@@ -629,15 +633,15 @@ class SportsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("SportsViewModel todayMatchesPublisher connect")
+                    print("PreLiveEventsViewModel todayMatchesPublisher connect")
                     self?.todayMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("SportsViewModel todayMatchesPublisher initialContent")
+                    print("PreLiveEventsViewModel todayMatchesPublisher initialContent")
                     self?.setupTodayAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateTodayAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
-                    print("SportsViewModel todayMatchesPublisher disconnect")
+                    print("PreLiveEventsViewModel todayMatchesPublisher disconnect")
                 }
 
             })
@@ -770,16 +774,16 @@ class SportsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("SportsViewModel competitionsMatchesPublisher connect")
+                    print("PreLiveEventsViewModel competitionsMatchesPublisher connect")
                     self?.competitionsMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("SportsViewModel competitionsMatchesPublisher initialContent")
+                    print("PreLiveEventsViewModel competitionsMatchesPublisher initialContent")
                     self?.setupCompetitionsAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateCompetitionsAggregatorProcessor(aggregator: aggregatorUpdates)
-                    print("SportsViewModel competitionsMatchesPublisher updatedContent")
+                    print("PreLiveEventsViewModel competitionsMatchesPublisher updatedContent")
                 case .disconnect:
-                    print("SportsViewModel competitionsMatchesPublisher disconnect")
+                    print("PreLiveEventsViewModel competitionsMatchesPublisher disconnect")
                 }
             })
     }
@@ -808,16 +812,16 @@ class SportsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("SportsViewModel favoriteCompetitionsMatchesPublisher connect")
+                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher connect")
                     self?.favoriteCompetitionsMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("SportsViewModel favoriteCompetitionsMatchesPublisher initialContent")
+                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher initialContent")
                     self?.setupFavoriteCompetitionsAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateFavoriteCompetitionsAggregatorProcessor(aggregator: aggregatorUpdates)
-                    print("SportsViewModel favoriteCompetitionsMatchesPublisher updatedContent")
+                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher updatedContent")
                 case .disconnect:
-                    print("SportsViewModel favoriteCompetitionsMatchesPublisher disconnect")
+                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher disconnect")
                 }
             })
     }
@@ -847,12 +851,12 @@ class SportsViewModel: NSObject {
                 case .connect(let publisherIdentifiable):
                     self?.bannersInfoRegister = publisherIdentifiable
                 case .initialContent(let responde):
-                    print("SportsViewModel bannersInfoPublisher initialContent")
+                    print("PreLiveEventsViewModel bannersInfoPublisher initialContent")
                     self?.banners = responde.records ?? []
                 case .updatedContent:
-                    print("SportsViewModel bannersInfoPublisher updatedContent")
+                    print("PreLiveEventsViewModel bannersInfoPublisher updatedContent")
                 case .disconnect:
-                    print("SportsViewModel bannersInfoPublisher disconnect")
+                    print("PreLiveEventsViewModel bannersInfoPublisher disconnect")
                 }
                 self?.updateContentList()
             })
@@ -887,15 +891,15 @@ class SportsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("SportsViewModel favoriteMatchesPublisher connect")
+                    print("PreLiveEventsViewModel favoriteMatchesPublisher connect")
                     self?.favoriteMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("SportsViewModel favoriteMatchesPublisher initialContent")
+                    print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
                     self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
-                    print("SportsViewModel favoriteMatchesPublisher disconnect")
+                    print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
                 }
 
             })
@@ -904,7 +908,7 @@ class SportsViewModel: NSObject {
 
 }
 
-extension SportsViewModel {
+extension PreLiveEventsViewModel {
 //
 //    var numberOfSections: Int {
 //        return 4
@@ -1003,7 +1007,7 @@ extension SportsViewModel {
 
 }
 
-extension SportsViewModel: UITableViewDataSource, UITableViewDelegate {
+extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         switch self.matchListTypePublisher.value {

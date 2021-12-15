@@ -61,6 +61,9 @@ struct Market {
     var id: String
     var typeId: String
     var name: String
+    var nameDigit1: Double?
+    var nameDigit2: Double?
+    var nameDigit3: Double?
     var outcomes: [Outcome]
 }
 
@@ -72,8 +75,28 @@ struct Outcome {
     var nameDigit1: Double?
     var nameDigit2: Double?
     var nameDigit3: Double?
+    var paramBoolean1: Bool?
     var marketName: String?
+    var marketId: String?
+    var marketDigit1: Double?
     var bettingOffer: BettingOffer
+}
+
+extension Outcome {
+    var headerCodeName: String {
+
+        if self.nameDigit1 == nil && self.nameDigit2 == nil && self.nameDigit3 == nil {
+            if self.codeName.isNotEmpty, let paramBoolean1 = self.paramBoolean1 {
+                return "\(self.codeName)-\(paramBoolean1)"
+            }
+            else if let paramBoolean1 = self.paramBoolean1 {
+                return "\(paramBoolean1)"
+            }
+        }
+
+        return self.codeName
+
+    }
 }
 
 struct BettingOffer {
@@ -96,5 +119,3 @@ struct BannerInfo {
     let imageURL: String?
     let priorityOrder: Int?
 }
-
-

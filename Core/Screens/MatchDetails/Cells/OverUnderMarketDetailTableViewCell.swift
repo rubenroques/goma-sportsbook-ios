@@ -20,11 +20,32 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var leftColumnsStackView: UIStackView!
     @IBOutlet private var rightColumnsStackView: UIStackView!
 
+    @IBOutlet private var expandBaseView: UIView!
+    @IBOutlet private var expandLabel: UILabel!
+    @IBOutlet private var expandArrowImageView: UIImageView!
+
     var match: Match?
     var market: Market?
-    var mergedMarketGroup: MergedMarketGroup?
+    var marketGroupOrganizer: MarketGroupOrganizer?
 
     private let lineHeight: CGFloat = 56
+
+    private let collapsedMaxNumberOfLines = 3
+    var isExpanded = false {
+        didSet {
+            if isExpanded {
+                self.expandArrowImageView.image = UIImage(named: "arrow_up_icon")
+                self.expandLabel.text = "See less"
+            }
+            else {
+                self.expandArrowImageView.image = UIImage(named: "arrow_down_icon")
+                self.expandLabel.text = "See all"
+            }
+        }
+    }
+
+    var didExpandCellAction: ((String) -> Void)?
+    var didColapseCellAction: ((String) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,6 +55,8 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.titleLabel.text = "Market"
         self.titleLabel.font = AppFont.with(type: .bold, size: 14)
 
+        let expandTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapExpandBaseView))
+        self.expandBaseView.addGestureRecognizer(expandTapGesture)
 
         self.setupWithTheme()
     }
@@ -43,10 +66,10 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
 
         self.match = nil
         self.market = nil
-        self.mergedMarketGroup = nil
+        self.marketGroupOrganizer = nil
 
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
+        self.expandBaseView.isHidden = false
+        self.isExpanded = false
 
         self.leftColumnsStackView.removeAllArrangedSubviews()
         self.rightColumnsStackView.removeAllArrangedSubviews()
@@ -61,49 +84,75 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
+
         self.containerView.backgroundColor = UIColor.App.secondaryBackground
+        self.expandBaseView.backgroundColor = UIColor.App.secondaryBackground
+
+        self.expandLabel.textColor = UIColor.App.headingMain
         self.titleLabel.textColor = UIColor.App.headingMain
     }
 
-    func configure(withMergedMarketGroup mergedMarketGroup: MergedMarketGroup) {
-        self.mergedMarketGroup = mergedMarketGroup
+    func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer, isExpanded: Bool) {
 
-        self.titleLabel.text = mergedMarketGroup.name
+        self.marketGroupOrganizer = marketGroupOrganizer
+        self.isExpanded = isExpanded
+        self.titleLabel.text = marketGroupOrganizer.marketName
 
-        var orderedKeys = Array(mergedMarketGroup.outcomes.keys)
-        orderedKeys = orderedKeys.sorted(by: { OddOutcomesSortingHelper.sortValueForOutcome($0) < OddOutcomesSortingHelper.sortValueForOutcome($1) } )
+        if marketGroupOrganizer.numberOfLines <= collapsedMaxNumberOfLines {
+            self.expandBaseView.isHidden = true
+        }
+        
+        for line in 0 ..< marketGroupOrganizer.numberOfLines {
 
-        if orderedKeys.count == 2 {
-            
-            var sortedLeftOutcome = mergedMarketGroup.outcomes[orderedKeys[0]] ?? []
-            var sortedRightOutcome = mergedMarketGroup.outcomes[orderedKeys[1]] ?? []
-
-            sortedLeftOutcome = sortedLeftOutcome.sorted(by: {
-                let leftV = ($0.nameDigit1 ?? 0.0) + ($0.nameDigit2 ?? 0.0) + ($0.nameDigit3 ?? 0.0)
-                let rightV = ($1.nameDigit1 ?? 0.0) + ($1.nameDigit2 ?? 0.0) + ($1.nameDigit3 ?? 0.0)
-                return leftV < rightV
-            })
-            sortedRightOutcome = sortedRightOutcome.sorted(by: {
-                let leftV = ($0.nameDigit1 ?? 0.0) + ($0.nameDigit2 ?? 0.0) + ($0.nameDigit3 ?? 0.0)
-                let rightV = ($1.nameDigit1 ?? 0.0) + ($1.nameDigit2 ?? 0.0) + ($1.nameDigit3 ?? 0.0)
-                return leftV < rightV
-            })
-
-            for outcome in sortedLeftOutcome {
-                let outcomeSelectionButtonView = OutcomeSelectionButtonView()
-                outcomeSelectionButtonView.match = self.match
-                outcomeSelectionButtonView.configureWith(outcome: outcome)
-                leftColumnsStackView.addArrangedSubview(outcomeSelectionButtonView)
+            if !isExpanded && line >= collapsedMaxNumberOfLines {
+                break
             }
 
-            for outcome in sortedRightOutcome {
-                let outcomeSelectionButtonView = OutcomeSelectionButtonView()
-                outcomeSelectionButtonView.match = self.match
-                outcomeSelectionButtonView.configureWith(outcome: outcome)
-                rightColumnsStackView.addArrangedSubview(outcomeSelectionButtonView)
+            for column in 0 ..< marketGroupOrganizer.numberOfColumns {
+
+                let outcome = marketGroupOrganizer.outcomeFor(column: column, line: line)
+
+                var columnStackView: UIStackView?
+                switch column {
+                case 0:
+                    columnStackView = leftColumnsStackView
+                case 1:
+                    columnStackView = rightColumnsStackView
+                default: ()
+                }
+
+                if let stackView = columnStackView {
+                    if let outcomeValue = outcome {
+                        let outcomeSelectionButtonView = OutcomeSelectionButtonView()
+                        outcomeSelectionButtonView.match = self.match
+                        outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
+                        stackView.addArrangedSubview(outcomeSelectionButtonView)
+                    }
+                    else {
+                        let clearView = UIView()
+                        clearView.backgroundColor = .clear
+                        clearView.translatesAutoresizingMaskIntoConstraints = false
+
+                        stackView.addArrangedSubview(clearView)
+                    }
+                }
             }
         }
+    }
 
+    @objc func didTapExpandBaseView() {
+        guard
+            let marketGroupOrganizerId = self.marketGroupOrganizer?.marketId
+        else {
+            return
+        }
+
+        if self.isExpanded {
+            self.didColapseCellAction?(marketGroupOrganizerId)
+        }
+        else {
+            self.didExpandCellAction?(marketGroupOrganizerId)
+        }
     }
 
 }
