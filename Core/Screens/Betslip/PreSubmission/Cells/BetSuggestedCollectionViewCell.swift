@@ -11,8 +11,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var betsStackView: UIStackView!
     @IBOutlet weak var competitionTitleLabel: UILabel!
-   
-   
+
     @IBOutlet weak var informationBetView: UIView!
     
     @IBOutlet weak var numberOfSelectionsLabel: UILabel!
@@ -107,7 +106,6 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                 gameSuggestedView.setMatchFlag(isoCode: countryIsoCode)
             }
 
-
             betsStackView.addArrangedSubview(gameSuggestedView)
         }
         
@@ -122,7 +120,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
      }
 
-    @IBAction func betNowAction() {
+    @IBAction private func betNowAction() {
 
         var foundOutcome = false
 
@@ -153,7 +151,6 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                                               marketDescription: marketDescription,
                                                               outcomeDescription: outcomeDescription)
 
-
                             Env.betslipManager.addBettingTicket(bettingTicket)
                             foundOutcome = true
                         }
@@ -173,7 +170,6 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                                   matchDescription: matchDescription,
                                                   marketDescription: marketDescription,
                                                   outcomeDescription: outcomeDescription)
-
 
                 Env.betslipManager.addBettingTicket(bettingTicket)
                 foundOutcome = true
