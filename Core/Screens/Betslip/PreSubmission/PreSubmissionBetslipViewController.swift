@@ -1111,11 +1111,15 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let bottomBarHeigth = 60.0
+        var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
+        if let a = self.suggestedBetsArray[indexPath.row] {
 
-        return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(betInfo.count) * 71)
+            size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(a.count) * 60)
+        }
+        return size
         
         }
-
+ 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
    
         self.betSuggestedCollectionView.reloadData()
