@@ -842,11 +842,16 @@ class PreSubmissionBetslipViewController: UIViewController {
     @objc func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.tableView.contentInset.bottom = (keyboardSize.height - placeBetBaseView.frame.size.height)
+
+            if view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
         }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
         self.tableView.contentInset.bottom = 12
+        self.view.frame.origin.y = 0
     }
 
     @IBAction private func didTapPlusOneButton() {
