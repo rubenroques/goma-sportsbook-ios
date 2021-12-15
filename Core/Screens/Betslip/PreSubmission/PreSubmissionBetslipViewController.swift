@@ -745,16 +745,14 @@ class PreSubmissionBetslipViewController: UIViewController {
                         print(error)
                     default: ()
                     }
-                    //
                     self.isLoading = false
-                } receiveValue: { betPlacedDetails in
-                    for betPlaced in betPlacedDetails {
-                        for bet in betPlaced.tickets {
+                } receiveValue: { betPlacedDetailsArray in
+                    for betPlacedDetails in betPlacedDetailsArray {
+                        for bet in betPlacedDetails.tickets {
                             self.totalBetOdds += bet.value
                         }
                     }
-                    
-                    self.betPlacedAction?(betPlacedDetails)
+                    self.betPlacedAction?(betPlacedDetailsArray)
                 }
                 .store(in: &cancellables)
 

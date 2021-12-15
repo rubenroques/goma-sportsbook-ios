@@ -76,17 +76,8 @@ class BannerCellViewModel {
         matchPublisher
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
-            .sink { completion in
-
-                switch completion {
-                case .failure(let error):
-                    print("ERROR ODD: \(error)")
-                case .finished:
-                    print("Finished")
-                }
-
+            .sink { _ in
             } receiveValue: { value in
-                print("MATCH BANNER CELL: \(value.content)")
                 self.processOddAggregator(value)
             }
         .store(in: &cancellables)
@@ -203,6 +194,7 @@ class BannerCellViewModel {
                                               nameDigit1: rawOutcome.paramFloat1,
                                               nameDigit2: rawOutcome.paramFloat2,
                                               nameDigit3: rawOutcome.paramFloat3,
+                                              paramBoolean1: rawOutcome.paramBoolean1,
                                               marketName: rawMarket.shortName ?? "",
                                               bettingOffer: bettingOffer)
                         outcomes.append(outcome)
@@ -218,6 +210,9 @@ class BannerCellViewModel {
             let market = Market(id: rawMarket.id,
                                 typeId: rawMarket.bettingTypeId ?? "",
                                 name: rawMarket.shortName ?? "",
+                                nameDigit1: rawMarket.paramFloat1,
+                                nameDigit2: rawMarket.paramFloat2,
+                                nameDigit3: rawMarket.paramFloat3,
                                 outcomes: sortedOutcomes)
             matchMarkets.append(market)
             }
