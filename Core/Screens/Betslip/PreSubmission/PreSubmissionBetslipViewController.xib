@@ -140,13 +140,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Add your first bet." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ldl-f4-u9t">
-                            <rect key="frame" x="50" y="403" width="314" height="24"/>
+                            <rect key="frame" x="50" y="399" width="314" height="28"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="24"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Click on the odds to add bets to your betslip." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DFg-gs-vfx">
-                            <rect key="frame" x="50" y="451" width="314" height="34"/>
+                            <rect key="frame" x="50" y="451" width="314" height="40"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
@@ -219,13 +219,13 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="System options" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Apo-7o-H6n">
-                                                    <rect key="frame" x="10" y="8" width="314" height="16"/>
+                                                    <rect key="frame" x="10" y="8" width="314" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingDisabledColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1289,32€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s4E-3e-pc5">
-                                                    <rect key="frame" x="10" y="27" width="314" height="16"/>
+                                                    <rect key="frame" x="10" y="24" width="314" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingMainColor"/>
                                                     <nil key="highlightedColor"/>
@@ -269,25 +269,25 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="52"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Possible Winnings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ENk-hS-Y0r">
-                                                    <rect key="frame" x="22" y="13" width="132.5" height="16"/>
+                                                    <rect key="frame" x="22" y="13" width="131" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingDisabledColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Bets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zbk-F4-b6x">
-                                                    <rect key="frame" x="22" y="33" width="53.5" height="11"/>
+                                                    <rect key="frame" x="22" y="36" width="53" height="13"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                     <color key="textColor" name="headingDisabledColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="System 1289,32€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ybK-6W-sZt">
-                                                    <rect key="frame" x="163.5" y="13" width="118.5" height="16"/>
+                                                    <rect key="frame" x="162" y="13" width="125" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingMainColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3.89" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kiK-p3-0HP">
-                                                    <rect key="frame" x="84.5" y="33" width="21.5" height="11"/>
+                                                    <rect key="frame" x="84" y="36" width="21.5" height="13"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                     <color key="textColor" name="headingMainColor"/>
                                                     <nil key="highlightedColor"/>
@@ -321,25 +321,25 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="52"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Possible Winnings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WhT-0i-XSz">
-                                                    <rect key="frame" x="22" y="13" width="132.5" height="16"/>
+                                                    <rect key="frame" x="22" y="13" width="131" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingDisabledColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Total Odd" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="N7U-RG-kET">
-                                                    <rect key="frame" x="22" y="33" width="50.5" height="11"/>
+                                                    <rect key="frame" x="22" y="36" width="48" height="13"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                     <color key="textColor" name="headingDisabledColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Multi - 1289,32€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kdY-i1-7RC">
-                                                    <rect key="frame" x="163.5" y="13" width="114" height="16"/>
+                                                    <rect key="frame" x="162" y="13" width="117" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingMainColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3.89" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="11d-8C-qQy">
-                                                    <rect key="frame" x="81.5" y="33" width="21.5" height="11"/>
+                                                    <rect key="frame" x="79" y="36" width="21.5" height="13"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                     <color key="textColor" name="headingMainColor"/>
                                                     <nil key="highlightedColor"/>
@@ -373,19 +373,19 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="52"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Possible Winnings" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="14q-ly-9tO">
-                                                    <rect key="frame" x="22" y="13" width="132.5" height="16"/>
+                                                    <rect key="frame" x="22" y="13" width="131" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingDisabledColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Place Bets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bev-aJ-ykz">
-                                                    <rect key="frame" x="22" y="33" width="53.5" height="11"/>
+                                                    <rect key="frame" x="22" y="36" width="53" height="13"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                     <color key="textColor" name="headingDisabledColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3.89" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jDg-5s-jBE">
-                                                    <rect key="frame" x="84.5" y="33" width="21.5" height="11"/>
+                                                    <rect key="frame" x="84" y="36" width="21.5" height="13"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                                     <color key="textColor" name="headingMainColor"/>
                                                     <nil key="highlightedColor"/>
@@ -398,7 +398,7 @@
                                                     </constraints>
                                                 </view>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Single - 1289,32€" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CIP-ee-wYo">
-                                                    <rect key="frame" x="163" y="13" width="123.5" height="16"/>
+                                                    <rect key="frame" x="161.5" y="13" width="126" height="19"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                                     <color key="textColor" name="headingMainColor"/>
                                                     <nil key="highlightedColor"/>
@@ -452,7 +452,7 @@
                                             <rect key="frame" x="22" y="6" width="96" height="38"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Amount.." textAlignment="right" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="MS2-zN-0UQ">
-                                                    <rect key="frame" x="8" y="11.5" width="80" height="15.5"/>
+                                                    <rect key="frame" x="8" y="10.5" width="80" height="17.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="80" id="y9c-T4-p3B"/>
                                                     </constraints>
@@ -557,7 +557,7 @@
                     <rect key="frame" x="0.0" y="94" width="414" height="32"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1NK-ag-RHY">
-                            <rect key="frame" x="349" y="6" width="55" height="26"/>
+                            <rect key="frame" x="353" y="3" width="51" height="29"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Clear all"/>
@@ -566,7 +566,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Koe-cc-PIx">
-                            <rect key="frame" x="10" y="6" width="54" height="26"/>
+                            <rect key="frame" x="10" y="3" width="52" height="29"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Settings"/>
