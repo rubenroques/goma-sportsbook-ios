@@ -10,7 +10,6 @@ import Combine
 
 class PreSubmissionBetslipViewController: UIViewController {
   
-
     @IBOutlet private weak var topSafeArea: UIView!
     @IBOutlet private weak var bottomSafeArea: UIView!
 
@@ -75,8 +74,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
-    @IBOutlet weak var betSuggestedCollectionView: UICollectionView!
-    @IBOutlet var suggestedBetsActivityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var betSuggestedCollectionView: UICollectionView!
+    @IBOutlet private var suggestedBetsActivityIndicator: UIActivityIndicatorView!
     
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -92,11 +91,10 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
     var betInfo: [[String]] = [["teste 1", "teste 2", "teste 3"], ["a", "b", "c"], ["1", "2", "3"]]
 
-
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
     // System Bets vars
-    var selectedSystemBet: SystemBetType? = nil {
+    var selectedSystemBet: SystemBetType? {
         didSet {
             if let systemBetType = self.selectedSystemBet {
                 self.systemBetTypeLabel.text = systemBetType.name ?? "System bet"
@@ -130,10 +128,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
     var numberOfBets: Int = 1
-    var totalPossibleEarnings : Double = 0.0
-    var totalBetOdds : Double = 0.0
-    
- 
+    var totalPossibleEarnings: Double = 0.0
+    var totalBetOdds: Double = 0.0
+
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -274,8 +271,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
                     self?.requestSystemBetsTypes()
                 }
-                
-               
 
                 if tickets.count == 1 {
                     if self?.betTypeSegmentControl.selectedSegmentIndex == 1 {
@@ -287,7 +282,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
                 }
 
-                if tickets.count > 1 && self?.isSuggestedMultiple == true{
+                if tickets.count > 1 && self?.isSuggestedMultiple == true {
                     self?.betTypeSegmentControl.selectedSegmentIndex = 1
                 }
 
@@ -473,10 +468,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print(completion)
-                //self.isLoading = false
             } receiveValue: { betPlacedDetails in
-                //self.isLoading = false
-                //print("BET PLACED DETAILS: \(betPlacedDetails)")
                 if !betPlacedDetails.isEmpty {
                     let errorMessage = betPlacedDetails[0].response.errorMessage
                     let response = betPlacedDetails[0].response
@@ -493,8 +485,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print(completion)
-                //self.isLoading = false
-            } receiveValue: { betslipPlaceBetResponse in
+                // self.isLoading = false
+            } receiveValue: { _ in
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -650,12 +642,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         return .lightContent
     }
     
-    private func commonInit(){
-        //let flowLayout = UICollectionViewFlowLayout()
-        //flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        //flowLayout.scrollDirection = .horizontal
-       // betSuggestedCollectionView.collectionViewLayout = flowLayout
-        //betSuggestedCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+    private func commonInit() {
+        // let flowLayout = UICollectionViewFlowLayout()
+        // flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        // flowLayout.scrollDirection = .horizontal
+        // betSuggestedCollectionView.collectionViewLayout = flowLayout
+        // betSuggestedCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         betSuggestedCollectionView.showsVerticalScrollIndicator = false
         betSuggestedCollectionView.showsHorizontalScrollIndicator = true
         betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
@@ -720,7 +712,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.maxValueButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
 
         self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
-
 
         self.simpleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.multipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
@@ -793,7 +784,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.showingSystemBetOptionsSelector = true
     }
 
-    @IBAction func didTapSystemBetTypeSelectButton() {
+    @IBAction private func didTapSystemBetTypeSelectButton() {
         self.showingSystemBetOptionsSelector = false
         self.requestSystemBetInfo()
     }
@@ -812,7 +803,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         TSManager.shared.getModel(router: route, decodingType: SystemBetResponse.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { _ in
                 self.systemBetTypeLoadingView.stopAnimating()
             }, receiveValue: { systemBetResponse in
                 self.systemBetOptions = systemBetResponse.systemBets
@@ -1049,7 +1040,6 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
 
 typealias UITableViewDelegateDataSource = UITableViewDelegate & UITableViewDataSource
 
-
 extension PreSubmissionBetslipViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -1082,10 +1072,10 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.gomaSuggestedBetsResponse.count
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
     
@@ -1112,9 +1102,9 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
 
         let bottomBarHeigth = 60.0
         var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
-        if let a = self.suggestedBetsArray[indexPath.row] {
+        if let arrayValues = self.suggestedBetsArray[indexPath.row] {
 
-            size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(a.count) * 60)
+            size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(arrayValues.count) * 60)
         }
         return size
         
@@ -1179,7 +1169,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
                 cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
             }
 
-        } else {
+        }
+        else {
             cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
         }
 
@@ -1248,14 +1239,15 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                 }
             }
 
-            if hasFoundCorrespondingId{
+            if hasFoundCorrespondingId {
                 cell.configureWithBettingTicket(bettingTicket, errorBetting: errorMessage)
             }
             else {
                 cell.configureWithBettingTicket(bettingTicket)
             }
 
-        } else {
+        }
+        else {
             cell.configureWithBettingTicket(bettingTicket)
         }
 
