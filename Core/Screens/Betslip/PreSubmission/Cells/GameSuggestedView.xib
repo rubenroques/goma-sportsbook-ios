@@ -27,20 +27,20 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="356" height="60"/>
+            <rect key="frame" x="0.0" y="0.0" width="406" height="59"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k5a-qi-Rjs">
-                    <rect key="frame" x="0.0" y="0.0" width="356" height="60"/>
+                    <rect key="frame" x="0.0" y="0.0" width="406" height="59"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XqE-hw-rCL">
-                            <rect key="frame" x="41" y="13.5" width="36" height="14"/>
+                            <rect key="frame" x="41" y="13.5" width="357" height="14"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5JP-Vr-V4O">
-                            <rect key="frame" x="44" y="40" width="30.5" height="12"/>
+                            <rect key="frame" x="41" y="35.5" width="357" height="12"/>
                             <fontDescription key="fontDescription" name="Gilroy-Regular" family="Gilroy" pointSize="12"/>
                             <color key="textColor" name="headingSecondaryColor"/>
                             <nil key="highlightedColor"/>
@@ -56,12 +56,14 @@
                     </subviews>
                     <color key="backgroundColor" red="0.19215686274509802" green="0.20784313725490194" blue="0.2627450980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstAttribute="bottom" secondItem="5JP-Vr-V4O" secondAttribute="bottom" constant="8" id="1Yz-ee-EdX"/>
+                        <constraint firstAttribute="trailing" secondItem="XqE-hw-rCL" secondAttribute="trailing" constant="8" id="DnW-5y-0xd"/>
                         <constraint firstItem="XqE-hw-rCL" firstAttribute="centerY" secondItem="rzY-Ay-fqd" secondAttribute="centerY" id="PIy-Jc-EyF"/>
                         <constraint firstItem="rzY-Ay-fqd" firstAttribute="top" secondItem="k5a-qi-Rjs" secondAttribute="top" constant="8" id="SXF-gf-eWW"/>
                         <constraint firstItem="5JP-Vr-V4O" firstAttribute="centerX" secondItem="XqE-hw-rCL" secondAttribute="centerX" id="Xyu-bB-u03"/>
+                        <constraint firstItem="5JP-Vr-V4O" firstAttribute="top" secondItem="XqE-hw-rCL" secondAttribute="bottom" constant="8" id="ZZu-gy-maB"/>
                         <constraint firstItem="rzY-Ay-fqd" firstAttribute="leading" secondItem="k5a-qi-Rjs" secondAttribute="leading" constant="8" id="gYH-Jv-7GY"/>
                         <constraint firstItem="XqE-hw-rCL" firstAttribute="leading" secondItem="rzY-Ay-fqd" secondAttribute="trailing" constant="8" id="gfT-rI-x1l"/>
+                        <constraint firstAttribute="trailing" secondItem="5JP-Vr-V4O" secondAttribute="trailing" constant="8" id="uiW-W2-x77"/>
                     </constraints>
                 </view>
             </subviews>
@@ -74,7 +76,7 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="k5a-qi-Rjs" secondAttribute="trailing" id="uDk-RX-Rqk"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-426.08695652173918" y="10.714285714285714"/>
+            <point key="canvasLocation" x="-389.85507246376812" y="10.379464285714285"/>
         </view>
     </objects>
     <resources>
