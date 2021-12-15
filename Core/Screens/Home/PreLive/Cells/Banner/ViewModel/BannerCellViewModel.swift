@@ -76,17 +76,8 @@ class BannerCellViewModel {
         matchPublisher
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
-            .sink { completion in
-
-                switch completion {
-                case .failure(let error):
-                    print("ERROR ODD: \(error)")
-                case .finished:
-                    print("Finished")
-                }
-
+            .sink { _ in
             } receiveValue: { value in
-                print("MATCH BANNER CELL: \(value.content)")
                 self.processOddAggregator(value)
             }
         .store(in: &cancellables)

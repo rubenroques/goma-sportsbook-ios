@@ -522,7 +522,6 @@ class MatchDetailsAggregatorRepository: NSObject {
 
             if let value = similarMarkets[marketKey] {
 
-
                 guard let firstMarket = value.first else { continue }
 
                 let marketGroupName = similarMarketsNames[marketKey] ?? ""
@@ -540,7 +539,6 @@ class MatchDetailsAggregatorRepository: NSObject {
                         outcomesDictionary[outcomeTypeName] = [outcomeIt]
                     }
                 }
-
 
                 //
                 // Select the correct organizer
@@ -594,7 +592,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                     marketGroupOrganizers.append(marketLinesMarketGroupOrganizer)
                 }
                 else {
-                    //Fall back
+                    // Fall back
                     let columnListedMarketGroupOrganizer = ColumnListedMarketGroupOrganizer(id: firstMarket.id,
                                                                                             name: marketGroupName,
                                                                                             outcomes: outcomesDictionary)
@@ -606,4 +604,3 @@ class MatchDetailsAggregatorRepository: NSObject {
         return marketGroupOrganizers
     }
 }
-

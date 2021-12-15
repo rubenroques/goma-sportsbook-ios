@@ -155,7 +155,6 @@ class MatchDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
             .receive(on: DispatchQueue.main)
@@ -346,16 +345,15 @@ class MatchDetailsViewController: UIViewController {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
         }
 
-
         let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
                                                                 language: "en", matchId: match.id)
-        print("ENDPOINT: \(endpoint)")
+
         self.matchDetailsAggregatorPublisher?.cancel()
         self.matchDetailsAggregatorPublisher = nil
 
         self.matchDetailsAggregatorPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
@@ -386,16 +384,15 @@ class MatchDetailsViewController: UIViewController {
     }
 
     private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        print("UPDATE MATCH DETAIL: \(aggregator)")
+
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
 
-        DispatchQueue.main.async {
+        DispatchQueue.main.async { // TODO: Code Review - DispatchQueue.main.async porquê?
             if !Env.everyMatrixStorage.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
                 self.matchMode = .live
             }
             self.updateHeaderDetails()
         }
-
 
     }
 

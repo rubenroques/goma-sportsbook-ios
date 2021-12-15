@@ -118,10 +118,8 @@ class SubmitedBetSelectionView: NibView {
                 //self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
             })
         }
-
-
+        
         self.setupWithTheme()
-
     }
 
     func setupWithTheme() {

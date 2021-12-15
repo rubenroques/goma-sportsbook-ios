@@ -41,7 +41,6 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
             return out1Value < out2Value
         }
 
-
         self.sortedOutcomes = [:]
 
         for sortedOutcomeKey in sortedOutcomeKeys {
@@ -59,8 +58,7 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
                     let rightNameDigit3 = rightOutcome.nameDigit3 ?? 0.0
 
                     if (leftOutcome.codeName == "away" || rightOutcome.codeName == "away" || leftOutcome.codeName == "away_draw" || rightOutcome.codeName == "away_draw")
-                        && (leftOutcome.nameDigit2 != nil && rightOutcome.nameDigit2 != nil)
-                    {
+                        && (leftOutcome.nameDigit2 != nil && rightOutcome.nameDigit2 != nil) {
                         leftNameDigit1 = leftOutcome.nameDigit2 ?? 0.0
                         rightNameDigit1 = rightOutcome.nameDigit2 ?? 0.0
 
@@ -180,10 +178,8 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
     func outcomeFor(column: Int, line: Int) -> Outcome? {
 
         if let market = self.sortedMarkets[safe: line], let outcomeKey = self.sortedOutcomeKeys[safe: column] {
-            for outcome in market.outcomes {
-                if outcome.headerCodeName == outcomeKey {
-                    return outcome
-                }
+            for outcome in market.outcomes where outcome.headerCodeName == outcomeKey {
+                return outcome
             }
         }
         return nil
