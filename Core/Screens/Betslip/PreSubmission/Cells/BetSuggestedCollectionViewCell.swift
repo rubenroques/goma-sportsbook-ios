@@ -26,8 +26,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupWithTheme()
-        
         betNowButton.layer.cornerRadius = 4.0
+        layer.cornerRadius = 4.0
         // Initialization code
     }
     override func prepareForReuse() {
