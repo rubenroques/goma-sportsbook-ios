@@ -141,19 +141,19 @@
                     <rect key="frame" x="0.0" y="0.0" width="478" height="896"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You don’t have any selections yet." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ldl-f4-u9t">
-                            <rect key="frame" x="50" y="116" width="378" height="14"/>
+                            <rect key="frame" x="8" y="50" width="462" height="14"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Here are your Suggested Bets!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DFg-gs-vfx">
-                            <rect key="frame" x="50" y="154" width="378" height="20"/>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Here are your Suggested Bets!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DFg-gs-vfx">
+                            <rect key="frame" x="8" y="76" width="462" height="20"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bms-St-XjN">
-                            <rect key="frame" x="8" y="194" width="398" height="362"/>
+                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bms-St-XjN">
+                            <rect key="frame" x="8" y="101" width="398" height="362"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -170,15 +170,15 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemGrayColor"/>
                     <constraints>
-                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="centerY" secondItem="WLl-sg-9Tv" secondAttribute="centerY" constant="-325" id="7w7-Dm-vBr"/>
                         <constraint firstItem="bms-St-XjN" firstAttribute="leading" secondItem="WLl-sg-9Tv" secondAttribute="leading" constant="8" id="98m-6j-wah"/>
-                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="centerX" secondItem="WLl-sg-9Tv" secondAttribute="centerX" id="JRM-wz-vrr"/>
+                        <constraint firstItem="bms-St-XjN" firstAttribute="top" secondItem="DFg-gs-vfx" secondAttribute="bottom" constant="5" id="N8u-Kj-baU"/>
+                        <constraint firstItem="DFg-gs-vfx" firstAttribute="leading" secondItem="WLl-sg-9Tv" secondAttribute="leading" constant="8" id="NlS-1k-0b8"/>
                         <constraint firstAttribute="trailing" secondItem="bms-St-XjN" secondAttribute="trailing" id="QJV-J8-V2d"/>
-                        <constraint firstItem="DFg-gs-vfx" firstAttribute="leading" secondItem="Ldl-f4-u9t" secondAttribute="leading" id="Vco-9J-Xsf"/>
-                        <constraint firstItem="bms-St-XjN" firstAttribute="top" secondItem="DFg-gs-vfx" secondAttribute="bottom" constant="20" id="mNe-df-wzk"/>
-                        <constraint firstItem="DFg-gs-vfx" firstAttribute="trailing" secondItem="Ldl-f4-u9t" secondAttribute="trailing" id="row-6H-oZa"/>
-                        <constraint firstItem="DFg-gs-vfx" firstAttribute="top" secondItem="Ldl-f4-u9t" secondAttribute="bottom" constant="24" id="wYI-05-79X"/>
-                        <constraint firstAttribute="trailing" secondItem="Ldl-f4-u9t" secondAttribute="trailing" constant="50" id="wZh-gD-0th"/>
+                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="leading" secondItem="WLl-sg-9Tv" secondAttribute="leading" constant="8" id="Qbe-cK-xYj"/>
+                        <constraint firstAttribute="trailing" secondItem="DFg-gs-vfx" secondAttribute="trailing" constant="8" id="S64-24-2Ga"/>
+                        <constraint firstAttribute="trailing" secondItem="Ldl-f4-u9t" secondAttribute="trailing" constant="8" id="c6j-m6-vcF"/>
+                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="top" secondItem="WLl-sg-9Tv" secondAttribute="top" constant="50" id="cBV-Yy-lBk"/>
+                        <constraint firstItem="DFg-gs-vfx" firstAttribute="top" secondItem="Ldl-f4-u9t" secondAttribute="bottom" constant="12" id="wYI-05-79X"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TZO-Zq-dgn">
