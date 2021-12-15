@@ -30,6 +30,11 @@ public class Debouncer {
         }
     }
 
+    public func cancel() {
+        timer?.invalidate()
+        self.handler = nil
+    }
+
     @objc private func timeIntervalDidFinish(for timer: Timer) {
         guard timer.isValid else {
             return

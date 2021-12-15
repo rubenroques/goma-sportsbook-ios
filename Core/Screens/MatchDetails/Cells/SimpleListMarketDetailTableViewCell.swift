@@ -109,6 +109,40 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
+    func configure(withMarketGroupOrganizer market: MarketGroupOrganizer) {
+
+        self.titleLabel.text = market.marketName
+
+        //calculate number of lines
+
+        //calculate number of lines
+//        let outcomes = market.outcomes.count
+//
+//        let useTriple = outcomes % 3 == 0
+//
+//        if useTriple {
+//            let numberOfLines = Int(outcomes / 3)
+//            //numberOfLines = numberOfLines < 4 ? numberOfLines : 4
+//
+//            self.columnType = ColumnType.triple
+//            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
+//        }
+//        else {
+//            //Use double
+//            let numberOfLines = Int(outcomes / 2)
+//            //numberOfLines = numberOfLines < 3 ? numberOfLines : 3
+//
+//            self.columnType = ColumnType.double
+//            self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
+//        }
+//
+//        // each line is 50 including space
+//        self.setNeedsLayout()
+//        self.layoutIfNeeded()
+//
+//        self.collectionView.reloadData()
+    }
+
 }
 
 extension SimpleListMarketDetailTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
