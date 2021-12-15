@@ -138,7 +138,6 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         }, completion: nil)
     }
 
-
     func configureWithBettingTicket(_ bettingTicket: BettingTicket, errorBetting: String? = nil) {
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
@@ -168,8 +167,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
                 self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
             })
 
-        if let errorBetting = errorBetting {
-
+        if errorBetting != nil {
             self.errorLateralTopView.backgroundColor = UIColor.App.alertError
             self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
         }
@@ -180,8 +178,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         
     }
 
-
-    @IBAction func didTapDeleteButton() {
+    @IBAction private func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             Env.betslipManager.removeAllPlacedDetailsError()

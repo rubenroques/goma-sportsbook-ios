@@ -40,3 +40,11 @@ public extension Collection {
         }
     }
 }
+
+extension Sequence {
+    func sorted<T: Comparable>(by keyPath: KeyPath<Element, T>) -> [Element] {
+        return sorted { left, right in
+            return left[keyPath: keyPath] < right[keyPath: keyPath]
+        }
+    }
+}

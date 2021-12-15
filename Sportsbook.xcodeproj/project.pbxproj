@@ -399,6 +399,8 @@
 		458F4C932712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */; };
 		458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871CF2710995700F5B87B /* AggregatorsRepository.swift */; };
 		458F4C962712B6B800AC13DB /* AggregatorsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871CF2710995700F5B87B /* AggregatorsRepository.swift */; };
+		4591358127602961009D1193 /* MarketGroupOrganizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4591358027602960009D1193 /* MarketGroupOrganizer.swift */; };
+		4591358227602961009D1193 /* MarketGroupOrganizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4591358027602960009D1193 /* MarketGroupOrganizer.swift */; };
 		45936CA4270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45936CA2270E1BCE00E8260E /* SportTypeSelectionViewController.swift */; };
 		45936CA5270E1BCE00E8260E /* SportTypeSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45936CA2270E1BCE00E8260E /* SportTypeSelectionViewController.swift */; };
 		45936CA6270E1BCE00E8260E /* SportTypeSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45936CA3270E1BCE00E8260E /* SportTypeSelectionViewController.xib */; };
@@ -1020,6 +1022,7 @@
 		4589F42826C02EAA005DF543 /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTableViewDescription.swift; sourceTree = "<group>"; };
 		458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveEventsViewModel.swift; sourceTree = "<group>"; };
+		4591358027602960009D1193 /* MarketGroupOrganizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroupOrganizer.swift; sourceTree = "<group>"; };
 		45936CA2270E1BCE00E8260E /* SportTypeSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeSelectionViewController.swift; sourceTree = "<group>"; };
 		45936CA3270E1BCE00E8260E /* SportTypeSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportTypeSelectionViewController.xib; sourceTree = "<group>"; };
 		45936CA9270E1C1A00E8260E /* SportTypeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeSelectorView.swift; sourceTree = "<group>"; };
@@ -2597,6 +2600,7 @@
 				A9BCF433274D1A77006DD528 /* MatchDetailsViewController.xib */,
 				453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */,
 				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
+				4591358027602960009D1193 /* MarketGroupOrganizer.swift */,
 				A9BCF43A274FB589006DD528 /* Cells */,
 			);
 			path = MatchDetails;
@@ -3107,7 +3111,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n# swiftlint\n  echo \"Disabled\"\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		45B2003026C46294005831CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3137,6 +3141,7 @@
 				45D9CBE1270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E0AB62732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
+				4591358127602961009D1193 /* MarketGroupOrganizer.swift in Sources */,
 				457F497527383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45D728D127158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
@@ -3426,6 +3431,7 @@
 				45D9CBE2270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E0AB72732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
+				4591358227602961009D1193 /* MarketGroupOrganizer.swift in Sources */,
 				457F497627383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45D728D227158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
@@ -3864,7 +3870,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00213;
+				CURRENT_PROJECT_VERSION = 00215;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -3890,7 +3896,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00213;
+				CURRENT_PROJECT_VERSION = 00215;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

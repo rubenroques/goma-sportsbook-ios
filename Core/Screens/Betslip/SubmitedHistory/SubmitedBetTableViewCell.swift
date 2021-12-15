@@ -64,7 +64,7 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.possibleWinningsTitleLabel.text = "Possible Winnings"
 
         self.cashoutLogoImageView.image = UIImage(systemName: "info.circle")
-        let logoGesture = UITapGestureRecognizer(target: self, action:  #selector(self.showPopover))
+        let logoGesture = UITapGestureRecognizer(target: self, action: #selector(self.showPopover))
         self.cashoutLogoImageView.addGestureRecognizer(logoGesture)
         self.cashoutLogoImageView.isUserInteractionEnabled = true
 
@@ -135,17 +135,11 @@ class SubmitedBetTableViewCell: UITableViewCell {
         }
 
         self.cashoutStackView.backgroundColor = UIColor.App.secondaryBackground
-
         self.cashoutView.backgroundColor = UIColor.App.secondaryBackground
-
         self.cashoutLogoImageView.backgroundColor = .clear
-
         self.cashoutTitleLabel.textColor = UIColor.App.headingSecondary
-
         self.cashoutValueLabel.textColor = UIColor.App.headingMain
-
         self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-
         self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
 
     }
@@ -179,10 +173,6 @@ class SubmitedBetTableViewCell: UITableViewCell {
 
         self.stackView.removeAllArrangedSubviews()
 
-//        if (betHistoryEntry.selections ?? []).count == 1 {
-//            self.oddBaseView.isHidden = true
-//        }
-
         for selection in betHistoryEntry.selections ?? [] {
             let submitedBetSelectionView = SubmitedBetSelectionView(betHistoryEntrySelection: selection)
             self.stackView.addArrangedSubview(submitedBetSelectionView)
@@ -197,16 +187,14 @@ class SubmitedBetTableViewCell: UITableViewCell {
         guard let cashoutValue = cashout.value else {return}
         self.cashoutValueLabel.text = "\(cashoutValue)"
         self.cashoutView.isHidden = false
-
     }
 
-    @objc func showPopover(sender : UITapGestureRecognizer) {
+    @objc private func showPopover(sender: UITapGestureRecognizer) {
         self.infoAction?()
     }
 
-    @IBAction func cashoutButtonAction(_ sender: Any) {
+    @IBAction private func cashoutButtonAction(_ sender: Any) {
         self.cashoutAction?()
     }
-
 
 }
