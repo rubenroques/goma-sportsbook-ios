@@ -1102,21 +1102,18 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
        
         if let suggestedBetCard = self.suggestedBetsArray[indexPath.row] {
             cell.setupStackBetView(betValues: suggestedBetCard, gomaValues: self.gomaSuggestedBetsResponse[indexPath.row])
-            //cell.setupInfoBetValues(betValues: betInfo)
+            // cell.setupInfoBetValues(betValues: betInfo)
         }
 
-  
         return cell
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let bottomBarHeigth = 60.0
 
-        
         return CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(betInfo.count) * 55)
         
         }
-    
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
    
@@ -1126,11 +1123,9 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         // let rect = self.betSuggestedCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
         //    self.betSuggestedCollectionView.scrollRectToVisible(rect!, animated: true)
 
-
     }
 
 }
-
 
 class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
 

@@ -33,6 +33,10 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     }
     override func prepareForReuse() {
         super.prepareForReuse()
+
+        self.betsArray = []
+        self.gomaArray = []
+        self.betslipTickets = []
         
     }
     
@@ -147,6 +151,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                     validMarkets += 1
 
                                     betsStackView.addArrangedSubview(gameSuggestedView)
+
+                                    self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
                                 }
                             }
 
@@ -190,6 +196,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                     validMarkets += 1
 
                                     betsStackView.addArrangedSubview(gameSuggestedView)
+
+                                    self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
                                 }
                             }
 
@@ -211,9 +219,29 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
      }
 
-    func 
+    func addOutcomeToTicketArray(match: Match, market: Market, outcome: Outcome) {
+        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
+        let marketDescription = market.name
+        let outcomeDescription = outcome.translatedName
+
+        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                          outcomeId: outcome.id,
+                                          matchId: match.id,
+                                          value: outcome.bettingOffer.value,
+                                          matchDescription: matchDescription,
+                                          marketDescription: marketDescription,
+                                          outcomeDescription: outcomeDescription)
+        self.betslipTickets.append(bettingTicket)
+    }
 
     @IBAction private func betNowAction() {
+
+        print("TICKETS: \(self.betslipTickets)")
+        for ticket in self.betslipTickets {
+
+            Env.betslipManager.addBettingTicket(ticket)
+
+        }
 
 //        var foundOutcome = false
 //
