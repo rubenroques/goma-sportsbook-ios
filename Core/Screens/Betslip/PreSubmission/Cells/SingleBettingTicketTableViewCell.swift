@@ -262,7 +262,14 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.errorLateralTopView.backgroundColor = UIColor.App.alertError
             self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
 
-            NSLayoutConstraint(item: self.errorView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: self.errorLabel, attribute: NSLayoutConstraint.Attribute.height, multiplier: 1, constant: 24).isActive = true
+            // TODO: Code Review - se a errorView for nil a app crasha
+            NSLayoutConstraint(item: self.errorView,
+                               attribute: NSLayoutConstraint.Attribute.height,
+                               relatedBy: NSLayoutConstraint.Relation.equal,
+                               toItem: self.errorLabel,
+                               attribute: NSLayoutConstraint.Attribute.height,
+                               multiplier: 1,
+                               constant: 24).isActive = true
         }
         else {
             self.errorLabel.text = ""

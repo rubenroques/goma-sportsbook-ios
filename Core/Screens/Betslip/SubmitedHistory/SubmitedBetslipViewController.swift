@@ -102,7 +102,7 @@ class SubmitedBetslipViewController: UIViewController {
 
         TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
@@ -143,7 +143,6 @@ class SubmitedBetslipViewController: UIViewController {
     private func updateCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
 
-
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -156,14 +155,15 @@ class SubmitedBetslipViewController: UIViewController {
         }
         let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"), message: localized("string_return_money") + "€\(betCashoutValue)", preferredStyle: UIAlertController.Style.alert)
 
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { (action: UIAlertAction!) in
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { _ in
             self.activityIndicatorBaseView.isHidden = false
 
             let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
 
+            // TODO: Code Review - se faz store não precisa guardar a variavel, muito menos numa variavel local que é desalocada no fim da func
             let request = TSManager.shared
                 .getModel(router: route, decodingType: CashoutSubmission.self)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { value in
                     print(value)
@@ -178,7 +178,6 @@ class SubmitedBetslipViewController: UIViewController {
                             self.activityIndicatorBaseView.isHidden = true
                         }
                     }
-
                 })
                 .store(in: &self.cancellables)
         }))
@@ -221,12 +220,10 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
 
         cell.configureWithBetHistoryEntry(entry)
 
-        var cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
+        let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
 
         if let betCashout = cashoutsPublisher[entry.betId].value {
-            let cashoutValue = betCashout.value
             cell.setupCashout(cashout: betCashout.value)
-
             cell.cashoutAction = {
                 self.submitCashout(betCashout: betCashout.value)
             }

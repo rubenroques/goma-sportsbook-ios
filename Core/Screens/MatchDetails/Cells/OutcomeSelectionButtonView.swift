@@ -24,6 +24,8 @@ class OutcomeSelectionButtonView: NibView {
     var oddValue: Double?
     var isAvailableForBet: Bool?
 
+    var debouncerSubscription: Debouncer?
+
     private var isOutcomeButtonSelected: Bool = false {
         didSet {
             self.isOutcomeButtonSelected ? self.selectButton() : self.deselectButton()
@@ -48,6 +50,9 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     override func commonInit() {
+
+        self.debouncerSubscription = Debouncer(timeInterval: 1, clearHandler: true)
+
         self.translatesAutoresizingMaskIntoConstraints = false
 
         self.backgroundColor = .clear
@@ -65,6 +70,10 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     deinit {
+
+        self.debouncerSubscription?.cancel()
+        self.debouncerSubscription = nil
+
         if let oddUpdatesRegister = oddUpdatesRegister {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
         }
@@ -95,26 +104,32 @@ class OutcomeSelectionButtonView: NibView {
 
         self.outcome = outcome
         self.bettingOffer = outcome.bettingOffer
-
         self.marketTypeLabel.text = outcome.translatedName
-        if let nameDigit1 = outcome.nameDigit1, let nameDigit2 = outcome.nameDigit2 {
 
-            var digit1String = "\(nameDigit1)"
-            digit1String = digit1String.replacingOccurrences(of: ".00", with: "")
-            digit1String = digit1String.replacingOccurrences(of: ".0", with: "")
+        //        if outcome.nameDigit1 != nil || outcome.nameDigit2 != nil || outcome.nameDigit3  != nil || outcome.paramBoolean1 != nil {
+        //            self.marketTypeLabel.text = "\(outcome.translatedName)"
+        //        }
 
-            var digit2String = "\(nameDigit2)"
-            digit2String = digit2String.replacingOccurrences(of: ".00", with: "")
-            digit2String = digit2String.replacingOccurrences(of: ".0", with: "")
+        //        if let nameDigit1 = outcome.nameDigit1, let nameDigit2 = outcome.nameDigit2 {
+        //
+        //            var digit1String = "\(nameDigit1)"
+        //            digit1String = digit1String.replacingOccurrences(of: ".00", with: "")
+        //            digit1String = digit1String.replacingOccurrences(of: ".0", with: "")
+        //
+        //            var digit2String = "\(nameDigit2)"
+        //            digit2String = digit2String.replacingOccurrences(of: ".00", with: "")
+        //            digit2String = digit2String.replacingOccurrences(of: ".0", with: "")
+        //
+        //            self.marketTypeLabel.text = "\(outcome.translatedName)" // \(digit1String)-\(digit2String)"
+        //        }
+        //        else if let nameDigit1 = outcome.nameDigit1 {
+        //            var digitString = "\(nameDigit1)"
+        //            digitString = digitString.replacingOccurrences(of: ".00", with: "")
+        //            digitString = digitString.replacingOccurrences(of: ".0", with: "")
+        //            self.marketTypeLabel.text = "\(outcome.translatedName)" //" \(digitString)"
+        //        }
 
-            self.marketTypeLabel.text = "\(outcome.translatedName)" // \(digit1String)-\(digit2String)"
-        }
-        else if let nameDigit1 = outcome.nameDigit1 {
-            var digitString = "\(nameDigit1)"
-            digitString = digitString.replacingOccurrences(of: ".00", with: "")
-            digitString = digitString.replacingOccurrences(of: ".0", with: "")
-            self.marketTypeLabel.text = "\(outcome.translatedName)" //" \(digitString)"
-        }
+
 
         self.updateBettingOffer(value: outcome.bettingOffer.value, isAvailableForBetting: true)
 
@@ -124,44 +139,51 @@ class OutcomeSelectionButtonView: NibView {
                                                       language: "en",
                                                       bettingOfferId: outcome.bettingOffer.id)
 
-        self.oddUpdatesPublisher = TSManager.shared.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let oddUpdatesRegister):
-                    self?.oddUpdatesRegister = oddUpdatesRegister
-                case .initialContent(let aggregator):
 
-                    if let content = aggregator.content {
-                        for contentType in content {
-                            if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
-                                self?.oddValue =  nil
-                                self?.updateBettingOffer(value: oddsValue, isAvailableForBetting: true)
-                                break
+        self.debouncerSubscription?.handler = { [weak self] in
+            print(" debouncerSubscription called ")
+            self?.oddUpdatesPublisher = TSManager.shared.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .failure:
+                        print("Error retrieving data!")
+                    case .finished:
+                        print("Data retrieved!")
+                    }
+                }, receiveValue: { [weak self] state in
+                    switch state {
+                    case .connect(let oddUpdatesRegister):
+                        self?.oddUpdatesRegister = oddUpdatesRegister
+                    case .initialContent(let aggregator):
+
+                        if let content = aggregator.content {
+                            for contentType in content {
+                                if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
+                                    self?.oddValue =  nil
+                                    self?.updateBettingOffer(value: oddsValue, isAvailableForBetting: true)
+                                    break
+                                }
                             }
                         }
-                    }
 
-                case .updatedContent(let aggregatorUpdates):
-                    if let content = aggregatorUpdates.contentUpdates {
-                        for contentType in content {
-                            if case let .bettingOfferUpdate(_, odd, _, isAvailable) = contentType {
-                                self?.updateBettingOffer(value: odd, isAvailableForBetting: isAvailable)
+                    case .updatedContent(let aggregatorUpdates):
+                        if let content = aggregatorUpdates.contentUpdates {
+                            for contentType in content {
+                                if case let .bettingOfferUpdate(_, odd, _, isAvailable) = contentType {
+                                    self?.updateBettingOffer(value: odd, isAvailableForBetting: isAvailable)
+                                }
                             }
                         }
-                    }
 
-                case .disconnect:
-                    print("MarketDetailCell odd update - disconnect")
-                }
-            })
+                    case .disconnect:
+                        print("MarketDetailCell odd update - disconnect")
+                    }
+                })
+        }
+
+        self.debouncerSubscription?.call()
+
     }
 
     private func updateBettingOffer(value: Double?, isAvailableForBetting available: Bool?) {
@@ -170,13 +192,13 @@ class OutcomeSelectionButtonView: NibView {
         if let currentOddValue = self.oddValue, let newOddValue = value {
             if newOddValue > currentOddValue {
                 self.highlightOddChangeUp(animated: true,
-                                           upChangeOddValueImage: self.upChangeOddValueImage,
-                                           baseView: self.containerView)
+                                          upChangeOddValueImage: self.upChangeOddValueImage,
+                                          baseView: self.containerView)
             }
             else if newOddValue < currentOddValue {
                 self.highlightOddChangeDown(animated: true,
-                                             downChangeOddValueImage: self.downChangeOddValueImage,
-                                             baseView: self.containerView)
+                                            downChangeOddValueImage: self.downChangeOddValueImage,
+                                            baseView: self.containerView)
             }
         }
 
