@@ -23,6 +23,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     var betsArray: [Match] = []
     var gomaArray: [GomaSuggestedBets] = []
     var betslipTickets: [BettingTicket] = []
+
+    var betNowCallbackAction: (() -> Void)?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -59,62 +61,6 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.gomaArray = gomaValues
 
         var validMarkets = 0
-        
-//        for value in betValues {
-//
-//            let gameTitle = "\(value.homeParticipant.name) x \(value.awayParticipant.name)"
-//            var gameMarket = ""
-//
-//            if let marketName = value.markets.first?.name {
-//                gameMarket = marketName
-//            }
-//            print("GAME: \(value)")
-//            if let betOutcomes = value.markets.first?.outcomes {
-//                var foundOutcome = false
-//
-//                for betOutcome in betOutcomes {
-//                    for gomaBet in gomaValues {
-//
-//                        if value.id == "\(gomaBet.matchId)" {
-//
-//                            if betOutcome.codeName == gomaBet.bettingOption {
-//
-//                                if firstOdd {
-//                                    totalOdd = betOutcome.bettingOffer.value
-//                                    firstOdd = false
-//                                }
-//                                else {
-//                                    totalOdd *= betOutcome.bettingOffer.value
-//                                }
-//                                foundOutcome = true
-//
-//                            }
-//
-//                        }
-//                    }
-//
-//                }
-//                if !foundOutcome {
-//                    if firstOdd {
-//                        totalOdd = betOutcomes[0].bettingOffer.value
-//                        firstOdd = false
-//                    }
-//                    else {
-//                        totalOdd *= betOutcomes[0].bettingOffer.value
-//                    }
-//                }
-//            }
-//
-//            let gameInfo = "\(gameMarket)"
-//
-//            let gameSuggestedView = GameSuggestedView(gameTitle: gameTitle, gameInfo: gameInfo)
-//
-//            if let countryIsoCode = value.venue?.isoCode {
-//                gameSuggestedView.setMatchFlag(isoCode: countryIsoCode)
-//            }
-//
-//            betsStackView.addArrangedSubview(gameSuggestedView)
-//        }
 
         for gomaBet in gomaArray {
 
@@ -236,67 +182,11 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
     @IBAction private func betNowAction() {
 
-        print("TICKETS: \(self.betslipTickets)")
         for ticket in self.betslipTickets {
-
             Env.betslipManager.addBettingTicket(ticket)
-
         }
 
-//        var foundOutcome = false
-//
-//        for bet in betsArray {
-//            guard
-//                let firstMarket = bet.markets.first,
-//                let outcomes = bet.markets.first?.outcomes
-//            else {
-//                return
-//            }
-//
-//            for outcome in outcomes {
-//
-//                for gomaBet in self.gomaArray {
-//
-//                    if bet.id == "\(gomaBet.matchId)" {
-//
-//                        if outcome.codeName == gomaBet.bettingOption {
-//                            let matchDescription = "\(bet.homeParticipant.name) x \(bet.awayParticipant.name)"
-//                            let marketDescription = firstMarket.name
-//                            let outcomeDescription = outcome.translatedName
-//
-//                            let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-//                                                              outcomeId: outcome.id,
-//                                                              matchId: bet.id,
-//                                                              value: outcome.bettingOffer.value,
-//                                                              matchDescription: matchDescription,
-//                                                              marketDescription: marketDescription,
-//                                                              outcomeDescription: outcomeDescription)
-//
-//                            Env.betslipManager.addBettingTicket(bettingTicket)
-//                            foundOutcome = true
-//                        }
-//                    }
-//                }
-//
-//            }
-//            if !foundOutcome {
-//                let matchDescription = "\(bet.homeParticipant.name) x \(bet.awayParticipant.name)"
-//                let marketDescription = firstMarket.name
-//                let outcomeDescription = outcomes[0].translatedName
-//
-//                let bettingTicket = BettingTicket(id: outcomes[0].bettingOffer.id,
-//                                                  outcomeId: outcomes[0].id,
-//                                                  matchId: bet.id,
-//                                                  value: outcomes[0].bettingOffer.value,
-//                                                  matchDescription: matchDescription,
-//                                                  marketDescription: marketDescription,
-//                                                  outcomeDescription: outcomeDescription)
-//
-//                Env.betslipManager.addBettingTicket(bettingTicket)
-//                foundOutcome = true
-//            }
-//
-//        }
+        self.betNowCallbackAction?()
 
     }
 

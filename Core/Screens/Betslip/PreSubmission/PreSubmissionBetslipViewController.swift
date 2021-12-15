@@ -83,6 +83,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var systemBettingTicketDataSource = SystemBettingTicketDataSource(bettingTickets: [])
 
     var cancellables = Set<AnyCancellable>()
+    var isSuggestedMultiple: Bool = false
 
     enum BetslipType {
         case simple
@@ -189,8 +190,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
         self.betSuggestedCollectionView.delegate = self
         self.betSuggestedCollectionView.dataSource = self
-        
-        
+
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
 
@@ -207,7 +207,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemWinningsValueLabel.text = "-.--€"
         self.systemOddsTitleLabel.text = "Total bet amount"
         self.systemOddsValueLabel.text = "-.--€"
-
 
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
@@ -286,6 +285,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
                 else {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
+                }
+
+                if tickets.count > 1 && self?.isSuggestedMultiple == true{
+                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
                 }
 
                 if let segmentControl = self?.betTypeSegmentControl {
@@ -1097,6 +1100,10 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         if let suggestedBetCard = self.suggestedBetsArray[indexPath.row] {
             cell.setupStackBetView(betValues: suggestedBetCard, gomaValues: self.gomaSuggestedBetsResponse[indexPath.row])
             // cell.setupInfoBetValues(betValues: betInfo)
+            cell.betNowCallbackAction = {
+                self.isSuggestedMultiple = true
+            }
+
         }
 
         return cell
