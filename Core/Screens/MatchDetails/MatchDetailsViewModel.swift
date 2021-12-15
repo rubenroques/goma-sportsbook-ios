@@ -61,7 +61,7 @@ class MatchDetailsViewModel: NSObject {
                         defaultFound = true
                         break
                     }
-                    index = index + 1
+                    index += 1
                 }
                 return defaultFound ? index : 0
             }

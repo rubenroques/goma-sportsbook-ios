@@ -80,15 +80,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     var match: Match?
 
     var isFavorite: Bool = false {
-            didSet {
-                if isFavorite {
-                    self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
-                }
-                else {
-                    self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
-                }
+        didSet {
+            if isFavorite {
+                self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
+            }
+            else {
+                self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
             }
         }
+    }
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?

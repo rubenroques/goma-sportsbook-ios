@@ -123,10 +123,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
     var numberOfBets: Int = 1
-    var totalPossibleEarnings : Double = 0.0
-    var totalBetOdds : Double = 0.0
-    
- 
+    var totalPossibleEarnings: Double = 0.0
+    var totalBetOdds: Double = 0.0
+
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -186,7 +185,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemWinningsValueLabel.text = "-.--€"
         self.systemOddsTitleLabel.text = "Total bet amount"
         self.systemOddsValueLabel.text = "-.--€"
-
 
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
@@ -254,8 +252,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
                     self?.requestSystemBetsTypes()
                 }
-                
-               
 
                 if tickets.count == 1 {
                     if self?.betTypeSegmentControl.selectedSegmentIndex == 1 {
@@ -444,10 +440,10 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print(completion)
-                //self.isLoading = false
+                // self.isLoading = false
             } receiveValue: { betPlacedDetails in
-                //self.isLoading = false
-                //print("BET PLACED DETAILS: \(betPlacedDetails)")
+                // self.isLoading = false
+                // print("BET PLACED DETAILS: \(betPlacedDetails)")
                 if !betPlacedDetails.isEmpty {
                     let errorMessage = betPlacedDetails[0].response.errorMessage
                     let response = betPlacedDetails[0].response
@@ -464,7 +460,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print(completion)
-                //self.isLoading = false
+                // self.isLoading = false
             } receiveValue: { betslipPlaceBetResponse in
                 self.tableView.reloadData()
             }
@@ -481,6 +477,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func showErrorView(errorMessage: String?) {
         let errorView = BetslipErrorView()
+        errorView.alpha = 0
         errorView.setDescription(description: errorMessage ?? "Error")
         errorView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(errorView)
@@ -491,8 +488,18 @@ class PreSubmissionBetslipViewController: UIViewController {
             errorView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
         ])
 
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
+            errorView.alpha = 1.0
+
+        }, completion: nil)
+
         DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            errorView.removeFromSuperview()
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut, animations: {
+                errorView.alpha = 0
+
+            }, completion: { _ in
+                errorView.removeFromSuperview()
+            })
         }
     }
 
@@ -579,7 +586,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
 
-
         self.simpleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.multipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.systemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
@@ -648,7 +654,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.showingSystemBetOptionsSelector = true
     }
 
-    @IBAction func didTapSystemBetTypeSelectButton() {
+    @IBAction private func didTapSystemBetTypeSelectButton() {
         self.showingSystemBetOptionsSelector = false
         self.requestSystemBetInfo()
     }
@@ -729,8 +735,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isLoading = true
 
         if self.listTypePublisher.value == .simple {
-            
-           
+
             self.numberOfBets = self.simpleBetsBettingValues.value.count
             Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
                 .receive(on: DispatchQueue.main)
@@ -743,18 +748,15 @@ class PreSubmissionBetslipViewController: UIViewController {
                     //
                     self.isLoading = false
                 } receiveValue: { betPlacedDetails in
-                    for t in betPlacedDetails {
-                        for bet in t.tickets{
-                            self.totalBetOdds =  self.totalBetOdds + bet.value
+                    for betPlaced in betPlacedDetails {
+                        for bet in betPlaced.tickets {
+                            self.totalBetOdds += bet.value
                         }
                     }
                     
                     self.betPlacedAction?(betPlacedDetails)
                 }
                 .store(in: &cancellables)
-            
-        
-            
 
         }
         else if self.listTypePublisher.value == .multiple {
@@ -980,7 +982,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
                 cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
             }
 
-        } else {
+        }
+        else {
             cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
         }
 
@@ -1056,7 +1059,8 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                 cell.configureWithBettingTicket(bettingTicket)
             }
 
-        } else {
+        }
+        else {
             cell.configureWithBettingTicket(bettingTicket)
         }
 
