@@ -119,7 +119,7 @@ class HomeViewController: UIViewController {
                         .sink { _ in
                         } receiveValue: { [weak self] userMetadata in
                             if let userMetadataFavorites = userMetadata.records[0].value {
-                                //Env.favoritesManager.favoriteEventsId =
+                                // Env.favoritesManager.favoriteEventsId =
                                 Env.favoritesManager.favoriteEventsIdPublisher.send(userMetadataFavorites)
                             }
 
@@ -159,7 +159,6 @@ class HomeViewController: UIViewController {
                 print("getOperatorInfo \(operatorInfo)")
             }
             .store(in: &cancellables)
-
 
     }
 

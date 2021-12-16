@@ -21,7 +21,6 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
     // Variables
     var chooseEmailActionSheet: UIAlertController?
 
-
     init() {
         super.init(nibName: "EmailVerificationViewController", bundle: nil)
     }

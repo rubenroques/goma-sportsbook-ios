@@ -79,24 +79,24 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
         self.titleLabel.text = market.name
 
-        //calculate number of lines
+        // calculate number of lines
 
-        //calculate number of lines
+        // calculate number of lines
         let outcomes = market.outcomes.count
 
         let useTriple = outcomes % 3 == 0
 
         if useTriple {
             let numberOfLines = Int(outcomes / 3)
-            //numberOfLines = numberOfLines < 4 ? numberOfLines : 4
+            // numberOfLines = numberOfLines < 4 ? numberOfLines : 4
 
             self.columnType = ColumnType.triple
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
         }
         else {
-            //Use double
+            // Use double
             let numberOfLines = Int(outcomes / 2)
-            //numberOfLines = numberOfLines < 3 ? numberOfLines : 3
+            // numberOfLines = numberOfLines < 3 ? numberOfLines : 3
 
             self.columnType = ColumnType.double
             self.collectionViewHeightContraint.constant = CGFloat(numberOfLines) * lineHeight
@@ -113,9 +113,9 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
         self.titleLabel.text = market.marketName
 
-        //calculate number of lines
+        // calculate number of lines
 
-        //calculate number of lines
+        // calculate number of lines
 //        let outcomes = market.outcomes.count
 //
 //        let useTriple = outcomes % 3 == 0
@@ -184,8 +184,7 @@ extension SimpleListMarketDetailTableViewCell: UICollectionViewDelegate, UIColle
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-
-        //let screenWidth = UIScreen.main.bounds.size.width
+        // let screenWidth = UIScreen.main.bounds.size.width
         let containerWidth = collectionView.bounds.size.width
 
         var width: CGFloat = 0.0

@@ -21,8 +21,6 @@ enum TSSubscriptionContent<T> {
 
 final class TSManager {
 
-
-
     private var globalCancellable = Set<AnyCancellable>()
     
     private let tsQueue = DispatchQueue(label: "com.goma.games.TSQueue")
@@ -70,7 +68,8 @@ final class TSManager {
                                                           transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint + "?cid=\(cid)")!,
                                                                                               userAgent: usrAg,
                                                                                               origin: self.origin))
-                    } else {
+                    }
+                    else {
                         self.swampSession = SSWampSession(realm: TSParams.realm,
                                                           transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint)!,
                                                                                               userAgent: usrAg,
@@ -90,7 +89,7 @@ final class TSManager {
 
     }
 
-    func printSWAMPLogs(){
+    func printSWAMPLogs() {
         self.swampSession?.printMemoryLogs()
     }
 
@@ -158,7 +157,7 @@ final class TSManager {
                             }
                         }
                         catch {
-                            //print("TSManager Decoding Error: \(error)")
+                            // print("TSManager Decoding Error: \(error)")
                             promise(.failure(.decodingError))
                         }
                     }, onError: { _, error, _, kwargs in
@@ -270,7 +269,7 @@ final class TSManager {
         swampSession.unregister(endpointPublisherIdentifiable.identificationCode) {
             ()
         } onError: { details, error in
-            //print("UnregisterFromEndpoint error \(details) \(error)")
+            // print("UnregisterFromEndpoint error \(details) \(error)")
         }
     }
 
@@ -325,7 +324,7 @@ final class TSManager {
                 }
             }
             catch {
-                //print("TSManager Decoding Error: \(error)")
+                // print("TSManager Decoding Error: \(error)")
                 subject.send(completion: .failure(.decodingError))
             }
         })

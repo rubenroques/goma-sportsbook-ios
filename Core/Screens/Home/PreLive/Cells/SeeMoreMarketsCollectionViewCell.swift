@@ -14,7 +14,6 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
 
-
     var tappedAction: (() -> Void)?
 
     override func awakeFromNib() {
@@ -25,7 +24,6 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
         self.titleLabel.text = "See All"
         self.setupWithTheme()
-
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)

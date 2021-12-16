@@ -9,7 +9,6 @@ import UIKit
 import Combine
 import SwiftUI
 
-
 class RootViewController: UIViewController {
 
     @IBOutlet private weak var openProfileButton: UIButton!
@@ -32,7 +31,6 @@ class RootViewController: UIViewController {
 
         self.setupWithTheme()
     }
-
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -100,7 +98,7 @@ class RootViewController: UIViewController {
         if let savedRegistration = savedRegistration {
             TSManager.shared.swampSession?.unregister(savedRegistration.registration, onSuccess: {
                 self.savedRegistration = nil
-            }, onError: { details, error in
+            }, onError: { _, _ in
                 self.savedRegistration = nil
             })
         }

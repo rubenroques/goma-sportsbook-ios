@@ -38,7 +38,7 @@ class CountrySelectorTableViewCell: UITableViewCell {
         self.setupTheme()
     }
 
-    func setupTheme(){
+    func setupTheme() {
 
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear

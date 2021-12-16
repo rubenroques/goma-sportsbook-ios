@@ -56,7 +56,6 @@ struct FirebaseClientSettings: Codable {
             self.showInformationPopUp = false
         }
 
-
         let isOnMaintenanceInt = try container.decode(Int.self, forKey: .isOnMaintenance)
         self.isOnMaintenance = isOnMaintenanceInt == 1 ? true : false
 

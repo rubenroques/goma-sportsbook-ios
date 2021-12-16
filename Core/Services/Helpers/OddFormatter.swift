@@ -18,4 +18,3 @@ enum OddFormatter {
         return clippedValue > 1.0
     }
 }
-

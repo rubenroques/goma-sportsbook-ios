@@ -17,7 +17,7 @@ class VersionUpdateViewController: UIViewController {
     @IBOutlet private var updateButton: UIButton!
     @IBOutlet private var dismissButton: UIButton!
 
-    var dismissCallback: (() -> ())?
+    var dismissCallback: (() -> Void)?
     // Variables
     var imageGradient: UIImage
     var required: Bool

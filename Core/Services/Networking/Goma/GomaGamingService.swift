@@ -59,7 +59,6 @@ extension GomaGamingService: Endpoint {
                     URLQueryItem(name: "lng", value: longitude)]
         case .settings, .simpleRegister, .modalPopUpDetails, .login, .suggestedBets:
             return nil
-
             
 //        case .getPredictionSubmit(let userId, let userName, let eventId, let prediction, let message):
 //            return [URLQueryItem(name: "userId", value: userId),

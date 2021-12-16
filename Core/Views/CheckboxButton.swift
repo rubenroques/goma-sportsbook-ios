@@ -17,7 +17,8 @@ class CheckboxButton: UIButton {
                 self.setImage(UIImage(named: "active_toggle_icon"), for: .normal)
                 self.backgroundColor = UIColor.App.mainTint
                 self.layer.borderColor = UIColor.App.mainTint.cgColor
-            } else {
+            }
+            else {
                 self.setImage(nil, for: .normal)
                 self.backgroundColor = UIColor.App.secondaryBackground
                 self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
@@ -26,7 +27,7 @@ class CheckboxButton: UIButton {
     }
 
     override func awakeFromNib() {
-        self.addTarget(self, action:#selector(buttonClicked(sender:)), for: UIControl.Event.touchUpInside)
+        self.addTarget(self, action: #selector(buttonClicked(sender:)), for: UIControl.Event.touchUpInside)
 
         self.backgroundColor = UIColor.App.secondaryBackground
 

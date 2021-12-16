@@ -15,7 +15,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
 
     // Variables
     override var isSelected: Bool {
-        didSet{
+        didSet {
             if self.isSelected {
                 containerView.layer.borderColor = UIColor.App.mainTint.cgColor
             }

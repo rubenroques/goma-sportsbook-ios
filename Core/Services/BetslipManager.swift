@@ -126,7 +126,7 @@ class BetslipManager: NSObject {
                 updatedTickets.append(newTicket)
             }
             else {
-//#warning TODO: The ticket value is not updated
+// #warning TODO: The ticket value is not updated
                 let newTicket = BettingTicket(id: ticket.id,
                                               outcomeId: ticket.outcomeId,
                                               matchId: ticket.matchId,
@@ -247,7 +247,7 @@ extension BetslipManager {
         return future
     }
 
-    private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails], completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void){
+    private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails], completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void) {
         let ticketSelections = self.updatedBettingTicketsOdds()
         
         if ticketSelections.isEmpty {
@@ -256,7 +256,7 @@ extension BetslipManager {
         }
 
         if let lastTicket = ticketSelections.first, let lastTicketAmount = self.amounts[lastTicket.id] {
-            placeSingleBet(betTicketId: lastTicket.id , amount: lastTicketAmount)
+            placeSingleBet(betTicketId: lastTicket.id, amount: lastTicketAmount)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { (publisherCompletion: Subscribers.Completion<EveryMatrix.APIError>) -> Void in
                     print(publisherCompletion)
@@ -272,10 +272,10 @@ extension BetslipManager {
                             self.removeBettingTicket(withId: lastTicket.id)
                             var newList = betPlacedDetailsList
                             newList.append(betPlacedDetails)
-                            self.placeNextSingleBet(betPlacedDetailsList: newList,  completion: completion)
+                            self.placeNextSingleBet(betPlacedDetailsList: newList, completion: completion)
                         
-                        
-                    } else {
+                    }
+                    else {
                         var newList = betPlacedDetailsList
                         newList.append(betPlacedDetails)
                         completion( .success(newList) )
@@ -284,7 +284,6 @@ extension BetslipManager {
                 .store(in: &cancellables)
         }
     }
-    
     
     private func placeSingleBet(betTicketId: String, amount: Double) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
@@ -305,7 +304,6 @@ extension BetslipManager {
             .eraseToAnyPublisher()
         
     }
-
 
     func placeMultipleBet(withSkateAmount amount: Double) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
 

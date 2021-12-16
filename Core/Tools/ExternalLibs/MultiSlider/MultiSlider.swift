@@ -280,5 +280,3 @@ open class MultiSlider: UIControl {
         thumbCount = oldThumbCount
     }
 }
-
-

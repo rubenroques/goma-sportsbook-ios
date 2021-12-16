@@ -8,12 +8,12 @@
 import UIKit
 
 class RadioButton: UIButton {
-    var alternateButton:Array<RadioButton>?
+    var alternateButton: [RadioButton]?
 
     override func awakeFromNib() {
         self.layer.cornerRadius = self.frame.width/2
         self.layer.borderWidth = 2.0
-        //self.layer.masksToBounds = true
+        // self.layer.masksToBounds = true
         self.isSelected = false
     }
 
@@ -21,10 +21,11 @@ class RadioButton: UIButton {
         if alternateButton != nil {
             self.isSelected = true
 
-            for aButton:RadioButton in alternateButton! {
+            for aButton: RadioButton in alternateButton! {
                 aButton.isSelected = false
             }
-        } else {
+        }
+        else {
             toggleButton()
         }
     }
@@ -44,7 +45,8 @@ class RadioButton: UIButton {
                 self.layer.borderColor = UIColor.App.mainTint.cgColor
                 self.backgroundColor = UIColor.App.mainTint
                 self.setImage(UIImage(named: "white_dot_icon"), for: .normal)
-            } else {
+            }
+            else {
                 self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
                 self.backgroundColor = UIColor.App.secondaryBackground
                 self.setImage(nil, for: .normal)

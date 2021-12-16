@@ -29,7 +29,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var suspendedBaseView: UIView!
     @IBOutlet weak var suspendedLabel: UILabel!
 
-
     @IBOutlet weak var leftUpChangeOddValueImage: UIImageView!
     @IBOutlet weak var leftDownChangeOddValueImage: UIImageView!
     @IBOutlet weak var rightUpChangeOddValueImage: UIImageView!
@@ -133,7 +132,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.participantsCountryImageView.isHidden = false
         self.participantsCountryImageView.image = nil
     }
-
 
     override func layoutSubviews() {
         super.layoutSubviews()
@@ -282,12 +280,10 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-
     
     func shouldShowCountryFlag(_ show: Bool) {
         self.participantsCountryImageView.isHidden = !show
     }
-
 
     func selectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App.mainTint
@@ -317,7 +313,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
 
-
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isLeftOutcomeButtonSelected = false
@@ -327,7 +322,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             self.isLeftOutcomeButtonSelected = true
         }
     }
-
 
     func selectRightOddButton() {
         self.rightBaseView.backgroundColor = UIColor.App.mainTint
@@ -344,7 +338,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         else {
             return
         }
-
 
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
@@ -367,6 +360,5 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected = true
         }
     }
-
 
 }

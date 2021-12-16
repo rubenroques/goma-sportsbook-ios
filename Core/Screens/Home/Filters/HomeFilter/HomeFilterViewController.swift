@@ -339,8 +339,7 @@ class HomeFilterViewController: UIViewController {
 
     @IBAction private func applyFiltersAction() {
         
-        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 48.0
-{
+        if lowerBoundTimeRange != 0.0 || highBoundTimeRange != 48.0 {
             countFilters += 1
         }
         

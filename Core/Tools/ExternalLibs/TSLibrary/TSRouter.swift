@@ -103,7 +103,6 @@ enum TSRouter {
     case events(payload: [String: Any]?)
     case odds(payload: [String: Any]?)
 
-
     var procedure: String {
         switch self {
 
@@ -306,7 +305,6 @@ enum TSRouter {
         case .coolOff24h:
             return "/user/coolOff#enable"
 
-
         }
     }
     
@@ -422,7 +420,7 @@ enum TSRouter {
                     "amount": amount,
                     "eachWay": false,
                     "type": betType.typeKeyword,
-                    "oddsValidationType" : "ACCEPT_ANY",
+                    "oddsValidationType": "ACCEPT_ANY",
                     "selections": selection]
             return params
 
@@ -432,7 +430,7 @@ enum TSRouter {
                     "nrOfRecords": records,
                     "page": page
             ]
-        case .cashoutBet(let language,let betId):
+        case .cashoutBet(let language, let betId):
             return ["lang": language,
                     "betId": betId]
 
@@ -483,7 +481,7 @@ enum TSRouter {
                     "eachWay": false,
                     "type": "SYSTEM",
                     "systemBetType": systemBetType.id,
-                    "oddsValidationType" : "ACCEPT_ANY",
+                    "oddsValidationType": "ACCEPT_ANY",
                     "selections": selection]
             return params
 
@@ -630,7 +628,6 @@ enum TSRouter {
 
 }
 
-
 //      Cliente                                           EM Server
 //         |                                                  |
 //         |              -------------------->               |
@@ -666,8 +663,6 @@ enum TSRouter {
 //         |                                                  |
 //         |                                                  |
 
-
-
 //
 //
 //         |             -------------------->                |
@@ -679,7 +674,6 @@ enum TSRouter {
 //
 //
 //
-
 
 // SOCKET
 //          Client                      Servidor
@@ -695,7 +689,6 @@ enum TSRouter {
 //
 //
 //
-
 
 // SOCKET
 //
@@ -720,7 +713,3 @@ enum TSRouter {
 //     unregister [id: 1234566] ----------------------->
 //
 //
-
-
-
-

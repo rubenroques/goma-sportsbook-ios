@@ -23,7 +23,7 @@ class FavoritesManager {
             .eraseToAnyPublisher()
             .sink { _ in
             } receiveValue: { [weak self] userMetadata in
-                if let userMetadataRecords = userMetadata.records[0].value{
+                if let userMetadataRecords = userMetadata.records[0].value {
 
                     self?.favoriteEventsIdPublisher.send(userMetadataRecords)
                 }
@@ -57,7 +57,7 @@ class FavoritesManager {
         }
 
         // Add to favorite
-        if !favoriteMatchExists{
+        if !favoriteMatchExists {
             favoriteEventsId.append(eventId)
             self.favoriteEventsIdPublisher.send(favoriteEventsId)
         }

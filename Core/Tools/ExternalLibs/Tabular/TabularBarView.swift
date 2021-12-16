@@ -1,4 +1,3 @@
-
 import UIKit
 
 public class TabularBarView: UIView {
@@ -158,7 +157,8 @@ public class TabularBarView: UIView {
 
         if barDistribution == .content {
             self.stackView.distribution = .fill
-        } else if barDistribution == .parent {
+        }
+        else if barDistribution == .parent {
             self.stackView.distribution = .fillEqually
         }
 
@@ -166,7 +166,6 @@ public class TabularBarView: UIView {
             self.setNeedsLayout()
             self.layoutIfNeeded()
         }
-
 
         if let selected = self.selectedBarButton {
             self.didSelectButton(button: selected, animated: false)

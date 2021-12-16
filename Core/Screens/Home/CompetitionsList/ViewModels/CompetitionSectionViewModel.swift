@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct CompetitionFilterSectionViewModel {
 
     var id: String
@@ -21,7 +20,6 @@ struct CompetitionFilterSectionViewModel {
     }
 
 }
-
 
 extension CompetitionFilterSectionViewModel {
     init(index: Int, competitionGroup: CompetitionGroup) {

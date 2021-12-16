@@ -316,7 +316,7 @@ class PreLiveEventsViewModel: NSObject {
         var filteredMatches: [Match] = []
         var filteredCompetitions: [Competition] = []
         for competition in competitions {
-            if !competition.matches.isEmpty{
+            if !competition.matches.isEmpty {
                 for match in competition.matches {
                     // Check default market order
                     var marketSort: [Market] = []
@@ -355,7 +355,7 @@ class PreLiveEventsViewModel: NSObject {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents,
                                                  shouldClear: true)
         self.favoriteMatches = Env.everyMatrixStorage.matchesForListType(.favoriteMatchEvents)
-        //self.isLoadingPopularList.send(false)
+        // self.isLoadingPopularList.send(false)
         self.updateContentList()
     }
 
@@ -501,7 +501,7 @@ class PreLiveEventsViewModel: NSObject {
         for competitionId in competitionsMatches.keys {
             if let tournament = Env.everyMatrixStorage.tournaments[competitionId] {
 
-                var location: Location? = nil
+                var location: Location?
                 if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                     name: rawLocation.name ?? "",
@@ -595,7 +595,6 @@ class PreLiveEventsViewModel: NSObject {
                     print("PreLiveEventsViewModel popularMatchesPublisher disconnect")
                 }
             })
-
 
     }
 
@@ -789,7 +788,6 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     func fetchFavoriteCompetitionsMatchesWithIds(_ ids: [String]) {
-
 
         if let favoriteCompetitionsMatchesRegister = favoriteCompetitionsMatchesRegister {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
@@ -1030,33 +1028,36 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
             
             if self.popularMatchesViewModelDataSource.numberOfSections(in: tableView) != 0 {
                 return true
-            }else{
+            }
+            else {
                 return false
             }
         case .today:
             if self.todaySportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
                 return true
-            }else{
+            }
+            else {
                 return false
             }
         case .competitions:
             if self.competitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
                 return true
-            }else{
+            }
+            else {
                 return false
             }
         case .favoriteGames:
             if self.favoriteGamesSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
                 return true
             }
-            else{
+            else {
                 return false
             }
         case .favoriteCompetitions:
             if self.favoriteCompetitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
                 return true
             }
-            else{
+            else {
                 return false
             }
         }
@@ -1593,7 +1594,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
 
     var userFavoriteMatches: [Match] = []
 
-    var requestNextPage: (() -> ())?
+    var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
     init(userFavoriteMatches: [Match]) {
@@ -1660,7 +1661,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 1:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1670,7 +1671,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 1:
-            //Loading cell
+            // Loading cell
             return 70
         default:
             return 155
@@ -1693,7 +1694,6 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
-
 
     init(favoriteCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions

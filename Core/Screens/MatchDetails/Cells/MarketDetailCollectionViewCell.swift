@@ -46,7 +46,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         let tapOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapOddButton))
         self.containerView.addGestureRecognizer(tapOddButton)
 
-
         self.setupWithTheme()
     }
 
@@ -125,7 +124,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
                 case .initialContent(let aggregator):
 
-
                     if let content = aggregator.content {
                         for contentType in content {
                             if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
@@ -155,7 +153,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     }
 
     private func updateBettingOffer(value: Double?, isAvailableForBetting available: Bool?) {
-
 
         if let currentOddValue = self.oddValue, let newOddValue = value {
             if newOddValue > currentOddValue {
@@ -189,7 +186,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
     }
 
-
     func selectButton() {
         self.containerView.backgroundColor = UIColor.App.mainTint
     }
@@ -218,7 +214,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
 
-
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isOutcomeButtonSelected = false
@@ -228,7 +223,6 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
             self.isOutcomeButtonSelected = true
         }
     }
-
 
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
@@ -265,6 +259,5 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-
 
 }

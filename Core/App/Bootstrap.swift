@@ -17,8 +17,8 @@ struct Bootstrap {
 
     func boot() {
 
-        let _ = Env
-        let _ = TSManager.shared.isConnected
+        _ = Env
+        _ = TSManager.shared.isConnected
 
         self.router.makeKeyAndVisible()
         Env.businessSettingsSocket.connect()

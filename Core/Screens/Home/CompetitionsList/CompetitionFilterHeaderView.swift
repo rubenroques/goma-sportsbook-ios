@@ -35,9 +35,9 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
             self.layoutIfNeeded()
         }
     }
-    var section: Int? = nil
+    var section: Int?
 
-    var sectionIdentifier: String? = nil
+    var sectionIdentifier: String?
 
     var viewModel: CompetitionFilterSectionViewModel? {
         didSet {
@@ -45,7 +45,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         }
     }
 
-    var delegate: CollapsibleTableViewHeaderDelegate?
+    weak var delegate: CollapsibleTableViewHeaderDelegate?
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
@@ -154,8 +154,6 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
 
 }
 
-
 protocol CollapsibleTableViewHeaderDelegate: AnyObject {
     func didToogleSection(sectionIdentifier: String)
 }
-

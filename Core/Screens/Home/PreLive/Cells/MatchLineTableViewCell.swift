@@ -47,7 +47,7 @@ class MatchLineTableViewCell: UITableViewCell {
         let flowLayout = FadeInCenterHorizontalFlowLayout()
         flowLayout.alpha = 0.38
         flowLayout.minimumScale = 0.7
-        //flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        // flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = flowLayout
 
@@ -208,7 +208,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         else {
             if let match = self.match, let market = match.markets[safe: indexPath.row] {
 
-                //\(match.competitionName) 
+                // \(match.competitionName) 
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
 
@@ -272,4 +272,3 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         }
     }
 }
-

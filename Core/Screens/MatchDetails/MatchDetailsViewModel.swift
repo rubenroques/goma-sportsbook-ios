@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 import Combine
 
-
 class MatchDetailsViewModel: NSObject {
 
     var marketGroupsTypesDataChanged: (() -> Void)?

@@ -391,7 +391,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
            
         }
 
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value{
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value {
             if matchId == match.id {
                 self.isFavorite = true
             }

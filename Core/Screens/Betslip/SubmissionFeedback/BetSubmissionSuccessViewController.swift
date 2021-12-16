@@ -15,29 +15,24 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var messageTitleLabel: UILabel!
     @IBOutlet private weak var messageSubtitleLabel: UILabel!
 
-
-
     @IBOutlet private weak var bottomView: UIView!
     @IBOutlet private weak var bottomSeparatorView: UIView!
     @IBOutlet private weak var continueButton: UIButton!
 
     @IBOutlet private weak var safeAreaBottomView: UIView!
     
-    
     @IBOutlet weak var possibleEarningsLabel: UILabel!
     @IBOutlet weak var totalOddsLabel: UILabel!
     @IBOutlet weak var betsMadeLabel: UILabel!
-    
-    
 
     var betPlacedDetailsArray: [BetPlacedDetails]
-    var totalOddsValue : String
-    var possibleEarningsValue : String
-    var numberOfbets : Int
+    var totalOddsValue: String
+    var possibleEarningsValue: String
+    var numberOfbets: Int
 
-    var willDismissAction: (() -> ())?
+    var willDismissAction: (() -> Void)?
 
-    init(betPlacedDetailsArray: [BetPlacedDetails], totalOddsValue : String ,  possibleEarningsValue  : String, numberOfBets : Int ) {
+    init(betPlacedDetailsArray: [BetPlacedDetails], totalOddsValue: String, possibleEarningsValue: String, numberOfBets: Int ) {
 
         self.betPlacedDetailsArray = betPlacedDetailsArray
         self.possibleEarningsValue = possibleEarningsValue
@@ -51,7 +46,6 @@ class BetSubmissionSuccessViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,9 +72,9 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.safeAreaBottomView.backgroundColor = UIColor.App.mainBackground
 
         self.possibleEarningsLabel.text = possibleEarningsValue
-        //self.possibleEarningsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
+        // self.possibleEarningsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
         self.totalOddsLabel.text = totalOddsValue
-        //self.totalOddsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
+        // self.totalOddsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
         self.betsMadeLabel.text = String(numberOfbets)
        // self.betsMadeLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
         self.messageTitleLabel.textColor = UIColor.App.headingMain
@@ -89,16 +83,14 @@ class BetSubmissionSuccessViewController: UIViewController {
         StyleHelper.styleButton(button: self.continueButton)
     }
 
-
-    @IBAction private func didTapContinueButton(){
+    @IBAction private func didTapContinueButton() {
         if self.isModal {
             self.willDismissAction?()
             self.dismiss(animated: true, completion: nil)
         }
     }
 
-
-    @IBAction private func didTapBackButton(){
+    @IBAction private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
@@ -115,7 +107,7 @@ extension BetSubmissionSuccessViewController: UITableViewDelegate, UITableViewDa
         case 0:
             return 0 // self.betPlacedDetailsArray[safe: section].tickets.count ?? 0
         case 1:
-            return 0 //1
+            return 0 // 1
         default:
             return 0
         }
@@ -124,6 +116,5 @@ extension BetSubmissionSuccessViewController: UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return UITableViewCell()
     }
-
 
 }

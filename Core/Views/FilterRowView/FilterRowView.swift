@@ -62,7 +62,8 @@ class FilterRowView: NibView {
                     buttonImageView.backgroundColor = UIColor.App.mainTint
                     buttonImageView.image = (UIImage(named: "white_dot_icon"))
                 }
-            } else {
+            }
+            else {
                 if buttonType == ButtonType.checkbox {
                 buttonImageView.image = nil
                 buttonImageView.backgroundColor = UIColor.App.secondaryBackground
@@ -119,12 +120,12 @@ class FilterRowView: NibView {
 
         self.buttonType = .checkbox
 
-        let gestureTap = UITapGestureRecognizer(target: self, action:  #selector(self.tappedView))
+        let gestureTap = UITapGestureRecognizer(target: self, action: #selector(self.tappedView))
         self.addGestureRecognizer(gestureTap)
 
     }
 
-    @objc func tappedView(sender : UITapGestureRecognizer) {
+    @objc func tappedView(sender: UITapGestureRecognizer) {
         if buttonType == ButtonType.checkbox {
             isChecked = !isChecked
         }

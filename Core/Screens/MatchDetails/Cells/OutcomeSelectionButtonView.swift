@@ -129,8 +129,6 @@ class OutcomeSelectionButtonView: NibView {
         //            self.marketTypeLabel.text = "\(outcome.translatedName)" //" \(digitString)"
         //        }
 
-
-
         self.updateBettingOffer(value: outcome.bettingOffer.value, isAvailableForBetting: true)
 
         self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
@@ -138,7 +136,6 @@ class OutcomeSelectionButtonView: NibView {
         let endpoint = TSRouter.bettingOfferPublisher(operatorId: Env.appSession.operatorId,
                                                       language: "en",
                                                       bettingOfferId: outcome.bettingOffer.id)
-
 
         self.debouncerSubscription?.handler = { [weak self] in
             print(" debouncerSubscription called ")
@@ -188,7 +185,6 @@ class OutcomeSelectionButtonView: NibView {
 
     private func updateBettingOffer(value: Double?, isAvailableForBetting available: Bool?) {
 
-
         if let currentOddValue = self.oddValue, let newOddValue = value {
             if newOddValue > currentOddValue {
                 self.highlightOddChangeUp(animated: true,
@@ -221,7 +217,6 @@ class OutcomeSelectionButtonView: NibView {
 
     }
 
-
     func selectButton() {
         self.containerView.backgroundColor = UIColor.App.mainTint
     }
@@ -249,7 +244,6 @@ class OutcomeSelectionButtonView: NibView {
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
 
-
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isOutcomeButtonSelected = false
@@ -259,7 +253,6 @@ class OutcomeSelectionButtonView: NibView {
             self.isOutcomeButtonSelected = true
         }
     }
-
 
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
@@ -296,7 +289,5 @@ class OutcomeSelectionButtonView: NibView {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-
-
 
 }

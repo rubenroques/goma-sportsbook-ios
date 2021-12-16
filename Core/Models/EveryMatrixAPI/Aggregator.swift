@@ -16,7 +16,7 @@ extension EveryMatrix {
 
     struct Aggregator: Decodable {
 
-        //var content: [Content]
+        // var content: [Content]
         var messageType: AggregatorContentType
 
         enum CodingKeys: String, CodingKey {
@@ -126,7 +126,6 @@ extension EveryMatrix {
             else {
                 throw ContentUpdateError.uknownUpdateType
             }
-            
 
             self = .unknown(typeName: entityTypeString)
             
@@ -253,12 +252,11 @@ extension EveryMatrix {
                     self = contentTypeKey
                 }
                 else {
-                    //print("Aggregator ContentTypeKey unknown [\(type)]")
+                    // print("Aggregator ContentTypeKey unknown [\(type)]")
                     self = .unknown
                 }
             }
         }
-
 
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)

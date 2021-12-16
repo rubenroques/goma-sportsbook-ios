@@ -151,15 +151,16 @@ class FilterSliderCollapseView: NibView {
         
     }
     
-    func setTitleWithBold(title : String , charToSplit : String.Element){
+    func setTitleWithBold(title: String, charToSplit: String.Element) {
         let boldText = title.split(separator: charToSplit)
-        let attrs = [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 15)]
+        let attrs = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 15)]
         if boldText.count > 1 {
-            let normalString = NSMutableAttributedString(string:String(boldText[0]+": "), attributes:attrs)
-            let boldString = NSMutableAttributedString(string:String(boldText[1]))
+            let normalString = NSMutableAttributedString(string: String(boldText[0]+": "), attributes: attrs)
+            let boldString = NSMutableAttributedString(string: String(boldText[1]))
             normalString.append(boldString)
             titleLabel.attributedText = normalString
-        }else {
+        }
+        else {
             titleLabel.text = title
         }
     }
@@ -206,7 +207,6 @@ class FilterSliderCollapseView: NibView {
         }
 
     }
-
 
     @IBAction private func toggleCollapseAction() {
         isCollapsed = !isCollapsed

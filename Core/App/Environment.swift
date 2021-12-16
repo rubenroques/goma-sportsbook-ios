@@ -13,7 +13,7 @@ struct Environment {
 
     let appSession = AppSession()
 
-    let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager()) //session: Environment.pulseConnectedSession()))
+    let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager()) // session: Environment.pulseConnectedSession()))
     let everyMatrixAPIClient = EveryMatrixAPIClient()
     let everyMatrixStorage = AggregatorsRepository()
 

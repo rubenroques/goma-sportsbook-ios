@@ -90,4 +90,3 @@ struct BetslipPlaceBetResponse: Decodable {
         case selections
     }
 }
-

@@ -33,7 +33,7 @@ enum MainMarketType: String {
     }
     
     var marketName: String {
-        switch self{
+        switch self {
         case .homeDrawAway:
             return "Home Draw Away"
         case .doubleChance:

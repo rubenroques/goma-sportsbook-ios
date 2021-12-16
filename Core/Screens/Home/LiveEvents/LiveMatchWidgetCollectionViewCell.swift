@@ -148,7 +148,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
-
         
         self.setupWithTheme()
     }

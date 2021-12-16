@@ -23,7 +23,6 @@ class SelectTextFieldView: NibView {
     @IBOutlet private var textFieldLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var textFieldImageConstraint: NSLayoutConstraint!
 
-
     // Variables
     let pickerView = UIPickerView()
     var selectionArray: [String] = []

@@ -87,7 +87,7 @@ class KeychainInterface {
 
         // SecItemAdd attempts to add the item identified by
         // the query to keychain
-        let status = SecItemAdd(query as CFDictionary,nil)
+        let status = SecItemAdd(query as CFDictionary, nil)
 
         // errSecDuplicateItem is a special case where the
         // item identified by the query already exists. Throw
@@ -160,4 +160,3 @@ class KeychainInterface {
     }
 
 }
-

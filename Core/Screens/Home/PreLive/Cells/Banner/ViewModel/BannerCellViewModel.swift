@@ -32,9 +32,9 @@ class BannerCellViewModel {
 
     var completeMatch: CurrentValueSubject<Match?, Never> = .init(nil)
 
-    //Aggregator variables
+    // Aggregator variables
     var matches: [String: EveryMatrix.Match] = [:]
-    //var markets: [String: EveryMatrix.Market] = [:]
+    // var markets: [String: EveryMatrix.Market] = [:]
     var marketsForMatch: [String: Set<String>] = [:]   // [Match ID: [Markets IDs] ]
     var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
     var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
@@ -108,7 +108,7 @@ class BannerCellViewModel {
 
             case .market(let marketContent):
 
-                //markets[marketContent.id] = marketContent
+                // markets[marketContent.id] = marketContent
                 marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
 
                 if let matchId = marketContent.eventId {
@@ -229,7 +229,6 @@ class BannerCellViewModel {
                           sportType: rawMatch.sportId ?? "",
                           numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                           markets: matchMarkets)
-
 
         self.completeMatch.send(match)
 

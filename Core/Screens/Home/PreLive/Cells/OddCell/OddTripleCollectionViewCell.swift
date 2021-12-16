@@ -10,7 +10,7 @@ import Combine
 
 class OddTripleCollectionViewCell: UICollectionViewCell {
 
-    //@IBOutlet weak var cardBaseView: UIView!
+    // @IBOutlet weak var cardBaseView: UIView!
 
     @IBOutlet weak var participantsNameLabel: UILabel!
     @IBOutlet weak var participantsCountryImageView: UIImageView!
@@ -32,7 +32,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var suspendedBaseView: UIView!
     @IBOutlet weak var suspendedLabel: UILabel!
-
 
     @IBOutlet weak var leftUpChangeOddValueImage: UIImageView!
     @IBOutlet weak var leftDownChangeOddValueImage: UIImageView!
@@ -111,7 +110,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.rightBaseView.addGestureRecognizer(tapRightOddButton)
 
-
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
 
@@ -162,7 +160,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.participantsCountryImageView.layer.cornerRadius = self.participantsCountryImageView.frame.size.width / 2
     }
 
-
     func setupWithTheme() {
         self.backgroundColor = UIColor.App.secondaryBackground
 
@@ -185,7 +182,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.suspendedBaseView.backgroundColor = UIColor.App.mainBackground
         self.suspendedLabel.textColor = UIColor.App.headingDisabled
     }
-
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
 
@@ -304,7 +300,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     }
 
-
     @IBAction func didTapMatchView(_ sender: Any) {
         self.tappedMatchWidgetAction?()
     }
@@ -344,12 +339,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-
     
     func shouldShowCountryFlag(_ show: Bool) {
         self.participantsCountryImageView.isHidden = !show
     }
-
 
     func selectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App.mainTint
@@ -390,7 +383,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     }
 
-
     func selectMiddleOddButton() {
         self.middleBaseView.backgroundColor = UIColor.App.mainTint
     }
@@ -428,7 +420,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
     }
 
-
     func selectRightOddButton() {
         self.rightBaseView.backgroundColor = UIColor.App.mainTint
     }
@@ -465,6 +456,5 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected = true
         }
     }
-
     
 }

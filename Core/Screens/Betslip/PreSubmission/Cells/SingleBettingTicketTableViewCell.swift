@@ -92,7 +92,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.maxValueButtonView.layer.cornerRadius = CornerRadius.view
         self.maxValueButtonView.clipsToBounds = true
 
-        //self.baseView.layer.cornerRadius = CornerRadius.view
+        // self.baseView.layer.cornerRadius = CornerRadius.view
         self.oddBaseView.layer.cornerRadius = 3
         self.amountBaseView.layer.cornerRadius = CornerRadius.view
         self.stackView.layer.cornerRadius = CornerRadius.view

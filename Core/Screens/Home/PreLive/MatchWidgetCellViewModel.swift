@@ -28,7 +28,6 @@ struct MatchWidgetCellViewModel {
         self.startDateString = ""
         self.startTimeString = ""
 
-
         if let startDate = match.date {
 
             let relativeFormatter = MatchWidgetCellViewModel.relativeDateFormatter
@@ -42,7 +41,8 @@ struct MatchWidgetCellViewModel {
             if relativeDateString == normalDateString {
                 let customFormatter = Date.buildFormatter(locale: Env.locale, dateFormat: "dd MMM")
                 self.startDateString = customFormatter.string(from: startDate)
-            } else {
+            }
+            else {
                 self.startDateString = relativeDateString // Today, Yesterday
             }
 
@@ -69,7 +69,6 @@ struct MatchWidgetCellViewModel {
         self.startDateString = ""
         self.startTimeString = ""
 
-
         if let startDate = match.startDate {
 
             let relativeFormatter = MatchWidgetCellViewModel.relativeDateFormatter
@@ -83,7 +82,8 @@ struct MatchWidgetCellViewModel {
             if relativeDateString == normalDateString {
                 let customFormatter = Date.buildFormatter(locale: Env.locale, dateFormat: "dd MMM")
                 self.startDateString = customFormatter.string(from: startDate)
-            } else {
+            }
+            else {
                 self.startDateString = relativeDateString // Today, Yesterday
             }
 
@@ -93,7 +93,6 @@ struct MatchWidgetCellViewModel {
 
         self.competitionName = match.parentName ?? ""
     }
-
 
     static var hourDateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
@@ -108,7 +107,6 @@ struct MatchWidgetCellViewModel {
         dateFormatter.dateStyle = .short
         return dateFormatter
     }()
-
 
     static var normalDateFormatter: DateFormatter = {
         var dateFormatter = Date.buildFormatter(locale: Env.locale)

@@ -112,7 +112,6 @@ class ProfileViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -138,11 +137,10 @@ class ProfileViewController: UIViewController {
             }
         .store(in: &cancellables)
 
-
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
-            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"} )
+            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
             .sink { value in
                 self.currentBalanceLabel.text = value
@@ -150,7 +148,6 @@ class ProfileViewController: UIViewController {
             .store(in: &cancellables)
 
         Env.userSessionStore.forceWalletUpdate()
-
 
     }
 
@@ -273,7 +270,6 @@ class ProfileViewController: UIViewController {
             self.infoLabel.text = "App Version \(versionNumber)(\(buildNumber))\nSportsbook® All Rights Reserved"
         }
 
-
         activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
         activationAlertScrollableView.layer.masksToBounds = true
 
@@ -312,7 +308,7 @@ class ProfileViewController: UIViewController {
                 }
                 else if alertType == ActivationAlertType.profile {
                     let fullRegisterViewController = FullRegisterPersonalInfoViewController()
-                    //self.present(fullRegisterViewController, animated: true, completion: nil)
+                    // self.present(fullRegisterViewController, animated: true, completion: nil)
                     self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
                 }
             }

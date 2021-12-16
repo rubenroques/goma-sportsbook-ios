@@ -95,7 +95,8 @@ extension UIImageView {
             blurView.alpha = 0.5
             addConstrainedSubview(blurView, constrain: .top, .bottom, .left, .right)
             layer.shadowOpacity /= 2
-        } else {
+        }
+        else {
             guard let blurView = viewWithTag(UIImageView.blurViewTag) else { return }
             blurView.removeFromSuperview()
             layer.shadowOpacity *= 2
@@ -237,5 +238,3 @@ extension NSObject {
         }
     }
 }
-
-

@@ -61,7 +61,6 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
 
     func commonInit() {
 
-
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
         titleLabel.text = localized("string_enter_code")
 
@@ -90,7 +89,7 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
     }
 
     @IBAction private func pasteClipboardAction() {
-        let pb = UIPasteboard.general;
+        let pb = UIPasteboard.general
         codeHeaderTextFieldView.setTextFieldDefaultValue(pb.string ?? "")
     }
 

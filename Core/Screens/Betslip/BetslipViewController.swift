@@ -10,7 +10,6 @@ import Combine
 
 class BetslipViewController: UIViewController {
 
-
     @IBOutlet private weak var topSafeAreaView: UIView!
     @IBOutlet private weak var navigationBarView: UIView!
 
@@ -32,11 +31,10 @@ class BetslipViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
-    var willDismissAction: (() -> ())?
+    var willDismissAction: (() -> Void)?
 
     init() {
         preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
-        
   
         submitedBetslipViewController = SubmitedBetslipViewController()
         viewControllers = [preSubmissionBetslipViewController, submitedBetslipViewController]
@@ -83,7 +81,7 @@ class BetslipViewController: UIViewController {
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
-            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"} )
+            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
             .sink { value in
                 self.accountValueLabel.text = value
@@ -94,7 +92,6 @@ class BetslipViewController: UIViewController {
 
         self.setupWithTheme()
     }
-
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)

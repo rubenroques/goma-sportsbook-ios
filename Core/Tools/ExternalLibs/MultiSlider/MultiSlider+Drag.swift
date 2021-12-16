@@ -51,7 +51,8 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         var delta: CGFloat = 0 // distance between thumbs in view coordinates
         if distanceBetweenThumbs < 0 {
             delta = thumbViews[draggedThumbIndex].frame.size(in: orientation) / 2
-        } else if distanceBetweenThumbs > 0 && distanceBetweenThumbs < maximumValue - minimumValue {
+        }
+        else if distanceBetweenThumbs > 0 && distanceBetweenThumbs < maximumValue - minimumValue {
             delta = (distanceBetweenThumbs / (maximumValue - minimumValue)) * slideView.bounds.size(in: orientation)
         }
         if orientation == .horizontal { delta = -delta }
@@ -63,7 +64,8 @@ extension MultiSlider: UIGestureRecognizerDelegate {
             : slideView.bounds.top(in: orientation)
         if orientation == .vertical {
             return min(bottomLimit, max(targetPosition, topLimit))
-        } else {
+        }
+        else {
             return max(bottomLimit, min(targetPosition, topLimit))
         }
     }
@@ -72,7 +74,8 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         var newValue = relativeValue * (maximumValue - minimumValue)
         if orientation == .vertical {
             newValue = maximumValue - newValue
-        } else {
+        }
+        else {
             newValue += minimumValue
         }
         newValue = newValue.rounded(snapStepSize)
@@ -120,4 +123,3 @@ extension MultiSlider: UIGestureRecognizerDelegate {
         return closest
     }
 }
-

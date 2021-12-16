@@ -114,7 +114,6 @@ class MatchDetailsAggregatorRepository: NSObject {
 
     }
 
-
     func connectMarketGroupListDetailsPublisher() {
 
         //
@@ -212,7 +211,6 @@ class MatchDetailsAggregatorRepository: NSObject {
         let marketGroupsArray = Array(marketGroups.values)
         self.marketGroupsPublisher.send(marketGroupsArray)
     }
-
 
     func updateStoredMarketGroups(fromAggregator aggregator: EveryMatrix.Aggregator) {
 
@@ -319,8 +317,8 @@ class MatchDetailsAggregatorRepository: NSObject {
 
         var allMarkets: [Market] = []
 
-        var similarMarkets: [String : [Market]] = [:]
-        var similarMarketsNames: [String : String] = [:]
+        var similarMarkets: [String: [Market]] = [:]
+        var similarMarketsNames: [String: String] = [:]
         var similarMarketsOrdered: OrderedSet<String> = []
 
         let rawMarketsList = marketsIds.map { id in
@@ -391,7 +389,6 @@ class MatchDetailsAggregatorRepository: NSObject {
 
         var mergedMarketGroups: [MergedMarketGroup] = []
 
-
         for marketKey in similarMarketsOrdered {
 
             if let value = similarMarkets[marketKey] {
@@ -439,14 +436,13 @@ class MatchDetailsAggregatorRepository: NSObject {
         return mergedMarketGroups
     }
 
-
     func marketGroupOrganizers(withGroupKey key: String) -> [MarketGroupOrganizer] {
         guard let marketsIds = self.marketsForGroup[key] else { return [] }
 
         var allMarkets: [String: Market] = [:]
 
-        var similarMarkets: [String : [Market]] = [:]
-        var similarMarketsNames: [String : String] = [:]
+        var similarMarkets: [String: [Market]] = [:]
+        var similarMarketsNames: [String: String] = [:]
         var similarMarketsOrdered: OrderedSet<String> = []
 
         let rawMarketsList = marketsIds.map { id in

@@ -17,7 +17,6 @@ class ResultSSWampMessage: SSWampMessage {
     let kwResults: [String: AnyObject]?
     let arrResults: [String: [AnyObject]]?
     
-    
     init(requestId: Int, details: [String: AnyObject], results: [AnyObject]?=nil, kwResults: [String: AnyObject]?=nil, arrResults: [String: [AnyObject]]? = nil) {
         self.requestId = requestId
         self.details = details
@@ -33,11 +32,13 @@ class ResultSSWampMessage: SSWampMessage {
         self.kwResults = payload[safe: 3] as? [String: AnyObject]
         if self.kwResults == nil {
             if let value = payload[safe: 3] as? [AnyObject] {
-                self.arrResults = ["locallyInjectedKey" : value]
-            } else {
+                self.arrResults = ["locallyInjectedKey": value]
+            }
+            else {
                 self.arrResults = nil
             }
-        } else {
+        }
+        else {
             self.arrResults = nil
         }
     }
@@ -49,7 +50,8 @@ class ResultSSWampMessage: SSWampMessage {
             if let kwResults = self.kwResults {
                 marshalled.append(kwResults)
             }
-        } else {
+        }
+        else {
             if let kwResults = self.kwResults {
                 marshalled.append([])
                 marshalled.append(kwResults)

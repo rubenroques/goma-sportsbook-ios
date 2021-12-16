@@ -13,10 +13,11 @@ extension UILabel {
         let attributedString: NSMutableAttributedString
         if let labelAttributedText = attributedText {
             attributedString = NSMutableAttributedString(attributedString: labelAttributedText)
-        } else {
+        }
+        else {
             attributedString = NSMutableAttributedString(string: labelText)
         }
-        attributedString.addAttribute(.kern, value: characterSpacing, range: NSMakeRange(0, attributedString.length))
+        attributedString.addAttribute(.kern, value: characterSpacing, range: NSRange(location: 0, length: attributedString.length))
         attributedText = attributedString
     }
 
@@ -39,7 +40,7 @@ extension UILabel {
         else {
             attributedString = NSMutableAttributedString(string: labelText)
         }
-        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value:paragraphStyle, range:NSMakeRange(0, attributedString.length))
+        attributedString.addAttribute(NSAttributedString.Key.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: attributedString.length))
         self.attributedText = attributedString
     }
 
@@ -60,4 +61,3 @@ extension UILabel {
             self.isUserInteractionEnabled = true
         }
 }
-

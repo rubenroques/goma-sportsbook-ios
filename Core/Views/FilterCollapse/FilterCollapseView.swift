@@ -16,7 +16,7 @@ class FilterCollapseView: NibView {
     @IBOutlet private var toggleButton: UIButton!
     @IBOutlet private var stackView: UIStackView!
     @IBOutlet private var checkboxButton: CheckboxButton!
-    //Constraints
+    // Constraints
     @IBOutlet private var viewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var stackViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet private var topViewBottomConstraint: NSLayoutConstraint!

@@ -84,7 +84,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         emailHeaderTextView.setTextFieldDefaultValue(self.emailAddress)
         emailHeaderTextView.isDisabled = true
 
-        //dateHeaderTextView.shouldBeginEditing = { return false }
+        // dateHeaderTextView.shouldBeginEditing = { return false }
         dateHeaderTextView.setPlaceholderText(localized("string_birth_date"))
         dateHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         dateHeaderTextView.setDatePickerMode()
@@ -431,7 +431,7 @@ extension SimpleRegisterDetailsViewController {
         Env.everyMatrixAPIClient
             .validateUsername(username)
             .receive(on: DispatchQueue.main)
-            .sink { completed in
+            .sink { _ in
                 self.loadingUsernameValidityView.stopAnimating()
             } receiveValue: { usernameAvailability in
                 if !usernameAvailability.isAvailable {
@@ -493,7 +493,7 @@ extension SimpleRegisterDetailsViewController {
     private func updateBirthAgeLimit(ageLimit: Int) {
 
         let maxDate = setCalendarMaxDate(legalAge: ageLimit)
-        //let fieldDate = dateHeaderTextView.datePicker.date
+        // let fieldDate = dateHeaderTextView.datePicker.date
         let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
         if fieldDate > maxDate {
             dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)

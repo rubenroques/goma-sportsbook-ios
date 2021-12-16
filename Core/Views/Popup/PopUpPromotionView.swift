@@ -71,7 +71,6 @@ class PopUpPromotionView: NibView {
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
 
-
         gradientView.backgroundColor = .black
         let leftGradientMaskLayer = CAGradientLayer()
         leftGradientMaskLayer.frame = gradientView.bounds
@@ -80,7 +79,6 @@ class PopUpPromotionView: NibView {
         leftGradientMaskLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
         leftGradientMaskLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
         gradientView.layer.mask = leftGradientMaskLayer
-
 
         if let imageURLString = details.coverImage, let imageURL = URL(string: imageURLString) {
             imageView.kf.setImage(with: imageURL)
@@ -165,7 +163,6 @@ class PopUpPromotionView: NibView {
             self.baseView.addGestureRecognizer(closeBackgroundTap)
         }
     }
-
 
     func setupWithTheme() {
 

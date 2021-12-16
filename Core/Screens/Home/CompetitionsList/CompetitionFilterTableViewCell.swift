@@ -8,12 +8,11 @@
 import UIKit
 import Combine
 
-
 class CompetitionFilterTableViewCell: UITableViewCell {
 
     private var baseView: UIView = {
         var baseView  = UIView()
-        //baseView.layer.cornerRadius = 5
+        // baseView.layer.cornerRadius = 5
         baseView.clipsToBounds = true
         baseView.translatesAutoresizingMaskIntoConstraints = false
         return baseView
@@ -78,7 +77,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         if isLastCell {
-            baseView.roundCorners(corners: [.bottomLeft, .bottomRight] , radius: 5)
+            baseView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 5)
         }
         else {
             baseView.layer.mask = nil

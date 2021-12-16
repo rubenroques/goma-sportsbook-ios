@@ -365,10 +365,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Publishers.CombineLatest(self.listTypePublisher, self.realBetValuePublisher)
             .receive(on: DispatchQueue.main)
-            .filter { [weak self] (betslipType, _) in
+            .filter { [weak self] betslipType, _ in
                 betslipType == .system && self?.selectedSystemBet != nil
             }
-            .map({ [weak self] (_, bettingValue) in
+            .map({ [weak self] _, bettingValue in
                 return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
@@ -475,9 +475,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self.showErrorView(errorMessage: errorMessage)
 
                     Env.betslipManager.addBetslipPlacedBetErrorResponse(betPlacedError: [response])
-
                 }
-
             }
             .store(in: &cancellables)
 
@@ -555,7 +553,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             TSManager.shared
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .sink(receiveCompletion: { [weak self] completion in
+                .sink(receiveCompletion: { completion in
                     switch completion {
                     case .failure:
                         print("Error retrieving data!")
@@ -1072,9 +1070,11 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.gomaSuggestedBetsResponse.count
     }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
@@ -1089,15 +1089,13 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
        
         if let suggestedBetCard = self.suggestedBetsArray[indexPath.row] {
             cell.setupStackBetView(betValues: suggestedBetCard, gomaValues: self.gomaSuggestedBetsResponse[indexPath.row])
-            // cell.setupInfoBetValues(betValues: betInfo)
             cell.betNowCallbackAction = {
                 self.isSuggestedMultiple = true
             }
-
         }
-
         return cell
     }
+
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let bottomBarHeigth = 60.0
@@ -1107,17 +1105,11 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
             size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(arrayValues.count) * 60)
         }
         return size
-        
-        }
- 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-   
-        self.betSuggestedCollectionView.reloadData()
-       // self.betSuggestedCollectionView.layoutIfNeeded()
-        self.betSuggestedCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        // let rect = self.betSuggestedCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
-        //    self.betSuggestedCollectionView.scrollRectToVisible(rect!, animated: true)
+    }
 
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.betSuggestedCollectionView.reloadData()
+        self.betSuggestedCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 
 }
@@ -1293,4 +1285,5 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 99
     }
+    
 }

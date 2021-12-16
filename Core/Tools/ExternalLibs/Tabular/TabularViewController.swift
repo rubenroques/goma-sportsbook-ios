@@ -1,4 +1,3 @@
-
 import UIKit
 
 public class TabularViewController: UIViewController {
@@ -32,7 +31,6 @@ public class TabularViewController: UIViewController {
     }
 
     // ===========
-
     private var barView: TabularBarView = {
         let view = TabularBarView()
         view.backgroundColor = .black
@@ -80,7 +78,6 @@ public class TabularViewController: UIViewController {
         stackView.spacing = 0
         return stackView
     }()
-
 
     private var viewControllers: [UIViewController] = []
 
@@ -233,7 +230,6 @@ public class TabularViewController: UIViewController {
             newVIewController.viewWillAppear(true)
         }
 
-
         let position = CGPoint(x: self.baseScrollView.frame.size.width*CGFloat(index), y: 0.0)
         self.baseScrollView.setContentOffset(position, animated: animated)
 
@@ -245,7 +241,6 @@ public class TabularViewController: UIViewController {
         if let newVIewController = self.viewControllers[safe: self.currentPage] {
             newVIewController.viewDidAppear(true)
         }
-
 
     }
 

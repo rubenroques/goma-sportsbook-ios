@@ -49,7 +49,8 @@ extension MultiSlider {
             let centerAttribute: NSLayoutConstraint.Attribute
             if #available(iOS 12, *) {
                 centerAttribute = .centerX // iOS 12 doesn't like .topMargin, .rightMargin
-            } else {
+            }
+            else {
                 centerAttribute = .centerXWithinMargins
             }
             addConstrainedSubview(trackView, constrain: .top, .bottom, centerAttribute)
@@ -62,7 +63,8 @@ extension MultiSlider {
             let centerAttribute: NSLayoutConstraint.Attribute
             if #available(iOS 12, *) {
                 centerAttribute = .centerY // iOS 12 doesn't like .leftMargin, .rightMargin
-            } else {
+            }
+            else {
                 centerAttribute = .centerYWithinMargins
             }
             addConstrainedSubview(trackView, constrain: .left, .right, centerAttribute)
@@ -82,7 +84,8 @@ extension MultiSlider {
         if orientation == .vertical {
             trackView.layoutMargins = UIEdgeInsets(top: halfThumb, left: 0, bottom: halfThumb, right: 0)
             constrain(.width, to: max(thumbSize.width, trackWidth), relation: .greaterThanOrEqual)
-        } else {
+        }
+        else {
             trackView.layoutMargins = UIEdgeInsets(top: 0, left: halfThumb, bottom: 0, right: halfThumb)
             constrainHorizontalTrackViewToLayoutMargins()
             constrain(.height, to: max(thumbSize.height, trackWidth), relation: .greaterThanOrEqual)
@@ -112,10 +115,12 @@ extension MultiSlider {
     func adjustThumbCountToValueCount() {
         if value.count == thumbViews.count {
             return
-        } else if value.count < thumbViews.count {
+        }
+        else if value.count < thumbViews.count {
             thumbViews.removeViewsStartingAt(value.count)
             valueLabels.removeViewsStartingAt(value.count)
-        } else { // add thumbViews
+        }
+        else { // add thumbViews
             for _ in thumbViews.count ..< value.count {
                 addThumbView()
             }
@@ -192,18 +197,20 @@ extension MultiSlider {
         let labelValue: CGFloat
         if isValueLabelRelative {
             labelValue = i > 0 ? value[i] - value[i - 1] : value[i] - minimumValue
-        } else {
+        }
+        else {
             labelValue = value[i]
         }
         
         if let minimumTextualValue = minimumTextualValue, labelValue == minimumValue {
             valueLabels[i].text = minimumTextualValue
-        }else if let maximumTextualValue = maximumTextualValue, labelValue == maximumValue {
+        }
+        else if let maximumTextualValue = maximumTextualValue, labelValue == maximumValue {
             valueLabels[i].text = maximumTextualValue
-        }else{
+        }
+        else {
             valueLabels[i].text = valueLabelFormatter.string(from: NSNumber(value: Double(labelValue)))
         }
-       
 
     }
 
@@ -224,7 +231,8 @@ extension MultiSlider {
             var step: CGFloat = 0
             if value.isEmpty && 1 < appendCount {
                 step = (length / CGFloat(appendCount - 1)).truncated(relativeStepSize)
-            } else {
+            }
+            else {
                 step = (length / CGFloat(appendCount)).truncated(relativeStepSize)
                 if !value.isEmpty {
                     startValue += step
@@ -264,13 +272,16 @@ extension MultiSlider {
         if orientation == .horizontal {
             if thumbRelativeDistanceToMax < 1 {
                 slideView.constrain(thumbView, at: .centerX, to: slideView, at: .right, ratio: CGFloat(1 - thumbRelativeDistanceToMax))
-            } else {
+            }
+            else {
                 slideView.constrain(thumbView, at: .centerX, to: slideView, at: .left)
             }
-        } else { // vertical orientation
+        }
+        else { // vertical orientation
             if thumbRelativeDistanceToMax.isNormal {
                 slideView.constrain(thumbView, at: .centerY, to: slideView, at: .bottom, ratio: CGFloat(thumbRelativeDistanceToMax))
-            } else {
+            }
+            else {
                 slideView.constrain(thumbView, at: .centerY, to: slideView, at: .top)
             }
         }
@@ -283,7 +294,8 @@ extension MultiSlider {
         removeFirstConstraint { $0.firstItem === self.trackView && ($0.firstAttribute == edge || $0.firstAttribute == superviewEdge) }
         if nil != toView.image {
             constrain(trackView, at: edge, to: toView, at: edge.opposite, diff: edge.inwardSign * 8)
-        } else {
+        }
+        else {
             constrain(trackView, at: edge, to: self, at: superviewEdge)
         }
     }
@@ -293,4 +305,3 @@ extension MultiSlider {
         outerTrackViews.forEach { $0.layer.cornerRadius = trackView.layer.cornerRadius }
     }
 }
-

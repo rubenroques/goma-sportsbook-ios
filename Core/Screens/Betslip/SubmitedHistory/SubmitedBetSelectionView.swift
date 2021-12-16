@@ -63,7 +63,6 @@ class SubmitedBetSelectionView: NibView {
             self.oddValueLabel.text = "-.--"
         }
 
-
         self.eventTimeLabel.text = ""
 
         self.upChangeOddValueImage.alpha = 0.0
@@ -115,7 +114,7 @@ class SubmitedBetSelectionView: NibView {
                     }
                 }
                 self?.currentOddValue = newOddValue
-                //self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                // self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
             })
         }
         

@@ -38,7 +38,7 @@ class SplashViewController: UIViewController {
             .sink(receiveCompletion: { completion in
                 Logger.log("completion \(completion)")
                 Logger.log("Services Bootstrap")
-            }, receiveValue: { [weak self] operatorInfo in
+            }, receiveValue: { [weak self] _ in
                 Logger.log("Socket connected: \(TSManager.shared.isConnected)")
                 self?.startUserSessionIfNeeded()
             })
@@ -66,11 +66,12 @@ class SplashViewController: UIViewController {
         }
         Env.userSessionStore.loadLoggedUser()
 
-        //Get and store FCM token
+        // Get and store FCM token
         Messaging.messaging().token { token, error in
           if let error = error {
             print("Error fetching FCM registration token: \(error)")
-          } else if let token = token {
+          }
+          else if let token = token {
             print("FCM registration token: \(token)")
             Env.deviceFCMToken = token
           }

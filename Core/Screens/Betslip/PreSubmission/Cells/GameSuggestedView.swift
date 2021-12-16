@@ -17,15 +17,14 @@ class GameSuggestedView: NibView {
     @IBOutlet weak var gameTitleLabel: UILabel!
     @IBOutlet weak var gameInfoLabel: UILabel!
     
-    
     var gameTitle: String
     var gameInfo: String
     
-    convenience init(gameTitle: String, gameInfo : String) {
-        self.init(frame: .zero, gameTitle: gameTitle, gameInfo : gameInfo)
+    convenience init(gameTitle: String, gameInfo: String) {
+        self.init(frame: .zero, gameTitle: gameTitle, gameInfo: gameInfo)
     }
 
-    init(frame: CGRect, gameTitle: String, gameInfo : String) {
+    init(frame: CGRect, gameTitle: String, gameInfo: String) {
         self.gameTitle = gameTitle
         self.gameInfo = gameInfo
         super.init(frame: frame)
@@ -59,7 +58,7 @@ class GameSuggestedView: NibView {
         
     }
     
-    override var intrinsicContentSize: CGSize{
+    override var intrinsicContentSize: CGSize {
         return CGSize(width: UIView.noIntrinsicMetric, height: 54)
     }
     
@@ -76,13 +75,12 @@ class GameSuggestedView: NibView {
        // self.gameInfoLabel.font = AppFont.with(type: .medium, size: 11)
 
         self.gameTitleLabel.textColor = UIColor.App.headingMain
-        //self.gameTitleLabel.font = AppFont.with(type: .bold, size: 13)
+        // self.gameTitleLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
     func setMatchFlag(isoCode: String) {
         self.gameImageView.image = UIImage(named: Assets.flagName(withCountryCode: isoCode))
 
     }
-
 
 }

@@ -15,10 +15,9 @@ class SubmitedBetslipViewController: UIViewController {
     @IBOutlet private var activityIndicatorBaseView: UIView!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
-
     private var cancellables = Set<AnyCancellable>()
     private var betHistoryEntries: [BetHistoryEntry] = []
-    //private var cashouts: [EveryMatrix.Cashout] = []
+    // private var cashouts: [EveryMatrix.Cashout] = []
     var cashouts: OrderedDictionary<String, EveryMatrix.Cashout> = [:]
 
     private var cashoutRegister: EndpointPublisherIdentifiable?
@@ -50,8 +49,6 @@ class SubmitedBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(self.activityIndicatorBaseView)
 
     }
-
-
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)

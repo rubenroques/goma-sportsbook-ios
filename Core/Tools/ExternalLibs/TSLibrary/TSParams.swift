@@ -10,6 +10,5 @@ import Foundation
 struct TSParams {
     static let realm = "http://www.gomadevelopment.pt"
     static let wsEndPoint = "wss://api-phoenix-stage.everymatrix.com/v2/"
-    //static let externalSession = "tipico"
+    // static let externalSession = "tipico"
 }
-

@@ -18,7 +18,6 @@ struct CompetitionFilterRowViewModel {
     }
 }
 
-
 extension CompetitionFilterRowViewModel {
     init(competition: Competition) {
         self.init(id: competition.id, name: competition.name)

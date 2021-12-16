@@ -48,7 +48,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             self.expandedCellsDictionary = [:]
-            self.competitions.forEach( { competition in self.expandedCellsDictionary[competition.id] = false } )
+            self.competitions.forEach({ competition in self.expandedCellsDictionary[competition.id] = false })
             self.searchBarView.text = nil
             self.filteredCompetitions = competitions
         }
@@ -141,7 +141,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.tintColor = .white
         self.searchBarView.barTintColor = .white
         self.searchBarView.backgroundImage = UIColor.App.mainBackground.image()
-        //self.searchBarView.placeholder = localized("string_search")
+        // self.searchBarView.placeholder = localized("string_search")
 
         self.searchBarView.delegate = self
 
@@ -207,7 +207,6 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.headerBaseView.roundCorners(corners: [.topRight, .topLeft], radius: 20)
 
     }
-
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -328,7 +327,7 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if let viewModelForSection = filteredCompetitions[safe: indexPath.section],
            expandedCellsDictionary[viewModelForSection.id] ?? false {
-        //if expandedCells.contains(indexPath.section) {
+        // if expandedCells.contains(indexPath.section) {
             return 52
         }
         return 0
@@ -381,7 +380,6 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
             }
         }
     }
-
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {

@@ -8,14 +8,14 @@
 
 import Foundation
 
-public typealias CallCallback = (_ details: [String : Any], _ results: [Any]?, _ kwResults: [String: Any]?, _ arrResults: [String: [AnyObject]]?) -> Void
+public typealias CallCallback = (_ details: [String: Any], _ results: [Any]?, _ kwResults: [String: Any]?, _ arrResults: [String: [AnyObject]]?) -> Void
 public typealias ErrorCallCallback = (_ details: [String: Any], _ error: String, _ args: [Any]?, _ kwargs: [String: Any]?) -> Void
 
-//public typealias RegisterCallback = (registration: Registration) -> Void
-//public typealias ErrorRegisterCallback = (details: [String: AnyObject], error: String) -> Void
-//public typealias SSWampProc = (args: [AnyObject]?, kwargs: [String: AnyObject]?) -> AnyObject
-//public typealias UnregisterCallback = () -> Void
-//public typealias ErrorUnregsiterCallback = (details: [String: AnyObject], error: String) -> Void
+// public typealias RegisterCallback = (registration: Registration) -> Void
+// public typealias ErrorRegisterCallback = (details: [String: AnyObject], error: String) -> Void
+// public typealias SSWampProc = (args: [AnyObject]?, kwargs: [String: AnyObject]?) -> AnyObject
+// public typealias UnregisterCallback = () -> Void
+// public typealias ErrorUnregsiterCallback = (details: [String: AnyObject], error: String) -> Void
 
 public typealias SubscribeCallback = (_ subscription: Subscription) -> Void
 public typealias ErrorSubscribeCallback = (_ details: [String: Any], _ error: String) -> Void
@@ -66,7 +66,6 @@ extension Subscription: EndpointPublisherIdentifiable {
     }
 }
 
-
 open class Registration {
     fileprivate weak var session: SSWampSession?
     internal let registration: Int
@@ -91,18 +90,15 @@ open class Registration {
     }
 }
 
-
 extension Registration: EndpointPublisherIdentifiable {
     var identificationCode: Int {
         return self.registration
     }
 }
 
-
-
-//public class Registration {
+// public class Registration {
 //    private let session: SSWampSession
-//}
+// }
 
 public protocol SSWampSessionDelegate: AnyObject {
     func ssWampSessionHandleChallenge(_ authMethod: String, extra: [String: Any]) -> String
@@ -181,8 +177,6 @@ open class SSWampSession: SSWampTransportDelegate {
     // public func register(proc: String, options: [String: AnyObject]=[:], onSuccess: RegisterCallback, onError: ErrorRegisterCallback, onFire: SSWampProc) {
     // }
 
-
-
     open func register(_ topic: String, options: [String: Any]=[:], onSuccess: @escaping RegisterCallback, onError: @escaping ErrorRegisterCallback, onEvent: @escaping EventCallback) {
         // assert topic is a valid WAMP uri
         let registerRequestId = self.generateRequestId()
@@ -200,8 +194,6 @@ open class SSWampSession: SSWampTransportDelegate {
         self.unregisterRequests[unregisterRequestId] = (registration, onSuccess, onError)
     }
 
-
-
     open func subscribe(_ topic: String, options: [String: Any]=[:], onSuccess: @escaping SubscribeCallback, onError: @escaping ErrorSubscribeCallback, onEvent: @escaping EventCallback) {
         // assert topic is a valid WAMP uri
         let subscribeRequestId = self.generateRequestId()
@@ -218,7 +210,6 @@ open class SSWampSession: SSWampTransportDelegate {
         // Store request ID to handle result
         self.unsubscribeRequests[unsubscribeRequestId] = (subscription, onSuccess, onError)
     }
-
     
     // without acknowledging
     open func publish(_ topic: String, options: [String: Any]=[:], args: [Any]?=nil, kwargs: [String: Any]?=nil) {
@@ -241,9 +232,6 @@ open class SSWampSession: SSWampTransportDelegate {
         // Store request ID to handle result
         self.publishRequests[publishRequestId] = (callback: onSuccess, errorCallback: onError)
     }
-
-
-    
    
     func ssWampTransportDidDisconnect(_ error: Error?, reason: String?) {
         if reason != nil {
@@ -308,10 +296,9 @@ open class SSWampSession: SSWampTransportDelegate {
             }
         case let message as WelcomeSSWampMessage:
             self.sessionId = message.sessionId
-            let routerRoles = message.details["roles"]! as! [String : [String : Any]]
+            let routerRoles = message.details["roles"]! as! [String: [String: Any]]
             self.routerSupportedRoles = routerRoles.keys.map { SSWampRole(rawValue: $0)! }
             self.delegate?.ssWampSessionConnected(self, sessionId: message.sessionId)
-
 
         case let message as GoodbyeSSWampMessage:
             if message.reason != "wamp.error.goodbye_and_out" {

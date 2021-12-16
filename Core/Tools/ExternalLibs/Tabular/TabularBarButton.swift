@@ -1,4 +1,3 @@
-
 import UIKit
 
 public class TabularBarButton: UIControl {
@@ -135,7 +134,6 @@ public class TabularBarButton: UIControl {
             titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
             titleLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
-
 
         self.setNeedsLayout()
     }

@@ -37,7 +37,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         }
     }
 
-    var didToggleHeaderViewAction: ((Int) -> ())?
+    var didToggleHeaderViewAction: ((Int) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -70,7 +70,6 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
         self.isFavorite = false
     }
-
 
     override func layoutSubviews() {
         super.layoutSubviews()

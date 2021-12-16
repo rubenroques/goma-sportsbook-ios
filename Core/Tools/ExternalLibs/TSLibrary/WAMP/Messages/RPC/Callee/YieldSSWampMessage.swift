@@ -39,7 +39,8 @@ class YieldSSWampMessage: SSWampMessage {
             if let kwargs = self.kwargs {
                 marshalled.append(kwargs as AnyObject)
             }
-        } else {
+        }
+        else {
             if let kwargs = self.kwargs {
                 marshalled.append([])
                 marshalled.append(kwargs as AnyObject)

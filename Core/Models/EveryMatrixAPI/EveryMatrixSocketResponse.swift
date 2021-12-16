@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 struct EveryMatrixSocketResponse<T: Decodable>: Decodable {
 
     let version: String

@@ -8,13 +8,10 @@
 import UIKit
 import SwiftUI
 
-
 class FilterCountView: UIView, NibLoadable {
-
    
     @IBOutlet weak var roundCornerView: UIView!
     @IBOutlet weak var textField: UITextField!
-    
     
     var unselectedColor: UIColor = UIColor.systemGray {
            didSet {

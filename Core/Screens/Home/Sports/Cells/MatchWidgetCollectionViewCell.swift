@@ -202,7 +202,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
 
-        for matchId in Env.favoritesManager.favoriteEventsId{
+        for matchId in Env.favoritesManager.favoriteEventsId {
             if matchId == match.id {
                 self.isFavorite = true
             }

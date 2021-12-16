@@ -25,11 +25,10 @@ class PreLiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersButtonView: UIView!
     
     @IBOutlet private weak var filtersCountView: UIView!
-    
 
     @IBOutlet weak var filtersCountLabel: UILabel!
 
-    var turnTimeRangeOn : Bool = false
+    var turnTimeRangeOn: Bool = false
 
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
     private lazy var betslipButtonView: UIView = {
@@ -234,10 +233,6 @@ class PreLiveEventsViewController: UIViewController {
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
         
-       
-        
-        
-        
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(self.handleSportsSelectionTap(_:)))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
 
@@ -304,7 +299,6 @@ class PreLiveEventsViewController: UIViewController {
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
             
-            
         }
 
         self.viewModel.matchListTypePublisher
@@ -334,7 +328,6 @@ class PreLiveEventsViewController: UIViewController {
                 self.competitionsFiltersView?.competitions = competitions
             }
             .store(in: &cancellables)
-
 
         self.viewModel.isLoadingCompetitionGroups
             .receive(on: DispatchQueue.main)
@@ -645,7 +638,6 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
 //        let rect = self.filtersCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
 //             self.filtersCollectionView.scrollRectToVisible(rect!, animated: true)
-
 
     }
 

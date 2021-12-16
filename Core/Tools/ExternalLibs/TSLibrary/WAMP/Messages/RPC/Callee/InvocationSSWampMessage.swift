@@ -41,7 +41,8 @@ class InvocationSSWampMessage: SSWampMessage {
             if let kwargs = self.kwargs {
                 marshalled.append(kwargs)
             }
-        } else {
+        }
+        else {
             if let kwargs = self.kwargs {
                 marshalled.append([])
                 marshalled.append(kwargs)

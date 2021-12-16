@@ -71,7 +71,6 @@ extension Date {
 
     // MARK: Convert to String
 
-
     /// Converts the date to string using the short date and time style.
     func toString(formatString: String) -> String {
         let formatter = Date.cachedDateFormatters.cachedFormatter(formatString)
@@ -145,14 +144,17 @@ extension Date {
             if sec < 10 {
                 if isPast {
                     return strings?[.nowPast] ?? NSLocalizedString("just now", comment: "Date format")
-                } else {
+                }
+                else {
                     return strings?[.nowFuture] ?? NSLocalizedString("in a few seconds", comment: "Date format")
                 }
-            } else {
+            }
+            else {
                 let string: String
                 if isPast {
                     string = strings?[.secondsPast] ?? NSLocalizedString("%.f seconds ago", comment: "Date format")
-                } else {
+                }
+                else {
                     string = strings?[.secondsFuture] ?? NSLocalizedString("in %.f seconds", comment: "Date format")
                 }
                 return String(format: string, sec)
@@ -162,14 +164,17 @@ extension Date {
             if min == 1 {
                 if isPast {
                     return strings?[.oneMinutePast] ?? NSLocalizedString("1 minute ago", comment: "Date format")
-                } else {
+                }
+                else {
                     return strings?[.oneMinuteFuture] ?? NSLocalizedString("in 1 minute", comment: "Date format")
                 }
-            } else {
+            }
+            else {
                 let string: String
                 if isPast {
                     string = strings?[.minutesPast] ?? NSLocalizedString("%.f minutes ago", comment: "Date format")
-                } else {
+                }
+                else {
                     string = strings?[.minutesFuture] ?? NSLocalizedString("in %.f minutes", comment: "Date format")
                 }
                 return String(format: string, min)
@@ -179,14 +184,17 @@ extension Date {
             if hour == 1 {
                 if isPast {
                     return strings?[.oneHourPast] ?? NSLocalizedString("last hour", comment: "Date format")
-                } else {
+                }
+                else {
                     return strings?[.oneHourFuture] ?? NSLocalizedString("next hour", comment: "Date format")
                 }
-            } else {
+            }
+            else {
                 let string: String
                 if isPast {
                     string = strings?[.hoursPast] ?? NSLocalizedString("%.f hours ago", comment: "Date format")
-                } else {
+                }
+                else {
                     string = strings?[.hoursFuture] ?? NSLocalizedString("in %.f hours", comment: "Date format")
                 }
                 return String(format: string, hour)
@@ -196,14 +204,17 @@ extension Date {
             if day == 1 {
                 if isPast {
                     return strings?[.oneDayPast] ?? NSLocalizedString(localized("string_yesterday"), comment: "Date format")
-                } else {
+                }
+                else {
                     return strings?[.oneDayFuture] ?? NSLocalizedString(localized("string_tomorrow"), comment: "Date format")
                 }
-            } else {
+            }
+            else {
                 let string: String
                 if isPast {
                     string = strings?[.daysPast] ?? localized("string_days_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
-                } else {
+                }
+                else {
                     string = strings?[.daysFuture] ?? NSLocalizedString("in %.f days", comment: "Date format")
                 }
                 return String(format: string, day)
@@ -213,14 +224,17 @@ extension Date {
             if isPast {
                 if compare(.isLastWeek) {
                     return strings?[.oneWeekPast] ?? NSLocalizedString("last week", comment: "Date format")
-                } else {
+                }
+                else {
                     let string = strings?[.weeksPast] ?? localized("string_weeks_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
                     return String(format: string, Double(abs(since(Env.date(), in: .week))))
                 }
-            } else {
+            }
+            else {
                 if compare(.isNextWeek) {
                     return strings?[.oneWeekFuture] ?? NSLocalizedString("next week", comment: "Date format")
-                } else {
+                }
+                else {
                     let string = strings?[.weeksFuture] ?? NSLocalizedString("in %.f weeks", comment: "Date format")
                     return String(format: string, Double(abs(since(Env.date(), in: .week))))
                 }
@@ -230,14 +244,17 @@ extension Date {
             if isPast {
                 if compare(.isLastMonth) {
                     return strings?[.oneMonthPast] ?? NSLocalizedString("last month", comment: "Date format")
-                } else {
+                }
+                else {
                     let string = strings?[.monthsPast] ?? localized("string_months_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
                     return String(format: string, Double(abs(since(Env.date(), in: .month))))
                 }
-            } else {
+            }
+            else {
                 if compare(.isNextMonth) {
                     return strings?[.oneMonthFuture] ?? NSLocalizedString("next month", comment: "Date format")
-                } else {
+                }
+                else {
                     let string = strings?[.monthsFuture] ?? NSLocalizedString("in %.f months", comment: "Date format")
                     return String(format: string, Double(abs(since(Env.date(), in: .month))))
                 }
@@ -246,14 +263,17 @@ extension Date {
         if isPast {
             if compare(.isLastYear) {
                 return strings?[.oneYearPast] ?? NSLocalizedString("last year", comment: "Date format")
-            } else {
+            }
+            else {
                 let string = strings?[.yearsPast] ?? localized("string_years_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
                 return String(format: string, Double(abs(since(Env.date(), in: .year))))
             }
-        } else {
+        }
+        else {
             if compare(.isNextYear) {
                 return strings?[.oneYearFuture] ?? NSLocalizedString("next year", comment: "Date format")
-            } else {
+            }
+            else {
                 let string = strings?[.yearsFuture] ?? NSLocalizedString("in %.f years", comment: "Date format")
                 return String(format: string, Double(abs(since(Env.date(), in: .year))))
             }
@@ -463,7 +483,6 @@ extension Date {
         }
     }
 
-
     // MARK: Extracting components
     func component(_ component: DateComponentType) -> Int? {
         let components = Date.components(self)
@@ -506,7 +525,6 @@ extension Date {
         let interval: TimeInterval = self.timeIntervalSinceReferenceDate - distanceToStartOfWeek + distanceToEndOfWeek
         return Date(timeIntervalSinceReferenceDate: interval).component(.day)!
     }
-
 
     // MARK: Internal Components
     internal static func componentFlags() -> Set<Calendar.Component> {
@@ -627,7 +645,6 @@ extension Date {
 }
 
 // MARK: Enums used
-
 
 /**
  The string format used for date string conversion.
@@ -830,7 +847,6 @@ enum DateComparisonType {
 enum DateComponentType {
     case second, minute, hour, day, weekday, nthWeekday, week, month, year
 }
-
 
 // The type of date that can be used for the dateFor function.
 enum DateForType {

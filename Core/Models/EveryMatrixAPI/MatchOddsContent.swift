@@ -65,7 +65,6 @@ extension EveryMatrix {
             }
         }
 
-
         init(from decoder: Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
             guard let type = try? container.decode(ContentTypeKey.self, forKey: .type) else {

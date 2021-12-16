@@ -5,13 +5,12 @@
 //  Created by Ruben Roques on 28/09/2021.
 //
 
-
 import UIKit
 import Combine
 import OrderedCollections
 import SwiftUI
 
-class LiveEventsViewController: UIViewController  {
+class LiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var filtersBarBaseView: UIView!
     @IBOutlet private weak var filtersCollectionView: UICollectionView!
@@ -27,7 +26,7 @@ class LiveEventsViewController: UIViewController  {
 
     @IBOutlet weak var filtersCountLabel: UILabel!
     
-    var turnTimeRangeOn : Bool = false
+    var turnTimeRangeOn: Bool = false
     
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
@@ -84,8 +83,8 @@ class LiveEventsViewController: UIViewController  {
         }
     }
 
-    var didChangeSportType: ((SportType) -> ())?
-    var didTapBetslipButtonAction: (() -> ())?
+    var didChangeSportType: ((SportType) -> Void)?
+    var didTapBetslipButtonAction: (() -> Void)?
 
     init(selectedSportType: SportType = .football) {
         self.selectedSportType = selectedSportType
@@ -125,7 +124,6 @@ class LiveEventsViewController: UIViewController  {
 
         self.setupWithTheme()
     }
-
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -172,8 +170,6 @@ class LiveEventsViewController: UIViewController  {
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
 
-
-
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
@@ -208,8 +204,6 @@ class LiveEventsViewController: UIViewController  {
 
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(handleSportsSelectionTap))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
-
-        
         
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
@@ -235,7 +229,6 @@ class LiveEventsViewController: UIViewController  {
         let homeFilterVC = HomeFilterViewController(liveEventsViewModel: self.viewModel)
         homeFilterVC.delegate = self
     }
-
 
     func connectPublishers() {
 
@@ -289,8 +282,6 @@ class LiveEventsViewController: UIViewController  {
         
     }
     
-    
-    
     func reloadData() {
         self.tableView.reloadData()
     }
@@ -299,7 +290,6 @@ class LiveEventsViewController: UIViewController  {
         self.selectedSportType = sportType
         self.didChangeSportType?(sportType)
     }
-
 
     @objc func handleSportsSelectionTap() {
         let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType)
@@ -423,9 +413,9 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
             filtersCountLabel.text = String(homeFilters.countFilters)
             filtersCountLabel.layer.cornerRadius =  filtersCountLabel.frame.width/2
             filtersCountLabel.layer.masksToBounds = true
-        }else{
+        }
+        else {
             filtersCountLabel.isHidden = true
-           
             
         }
     }

@@ -10,12 +10,12 @@ import CoreGraphics
 
 struct HomeFilterOptions {
 
-    let lowerBoundTimeRange : CGFloat
-    let highBoundTimeRange : CGFloat
+    let lowerBoundTimeRange: CGFloat
+    let highBoundTimeRange: CGFloat
     let defaultMarket: MainMarketType
  
-    let lowerBoundOddsRange : CGFloat
-    let highBoundOddsRange : CGFloat
+    let lowerBoundOddsRange: CGFloat
+    let highBoundOddsRange: CGFloat
     let countFilters: Int
 
     init(lowerBoundTimeRange: CGFloat = 0.0,

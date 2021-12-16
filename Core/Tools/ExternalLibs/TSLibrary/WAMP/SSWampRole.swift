@@ -10,13 +10,13 @@ import Foundation
 
 enum SSWampRole: String {
     // swiftlint:disable identifier_name
-    //Client roles
+    // Client roles
     case Caller = "caller"
     case Callee = "callee"
     case Subscriber = "subscriber"
     case Publisher = "publisher"
     
-    //Route roles
+    // Route roles
     case Broker = "broker"
     case Dealer = "dealer"
 }

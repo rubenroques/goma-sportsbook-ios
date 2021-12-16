@@ -25,7 +25,8 @@ final class JSONSSWampSerializer: SSWampSerializer {
         do {
             let json = try JSONSerialization.jsonObject(with: data)
             return json as? [Any]
-        } catch {
+        }
+        catch {
             return nil
         }
     }
