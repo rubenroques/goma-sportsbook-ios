@@ -96,6 +96,17 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     
     var match: Match?
 
+    var isFavorite: Bool = false {
+        didSet {
+            if isFavorite {
+                self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
+            }
+            else {
+                self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+            }
+        }
+    }
+
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
@@ -423,6 +434,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.matchTimeLabel.text = "\(matchPart)"
         }
 
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            self.isFavorite = true
+        }
+
     }
 
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
@@ -466,7 +481,19 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
+        if UserDefaults.standard.userSession != nil {
 
+            if let matchId = self.match?.id {
+                Env.favoritesManager.checkFavorites(eventId: matchId)
+            }
+
+            if self.isFavorite {
+                self.isFavorite = false
+            }
+            else {
+                self.isFavorite = true
+            }
+        }
     }
 
     @IBAction func didTapMatchView(_ sender: Any) {

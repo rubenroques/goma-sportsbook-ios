@@ -602,7 +602,9 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     func showErrorView(errorMessage: String?) {
+
         let errorView = BetslipErrorView()
+        errorView.alpha = 0
         errorView.setDescription(description: errorMessage ?? "Error")
         errorView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(errorView)
@@ -613,9 +615,15 @@ class PreSubmissionBetslipViewController: UIViewController {
             errorView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
         ])
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-            errorView.removeFromSuperview()
-        }
+        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
+            errorView.alpha = 1.0
+            UIView.animate(withDuration: 0.2, delay: 5.0, options: .curveEaseOut, animations: {
+                errorView.alpha = 0
+            }, completion: { _ in
+                errorView.removeFromSuperview()
+            })
+        }, completion: nil)
+
     }
 
     override func viewDidLayoutSubviews() {
@@ -646,11 +654,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
     
     private func commonInit() {
-        // let flowLayout = UICollectionViewFlowLayout()
-        // flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        // flowLayout.scrollDirection = .horizontal
-        // betSuggestedCollectionView.collectionViewLayout = flowLayout
-        // betSuggestedCollectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+
         betSuggestedCollectionView.showsVerticalScrollIndicator = false
         betSuggestedCollectionView.showsHorizontalScrollIndicator = true
         betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
@@ -871,11 +875,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isLoading = true
 
         if self.listTypePublisher.value == .simple {
-<<<<<<< HEAD
-           
-=======
 
->>>>>>> develop
             self.numberOfBets = self.simpleBetsBettingValues.value.count
             Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
                 .receive(on: DispatchQueue.main)
@@ -1134,7 +1134,6 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
             else {
                 cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
             }
-
         }
         else {
             cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)

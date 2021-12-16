@@ -140,6 +140,7 @@ class BetslipManager: NSObject {
         return updatedTickets
     }
 
+    // TODO: Code Review - Vamos ver se é possivel simplificar isto, são dois publishers para o mesmo efeito
     func addBetPlacedDetailsError(betPlacedDetails: [BetPlacedDetails]) {
         self.betPlacedDetailsErrorsPublisher.send(betPlacedDetails)
     }
@@ -155,6 +156,7 @@ class BetslipManager: NSObject {
     func removeAllBetslipPlacedBetErrorResponse() {
         self.betslipPlaceBetResponseErrorsPublisher.send([])
     }
+    
 }
 
 //
