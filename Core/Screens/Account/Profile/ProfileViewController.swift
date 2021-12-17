@@ -407,10 +407,21 @@ class ProfileViewController: UIViewController {
 
 
     @IBAction private func didTapDepositButton() {
-        let depositViewController = DepositViewController()
 
-        // self.present(depositViewController, animated: true, completion: nil)
-        self.navigationController?.pushViewController(depositViewController, animated: true)
+        if !Env.userSessionStore.isUserProfileIncomplete {
+
+            let depositViewController = DepositViewController()
+
+            self.navigationController?.pushViewController(depositViewController, animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: localized("Profile Incomplete"),
+                                          message: "Please complete your profile before you can make deposits.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
     }
 
 }

@@ -74,6 +74,7 @@ class DepositViewController: UIViewController {
 
         self.nextButton.setTitle(localized("string_next"), for: .normal)
         self.nextButton.isEnabled = false
+        self.nextButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
         self.paymentsLabel.text = localized("string_payments_available")
         self.paymentsLabel.font = AppFont.with(type: .medium, size: 12)
@@ -255,6 +256,44 @@ class DepositViewController: UIViewController {
 
         if depositText {
             self.nextButton.isEnabled = true
+            self.checkForHighlightedAmountButton()
+
+            if depositHeaderTextFieldView.text == "10" {
+                self.amount10Button.backgroundColor = UIColor.App.mainTint
+                self.amount10Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                currentSelectedButton = self.amount10Button
+            }
+            else if depositHeaderTextFieldView.text == "20" {
+                self.amount20Button.backgroundColor = UIColor.App.mainTint
+                self.amount20Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                currentSelectedButton = self.amount20Button
+
+            }
+            else if depositHeaderTextFieldView.text == "50" {
+                self.amount50Button.backgroundColor = UIColor.App.mainTint
+                self.amount50Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                currentSelectedButton = self.amount50Button
+
+            }
+            else if depositHeaderTextFieldView.text == "100" {
+                self.amount100Button.backgroundColor = UIColor.App.mainTint
+                self.amount100Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                currentSelectedButton = self.amount100Button
+
+            }
+            else {
+                self.amount10Button.backgroundColor = .clear
+                self.amount10Button.layer.borderColor = UIColor.App.headingSecondary.cgColor
+
+                self.amount20Button.backgroundColor = .clear
+                self.amount20Button.layer.borderColor = UIColor.App.headingSecondary.cgColor
+
+                self.amount50Button.backgroundColor = .clear
+                self.amount50Button.layer.borderColor = UIColor.App.headingSecondary.cgColor
+
+                self.amount100Button.backgroundColor = .clear
+                self.amount100Button.layer.borderColor = UIColor.App.headingSecondary.cgColor
+            }
         }
         else {
             self.nextButton.isEnabled = false
@@ -273,6 +312,7 @@ class DepositViewController: UIViewController {
         button.layer.borderColor = UIColor.App.headingSecondary.cgColor
 
         button.setTitle(title, for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
     }
 
@@ -340,11 +380,22 @@ class DepositViewController: UIViewController {
         var currency = ""
         var gamingAccountId = ""
 
-        guard let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency else { return }
-        guard let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id else { return }
+        if let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency {
+            currency = walletCurrency
+        }
+        else {
+            self.showErrorAlert()
+            self.activityIndicatorView.isHidden = true
+        }
 
-        currency = walletCurrency
-        gamingAccountId = "\(walletGamingAccountId)"
+        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
+            gamingAccountId = "\(walletGamingAccountId)"
+        }
+        else {
+            self.showErrorAlert()
+            self.activityIndicatorView.isHidden = true
+        }
+
 
         Env.everyMatrixAPIClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
             .receive(on: DispatchQueue.main)
@@ -359,6 +410,14 @@ class DepositViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+    }
+
+    func showErrorAlert() {
+        let alert = UIAlertController(title: localized("Wallet Error"),
+                                      message: "There was an error trying to get your wallet settings. Try again later.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
     @IBAction private func didTapCloseButton() {

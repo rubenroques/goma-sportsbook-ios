@@ -82,117 +82,127 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qx4-fc-HRP" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                            <rect key="frame" x="16" y="165.5" width="382" height="80"/>
+                            <rect key="frame" x="30" y="165.5" width="354" height="80"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="80" id="6ez-wS-4xW"/>
                             </constraints>
                         </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="cjs-fx-QLC">
-                            <rect key="frame" x="16" y="265.5" width="382" height="50"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="cjs-fx-QLC">
+                            <rect key="frame" x="30" y="265.5" width="354" height="45"/>
                             <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bho-EI-4ya">
-                                    <rect key="frame" x="0.0" y="0.0" width="83.5" height="50"/>
-                                    <state key="normal" title="Button"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bho-EI-4ya">
+                                    <rect key="frame" x="0.0" y="0.0" width="80.5" height="45"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleColor" name="AccentColor"/>
+                                    </state>
                                     <connections>
                                         <action selector="didTap10Button" destination="-1" eventType="touchUpInside" id="qbI-ka-IZe"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7O1-9G-yXH">
-                                    <rect key="frame" x="99.5" y="0.0" width="83.5" height="50"/>
-                                    <state key="normal" title="Button"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7O1-9G-yXH">
+                                    <rect key="frame" x="91.5" y="0.0" width="80" height="45"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleColor" name="AccentColor"/>
+                                    </state>
                                     <connections>
                                         <action selector="didTap20Button" destination="-1" eventType="touchUpInside" id="u7s-Dp-FX7"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="atD-RP-Syo">
-                                    <rect key="frame" x="199" y="0.0" width="83.5" height="50"/>
-                                    <state key="normal" title="Button"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="atD-RP-Syo">
+                                    <rect key="frame" x="182.5" y="0.0" width="80.5" height="45"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleColor" name="AccentColor"/>
+                                    </state>
                                     <connections>
                                         <action selector="didTap50Button" destination="-1" eventType="touchUpInside" id="2yI-HB-NuC"/>
                                     </connections>
                                 </button>
-                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jdh-zE-bjE">
-                                    <rect key="frame" x="298.5" y="0.0" width="83.5" height="50"/>
-                                    <state key="normal" title="Button"/>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jdh-zE-bjE">
+                                    <rect key="frame" x="274" y="0.0" width="80" height="45"/>
+                                    <state key="normal" title="Button">
+                                        <color key="titleColor" name="AccentColor"/>
+                                    </state>
                                     <connections>
                                         <action selector="didTap100Button" destination="-1" eventType="touchUpInside" id="cn7-Ei-lCu"/>
                                     </connections>
                                 </button>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="height" constant="50" id="1eh-Su-LJJ"/>
+                                <constraint firstAttribute="height" constant="45" id="1eh-Su-LJJ"/>
                             </constraints>
                         </stackView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K8a-m3-CIw">
-                            <rect key="frame" x="16" y="335.5" width="382" height="50"/>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K8a-m3-CIw">
+                            <rect key="frame" x="30" y="340.5" width="354" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="Ye8-Sk-aqW"/>
                             </constraints>
-                            <state key="normal" title="Button"/>
+                            <state key="normal" title="Button">
+                                <color key="titleColor" name="AccentColor"/>
+                            </state>
                             <connections>
                                 <action selector="didTapNextButton" destination="-1" eventType="touchUpInside" id="qpQ-el-hzn"/>
                             </connections>
                         </button>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ngw-aR-kDb">
-                            <rect key="frame" x="16" y="620.5" width="382" height="20.5"/>
+                            <rect key="frame" x="30" y="625.5" width="354" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="KIw-0Y-J3N">
-                            <rect key="frame" x="16" y="649" width="382" height="40"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="KIw-0Y-J3N">
+                            <rect key="frame" x="30" y="654" width="354" height="40"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="40" id="ymR-ce-avc"/>
                             </constraints>
                         </stackView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="A0t-8w-ZtH">
-                            <rect key="frame" x="16" y="729" width="382" height="20.5"/>
+                            <rect key="frame" x="30" y="729" width="354" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5qH-bK-e05">
-                            <rect key="frame" x="16" y="757.5" width="382" height="20.5"/>
+                            <rect key="frame" x="30" y="757.5" width="354" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="D6U-Id-Np1">
-                            <rect key="frame" x="188.5" y="405.5" width="37" height="37"/>
+                            <rect key="frame" x="188.5" y="410.5" width="37" height="37"/>
                         </activityIndicatorView>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
-                        <constraint firstAttribute="trailing" secondItem="5qH-bK-e05" secondAttribute="trailing" constant="16" id="1yx-hc-3ce"/>
+                        <constraint firstAttribute="trailing" secondItem="5qH-bK-e05" secondAttribute="trailing" constant="30" id="1yx-hc-3ce"/>
                         <constraint firstItem="cey-8B-Vi3" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="50" id="22K-zf-eXo"/>
                         <constraint firstItem="D6U-Id-Np1" firstAttribute="centerX" secondItem="cpr-u3-egP" secondAttribute="centerX" id="31o-kQ-1Rf"/>
-                        <constraint firstAttribute="trailing" secondItem="cjs-fx-QLC" secondAttribute="trailing" constant="16" id="3hE-88-bjB"/>
-                        <constraint firstItem="Ngw-aR-kDb" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="16" id="4zq-GP-feW"/>
-                        <constraint firstItem="K8a-m3-CIw" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="16" id="51a-C4-534"/>
-                        <constraint firstItem="A0t-8w-ZtH" firstAttribute="top" secondItem="KIw-0Y-J3N" secondAttribute="bottom" constant="40" id="5DI-4v-eEc"/>
-                        <constraint firstItem="5qH-bK-e05" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="16" id="5ev-OT-oSJ"/>
+                        <constraint firstAttribute="trailing" secondItem="cjs-fx-QLC" secondAttribute="trailing" constant="30" id="3hE-88-bjB"/>
+                        <constraint firstItem="Ngw-aR-kDb" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="4zq-GP-feW"/>
+                        <constraint firstItem="K8a-m3-CIw" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="51a-C4-534"/>
+                        <constraint firstItem="A0t-8w-ZtH" firstAttribute="top" secondItem="KIw-0Y-J3N" secondAttribute="bottom" constant="35" id="5DI-4v-eEc"/>
+                        <constraint firstItem="5qH-bK-e05" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="5ev-OT-oSJ"/>
                         <constraint firstAttribute="trailing" secondItem="cey-8B-Vi3" secondAttribute="trailing" constant="50" id="Al2-74-llb"/>
                         <constraint firstItem="cey-8B-Vi3" firstAttribute="top" secondItem="puZ-O4-0OE" secondAttribute="bottom" constant="45" id="D4h-r4-fCY"/>
-                        <constraint firstAttribute="trailing" secondItem="Ngw-aR-kDb" secondAttribute="trailing" constant="16" id="GBy-6B-ahQ"/>
-                        <constraint firstAttribute="trailing" secondItem="KIw-0Y-J3N" secondAttribute="trailing" constant="16" id="GTz-xc-010"/>
-                        <constraint firstItem="cjs-fx-QLC" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="16" id="Hai-Bc-lE5"/>
+                        <constraint firstAttribute="trailing" secondItem="Ngw-aR-kDb" secondAttribute="trailing" constant="30" id="GBy-6B-ahQ"/>
+                        <constraint firstAttribute="trailing" secondItem="KIw-0Y-J3N" secondAttribute="trailing" constant="30" id="GTz-xc-010"/>
+                        <constraint firstItem="cjs-fx-QLC" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="Hai-Bc-lE5"/>
                         <constraint firstAttribute="bottom" secondItem="5qH-bK-e05" secondAttribute="bottom" constant="40" id="LbN-Ua-BEI"/>
-                        <constraint firstAttribute="trailing" secondItem="qx4-fc-HRP" secondAttribute="trailing" constant="16" id="Myz-C9-mb1"/>
+                        <constraint firstAttribute="trailing" secondItem="qx4-fc-HRP" secondAttribute="trailing" constant="30" id="Myz-C9-mb1"/>
                         <constraint firstItem="qx4-fc-HRP" firstAttribute="top" secondItem="cey-8B-Vi3" secondAttribute="bottom" constant="50" id="NTT-R0-Lb1"/>
-                        <constraint firstItem="K8a-m3-CIw" firstAttribute="top" secondItem="cjs-fx-QLC" secondAttribute="bottom" constant="20" id="NlZ-G5-kY1"/>
-                        <constraint firstItem="KIw-0Y-J3N" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="16" id="Olq-7R-jip"/>
+                        <constraint firstItem="K8a-m3-CIw" firstAttribute="top" secondItem="cjs-fx-QLC" secondAttribute="bottom" constant="30" id="NlZ-G5-kY1"/>
+                        <constraint firstItem="KIw-0Y-J3N" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="Olq-7R-jip"/>
                         <constraint firstItem="puZ-O4-0OE" firstAttribute="top" secondItem="cpr-u3-egP" secondAttribute="top" id="WEX-rd-sZx"/>
-                        <constraint firstAttribute="trailing" secondItem="A0t-8w-ZtH" secondAttribute="trailing" constant="16" id="aUt-sH-fJc"/>
+                        <constraint firstAttribute="trailing" secondItem="A0t-8w-ZtH" secondAttribute="trailing" constant="30" id="aUt-sH-fJc"/>
                         <constraint firstItem="KIw-0Y-J3N" firstAttribute="top" secondItem="Ngw-aR-kDb" secondAttribute="bottom" constant="8" id="bMd-yb-EC1"/>
                         <constraint firstItem="cjs-fx-QLC" firstAttribute="top" secondItem="qx4-fc-HRP" secondAttribute="bottom" constant="20" id="cgt-H9-gR5"/>
-                        <constraint firstItem="A0t-8w-ZtH" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="16" id="crB-F3-GPB"/>
+                        <constraint firstItem="A0t-8w-ZtH" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="crB-F3-GPB"/>
                         <constraint firstItem="puZ-O4-0OE" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" id="e0t-v2-Xq6"/>
                         <constraint firstItem="5qH-bK-e05" firstAttribute="top" secondItem="A0t-8w-ZtH" secondAttribute="bottom" constant="8" id="fRl-tQ-1Bo"/>
                         <constraint firstItem="D6U-Id-Np1" firstAttribute="top" secondItem="K8a-m3-CIw" secondAttribute="bottom" constant="20" id="h1e-Hm-VLQ"/>
                         <constraint firstAttribute="trailing" secondItem="puZ-O4-0OE" secondAttribute="trailing" id="oRp-YM-YwH"/>
-                        <constraint firstAttribute="trailing" secondItem="K8a-m3-CIw" secondAttribute="trailing" constant="16" id="qaE-DC-qJp"/>
-                        <constraint firstItem="qx4-fc-HRP" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="16" id="y6A-KN-vfN"/>
+                        <constraint firstAttribute="trailing" secondItem="K8a-m3-CIw" secondAttribute="trailing" constant="30" id="qaE-DC-qJp"/>
+                        <constraint firstItem="qx4-fc-HRP" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="y6A-KN-vfN"/>
                     </constraints>
                 </view>
             </subviews>
@@ -213,6 +223,9 @@
     </objects>
     <resources>
         <image name="thin_close_cross_icon" width="13" height="13"/>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="headingMainColor">
             <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
