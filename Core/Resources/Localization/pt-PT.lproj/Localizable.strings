@@ -182,3 +182,18 @@ Terms of use, Privacy Policy and EULA";
 "string_cashout_info" = "Get a percentage of your bet back before the game is over";
 
 "string_country" = "Country";
+
+"string_deposit" = "Deposit";
+"string_how_much_deposit" = "How much do you want to deposit in your account?";
+"string_deposit_value" = "Deposit Value";
+"string_minimum_deposit_value" = "Minimum Value: 10€";
+"string_payments_available" = "Payments available using:";
+"string_next" = "Next";
+"string_payments_available" = "Payments available using:";
+
+"string_responsible_gaming" = "Read about Responsible Gambling.";
+"string_responsible_gaming_clickable" = "Responsible Gambling";
+
+"string_faq" = "Any questions about payment process see F.A.Q or Contact Us.";
+"string_faq_clickable" = "F.A.Q";
+"string_contact_us" = "Contact Us";

@@ -1,0 +1,385 @@
+//
+//  DepositViewController.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 17/12/2021.
+//
+
+import UIKit
+import Combine
+
+class DepositViewController: UIViewController {
+
+    @IBOutlet private var topView: UIView!
+    @IBOutlet private var containerView: UIView!
+    @IBOutlet private var navigationView: UIView!
+    @IBOutlet private var navigationLabel: UILabel!
+    @IBOutlet private var navigationButton: UIButton!
+    @IBOutlet private var titleLabel: UILabel!
+    @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var amountButtonStackView: UIStackView!
+    @IBOutlet private var amount10Button: UIButton!
+    @IBOutlet private var amount20Button: UIButton!
+    @IBOutlet private var amount50Button: UIButton!
+    @IBOutlet private var amount100Button: UIButton!
+    @IBOutlet private var nextButton: UIButton!
+    @IBOutlet private var paymentsLabel: UILabel!
+    @IBOutlet private var paymentsLogosStackView: UIStackView!
+    @IBOutlet private var responsibleGamingLabel: UILabel!
+    @IBOutlet private var faqLabel: UILabel!
+    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+
+    // Variables
+    var currentSelectedButton: UIButton?
+    var cancellables = Set<AnyCancellable>()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.commonInit()
+        self.setupWithTheme()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        setupWithTheme()
+    }
+
+    func commonInit() {
+
+        self.navigationLabel.text = localized("string_deposit")
+        self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
+
+        self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
+        self.navigationButton.contentMode = .scaleAspectFit
+
+        self.titleLabel.text = localized("string_how_much_deposit")
+        self.titleLabel.font = AppFont.with(type: .bold, size: 20)
+        self.titleLabel.numberOfLines = 0
+
+        self.depositHeaderTextFieldView.setPlaceholderText(localized("string_deposit_value"))
+        self.depositHeaderTextFieldView.showTipWithoutIcon(text: localized("string_minimum_deposit_value"), color: UIColor.App.headingSecondary)
+        self.depositHeaderTextFieldView.isTipPermanent = true
+        self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
+
+        self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€10")
+        self.setDepositAmountButtonDesign(button: self.amount20Button, title: "€20")
+        self.setDepositAmountButtonDesign(button: self.amount50Button, title: "€50")
+        self.setDepositAmountButtonDesign(button: self.amount100Button, title: "€100")
+
+        self.nextButton.setTitle(localized("string_next"), for: .normal)
+        self.nextButton.isEnabled = false
+
+        self.paymentsLabel.text = localized("string_payments_available")
+        self.paymentsLabel.font = AppFont.with(type: .medium, size: 12)
+
+        self.createPaymentsLogosImageViews()
+
+        self.setupResponsableGamingUnderlineClickableLabel()
+        self.setupFaqUnderlineClickableLabel()
+
+        let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        self.setupPublishers()
+
+        self.activityIndicatorView.isHidden = true
+    }
+
+    func setupWithTheme() {
+        self.view.backgroundColor = UIColor.App.mainBackground
+
+        self.topView.backgroundColor = UIColor.App.mainBackground
+
+        self.containerView.backgroundColor = UIColor.App.mainBackground
+
+        self.navigationView.backgroundColor = .clear
+
+        self.navigationLabel.textColor = UIColor.App.headingMain
+
+        self.navigationButton.backgroundColor = .clear
+        self.navigationButton.tintColor = UIColor.App.headingMain
+
+        self.titleLabel.textColor = UIColor.App.headingMain
+
+        self.depositHeaderTextFieldView.backgroundColor = .clear
+        self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App.headingSecondary)
+        self.depositHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+
+        self.amountButtonStackView.backgroundColor = .clear
+
+        self.nextButton.setBackgroundColor(UIColor.App.mainTint, for: .normal)
+        self.nextButton.setBackgroundColor(UIColor.App.contentBackground, for: .disabled)
+        self.nextButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        self.nextButton.setTitleColor(UIColor.App.headingDisabled, for: .disabled)
+        self.nextButton.layer.cornerRadius = CornerRadius.button
+        self.nextButton.layer.masksToBounds = true
+
+        self.paymentsLabel.textColor = UIColor.App.headingSecondary
+
+        self.paymentsLogosStackView.backgroundColor = .clear
+    }
+
+    func setupPublishers() {
+        self.depositHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkUserInputs()
+            })
+            .store(in: &cancellables)
+    }
+
+    func createPaymentsLogosImageViews() {
+        let mastercardImageView = UIImageView()
+        mastercardImageView.image = UIImage(named: "mastercard_logo")
+        mastercardImageView.contentMode = .scaleAspectFit
+
+        let maestroImageView = UIImageView()
+        maestroImageView.image = UIImage(named: "maestro_logo")
+        maestroImageView.contentMode = .scaleAspectFit
+
+        let visaImageView = UIImageView()
+        visaImageView.image = UIImage(named: "visa_logo")
+        visaImageView.contentMode = .scaleAspectFit
+
+        let netellerImageView = UIImageView()
+        netellerImageView.image = UIImage(named: "neteller_logo")
+        netellerImageView.contentMode = .scaleAspectFit
+
+        self.paymentsLogosStackView.addArrangedSubview(mastercardImageView)
+        self.paymentsLogosStackView.addArrangedSubview(maestroImageView)
+        self.paymentsLogosStackView.addArrangedSubview(visaImageView)
+        self.paymentsLogosStackView.addArrangedSubview(netellerImageView)
+
+    }
+
+    func setupResponsableGamingUnderlineClickableLabel() {
+
+        let fullString = localized("string_responsible_gaming")
+
+        responsibleGamingLabel.text = fullString
+        responsibleGamingLabel.numberOfLines = 0
+        responsibleGamingLabel.font = AppFont.with(type: .medium, size: 10)
+        responsibleGamingLabel.textColor =  UIColor.App.headingSecondary
+
+        let underlineAttriString = NSMutableAttributedString(string: fullString)
+
+        let range1 = (fullString as NSString).range(of: localized("string_responsible_gaming_clickable"))
+
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
+
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
+
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
+
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.alignment = .left
+
+        underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: underlineAttriString.length))
+
+        responsibleGamingLabel.attributedText = underlineAttriString
+        responsibleGamingLabel.isUserInteractionEnabled = true
+        responsibleGamingLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapResponsabibleGamingUnderlineLabel(gesture:))))
+    }
+
+    @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {
+        let text = localized("string_responsible_gaming")
+
+        let stringRange1 = (text as NSString).range(of: localized("string_responsible_gaming_clickable"))
+
+        if gesture.didTapAttributedTextInLabel(label: self.responsibleGamingLabel, inRange: stringRange1) {
+
+        }
+
+    }
+
+    func setupFaqUnderlineClickableLabel() {
+
+        let fullString = localized("string_faq")
+
+        faqLabel.text = fullString
+        faqLabel.numberOfLines = 0
+        faqLabel.font = AppFont.with(type: .medium, size: 10)
+        faqLabel.textColor =  UIColor.App.headingSecondary
+
+        let underlineAttriString = NSMutableAttributedString(string: fullString)
+
+        let range1 = (fullString as NSString).range(of: localized("string_faq_clickable"))
+        let range2 = (fullString as NSString).range(of: localized("string_contact_us"))
+
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
+
+        underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range2)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
+        underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
+
+        let paragraphStyle = NSMutableParagraphStyle()
+
+        paragraphStyle.lineHeightMultiple = TextSpacing.subtitle
+        paragraphStyle.alignment = .left
+
+        underlineAttriString.addAttribute(.paragraphStyle, value: paragraphStyle, range: NSRange(location: 0, length: underlineAttriString.length))
+
+        faqLabel.attributedText = underlineAttriString
+        faqLabel.isUserInteractionEnabled = true
+        faqLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(tapFaqUnderlineLabel(gesture:))))
+    }
+
+    @IBAction private func tapFaqUnderlineLabel(gesture: UITapGestureRecognizer) {
+        let text = localized("string_faq")
+
+        let stringRange1 = (text as NSString).range(of: localized("string_faq_clickable"))
+        let stringRange2 = (text as NSString).range(of: localized("string_contact_us"))
+
+        if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange1) {
+
+        }
+        else if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange2) {
+
+        }
+
+    }
+
+    private func checkUserInputs() {
+
+        let depositText = depositHeaderTextFieldView.text == "" ? false : true
+
+        if depositText {
+            self.nextButton.isEnabled = true
+        }
+        else {
+            self.nextButton.isEnabled = false
+        }
+
+    }
+
+    func setDepositAmountButtonDesign(button: UIButton, title: String) {
+        button.backgroundColor = .clear
+        button.layer.cornerRadius = CornerRadius.button
+        button.layer.masksToBounds = true
+
+        button.setTitleColor(UIColor.App.headingMain, for: .normal)
+        button.setBackgroundColor(.clear, for: .normal)
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.App.headingSecondary.cgColor
+
+        button.setTitle(title, for: .normal)
+
+    }
+
+    func checkForHighlightedAmountButton() {
+        if currentSelectedButton != nil {
+            currentSelectedButton?.backgroundColor = .clear
+            currentSelectedButton?.layer.borderColor = UIColor.App.headingSecondary.cgColor
+        }
+    }
+
+    @IBAction private func didTap10Button() {
+        self.checkForHighlightedAmountButton()
+
+        self.amount10Button.backgroundColor = UIColor.App.mainTint
+        self.amount10Button.layer.borderColor = UIColor.App.mainTint.cgColor
+
+        self.currentSelectedButton = self.amount10Button
+
+        self.depositHeaderTextFieldView.setText("10")
+        self.nextButton.isEnabled = true
+    }
+    @IBAction private func didTap20Button() {
+        self.checkForHighlightedAmountButton()
+
+        self.amount20Button.backgroundColor = UIColor.App.mainTint
+        self.amount20Button.layer.borderColor = UIColor.App.mainTint.cgColor
+
+        self.currentSelectedButton = self.amount20Button
+
+        self.depositHeaderTextFieldView.setText("20")
+        self.nextButton.isEnabled = true
+
+    }
+
+    @IBAction private func didTap50Button() {
+        self.checkForHighlightedAmountButton()
+
+        self.amount50Button.backgroundColor = UIColor.App.mainTint
+        self.amount50Button.layer.borderColor = UIColor.App.mainTint.cgColor
+
+        self.currentSelectedButton = self.amount50Button
+
+        self.depositHeaderTextFieldView.setText("50")
+        self.nextButton.isEnabled = true
+
+    }
+
+    @IBAction private func didTap100Button() {
+        self.checkForHighlightedAmountButton()
+
+        self.amount100Button.backgroundColor = UIColor.App.mainTint
+        self.amount100Button.layer.borderColor = UIColor.App.mainTint.cgColor
+
+        self.currentSelectedButton = self.amount100Button
+
+        self.depositHeaderTextFieldView.setText("100")
+        self.nextButton.isEnabled = true
+
+    }
+
+    @IBAction private func didTapNextButton() {
+        self.activityIndicatorView.isHidden = false
+
+        let amount = self.depositHeaderTextFieldView.text
+        var currency = ""
+        var gamingAccountId = ""
+
+        guard let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency else { return }
+        guard let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id else { return }
+
+        currency = walletCurrency
+        gamingAccountId = "\(walletGamingAccountId)"
+
+        Env.everyMatrixAPIClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                self.activityIndicatorView.isHidden = true
+
+            }, receiveValue: { value in
+                DispatchQueue.main.async {
+                    let depositWebViewController = DepositWebViewController(depositUrl: value.cashierUrl)
+
+                    self.navigationController?.pushViewController(depositWebViewController, animated: true)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    @IBAction private func didTapCloseButton() {
+        self.dismiss(animated: true, completion: nil)
+    }
+
+    @objc func didTapBackground() {
+        self.resignFirstResponder()
+
+        self.depositHeaderTextFieldView.resignFirstResponder()
+
+    }
+
+    @objc func keyboardWillShow(notification: NSNotification) {
+
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+
+        self.checkForHighlightedAmountButton()
+        self.currentSelectedButton = nil
+    }
+
+}

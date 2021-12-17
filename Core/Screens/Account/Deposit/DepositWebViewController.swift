@@ -1,0 +1,84 @@
+//
+//  DepositWebViewController.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 17/12/2021.
+//
+
+import UIKit
+import WebKit
+
+class DepositWebViewController: UIViewController {
+
+    @IBOutlet private var topView: UIView!
+    @IBOutlet private var containerView: UIView!
+    @IBOutlet private var navigationView: UIView!
+    @IBOutlet private var navigationLabel: UILabel!
+    @IBOutlet private var navigationButton: UIButton!
+    @IBOutlet private var webView: WKWebView!
+
+    var depositUrl: String?
+
+    init(depositUrl: String? = nil) {
+
+        self.depositUrl = depositUrl
+
+        super.init(nibName: "DepositWebViewController", bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.commonInit()
+        self.setupWithTheme()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        setupWithTheme()
+    }
+
+    func commonInit() {
+        self.navigationLabel.text = localized("string_deposit")
+        self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
+
+        self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
+        self.navigationButton.contentMode = .scaleAspectFit
+
+        self.setupWebView()
+    }
+
+    func setupWithTheme() {
+        self.topView.backgroundColor = UIColor.App.mainBackground
+
+        self.containerView.backgroundColor = UIColor.App.mainBackground
+
+        self.navigationView.backgroundColor = .clear
+
+        self.navigationLabel.textColor = UIColor.App.headingMain
+
+        self.navigationButton.backgroundColor = .clear
+        self.navigationButton.tintColor = UIColor.App.headingMain
+    }
+
+    func setupWebView() {
+
+        guard let depositUrlString = self.depositUrl else { return }
+
+        guard let depositUrl = URL(string: depositUrlString) else { return }
+
+        self.webView.load(URLRequest(url: depositUrl))
+    }
+
+    @IBAction private func didTapCloseButton() {
+        self.dismiss(animated: true, completion: nil)
+
+    }
+
+}

@@ -405,6 +405,14 @@ class ProfileViewController: UIViewController {
         infoBaseView.backgroundColor = .clear
     }
 
+
+    @IBAction private func didTapDepositButton() {
+        let depositViewController = DepositViewController()
+
+        // self.present(depositViewController, animated: true, completion: nil)
+        self.navigationController?.pushViewController(depositViewController, animated: true)
+    }
+
 }
 
 extension ProfileViewController {

@@ -644,6 +644,16 @@
 		A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		A979CA562762247900230E93 /* GomaSuggestedBets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA552762247900230E93 /* GomaSuggestedBets.swift */; };
 		A979CA572762247900230E93 /* GomaSuggestedBets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA552762247900230E93 /* GomaSuggestedBets.swift */; };
+		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
+		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
+		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
+		A9875798276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
+		A987579B276CD3660099990D /* DepositWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875799276CD3660099990D /* DepositWebViewController.swift */; };
+		A987579C276CD3660099990D /* DepositWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875799276CD3660099990D /* DepositWebViewController.swift */; };
+		A987579D276CD3660099990D /* DepositWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A987579A276CD3660099990D /* DepositWebViewController.xib */; };
+		A987579E276CD3660099990D /* DepositWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A987579A276CD3660099990D /* DepositWebViewController.xib */; };
+		A98757A1276CDB990099990D /* DepositResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98757A0276CDB990099990D /* DepositResponse.swift */; };
+		A98757A2276CDB990099990D /* DepositResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98757A0276CDB990099990D /* DepositResponse.swift */; };
 		A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
 		A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */; };
 		A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */; };
@@ -1150,6 +1160,11 @@
 		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
 		A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchOddsContent.swift; sourceTree = "<group>"; };
 		A979CA552762247900230E93 /* GomaSuggestedBets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaSuggestedBets.swift; sourceTree = "<group>"; };
+		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
+		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
+		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
+		A987579A276CD3660099990D /* DepositWebViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositWebViewController.xib; sourceTree = "<group>"; };
+		A98757A0276CDB990099990D /* DepositResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositResponse.swift; sourceTree = "<group>"; };
 		A98D3B28271481A8003BAE6F /* SportSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionViewController.swift; sourceTree = "<group>"; };
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1990,6 +2005,7 @@
 		4589F3EA26BF017A005DF543 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				A9875792276CA4ED0099990D /* Deposit */,
 				4589F3F126BF017A005DF543 /* Login */,
 				A9C82FB226F3AB3400059DCD /* Profile */,
 				4589F3EB26BF017A005DF543 /* Welcome */,
@@ -2405,6 +2421,25 @@
 			path = ActivationAlertScrollableView;
 			sourceTree = "<group>";
 		};
+		A9875792276CA4ED0099990D /* Deposit */ = {
+			isa = PBXGroup;
+			children = (
+				A9875793276CA50F0099990D /* DepositViewController.swift */,
+				A9875794276CA50F0099990D /* DepositViewController.xib */,
+				A9875799276CD3660099990D /* DepositWebViewController.swift */,
+				A987579A276CD3660099990D /* DepositWebViewController.xib */,
+			);
+			path = Deposit;
+			sourceTree = "<group>";
+		};
+		A987579F276CDB860099990D /* Deposits */ = {
+			isa = PBXGroup;
+			children = (
+				A98757A0276CDB990099990D /* DepositResponse.swift */,
+			);
+			path = Deposits;
+			sourceTree = "<group>";
+		};
 		A98D3B272714817C003BAE6F /* SportSelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -2531,6 +2566,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				A987579F276CDB860099990D /* Deposits */,
 				A9BCF44E2755283B006DD528 /* Cashouts */,
 				457F495E2737C3580047169D /* Betting */,
 				455F764F26F0EFAD00B9B85D /* Account */,
@@ -2945,6 +2981,7 @@
 				45BEA48326F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				A9627A0127440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
 				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
+				A9875797276CA50F0099990D /* DepositViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */,
 				A92F5D8A2719D63300884BDF /* FilterSliderInfoView.xib in Resources */,
@@ -2981,6 +3018,7 @@
 				455A0CAC26BD981900EC572D /* SharedAssets.xcassets in Resources */,
 				A9627A08274529BD0001E1D5 /* ActivationAlertScrollableView.xib in Resources */,
 				45DDBA9426F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
+				A987579D276CD3660099990D /* DepositWebViewController.xib in Resources */,
 				454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */,
 				45626E40275544620069B89B /* OutcomeSelectionButtonView.xib in Resources */,
 				4589F41026BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
@@ -3070,6 +3108,7 @@
 				455A0CAF26BD982000EC572D /* Localizable.strings in Resources */,
 				456B343726C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
+				A987579E276CD3660099990D /* DepositWebViewController.xib in Resources */,
 				A92F5DAD272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
@@ -3082,6 +3121,7 @@
 				A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
+				A9875798276CA50F0099990D /* DepositViewController.xib in Resources */,
 				A9627A0227440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
 				A9C6022E2716F41200992E11 /* HomeFilterViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
@@ -3303,6 +3343,7 @@
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				45626E442755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
+				A98757A1276CDB990099990D /* DepositResponse.swift in Sources */,
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CE926F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
@@ -3312,6 +3353,7 @@
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CED26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
+				A9875795276CA50F0099990D /* DepositViewController.swift in Sources */,
 				A9627A05274529670001E1D5 /* ActivationAlertScrollableView.swift in Sources */,
 				454E0AB22732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48926F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
@@ -3422,6 +3464,7 @@
 				455A0CEA26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1926F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				454E0ABE2732C78300794E0C /* TitleTabularDataSource.swift in Sources */,
+				A987579B276CD3660099990D /* DepositWebViewController.swift in Sources */,
 				4589F41426BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				A9627A11274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
@@ -3596,6 +3639,7 @@
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45626E452755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
+				A98757A2276CDB990099990D /* DepositResponse.swift in Sources */,
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CEA26F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
@@ -3605,6 +3649,7 @@
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CEE26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
+				A9875796276CA50F0099990D /* DepositViewController.swift in Sources */,
 				A9627A06274529670001E1D5 /* ActivationAlertScrollableView.swift in Sources */,
 				454E0AB32732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48A26F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
@@ -3715,6 +3760,7 @@
 				455A0CEB26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1A26F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				454E0ABF2732C78300794E0C /* TitleTabularDataSource.swift in Sources */,
+				A987579C276CD3660099990D /* DepositWebViewController.swift in Sources */,
 				4589F41526BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				A9627A12274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,

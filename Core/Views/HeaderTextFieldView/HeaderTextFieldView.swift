@@ -273,6 +273,10 @@ class HeaderTextFieldView: NibView {
         self.headerLabel.text = placeholder
     }
 
+    func setPlaceholderColor(_ color: UIColor) {
+        self.headerLabel.textColor = color
+    }
+
     func setSecureField(_ isSecure: Bool) {
         self.isSecureField = isSecure
     }
