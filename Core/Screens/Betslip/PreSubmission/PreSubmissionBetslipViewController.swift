@@ -398,7 +398,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
                     let totalValue = multiplier * betValue
-                       //self.totalBetOdds = betValue
+                 
                     self.totalPossibleEarnings =  totalValue
                     
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
@@ -408,7 +408,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarnings in
-                //self.totalPossibleEarnings = Double(possibleEarnings)
+                
                 self?.multipleWinningsValueLabel.text = possibleEarnings
             })
             .store(in: &cancellables)
@@ -433,13 +433,16 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return "-.--€"
                 }
                 else {
-                    //self.totalBetOdds = expectedReturn
-                    //self.totalPossibleEarnings = expectedReturn
+                   
+                    self.totalPossibleEarnings = expectedReturn
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarningsString in
-               
+                if let possibleEarningsConverted = Double(possibleEarningsString){
+                    self?.totalPossibleEarnings = possibleEarningsConverted
+                }
+                
                 self?.simpleWinningsValueLabel.text = possibleEarningsString
             })
             .store(in: &cancellables)
@@ -887,11 +890,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                     self.isLoading = false
                 } receiveValue: { betPlacedDetailsArray in
-                    for betPlacedDetails in betPlacedDetailsArray {
-                        for bet in betPlacedDetails.tickets {
-                            self.totalBetOdds += bet.value
-                        }
-                    }
+                    
                     self.betPlacedAction?(betPlacedDetailsArray)
 
                 }
