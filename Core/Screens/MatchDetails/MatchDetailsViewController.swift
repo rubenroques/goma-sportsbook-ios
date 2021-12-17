@@ -257,6 +257,7 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         self.marketTypesCollectionView.showsVerticalScrollIndicator = false
         self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
+        self.marketTypesCollectionView.alwaysBounceHorizontal = true
         self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         self.marketTypesCollectionView.delegate = self.viewModel

@@ -152,7 +152,6 @@ class BannerCellViewModel {
             }
         }
 
-        print("Finished dump processing")
         self.joinMatchMarkets()
     }
 

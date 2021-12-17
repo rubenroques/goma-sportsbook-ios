@@ -206,6 +206,7 @@ class PreLiveEventsViewController: UIViewController {
         filtersCollectionView.contentInset = UIEdgeInsets(top: 0, left: 74, bottom: 0, right: 54)
         filtersCollectionView.showsVerticalScrollIndicator = false
         filtersCollectionView.showsHorizontalScrollIndicator = false
+        filtersCollectionView.alwaysBounceHorizontal = true
         filtersCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
@@ -636,8 +637,6 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         self.filtersCollectionView.reloadData()
         self.filtersCollectionView.layoutIfNeeded()
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-//        let rect = self.filtersCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
-//             self.filtersCollectionView.scrollRectToVisible(rect!, animated: true)
 
     }
 

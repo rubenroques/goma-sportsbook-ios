@@ -558,25 +558,18 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             TSManager.shared
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure:
-                        print("Error retrieving data!")
-                    case .finished:
-                        print("Data retrieved!")
-                    }
+                .sink(receiveCompletion: { _ in
+
                 }, receiveValue: { [weak self] state in
                     switch state {
                     case .connect(let publisherIdentifiable):
-                        print("MyBets suggestedBets connect")
                         self?.suggestedBetsRegister = publisherIdentifiable
                     case .initialContent(let aggregator):
-                        print("MyBets suggestedBets initialContent")
                         self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
                     case .updatedContent(let aggregatorUpdates):
                         print("MyBets suggestedBets updatedContent")
                     case .disconnect:
-                        print("MyBets suggestedBets disconnect")
+                        ()
                     }
                 })
                 .store(in: &cancellables)

@@ -395,6 +395,12 @@
 		4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42826C02EAA005DF543 /* StaticTableViewController.swift */; };
 		4589F42C26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */; };
 		4589F42D26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */; };
+		458BAC69276B65D5006C4BC7 /* MyTicketsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */; };
+		458BAC6A276B65D5006C4BC7 /* MyTicketsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */; };
+		458BAC6B276B65D5006C4BC7 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */; };
+		458BAC6C276B65D5006C4BC7 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */; };
+		458BAC6E276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */; };
+		458BAC6F276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */; };
 		458F4C922712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */; };
 		458F4C932712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */; };
 		458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871CF2710995700F5B87B /* AggregatorsRepository.swift */; };
@@ -1031,6 +1037,9 @@
 		4589F42426C02DF3005DF543 /* TableViewDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewDescriptor.swift; sourceTree = "<group>"; };
 		4589F42826C02EAA005DF543 /* StaticTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTableViewController.swift; sourceTree = "<group>"; };
 		4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugTableViewDescription.swift; sourceTree = "<group>"; };
+		458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsViewController.swift; sourceTree = "<group>"; };
+		458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTicketsViewController.xib; sourceTree = "<group>"; };
+		458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsViewModel.swift; sourceTree = "<group>"; };
 		458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveEventsViewModel.swift; sourceTree = "<group>"; };
 		4591358027602960009D1193 /* MarketGroupOrganizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroupOrganizer.swift; sourceTree = "<group>"; };
 		45936CA2270E1BCE00E8260E /* SportTypeSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeSelectionViewController.swift; sourceTree = "<group>"; };
@@ -1801,6 +1810,7 @@
 				45EF5430270C5FD600D1E13E /* Filters */,
 				45936CA8270E1BF600E8260E /* SportTypeSelection */,
 				45B0BD2F271EED24009C41FA /* CompetitionsList */,
+				458BAC66276B652F006C4BC7 /* MyTickets */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -1971,7 +1981,6 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				A92F5D8F2729730100884BDF /* Spinner */,
 				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
 				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
 				452047BE27036D4600B277B5 /* Splash */,
@@ -1983,6 +1992,7 @@
 				4589F3EA26BF017A005DF543 /* Account */,
 				454E0A932732BF4600794E0C /* Betslip */,
 				455A0D2226BDE7B900EC572D /* DebugHelper */,
+				A92F5D8F2729730100884BDF /* Spinner */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -2071,6 +2081,16 @@
 				4589F42826C02EAA005DF543 /* StaticTableViewController.swift */,
 			);
 			path = StaticTableViews;
+			sourceTree = "<group>";
+		};
+		458BAC66276B652F006C4BC7 /* MyTickets */ = {
+			isa = PBXGroup;
+			children = (
+				458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */,
+				458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */,
+				458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */,
+			);
+			path = MyTickets;
 			sourceTree = "<group>";
 		};
 		45936CA8270E1BF600E8260E /* SportTypeSelection */ = {
@@ -2903,6 +2923,7 @@
 				456B343A26C2819E009D7D27 /* Inconsolata-Medium.ttf in Resources */,
 				457816BD2707632400F66878 /* TitleTableViewHeader.xib in Resources */,
 				454E0AA42732C10C00794E0C /* SubmitedBetslipViewController.xib in Resources */,
+				458BAC6B276B65D5006C4BC7 /* MyTicketsViewController.xib in Resources */,
 				4589F3FF26BF017A005DF543 /* LoginViewController.xib in Resources */,
 				A9627A0E274548610001E1D5 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				455A0C6026BD902F00EC572D /* LaunchScreen.storyboard in Resources */,
@@ -3072,6 +3093,7 @@
 				45A2896526C2BF5600BCD5DA /* ThemeColors.xcassets in Resources */,
 				A92F5DAD272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */,
 				A9B8408926D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
+				458BAC6C276B65D5006C4BC7 /* MyTicketsViewController.xib in Resources */,
 				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457816AC2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
@@ -3181,6 +3203,7 @@
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				A92F5DAA272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */,
 				45EF540A2709E81C00D1E13E /* PopUpStore.swift in Sources */,
+				458BAC69276B65D5006C4BC7 /* MyTicketsViewController.swift in Sources */,
 				458F4C922712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */,
 				455A0D1626BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				45166D1D26F3548D00E69D65 /* SSWampError.swift in Sources */,
@@ -3316,6 +3339,7 @@
 				454E0AB22732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48926F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				455A0CFE26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
+				458BAC6E276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */,
 				45D712F227031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40126BF017A005DF543 /* LoginViewController.swift in Sources */,
 				45166D0F26F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
@@ -3474,6 +3498,7 @@
 				455A0D1726BD9F4D00EC572D /* GeoLocationManager.swift in Sources */,
 				A92F5DAB272C44CD00884BDF /* FullRegisterDocumentsViewController.swift in Sources */,
 				45EF540B2709E81C00D1E13E /* PopUpStore.swift in Sources */,
+				458BAC6A276B65D5006C4BC7 /* MyTicketsViewController.swift in Sources */,
 				458F4C932712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */,
 				45166D1E26F3548D00E69D65 /* SSWampError.swift in Sources */,
 				A9C82FB626F3AFB400059DCD /* PersonalInfoViewController.swift in Sources */,
@@ -3609,6 +3634,7 @@
 				454E0AB32732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48A26F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				455A0CFF26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
+				458BAC6F276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */,
 				45D712F327031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40226BF017A005DF543 /* LoginViewController.swift in Sources */,
 				45166D1026F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
