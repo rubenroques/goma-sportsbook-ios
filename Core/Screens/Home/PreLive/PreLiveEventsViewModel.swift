@@ -164,7 +164,6 @@ class PreLiveEventsViewModel: NSObject {
         Env.userSessionStore.isUserProfileIncomplete
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { value in
-                print("USER PROFILE: \(value)")
                 self.popularMatchesViewModelDataSource.refetchAlerts()
             })
             .store(in: &cancellables)
@@ -1254,7 +1253,7 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
 
     func refetchAlerts() {
         alertsArray = []
-        
+
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
 
