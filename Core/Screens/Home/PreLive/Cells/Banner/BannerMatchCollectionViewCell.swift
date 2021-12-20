@@ -12,7 +12,6 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet weak var baseView: UIView!
 
-    //
     @IBOutlet weak var imageBaseView: UIView!
     @IBOutlet weak var imageView: UIImageView!
 
@@ -66,6 +65,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     var completeMatch: Match?
+    var tappedMatchBaseViewAction: ((Match) -> Void)?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -124,6 +124,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
+
+        let tapMatchBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchBaseView))
+        self.matchBaseView.addGestureRecognizer(tapMatchBaseView)
 
         self.setupWithTheme()
     }
@@ -509,5 +512,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isRightOutcomeButtonSelected = true
         }
+    }
+
+    @objc func didTapMatchBaseView() {
+
+        guard let completeMatch = self.completeMatch else { return }
+
+        self.tappedMatchBaseViewAction?(completeMatch)
+
     }
 }

@@ -247,8 +247,6 @@ class MatchDetailsViewController: UIViewController {
 
         setupMatchDetailPublisher()
 
-        setupHeaderDetails()
-
         // Market Types CollectionView
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -353,6 +351,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.matchDetailsAggregatorPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -379,20 +378,20 @@ class MatchDetailsViewController: UIViewController {
     }
 
     private func setupMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .matchDetails,
-                                                 shouldClear: true)
+
+        self.viewModel.store.processAggregatorForMatchDetail(aggregator)
+
+        setupHeaderDetails()
     }
 
     private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+        self.viewModel.store.processContentUpdateAggregatorForMatchDetail(aggregator)
 
-        DispatchQueue.main.async { // TODO: Code Review - DispatchQueue.main.async porquê?
-            if !Env.everyMatrixStorage.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
-                self.matchMode = .live
-            }
-            self.updateHeaderDetails()
+        if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
+            self.matchMode = .live
         }
+        self.updateHeaderDetails()
 
     }
 
@@ -419,9 +418,9 @@ class MatchDetailsViewController: UIViewController {
         var minutes = ""
         var matchPart = ""
 
-        if let matchInfoArray = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[match.id] {
             for matchInfoId in matchInfoArray {
-                if let matchInfo = Env.everyMatrixStorage.matchesInfo[matchInfoId] {
+                if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
                     if (matchInfo.typeId ?? "") == "1" {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {

@@ -21,7 +21,8 @@ class UserSessionStore {
     var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
 
     var shouldRecordUserSession = true
-    var isUserProfileIncomplete: Bool = true
+    //var isUserProfileIncomplete: Bool = true
+    var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
 
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession

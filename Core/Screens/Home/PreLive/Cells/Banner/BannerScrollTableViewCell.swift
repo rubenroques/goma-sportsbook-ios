@@ -16,7 +16,7 @@ class BannerScrollTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     var viewModel: BannerLineCellViewModel?
-    var popularMatches: [Match] = []
+    var tappedBannerMatchAction: ((Match) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -72,12 +72,9 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     func setupWithViewModel(_ viewModel: BannerLineCellViewModel) {
         self.viewModel = viewModel
-        self.collectionView.reloadData()
+        //self.collectionView.reloadData()
     }
 
-    func storePopularMatches(popularMatches: [Match]) {
-        self.popularMatches = popularMatches
-    }
 }
 
 extension BannerScrollTableViewCell: UIScrollViewDelegate {
@@ -112,6 +109,9 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
         }
         
         cell.setupWithViewModel(cellViewModel)
+        cell.tappedMatchBaseViewAction = { match in
+            self.tappedBannerMatchAction?(match)
+        }
 
         return cell
     }
