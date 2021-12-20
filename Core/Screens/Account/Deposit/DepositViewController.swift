@@ -28,6 +28,7 @@ class DepositViewController: UIViewController {
     @IBOutlet private var responsibleGamingLabel: UILabel!
     @IBOutlet private var faqLabel: UILabel!
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private var depositTipLabel: UILabel!
 
     // Variables
     var currentSelectedButton: UIButton?
@@ -63,9 +64,12 @@ class DepositViewController: UIViewController {
         self.titleLabel.numberOfLines = 0
 
         self.depositHeaderTextFieldView.setPlaceholderText(localized("string_deposit_value"))
-        self.depositHeaderTextFieldView.showTipWithoutIcon(text: localized("string_minimum_deposit_value"), color: UIColor.App.headingSecondary)
-        self.depositHeaderTextFieldView.isTipPermanent = true
+//        self.depositHeaderTextFieldView.showTipWithoutIcon(text: localized("string_minimum_deposit_value"), color: UIColor.App.headingSecondary)
+//        self.depositHeaderTextFieldView.isTipPermanent = true
         self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
+
+        depositTipLabel.text = localized("string_minimum_deposit_value")
+        depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
 
         self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€10")
         self.setDepositAmountButtonDesign(button: self.amount20Button, title: "€20")
@@ -111,6 +115,8 @@ class DepositViewController: UIViewController {
         self.depositHeaderTextFieldView.backgroundColor = .clear
         self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App.headingSecondary)
         self.depositHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+
+        self.depositTipLabel.textColor = UIColor.App.headingSecondary
 
         self.amountButtonStackView.backgroundColor = .clear
 
@@ -302,14 +308,13 @@ class DepositViewController: UIViewController {
     }
 
     func setDepositAmountButtonDesign(button: UIButton, title: String) {
-        button.backgroundColor = .clear
-        button.layer.cornerRadius = CornerRadius.button
-        button.layer.masksToBounds = true
+
+        StyleHelper.styleButton(button: button)
 
         button.setTitleColor(UIColor.App.headingMain, for: .normal)
         button.setBackgroundColor(.clear, for: .normal)
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.App.headingSecondary.cgColor
+        button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
 
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
@@ -395,7 +400,6 @@ class DepositViewController: UIViewController {
             self.showErrorAlert()
             self.activityIndicatorView.isHidden = true
         }
-
 
         Env.everyMatrixAPIClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
             .receive(on: DispatchQueue.main)
