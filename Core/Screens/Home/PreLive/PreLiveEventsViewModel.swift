@@ -160,6 +160,14 @@ class PreLiveEventsViewModel: NSObject {
                 self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
             })
             .store(in: &cancellables)
+
+        Env.userSessionStore.isUserProfileIncomplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { value in
+                print("USER PROFILE: \(value)")
+                self.popularMatchesViewModelDataSource.refetchAlerts()
+            })
+            .store(in: &cancellables)
     }
 
     func fetchData() {
@@ -1242,6 +1250,25 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
         }
 
         super.init()
+    }
+
+    func refetchAlerts() {
+        alertsArray = []
+        
+        if let userSession = UserSessionStore.loggedUserSession() {
+            if !userSession.isEmailVerified {
+
+                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+
+                alertsArray.append(emailActivationAlertData)
+            }
+
+            if Env.userSessionStore.isUserProfileIncomplete.value {
+                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+
+                alertsArray.append(completeProfileAlertData)
+            }
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {

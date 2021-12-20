@@ -363,9 +363,11 @@ class PreLiveEventsViewController: UIViewController {
 
         Env.userSessionStore.isUserProfileIncomplete
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { _ in
+            .sink(receiveValue: { value in
+                print("USER PROFILE: \(value)")
                 self.tableView.reloadData()
             })
+            .store(in: &cancellables)
 
     }
 
