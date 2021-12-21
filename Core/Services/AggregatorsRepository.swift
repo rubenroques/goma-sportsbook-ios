@@ -399,6 +399,7 @@ struct OddOutcomesSortingHelper {
         case "more_than": return 30
 
         case "in_90_minutes": return 10
+        case "in_extra_time": return 20
         case "on_penalties": return 30
 
         case "home-true": return 10

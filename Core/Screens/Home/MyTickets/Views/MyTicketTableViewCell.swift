@@ -37,6 +37,8 @@ class MyTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var cashoutBaseView: UIView!
     @IBOutlet private weak var cashoutButton: UIButton!
 
+    private var betHistoryEntry: BetHistoryEntry?
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -68,6 +70,8 @@ class MyTicketTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+
+        self.betHistoryEntry = nil
 
         self.cashoutBaseView.isHidden = true
 
@@ -117,9 +121,24 @@ class MyTicketTableViewCell: UITableViewCell {
         self.betAmountSubtitleLabel.textColor = UIColor.App.headingMain
         self.winningsTitleLabel.textColor = UIColor.App.headingMain
         self.winningsSubtitleLabel.textColor = UIColor.App.headingMain
+
+        if let status = self.betHistoryEntry?.status?.uppercased() {
+            switch status {
+            case "WON", "HALF_WON":
+                self.highlightCard(withColor: UIColor.App.statusWon)
+            case "LOST", "HALF_LOST":
+                self.highlightCard(withColor: UIColor.App.statusLoss)
+            case "CASHED_OUT", "CANCELLED":
+                self.highlightCard(withColor: UIColor.App.statusDraw)
+            default:
+                self.resetHighlightedCard()
+            }
+        }
     }
 
     func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry) {
+
+        self.betHistoryEntry = betHistoryEntry
 
         self.cashoutBaseView.isHidden = true
 
@@ -160,10 +179,12 @@ class MyTicketTableViewCell: UITableViewCell {
 
         if let status = betHistoryEntry.status?.uppercased() {
             switch status {
-            case "WON", "HALF_WON", "CASHED_OUT":
+            case "WON", "HALF_WON":
                 self.highlightCard(withColor: UIColor.App.statusWon)
             case "LOST", "HALF_LOST":
                 self.highlightCard(withColor: UIColor.App.statusLoss)
+            case "CASHED_OUT", "CANCELLED":
+                self.highlightCard(withColor: UIColor.App.statusDraw)
             default:
                 self.resetHighlightedCard()
             }

@@ -407,7 +407,7 @@ class ProfileViewController: UIViewController {
 
     @IBAction private func didTapDepositButton() {
 
-        if !Env.userSessionStore.isUserProfileIncomplete {
+        if !Env.userSessionStore.isUserProfileIncomplete.value {
 
             let depositViewController = DepositViewController()
 
@@ -424,7 +424,7 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction private func didTapWithdrawButton() {
-        if !Env.userSessionStore.isUserProfileIncomplete {
+        if !Env.userSessionStore.isUserProfileIncomplete.value {
 
             let withDrawViewController = WithdrawViewController()
 
