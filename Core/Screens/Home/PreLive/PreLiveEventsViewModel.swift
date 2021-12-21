@@ -160,6 +160,13 @@ class PreLiveEventsViewModel: NSObject {
                 self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
             })
             .store(in: &cancellables)
+
+        Env.userSessionStore.isUserProfileIncomplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { value in
+                self.popularMatchesViewModelDataSource.refetchAlerts()
+            })
+            .store(in: &cancellables)
     }
 
     func fetchData() {
@@ -355,7 +362,11 @@ class PreLiveEventsViewModel: NSObject {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents,
                                                  shouldClear: true)
         self.favoriteMatches = Env.everyMatrixStorage.matchesForListType(.favoriteMatchEvents)
-        // self.isLoadingPopularList.send(false)
+
+        self.favoriteMatches = self.favoriteMatches.filter({
+            $0.sportType == self.selectedSportId.id
+        })
+
         self.updateContentList()
     }
 
@@ -851,6 +862,11 @@ class PreLiveEventsViewModel: NSObject {
                 case .initialContent(let responde):
                     print("PreLiveEventsViewModel bannersInfoPublisher initialContent")
                     self?.banners = responde.records ?? []
+                    let sortedBanners = self?.banners.sorted {
+                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
+                    }
+                    self?.banners = sortedBanners ?? []
+
                 case .updatedContent:
                     print("PreLiveEventsViewModel bannersInfoPublisher updatedContent")
                 case .disconnect:
@@ -1225,7 +1241,7 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
                 alertsArray.append(emailActivationAlertData)
             }
 
-            if Env.userSessionStore.isUserProfileIncomplete {
+            if Env.userSessionStore.isUserProfileIncomplete.value {
                 let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
@@ -1233,6 +1249,25 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
         }
 
         super.init()
+    }
+
+    func refetchAlerts() {
+        alertsArray = []
+
+        if let userSession = UserSessionStore.loggedUserSession() {
+            if !userSession.isEmailVerified {
+
+                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+
+                alertsArray.append(emailActivationAlertData)
+            }
+
+            if Env.userSessionStore.isUserProfileIncomplete.value {
+                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+
+                alertsArray.append(completeProfileAlertData)
+            }
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -1243,7 +1278,10 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
         switch section {
         case 0:
             if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
-                if !loggedUser.isEmailVerified || Env.userSessionStore.isUserProfileIncomplete {
+                if !loggedUser.isEmailVerified {
+                    return 1
+                }
+                else if Env.userSessionStore.isUserProfileIncomplete.value {
                     return 1
                 }
             }
@@ -1274,7 +1312,10 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
                 if let viewModel = self.bannersViewModel {
                     cell.setupWithViewModel(viewModel)
-                    cell.storePopularMatches(popularMatches: self.matches)
+
+                    cell.tappedBannerMatchAction = { match in
+                        self.didSelectMatchAction?(match)
+                    }
                 }
                 return cell
             }

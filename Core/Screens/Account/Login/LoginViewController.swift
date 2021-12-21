@@ -289,7 +289,7 @@ class LoginViewController: UIViewController {
             .sink(receiveCompletion: { _ in
                 self.hideLoadingSpinner()
             }, receiveValue: { value in
-                Env.userSessionStore.isUserProfileIncomplete = value.isProfileIncomplete
+                Env.userSessionStore.isUserProfileIncomplete.send(value.isProfileIncomplete)
                 self.showNextViewController()
             })
             .store(in: &cancellables)

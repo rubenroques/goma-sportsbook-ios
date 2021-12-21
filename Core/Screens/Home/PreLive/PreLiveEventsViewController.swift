@@ -362,6 +362,13 @@ class PreLiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.userSessionStore.isUserProfileIncomplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { _ in
+                self.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+
     }
 
     func reloadTableViewData() {

@@ -328,7 +328,8 @@ class AggregatorsRepository {
                               sportType: rawMatch.sportId ?? "",
                               venue: location,
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                              markets: sortedMarkets)
+                              markets: sortedMarkets,
+                              rootPartId: rawMatch.rootPartId ?? "")
 
             matchesList.append(match)
         }

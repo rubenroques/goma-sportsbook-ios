@@ -44,6 +44,7 @@ struct Match {
     var venue: Location?
     var numberTotalOfMarkets: Int
     var markets: [Market]
+    var rootPartId: String
 }
 
 struct Location {

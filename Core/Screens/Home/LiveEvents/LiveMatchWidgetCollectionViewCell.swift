@@ -389,7 +389,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         if let matchInfoArray = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
             for matchInfoId in matchInfoArray {
                 if let matchInfo = Env.everyMatrixStorage.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" {
+                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match?.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
                             if self.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
@@ -496,7 +496,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @IBAction func didTapMatchView(_ sender: Any) {
+    @IBAction private func didTapMatchView(_ sender: Any) {
         self.tappedMatchWidgetAction?()
     }
     

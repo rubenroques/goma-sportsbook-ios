@@ -227,7 +227,9 @@ class BannerCellViewModel {
                           date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
                           sportType: rawMatch.sportId ?? "",
                           numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                          markets: matchMarkets)
+                          markets: matchMarkets,
+                          rootPartId: rawMatch.rootPartId ?? ""
+                          )
 
         self.completeMatch.send(match)
 
