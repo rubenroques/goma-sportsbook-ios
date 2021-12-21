@@ -612,15 +612,11 @@ class MatchDetailsAggregatorRepository: NSObject {
         return marketGroupOrganizers
     }
 
-    func processAggregatorForMatchDetail(_ aggregator: EveryMatrix.Aggregator, shouldClear: Bool = false) {
-
-//        if shouldClear {
-//            self.matchesForType = [:]
-//        }
+    func processAggregatorForMatchDetail(_ aggregator: EveryMatrix.Aggregator) {
 
         for content in aggregator.content ?? [] {
             switch content {
-            case .tournament(_):
+            case .tournament:
                 ()
 
             case .match(let matchContent):
@@ -691,7 +687,7 @@ class MatchDetailsAggregatorRepository: NSObject {
             case .location(let location):
                 self.locations[location.id] = location
 
-            case .cashout(_):
+            case .cashout:
                 ()
 
             case .event:
@@ -727,7 +723,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
                 }
-            case .cashoutUpdate(_, _, _):
+            case .cashoutUpdate:
                 ()
             case .matchInfo(let id, let paramFloat1, let paramFloat2, let paramEventPartName1):
                 for matchInfoForMatch in matchesInfoForMatch {

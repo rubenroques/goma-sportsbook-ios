@@ -367,7 +367,6 @@ class MatchDetailsViewController: UIViewController {
                 case .initialContent(let aggregator):
                     print("MatchDetailsAggregator matchDetailsAggregatorPublisher initialContent")
                     self?.setupMatchDetailAggregatorProcessor(aggregator: aggregator)
-                    print("MATCH DETAIL AGG: \(aggregator)")
                 case .updatedContent(let aggregatorUpdates):
                     print("MatchDetailsAggregator matchDetailsAggregatorPublisher updatedContent")
                     self?.updateMatchDetailAggregatorProcessor(aggregator: aggregatorUpdates)
@@ -421,7 +420,7 @@ class MatchDetailsViewController: UIViewController {
         if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[match.id] {
             for matchInfoId in matchInfoArray {
                 if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" {
+                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
                             if self.match.homeParticipant.id == matchInfo.paramParticipantId1 {
@@ -485,7 +484,7 @@ class MatchDetailsViewController: UIViewController {
 
     }
     
-    @IBAction func didTapBackAction() {
+    @IBAction private func didTapBackAction() {
         self.navigationController?.popViewController(animated: true)
     }
 
