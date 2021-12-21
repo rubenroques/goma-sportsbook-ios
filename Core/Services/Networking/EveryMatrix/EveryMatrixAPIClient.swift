@@ -233,6 +233,16 @@ class EveryMatrixAPIClient: ObservableObject {
         return TSManager.shared.getModel(router: .odds(payload: payload), decodingType: EveryMatrixSocketResponse<Odd>.self)
     }
 
+    func getDepositResponse(currency: String, amount: String, gamingAccountId: String) -> AnyPublisher<EveryMatrix.DepositResponse, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .getDepositCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId), decodingType: EveryMatrix.DepositResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getWithdrawResponse(currency: String, amount: String, gamingAccountId: String) -> AnyPublisher<EveryMatrix.WithdrawResponse, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .getWithdrawCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId), decodingType: EveryMatrix.WithdrawResponse.self)
+            .eraseToAnyPublisher()
+    }
+
     func subscribeOdds(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<Odd>, EveryMatrix.APIError> {
         do {
 

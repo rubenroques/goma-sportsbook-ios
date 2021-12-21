@@ -36,6 +36,8 @@ enum TSRouter {
     case getOpenBets(language: String, records: Int, page: Int)
     case cashoutBet(language: String, betId: String)
     case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
+    case getDepositCashier(currency: String, amount: String, gamingAccountId: String)
+    case getWithdrawCashier(currency: String, amount: String, gamingAccountId: String)
 
     case getMyTickets(language: String, ticketsType: EveryMatrix.MyTicketsType, records: Int, page: Int)
 
@@ -160,6 +162,10 @@ enum TSRouter {
             return "/sports#cashOut"
         case .getMatchOdds:
             return "/sports#odds"
+        case .getDepositCashier:
+            return "/user/hostedcashier#deposit"
+        case .getWithdrawCashier:
+            return "/user/hostedcashier#withdraw"
 
         case .getSystemBetTypes:
             return "/sports#systemBetCalculationV2"
@@ -444,6 +450,23 @@ enum TSRouter {
             return ["lang": language,
                     "matchId": matchId,
                     "bettingTypeId": bettingTypeId]
+
+        case .getDepositCashier(let currency, let amount, let gamingAccountId):
+            let params: [String: Any] = ["fields": ["currency": currency,
+                                                    "amount": amount,
+                                                    "gamingAccountID": gamingAccountId,
+                                                    "cashierMode": 0
+                                                    ]
+                                        ]
+            return params
+        case .getWithdrawCashier(let currency, let amount, let gamingAccountId):
+            let params: [String: Any] = ["fields": ["currency": currency,
+                                                    "amount": amount,
+                                                    "gamingAccountID": gamingAccountId,
+                                                    "cashierMode": 0
+                                                    ]
+                                        ]
+            return params
 
         case .getSystemBetTypes(let tickets):
             var selection: [Any] = []
