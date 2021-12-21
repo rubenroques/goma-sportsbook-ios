@@ -197,3 +197,8 @@ Terms of use, Privacy Policy and EULA";
 "string_faq" = "Any questions about payment process see F.A.Q or Contact Us.";
 "string_faq_clickable" = "F.A.Q";
 "string_contact_us" = "Contact Us";
+
+"string_withdraw" = "Withdraw";
+"string_how_much_withdraw" = "How much do you want to withdraw from your account?";
+"string_withdraw_value" = "Withdraw Value";
+"string_minimum_withdraw_value" = "Minimum Value: 10€";

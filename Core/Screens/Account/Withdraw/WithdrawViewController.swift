@@ -1,14 +1,14 @@
 //
-//  DepositViewController.swift
+//  WithdrawViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 17/12/2021.
+//  Created by André Lascas on 21/12/2021.
 //
 
 import UIKit
 import Combine
 
-class DepositViewController: UIViewController {
+class WithdrawViewController: UIViewController {
 
     @IBOutlet private var topView: UIView!
     @IBOutlet private var containerView: UIView!
@@ -16,22 +16,16 @@ class DepositViewController: UIViewController {
     @IBOutlet private var navigationLabel: UILabel!
     @IBOutlet private var navigationButton: UIButton!
     @IBOutlet private var titleLabel: UILabel!
-    @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var amountButtonStackView: UIStackView!
-    @IBOutlet private var amount10Button: UIButton!
-    @IBOutlet private var amount20Button: UIButton!
-    @IBOutlet private var amount50Button: UIButton!
-    @IBOutlet private var amount100Button: UIButton!
+    @IBOutlet private var withdrawHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var tipLabel: UILabel!
     @IBOutlet private var nextButton: UIButton!
+    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var paymentsLabel: UILabel!
     @IBOutlet private var paymentsLogosStackView: UIStackView!
     @IBOutlet private var responsibleGamingLabel: UILabel!
     @IBOutlet private var faqLabel: UILabel!
-    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
-    @IBOutlet private var depositTipLabel: UILabel!
 
     // Variables
-    var currentSelectedButton: UIButton?
     var cancellables = Set<AnyCancellable>()
 
     override func viewDidLoad() {
@@ -39,9 +33,6 @@ class DepositViewController: UIViewController {
 
         self.commonInit()
         self.setupWithTheme()
-
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
     }
 
@@ -52,29 +43,24 @@ class DepositViewController: UIViewController {
     }
 
     func commonInit() {
-
-        self.navigationLabel.text = localized("string_deposit")
+        self.navigationLabel.text = localized("string_withdraw")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
         self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
         self.navigationButton.contentMode = .scaleAspectFit
 
-        self.titleLabel.text = localized("string_how_much_deposit")
+        self.titleLabel.text = localized("string_how_much_withdraw")
         self.titleLabel.font = AppFont.with(type: .bold, size: 20)
         self.titleLabel.numberOfLines = 0
 
-        self.depositHeaderTextFieldView.setPlaceholderText(localized("string_deposit_value"))
-        self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
-        self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.headingSecondary)
+        self.withdrawHeaderTextFieldView.setPlaceholderText(localized("string_withdraw_value"))
+        self.withdrawHeaderTextFieldView.setKeyboardType(.decimalPad)
+        self.withdrawHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.headingSecondary)
 
-        depositTipLabel.text = localized("string_minimum_deposit_value")
-        depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
+        tipLabel.text = localized("string_minimum_withdraw_value")
+        tipLabel.font = AppFont.with(type: .semibold, size: 12)
 
-        self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€10")
-        self.setDepositAmountButtonDesign(button: self.amount20Button, title: "€20")
-        self.setDepositAmountButtonDesign(button: self.amount50Button, title: "€50")
-        self.setDepositAmountButtonDesign(button: self.amount100Button, title: "€100")
-
+        StyleHelper.styleButton(button: self.nextButton)
         self.nextButton.setTitle(localized("string_next"), for: .normal)
         self.nextButton.isEnabled = false
         self.nextButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
@@ -93,6 +79,7 @@ class DepositViewController: UIViewController {
         self.setupPublishers()
 
         self.activityIndicatorView.isHidden = true
+
     }
 
     func setupWithTheme() {
@@ -111,13 +98,11 @@ class DepositViewController: UIViewController {
 
         self.titleLabel.textColor = UIColor.App.headingMain
 
-        self.depositHeaderTextFieldView.backgroundColor = .clear
-        self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App.headingSecondary)
-        self.depositHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        self.withdrawHeaderTextFieldView.backgroundColor = .clear
+        self.withdrawHeaderTextFieldView.setPlaceholderColor(UIColor.App.headingSecondary)
+        self.withdrawHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
 
-        self.depositTipLabel.textColor = UIColor.App.headingSecondary
-
-        self.amountButtonStackView.backgroundColor = .clear
+        self.tipLabel.textColor = UIColor.App.headingSecondary
 
         self.nextButton.setBackgroundColor(UIColor.App.mainTint, for: .normal)
         self.nextButton.setBackgroundColor(UIColor.App.contentBackground, for: .disabled)
@@ -129,15 +114,6 @@ class DepositViewController: UIViewController {
         self.paymentsLabel.textColor = UIColor.App.headingSecondary
 
         self.paymentsLogosStackView.backgroundColor = .clear
-    }
-
-    func setupPublishers() {
-        self.depositHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.checkUserInputs()
-            })
-            .store(in: &cancellables)
     }
 
     func createPaymentsLogosImageViews() {
@@ -255,51 +231,21 @@ class DepositViewController: UIViewController {
 
     }
 
+    func setupPublishers() {
+        self.withdrawHeaderTextFieldView.textPublisher
+            .receive(on: RunLoop.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.checkUserInputs()
+            })
+            .store(in: &cancellables)
+    }
+
     private func checkUserInputs() {
 
-        let depositText = depositHeaderTextFieldView.text == "" ? false : true
+        let withdrawText = withdrawHeaderTextFieldView.text == "" ? false : true
 
-        if depositText {
+        if withdrawText {
             self.nextButton.isEnabled = true
-            self.checkForHighlightedAmountButton()
-
-            if depositHeaderTextFieldView.text == "10" {
-                self.amount10Button.backgroundColor = UIColor.App.mainTint
-                self.amount10Button.layer.borderColor = UIColor.App.mainTint.cgColor
-                currentSelectedButton = self.amount10Button
-            }
-            else if depositHeaderTextFieldView.text == "20" {
-                self.amount20Button.backgroundColor = UIColor.App.mainTint
-                self.amount20Button.layer.borderColor = UIColor.App.mainTint.cgColor
-                currentSelectedButton = self.amount20Button
-
-            }
-            else if depositHeaderTextFieldView.text == "50" {
-                self.amount50Button.backgroundColor = UIColor.App.mainTint
-                self.amount50Button.layer.borderColor = UIColor.App.mainTint.cgColor
-                currentSelectedButton = self.amount50Button
-
-            }
-            else if depositHeaderTextFieldView.text == "100" {
-                self.amount100Button.backgroundColor = UIColor.App.mainTint
-                self.amount100Button.layer.borderColor = UIColor.App.mainTint.cgColor
-                currentSelectedButton = self.amount100Button
-
-            }
-            else {
-                self.amount10Button.backgroundColor = .clear
-                self.amount10Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
-
-                self.amount20Button.backgroundColor = .clear
-                self.amount20Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
-
-                self.amount50Button.backgroundColor = .clear
-                self.amount50Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
-
-                self.amount100Button.backgroundColor = .clear
-                self.amount100Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
-
-            }
         }
         else {
             self.nextButton.isEnabled = false
@@ -307,91 +253,22 @@ class DepositViewController: UIViewController {
 
     }
 
-    func setDepositAmountButtonDesign(button: UIButton, title: String) {
-
-        StyleHelper.styleButton(button: button)
-
-        button.setTitleColor(UIColor.App.headingMain, for: .normal)
-        button.setBackgroundColor(.clear, for: .normal)
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
-
-        button.setTitle(title, for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
-
+    func showErrorAlert() {
+        let alert = UIAlertController(title: localized("Wallet Error"),
+                                      message: "There was an error trying to get your wallet settings. Try again later.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 
-    func checkForHighlightedAmountButton() {
-        if currentSelectedButton != nil {
-            currentSelectedButton?.backgroundColor = .clear
-            currentSelectedButton?.layer.borderColor = UIColor.App.secondaryBackground.cgColor
-        }
-    }
-
-    func showRightLabelCustom() {
-        if self.depositHeaderTextFieldView.text != "" {
-            self.depositHeaderTextFieldView.showPasswordLabelVisible(visible: true)
-        }
-    }
-
-    @IBAction private func didTap10Button() {
-        self.checkForHighlightedAmountButton()
-
-        self.amount10Button.backgroundColor = UIColor.App.mainTint
-        self.amount10Button.layer.borderColor = UIColor.App.mainTint.cgColor
-
-        self.currentSelectedButton = self.amount10Button
-
-        self.depositHeaderTextFieldView.setText("10")
-        self.nextButton.isEnabled = true
-        self.showRightLabelCustom()
-    }
-    @IBAction private func didTap20Button() {
-        self.checkForHighlightedAmountButton()
-
-        self.amount20Button.backgroundColor = UIColor.App.mainTint
-        self.amount20Button.layer.borderColor = UIColor.App.mainTint.cgColor
-
-        self.currentSelectedButton = self.amount20Button
-
-        self.depositHeaderTextFieldView.setText("20")
-        self.nextButton.isEnabled = true
-        self.showRightLabelCustom()
-
-    }
-
-    @IBAction private func didTap50Button() {
-        self.checkForHighlightedAmountButton()
-
-        self.amount50Button.backgroundColor = UIColor.App.mainTint
-        self.amount50Button.layer.borderColor = UIColor.App.mainTint.cgColor
-
-        self.currentSelectedButton = self.amount50Button
-
-        self.depositHeaderTextFieldView.setText("50")
-        self.nextButton.isEnabled = true
-        self.showRightLabelCustom()
-
-    }
-
-    @IBAction private func didTap100Button() {
-        self.checkForHighlightedAmountButton()
-
-        self.amount100Button.backgroundColor = UIColor.App.mainTint
-        self.amount100Button.layer.borderColor = UIColor.App.mainTint.cgColor
-
-        self.currentSelectedButton = self.amount100Button
-
-        self.depositHeaderTextFieldView.setText("100")
-        self.nextButton.isEnabled = true
-        self.showRightLabelCustom()
-
+    @IBAction private func didTapCloseButton() {
+        self.navigationController?.popViewController(animated: true)
     }
 
     @IBAction private func didTapNextButton() {
         self.activityIndicatorView.isHidden = false
 
-        let amount = self.depositHeaderTextFieldView.text
+        let amount = self.withdrawHeaderTextFieldView.text
         var currency = ""
         var gamingAccountId = ""
 
@@ -411,48 +288,26 @@ class DepositViewController: UIViewController {
             self.activityIndicatorView.isHidden = true
         }
 
-        Env.everyMatrixAPIClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
+        Env.everyMatrixAPIClient.getWithdrawResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
                 self.activityIndicatorView.isHidden = true
 
             }, receiveValue: { value in
                 DispatchQueue.main.async {
-                    let depositWebViewController = DepositWebViewController(depositUrl: value.cashierUrl)
+                    let withdrawWebViewController = WithdrawWebViewController(withdrawUrl: value.cashierUrl)
 
-                    self.navigationController?.pushViewController(depositWebViewController, animated: true)
+                    self.navigationController?.pushViewController(withdrawWebViewController, animated: true)
                 }
             })
             .store(in: &cancellables)
     }
 
-    func showErrorAlert() {
-        let alert = UIAlertController(title: localized("Wallet Error"),
-                                      message: "There was an error trying to get your wallet settings. Try again later.",
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-
-    @IBAction private func didTapCloseButton() {
-        self.navigationController?.popViewController(animated: true)
-    }
-
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
-        self.depositHeaderTextFieldView.resignFirstResponder()
+        self.withdrawHeaderTextFieldView.resignFirstResponder()
 
-    }
-
-    @objc func keyboardWillShow(notification: NSNotification) {
-
-    }
-
-    @objc func keyboardWillHide(notification: NSNotification) {
-
-        self.checkForHighlightedAmountButton()
-        self.currentSelectedButton = nil
     }
 
 }

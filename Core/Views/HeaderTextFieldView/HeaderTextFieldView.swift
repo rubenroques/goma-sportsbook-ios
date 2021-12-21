@@ -46,6 +46,8 @@ class HeaderTextFieldView: NibView {
 
     var showingTipLabel: Bool = false
 
+    var hasCustomRightLabel: Bool = false
+
     private var isSecureField = false {
         didSet {
 
@@ -285,6 +287,14 @@ class HeaderTextFieldView: NibView {
         self.showPasswordLabel.isHidden = !visible
     }
 
+    func setRightLabelCustom(title: String, font: UIFont, color: UIColor) {
+        self.hasCustomRightLabel = true
+        self.showPasswordLabel.attributedText = nil
+        self.showPasswordLabel.text = title
+        self.showPasswordLabel.font = font
+        self.showPasswordLabel.textColor = color
+    }
+
     func setHeaderLabelColor(_ color: UIColor) {
         self.headerLabel.textColor = color
     }
@@ -497,6 +507,10 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             self.hideTipAndError()
         }
 
+        if hasCustomRightLabel {
+            self.showPasswordLabel.isHidden = false
+        }
+
         self.highlightColor = UIColor.App.headingMain
         self.containerView.layer.borderColor = self.highlightColor.cgColor
 
@@ -511,6 +525,10 @@ extension HeaderTextFieldView: UITextFieldDelegate {
 
         if self.textField.text == "" {
             self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
+
+            if hasCustomRightLabel {
+                self.showPasswordLabel.isHidden = true
+            }
         }
 
         self.isActive = false

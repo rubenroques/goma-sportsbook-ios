@@ -238,6 +238,11 @@ class EveryMatrixAPIClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+    func getWithdrawResponse(currency: String, amount: String, gamingAccountId: String) -> AnyPublisher<EveryMatrix.WithdrawResponse, EveryMatrix.APIError> {
+        return TSManager.shared.getModel(router: .getWithdrawCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId), decodingType: EveryMatrix.WithdrawResponse.self)
+            .eraseToAnyPublisher()
+    }
+
     func subscribeOdds(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<Odd>, EveryMatrix.APIError> {
         do {
 

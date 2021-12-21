@@ -583,6 +583,16 @@
 		45F8B154274BC3B60087652B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 45F8B153274BC3B60087652B /* FirebaseMessaging */; };
 		45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
 		45F8B158274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
+		A90D8AF5277200C400DF88EB /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */; };
+		A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */; };
+		A90D8AF7277200C400DF88EB /* WithdrawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */; };
+		A90D8AF8277200C400DF88EB /* WithdrawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */; };
+		A90D8AFB277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF9277223DC00DF88EB /* WithdrawWebViewController.swift */; };
+		A90D8AFC277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF9277223DC00DF88EB /* WithdrawWebViewController.swift */; };
+		A90D8AFD277223DC00DF88EB /* WithdrawWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AFA277223DC00DF88EB /* WithdrawWebViewController.xib */; };
+		A90D8AFE277223DC00DF88EB /* WithdrawWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AFA277223DC00DF88EB /* WithdrawWebViewController.xib */; };
+		A90D8B01277228B600DF88EB /* WithdrawResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8B00277228B600DF88EB /* WithdrawResponse.swift */; };
+		A90D8B02277228B600DF88EB /* WithdrawResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8B00277228B600DF88EB /* WithdrawResponse.swift */; };
 		A92F5D792717169900884BDF /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
 		A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92F5D782717169900884BDF /* FilterRowView.swift */; };
 		A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A92F5D7B271716B900884BDF /* FilterRowView.xib */; };
@@ -1130,6 +1140,11 @@
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
+		A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewController.swift; sourceTree = "<group>"; };
+		A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawViewController.xib; sourceTree = "<group>"; };
+		A90D8AF9277223DC00DF88EB /* WithdrawWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawWebViewController.swift; sourceTree = "<group>"; };
+		A90D8AFA277223DC00DF88EB /* WithdrawWebViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawWebViewController.xib; sourceTree = "<group>"; };
+		A90D8B00277228B600DF88EB /* WithdrawResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawResponse.swift; sourceTree = "<group>"; };
 		A92F5D782717169900884BDF /* FilterRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterRowView.swift; sourceTree = "<group>"; };
 		A92F5D7B271716B900884BDF /* FilterRowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterRowView.xib; sourceTree = "<group>"; };
 		A92F5D7F2718384900884BDF /* FilterSliderCollapseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSliderCollapseView.swift; sourceTree = "<group>"; };
@@ -2005,6 +2020,7 @@
 		4589F3EA26BF017A005DF543 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				A90D8AF2277200A300DF88EB /* Withdraw */,
 				A9875792276CA4ED0099990D /* Deposit */,
 				4589F3F126BF017A005DF543 /* Login */,
 				A9C82FB226F3AB3400059DCD /* Profile */,
@@ -2341,6 +2357,25 @@
 			path = Filters;
 			sourceTree = "<group>";
 		};
+		A90D8AF2277200A300DF88EB /* Withdraw */ = {
+			isa = PBXGroup;
+			children = (
+				A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */,
+				A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */,
+				A90D8AF9277223DC00DF88EB /* WithdrawWebViewController.swift */,
+				A90D8AFA277223DC00DF88EB /* WithdrawWebViewController.xib */,
+			);
+			path = Withdraw;
+			sourceTree = "<group>";
+		};
+		A90D8AFF277228A300DF88EB /* Withdraws */ = {
+			isa = PBXGroup;
+			children = (
+				A90D8B00277228B600DF88EB /* WithdrawResponse.swift */,
+			);
+			path = Withdraws;
+			sourceTree = "<group>";
+		};
 		A92F5D772717168100884BDF /* FilterRowView */ = {
 			isa = PBXGroup;
 			children = (
@@ -2566,6 +2601,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				A90D8AFF277228A300DF88EB /* Withdraws */,
 				A987579F276CDB860099990D /* Deposits */,
 				A9BCF44E2755283B006DD528 /* Cashouts */,
 				457F495E2737C3580047169D /* Betting */,
@@ -2918,6 +2954,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A90D8AF7277200C400DF88EB /* WithdrawViewController.xib in Resources */,
 				454990CC2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
 				A9BCF44C2750FCA5006DD528 /* BetslipErrorView.xib in Resources */,
 				45BEA47F26F4DC9900680181 /* SimpleRegisterDetailsViewController.xib in Resources */,
@@ -2970,6 +3007,7 @@
 				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
 				A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */,
 				A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
+				A90D8AFD277223DC00DF88EB /* WithdrawWebViewController.xib in Resources */,
 				A92F5D96272C410400884BDF /* DocumentPickerView.xib in Resources */,
 				A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */,
 				45DDBAA826F2146100A73E45 /* Gilroy-Bold.ttf in Resources */,
@@ -3079,6 +3117,7 @@
 				A9BCF431274BBE8D006DD528 /* PolicyLinkView.xib in Resources */,
 				45DDBA9B26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				A9BCF44D2750FCA5006DD528 /* BetslipErrorView.xib in Resources */,
+				A90D8AFE277223DC00DF88EB /* WithdrawWebViewController.xib in Resources */,
 				45DDBAA726F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */,
 				A96279F62743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
@@ -3138,6 +3177,7 @@
 				A9C82FBF26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				454990CD2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
 				A9BCF446274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
+				A90D8AF8277200C400DF88EB /* WithdrawViewController.xib in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				A9627A09274529BD0001E1D5 /* ActivationAlertScrollableView.xib in Resources */,
 				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
@@ -3409,8 +3449,10 @@
 				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				45936CAA270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
+				A90D8AF5277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A626E6557000269B05 /* Location.swift in Sources */,
 				45166D1726F3548D00E69D65 /* SSWampTransport.swift in Sources */,
+				A90D8AFB277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */,
 				A9BCF443274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
 				454E0AB42732C58D00794E0C /* TabularBarButton.swift in Sources */,
 				454E0AB02732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
@@ -3469,6 +3511,7 @@
 				A9627A11274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				A90D8B01277228B600DF88EB /* WithdrawResponse.swift in Sources */,
 				45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
@@ -3705,8 +3748,10 @@
 				45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				45936CAB270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
+				A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
 				45166D1826F3548D00E69D65 /* SSWampTransport.swift in Sources */,
+				A90D8AFC277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */,
 				A9BCF444274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
 				454E0AB52732C58D00794E0C /* TabularBarButton.swift in Sources */,
 				454E0AB12732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
@@ -3765,6 +3810,7 @@
 				A9627A12274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				A90D8B02277228B600DF88EB /* WithdrawResponse.swift in Sources */,
 				45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,

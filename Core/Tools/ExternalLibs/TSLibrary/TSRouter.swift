@@ -37,6 +37,7 @@ enum TSRouter {
     case cashoutBet(language: String, betId: String)
     case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
     case getDepositCashier(currency: String, amount: String, gamingAccountId: String)
+    case getWithdrawCashier(currency: String, amount: String, gamingAccountId: String)
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
@@ -161,6 +162,8 @@ enum TSRouter {
             return "/sports#odds"
         case .getDepositCashier:
             return "/user/hostedcashier#deposit"
+        case .getWithdrawCashier:
+            return "/user/hostedcashier#withdraw"
 
         case .getSystemBetTypes:
             return "/sports#systemBetCalculationV2"
@@ -443,6 +446,14 @@ enum TSRouter {
                     "bettingTypeId": bettingTypeId]
 
         case .getDepositCashier(let currency, let amount, let gamingAccountId):
+            let params: [String: Any] = ["fields": ["currency": currency,
+                                                    "amount": amount,
+                                                    "gamingAccountID": gamingAccountId,
+                                                    "cashierMode": 0
+                                                    ]
+                                        ]
+            return params
+        case .getWithdrawCashier(let currency, let amount, let gamingAccountId):
             let params: [String: Any] = ["fields": ["currency": currency,
                                                     "amount": amount,
                                                     "gamingAccountID": gamingAccountId,

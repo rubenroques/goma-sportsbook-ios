@@ -405,7 +405,6 @@ class ProfileViewController: UIViewController {
         infoBaseView.backgroundColor = .clear
     }
 
-
     @IBAction private func didTapDepositButton() {
 
         if !Env.userSessionStore.isUserProfileIncomplete {
@@ -423,6 +422,23 @@ class ProfileViewController: UIViewController {
         }
 
     }
+
+    @IBAction private func didTapWithdrawButton() {
+        if !Env.userSessionStore.isUserProfileIncomplete {
+
+            let withDrawViewController = WithdrawViewController()
+
+            self.navigationController?.pushViewController(withDrawViewController, animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: localized("Profile Incomplete"),
+                                          message: "Please complete your profile before you can make withdraws.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
 
 }
 
