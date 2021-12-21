@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyTicketsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="loadingBaseView" destination="P3q-Kh-mfv" id="Anb-Ki-H9J"/>
+                <outlet property="loadingIndicatorView" destination="BiE-rg-Q5X" id="wWk-3B-3dM"/>
                 <outlet property="loadingView" destination="yS4-Nl-68V" id="JIF-sc-qCm"/>
                 <outlet property="ticketTypesCollectionView" destination="9c3-B6-Qac" id="Lcs-P3-ie6"/>
                 <outlet property="ticketTypesSeparatorLineView" destination="NX1-kb-QJi" id="sf5-qS-eas"/>
@@ -62,6 +63,10 @@
                     <rect key="frame" x="0.0" y="70" width="423" height="494"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="BiE-rg-Q5X">
+                    <rect key="frame" x="193" y="263.5" width="37" height="37"/>
+                    <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                </activityIndicatorView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -72,6 +77,7 @@
                 <constraint firstItem="AZQ-85-hF6" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="4qx-qm-1A1"/>
                 <constraint firstItem="9c3-B6-Qac" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="AUb-7O-rbo"/>
                 <constraint firstItem="NX1-kb-QJi" firstAttribute="bottom" secondItem="9c3-B6-Qac" secondAttribute="bottom" id="POa-cV-VEz"/>
+                <constraint firstItem="BiE-rg-Q5X" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="QFl-rN-Uh5"/>
                 <constraint firstAttribute="bottom" secondItem="P3q-Kh-mfv" secondAttribute="bottom" id="Rn6-Wt-WqU"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="9c3-B6-Qac" secondAttribute="trailing" id="W1g-jU-ANG"/>
                 <constraint firstItem="NX1-kb-QJi" firstAttribute="trailing" secondItem="9c3-B6-Qac" secondAttribute="trailing" id="cM3-DH-dXh"/>
@@ -79,6 +85,7 @@
                 <constraint firstItem="9c3-B6-Qac" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="gsL-gw-aw4"/>
                 <constraint firstItem="P3q-Kh-mfv" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="gvj-iW-9GD"/>
                 <constraint firstItem="NX1-kb-QJi" firstAttribute="leading" secondItem="9c3-B6-Qac" secondAttribute="leading" id="iX8-Pa-TIx"/>
+                <constraint firstItem="BiE-rg-Q5X" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="utu-F1-qEt"/>
                 <constraint firstAttribute="bottom" secondItem="AZQ-85-hF6" secondAttribute="bottom" id="ynO-Q2-PP4"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

@@ -159,7 +159,7 @@ class MatchDetailsAggregatorRepository: NSObject {
 
             TSManager.shared
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .sink(receiveCompletion: { [weak self] completion in
+                .sink(receiveCompletion: { completion in
                     switch completion {
                     case .failure:
                         print("Error retrieving data!")
@@ -300,11 +300,11 @@ class MatchDetailsAggregatorRepository: NSObject {
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
                 }
-            case .matchInfo(let id, let paramFloat1, let paramFloat2, let shortParamEventPartName1):
+            case .matchInfo:
                 print("match update")
-            case .fullMatchInfoUpdate(let matchInfo):
+            case .fullMatchInfoUpdate:
                 print("full match update")
-            case .cashoutUpdate(let id, let value, let stake):
+            case .cashoutUpdate:
                 print("Cashout Update")
             case .unknown:
                 print("uknown")

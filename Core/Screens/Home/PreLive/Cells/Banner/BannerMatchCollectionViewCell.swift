@@ -10,38 +10,38 @@ import Combine
 
 class BannerMatchCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
     //
-    @IBOutlet weak var imageBaseView: UIView!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet private weak var imageBaseView: UIView!
+    @IBOutlet private weak var imageView: UIImageView!
 
-    @IBOutlet weak var matchBaseView: UIView!
-    @IBOutlet weak var matchOffuscationView: UIView!
-    @IBOutlet weak var matchGradientView: UIView!
-    @IBOutlet weak var centerView: UIView!
+    @IBOutlet private weak var matchBaseView: UIView!
+    @IBOutlet private weak var matchOffuscationView: UIView!
+    @IBOutlet private weak var matchGradientView: UIView!
+    @IBOutlet private weak var centerView: UIView!
 
-    @IBOutlet weak var participantsBaseView: UIView!
+    @IBOutlet private weak var participantsBaseView: UIView!
 
-    @IBOutlet weak var homeParticipantNameLabel: UILabel!
-    @IBOutlet weak var awayParticipantNameLabel: UILabel!
+    @IBOutlet private weak var homeParticipantNameLabel: UILabel!
+    @IBOutlet private weak var awayParticipantNameLabel: UILabel!
 
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet private weak var timeLabel: UILabel!
 
-    @IBOutlet weak var oddsStackView: UIStackView!
+    @IBOutlet private weak var oddsStackView: UIStackView!
 
-    @IBOutlet weak var homeBaseView: UIView!
-    @IBOutlet weak var homeOddTitleLabel: UILabel!
-    @IBOutlet weak var homeOddValueLabel: UILabel!
+    @IBOutlet private weak var homeBaseView: UIView!
+    @IBOutlet private weak var homeOddTitleLabel: UILabel!
+    @IBOutlet private weak var homeOddValueLabel: UILabel!
 
-    @IBOutlet weak var drawBaseView: UIView!
-    @IBOutlet weak var drawOddTitleLabel: UILabel!
-    @IBOutlet weak var drawOddValueLabel: UILabel!
+    @IBOutlet private weak var drawBaseView: UIView!
+    @IBOutlet private weak var drawOddTitleLabel: UILabel!
+    @IBOutlet private weak var drawOddValueLabel: UILabel!
 
-    @IBOutlet weak var awayBaseView: UIView!
-    @IBOutlet weak var awayOddTitleLabel: UILabel!
-    @IBOutlet weak var awayOddValueLabel: UILabel!
+    @IBOutlet private weak var awayBaseView: UIView!
+    @IBOutlet private weak var awayOddTitleLabel: UILabel!
+    @IBOutlet private weak var awayOddValueLabel: UILabel!
 
     var cancellables = Set<AnyCancellable>()
 

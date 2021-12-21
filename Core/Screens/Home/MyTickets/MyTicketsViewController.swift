@@ -14,6 +14,8 @@ class MyTicketsViewController: UIViewController {
     @IBOutlet private var ticketTypesSeparatorLineView: UIView!
     @IBOutlet private var ticketsTableView: UITableView!
 
+    @IBOutlet weak var loadingIndicatorView: UIActivityIndicatorView!
+    private let refreshControl = UIRefreshControl()
 
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
@@ -67,6 +69,7 @@ class MyTicketsViewController: UIViewController {
     init() {
         self.viewModel = MyTicketsViewModel()
 
+
         super.init(nibName: "MyTicketsViewController", bundle: nil)
     }
 
@@ -83,16 +86,28 @@ class MyTicketsViewController: UIViewController {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
-        ticketTypesCollectionView.collectionViewLayout = flowLayout
-        ticketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        ticketTypesCollectionView.showsVerticalScrollIndicator = false
-        ticketTypesCollectionView.showsHorizontalScrollIndicator = false
-        ticketTypesCollectionView.alwaysBounceHorizontal = true
-        ticketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.ticketTypesCollectionView.collectionViewLayout = flowLayout
+        self.ticketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+        self.ticketTypesCollectionView.showsVerticalScrollIndicator = false
+        self.ticketTypesCollectionView.showsHorizontalScrollIndicator = false
+        self.ticketTypesCollectionView.alwaysBounceHorizontal = true
+        self.ticketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        ticketTypesCollectionView.delegate = self
-        ticketTypesCollectionView.dataSource = self
+        self.ticketTypesCollectionView.delegate = self
+        self.ticketTypesCollectionView.dataSource = self
 
+        //
+        //
+        self.ticketsTableView.delegate = self.viewModel
+        self.ticketsTableView.dataSource = self.viewModel
+        self.ticketsTableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
+        self.ticketsTableView.separatorStyle = .none
+
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+        self.ticketsTableView.addSubview(self.refreshControl)
+
+        //
         //
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
@@ -114,6 +129,21 @@ class MyTicketsViewController: UIViewController {
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
+
+        self.viewModel.isLoading
+            .sink(receiveValue: { [weak self] isLoading in
+                if isLoading {
+                    self?.loadingIndicatorView.startAnimating()
+                }
+                else {
+                    self?.loadingIndicatorView.stopAnimating()
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.reloadTableViewAction = { [weak self] in
+            self?.ticketsTableView.reloadData()
+        }
 
         self.connectPublishers()
         self.setupWithTheme()
@@ -149,6 +179,7 @@ class MyTicketsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.mainTint
+
     }
 
     func connectPublishers() {
@@ -172,8 +203,13 @@ class MyTicketsViewController: UIViewController {
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
-}
 
+
+    @objc func refresh() {
+        self.viewModel.refresh()
+    }
+
+}
 
 extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 

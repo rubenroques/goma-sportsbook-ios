@@ -401,6 +401,14 @@
 		458BAC6C276B65D5006C4BC7 /* MyTicketsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */; };
 		458BAC6E276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */; };
 		458BAC6F276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */; };
+		458BAC752770ACAE006C4BC7 /* MyTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */; };
+		458BAC762770ACAE006C4BC7 /* MyTicketTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */; };
+		458BAC772770ACAE006C4BC7 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		458BAC782770ACAE006C4BC7 /* MyTicketTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */; };
+		458BAC812770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */; };
+		458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */; };
+		458BAC832770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */; };
+		458BAC842770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */; };
 		458F4C922712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */; };
 		458F4C932712AB1900AC13DB /* PreLiveEventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */; };
 		458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45D871CF2710995700F5B87B /* AggregatorsRepository.swift */; };
@@ -1040,6 +1048,10 @@
 		458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsViewController.swift; sourceTree = "<group>"; };
 		458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTicketsViewController.xib; sourceTree = "<group>"; };
 		458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsViewModel.swift; sourceTree = "<group>"; };
+		458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketTableViewCell.swift; sourceTree = "<group>"; };
+		458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MyTicketTableViewCell.xib; sourceTree = "<group>"; };
+		458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyTicketBetLineView.swift; sourceTree = "<group>"; };
+		458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MyTicketBetLineView.xib; sourceTree = "<group>"; };
 		458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreLiveEventsViewModel.swift; sourceTree = "<group>"; };
 		4591358027602960009D1193 /* MarketGroupOrganizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketGroupOrganizer.swift; sourceTree = "<group>"; };
 		45936CA2270E1BCE00E8260E /* SportTypeSelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportTypeSelectionViewController.swift; sourceTree = "<group>"; };
@@ -2088,9 +2100,29 @@
 			children = (
 				458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */,
 				458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */,
-				458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */,
+				458BAC7127709692006C4BC7 /* ViewModel */,
+				458BAC722770AC32006C4BC7 /* Views */,
 			);
 			path = MyTickets;
+			sourceTree = "<group>";
+		};
+		458BAC7127709692006C4BC7 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		458BAC722770AC32006C4BC7 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */,
+				458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */,
+				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
+				458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		45936CA8270E1BF600E8260E /* SportTypeSelection */ = {
@@ -2852,7 +2884,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1250;
-				LastUpgradeCheck = 1310;
+				LastUpgradeCheck = 1320;
 				TargetAttributes = {
 					455A0C4F26BD902C00EC572D = {
 						CreatedOnToolsVersion = 12.5.1;
@@ -2937,7 +2969,6 @@
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
 				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */,
-				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				45D728D327158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */,
 				45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
@@ -2947,6 +2978,7 @@
 				45EF5438270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */,
 				4589F3F926BF017A005DF543 /* WelcomeViewController.xib in Resources */,
 				A92F5DA4272C44A000884BDF /* UploadView.xib in Resources */,
+				458BAC772770ACAE006C4BC7 /* MyTicketTableViewCell.xib in Resources */,
 				45DDBA9A26F2146100A73E45 /* Gilroy-Regular.ttf in Resources */,
 				45DDBAA626F2146100A73E45 /* Gilroy-Medium.ttf in Resources */,
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
@@ -3010,6 +3042,7 @@
 				F47BF2662763986300648440 /* GameSuggestedView.xib in Resources */,
 				45626E462755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				455C962A26FE11CA00456F30 /* HomeViewController.xib in Resources */,
+				458BAC832770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */,
 				45CD7B542716F5CB003044C5 /* OddTripleCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3069,6 +3102,7 @@
 				45626E3B275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
+				458BAC782770ACAE006C4BC7 /* MyTicketTableViewCell.xib in Resources */,
 				45626E472755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
 				A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				F47BF2672763986300648440 /* GameSuggestedView.xib in Resources */,
@@ -3098,12 +3132,10 @@
 				457816AC2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
 				A9C82FB826F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A96279EF273ED2290001E1D5 /* ActivationAlertView.xib in Resources */,
-				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457F497927383A350047169D /* SubmitedBetSelectionView.xib in Resources */,
 				457816BE2707632400F66878 /* TitleTableViewHeader.xib in Resources */,
 				A99A972526FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				A99A971F26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
-				A9B840A826DE86B900269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				A9627A0227440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
 				A9C6022E2716F41200992E11 /* HomeFilterViewController.xib in Resources */,
 				456B343026C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
@@ -3125,7 +3157,6 @@
 				45DDBA9526F2146100A73E45 /* Gilroy-ExtraBold.ttf in Resources */,
 				454E0AC6273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */,
 				45D712F527031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
-				45D712F527031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				A92F5DA5272C44A000884BDF /* UploadView.xib in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
 				45B0BD49271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
@@ -3135,6 +3166,7 @@
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
 				455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */,
+				458BAC842770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */,
 				A92F5D8B2719D63300884BDF /* FilterSliderInfoView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3157,7 +3189,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n swiftlint --no-cache\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		45B2003026C46294005831CC /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3292,6 +3324,7 @@
 				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A626DE831400269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B226E9054700269B05 /* Market.swift in Sources */,
+				458BAC752770ACAE006C4BC7 /* MyTicketTableViewCell.swift in Sources */,
 				45CD7B58271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				A9BCF43D274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				45B7DADB26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
@@ -3370,6 +3403,7 @@
 				A96279FF27440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408626D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				45626E34275530990069B89B /* OddFormatter.swift in Sources */,
+				458BAC812770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
@@ -3587,6 +3621,7 @@
 				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A926DE86BE00269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B326E9054700269B05 /* Market.swift in Sources */,
+				458BAC762770ACAE006C4BC7 /* MyTicketTableViewCell.swift in Sources */,
 				45CD7B59271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift in Sources */,
 				A9BCF43E274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				45B7DADC26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
@@ -3665,6 +3700,7 @@
 				A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
+				458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,

@@ -800,7 +800,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitionsMatchesPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
@@ -878,7 +878,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteMatchesPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving Favorite data!")

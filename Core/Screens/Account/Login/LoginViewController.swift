@@ -274,9 +274,9 @@ class LoginViewController: UIViewController {
                 case .finished:
                     ()
                 }
+                self.hideLoadingSpinner()
                 self.loginButton.isEnabled = true
-            }, receiveValue: { userSession in
-                print("userSession: \(userSession)")
+            }, receiveValue: { _ in
                 self.getProfileStatus()
             })
             .store(in: &cancellables)

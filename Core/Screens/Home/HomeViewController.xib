@@ -151,21 +151,21 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KmS-Xh-sK7">
                     <rect key="frame" x="0.0" y="1098" width="610" height="52"/>
                     <subviews>
-                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="24" translatesAutoresizingMaskIntoConstraints="NO" id="DgF-9v-Tmt">
-                            <rect key="frame" x="78.5" y="0.0" width="453" height="52"/>
+                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="DgF-9v-Tmt">
+                            <rect key="frame" x="16" y="0.0" width="578" height="52"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0dg-mr-47t">
-                                    <rect key="frame" x="0.0" y="0.0" width="135" height="52"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="182" height="52"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_sports_icon" translatesAutoresizingMaskIntoConstraints="NO" id="jq1-az-paT">
-                                            <rect key="frame" x="57.5" y="11" width="20" height="20"/>
+                                            <rect key="frame" x="81" y="8" width="20" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="jq1-az-paT" secondAttribute="height" id="LyC-rB-lHg"/>
                                                 <constraint firstAttribute="width" constant="20" id="v15-IL-2Zu"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sports" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8B6-32-WvK">
-                                            <rect key="frame" x="4" y="33" width="127" height="18"/>
+                                            <rect key="frame" x="4" y="30" width="174" height="19"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -173,27 +173,27 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstItem="jq1-az-paT" firstAttribute="bottom" secondItem="0dg-mr-47t" secondAttribute="centerY" constant="5" id="2fJ-V5-Inq"/>
+                                        <constraint firstItem="jq1-az-paT" firstAttribute="bottom" secondItem="0dg-mr-47t" secondAttribute="centerY" constant="2" id="2fJ-V5-Inq"/>
                                         <constraint firstItem="8B6-32-WvK" firstAttribute="top" secondItem="jq1-az-paT" secondAttribute="bottom" constant="2" id="AEh-Wn-f81"/>
                                         <constraint firstItem="8B6-32-WvK" firstAttribute="centerX" secondItem="0dg-mr-47t" secondAttribute="centerX" id="BDF-Ww-H39"/>
                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="120" id="Kmz-cf-wwQ"/>
                                         <constraint firstItem="jq1-az-paT" firstAttribute="centerX" secondItem="0dg-mr-47t" secondAttribute="centerX" id="MTK-xx-k8f"/>
-                                        <constraint firstAttribute="bottom" secondItem="8B6-32-WvK" secondAttribute="bottom" constant="1" id="pVI-Hf-3e3"/>
+                                        <constraint firstAttribute="bottom" secondItem="8B6-32-WvK" secondAttribute="bottom" constant="3" id="pVI-Hf-3e3"/>
                                         <constraint firstItem="8B6-32-WvK" firstAttribute="leading" secondItem="0dg-mr-47t" secondAttribute="leading" constant="4" id="tDN-60-OJI"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="F4I-4h-jeW">
-                                    <rect key="frame" x="159" y="0.0" width="135" height="52"/>
+                                    <rect key="frame" x="198" y="0.0" width="182" height="52"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="OrN-gr-CSa">
-                                            <rect key="frame" x="57.5" y="11" width="20" height="20"/>
+                                            <rect key="frame" x="81" y="8" width="20" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="20" id="IK8-f9-5ky"/>
                                                 <constraint firstAttribute="width" secondItem="OrN-gr-CSa" secondAttribute="height" multiplier="1:1" id="lsx-AB-IIA"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Live" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0RE-N3-etL">
-                                            <rect key="frame" x="4" y="33" width="127" height="18"/>
+                                            <rect key="frame" x="4" y="30" width="174" height="19"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -204,23 +204,23 @@
                                         <constraint firstItem="0RE-N3-etL" firstAttribute="leading" secondItem="F4I-4h-jeW" secondAttribute="leading" constant="4" id="9kI-Ou-LLM"/>
                                         <constraint firstItem="OrN-gr-CSa" firstAttribute="centerX" secondItem="F4I-4h-jeW" secondAttribute="centerX" id="Foc-tR-58E"/>
                                         <constraint firstItem="0RE-N3-etL" firstAttribute="centerX" secondItem="F4I-4h-jeW" secondAttribute="centerX" id="V4k-EY-380"/>
-                                        <constraint firstItem="OrN-gr-CSa" firstAttribute="bottom" secondItem="F4I-4h-jeW" secondAttribute="centerY" constant="5" id="hzV-Kf-0fA"/>
+                                        <constraint firstItem="OrN-gr-CSa" firstAttribute="bottom" secondItem="F4I-4h-jeW" secondAttribute="centerY" constant="2" id="hzV-Kf-0fA"/>
                                         <constraint firstItem="0RE-N3-etL" firstAttribute="top" secondItem="OrN-gr-CSa" secondAttribute="bottom" constant="2" id="na6-t6-4fh"/>
-                                        <constraint firstAttribute="bottom" secondItem="0RE-N3-etL" secondAttribute="bottom" constant="1" id="vpC-dO-jCy"/>
+                                        <constraint firstAttribute="bottom" secondItem="0RE-N3-etL" secondAttribute="bottom" constant="3" id="vpC-dO-jCy"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X4U-LC-UkC">
-                                    <rect key="frame" x="318" y="0.0" width="135" height="52"/>
+                                    <rect key="frame" x="396" y="0.0" width="182" height="52"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_live_icon" translatesAutoresizingMaskIntoConstraints="NO" id="EcN-NV-eOB">
-                                            <rect key="frame" x="57.5" y="11" width="20" height="20"/>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_my_tickets" translatesAutoresizingMaskIntoConstraints="NO" id="EcN-NV-eOB">
+                                            <rect key="frame" x="81" y="8" width="20" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="EcN-NV-eOB" secondAttribute="height" multiplier="1:1" id="3h4-ey-Ozo"/>
                                                 <constraint firstAttribute="width" constant="20" id="MSp-1y-PaG"/>
                                             </constraints>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Tickets" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SDN-s8-3nz">
-                                            <rect key="frame" x="4" y="33" width="127" height="18"/>
+                                            <rect key="frame" x="4" y="30" width="174" height="19"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="11"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -228,11 +228,11 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="SDN-s8-3nz" secondAttribute="bottom" constant="1" id="C8R-1z-dwA"/>
+                                        <constraint firstAttribute="bottom" secondItem="SDN-s8-3nz" secondAttribute="bottom" constant="3" id="C8R-1z-dwA"/>
                                         <constraint firstItem="EcN-NV-eOB" firstAttribute="centerX" secondItem="X4U-LC-UkC" secondAttribute="centerX" id="KNv-ap-PT4"/>
                                         <constraint firstItem="SDN-s8-3nz" firstAttribute="leading" secondItem="X4U-LC-UkC" secondAttribute="leading" constant="4" id="R8N-9M-aLp"/>
                                         <constraint firstItem="SDN-s8-3nz" firstAttribute="centerX" secondItem="X4U-LC-UkC" secondAttribute="centerX" id="dvD-Sg-XFt"/>
-                                        <constraint firstItem="EcN-NV-eOB" firstAttribute="bottom" secondItem="X4U-LC-UkC" secondAttribute="centerY" constant="5" id="frV-d6-0Yg"/>
+                                        <constraint firstItem="EcN-NV-eOB" firstAttribute="bottom" secondItem="X4U-LC-UkC" secondAttribute="centerY" constant="2" id="frV-d6-0Yg"/>
                                         <constraint firstItem="SDN-s8-3nz" firstAttribute="top" secondItem="EcN-NV-eOB" secondAttribute="bottom" constant="2" id="iT9-tc-9pl"/>
                                     </constraints>
                                 </view>
@@ -242,6 +242,7 @@
                     <color key="backgroundColor" systemColor="systemRedColor"/>
                     <constraints>
                         <constraint firstItem="DgF-9v-Tmt" firstAttribute="top" secondItem="KmS-Xh-sK7" secondAttribute="top" id="275-mv-f46"/>
+                        <constraint firstItem="DgF-9v-Tmt" firstAttribute="leading" secondItem="KmS-Xh-sK7" secondAttribute="leading" constant="16" id="RZg-On-gEM"/>
                         <constraint firstItem="DgF-9v-Tmt" firstAttribute="centerX" secondItem="KmS-Xh-sK7" secondAttribute="centerX" id="Wfv-89-a91"/>
                         <constraint firstAttribute="height" constant="52" id="jY2-S0-YuM"/>
                         <constraint firstItem="DgF-9v-Tmt" firstAttribute="centerY" secondItem="KmS-Xh-sK7" secondAttribute="centerY" id="xt4-Ak-h0V"/>
@@ -280,6 +281,7 @@
         <image name="logo_vertical" width="56" height="34"/>
         <image name="search_bar_icon" width="22" height="22"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
+        <image name="tabbar_my_tickets" width="25" height="24"/>
         <image name="tabbar_sports_icon" width="29" height="23"/>
         <namedColor name="mainTintColor">
             <color red="0.016000000759959221" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

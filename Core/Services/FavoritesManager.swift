@@ -36,24 +36,24 @@ class FavoritesManager {
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
-            } receiveValue: { [weak self] userMetadata in
-                print("POST METADATA: \(userMetadata)")
+            } receiveValue: { _ in
+
             }
             .store(in: &cancellables)
     }
+
+    // TODO: Code Review - Isto ficou por corrigir, o check faz tudo, e não pode, tem que haver um addFavorite, um removeFavorite e é isso. O postUserMetadata tem que ser private, não pode ser chamado fora do manager.
 
     func checkFavorites(eventId: String) {
         var favoriteMatchExists = false
         var favoriteEventsId = self.favoriteEventsIdPublisher.value
 
-        for favoriteEventId in favoriteEventsId {
+        for favoriteEventId in favoriteEventsId where eventId == favoriteEventId {
             // Remove from favorite
-            if eventId == favoriteEventId {
-                favoriteMatchExists = true
-                favoriteEventsId = favoriteEventsId.filter {$0 != eventId}
+            favoriteMatchExists = true
+            favoriteEventsId = favoriteEventsId.filter {$0 != eventId}
 
-                self.favoriteEventsIdPublisher.send(favoriteEventsId)
-            }
+            self.favoriteEventsIdPublisher.send(favoriteEventsId)
         }
 
         // Add to favorite

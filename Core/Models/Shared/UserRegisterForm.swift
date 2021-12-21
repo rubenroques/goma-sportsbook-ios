@@ -71,6 +71,35 @@ extension EveryMatrix {
         }
     }
 
+    enum MyTicketsType {
+
+        case resolved
+        case opened
+        case won
+
+        var queryString: String {
+            switch self {
+            case .resolved:
+                return "[\"WON\",\"HALF_WON\",\"LOST\",\"HALF_LOST\",\"DRAW\",\"CASHED_OUT\",\"CANCELLED\"] "
+            case .opened:
+                return "[\"OPEN\"]"
+            case .won:
+                return "[\"WON\",\"HALF_WON\"]"
+            }
+        }
+
+        var queryArray: [String] {
+            switch self {
+            case .resolved:
+                return ["WON","HALF_WON","LOST","HALF_LOST","DRAW","CASHED_OUT","CANCELLED"]
+            case .opened:
+                return ["OPEN"]
+            case .won:
+                return ["WON","HALF_WON"]
+            }
+        }
+    }
+
     struct CompleteRegisterForm {
 
     }

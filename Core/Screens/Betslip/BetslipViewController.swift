@@ -127,7 +127,7 @@ class BetslipViewController: UIViewController {
 
     }
 
-    @IBAction func didTapCancelButton() {
+    @IBAction private func didTapCancelButton() {
         self.willDismissAction?()
         self.dismiss(animated: true, completion: nil)
     }
