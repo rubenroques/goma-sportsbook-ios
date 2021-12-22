@@ -187,6 +187,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
         self.betSuggestedCollectionView.delegate = self
         self.betSuggestedCollectionView.dataSource = self
+        
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
@@ -1069,8 +1070,12 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         let bottomBarHeigth = 60.0
         var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
         if let arrayValues = self.suggestedBetsArray[indexPath.row] {
-
-            size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(arrayValues.count) * 60)
+//            if arrayValues.count == 3 {
+//                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 3 * 60)
+//            }else{
+                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 4 * 60)
+           // }
+            
         }
         return size
     }

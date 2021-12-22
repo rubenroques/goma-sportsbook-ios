@@ -29,8 +29,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupWithTheme()
-        betNowButton.layer.cornerRadius = 4.0
-        layer.cornerRadius = 4.0
+        betNowButton.layer.cornerRadius = 5.0
+        layer.cornerRadius = 5.0
         // Initialization code
     }
     override func prepareForReuse() {
@@ -47,7 +47,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
         self.betsStackView.removeAllArrangedSubviews()
-
+       
     }
     
     func setupStackBetView(betValues: [Match], gomaValues: [GomaSuggestedBets]) {
@@ -140,7 +140,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                     }
 
                                     validMarkets += 1
-
+                                    gameSuggestedView.frame.size.height = 60
+                                    
                                     betsStackView.addArrangedSubview(gameSuggestedView)
 
                                     self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
