@@ -56,7 +56,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var systemOddsValueLabel: UILabel!
 
     @IBOutlet private weak var placeBetBaseView: UIView!
-
     @IBOutlet private weak var placeBetButtonsBaseView: UIView!
     @IBOutlet private weak var placeBetButtonsSeparatorView: UIView!
     @IBOutlet private weak var amountBaseView: UIView!
@@ -69,6 +68,19 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var placeBetButton: UIButton!
 
     @IBOutlet private weak var placeBetBottomConstraint: NSLayoutConstraint!
+    
+
+    @IBOutlet weak var secondaryPlaceBetBaseView: UIView!
+    
+    @IBOutlet weak var secondaryPlaceBetButtonsBaseView: UIView!
+    @IBOutlet weak var secondaryPlaceBetButtonsSeparatorView: UIView!
+    @IBOutlet weak var secondaryAmountBaseView: UIView!
+    @IBOutlet weak var secondaryAmountTextfield: UITextField!
+    
+    @IBOutlet weak var secondaryPlaceBetButton: UIButton!
+    
+    
+    
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
     @IBOutlet private weak var loadingBaseView: UIView!
@@ -76,6 +88,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var betSuggestedCollectionView: UICollectionView!
     @IBOutlet private var suggestedBetsActivityIndicator: UIActivityIndicatorView!
+    
+    @IBOutlet weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
+    
     
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -205,6 +220,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemOddsTitleLabel.text = "Total bet amount"
         self.systemOddsValueLabel.text = "-.--€"
 
+        self.secondaryPlaceBetBaseView.isHidden = true
+        
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
 
@@ -332,6 +349,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ $0 == .simple })
             .sink(receiveValue: { [weak self] isSimpleBet in
                 self?.placeBetButtonsBaseView.isHidden = isSimpleBet
+                self?.secondaryPlaceBetButtonsBaseView.isHidden = isSimpleBet
             })
             .store(in: &cancellables)
 
@@ -376,6 +394,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if hasValidBettingValue {
                     self?.requestSystemBetInfo()
                 }
+                self?.secondaryPlaceBetButton.isEnabled = hasValidBettingValue
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &cancellables)
@@ -389,6 +408,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
+                self?.secondaryPlaceBetButton.isEnabled = hasValidBettingValue
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &cancellables)
@@ -462,6 +482,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return hasValidAmounts
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
+                self?.secondaryPlaceBetButton.isEnabled = hasValidBettingValue
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &cancellables)
@@ -499,7 +520,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
+        
+        self.secondaryPlaceBetButton.isEnabled = false
         self.placeBetButton.isEnabled = false
     }
 
@@ -744,6 +766,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         StyleHelper.styleButton(button: self.selectSystemBetTypeButton)
         StyleHelper.styleButton(button: self.placeBetButton)
+        StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
     }
 
     func addDoneAccessoryView() {
@@ -753,6 +776,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
         keyboardToolbar.items = [flexBarButton, doneBarButton]
         self.amountTextfield.inputAccessoryView = keyboardToolbar
+        
+     
     }
 
     @objc func dismissKeyboard() {
@@ -940,13 +965,22 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
+        self.secondaryPlaceBetBaseView.isHidden = false
+        self.placeBetBaseView.isHidden = true
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.tableView.contentInset.bottom = (keyboardSize.height - placeBetBaseView.frame.size.height)
+            
+            self.secondPlaceBetBaseViewConstraint.constant = keyboardSize.height
+            
         }
+        
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
         self.tableView.contentInset.bottom = 12
+        self.secondPlaceBetBaseViewConstraint.constant = 0
+        self.placeBetBaseView.isHidden = false
+        self.secondaryPlaceBetBaseView.isHidden = true
     }
 
     @IBAction private func didTapPlusOneButton() {
@@ -966,6 +1000,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         self.updateAmountValue(string)
+      
         return false
     }
 
