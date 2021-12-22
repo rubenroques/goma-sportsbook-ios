@@ -68,7 +68,14 @@ class PreLiveEventsViewModel: NSObject {
     }
     var homeFilterOptions: HomeFilterOptions? {
         didSet {
-            self.updateContentList()
+            if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
+                let timeRange = "\(Int(lowerTimeRange))-\(Int(highTimeRange))"
+                self.fetchTodayMatches(withFilter: true, timeRange: timeRange)
+            }
+            else {
+                self.updateContentList()
+            }
+
         }
     }
 
@@ -216,6 +223,27 @@ class PreLiveEventsViewModel: NSObject {
         }
     }
 
+    private func updateContentListFiltered() {
+
+        self.isLoadingMyGamesList.send(false)
+
+        self.popularMatchesViewModelDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
+
+        self.popularMatchesViewModelDataSource.banners = self.banners
+
+        self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
+
+        self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
+
+        self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
+
+        self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
+
+        DispatchQueue.main.async {
+            self.dataDidChangedAction?()
+        }
+    }
+
     func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
         guard let filterOptionsValue = filtersOptions else {
             return matches
@@ -260,11 +288,11 @@ class PreLiveEventsViewModel: NSObject {
         }
 
         // Check time
-        let timeOptionMin = Int(filterOptionsValue.lowerBoundTimeRange) * 3600
-        let timeOptionMax = Int(filterOptionsValue.highBoundTimeRange) * 3600
-        let dateOptionMin = Date().addingTimeInterval(TimeInterval(timeOptionMin))
-        let dateOptionMax = Date().addingTimeInterval(TimeInterval(timeOptionMax))
-        let dateRange = dateOptionMin...dateOptionMax
+//        let timeOptionMin = Int(filterOptionsValue.lowerBoundTimeRange) * 3600
+//        let timeOptionMax = Int(filterOptionsValue.highBoundTimeRange) * 3600
+//        let dateOptionMin = Date().addingTimeInterval(TimeInterval(timeOptionMin))
+//        let dateOptionMax = Date().addingTimeInterval(TimeInterval(timeOptionMax))
+//        let dateRange = dateOptionMin...dateOptionMax
 
         var filteredMatches: [Match] = []
 
@@ -279,10 +307,10 @@ class PreLiveEventsViewModel: NSObject {
                 }
             }
             // Check time range
-            var timeInRange = false
-            if dateRange.contains(match.date!) {
-                timeInRange = true
-            }
+//            var timeInRange = false
+//            if dateRange.contains(match.date!) {
+//                timeInRange = true
+//            }
 
             // Check odds filter
             let matchOdds = marketSort[0].outcomes
@@ -296,8 +324,7 @@ class PreLiveEventsViewModel: NSObject {
                 }
             }
 
-            if oddsInRange && timeInRange {
-                print("\(oddsInRange) + \(timeInRange)")
+            if oddsInRange {
                 var newMatch = match
                 newMatch.markets = marketSort
 
@@ -367,14 +394,19 @@ class PreLiveEventsViewModel: NSObject {
         self.updateContentList()
     }
 
-    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator, filtered: Bool = false) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .todayEvents,
                                                  shouldClear: true)
         self.todayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
 
         self.isLoadingTodayList.send(false)
 
-        self.updateContentList()
+        if filtered {
+            self.updateContentListFiltered()
+        }
+        else {
+            self.updateContentList()
+        }
     }
 
     private func setupCompetitionGroups() {
@@ -603,17 +635,25 @@ class PreLiveEventsViewModel: NSObject {
         self.fetchTodayMatches()
     }
 
-    private func fetchTodayMatches() {
+    private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
 
         if let todayMatchesRegister = todayMatchesRegister {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: todayMatchesRegister)
         }
 
         let matchesCount = self.todayMatchesCount * self.todayMatchesPage
-        let endpoint = TSRouter.todayMatchesPublisher(operatorId: Env.appSession.operatorId,
+
+        var endpoint = TSRouter.todayMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                       language: "en",
                                                       sportId: self.selectedSportId.typeId,
                                                       matchesCount: matchesCount)
+
+        if withFilter {
+            endpoint = TSRouter.todayMatchesFilterPublisher(operatorId: Env.appSession.operatorId,
+                                                          language: "en",
+                                                          sportId: self.selectedSportId.typeId,
+                                                          matchesCount: matchesCount, timeRange: timeRange)
+        }
 
         self.todayMatchesPublisher?.cancel()
         self.todayMatchesPublisher = nil
@@ -636,7 +676,7 @@ class PreLiveEventsViewModel: NSObject {
                     self?.todayMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
                     print("PreLiveEventsViewModel todayMatchesPublisher initialContent")
-                    self?.setupTodayAggregatorProcessor(aggregator: aggregator)
+                    self?.setupTodayAggregatorProcessor(aggregator: aggregator, filtered: withFilter)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateTodayAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
@@ -1274,7 +1314,6 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
                 if let viewModel = self.bannersViewModel {
                     cell.setupWithViewModel(viewModel)
-                    cell.storePopularMatches(popularMatches: self.matches)
                 }
                 return cell
             }
