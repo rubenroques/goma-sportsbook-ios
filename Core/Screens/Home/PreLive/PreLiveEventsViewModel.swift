@@ -565,6 +565,10 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitions = processedCompetitions
 
+//        self.favoriteCompetitions = self.favoriteCompetitions.filter({
+//            $0. == self.selectedSportId.id
+//        })
+
         self.isLoadingCompetitions.send(false)
 
         self.updateContentList()
