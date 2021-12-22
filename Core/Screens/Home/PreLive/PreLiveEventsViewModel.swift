@@ -542,20 +542,24 @@ class PreLiveEventsViewModel: NSObject {
 
         var processedCompetitions: [Competition] = []
         for competitionId in competitionsMatches.keys {
-            if let tournament = Env.everyMatrixStorage.tournaments[competitionId] {
+            if let tournament = Env.everyMatrixStorage.tournaments[competitionId], let tournamentSportTypeId = tournament.sportId {
 
-                var location: Location?
-                if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
-                    location = Location(id: rawLocation.id,
-                                    name: rawLocation.name ?? "",
-                                    isoCode: rawLocation.code ?? "")
+                if tournamentSportTypeId == self.selectedSportId.id {
+
+                    var location: Location?
+                    if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
+                        location = Location(id: rawLocation.id,
+                                        name: rawLocation.name ?? "",
+                                        isoCode: rawLocation.code ?? "")
+                    }
+
+                    let competition = Competition(id: competitionId,
+                                                  name: tournament.name ?? "",
+                                                  matches: (competitionsMatches[competitionId] ?? []),
+                                                  venue: location)
+                    processedCompetitions.append(competition)
                 }
 
-                let competition = Competition(id: competitionId,
-                                              name: tournament.name ?? "",
-                                              matches: (competitionsMatches[competitionId] ?? []),
-                                              venue: location)
-                processedCompetitions.append(competition)
             }
         }
 
