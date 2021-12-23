@@ -11,41 +11,41 @@ import Kingfisher
 class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
-    @IBOutlet weak var favoritesIconImageView: UIImageView!
+    @IBOutlet private weak var favoritesIconImageView: UIImageView!
 
-    @IBOutlet weak var numberOfBetsLabels: UILabel!
+    @IBOutlet private weak var numberOfBetsLabels: UILabel!
     
-    @IBOutlet weak var eventNameLabel: UILabel!
-    @IBOutlet weak var locationFlagImageView: UIImageView!
+    @IBOutlet private weak var eventNameLabel: UILabel!
+    @IBOutlet private weak var locationFlagImageView: UIImageView!
 
-    @IBOutlet weak var favoritesButton: UIButton!
+    @IBOutlet private weak var favoritesButton: UIButton!
 
-    @IBOutlet weak var participantsBaseView: UIView!
+    @IBOutlet private weak var participantsBaseView: UIView!
 
-    @IBOutlet weak var homeParticipantNameLabel: UILabel!
-    @IBOutlet weak var awayParticipantNameLabel: UILabel!
+    @IBOutlet private weak var homeParticipantNameLabel: UILabel!
+    @IBOutlet private weak var awayParticipantNameLabel: UILabel!
 
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var timeLabel: UILabel!
+    @IBOutlet private weak var dateLabel: UILabel!
+    @IBOutlet private weak var timeLabel: UILabel!
 
-    @IBOutlet weak var oddsStackView: UIStackView!
+    @IBOutlet private weak var oddsStackView: UIStackView!
 
-    @IBOutlet weak var homeBaseView: UIView!
-    @IBOutlet weak var homeOddTitleLabel: UILabel!
-    @IBOutlet weak var homeOddValueLabel: UILabel!
+    @IBOutlet private weak var homeBaseView: UIView!
+    @IBOutlet private weak var homeOddTitleLabel: UILabel!
+    @IBOutlet private weak var homeOddValueLabel: UILabel!
 
-    @IBOutlet weak var drawBaseView: UIView!
-    @IBOutlet weak var drawOddTitleLabel: UILabel!
-    @IBOutlet weak var drawOddValueLabel: UILabel!
+    @IBOutlet private weak var drawBaseView: UIView!
+    @IBOutlet private weak var drawOddTitleLabel: UILabel!
+    @IBOutlet private weak var drawOddValueLabel: UILabel!
 
-    @IBOutlet weak var awayBaseView: UIView!
-    @IBOutlet weak var awayOddTitleLabel: UILabel!
-    @IBOutlet weak var awayOddValueLabel: UILabel!
+    @IBOutlet private weak var awayBaseView: UIView!
+    @IBOutlet private weak var awayOddTitleLabel: UILabel!
+    @IBOutlet private weak var awayOddValueLabel: UILabel!
 
-    @IBOutlet weak var suspendedBaseView: UIView!
-    @IBOutlet weak var suspendedLabel: UILabel!
+    @IBOutlet private weak var suspendedBaseView: UIView!
+    @IBOutlet private weak var suspendedLabel: UILabel!
 
     var viewModel: MatchWidgetCellViewModel? {
         didSet {
@@ -202,10 +202,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
 
-        for matchId in Env.favoritesManager.favoriteEventsId {
-            if matchId == match.id {
-                self.isFavorite = true
-            }
+        for matchId in Env.favoritesManager.favoriteEventsId where matchId == match.id {
+            self.isFavorite = true
         }
     }
 
@@ -219,11 +217,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             var favoriteMatchExists = false
 
-            for matchId in Env.favoritesManager.favoriteEventsId {
-                if self.match!.id == matchId {
-                    favoriteMatchExists = true
-                    Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.match!.id}
-                }
+            for matchId in Env.favoritesManager.favoriteEventsId where self.match!.id == matchId {
+                favoriteMatchExists = true
+                Env.favoritesManager.favoriteEventsId = Env.favoritesManager.favoriteEventsId.filter {$0 != self.match!.id}
             }
 
             if self.isFavorite {
@@ -234,6 +230,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
                 Env.favoritesManager.favoriteEventsId.append(self.match!.id)
             }
+
             Env.favoritesManager.postUserMetadata(favoriteEvents: Env.favoritesManager.favoriteEventsId)
         }
     }

@@ -328,7 +328,8 @@ class AggregatorsRepository {
                               sportType: rawMatch.sportId ?? "",
                               venue: location,
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                              markets: sortedMarkets)
+                              markets: sortedMarkets,
+                              rootPartId: rawMatch.rootPartId ?? "")
 
             matchesList.append(match)
         }
@@ -398,6 +399,7 @@ struct OddOutcomesSortingHelper {
         case "more_than": return 30
 
         case "in_90_minutes": return 10
+        case "in_extra_time": return 20
         case "on_penalties": return 30
 
         case "home-true": return 10

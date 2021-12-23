@@ -257,8 +257,7 @@ extension Router {
 
 extension UIWindow {
     open override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if motion == .motionShake {
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        if motion == .motionShake, let appDelegate = UIApplication.shared.delegate as? AppDelegate {
             appDelegate.bootstrap.router.showDebugView()
         }
     }

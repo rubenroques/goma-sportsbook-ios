@@ -17,7 +17,7 @@ class MatchDetailsViewModel: NSObject {
     var isLoadingData: CurrentValueSubject<Bool, Never> = .init(true)
 
     private var match: Match
-    private var store: MatchDetailsAggregatorRepository
+    var store: MatchDetailsAggregatorRepository
 
     private var marketTypeSelectedOptionIndex: Int?
 

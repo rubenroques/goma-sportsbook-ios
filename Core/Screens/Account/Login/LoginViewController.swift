@@ -274,9 +274,9 @@ class LoginViewController: UIViewController {
                 case .finished:
                     ()
                 }
+                self.hideLoadingSpinner()
                 self.loginButton.isEnabled = true
-            }, receiveValue: { userSession in
-                print("userSession: \(userSession)")
+            }, receiveValue: { _ in
                 self.getProfileStatus()
             })
             .store(in: &cancellables)
@@ -289,7 +289,7 @@ class LoginViewController: UIViewController {
             .sink(receiveCompletion: { _ in
                 self.hideLoadingSpinner()
             }, receiveValue: { value in
-                Env.userSessionStore.isUserProfileIncomplete = value.isProfileIncomplete
+                Env.userSessionStore.isUserProfileIncomplete.send(value.isProfileIncomplete)
                 self.showNextViewController()
             })
             .store(in: &cancellables)

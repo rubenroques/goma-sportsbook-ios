@@ -89,8 +89,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         case multiple
         case system
     }
-    var betInfo: [[String]] = [["teste 1", "teste 2", "teste 3"], ["a", "b", "c"], ["1", "2", "3"]]
-
+    
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
     // System Bets vars
@@ -130,7 +129,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     var numberOfBets: Int = 1
     var totalPossibleEarnings: Double = 0.0
     var totalBetOdds: Double = 0.0
-
+    var simpleOddsValues : [Double] = [0.0]
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -309,7 +308,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multiplierPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
-                self?.totalBetOdds = Double(multiplier)
                 self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
             })
             .store(in: &cancellables)
@@ -398,7 +396,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
                     let totalValue = multiplier * betValue
-                 
+
                     self.totalPossibleEarnings =  totalValue
                     
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
@@ -408,11 +406,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarnings in
-                
+
                 self?.multipleWinningsValueLabel.text = possibleEarnings
             })
             .store(in: &cancellables)
-       
+        
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
@@ -423,9 +421,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
+                        self.simpleOddsValues.append(ticket.value)
                         let expectedTicketReturn = ticket.value * betValue
-                        
-                        expectedReturn += expectedTicketReturn
+                          expectedReturn += expectedTicketReturn
                         
                     }
                 }
@@ -433,16 +431,13 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return "-.--€"
                 }
                 else {
-                   
-                    self.totalPossibleEarnings = expectedReturn
+
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarningsString in
-                if let possibleEarningsConverted = Double(possibleEarningsString){
-                    self?.totalPossibleEarnings = possibleEarningsConverted
-                }
-                
+
+              
                 self?.simpleWinningsValueLabel.text = possibleEarningsString
             })
             .store(in: &cancellables)
@@ -542,6 +537,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        // TODO: Code Review - Yap, this wont work a lot of times
         // Needs to be changed
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.betSuggestedCollectionView.reloadData()
@@ -561,25 +557,18 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             TSManager.shared
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure:
-                        print("Error retrieving data!")
-                    case .finished:
-                        print("Data retrieved!")
-                    }
+                .sink(receiveCompletion: { _ in
+
                 }, receiveValue: { [weak self] state in
                     switch state {
                     case .connect(let publisherIdentifiable):
-                        print("MyBets suggestedBets connect")
                         self?.suggestedBetsRegister = publisherIdentifiable
                     case .initialContent(let aggregator):
-                        print("MyBets suggestedBets initialContent")
                         self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
-                    case .updatedContent(let aggregatorUpdates):
+                    case .updatedContent:
                         print("MyBets suggestedBets updatedContent")
                     case .disconnect:
-                        print("MyBets suggestedBets disconnect")
+                        ()
                     }
                 })
                 .store(in: &cancellables)
@@ -876,7 +865,28 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapPlaceBetButton() {
 
         self.isLoading = true
+        
+        
+        
+        if let simpleWinningsValueString = self.simpleWinningsValueLabel.text , simpleOddsValues.count != 1{
+            let valuesString = simpleWinningsValueString.components(separatedBy: "€")
+             if let winningsValue = Double(valuesString[1]){
+                 self.totalPossibleEarnings = winningsValue
+             }
 
+            simpleOddsValues =  Array(Set(simpleOddsValues))
+                self.totalBetOdds = 0.0
+                for odd in simpleOddsValues{
+                    self.totalBetOdds += odd
+                }
+            
+        }else if let multipleWinningsValueString = self.multipleOddsValueLabel.text {
+            if let valuesString = Double(multipleWinningsValueString){
+                 self.totalBetOdds = valuesString
+            }
+        }
+      
+        
         if self.listTypePublisher.value == .simple {
 
             self.numberOfBets = self.simpleBetsBettingValues.value.count

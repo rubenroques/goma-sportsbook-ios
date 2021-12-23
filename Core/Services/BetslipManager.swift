@@ -126,7 +126,7 @@ class BetslipManager: NSObject {
                 updatedTickets.append(newTicket)
             }
             else {
-// #warning TODO: The ticket value is not updated
+                // TODO: The ticket value is not updated
                 let newTicket = BettingTicket(id: ticket.id,
                                               outcomeId: ticket.outcomeId,
                                               matchId: ticket.matchId,
@@ -156,7 +156,7 @@ class BetslipManager: NSObject {
     func removeAllBetslipPlacedBetErrorResponse() {
         self.betslipPlaceBetResponseErrorsPublisher.send([])
     }
-    
+
 }
 
 //
