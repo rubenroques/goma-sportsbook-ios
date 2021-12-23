@@ -9,9 +9,9 @@ import UIKit
 
 class EmptyCardTableViewCell: UITableViewCell {
 
-    @IBOutlet var containerView: UIView!
-    @IBOutlet var iconImageView: UIImageView!
-    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet private var containerView: UIView!
+    @IBOutlet private var iconImageView: UIImageView!
+    @IBOutlet private var descriptionLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -38,6 +38,7 @@ class EmptyCardTableViewCell: UITableViewCell {
         self.containerView.layer.masksToBounds = true
 
         self.iconImageView.backgroundColor = .clear
+        self.iconImageView.tintColor = UIColor.App.headingMain
 
         self.descriptionLabel.textColor = UIColor.App.headingMain
         self.descriptionLabel.font = AppFont.with(type: .semibold, size: 14)
