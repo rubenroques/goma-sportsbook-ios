@@ -254,14 +254,14 @@
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ovs-WL-i4P">
-                    <rect key="frame" x="552" y="12" width="46" height="17"/>
+                    <rect key="frame" x="547" y="11" width="52" height="19"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-4y-bft">
-                            <rect key="frame" x="0.0" y="0.0" width="66" height="17"/>
+                            <rect key="frame" x="0.0" y="0.0" width="72" height="19"/>
                             <color key="backgroundColor" systemColor="systemOrangeColor"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfI-T8-xC9">
-                            <rect key="frame" x="9" y="3" width="28" height="11"/>
+                            <rect key="frame" x="12" y="4" width="28" height="11"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -271,8 +271,8 @@
                     <constraints>
                         <constraint firstItem="kfI-T8-xC9" firstAttribute="centerY" secondItem="Ovs-WL-i4P" secondAttribute="centerY" id="9l2-SL-UG5"/>
                         <constraint firstAttribute="trailing" secondItem="yXI-4y-bft" secondAttribute="trailing" constant="-20" id="JlI-AY-u4K"/>
-                        <constraint firstAttribute="trailing" secondItem="kfI-T8-xC9" secondAttribute="trailing" constant="9" id="S8I-Oa-i0e"/>
-                        <constraint firstAttribute="height" constant="17" id="SMh-mZ-2CH"/>
+                        <constraint firstAttribute="trailing" secondItem="kfI-T8-xC9" secondAttribute="trailing" constant="12" id="S8I-Oa-i0e"/>
+                        <constraint firstAttribute="height" constant="19" id="SMh-mZ-2CH"/>
                         <constraint firstItem="kfI-T8-xC9" firstAttribute="centerX" secondItem="Ovs-WL-i4P" secondAttribute="centerX" id="dBv-wC-9BF"/>
                         <constraint firstItem="yXI-4y-bft" firstAttribute="leading" secondItem="Ovs-WL-i4P" secondAttribute="leading" id="dXi-oS-rAB"/>
                         <constraint firstAttribute="bottom" secondItem="yXI-4y-bft" secondAttribute="bottom" id="jNU-XB-gW3"/>
@@ -287,7 +287,7 @@
                 <constraint firstItem="Ovs-WL-i4P" firstAttribute="centerY" secondItem="Vqq-sH-Fcn" secondAttribute="centerY" id="CvF-0H-mUc"/>
                 <constraint firstItem="YPg-OO-9uf" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="2" id="O7w-jg-xYi"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="YPg-OO-9uf" secondAttribute="bottom" id="VDf-QH-YJj"/>
-                <constraint firstItem="Ovs-WL-i4P" firstAttribute="trailing" secondItem="YPg-OO-9uf" secondAttribute="trailing" constant="2" id="gZC-hk-gnK"/>
+                <constraint firstItem="Ovs-WL-i4P" firstAttribute="trailing" secondItem="YPg-OO-9uf" secondAttribute="trailing" constant="3" id="gZC-hk-gnK"/>
                 <constraint firstItem="YPg-OO-9uf" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="8" id="oGx-31-esE"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
