@@ -1699,6 +1699,9 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
+            if self.userFavoriteMatches.isEmpty {
+                return 1
+            }
             return self.userFavoriteMatches.count
         default:
             return 0
@@ -1709,14 +1712,23 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
 
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let match = self.userFavoriteMatches[safe: indexPath.row] {
-                cell.setupWithMatch(match)
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
-                }
+            if !self.userFavoriteMatches.isEmpty {
+                if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+                   let match = self.userFavoriteMatches[safe: indexPath.row] {
+                    cell.setupWithMatch(match)
+                    cell.tappedMatchLineAction = {
+                        self.didSelectMatchAction?(match)
+                    }
 
-                return cell
+                    return cell
+                }
+            }
+            else {
+                if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
+                    cell.setDescription(text: localized("string_empty_my_games"))
+
+                    return cell
+                }
             }
         default:
             ()
@@ -1727,7 +1739,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
             as? TitleTableViewHeader {
-            headerView.sectionTitleLabel.text = "My Games"
+            headerView.sectionTitleLabel.text = localized("string_my_games")
             return headerView
         }
         return nil
@@ -1752,6 +1764,13 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
         case 1:
             // Loading cell
             return 70
+        case 0:
+            if self.userFavoriteMatches.isEmpty {
+                return 70
+            }
+            else {
+                return 155
+            }
         default:
             return 155
         }
@@ -1789,31 +1808,45 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return competitions.count
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let competition = competitions[safe: section] {
             return competition.matches.count
         }
-        return 0
+        else {
+            return 1
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-            let competition = self.competitions[safe: indexPath.section],
-            let match = competition.matches[safe: indexPath.row]
-        else {
-            fatalError()
-        }
-        cell.setupWithMatch(match)
-        cell.shouldShowCountryFlag(false)
-        cell.tappedMatchLineAction = {
-            self.didSelectMatchAction?(match)
-        }
+        if !competitions.isEmpty {
+            guard
+                let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+                let competition = self.competitions[safe: indexPath.section],
+                let match = competition.matches[safe: indexPath.row]
+            else {
+                fatalError()
+            }
+            cell.setupWithMatch(match)
+            cell.shouldShowCountryFlag(false)
+            cell.tappedMatchLineAction = {
+                self.didSelectMatchAction?(match)
+            }
 
-        return cell
+            return cell
+        }
+        else {
+            guard
+                let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self)
+                else {
+                    fatalError()
+                }
+            cell.setDescription(text: localized("string_empty_my_competitions"))
+
+            return cell
+        }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -1822,7 +1855,14 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
                 as? TournamentTableViewHeader,
             let competition = self.competitions[safe: section]
         else {
-            fatalError()
+            // fatalError()
+            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
+                as? TitleTableViewHeader {
+                headerView.sectionTitleLabel.text = localized("string_my_competitions")
+                return headerView
+
+            }
+            return UIView()
         }
 
         headerView.nameTitleLabel.text = competition.name
@@ -1862,15 +1902,21 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
+//        if self.collapsedCompetitionsSections.contains(indexPath.section) {
+//            return 0
+//        }
+        if competitions.isEmpty {
+            return 70
         }
         return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
+//        if self.collapsedCompetitionsSections.contains(indexPath.section) {
+//            return 0
+//        }
+        if competitions.isEmpty {
+            return 70
         }
         return 155
     }

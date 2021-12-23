@@ -201,3 +201,9 @@ Terms of use, Privacy Policy and EULA";
 "string_how_much_withdraw" = "How much do you want to withdraw from your account?";
 "string_withdraw_value" = "Withdraw Value";
 "string_minimum_withdraw_value" = "Minimum Value: 10€";
+
+"string_empty_my_games" = "You don't have favorite games for the selected sport.";
+"string_empty_my_competitions" = "You don't have favorite competitions for the selected sport.";
+
+"string_my_games" = "My Games";
+"string_my_competitions" = "My Competitions";
