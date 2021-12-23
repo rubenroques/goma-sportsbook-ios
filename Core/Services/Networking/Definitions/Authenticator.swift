@@ -43,7 +43,7 @@ class Authenticator {
             }
 
             // We don't have a token so we override the forceRefresh
-            if let selfValue = self, selfValue.currentToken != nil {
+            if let selfValue = self, selfValue.currentToken == nil {
                 shouldForceRefresh = true
             }
 

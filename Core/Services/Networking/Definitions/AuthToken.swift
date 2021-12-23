@@ -14,7 +14,7 @@ struct AuthToken: Decodable {
     let expiresDate: TimeInterval
 
     var isValid: Bool {
-        return Date().timeIntervalSince1970 > self.expiresDate
+        return Date().timeIntervalSince1970 < self.expiresDate
     }
 
     enum CodingKeys: String, CodingKey {
