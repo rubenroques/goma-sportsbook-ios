@@ -683,15 +683,14 @@ class MatchDetailsAggregatorRepository: NSObject {
                 }
             case .marketGroup:
                 ()
-
             case .location(let location):
                 self.locations[location.id] = location
-
             case .cashout:
                 ()
-
             case .event:
                 () // print("Events aren't processed")
+            case .eventPartScore:
+                ()
             case .unknown:
                 () // print("Unknown type ignored")
             }

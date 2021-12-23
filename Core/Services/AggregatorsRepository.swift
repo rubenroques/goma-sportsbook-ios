@@ -152,6 +152,9 @@ class AggregatorsRepository {
                 
             case .event:
                 () // print("Events aren't processed")
+            case .eventPartScore:
+                ()
+                
             case .unknown:
                 () // print("Unknown type ignored")
             }

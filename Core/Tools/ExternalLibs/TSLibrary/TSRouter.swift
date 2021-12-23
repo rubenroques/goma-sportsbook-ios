@@ -65,6 +65,8 @@ enum TSRouter {
     case matchDetailsAggregatorPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketOdds(operatorId: String, language: String, matchId: String, bettingType: String, eventPartId: String)
 
+    case eventPartScoresPublisher(operatorId: String, language: String, matchId: String)
+
     // Others
     case registrationDismissed
     case getTransportSessionID
@@ -230,6 +232,9 @@ enum TSRouter {
             return "/sports/\(operatorId)/\(language)/cashout/\(betId)"
         case .matchMarketOdds(let operatorId, let language, let matchId, let bettingType, let eventPartId):
             return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/\(bettingType)/\(eventPartId)"
+
+        case .eventPartScoresPublisher(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/\(matchId)/eventPartScores/small"
 
         //
         //
@@ -655,7 +660,9 @@ enum TSRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .matchMarketOdds:
             return .sportsInitialDump(topic: self.procedure)
-
+        case .eventPartScoresPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+            
         default:
             return nil
         }

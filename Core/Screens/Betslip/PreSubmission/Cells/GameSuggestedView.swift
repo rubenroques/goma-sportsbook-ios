@@ -50,7 +50,7 @@ class GameSuggestedView: NibView {
         self.gameTitleLabel.text = self.gameTitle
         self.gameInfoLabel.text = self.gameInfo
         
-        self.gameImageView.image = UIImage(named: "country_flag_yt")
+        self.gameImageView.image = UIImage(named: "")
         self.gameImageView.clipsToBounds = true
         self.gameImageView.layer.masksToBounds = true
   

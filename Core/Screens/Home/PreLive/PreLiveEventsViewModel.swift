@@ -1377,7 +1377,7 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 140
+            return 132
         case 3:
             // Loading cell
             return 70

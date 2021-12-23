@@ -176,7 +176,7 @@ Terms of use, Privacy Policy and EULA";
 
 "string_cashout_available" = "Cashout Available";
 "string_cashout" = "Cashout";
-"string_return_money" = "Your return money will be ";
+"string_return_money" = "Your return will be ";
 "string_cashout_verification" = "Are you sure you want to cashout?";
 "string_cashout_info" = "Get a percentage of your bet back before the game is over";
 

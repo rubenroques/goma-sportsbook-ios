@@ -68,13 +68,13 @@ class SplashViewController: UIViewController {
 
         // Get and store FCM token
         Messaging.messaging().token { token, error in
-          if let error = error {
-            print("Error fetching FCM registration token: \(error)")
-          }
-          else if let token = token {
-            print("FCM registration token: \(token)")
-            Env.deviceFCMToken = token
-          }
+            if let error = error {
+                print("Error fetching FCM registration token: \(error)")
+            }
+            else if let token = token {
+                print("FCM registration token: \(token)")
+                Env.deviceFCMToken = token
+            }
         }
 
         TSManager.shared

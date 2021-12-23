@@ -32,18 +32,29 @@ class MyTicketBetLineView: NibView {
     @IBOutlet private weak var oddTitleLabel: UILabel!
     @IBOutlet private weak var oddValueLabel: UILabel!
 
+    @IBOutlet private weak var dateLabel: UILabel!
+
     @IBOutlet private weak var indicatorBaseView: UIView!
     @IBOutlet private weak var indicatorInternalBaseView: UIView!
     @IBOutlet private weak var indicatorLabel: UILabel!
 
     var betHistoryEntrySelection: BetHistoryEntrySelection
+    var countryCode: String = ""
 
-    convenience init(betHistoryEntrySelection: BetHistoryEntrySelection) {
-        self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection)
+    var viewModel: MyTicketBetLineViewModel?
+
+    private var homeResultSubscription: AnyCancellable?
+    private var awayResultSubscription: AnyCancellable?
+    
+    convenience init(betHistoryEntrySelection: BetHistoryEntrySelection, countryCode: String, viewModel: MyTicketBetLineViewModel) {
+        self.init(frame: .zero, betHistoryEntrySelection: betHistoryEntrySelection, countryCode: countryCode, viewModel: viewModel)
     }
 
-    init(frame: CGRect, betHistoryEntrySelection: BetHistoryEntrySelection) {
+    init(frame: CGRect, betHistoryEntrySelection: BetHistoryEntrySelection, countryCode: String, viewModel: MyTicketBetLineViewModel) {
         self.betHistoryEntrySelection = betHistoryEntrySelection
+        self.countryCode = countryCode
+        self.viewModel = viewModel
+
         super.init(frame: frame)
 
         self.commonInit()
@@ -67,16 +78,24 @@ class MyTicketBetLineView: NibView {
         self.baseView.layer.cornerRadius = 8
         self.baseView.layer.masksToBounds = true
 
+        self.locationImageView.contentMode = .scaleAspectFill
+        self.locationImageView.clipsToBounds = true
+        self.locationImageView.layer.masksToBounds = true
+
         self.tournamentNameLabel.text = self.betHistoryEntrySelection.tournamentName ?? ""
 
-        let splittedTeamNames = Array((self.betHistoryEntrySelection.eventName ?? "").components(separatedBy: " - "))
-        if splittedTeamNames.count == 2 {
-            self.homeTeamNameLabel.text = splittedTeamNames.first ?? ""
-            self.awayTeamNameLabel.text = splittedTeamNames.last ?? ""
-        }
+        self.homeTeamNameLabel.text = self.betHistoryEntrySelection.homeParticipantName ?? ""
+        self.awayTeamNameLabel.text = self.betHistoryEntrySelection.awayParticipantName ?? ""
 
         if let sportId = self.betHistoryEntrySelection.sportId {
             self.sportTypeImageView.image = UIImage(named: "sport_type_icon_\(sportId)")
+        }
+
+        if let image = UIImage(named: Assets.flagName(withCountryCode: self.countryCode)) {
+            self.locationImageView.image = image
+        }
+        else {
+            self.locationImageView.isHidden = true
         }
 
         self.marketLabel.text = self.betHistoryEntrySelection.marketName ?? ""
@@ -87,31 +106,29 @@ class MyTicketBetLineView: NibView {
             self.oddValueLabel.text = String(format: "%.2f", Double(floor(oddValue * 100)/100))
         }
 
+        self.dateLabel.text = ""
+        if let date = self.betHistoryEntrySelection.eventDate {
+            self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
+        }
+
         self.homeTeamScoreLabel.text = ""
         self.awayTeamScoreLabel.text = ""
 
-        if let status = self.betHistoryEntrySelection.status?.uppercased() {
-            switch status {
-            case "WON", "HALF_WON":
-                self.indicatorBaseView.isHidden = false
-                self.separatorView.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusWon.withAlphaComponent(0.5)
-                self.bottomBaseView.backgroundColor = UIColor.App.statusWon.withAlphaComponent(0.5)
-                self.indicatorLabel.text = "Won"
-            case "LOST", "HALF_LOST":
-                self.indicatorBaseView.isHidden = false
-                self.separatorView.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusLoss.withAlphaComponent(0.5)
-                self.bottomBaseView.backgroundColor = UIColor.App.statusLoss.withAlphaComponent(0.5)
-                self.indicatorLabel.text = "Lost"
-            default:
-                self.indicatorLabel.text = ""
-                self.indicatorBaseView.isHidden = true
-                self.separatorView.isHidden = false
-                self.bottomBaseView.backgroundColor = .clear
-            }
-        }
+        self.homeResultSubscription = self.viewModel?.homeScore
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] homeGoals in
+            self?.homeTeamScoreLabel.text = homeGoals ?? ""
+        })
 
+        self.awayResultSubscription = self.viewModel?.awayScore
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] awayGoals in
+            self?.awayTeamScoreLabel.text = awayGoals ?? ""
+        })
+
+        self.configureFromStatus()
         self.setupWithTheme()
     }
 
@@ -124,9 +141,8 @@ class MyTicketBetLineView: NibView {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.baseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.baseView.backgroundColor = UIColor.App.secondaryBackground
         self.indicatorBaseView.backgroundColor = UIColor.clear
-
 
         self.separatorView.backgroundColor = UIColor.App.separatorLine
 
@@ -139,31 +155,53 @@ class MyTicketBetLineView: NibView {
         self.outcomeLabel.textColor = UIColor.App.headingMain
         self.oddTitleLabel.textColor = UIColor.App.headingMain
         self.oddValueLabel.textColor = UIColor.App.headingMain
+        self.dateLabel.textColor = UIColor.App.headingMain
 
         self.indicatorLabel.textColor = UIColor.App.headingMain
 
+        self.configureFromStatus()
+    }
+
+    func configureFromStatus() {
         if let status = self.betHistoryEntrySelection.status?.uppercased() {
             switch status {
             case "WON", "HALF_WON":
                 self.indicatorBaseView.isHidden = false
                 self.separatorView.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusWon.withAlphaComponent(0.5)
-                self.bottomBaseView.backgroundColor = UIColor.App.statusWon.withAlphaComponent(0.5)
+                self.dateLabel.isHidden = true
+                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusWon
+                self.bottomBaseView.backgroundColor = UIColor.App.statusWon
                 self.indicatorLabel.text = "Won"
             case "LOST", "HALF_LOST":
                 self.indicatorBaseView.isHidden = false
                 self.separatorView.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusLoss.withAlphaComponent(0.5)
-                self.bottomBaseView.backgroundColor = UIColor.App.statusLoss.withAlphaComponent(0.5)
+                self.dateLabel.isHidden = true
+                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusLoss
+                self.bottomBaseView.backgroundColor = UIColor.App.statusLoss
                 self.indicatorLabel.text = "Lost"
+            case "OPEN":
+                self.dateLabel.isHidden = false
+                self.indicatorLabel.text = ""
+                self.indicatorBaseView.isHidden = true
+                self.separatorView.isHidden = false
+                self.bottomBaseView.backgroundColor = .clear
             default:
+                self.dateLabel.isHidden = true
                 self.indicatorLabel.text = ""
                 self.indicatorBaseView.isHidden = true
                 self.separatorView.isHidden = false
                 self.bottomBaseView.backgroundColor = .clear
             }
         }
-
     }
 
+}
+
+extension MyTicketBetLineView {
+    static var dateFormatter: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .medium
+        return dateFormatter
+    }()
 }

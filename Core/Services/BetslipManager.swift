@@ -24,6 +24,8 @@ class BetslipManager: NSObject {
     private var multipleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     private var systemBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
 
+    var newBetsPlacedPublisher = PassthroughSubject<Void, Never>.init()
+
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
 
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
@@ -254,6 +256,7 @@ extension BetslipManager {
         
         if ticketSelections.isEmpty {
             completion(.success(betPlacedDetailsList))
+            self.newBetsPlacedPublisher.send()
             return
         }
 
@@ -270,17 +273,16 @@ extension BetslipManager {
                     }
                 }, receiveValue: { (betPlacedDetails: BetPlacedDetails) -> Void in
                     if let response = betPlacedDetails.response.betSucceed, response == true {
-                       
                             self.removeBettingTicket(withId: lastTicket.id)
                             var newList = betPlacedDetailsList
                             newList.append(betPlacedDetails)
                             self.placeNextSingleBet(betPlacedDetailsList: newList, completion: completion)
-                        
                     }
                     else {
                         var newList = betPlacedDetailsList
                         newList.append(betPlacedDetails)
                         completion( .success(newList) )
+                        self.newBetsPlacedPublisher.send()
                     }
                 })
                 .store(in: &cancellables)
@@ -324,6 +326,7 @@ extension BetslipManager {
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
                     self.clearAllBettingTickets()
+                    self.newBetsPlacedPublisher.send()
                 }
             })
             .eraseToAnyPublisher()
@@ -346,6 +349,7 @@ extension BetslipManager {
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
                     self.clearAllBettingTickets()
+                    self.newBetsPlacedPublisher.send()
                 }
             })
             .eraseToAnyPublisher()

@@ -48,8 +48,8 @@ class ActivationAlertScrollableView: NibView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App.mainBackground
-        self.collectionView.backgroundColor = UIColor.App.mainBackground
+        self.backgroundColor = UIColor.clear
+        self.collectionView.backgroundColor = UIColor.clear
     }
 
     func setAlertArrayData(arrayData: [ActivationAlert]) {
