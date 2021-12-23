@@ -155,9 +155,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var suggestedBetsRegister: EndpointPublisherIdentifiable?
     private var suggestedBetsPublisher: AnyCancellable?
+    private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
 
     var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
     var suggestedBetsArray: [Int: [Match]] = [:]
+    var totalGomaSuggestedBets: Int = 0
 
     init() {
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
@@ -433,8 +435,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return "-.--€"
                 }
                 else {
-                    //self.totalBetOdds = expectedReturn
-                    //self.totalPossibleEarnings = expectedReturn
+                    // self.totalBetOdds = expectedReturn
+                    // self.totalPossibleEarnings = expectedReturn
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
                 }
             })
@@ -443,8 +445,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.simpleWinningsValueLabel.text = possibleEarningsString
             })
             .store(in: &cancellables)
-      
-        
+
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
@@ -494,6 +495,17 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        self.suggestedBetsRetrievedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: {value in
+
+                if value == self.totalGomaSuggestedBets && value != 0 {
+                    self.betSuggestedCollectionView.reloadData()
+                    self.isSuggestedBetsLoading(false)
+                }
+            })
+            .store(in: &cancellables)
+
         self.addDoneAccessoryView()
         self.setupWithTheme()
 
@@ -514,37 +526,23 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func getSuggestedBets() {
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving suggested bets!")
-
-                case .finished:
-                    print("Suggested bets retrieved!")
-                }
-
-                print("Received suggested bets completion: \(completion).")
-
+            .sink(receiveCompletion: { _ in
             },
             receiveValue: { gomaBetsArray in
 
                 guard let betsArray = gomaBetsArray else {return}
-                print("GOMA SUGGESTED BETS: \(betsArray)")
+
                 self.gomaSuggestedBetsResponse = betsArray
+
+                let totalGomaCount = self.gomaSuggestedBetsResponse.flatMap({$0}).count
+                self.totalGomaSuggestedBets = totalGomaCount
 
                 for (index, betArray) in betsArray.enumerated() {
                     self.subscribeSuggestedBet(betArray: betArray, index: index)
                 }
-
             })
             .store(in: &cancellables)
 
-        // TODO: Code Review - Yap, this wont work a lot of times
-        // Needs to be changed
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.betSuggestedCollectionView.reloadData()
-            self.isSuggestedBetsLoading(false)
-        }
     }
 
     func subscribeSuggestedBet(betArray: [GomaSuggestedBets], index: Int) {
@@ -591,6 +589,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             else {
                 self.suggestedBetsArray[index] = [suggestedMatch]
             }
+
+            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
+            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
         }
 
     }
@@ -919,8 +920,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
     }
-
-
 
     func currentDataSource() -> UITableViewDelegateDataSource {
         switch self.listTypePublisher.value {
