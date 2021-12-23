@@ -484,7 +484,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         if UserDefaults.standard.userSession != nil {
 
             if let matchId = self.match?.id {
-                Env.favoritesManager.checkFavorites(eventId: matchId)
+                Env.favoritesManager.checkFavorites(eventId: matchId, favoriteType: "event")
             }
 
             if self.isFavorite {

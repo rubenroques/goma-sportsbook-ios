@@ -56,6 +56,7 @@ enum TSRouter {
     case liveMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case popularMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
+    case todayMatchesFilterPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int, timeRange: String)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
     case locationsPublisher(operatorId: String, language: String, sportId: String)
@@ -214,6 +215,9 @@ enum TSRouter {
         case .todayMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
+        case .todayMatchesFilterPublisher(let operatorId, let language, let sportId, let matchesCount, let timeRange):
+            let marketsCount = 5
+            return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(timeRange)/\(matchesCount)/\(marketsCount)"
         case .competitionsMatchesPublisher(let operatorId, let language, _, let events):
             let marketsCount = 5
             let eventsIds = events.joined(separator: ",")
@@ -637,6 +641,8 @@ enum TSRouter {
         case .popularMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .todayMatchesFilterPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .bannersInfoPublisher:
             return .sportsInitialDump(topic: self.procedure)

@@ -72,6 +72,9 @@ class BetslipViewController: UIViewController {
         self.accountInfoBaseView.clipsToBounds = true
         self.accountValuePlusView.clipsToBounds = true
 
+        let tapAccountValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapAccountValue(_:)))
+        self.accountValuePlusView.addGestureRecognizer(tapAccountValue)
+
         self.accountValueLabel.text = "Loading"
 
         preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
@@ -125,6 +128,22 @@ class BetslipViewController: UIViewController {
         self.tabViewController.barColor = UIColor.App.mainBackground
         self.tabViewController.textColor = .white
 
+    }
+
+    @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {
+        if !Env.userSessionStore.isUserProfileIncomplete.value {
+
+            let depositViewController = DepositViewController()
+
+            self.navigationController?.pushViewController(depositViewController, animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: localized("Profile Incomplete"),
+                                          message: "Please complete your profile before you can make deposits.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
 
     @IBAction private func didTapCancelButton() {
