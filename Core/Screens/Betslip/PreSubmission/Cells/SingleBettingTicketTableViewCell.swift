@@ -10,6 +10,10 @@ import Combine
 
 class SingleBettingTicketTableViewCell: UITableViewCell {
 
+    //TODO: Code Review - A baseView é utilizada como a primeira view da cell, se precisarmos que editar as cells deixar a baseView como root se a mesma existir
+
+    @IBOutlet private weak var stackView: UIStackView!
+
     @IBOutlet private weak var baseView: UIView!
 
     @IBOutlet private weak var topBaseView: UIView!
@@ -37,18 +41,21 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var plusFiveButtonView: UIButton!
     @IBOutlet private weak var maxValueButtonView: UIButton!
 
-    @IBOutlet private var stackView: UIStackView!
-    @IBOutlet private var errorView: UIView!
-    @IBOutlet private var errorLabel: UILabel!
-    @IBOutlet private var errorLogoImageView: UIImageView!
+    @IBOutlet private weak var suspendedBettingOfferView: UIView!
+    @IBOutlet private weak var suspendedBettingOfferLabel: UILabel!
 
-    @IBOutlet private var errorLateralTopView: UIView!
-    @IBOutlet private var errorLateralBottomView: UIView!
+    @IBOutlet private weak var errorView: UIView!
+    @IBOutlet private weak var errorLabel: UILabel!
+    @IBOutlet private weak var errorLogoImageView: UIImageView!
+
+    @IBOutlet private weak var errorLateralTopView: UIView!
+    @IBOutlet private weak var errorLateralBottomView: UIView!
 
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
 
     var oddSubscriber: AnyCancellable?
+    var oddAvailabilitySubscriber: AnyCancellable?
 
     var currentValue: Int = 0 {
         didSet {
@@ -70,6 +77,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+
+        self.suspendedBettingOfferView.isHidden = true
 
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
@@ -95,6 +104,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         // self.baseView.layer.cornerRadius = CornerRadius.view
         self.oddBaseView.layer.cornerRadius = 3
         self.amountBaseView.layer.cornerRadius = CornerRadius.view
+
         self.stackView.layer.cornerRadius = CornerRadius.view
         self.stackView.layer.masksToBounds = true
     }
@@ -111,8 +121,12 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.currentOddValue = nil
 
         self.bettingTicket = nil
+
         self.oddSubscriber?.cancel()
         self.oddSubscriber = nil
+
+        self.oddAvailabilitySubscriber?.cancel()
+        self.oddAvailabilitySubscriber = nil
 
         self.didUpdateBettingValueAction = nil
         
@@ -124,6 +138,9 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.matchDetailLabel.text = ""
 
         self.amountTextfield.text = nil
+
+        self.suspendedBettingOfferView.isHidden = true
+        
         self.endEditing(true)
     }
 
@@ -222,11 +239,14 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     }
 
     func configureWithBettingTicket(_ bettingTicket: BettingTicket, previousBettingAmount: Double? = nil, errorBetting: String? = nil) {
+
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
         self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
         self.marketNameLabel.text = bettingTicket.marketDescription
         self.matchDetailLabel.text = bettingTicket.matchDescription
+
+        self.returnsValueLabel.text = "--"
 
         self.currentOddValue = bettingTicket.value
 
@@ -253,6 +273,15 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 
                 self?.currentOddValue = newOddValue
                 self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+            })
+
+        self.oddAvailabilitySubscriber = Env.everyMatrixStorage
+            .oddPublisherForBettingOfferId(bettingTicket.id)?
+            .map(\.isAvailable)
+            .compactMap({ $0 })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isAvailable in
+                self?.suspendedBettingOfferView.isHidden = isAvailable
             })
 
         if let errorBetting = errorBetting {
