@@ -156,6 +156,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var suggestedBetsRegister: EndpointPublisherIdentifiable?
     private var suggestedBetsPublisher: AnyCancellable?
     private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
+    private var suggestedBetsNotFound: Int = 0
 
     var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
     var suggestedBetsArray: [Int: [Match]] = [:]
@@ -498,10 +499,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.suggestedBetsRetrievedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: {value in
-
-                if value == self.totalGomaSuggestedBets && value != 0 {
+                print("SUGGESTED: \(value) - \(self.totalGomaSuggestedBets)")
+                let totalSuggestedBets = self.totalGomaSuggestedBets - self.suggestedBetsNotFound
+                if value == totalSuggestedBets && value != 0 {
                     self.betSuggestedCollectionView.reloadData()
                     self.isSuggestedBetsLoading(false)
+                    self.suggestedBetsRetrievedPublisher.send(0)
+                    self.suggestedBetsNotFound = 0
                 }
             })
             .store(in: &cancellables)
@@ -564,6 +568,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     case .connect(let publisherIdentifiable):
                         self?.suggestedBetsRegister = publisherIdentifiable
                     case .initialContent(let aggregator):
+//                        print("BET: \(bet)")
+//                        print("ENDPOINT: \(endpoint)")
+//                        print("MATCH AGG: \(aggregator)")
                         self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
                     case .updatedContent:
                         print("MyBets suggestedBets updatedContent")
@@ -592,6 +599,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
             self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
+        }
+        else {
+            self.suggestedBetsNotFound += 1
         }
 
     }
