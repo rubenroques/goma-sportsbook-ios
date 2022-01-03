@@ -57,6 +57,7 @@ class MyTicketsViewController: UIViewController {
         return betslipCountLabel
     }()
 
+
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
@@ -64,11 +65,12 @@ class MyTicketsViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+    private var shouldShowCenterLoadingView = true
+
     var didTapBetslipButtonAction: (() -> Void)?
 
     init() {
         self.viewModel = MyTicketsViewModel()
-
 
         super.init(nibName: "MyTicketsViewController", bundle: nil)
     }
@@ -103,7 +105,7 @@ class MyTicketsViewController: UIViewController {
         self.ticketsTableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
         self.ticketsTableView.separatorStyle = .none
 
-        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refresh")
+        self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         self.ticketsTableView.addSubview(self.refreshControl)
 
@@ -131,19 +133,35 @@ class MyTicketsViewController: UIViewController {
         self.view.layoutIfNeeded()
 
         self.viewModel.isLoading
-            .sink(receiveValue: { [weak self] isLoading in
-                if isLoading {
+            .sink(receiveValue: { [weak self] isLoading in
+
+                if !isLoading {
+                    self?.loadingIndicatorView.stopAnimating()
+                    self?.refreshControl.endRefreshing()
+                    self?.shouldShowCenterLoadingView = true
+                }
+                else if self?.shouldShowCenterLoadingView ?? false {
                     self?.loadingIndicatorView.startAnimating()
                 }
-                else {
-                    self?.loadingIndicatorView.stopAnimating()
-                }
+
             })
             .store(in: &cancellables)
 
         self.viewModel.reloadTableViewAction = { [weak self] in
             self?.ticketsTableView.reloadData()
+
         }
+
+        self.viewModel.redrawTableViewAction = { [weak self] in
+            self?.ticketsTableView.beginUpdates()
+            self?.ticketsTableView.endUpdates()
+        }
+
+        Env.betslipManager.newBetsPlacedPublisher
+            .sink {
+                self.viewModel.refresh()
+            }
+            .store(in: &cancellables)
 
         self.connectPublishers()
         self.setupWithTheme()
@@ -204,8 +222,8 @@ class MyTicketsViewController: UIViewController {
         self.didTapBetslipButtonAction?()
     }
 
-
     @objc func refresh() {
+        self.shouldShowCenterLoadingView = false
         self.viewModel.refresh()
     }
 

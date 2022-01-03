@@ -29,16 +29,4 @@ struct PopUpDetails: Codable {
         case intervalMinutes = "interv_min"
     }
 
-//    static var test: PopUpDetails {
-//        PopUpDetails(id: 2, type: 2,
-//                     title: "SERIE A IS COMING!",
-//                     subtitle: "DEPOSIT 20€ AND GET 10€ FREE",
-//                     textTile: "Get ready Serie A is coming!",
-//                     text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.",
-//                     promoButtonText: "See Promo",
-//                     closeButtonText: "Maybe Later",
-//                     coverImage: "https://www.abola.pt/img/fotos/abola2015/FOTOSAP/INGLATERRA/2021/ronaldoSolskjaer1.jpg",
-//                     linkURL: "https://gomadevelopment.pt/",
-//                     intervalMinutes: 2)
-//    }
 }

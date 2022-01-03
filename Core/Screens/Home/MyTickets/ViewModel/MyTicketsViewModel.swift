@@ -20,9 +20,9 @@ class MyTicketsViewModel: NSObject {
     }
 
     var reloadTableViewAction: (() -> Void)?
+    var redrawTableViewAction: (() -> Void)?
 
     private var matchDetailsDictionary: [String: Match] = [:]
-
 
     private var resolvedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
     private var openedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
@@ -32,6 +32,8 @@ class MyTicketsViewModel: NSObject {
     private var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingWon: CurrentValueSubject<Bool, Never> = .init(true)
 
+    private var locationsCodesDictionary: [String: String] = [:]
+
     var isLoading: AnyPublisher<Bool, Never>
 
     private let recordsPerPage = 1000
@@ -40,6 +42,10 @@ class MyTicketsViewModel: NSObject {
     private var openedPage = 0
     private var wonPage = 0
 
+    //Cached view models
+    var cachedViewModels: [String: MyTicketCellViewModel] = [:]
+
+    //
     private var cancellables = Set<AnyCancellable>()
 
     override init() {
@@ -59,8 +65,7 @@ class MyTicketsViewModel: NSObject {
         }
         .store(in: &cancellables)
 
-
-
+        self.loadLocations()
         self.initialLoadMyTickets()
     }
 
@@ -70,6 +75,26 @@ class MyTicketsViewModel: NSObject {
 
     func isTicketsTypeSelected(forIndex index: Int) -> Bool {
         return index == selectedMyTicketsTypeIndex
+    }
+
+    //
+    //
+    func loadLocations() {
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        TSManager.shared.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { _ in
+
+            },
+            receiveValue: { response in
+                self.locationsCodesDictionary = [:]
+                (response.records ?? []).forEach { location in
+                    if let code = location.code {
+                        self.locationsCodesDictionary[location.id] = code
+                    }
+                }
+
+            })
+            .store(in: &cancellables)
     }
 
     //
@@ -86,7 +111,7 @@ class MyTicketsViewModel: NSObject {
 
         self.isLoadingResolved.send(true)
 
-        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
+        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
         TSManager.shared.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
@@ -106,7 +131,7 @@ class MyTicketsViewModel: NSObject {
 
         self.isLoadingOpened.send(true)
 
-        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
+        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
         TSManager.shared.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
@@ -170,12 +195,7 @@ class MyTicketsViewModel: NSObject {
         self.reloadTableViewAction?()
     }
 
-}
-
-extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-
+    func numberOfRows() -> Int {
         switch myTicketsTypePublisher.value {
         case .resolved:
             return resolvedMyTickets.value.count
@@ -184,7 +204,43 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
         case .won:
             return wonMyTickets.value.count
         }
+    }
 
+    func viewModel(forIndex index: Int) -> MyTicketCellViewModel? {
+        let ticket: BetHistoryEntry?
+
+        switch myTicketsTypePublisher.value {
+        case .resolved:
+            ticket = resolvedMyTickets.value[safe: index] ?? nil
+        case .opened:
+            ticket =  openedMyTickets.value[safe: index] ?? nil
+        case .won:
+            ticket =  wonMyTickets.value[safe: index] ?? nil
+        }
+
+        guard let ticket = ticket else {
+            return nil
+        }
+
+        if let viewModel = cachedViewModels[ticket.betId] {
+            return viewModel
+        }
+        else {
+            let viewModel =  MyTicketCellViewModel(ticket: ticket)
+            viewModel.requestDataRefreshAction = { [weak self] in
+                self?.refresh()
+            }
+            cachedViewModels[ticket.betId] = viewModel
+            return viewModel
+        }
+    }
+
+}
+
+extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.numberOfRows()
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -202,12 +258,24 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
 
         guard
             let cell = tableView.dequeueCellType(MyTicketTableViewCell.self),
+            let viewModel = self.viewModel(forIndex: indexPath.row),
             let ticketValue = ticket
         else {
             fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
         }
 
-        cell.configure(withBetHistoryEntry: ticketValue)
+        debugPrint("MyTicketCellViewModel \(viewModel)")
+
+        let locationsCodes = (ticketValue.selections ?? [])
+            .map({ event -> String in
+                let id = event.venueId ?? ""
+                return self.locationsCodesDictionary[id] ?? ""
+            })
+
+        cell.needsHeightRedraw = { [weak self] in
+            self?.redrawTableViewAction?()
+        }
+        cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
 
         return cell
     }

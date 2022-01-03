@@ -24,11 +24,13 @@ struct BetHistoryEntry: Codable {
     let type: String?
     let systemBetType: String?
     let amount: Double?
+    let totalBetAmount: Double?
     let freeBetAmount: Int?
     let bonusBetAmount: Int?
     let currency: String?
     let maxWinning: Double?
     let totalPriceValue: Double?
+    let overallBetReturns: Double?
     let numberOfSelections: Int?
     let status: String?
     let placedDate: Date?
@@ -41,12 +43,14 @@ struct BetHistoryEntry: Codable {
         case type = "type"
         case systemBetType = "systemBetType"
         case amount = "amount"
+        case totalBetAmount = "totalBetAmount"
         case freeBetAmount = "freeBetAmount"
         case bonusBetAmount = "bonusBetAmount"
         case currency = "currency"
         case maxWinning = "maxWinning"
         case totalPriceValue = "totalPriceValue"
         case numberOfSelections = "numberOfSelections"
+        case overallBetReturns = "overallBetReturns"
         case status = "status"
         case placedDate = "placedDate"
         case settledDate = "settledDate"
@@ -73,6 +77,10 @@ struct BetHistoryEntrySelection: Codable {
     let bettingTypeName: String?
     let bettingTypeEventPartId: String?
     let bettingTypeEventPartName: String?
+
+    let homeParticipantName: String?
+    let awayParticipantName: String?
+
     let marketName: String?
     let betName: String?
 
@@ -94,6 +102,10 @@ struct BetHistoryEntrySelection: Codable {
         case bettingTypeName = "bettingTypeName"
         case bettingTypeEventPartId = "bettingTypeEventPartId"
         case bettingTypeEventPartName = "bettingTypeEventPartName"
+
+        case homeParticipantName = "homeParticipantName"
+        case awayParticipantName = "awayParticipantName"
+
         case marketName = "marketName"
         case betName = "betName"
     }

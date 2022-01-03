@@ -17,24 +17,19 @@ struct BetPlacedDetails {
 
 class BetslipManager: NSObject {
 
-    private var bettingTicketsDictionaryPublisher: CurrentValueSubject<OrderedDictionary<String, BettingTicket>, Never>
+    var newBetsPlacedPublisher = PassthroughSubject<Void, Never>.init()
     var bettingTicketsPublisher: CurrentValueSubject<[BettingTicket], Never>
+
+    private var bettingTicketsDictionaryPublisher: CurrentValueSubject<OrderedDictionary<String, BettingTicket>, Never>
 
     private var simpleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     private var multipleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
     private var systemBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
 
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
-
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
 
-    private var cancellable: Set<AnyCancellable> = []
-
-    private var oddsCancellableDictionary: [String: AnyCancellable] = [:]
-    private var  amounts: [String: Double] = [:]
-
-    var requests: [AnyPublisher<BetPlacedDetails, EveryMatrix.APIError>] = []
-    var cancellables = Set<AnyCancellable>()
+    private var cancellables: Set<AnyCancellable> = []
 
     override init() {
 
@@ -55,13 +50,13 @@ class BetslipManager: NSObject {
             .sink { [weak self] tickets in
                 self?.bettingTicketsPublisher.send(tickets)
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
 
         bettingTicketsDictionaryPublisher.filter(\.isEmpty).sink { _ in
             self.simpleBetslipSelectionState.send(nil)
             self.multipleBetslipSelectionState.send(nil)
         }
-        .store(in: &cancellable)
+        .store(in: &cancellables)
 
         bettingTicketsDictionaryPublisher
             .filter({ return !$0.isEmpty })
@@ -75,7 +70,7 @@ class BetslipManager: NSObject {
                 self?.requestSimpleBetslipSelectionState()
                 self?.requestMultipleBetslipSelectionState()
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
 
     }
 
@@ -84,19 +79,11 @@ class BetslipManager: NSObject {
     }
 
     func removeBettingTicket(_ bettingTicket: BettingTicket) {
-
         bettingTicketsDictionaryPublisher.value[bettingTicket.id] = nil
-
-        oddsCancellableDictionary[bettingTicket.id]?.cancel()
-        oddsCancellableDictionary[bettingTicket.id] = nil
     }
 
     func removeBettingTicket(withId id: String) {
-
         bettingTicketsDictionaryPublisher.value[id] = nil
-
-        oddsCancellableDictionary[id]?.cancel()
-        oddsCancellableDictionary[id] = nil
     }
 
     func hasBettingTicket(_ bettingTicket: BettingTicket) -> Bool {
@@ -183,7 +170,7 @@ extension BetslipManager {
             } receiveValue: { betslipSelectionState in
                 self.simpleBetslipSelectionState.send(betslipSelectionState)
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
     }
 
     func requestMultipleBetslipSelectionState() {
@@ -204,7 +191,7 @@ extension BetslipManager {
             } receiveValue: { betslipSelectionState in
                 self.multipleBetslipSelectionState.send(betslipSelectionState)
             }
-            .store(in: &cancellable)
+            .store(in: &cancellables)
 
     }
 
@@ -233,9 +220,8 @@ extension BetslipManager {
 
     func placeAllSingleBets(withSkateAmount amounts: [String: Double]) -> AnyPublisher<[BetPlacedDetails], EveryMatrix.APIError> {
 
-        self.amounts = amounts
         let future = Future<[BetPlacedDetails], EveryMatrix.APIError>.init({ promise in
-            self.placeNextSingleBet(betPlacedDetailsList: [], completion: { result in
+            self.placeNextSingleBet(betPlacedDetailsList: [], amounts: amounts, completion: { result in
                 switch result {
                 case .success(let betPlacedDetailsList):
                     promise(.success(betPlacedDetailsList))
@@ -249,15 +235,16 @@ extension BetslipManager {
         return future
     }
 
-    private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails], completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void) {
+    private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails], amounts: [String: Double], completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void) {
         let ticketSelections = self.updatedBettingTicketsOdds()
         
         if ticketSelections.isEmpty {
             completion(.success(betPlacedDetailsList))
+            self.newBetsPlacedPublisher.send()
             return
         }
 
-        if let lastTicket = ticketSelections.first, let lastTicketAmount = self.amounts[lastTicket.id] {
+        if let lastTicket = ticketSelections.first, let lastTicketAmount = amounts[lastTicket.id] {
             placeSingleBet(betTicketId: lastTicket.id, amount: lastTicketAmount)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { (publisherCompletion: Subscribers.Completion<EveryMatrix.APIError>) -> Void in
@@ -270,17 +257,16 @@ extension BetslipManager {
                     }
                 }, receiveValue: { (betPlacedDetails: BetPlacedDetails) -> Void in
                     if let response = betPlacedDetails.response.betSucceed, response == true {
-                       
                             self.removeBettingTicket(withId: lastTicket.id)
                             var newList = betPlacedDetailsList
                             newList.append(betPlacedDetails)
-                            self.placeNextSingleBet(betPlacedDetailsList: newList, completion: completion)
-                        
+                        self.placeNextSingleBet(betPlacedDetailsList: newList, amounts: amounts, completion: completion)
                     }
                     else {
                         var newList = betPlacedDetailsList
                         newList.append(betPlacedDetails)
                         completion( .success(newList) )
+                        self.newBetsPlacedPublisher.send()
                     }
                 })
                 .store(in: &cancellables)
@@ -324,6 +310,7 @@ extension BetslipManager {
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
                     self.clearAllBettingTickets()
+                    self.newBetsPlacedPublisher.send()
                 }
             })
             .eraseToAnyPublisher()
@@ -346,6 +333,7 @@ extension BetslipManager {
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
                     self.clearAllBettingTickets()
+                    self.newBetsPlacedPublisher.send()
                 }
             })
             .eraseToAnyPublisher()

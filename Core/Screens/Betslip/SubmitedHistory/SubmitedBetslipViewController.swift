@@ -11,9 +11,9 @@ import OrderedCollections
 
 class SubmitedBetslipViewController: UIViewController {
 
-    @IBOutlet weak var tableView: UITableView!
-    @IBOutlet private var activityIndicatorBaseView: UIView!
-    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet private weak var activityIndicatorBaseView: UIView!
+    @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
 
     private var cancellables = Set<AnyCancellable>()
     private var betHistoryEntries: [BetHistoryEntry] = []

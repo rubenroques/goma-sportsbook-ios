@@ -208,10 +208,10 @@ class MatchDetailsViewController: UIViewController {
 
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
 
-        self.headerCompetitionLabel.text = "Primeira Liga"
+        self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
 
-        self.headerCompetitionImageView.image = UIImage(named: "country_flag_pt")
+        self.headerCompetitionImageView.image = UIImage(named: "")
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .center
 

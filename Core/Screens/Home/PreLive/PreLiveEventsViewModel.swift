@@ -225,6 +225,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
 
+        //Todo - Code Review  
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
@@ -1425,7 +1426,7 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 140
+            return 132
         case 3:
             // Loading cell
             return 70
@@ -1808,7 +1809,7 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return competitions.isEmpty ? 1 : competitions.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -1902,9 +1903,9 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-//            return 0
-//        }
+        if self.collapsedCompetitionsSections.contains(indexPath.section) {
+            return 0
+        }
         if competitions.isEmpty {
             return 70
         }
@@ -1912,9 +1913,9 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-//            return 0
-//        }
+        if self.collapsedCompetitionsSections.contains(indexPath.section) {
+            return 0
+        }
         if competitions.isEmpty {
             return 70
         }

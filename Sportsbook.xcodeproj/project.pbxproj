@@ -502,6 +502,12 @@
 		45BEA48E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */; };
 		45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BF4E6C270DC37D00785E79 /* FilterLineView.swift */; };
 		45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BF4E6C270DC37D00785E79 /* FilterLineView.swift */; };
+		45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */; };
+		45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */; };
+		45C3D2B72773B1B500B3EF44 /* EventPartScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */; };
+		45C3D2B82773B1B500B3EF44 /* EventPartScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */; };
+		45C3D2BA2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */; };
+		45C3D2BB2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */; };
 		45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
 		45CD7B4F2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
 		45CD7B502716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CD7B4B2716F5CB003044C5 /* OddDoubleCollectionViewCell.swift */; };
@@ -1123,6 +1129,9 @@
 		45BEA47D26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleRegisterEmailSentViewController.xib; sourceTree = "<group>"; };
 		45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleRegisterSendEmailCodeViewController.swift; sourceTree = "<group>"; };
 		45BF4E6C270DC37D00785E79 /* FilterLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLineView.swift; sourceTree = "<group>"; };
+		45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketCellViewModel.swift; sourceTree = "<group>"; };
+		45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPartScore.swift; sourceTree = "<group>"; };
+		45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketBetLineViewModel.swift; sourceTree = "<group>"; };
 		45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OddDoubleCollectionViewCell.xib; sourceTree = "<group>"; };
 		45CD7B4B2716F5CB003044C5 /* OddDoubleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddDoubleCollectionViewCell.swift; sourceTree = "<group>"; };
 		45CD7B4C2716F5CB003044C5 /* OddTripleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddTripleCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2151,6 +2160,8 @@
 			isa = PBXGroup;
 			children = (
 				458BAC6D276CD246006C4BC7 /* MyTicketsViewModel.swift */,
+				45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */,
+				45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -2715,6 +2726,7 @@
 			children = (
 				A9B841AD26E674AA00269B05 /* Match.swift */,
 				4572633C272C2220002F2959 /* MatchInfo.swift */,
+				45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */,
 			);
 			path = Matches;
 			sourceTree = "<group>";
@@ -3472,6 +3484,7 @@
 				45BEA48926F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				455A0CFE26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
 				458BAC6E276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */,
+				45C3D2B72773B1B500B3EF44 /* EventPartScore.swift in Sources */,
 				45D712F227031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40126BF017A005DF543 /* LoginViewController.swift in Sources */,
 				45166D0F26F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
@@ -3504,6 +3517,7 @@
 				45626E34275530990069B89B /* OddFormatter.swift in Sources */,
 				458BAC812770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
+				45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
@@ -3519,6 +3533,7 @@
 				45D3DE4027149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
 				454E0AC3273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
 				454E0AAE2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
+				45C3D2BA2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
 				A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
 				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
@@ -3777,6 +3792,7 @@
 				45BEA48A26F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
 				455A0CFF26BD9D9000EC572D /* UIAlertController+Extensions.swift in Sources */,
 				458BAC6F276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */,
+				45C3D2B82773B1B500B3EF44 /* EventPartScore.swift in Sources */,
 				45D712F327031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40226BF017A005DF543 /* LoginViewController.swift in Sources */,
 				45166D1026F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
@@ -3809,6 +3825,7 @@
 				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
 				458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
+				45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
@@ -3824,6 +3841,7 @@
 				45D3DE4127149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
 				454E0AC4273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
 				454E0AAF2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
+				45C3D2BB2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
 				A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
 				45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
@@ -4071,9 +4089,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00215;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 00220;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4085,7 +4103,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "Ad Hoc Sportsbook - Showcase";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -4099,7 +4117,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 00215;
+				CURRENT_PROJECT_VERSION = 00220;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

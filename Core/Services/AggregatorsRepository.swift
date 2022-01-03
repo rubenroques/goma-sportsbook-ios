@@ -152,6 +152,9 @@ class AggregatorsRepository {
                 
             case .event:
                 () // print("Events aren't processed")
+            case .eventPartScore:
+                ()
+                
             case .unknown:
                 () // print("Unknown type ignored")
             }
@@ -171,6 +174,11 @@ class AggregatorsRepository {
             switch update {
             case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
+
+                    if isLive != nil || isAvailable != nil {
+                        print("break")
+                    }
+
                     let bettingOffer = publisher.value
                     let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
                                                                                isLive: isLive,
