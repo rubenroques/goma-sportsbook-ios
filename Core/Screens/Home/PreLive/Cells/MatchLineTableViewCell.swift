@@ -44,18 +44,20 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
         
-        let flowLayout = FadeInCenterHorizontalFlowLayout()
-        flowLayout.alpha = 0.38
-        flowLayout.minimumScale = 0.7
+        // let flowLayout = FadeInCenterHorizontalFlowLayout()
+        // flowLayout.alpha = 0.38
+        // flowLayout.minimumScale = 0.7
         // flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+
+        let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = flowLayout
 
-        //        let screenWidth = UIScreen.main.bounds.size.width
-        //        let inset = (screenWidth - cellWidth) / 2
-        //        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        // let screenWidth = UIScreen.main.bounds.size.width
+        // let inset = (screenWidth - cellWidth) / 2
+        // self.collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
 
-        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 300)
+        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 
         self.backSliderView.layer.cornerRadius = 6
 
@@ -123,6 +125,11 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
         let screenWidth = UIScreen.main.bounds.size.width
         let width = screenWidth*0.6
 
+        if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 70 {
+            self.tappedMatchLineAction?()
+            return
+        }
+
         if scrollView.contentOffset.x > width {
             UIView.animate(withDuration: 0.2) {
                 self.backSliderView.alpha = 1.0
@@ -133,7 +140,6 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
                 self.backSliderView.alpha = 0.0
             }
         }
-
     }
 }
 
@@ -208,7 +214,6 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         else {
             if let match = self.match, let market = match.markets[safe: indexPath.row] {
 
-                // \(match.competitionName) 
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
 
@@ -247,11 +252,15 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 40
+        return 16
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return -4
+        return 16
+    }
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -259,7 +268,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: 128)
+            return CGSize(width: 99, height: 133)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -268,6 +277,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             if width > 390 {
                 width = 390
             }
+            
             return CGSize(width: width, height: 133) // design width: 331
         }
     }

@@ -80,6 +80,7 @@ struct GomaGamingServiceClient {
         return requestPublisher
     }
 
+    // TODO: Code Review -
     func requestSuggestedBets(deviceId: String) -> AnyPublisher<[[GomaSuggestedBets]]?, NetworkError> {
         let endpoint = GomaGamingService.suggestedBets
         let requestPublisher: AnyPublisher<[[GomaSuggestedBets]]?, NetworkError> = networkClient.requestEndpointArrayData(deviceId: deviceId, endpoint: endpoint)

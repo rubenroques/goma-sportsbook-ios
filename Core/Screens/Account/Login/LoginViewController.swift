@@ -150,6 +150,12 @@ class LoginViewController: UIViewController {
             self.dismissButton.isHidden = true
         }
 
+        #if DEBUG
+        let debugLogoImageViewTap = UITapGestureRecognizer(target: self, action: #selector(didTapDebugFormFill))
+        debugLogoImageViewTap.numberOfTapsRequired = 3
+        logoImageView.isUserInteractionEnabled = true
+        logoImageView.addGestureRecognizer(debugLogoImageViewTap)
+        #endif
     }
 
     func setupWithTheme() {
@@ -346,6 +352,17 @@ class LoginViewController: UIViewController {
 
     @IBAction private func didTapRecoverPassword() {
         self.navigationController?.pushViewController(RecoverPasswordViewController(), animated: true)
+    }
+
+}
+
+extension LoginViewController {
+
+    @objc func didTapDebugFormFill() {
+        #if DEBUG
+        self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
+        self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
+        #endif
     }
 
 }
