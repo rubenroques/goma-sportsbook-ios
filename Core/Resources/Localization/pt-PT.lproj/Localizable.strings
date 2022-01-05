@@ -65,7 +65,7 @@ Terms of use, Privacy Policy and EULA";
 "string_birth_date" = "Birth Date";
 "string_username" = "Username";
 "string_email" = "Email";
-"string_weak_password" = "Must contain: 8 characters, 1 Uppercase, 1 Lowecase and 1 Symbol";
+"string_weak_password" = "Must contain: 8 characters, 1 Uppercase, 1 Lowercase and 1 Symbol";
 "string_password_not_match" = "Passwords don't match";
 "string_check_email" = "Check your Email";
 "string_check_email_text1" = "We have sent a code to";
@@ -208,3 +208,23 @@ Terms of use, Privacy Policy and EULA";
 
 "string_my_games" = "My Games";
 "string_my_competitions" = "My Competitions";
+"string_popular" = "Popular";
+"string_upcoming" = "Upcoming";
+"string_competitions" = "Competitions";
+
+"string_amount" = "Amount";
+
+"string_profile_incomplete" = "Profile Incomplete";
+"string_profile_incomplete_deposit" = "Please complete your profile before you can make deposits.";
+"string_profile_incomplete_withdraw" = "Please complete your profile before you can make withdraws.";
+
+"string_all" = "All";
+"string_loading" = "Loading";
+"string_title" = "Title";
+
+"string_home_label_default" = "Home Team";
+"string_away_label_default" = "Away Team";
+"string_match_label_default" = "Match Day";
+"string_time_label_default" = "00:00";
+"string_score_label_default" = "0 - 0";
+"string_match_start_label_default" = "Match Start";
