@@ -224,6 +224,7 @@ extension EveryMatrix {
         case location(EveryMatrix.Location)
         case cashout(EveryMatrix.Cashout)
         case eventPartScore(EveryMatrix.EventPartScore)
+        case sport(EveryMatrix.Discipline)
         case unknown
 
         enum CodingKeys: String, CodingKey {
@@ -245,6 +246,7 @@ extension EveryMatrix {
             case location = "LOCATION"
             case cashout = "CASHOUT"
             case eventPartScore = "EVENT_PART_SCORE"
+            case sport = "SPORT"
             case unknown
 
             init(from decoder: Decoder) throws {
@@ -310,6 +312,9 @@ extension EveryMatrix {
             case .eventPartScore:
                 let eventPartScore = try objectContainer.decode(EveryMatrix.EventPartScore.self)
                 self = .eventPartScore(eventPartScore)
+            case .sport:
+                let sport = try objectContainer.decode(EveryMatrix.Discipline.self)
+                self = .sport(sport)
             case .unknown:
                 self = .unknown
             }

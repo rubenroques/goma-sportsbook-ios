@@ -68,6 +68,8 @@ enum TSRouter {
 
     case eventPartScoresPublisher(operatorId: String, language: String, matchId: String)
 
+    case sportsListPublisher(operatorId: String, language: String)
+
     // Others
     case registrationDismissed
     case getTransportSessionID
@@ -239,6 +241,9 @@ enum TSRouter {
 
         case .eventPartScoresPublisher(let operatorId, let language, let matchId):
             return "/sports/\(operatorId)/\(language)/\(matchId)/eventPartScores/small"
+
+        case .sportsListPublisher(let operatorId, let language):
+            return "/sports/\(operatorId)/\(language)/disciplines/LIVE/BOTH"
 
         //
         //
@@ -668,7 +673,8 @@ enum TSRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .eventPartScoresPublisher:
             return .sportsInitialDump(topic: self.procedure)
-            
+        case .sportsListPublisher:
+            return .sportsInitialDump(topic: self.procedure)
         default:
             return nil
         }

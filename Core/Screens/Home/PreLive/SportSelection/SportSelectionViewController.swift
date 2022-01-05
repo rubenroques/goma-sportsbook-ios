@@ -24,9 +24,14 @@ class SportSelectionViewController: UIViewController {
     var sportsData: [EveryMatrix.Discipline] = []
     var fullSportsData: [EveryMatrix.Discipline] = []
     var defaultSport: SportType
+    var isLiveSport: Bool
+
+    var liveSportsPublisher: AnyCancellable?
+    var liveSportsRegister: EndpointPublisherIdentifiable?
     
-    init(defaultSport: SportType) {
+    init(defaultSport: SportType, isLiveSport: Bool = false) {
         self.defaultSport = defaultSport
+        self.isLiveSport = isLiveSport
         super.init(nibName: "SportSelectionViewController", bundle: nil)
     }
 
@@ -50,6 +55,7 @@ class SportSelectionViewController: UIViewController {
     func commonInit() {
 
         getSports()
+        getSportsLive()
 
         navigationLabel.text = localized("string_choose_sport")
         navigationLabel.font = AppFont.with(type: .bold, size: 16)
@@ -116,12 +122,59 @@ class SportSelectionViewController: UIViewController {
                     print("Data retrieved!")
                 }
             }, receiveValue: { value in
-                self.sportsData = value.records ?? []
+                if self.isLiveSport {
+                    let filteredValue = value.records?.filter({$0.numberOfLiveEvents != 0})
+                    self.sportsData = filteredValue ?? []
+                }
+                else {
+                    self.sportsData = value.records ?? []
+                }
                 self.fullSportsData = self.sportsData
                 self.collectionView.reloadData()
             })
             .store(in: &self.cancellable)
 
+    }
+
+    func getSportsLive() {
+        if let liveSportsRegister = liveSportsRegister {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
+        }
+
+        var endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
+                                                      language: "en")
+
+        self.liveSportsPublisher?.cancel()
+        self.liveSportsPublisher = nil
+
+        self.liveSportsPublisher = TSManager.shared
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+
+                case .finished:
+                    print("Data retrieved!")
+                }
+                //self?.isLoadingTodayList.send(false)
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("SportsSelectorViewController liveSportsPublisher connect")
+                    self?.liveSportsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("SPORT AGG: \(aggregator)")
+                    print("SportsSelectorViewController liveSportsPublisher initialContent")
+                    //self?.setupTodayAggregatorProcessor(aggregator: aggregator, filtered: withFilter)
+                case .updatedContent(let aggregatorUpdates):
+                    print("SportsSelectorViewController liveSportsPublisher updatedContent")
+                    //self?.updateTodayAggregatorProcessor(aggregator: aggregatorUpdates)
+                case .disconnect:
+                    print("SportsSelectorViewController liveSportsPublisher disconnect")
+                }
+
+            })
     }
 
     @IBAction private func cancelAction() {
