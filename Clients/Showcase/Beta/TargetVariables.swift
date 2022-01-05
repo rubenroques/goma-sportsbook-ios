@@ -17,8 +17,12 @@ struct TargetVariables: SportsbookTarget {
         return "https://sportsbook-api.gomagaming.com"
     }
 
-    static var gomaGamingAuthEndpoint: String {
+    static var gomaGamingAnonymousAuthEndpoint: String {
         "https://sportsbook-api.gomagaming.com/api/auth/v1"
+    }
+
+    static var gomaGamingLoggedAuthEndpoint: String {
+        "https://sportsbook-api.gomagaming.com/api/auth/v1/login"
     }
 
     static var firebaseDatabaseURL: String {

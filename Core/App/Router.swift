@@ -37,20 +37,12 @@ class Router {
     }
 
     func makeKeyAndVisible() {
-
-        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
-
+        self.rootWindow.overrideUserInterfaceStyle = Theme.dark.userInterfaceStyle // UserDefaults.standard.theme.userInterfaceStyle
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
         self.rootWindow.rootViewController = splashViewController
-
-         // self.rootWindow.rootViewController = BetslipViewController()
-
-        // self.rootWindow.rootViewController = ContainerViewController(containedView: CompetitionsFiltersView(), containerType: .edges)
-
         self.rootWindow.makeKeyAndVisible()
-
     }
 
     func showPostLoadingFlow() {

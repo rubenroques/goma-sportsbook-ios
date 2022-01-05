@@ -36,20 +36,10 @@ final class TSManager {
         return sharedInstance
     }
     
-    class func destroySharedInstance() {
-        sharedInstance = nil
-    }
-    
-    func destroySwampSession() {
-        swampSession = nil
-    }
-    
     var swampSession: SSWampSession?
     var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
     let origin = "https://clientsample-sports-stage.everymatrix.com/"
-
-    private var debugLoggerTimer = Timer()
 
     private init() {
 
@@ -59,39 +49,50 @@ final class TSManager {
 
             self.userAgentExtractionWebView = WKWebView()
             self.userAgentExtractionWebView?.evaluateJavaScript("navigator.userAgent") { [weak self] userAgent, error in
-                guard let usrAg = userAgent as? String, let self = self else {
+                guard let userAgentValue = userAgent as? String, let weakSelf = self else {
                     return
                 }
-                self.tsQueue.async {
+                weakSelf.tsQueue.async {
                     if let cid = UserDefaults.standard.string(forKey: "CID") {
-                        self.swampSession = SSWampSession(realm: TSParams.realm,
+                        weakSelf.swampSession = SSWampSession(realm: TSParams.realm,
                                                           transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint + "?cid=\(cid)")!,
-                                                                                              userAgent: usrAg,
-                                                                                              origin: self.origin))
+                                                                                              userAgent: userAgentValue,
+                                                                                              origin: weakSelf.origin))
                     }
                     else {
-                        self.swampSession = SSWampSession(realm: TSParams.realm,
+                        weakSelf.swampSession = SSWampSession(realm: TSParams.realm,
                                                           transport: WebSocketSSWampTransport(wsEndpoint: URL(string: TSParams.wsEndPoint)!,
-                                                                                              userAgent: usrAg,
-                                                                                              origin: self.origin))
+                                                                                              userAgent: userAgentValue,
+                                                                                              origin: weakSelf.origin))
                     }
-                    self.swampSession?.delegate = self
-                    self.swampSession?.connect()
-                    self.userAgentExtractionWebView = nil
+                    weakSelf.connect()
+                    weakSelf.userAgentExtractionWebView = nil
                 }
             }
         }
-
-//
-//        self.debugLoggerTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true, block: { [weak self] _ in
-//            self?.printSWAMPLogs()
-//        })
-
     }
 
-    func printSWAMPLogs() {
-        self.swampSession?.printMemoryLogs()
+
+
+    class func destroySharedInstance() {
+        sharedInstance = nil
     }
+
+    func destroySwampSession() {
+        self.disconnect()
+        self.swampSession = nil
+    }
+
+    func disconnect() {
+        self.swampSession?.disconnect()
+    }
+
+    func connect() {
+        Logger.log("TSManager connect")
+        self.swampSession?.delegate = self
+        self.swampSession?.connect()
+    }
+
 
     func sessionStateChanged() -> AnyPublisher<Bool, EveryMatrix.APIError> {
         return Future {[self] promise in
@@ -337,17 +338,6 @@ final class TSManager {
         }).eraseToAnyPublisher()
     }
 
-    class func reconnect() {
-        destroySharedInstance()
-    }
-    
-    func logout(router: TSRouter) {
-        swampSession?.call(router.procedure, onSuccess: { _, _, _, _ in }, onError: { _, _, _, _ in })
-    }
-    
-    func disconnect() {
-        swampSession?.disconnect()
-    }
 }
 
 extension TSManager: SSWampSessionDelegate {
@@ -357,10 +347,14 @@ extension TSManager: SSWampSessionDelegate {
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
         sessionStateChanged()
-            .sink(receiveCompletion: { _ in
-                NotificationCenter.default.post(name: .wampSocketConnected, object: nil)
-            }, receiveValue: { value in
-                Logger.log("TSManager ssWampSessionConnected\(value.description)")
+            .sink(receiveCompletion: { completion in
+                Logger.log("TSManager sessionStateChanged completion: \(completion)")
+            }, receiveValue: { connected in
+                Logger.log("TSManager sessionStateChanged \(connected)")
+
+                if connected {
+                    NotificationCenter.default.post(name: .wampSocketConnected, object: nil)
+                }
             })
             .store(in: &globalCancellable)
     }

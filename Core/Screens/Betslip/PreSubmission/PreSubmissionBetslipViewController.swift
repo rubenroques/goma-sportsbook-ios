@@ -56,7 +56,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var systemOddsValueLabel: UILabel!
 
     @IBOutlet private weak var placeBetBaseView: UIView!
-
     @IBOutlet private weak var placeBetButtonsBaseView: UIView!
     @IBOutlet private weak var placeBetButtonsSeparatorView: UIView!
     @IBOutlet private weak var amountBaseView: UIView!
@@ -69,6 +68,37 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var placeBetButton: UIButton!
 
     @IBOutlet private weak var placeBetBottomConstraint: NSLayoutConstraint!
+    
+
+    @IBOutlet weak var secondaryPlaceBetBaseView: UIView!
+    
+    @IBOutlet weak var secondaryPlaceBetButtonsBaseView: UIView!
+    @IBOutlet weak var secondaryPlaceBetButtonsSeparatorView: UIView!
+    @IBOutlet weak var secondaryAmountBaseView: UIView!
+    @IBOutlet weak var secondaryAmountTextfield: UITextField!
+    
+    @IBOutlet weak var secondaryPlaceBetButton: UIButton!
+    
+    @IBOutlet weak var secondaryPlusOneButtonView: UIButton!
+    @IBOutlet weak var secondaryPlusFiveButtonView: UIButton!
+    @IBOutlet weak var secondaryMaxButtonView: UIButton!
+    
+    @IBOutlet weak var secondaryMultipleWinningsBaseView: UIView!
+    @IBOutlet weak var secondaryMultipleWinningsValueLabel: UILabel!
+    @IBOutlet weak var secondaryMultipleWinningsTitleLabel: UILabel!
+    @IBOutlet weak var secondaryMultipleOddsTitleLabel: UILabel!
+    @IBOutlet weak var secondaryMultipleOddsValueLabel: UILabel!
+    @IBOutlet weak var secondaryMultipleWinningsSeparatorView: UIView!
+
+    @IBOutlet weak var secondarySystemWinningsBaseView: UIView!
+    @IBOutlet weak var secondarySystemWinningsValueLabel: UILabel!
+    @IBOutlet weak var secondarySystemOddsTitleLabel: UILabel!
+    @IBOutlet weak var secondarySystemWinningsTitleLabel: UILabel!
+    @IBOutlet weak var secondarySystemOddsValueLabel: UILabel!
+    
+    @IBOutlet weak var secondarySystemWinningsSeparatorView: UIView!
+    
+    
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
     @IBOutlet private weak var loadingBaseView: UIView!
@@ -76,6 +106,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var betSuggestedCollectionView: UICollectionView!
     @IBOutlet private var suggestedBetsActivityIndicator: UIActivityIndicatorView!
+    
+    @IBOutlet weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
+    
     
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -89,7 +122,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         case multiple
         case system
     }
-    
+
     private var listTypePublisher: CurrentValueSubject<BetslipType, Never> = .init(.simple)
 
     // System Bets vars
@@ -129,7 +162,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     var numberOfBets: Int = 1
     var totalPossibleEarnings: Double = 0.0
     var totalBetOdds: Double = 0.0
-    var simpleOddsValues : [Double] = [0.0]
+    var simpleOddsValues: [Double] = [0.0]
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -138,6 +171,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var realBetValuePublisher: CurrentValueSubject<Double, Never> = .init(0.0)
     private var multiplierPublisher: CurrentValueSubject<Double, Never> = .init(0.0)
+    
+    private var isKeyboardShowingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     private var isLoading = false {
         didSet {
@@ -155,6 +190,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var suggestedBetsRegister: EndpointPublisherIdentifiable?
     private var suggestedBetsPublisher: AnyCancellable?
     private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
+    private var suggestedBetsNotFound: Int = 0
 
     var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
     var suggestedBetsArray: [Int: [Match]] = [:]
@@ -188,13 +224,16 @@ class PreSubmissionBetslipViewController: UIViewController {
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
         self.betSuggestedCollectionView.delegate = self
         self.betSuggestedCollectionView.dataSource = self
-        
+        self.betSuggestedCollectionView.showsVerticalScrollIndicator = false
+        self.betSuggestedCollectionView.showsHorizontalScrollIndicator = false
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
 
         self.placeBetButtonsBaseView.isHidden = true
         self.placeBetButtonsSeparatorView.alpha = 0.5
+        
+        self.secondaryPlaceBetButtonsSeparatorView.alpha = 0.5
 
         self.simpleWinningsValueLabel.text = "-.--€"
         self.simpleOddsValueLabel.isHidden = true
@@ -203,10 +242,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multipleWinningsValueLabel.text = "-.--€"
         self.multipleOddsValueLabel.text = "-.--"
 
+        self.secondaryMultipleWinningsValueLabel.text = "-.--€"
+        self.secondaryMultipleOddsValueLabel.text = "-.--"
+        
         self.systemWinningsValueLabel.text = "-.--€"
         self.systemOddsTitleLabel.text = "Total bet amount"
         self.systemOddsValueLabel.text = "-.--€"
-
+        
+        self.secondarySystemWinningsValueLabel.text = "-.--€"
+        self.secondarySystemOddsTitleLabel.text = "Total bet amount"
+        self.secondarySystemOddsValueLabel.text = "-.--€"
+        
         self.tableView.separatorStyle = .none
         self.tableView.allowsSelection = false
 
@@ -217,6 +263,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.delegate = self
 
         self.amountTextfield.delegate = self
+        
+        self.secondaryAmountTextfield.delegate = self
 
         self.systemBetInteriorView.layer.cornerRadius = 8
         self.systemBetInteriorView.layer.borderWidth = 2
@@ -230,6 +278,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         let tapSystemBetTypeSelector = UITapGestureRecognizer(target: self, action: #selector(didTapSystemBetTypeSelector))
         self.systemBetInteriorView.addGestureRecognizer(tapSystemBetTypeSelector)
 
+        let amountBaseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAmountBaseView))
+        self.amountBaseView.addGestureRecognizer(amountBaseViewTapGesture)
+        self.amountTextfield.isUserInteractionEnabled = false
+        
         if Env.betslipManager.bettingTicketsPublisher.value.count > 1 {
             self.betTypeSegmentControl.selectedSegmentIndex = 1
             self.didChangeSegmentValue(self.betTypeSegmentControl)
@@ -312,6 +364,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
                 self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
+                self?.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
             })
             .store(in: &cancellables)
 
@@ -333,6 +386,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ $0 == .simple })
             .sink(receiveValue: { [weak self] isSimpleBet in
                 self?.placeBetButtonsBaseView.isHidden = isSimpleBet
+                self?.secondaryPlaceBetButtonsBaseView.isHidden = isSimpleBet
             })
             .store(in: &cancellables)
 
@@ -377,6 +431,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if hasValidBettingValue {
                     self?.requestSystemBetInfo()
                 }
+                
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &cancellables)
@@ -390,6 +445,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
+               
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &cancellables)
@@ -409,6 +465,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarnings in
+
+                self?.secondaryMultipleWinningsValueLabel.text = possibleEarnings
 
                 self?.multipleWinningsValueLabel.text = possibleEarnings
             })
@@ -439,7 +497,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .sink(receiveValue: { [weak self] possibleEarningsString in
 
-              
                 self?.simpleWinningsValueLabel.text = possibleEarningsString
             })
             .store(in: &cancellables)
@@ -462,6 +519,29 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
                 self?.placeBetButton.isEnabled = hasValidBettingValue
+            })
+            .store(in: &cancellables)
+        
+        Publishers.CombineLatest(self.listTypePublisher, self.isKeyboardShowingPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] (listType, isKeyboardShowing) in
+                switch (listType, isKeyboardShowing){
+                case (.simple, _):
+                    self?.secondaryPlaceBetBaseView.isHidden = true
+                    self?.secondaryAmountTextfield.resignFirstResponder()
+                    self?.amountTextfield.resignFirstResponder()
+                case (.multiple , true):
+                    self?.secondaryPlaceBetBaseView.isHidden = false
+                    self?.secondaryMultipleWinningsBaseView.isHidden = false
+                    self?.secondarySystemWinningsBaseView.isHidden = true
+                case (.system , true):
+                    self?.secondaryPlaceBetBaseView.isHidden = false
+                    self?.secondaryMultipleWinningsBaseView.isHidden = true
+                    self?.secondarySystemWinningsBaseView.isHidden = false
+                
+                default :
+                    self?.secondaryPlaceBetBaseView.isHidden = true
+                }
             })
             .store(in: &cancellables)
 
@@ -493,23 +573,30 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+
         self.suggestedBetsRetrievedPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: {value in
 
-                if value == self.totalGomaSuggestedBets && value != 0 {
+            .sink(receiveValue: {[weak self] value in
+                guard let self = self else { return }
+                let totalSuggestedBets = self.totalGomaSuggestedBets - self.suggestedBetsNotFound
+
+                if value == totalSuggestedBets && value != 0 {
+
                     self.betSuggestedCollectionView.reloadData()
                     self.isSuggestedBetsLoading(false)
+                    self.suggestedBetsRetrievedPublisher.send(0)
+                    self.suggestedBetsNotFound = 0
                 }
             })
             .store(in: &cancellables)
 
-        self.addDoneAccessoryView()
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
+        
         self.placeBetButton.isEnabled = false
     }
 
@@ -591,6 +678,11 @@ class PreSubmissionBetslipViewController: UIViewController {
             let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
             self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
         }
+        else {
+            self.suggestedBetsNotFound += 1
+            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
+            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount)
+        }
 
     }
 
@@ -630,6 +722,15 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.maxValueButtonView.clipsToBounds = true
 
         self.amountBaseView.layer.cornerRadius = CornerRadius.view
+        
+        self.secondaryPlusOneButtonView.layer.cornerRadius = CornerRadius.view
+        self.secondaryPlusOneButtonView.clipsToBounds = true
+        self.secondaryPlusFiveButtonView.layer.cornerRadius = CornerRadius.view
+        self.secondaryPlusFiveButtonView.clipsToBounds = true
+        self.secondaryMaxButtonView.layer.cornerRadius = CornerRadius.view
+        self.secondaryMaxButtonView.clipsToBounds = true
+
+        self.secondaryAmountBaseView.layer.cornerRadius = CornerRadius.view
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -682,74 +783,110 @@ class PreSubmissionBetslipViewController: UIViewController {
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
         ])
-        self.amountBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        
+        self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
+        self.secondaryAmountTextfield.textColor = UIColor.App.headingMain
+        self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: "Amount", attributes: [
+            NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
+            NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
+        ])
+        
+        self.amountBaseView.backgroundColor = UIColor.App.secondaryBackground
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackground
         self.tableView.backgroundColor = UIColor.App.mainBackground
         self.tableView.contentInset.bottom = 12
 
         self.systemBetSeparatorView.backgroundColor = UIColor.App.separatorLine
-        self.systemBetBaseView.backgroundColor = UIColor.App.mainBackground
+        self.systemBetBaseView.backgroundColor = UIColor.App.contentBackground
         self.systemBetInteriorView.layer.borderColor = UIColor.App.tertiaryBackground.cgColor
 
-        self.placeBetBaseView.backgroundColor = UIColor.App.mainBackground
-        self.placeBetButtonsBaseView.backgroundColor = UIColor.App.mainBackground
+        self.placeBetBaseView.backgroundColor = UIColor.App.contentBackground
+        self.placeBetButtonsBaseView.backgroundColor = UIColor.App.contentBackground
         self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
-        self.placeBetSendButtonBaseView.backgroundColor = UIColor.App.mainBackground
+        self.placeBetSendButtonBaseView.backgroundColor = UIColor.App.contentBackground
+        
+        //self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
+        self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-        self.amountBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        
 
-        self.plusOneButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
+        self.plusOneButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
 
-        self.plusFiveButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
+        self.plusFiveButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
         self.plusFiveButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
         self.plusFiveButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
 
-        self.maxValueButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
+        self.maxValueButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
         self.maxValueButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
         self.maxValueButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        
+        self.secondaryPlusOneButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
+        self.secondaryPlusOneButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
+        self.secondaryPlusOneButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+
+        self.secondaryPlusFiveButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
+        self.secondaryPlusFiveButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
+        self.secondaryPlusFiveButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+
+        self.secondaryMaxButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
+        self.secondaryMaxButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
+        self.secondaryMaxButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
 
         self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
 
         self.simpleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.multipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.secondaryMultipleWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.systemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
-
-        self.simpleWinningsBaseView.backgroundColor = UIColor.App.mainBackground
+        self.secondarySystemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
+        
+        self.simpleWinningsBaseView.backgroundColor = UIColor.App.contentBackground
         self.simpleWinningsTitleLabel.textColor = UIColor.App.headingDisabled
         self.simpleWinningsValueLabel.textColor = UIColor.App.headingMain
         self.simpleOddsTitleLabel.textColor = UIColor.App.headingDisabled
         self.simpleOddsValueLabel.textColor = UIColor.App.headingMain
 
-        self.multipleWinningsBaseView.backgroundColor = UIColor.App.mainBackground
+        self.multipleWinningsBaseView.backgroundColor = UIColor.App.contentBackground
         self.multipleWinningsTitleLabel.textColor = UIColor.App.headingDisabled
         self.multipleWinningsValueLabel.textColor = UIColor.App.headingMain
+        
+        self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.contentBackground
+        self.secondaryAmountBaseView.backgroundColor = UIColor.App.secondaryBackground
+        //self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
+        
+        
+        self.secondaryMultipleWinningsTitleLabel.textColor = UIColor.App.headingDisabled
+        self.secondaryMultipleWinningsValueLabel.textColor = UIColor.App.headingMain
+
+        self.secondaryMultipleOddsTitleLabel.textColor = UIColor.App.headingDisabled
+        self.secondaryMultipleOddsValueLabel.textColor = UIColor.App.headingMain
+        
         self.multipleOddsTitleLabel.textColor = UIColor.App.headingDisabled
         self.multipleOddsValueLabel.textColor = UIColor.App.headingMain
 
-        self.systemWinningsBaseView.backgroundColor = UIColor.App.mainBackground
+        self.systemWinningsBaseView.backgroundColor = UIColor.App.contentBackground
         self.systemWinningsTitleLabel.textColor = UIColor.App.headingDisabled
         self.systemWinningsValueLabel.textColor = UIColor.App.headingMain
         self.systemOddsTitleLabel.textColor = UIColor.App.headingDisabled
         self.systemOddsValueLabel.textColor = UIColor.App.headingMain
+        
+        self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App.contentBackground
+        self.secondarySystemWinningsTitleLabel.textColor = UIColor.App.headingDisabled
+        self.secondarySystemWinningsValueLabel.textColor = UIColor.App.headingMain
+        self.secondarySystemOddsTitleLabel.textColor = UIColor.App.headingDisabled
+        self.secondarySystemOddsValueLabel.textColor = UIColor.App.headingMain
 
         StyleHelper.styleButton(button: self.selectSystemBetTypeButton)
         StyleHelper.styleButton(button: self.placeBetButton)
-    }
-
-    func addDoneAccessoryView() {
-        let keyboardToolbar = UIToolbar()
-        keyboardToolbar.sizeToFit()
-        let flexBarButton = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let doneBarButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissKeyboard))
-        keyboardToolbar.items = [flexBarButton, doneBarButton]
-        self.amountTextfield.inputAccessoryView = keyboardToolbar
+        StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
     }
 
     @objc func dismissKeyboard() {
-        self.view.endEditing(true)
+        self.amountTextfield.resignFirstResponder()
+        self.secondaryAmountTextfield.resignFirstResponder()
     }
 
     @IBAction private func didTapClearButton() {
@@ -782,6 +919,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @objc func didTapSystemBetTypeSelector() {
         self.showingSystemBetOptionsSelector = true
+    }
+    
+    @objc func didTapAmountBaseView(){
+        self.secondaryAmountTextfield.becomeFirstResponder()
     }
 
     @IBAction private func didTapSystemBetTypeSelectButton() {
@@ -822,9 +963,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         else {
             return
         }
-
+        
         self.systemOddsValueLabel.text = "-.--€"
         self.systemWinningsValueLabel.text = "-.--€"
+        
+        self.secondarySystemOddsValueLabel.text = "-.--€"
+        self.secondarySystemWinningsValueLabel.text = "-.--€"
 
         Env.betslipManager
             .requestSystemBetslipSelectionState(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBet)
@@ -849,20 +993,31 @@ class PreSubmissionBetslipViewController: UIViewController {
         if let totalBetAmountNetto = selectedSystemBetWinnings.totalBetAmountNetto, totalBetAmountNetto != 0 {
             
             self.systemOddsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmountNetto)) ?? "-.--€"
+            self.secondarySystemOddsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmountNetto)) ?? "-.--€"
         }
+    
         else {
             self.systemOddsValueLabel.text = "-.--€"
+            self.secondarySystemOddsValueLabel.text = "-.--€"
         }
 
         if let maxWinningNetto = selectedSystemBetWinnings.maxWinningNetto, maxWinningNetto != 0 {
             self.totalPossibleEarnings = maxWinningNetto
             self.systemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
+            self.secondarySystemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
         }
         else {
             self.systemWinningsValueLabel.text = "-.--€"
+            self.secondarySystemWinningsValueLabel.text = "-.--€"
         }
     }
 
+    @IBAction private func didTapDoneButton(){
+        self.dismissKeyboard()
+    }
+    
+    
+    
     @IBAction private func didTapPlaceBetButton() {
 
         self.isLoading = true
@@ -889,7 +1044,7 @@ class PreSubmissionBetslipViewController: UIViewController {
       
         
         if self.listTypePublisher.value == .simple {
-
+            
             self.numberOfBets = self.simpleBetsBettingValues.value.count
             Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
                 .receive(on: DispatchQueue.main)
@@ -948,13 +1103,21 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
+    
+        self.isKeyboardShowingPublisher.send(true)
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.tableView.contentInset.bottom = (keyboardSize.height - placeBetBaseView.frame.size.height)
+            
+            self.secondPlaceBetBaseViewConstraint.constant = keyboardSize.height
         }
+        
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
+        
+        self.isKeyboardShowingPublisher.send(false)
         self.tableView.contentInset.bottom = 12
+        self.secondPlaceBetBaseViewConstraint.constant = 0
     }
 
     @IBAction private func didTapPlusOneButton() {
@@ -974,6 +1137,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 extension PreSubmissionBetslipViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         self.updateAmountValue(string)
+      
         return false
     }
 
@@ -982,6 +1146,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
 
         let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
     }
 
     func updateAmountValue(_ newValue: String) {
@@ -993,6 +1158,10 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         }
         let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        
+        secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+
+        
     }
 
 }

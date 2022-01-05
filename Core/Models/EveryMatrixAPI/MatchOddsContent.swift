@@ -55,7 +55,6 @@ extension EveryMatrix {
                 let container = try decoder.singleValueContainer()
                 let type = try container.decode(String.self)
                 if let contentTypeKey = ContentTypeKey(rawValue: type) {
-                    print("Odds Aggregator ContentTypeKey [\(type)]")
                     self = contentTypeKey
                 }
                 else {
