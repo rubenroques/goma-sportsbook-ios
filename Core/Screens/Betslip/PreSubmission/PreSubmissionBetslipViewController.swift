@@ -162,7 +162,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     var numberOfBets: Int = 1
     var totalPossibleEarnings: Double = 0.0
     var totalBetOdds: Double = 0.0
-    var simpleOddsValues : [Double] = [0.0]
+    var simpleOddsValues: [Double] = [0.0]
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -190,6 +190,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     private var suggestedBetsRegister: EndpointPublisherIdentifiable?
     private var suggestedBetsPublisher: AnyCancellable?
     private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
+    private var suggestedBetsNotFound: Int = 0
 
     var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
     var suggestedBetsArray: [Int: [Match]] = [:]
@@ -223,7 +224,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
         self.betSuggestedCollectionView.delegate = self
         self.betSuggestedCollectionView.dataSource = self
-        
+        self.betSuggestedCollectionView.showsVerticalScrollIndicator = false
+        self.betSuggestedCollectionView.showsHorizontalScrollIndicator = false
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
@@ -574,11 +576,17 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.suggestedBetsRetrievedPublisher
             .receive(on: DispatchQueue.main)
+
             .sink(receiveValue: {[weak self] value in
                 guard let self = self else { return }
-                if value == self.totalGomaSuggestedBets && value != 0 {
+                let totalSuggestedBets = self.totalGomaSuggestedBets - self.suggestedBetsNotFound
+
+                if value == totalSuggestedBets && value != 0 {
+
                     self.betSuggestedCollectionView.reloadData()
                     self.isSuggestedBetsLoading(false)
+                    self.suggestedBetsRetrievedPublisher.send(0)
+                    self.suggestedBetsNotFound = 0
                 }
             })
             .store(in: &cancellables)
@@ -669,6 +677,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
             self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
+        }
+        else {
+            self.suggestedBetsNotFound += 1
+            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
+            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount)
         }
 
     }
