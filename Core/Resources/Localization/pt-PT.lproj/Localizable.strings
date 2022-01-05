@@ -234,3 +234,29 @@ Terms of use, Privacy Policy and EULA";
 "string_my_tickets" = "My Tickets";
 
 "string_logout" = "Logout";
+
+"string_resolved" = "Resolved";
+"string_opened" = "Opened";
+"string_won" = "Won";
+"string_draw" = "Draw";
+"string_lost" = "Lost";
+"string_open" = "Open";
+"string_half_won" = "Half Won";
+"string_half_lost" = "Half Lost";
+"string_cancelled" = "Cancelled";
+"string_cashed_out" = "Cashed Out";
+
+"string_total_odd" = "Total Odd";
+"string_bet_amount" = "Bet Amount";
+"string_return" = "Return";
+
+"string_single" = "Single";
+"string_multiple" = "Multiple";
+"string_system" = "System";
+"string_possible_winnings" = "Possible Winnings";
+
+"string_market" = "Market";
+"string_all_live_events" = "All Live Events";
+"string_upcoming_highlights" = "Upcoming's Highlights";
+"string_choose_competitions" = "Choose competitions";
+"string_popular_competitions" = "Popular Competitions";

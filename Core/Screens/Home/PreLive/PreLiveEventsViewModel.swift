@@ -434,7 +434,7 @@ class PreLiveEventsViewModel: NSObject {
         }
 
         let popularCompetitionGroup = CompetitionGroup(id: "0",
-                                                        name: "Popular Competitions",
+                                                        name: localized("string_popular_competitions"),
                                                         aggregationType: CompetitionGroup.AggregationType.popular,
                                                         competitions: popularCompetitions)
         var popularCompetitionGroups = [popularCompetitionGroup]
@@ -1510,7 +1510,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
             as? TitleTableViewHeader {
-            headerView.sectionTitleLabel.text = "Today’s Highlights"
+            headerView.sectionTitleLabel.text = localized("string_upcoming_highlights")
             return headerView
         }
         return nil
