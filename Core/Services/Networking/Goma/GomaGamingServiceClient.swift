@@ -86,4 +86,10 @@ struct GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func sendFavorites(deviceId: String, favorites: String) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
+        let endpoint = GomaGamingService.favorites(favorites: favorites)
+        let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
 }

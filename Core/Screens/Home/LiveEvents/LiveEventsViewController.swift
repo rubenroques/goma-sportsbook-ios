@@ -24,7 +24,7 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
 
-    @IBOutlet weak var filtersCountLabel: UILabel!
+    @IBOutlet private weak var filtersCountLabel: UILabel!
     
     var turnTimeRangeOn: Bool = false
     
@@ -68,8 +68,8 @@ class LiveEventsViewController: UIViewController {
         return betslipCountLabel
     }()
 
-    @IBOutlet weak var loadingBaseView: UIView!
-    @IBOutlet weak var loadingView: UIActivityIndicatorView!
+    @IBOutlet private weak var loadingBaseView: UIView!
+    @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     var cancellables = Set<AnyCancellable>()
 
@@ -177,6 +177,7 @@ class LiveEventsViewController: UIViewController {
         filtersCollectionView.contentInset = UIEdgeInsets(top: 0, left: 74, bottom: 0, right: 54)
         filtersCollectionView.showsVerticalScrollIndicator = false
         filtersCollectionView.showsHorizontalScrollIndicator = false
+        filtersCollectionView.alwaysBounceHorizontal = true
         filtersCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
@@ -226,6 +227,8 @@ class LiveEventsViewController: UIViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
 
+        // TODO: Code Review - Este HomeFilterViewController com o nome (errado) homeFilterVC não está a ser
+        // utilizado em lado nenhum e é desalocado logo a seguir
         let homeFilterVC = HomeFilterViewController(liveEventsViewModel: self.viewModel)
         homeFilterVC.delegate = self
     }

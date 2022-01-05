@@ -112,7 +112,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         if UserDefaults.standard.userSession != nil {
 
             if let competitionId = self.competition?.id {
-                Env.favoritesManager.checkFavorites(eventId: competitionId)
+                Env.favoritesManager.checkFavorites(eventId: competitionId, favoriteType: "competition")
             }
 
             if self.isFavorite {

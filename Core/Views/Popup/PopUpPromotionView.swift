@@ -151,6 +151,8 @@ class PopUpPromotionView: NibView {
 
         self.clipsToBounds = true
         self.baseView.layer.cornerRadius = 12
+        self.baseView.layer.borderWidth = 1
+
         self.baseView.clipsToBounds = true
 
         let closeCornerTap = UITapGestureRecognizer(target: self, action: #selector(didTapCloseAction))
@@ -167,6 +169,8 @@ class PopUpPromotionView: NibView {
     func setupWithTheme() {
 
         self.backgroundColor = UIColor.clear
+
+        baseView.layer.borderColor = UIColor.App.separatorLine.cgColor
 
         imageBaseView.backgroundColor = UIColor.clear
         baseView.backgroundColor = UIColor.App.secondaryBackground

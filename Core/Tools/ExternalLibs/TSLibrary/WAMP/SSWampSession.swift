@@ -277,7 +277,9 @@ open class SSWampSession: SSWampTransportDelegate {
     open func ssWampTransportReceivedData(_ data: Data) {
         if let payload = self.serializer?.unpack(data) {
             if let message = SSWampMessages.createMessage(payload) {
+                objc_sync_enter(self)
                 self.handleMessage(message)
+                objc_sync_exit(self)
             }
         }
     }
@@ -427,26 +429,26 @@ open class SSWampSession: SSWampTransportDelegate {
                 return
             }
 
-        case let message as AuthenticateSSWampMessage:
+        case _ as AuthenticateSSWampMessage:
             ()
             return
-        case let message as PublishSSWampMessage:
+        case _ as PublishSSWampMessage:
             ()
             return
-        case let message as UnsubscribeSSWampMessage:
+        case _ as UnsubscribeSSWampMessage:
             ()
             return
-        case let message as SubscribeSSWampMessage:
+        case _ as SubscribeSSWampMessage:
             ()
             return
 
-        case let message as YieldSSWampMessage:
+        case _ as YieldSSWampMessage:
             ()
             return
-        case let message as UnregisterSSWampMessage:
+        case _ as UnregisterSSWampMessage:
             ()
             return
-        case let message as RegisterSSWampMessage:
+        case _ as RegisterSSWampMessage:
             ()
             return
         case let message as InvocationSSWampMessage:
@@ -462,10 +464,10 @@ open class SSWampSession: SSWampTransportDelegate {
             }
             // send YieldSSWampMessage
             return
-        case let message as CallSSWampMessage:
+        case _ as CallSSWampMessage:
             ()
             return
-        case let message as HelloSSWampMessage:
+        case _ as HelloSSWampMessage:
             ()
             return
         default:

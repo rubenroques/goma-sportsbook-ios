@@ -160,7 +160,7 @@ Terms of use, Privacy Policy and EULA";
 "string_odds_filter" = "Odds Filter";
 "string_from" = "From";
 "string_to" = "To";
-"string_time_today_only" = "Time (for Today's matches only)";
+"string_time_today_only" = "Time (for Upcoming's matches only)";
 "string_default_market" = "Default Market";
 
 "string_verify_email" = "Verify your Email";
@@ -176,8 +176,34 @@ Terms of use, Privacy Policy and EULA";
 
 "string_cashout_available" = "Cashout Available";
 "string_cashout" = "Cashout";
-"string_return_money" = "Your return money will be ";
+"string_return_money" = "Your return will be ";
 "string_cashout_verification" = "Are you sure you want to cashout?";
 "string_cashout_info" = "Get a percentage of your bet back before the game is over";
 
 "string_country" = "Country";
+
+"string_deposit" = "Deposit";
+"string_how_much_deposit" = "How much do you want to deposit in your account?";
+"string_deposit_value" = "Deposit Value";
+"string_minimum_deposit_value" = "Minimum Value: 10€";
+"string_payments_available" = "Payments available using:";
+"string_next" = "Next";
+"string_payments_available" = "Payments available using:";
+
+"string_responsible_gaming" = "Read about Responsible Gambling.";
+"string_responsible_gaming_clickable" = "Responsible Gambling";
+
+"string_faq" = "Any questions about payment process see F.A.Q or Contact Us.";
+"string_faq_clickable" = "F.A.Q";
+"string_contact_us" = "Contact Us";
+
+"string_withdraw" = "Withdraw";
+"string_how_much_withdraw" = "How much do you want to withdraw from your account?";
+"string_withdraw_value" = "Withdraw Value";
+"string_minimum_withdraw_value" = "Minimum Value: 10€";
+
+"string_empty_my_games" = "You don't have favorite games for the selected sport.";
+"string_empty_my_competitions" = "You don't have favorite competitions for the selected sport.";
+
+"string_my_games" = "My Games";
+"string_my_competitions" = "My Competitions";

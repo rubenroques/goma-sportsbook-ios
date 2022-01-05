@@ -10,14 +10,13 @@ import Combine
 
 class HomeViewController: UIViewController {
 
-    let test = MatchDetailsAggregatorRepository(matchId: "155447218572152832")
-
     @IBOutlet private weak var topSafeAreaView: UIView!
     @IBOutlet private weak var topBarView: UIView!
     @IBOutlet private weak var contentView: UIView!
 
     @IBOutlet private weak var preLiveBaseView: UIView!
     @IBOutlet private weak var liveBaseView: UIView!
+    @IBOutlet private weak var myTicketsBaseView: UIView!
 
     @IBOutlet private weak var tabBarView: UIView!
     @IBOutlet private weak var bottomSafeAreaView: UIView!
@@ -30,6 +29,10 @@ class HomeViewController: UIViewController {
     @IBOutlet private weak var liveIconImageView: UIImageView!
     @IBOutlet private weak var liveTitleLabel: UILabel!
 
+    @IBOutlet private weak var myTicketsButtonBaseView: UIView!
+    @IBOutlet private weak var myTicketsIconImageView: UIImageView!
+    @IBOutlet private weak var myTicketsTitleLabel: UILabel!
+
     @IBOutlet private weak var profilePictureBaseView: UIView!
     @IBOutlet private weak var profilePictureImageView: UIImageView!
 
@@ -41,10 +44,12 @@ class HomeViewController: UIViewController {
     // Child view controllers
     lazy var preLiveViewController = PreLiveEventsViewController()
     lazy var liveEventsViewController = LiveEventsViewController()
+    lazy var myTicketsViewController = MyTicketsViewController()
 
     // Loaded view controllers
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
+    var myTicketsViewControllerLoaded = false
 
     var currentSportType: SportType
 
@@ -59,6 +64,7 @@ class HomeViewController: UIViewController {
     enum TabItem {
         case sports
         case live
+        case myTickets
     }
     var selectedTabItem: TabItem {
         didSet {
@@ -67,6 +73,8 @@ class HomeViewController: UIViewController {
                 self.selectSportsTabBarItem()
             case .live:
                 self.selectLiveTabBarItem()
+            case .myTickets:
+                self.selectMyTicketTabBarItem()
             }
         }
     }
@@ -168,13 +176,6 @@ class HomeViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//
-//                EveryMatrixAPIClient.operatorInfo().sink(receiveCompletion: { completion in
-//                    Logger.log("completion \(completion)")
-//                }, receiveValue: { operatorInfo in
-//                    Logger.log("Socket connected: \(TSManager.shared.isConnected)")
-//                })
-//                .store(in: &cancellables)
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -197,6 +198,7 @@ class HomeViewController: UIViewController {
     func commonInit() {
 
         liveButtonBaseView.alpha = 0.2
+        myTicketsButtonBaseView.alpha = 0.2
 
         loginButton.setTitle(localized("string_login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
@@ -207,6 +209,9 @@ class HomeViewController: UIViewController {
         let liveTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveTabItem))
         liveButtonBaseView.addGestureRecognizer(liveTapGesture)
 
+        let myTicketTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapMyTicketsTabItem))
+        myTicketsButtonBaseView.addGestureRecognizer(myTicketTapGesture)
+
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
         profilePictureBaseView.addGestureRecognizer(profileTapGesture)
     }
@@ -215,6 +220,7 @@ class HomeViewController: UIViewController {
 
         preLiveBaseView.backgroundColor = UIColor.App.mainBackground
         liveBaseView.backgroundColor = UIColor.App.mainBackground
+        myTicketsBaseView.backgroundColor = UIColor.App.mainBackground
 
         topSafeAreaView.backgroundColor = UIColor.App.mainBackground
         topBarView.backgroundColor = UIColor.App.mainBackground
@@ -234,6 +240,7 @@ class HomeViewController: UIViewController {
 
         sportsButtonBaseView.backgroundColor = .clear
         liveButtonBaseView.backgroundColor = .clear
+        myTicketsButtonBaseView.backgroundColor = .clear
 
         profilePictureBaseView.backgroundColor = UIColor.App.mainTint
 
@@ -316,6 +323,13 @@ extension HomeViewController {
             }
             liveEventsViewControllerLoaded = true
         }
+        if case .myTickets = tab, !myTicketsViewControllerLoaded {
+            self.addChildViewController(self.myTicketsViewController, toView: self.myTicketsBaseView)
+            self.myTicketsViewController.didTapBetslipButtonAction = { [weak self] in
+                self?.openBetslipModal()
+            }
+            myTicketsViewControllerLoaded = true
+        }
     }
 }
 
@@ -395,9 +409,8 @@ extension HomeViewController {
 
         popUpPromotionView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
 
-        // Finally the animation!
         UIView.animate(withDuration: 0.5) {
-            popUpBackgroundView.alpha = 0.4
+            popUpBackgroundView.alpha = 0.53
         }
         UIView.animate(
             withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.55, initialSpringVelocity: 3,
@@ -417,7 +430,6 @@ extension HomeViewController {
             return
         }
 
-        // Finally the animation!
         UIView.animate(withDuration: 0.5) {
             popUpBackgroundView.alpha = 0.0
         }
@@ -446,24 +458,44 @@ extension HomeViewController {
         self.selectedTabItem = .live
     }
 
+    @objc private func didTapMyTicketsTabItem() {
+        self.selectedTabItem = .myTickets
+    }
+
     func selectSportsTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .sports)
 
-        self.preLiveBaseView.isHidden = false
         self.liveBaseView.isHidden = true
+        self.myTicketsBaseView.isHidden = true
+        self.preLiveBaseView.isHidden = false
 
         sportsButtonBaseView.alpha = 1.0
         liveButtonBaseView.alpha = 0.2
+        myTicketsButtonBaseView.alpha = 0.2
     }
 
     func selectLiveTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .live)
 
         self.preLiveBaseView.isHidden = true
+        self.myTicketsBaseView.isHidden = true
         self.liveBaseView.isHidden = false
 
         sportsButtonBaseView.alpha = 0.2
         liveButtonBaseView.alpha = 1.0
+        myTicketsButtonBaseView.alpha = 0.2
+    }
+
+    func selectMyTicketTabBarItem() {
+        self.loadChildViewControllerIfNeeded(tab: .myTickets)
+
+        self.myTicketsBaseView.isHidden = false
+        self.preLiveBaseView.isHidden = true
+        self.liveBaseView.isHidden = true
+
+        sportsButtonBaseView.alpha = 0.2
+        liveButtonBaseView.alpha = 0.2
+        myTicketsButtonBaseView.alpha = 1.0
     }
 
 }

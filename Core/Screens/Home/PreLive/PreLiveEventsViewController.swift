@@ -206,6 +206,7 @@ class PreLiveEventsViewController: UIViewController {
         filtersCollectionView.contentInset = UIEdgeInsets(top: 0, left: 74, bottom: 0, right: 54)
         filtersCollectionView.showsVerticalScrollIndicator = false
         filtersCollectionView.showsHorizontalScrollIndicator = false
+        filtersCollectionView.alwaysBounceHorizontal = true
         filtersCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
@@ -225,6 +226,7 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
         tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
+        tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -358,6 +360,13 @@ class PreLiveEventsViewController: UIViewController {
                     self?.betslipCountLabel.text = "\(betslipValue)"
                     self?.betslipCountLabel.isHidden = false
                 }
+            })
+            .store(in: &cancellables)
+
+        Env.userSessionStore.isUserProfileIncomplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { _ in
+                self.tableView.reloadData()
             })
             .store(in: &cancellables)
 
@@ -636,8 +645,6 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         self.filtersCollectionView.reloadData()
         self.filtersCollectionView.layoutIfNeeded()
         self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-//        let rect = self.filtersCollectionView.layoutAttributesForItem(at:IndexPath(row: indexPath.row, section: 0))?.frame
-//             self.filtersCollectionView.scrollRectToVisible(rect!, animated: true)
 
     }
 

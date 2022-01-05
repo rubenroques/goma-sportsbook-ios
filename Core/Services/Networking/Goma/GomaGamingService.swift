@@ -15,6 +15,7 @@ enum GomaGamingService {
     case modalPopUpDetails
     case login(username: String, password: String, deviceToken: String)
     case suggestedBets
+    case favorites(favorites: String)
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
 }
 
@@ -43,6 +44,8 @@ extension GomaGamingService: Endpoint {
             return "/api/auth/\(apiVersion)/login"
         case .suggestedBets:
             return "/api/betting/\(apiVersion)/betslip/suggestions"
+        case .favorites:
+            return "/api/favorites/\(apiVersion)"
 //        case .xpto, .foo:
 //            return "/api/v1/abcd"
 //        default:
@@ -57,7 +60,7 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .settings, .simpleRegister, .modalPopUpDetails, .login, .suggestedBets:
+        case .settings, .simpleRegister, .modalPopUpDetails, .login, .suggestedBets, .favorites:
             return nil
             
 //        case .getPredictionSubmit(let userId, let userName, let eventId, let prediction, let message):
@@ -92,7 +95,7 @@ extension GomaGamingService: Endpoint {
             return .get
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets:
             return .get
-        case .simpleRegister, .login:
+        case .simpleRegister, .login, .favorites:
             return .post
 //        case .xpto, .foo, .bar:
 //            return .post
@@ -123,6 +126,16 @@ extension GomaGamingService: Endpoint {
                         "password": "\(password)",
                         "device_token": "\(deviceToken)"}
                        """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .favorites(let favorites):
+            let body = """
+                    {"favorites":
+                    [
+                    \(favorites)
+                    ]
+                    }
+                    """
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:

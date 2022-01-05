@@ -1,0 +1,380 @@
+//
+//  MyTicketTableViewCell.swift
+//  Sportsbook
+//
+//  Created by Ruben Roques on 20/12/2021.
+//
+
+import UIKit
+import Combine
+
+class MyTicketTableViewCell: UITableViewCell {
+
+    @IBOutlet private weak var baseView: UIView!
+
+
+
+    @IBOutlet private weak var topStatusView: UIView!
+
+    @IBOutlet private weak var headerBaseView: UIView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var subtitleLabel: UILabel!
+    @IBOutlet private weak var shareButton: UIButton!
+
+    @IBOutlet private weak var betCardsBaseView: UIView!
+    @IBOutlet private weak var betCardsStackView: UIStackView!
+
+    @IBOutlet private weak var bottomBaseView: UIView!
+    @IBOutlet private weak var bottomSeparatorLineView: UIView!
+    @IBOutlet private weak var bottomStackView: UIStackView!
+
+    @IBOutlet private weak var totalOddTitleLabel: UILabel!
+    @IBOutlet private weak var totalOddSubtitleLabel: UILabel!
+
+    @IBOutlet private weak var betAmountTitleLabel: UILabel!
+    @IBOutlet private weak var betAmountSubtitleLabel: UILabel!
+
+    @IBOutlet private weak var winningsTitleLabel: UILabel!
+    @IBOutlet private weak var winningsSubtitleLabel: UILabel!
+
+    @IBOutlet private weak var cashoutBaseView: UIView!
+    @IBOutlet private weak var cashoutButton: UIButton!
+
+    @IBOutlet private weak var loadingView: UIView!
+    @IBOutlet private weak var loadingActivityIndicator: UIActivityIndicatorView!
+
+    private var betHistoryEntry: BetHistoryEntry?
+
+    private var viewModel: MyTicketCellViewModel?
+
+
+    private var isLoadingCellDataSubscription: AnyCancellable?
+
+    private var cashoutSubscription: AnyCancellable?
+
+    private var cashoutValue: Double?
+    private var showCashoutButton: Bool = false {
+        didSet {
+            self.cashoutBaseView.isHidden = !showCashoutButton
+            if showCashoutButton {
+                self.needsHeightRedraw?()
+            }
+        }
+    }
+
+    var needsHeightRedraw: (() -> Void)?
+
+    override func awakeFromNib() {
+        super.awakeFromNib()
+
+        self.selectionStyle = .none
+
+        self.loadingView.isHidden = true
+
+        self.cashoutBaseView.isHidden = true
+
+        self.baseView.clipsToBounds = true
+        self.baseView.layer.cornerRadius = 10
+        self.baseView.layer.masksToBounds = true
+
+        self.cashoutButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        self.cashoutButton.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        self.cashoutButton.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.39), for: .disabled)
+
+        self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
+        self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground.withAlphaComponent(0.7), for: .highlighted)
+
+        self.cashoutButton.layer.cornerRadius = CornerRadius.button
+        self.cashoutButton.layer.masksToBounds = true
+        self.cashoutButton.backgroundColor = .clear
+
+        self.totalOddSubtitleLabel.text = "-"
+        self.betAmountSubtitleLabel.text = "-"
+        self.winningsSubtitleLabel.text = "-"
+
+        self.setupWithTheme()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        self.loadingView.isHidden = true
+
+        self.betHistoryEntry = nil
+        self.viewModel = nil
+
+        self.cashoutValue = nil
+        self.showCashoutButton = false
+
+        self.cashoutSubscription?.cancel()
+        self.cashoutSubscription = nil
+
+        self.isLoadingCellDataSubscription?.cancel()
+        self.isLoadingCellDataSubscription = nil
+
+        self.titleLabel.text = ""
+        self.subtitleLabel.text = ""
+
+        self.totalOddTitleLabel.text = "Total Odd"
+        self.betAmountTitleLabel.text = "Bet Amount"
+        self.winningsTitleLabel.text = "Return"
+
+        self.totalOddSubtitleLabel.text = "-"
+        self.betAmountSubtitleLabel.text = "-"
+        self.winningsSubtitleLabel.text = "-"
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
+    }
+
+    func setupWithTheme() {
+
+        self.backgroundColor = UIColor.clear
+        self.backgroundView?.backgroundColor = UIColor.clear
+        self.contentView.backgroundColor = UIColor.clear
+
+        self.baseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.topStatusView.backgroundColor = .clear
+        self.headerBaseView.backgroundColor = .clear
+        self.betCardsBaseView.backgroundColor = .clear
+        self.betCardsStackView.backgroundColor = .clear
+        self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.bottomBaseView.backgroundColor = .clear
+        self.bottomStackView.backgroundColor = .clear
+        self.cashoutBaseView.backgroundColor = .clear
+
+        self.cashoutButton.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
+
+        self.titleLabel.textColor = UIColor.App.headingMain
+        self.subtitleLabel.textColor = UIColor.App.headingMain
+        self.totalOddTitleLabel.textColor = UIColor.App.headingMain
+        self.totalOddSubtitleLabel.textColor = UIColor.App.headingMain
+        self.betAmountTitleLabel.textColor = UIColor.App.headingMain
+        self.betAmountSubtitleLabel.textColor = UIColor.App.headingMain
+        self.winningsTitleLabel.textColor = UIColor.App.headingMain
+        self.winningsSubtitleLabel.textColor = UIColor.App.headingMain
+
+        if let status = self.betHistoryEntry?.status?.uppercased() {
+            switch status {
+            case "WON", "HALF_WON":
+                self.highlightCard(withColor: UIColor.App.statusWon)
+            case "LOST", "HALF_LOST":
+                self.highlightCard(withColor: UIColor.App.statusLoss)
+            case "CASHED_OUT", "CANCELLED":
+                self.highlightCard(withColor: UIColor.App.statusDraw)
+            default:
+                self.resetHighlightedCard()
+            }
+        }
+    }
+
+    func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
+        if case .visible(let cashoutValue) = state {
+            self.cashoutButton.setTitle("Cashout", for: .normal)
+            if let cashoutValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashoutValue)) {
+                self.cashoutButton.setTitle("Cashout \(cashoutValueString)", for: .normal)
+            }
+            self.cashoutValue = cashoutValue
+            self.showCashoutButton = true
+        }
+        else {
+            self.showCashoutButton = false
+        }
+    }
+
+
+    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry, countryCodes: [String], viewModel: MyTicketCellViewModel) {
+
+        self.betHistoryEntry = betHistoryEntry
+        self.viewModel = viewModel
+
+        if let state = self.viewModel?.hasCashoutEnabled.value {
+            self.configureCashoutButton(withState: state)
+        }
+
+        self.cashoutSubscription = self.viewModel?.hasCashoutEnabled
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] cashoutButtonState in
+                self?.configureCashoutButton(withState: cashoutButtonState)
+            })
+
+
+        self.isLoadingCellDataSubscription = self.viewModel?.isLoadingCellData
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoadingCellData in
+                if isLoadingCellData {
+                    self?.loadingActivityIndicator.startAnimating()
+                }
+                else {
+                    self?.loadingActivityIndicator.stopAnimating()
+                }
+                self?.loadingView.isHidden = !isLoadingCellData
+            })
+
+
+        self.betCardsStackView.removeAllArrangedSubviews()
+
+        for (index, betHistoryEntrySelection) in (betHistoryEntry.selections ?? []).enumerated() {
+
+            let myTicketBetLineView = MyTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,
+                                                          countryCode: countryCodes[safe: index] ?? "",
+                                                          viewModel: viewModel.selections[index])
+
+            self.betCardsStackView.addArrangedSubview(myTicketBetLineView)
+        }
+
+        //
+        if betHistoryEntry.type == "SINGLE" {
+            self.titleLabel.text = "Single - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+        }
+        else if betHistoryEntry.type == "MULTIPLE" {
+            self.titleLabel.text = "Multiple - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+        }
+        else if betHistoryEntry.type == "SYSTEM" {
+            self.titleLabel.text = "System - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+        }
+
+        if let date = betHistoryEntry.placedDate {
+            self.subtitleLabel.text = MyTicketTableViewCell.dateFormatter.string(from: date)
+        }
+
+        if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
+            self.totalOddSubtitleLabel.text = "\(Double(floor(oddValue * 100)/100))"
+        }
+
+        if let betAmount = betHistoryEntry.totalBetAmount,
+           let betAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betAmount)) {
+            self.betAmountSubtitleLabel.text = betAmountString
+        }
+
+        //
+        self.winningsTitleLabel.text = "Possible Winnings"
+        if let maxWinnings = betHistoryEntry.maxWinning,
+           let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+            self.winningsSubtitleLabel.text = maxWinningsString
+        }
+
+        if let status = betHistoryEntry.status?.uppercased() {
+            switch status {
+            case "WON", "HALF_WON":
+                self.highlightCard(withColor: UIColor.App.statusWon)
+                self.winningsTitleLabel.text = "Return"  // Titulo
+                if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.winningsSubtitleLabel.text = maxWinningsString
+                }
+
+            case "LOST", "HALF_LOST":
+                self.highlightCard(withColor: UIColor.App.statusLoss)
+                self.winningsTitleLabel.text = "Possible Winnings" // Titulo
+                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.winningsSubtitleLabel.text = maxWinningsString
+                }
+
+            case "CASHED_OUT":
+                self.highlightCard(withColor: UIColor.App.statusDraw)
+                self.winningsTitleLabel.text = "Return" // Titulo
+                if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.winningsSubtitleLabel.text = maxWinningsString
+                }
+
+            case "DRAW":
+                self.highlightCard(withColor: UIColor.App.statusDraw)
+                self.winningsTitleLabel.text = "Return"  // Titulo
+                if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.winningsSubtitleLabel.text = maxWinningsString
+                }
+
+            case "CANCELLED":
+                self.highlightCard(withColor: UIColor.App.statusDraw)
+                self.winningsTitleLabel.text = "Possible Winnings" // Titulo
+                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.winningsSubtitleLabel.text = maxWinningsString
+                }
+
+            case "OPEN":
+                self.resetHighlightedCard()
+                self.winningsTitleLabel.text = "Possible Winnings" // Titulo
+                if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
+                   let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                    self.winningsSubtitleLabel.text = maxWinningsString
+                }
+
+            default:
+                self.resetHighlightedCard()
+            }
+        }
+    }
+
+    @IBAction private func didTapCashoutButton() {
+
+        guard
+            let cashoutValue = self.cashoutValue,
+            let cashoutValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashoutValue))
+        else {
+            return
+        }
+
+        let cashoutAlertMessage = "\(localized("string_return_money")) \(cashoutValueString)"
+
+        let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"), message: cashoutAlertMessage, preferredStyle: UIAlertController.Style.alert)
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { _ in
+            self.viewModel?.requestCashout()
+        }))
+
+        submitCashoutAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        self.viewController?.present(submitCashoutAlert, animated: true, completion: nil)
+
+    }
+
+    private func resetHighlightedCard() {
+        self.bottomBaseView.backgroundColor = .clear
+        self.topStatusView.backgroundColor = .clear
+
+        self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+    }
+
+    private func highlightCard(withColor color: UIColor) {
+        self.bottomBaseView.backgroundColor = color
+        self.topStatusView.backgroundColor = color
+
+        self.bottomSeparatorLineView.backgroundColor = .white
+    }
+
+    private func betStatusText(forCode code: String) -> String {
+        switch code {
+        case "OPEN": return "Open"
+        case "DRAW": return "Draw"
+        case "WON": return "Won"
+        case "HALF_WON": return "Half Won"
+        case "LOST": return "Lost"
+        case "HALF_LOST": return "Half Lost"
+        case "CANCELLED": return "Cancelled"
+        case "CASHED_OUT": return "Cashed Out"
+        default: return ""
+        }
+    }
+}
+
+extension MyTicketTableViewCell {
+    static var dateFormatter: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .short
+        dateFormatter.dateStyle = .short
+        return dateFormatter
+    }()
+}

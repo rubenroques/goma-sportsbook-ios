@@ -152,6 +152,9 @@ class AggregatorsRepository {
                 
             case .event:
                 () // print("Events aren't processed")
+            case .eventPartScore:
+                ()
+                
             case .unknown:
                 () // print("Unknown type ignored")
             }
@@ -171,6 +174,11 @@ class AggregatorsRepository {
             switch update {
             case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
+
+                    if isLive != nil || isAvailable != nil {
+                        print("break")
+                    }
+
                     let bettingOffer = publisher.value
                     let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
                                                                                isLive: isLive,
@@ -328,7 +336,8 @@ class AggregatorsRepository {
                               sportType: rawMatch.sportId ?? "",
                               venue: location,
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                              markets: sortedMarkets)
+                              markets: sortedMarkets,
+                              rootPartId: rawMatch.rootPartId ?? "")
 
             matchesList.append(match)
         }
@@ -398,6 +407,7 @@ struct OddOutcomesSortingHelper {
         case "more_than": return 30
 
         case "in_90_minutes": return 10
+        case "in_extra_time": return 20
         case "on_penalties": return 30
 
         case "home-true": return 10

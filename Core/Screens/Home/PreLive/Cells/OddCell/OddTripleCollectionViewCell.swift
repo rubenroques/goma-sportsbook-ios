@@ -12,33 +12,33 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     // @IBOutlet weak var cardBaseView: UIView!
 
-    @IBOutlet weak var participantsNameLabel: UILabel!
-    @IBOutlet weak var participantsCountryImageView: UIImageView!
-    @IBOutlet weak var marketNameLabel: UILabel!
+    @IBOutlet private weak var participantsNameLabel: UILabel!
+    @IBOutlet private weak var participantsCountryImageView: UIImageView!
+    @IBOutlet private weak var marketNameLabel: UILabel!
 
-    @IBOutlet weak var oddsStackView: UIStackView!
+    @IBOutlet private weak var oddsStackView: UIStackView!
 
-    @IBOutlet weak var leftBaseView: UIView!
-    @IBOutlet weak var leftOddTitleLabel: UILabel!
-    @IBOutlet weak var leftOddValueLabel: UILabel!
+    @IBOutlet private weak var leftBaseView: UIView!
+    @IBOutlet private weak var leftOddTitleLabel: UILabel!
+    @IBOutlet private weak var leftOddValueLabel: UILabel!
 
-    @IBOutlet weak var middleBaseView: UIView!
-    @IBOutlet weak var middleOddTitleLabel: UILabel!
-    @IBOutlet weak var middleOddValueLabel: UILabel!
+    @IBOutlet private weak var middleBaseView: UIView!
+    @IBOutlet private weak var middleOddTitleLabel: UILabel!
+    @IBOutlet private weak var middleOddValueLabel: UILabel!
 
-    @IBOutlet weak var rightBaseView: UIView!
-    @IBOutlet weak var rightOddTitleLabel: UILabel!
-    @IBOutlet weak var rightOddValueLabel: UILabel!
+    @IBOutlet private weak var rightBaseView: UIView!
+    @IBOutlet private weak var rightOddTitleLabel: UILabel!
+    @IBOutlet private weak var rightOddValueLabel: UILabel!
 
-    @IBOutlet weak var suspendedBaseView: UIView!
-    @IBOutlet weak var suspendedLabel: UILabel!
+    @IBOutlet private weak var suspendedBaseView: UIView!
+    @IBOutlet private weak var suspendedLabel: UILabel!
 
-    @IBOutlet weak var leftUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var leftDownChangeOddValueImage: UIImageView!
-    @IBOutlet weak var middleUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var middleDownChangeOddValueImage: UIImageView!
-    @IBOutlet weak var rightUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var rightDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var leftUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var leftDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var middleUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var middleDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var rightUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var rightDownChangeOddValueImage: UIImageView!
 
     var match: Match?
     var market: Market?

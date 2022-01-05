@@ -208,10 +208,10 @@ class MatchDetailsViewController: UIViewController {
 
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
 
-        self.headerCompetitionLabel.text = "Primeira Liga"
+        self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
 
-        self.headerCompetitionImageView.image = UIImage(named: "country_flag_pt")
+        self.headerCompetitionImageView.image = UIImage(named: "")
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .center
 
@@ -247,8 +247,6 @@ class MatchDetailsViewController: UIViewController {
 
         setupMatchDetailPublisher()
 
-        setupHeaderDetails()
-
         // Market Types CollectionView
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -257,6 +255,7 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         self.marketTypesCollectionView.showsVerticalScrollIndicator = false
         self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
+        self.marketTypesCollectionView.alwaysBounceHorizontal = true
         self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         self.marketTypesCollectionView.delegate = self.viewModel
@@ -353,6 +352,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.matchDetailsAggregatorPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -368,7 +368,6 @@ class MatchDetailsViewController: UIViewController {
                 case .initialContent(let aggregator):
                     print("MatchDetailsAggregator matchDetailsAggregatorPublisher initialContent")
                     self?.setupMatchDetailAggregatorProcessor(aggregator: aggregator)
-                    print("MATCH DETAIL AGG: \(aggregator)")
                 case .updatedContent(let aggregatorUpdates):
                     print("MatchDetailsAggregator matchDetailsAggregatorPublisher updatedContent")
                     self?.updateMatchDetailAggregatorProcessor(aggregator: aggregatorUpdates)
@@ -379,20 +378,20 @@ class MatchDetailsViewController: UIViewController {
     }
 
     private func setupMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .matchDetails,
-                                                 shouldClear: true)
+
+        self.viewModel.store.processAggregatorForMatchDetail(aggregator)
+
+        setupHeaderDetails()
     }
 
     private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+        self.viewModel.store.processContentUpdateAggregatorForMatchDetail(aggregator)
 
-        DispatchQueue.main.async { // TODO: Code Review - DispatchQueue.main.async porquê?
-            if !Env.everyMatrixStorage.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
-                self.matchMode = .live
-            }
-            self.updateHeaderDetails()
+        if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
+            self.matchMode = .live
         }
+        self.updateHeaderDetails()
 
     }
 
@@ -419,10 +418,10 @@ class MatchDetailsViewController: UIViewController {
         var minutes = ""
         var matchPart = ""
 
-        if let matchInfoArray = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[match.id] {
             for matchInfoId in matchInfoArray {
-                if let matchInfo = Env.everyMatrixStorage.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" {
+                if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
+                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
                             if self.match.homeParticipant.id == matchInfo.paramParticipantId1 {
@@ -486,7 +485,7 @@ class MatchDetailsViewController: UIViewController {
 
     }
     
-    @IBAction func didTapBackAction() {
+    @IBAction private func didTapBackAction() {
         self.navigationController?.popViewController(animated: true)
     }
 

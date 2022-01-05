@@ -162,7 +162,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     var numberOfBets: Int = 1
     var totalPossibleEarnings: Double = 0.0
     var totalBetOdds: Double = 0.0
-
+    var simpleOddsValues : [Double] = [0.0]
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -189,9 +189,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     private var suggestedBetsRegister: EndpointPublisherIdentifiable?
     private var suggestedBetsPublisher: AnyCancellable?
+    private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
 
     var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
     var suggestedBetsArray: [Int: [Match]] = [:]
+    var totalGomaSuggestedBets: Int = 0
 
     init() {
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
@@ -221,6 +223,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
         self.betSuggestedCollectionView.delegate = self
         self.betSuggestedCollectionView.dataSource = self
+        
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
@@ -358,7 +361,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multiplierPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
-                self?.totalBetOdds = Double(multiplier)
                 self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
                 self?.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
             })
@@ -451,7 +453,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
                     let totalValue = multiplier * betValue
-                       //self.totalBetOdds = betValue
+
                     self.totalPossibleEarnings =  totalValue
                     
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
@@ -461,12 +463,13 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarnings in
-                //self.totalPossibleEarnings = Double(possibleEarnings)
+
                 self?.secondaryMultipleWinningsValueLabel.text = possibleEarnings
+
                 self?.multipleWinningsValueLabel.text = possibleEarnings
             })
             .store(in: &cancellables)
-       
+        
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
@@ -477,9 +480,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
+                        self.simpleOddsValues.append(ticket.value)
                         let expectedTicketReturn = ticket.value * betValue
-                        
-                        expectedReturn += expectedTicketReturn
+                          expectedReturn += expectedTicketReturn
                         
                     }
                 }
@@ -487,18 +490,15 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return "-.--€"
                 }
                 else {
-                    //self.totalBetOdds = expectedReturn
-                    //self.totalPossibleEarnings = expectedReturn
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarningsString in
-                
+
                 self?.simpleWinningsValueLabel.text = possibleEarningsString
             })
             .store(in: &cancellables)
-      
-        
+
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
@@ -571,6 +571,19 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+
+        self.suggestedBetsRetrievedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: {[weak self] value in
+                guard let self = self else { return }
+                if value == self.totalGomaSuggestedBets && value != 0 {
+                    self.betSuggestedCollectionView.reloadData()
+                    self.isSuggestedBetsLoading(false)
+                }
+            })
+            .store(in: &cancellables)
+
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -590,36 +603,23 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func getSuggestedBets() {
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving suggested bets!")
-
-                case .finished:
-                    print("Suggested bets retrieved!")
-                }
-
-                print("Received suggested bets completion: \(completion).")
-
+            .sink(receiveCompletion: { _ in
             },
             receiveValue: { gomaBetsArray in
 
                 guard let betsArray = gomaBetsArray else {return}
-                print("GOMA SUGGESTED BETS: \(betsArray)")
+
                 self.gomaSuggestedBetsResponse = betsArray
+
+                let totalGomaCount = self.gomaSuggestedBetsResponse.flatMap({$0}).count
+                self.totalGomaSuggestedBets = totalGomaCount
 
                 for (index, betArray) in betsArray.enumerated() {
                     self.subscribeSuggestedBet(betArray: betArray, index: index)
                 }
-
             })
             .store(in: &cancellables)
 
-        // Needs to be changed
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.betSuggestedCollectionView.reloadData()
-            self.isSuggestedBetsLoading(false)
-        }
     }
 
     func subscribeSuggestedBet(betArray: [GomaSuggestedBets], index: Int) {
@@ -634,25 +634,18 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             TSManager.shared
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure:
-                        print("Error retrieving data!")
-                    case .finished:
-                        print("Data retrieved!")
-                    }
+                .sink(receiveCompletion: { _ in
+
                 }, receiveValue: { [weak self] state in
                     switch state {
                     case .connect(let publisherIdentifiable):
-                        print("MyBets suggestedBets connect")
                         self?.suggestedBetsRegister = publisherIdentifiable
                     case .initialContent(let aggregator):
-                        print("MyBets suggestedBets initialContent")
                         self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
-                    case .updatedContent(let aggregatorUpdates):
+                    case .updatedContent:
                         print("MyBets suggestedBets updatedContent")
                     case .disconnect:
-                        print("MyBets suggestedBets disconnect")
+                        ()
                     }
                 })
                 .store(in: &cancellables)
@@ -673,6 +666,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             else {
                 self.suggestedBetsArray[index] = [suggestedMatch]
             }
+
+            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
+            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
         }
 
     }
@@ -1012,7 +1008,28 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapPlaceBetButton() {
 
         self.isLoading = true
+        
+        
+        
+        if let simpleWinningsValueString = self.simpleWinningsValueLabel.text , simpleOddsValues.count != 1{
+            let valuesString = simpleWinningsValueString.components(separatedBy: "€")
+             if let winningsValue = Double(valuesString[1]){
+                 self.totalPossibleEarnings = winningsValue
+             }
 
+            simpleOddsValues =  Array(Set(simpleOddsValues))
+                self.totalBetOdds = 0.0
+                for odd in simpleOddsValues{
+                    self.totalBetOdds += odd
+                }
+            
+        }else if let multipleWinningsValueString = self.multipleOddsValueLabel.text {
+            if let valuesString = Double(multipleWinningsValueString){
+                 self.totalBetOdds = valuesString
+            }
+        }
+      
+        
         if self.listTypePublisher.value == .simple {
             
             self.numberOfBets = self.simpleBetsBettingValues.value.count
@@ -1026,11 +1043,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
                     self.isLoading = false
                 } receiveValue: { betPlacedDetailsArray in
-                    for betPlacedDetails in betPlacedDetailsArray {
-                        for bet in betPlacedDetails.tickets {
-                            self.totalBetOdds += bet.value
-                        }
-                    }
+                    
                     self.betPlacedAction?(betPlacedDetailsArray)
 
                 }
@@ -1226,8 +1239,12 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         let bottomBarHeigth = 60.0
         var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
         if let arrayValues = self.suggestedBetsArray[indexPath.row] {
-
-            size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + Double(arrayValues.count) * 60)
+//            if arrayValues.count == 3 {
+//                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 3 * 60)
+//            }else{
+                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 4 * 60)
+           // }
+            
         }
         return size
     }

@@ -242,7 +242,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             textfield.backgroundColor = UIColor.App.secondaryBackground
             textfield.textColor = .white
             textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("string_search_field"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("string_search_field_competitions"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.fadeOutHeading])
 
@@ -416,11 +416,9 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
     func redrawForSection(_ sectionIdentifier: String) {
 
         var selectedSection: Int?
-        for (i, section) in self.filteredCompetitions.enumerated() {
-            if section.id == sectionIdentifier {
-                selectedSection = i
-                break
-            }
+        for (i, section) in self.filteredCompetitions.enumerated() where section.id == sectionIdentifier  {
+            selectedSection = i
+            break
         }
 
         guard
@@ -434,12 +432,14 @@ extension CompetitionsFiltersView: CollapsibleTableViewHeaderDelegate {
 
         let selectedCells = tableView.indexPathsForSelectedRows ?? []
 
-        tableView.beginUpdates()
-        tableView.reloadRows(at: rows, with: .automatic)
-        tableView.endUpdates()
+        if rows.isNotEmpty {
+            tableView.beginUpdates()
+            tableView.reloadRows(at: rows, with: .automatic)
+            tableView.endUpdates()
 
-        for selectedCellIndexPath in selectedCells {
-            tableView.selectRow(at: selectedCellIndexPath, animated: false, scrollPosition: .none)
+            for selectedCellIndexPath in selectedCells {
+                tableView.selectRow(at: selectedCellIndexPath, animated: false, scrollPosition: .none)
+            }
         }
     }
 }
@@ -471,9 +471,14 @@ extension CompetitionsFiltersView: UISearchBarDelegate {
 
             newCompetitionGroup.cells = filteredCompetitions
 
-            if newCompetitionGroup.name.lowercased().contains(searchText) || filteredCompetitions.isNotEmpty {
+//            if newCompetitionGroup.name.lowercased().contains(searchText) || filteredCompetitions.isNotEmpty {
+//                filteredCompetitionGroup.append(newCompetitionGroup)
+//            }
+
+            if filteredCompetitions.isNotEmpty {
                 filteredCompetitionGroup.append(newCompetitionGroup)
             }
+
         }
 
         self.filteredCompetitions = filteredCompetitionGroup

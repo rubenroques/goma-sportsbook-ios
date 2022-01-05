@@ -290,7 +290,7 @@ class ProfileViewController: UIViewController {
         }
 
         if let userSession = userSession {
-            if Env.userSessionStore.isUserProfileIncomplete {
+            if Env.userSessionStore.isUserProfileIncomplete.value {
                 let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
@@ -404,6 +404,41 @@ class ProfileViewController: UIViewController {
         logoutBaseView.backgroundColor = .clear
         infoBaseView.backgroundColor = .clear
     }
+
+    @IBAction private func didTapDepositButton() {
+
+        if !Env.userSessionStore.isUserProfileIncomplete.value {
+
+            let depositViewController = DepositViewController()
+
+            self.navigationController?.pushViewController(depositViewController, animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: localized("Profile Incomplete"),
+                                          message: "Please complete your profile before you can make deposits.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+
+    }
+
+    @IBAction private func didTapWithdrawButton() {
+        if !Env.userSessionStore.isUserProfileIncomplete.value {
+
+            let withDrawViewController = WithdrawViewController()
+
+            self.navigationController?.pushViewController(withDrawViewController, animated: true)
+        }
+        else {
+            let alert = UIAlertController(title: localized("Profile Incomplete"),
+                                          message: "Please complete your profile before you can make withdraws.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+
 
 }
 

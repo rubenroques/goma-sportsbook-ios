@@ -674,12 +674,18 @@ Sportsbook® All Rights Reserved</string>
                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <state key="normal" title="Deposit"/>
+                                    <connections>
+                                        <action selector="didTapDepositButton" destination="-1" eventType="touchUpInside" id="jug-JG-Frc"/>
+                                    </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="55d-pC-VkS">
                                     <rect key="frame" x="183" y="0.0" width="151" height="50"/>
                                     <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="16"/>
                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                     <state key="normal" title="Withdraw"/>
+                                    <connections>
+                                        <action selector="didTapWithdrawButton" destination="-1" eventType="touchUpInside" id="Heq-gV-mKi"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </stackView>
