@@ -227,3 +227,9 @@ Terms of use, Privacy Policy and EULA";
 "string_time_label_default" = "00:00";
 "string_score_label_default" = "0 - 0";
 "string_match_start_label_default" = "Match Start";
+
+"string_sports" = "Sports";
+"string_live" = "Live";
+"string_my_tickets" = "My Tickets";
+
+"string_logout" = "Logout";

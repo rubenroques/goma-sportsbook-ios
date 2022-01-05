@@ -373,7 +373,7 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle("All")
+            cell.setupWithTitle(localized("string_all"))
         default:
             ()
         }

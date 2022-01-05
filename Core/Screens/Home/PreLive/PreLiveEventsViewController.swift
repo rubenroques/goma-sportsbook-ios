@@ -595,15 +595,15 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle("Popular")
+            cell.setupWithTitle(localized("string_popular"))
         case 1:
-            cell.setupWithTitle("Upcoming")
+            cell.setupWithTitle(localized("string_upcoming"))
         case 2:
-            cell.setupWithTitle("Competitions")
+            cell.setupWithTitle(localized("string_competitions"))
         case 3:
-            cell.setupWithTitle("My Games")
+            cell.setupWithTitle(localized("string_my_games"))
         case 4:
-            cell.setupWithTitle("My Competitions")
+            cell.setupWithTitle(localized("string_my_competitions"))
         default:
             ()
         }

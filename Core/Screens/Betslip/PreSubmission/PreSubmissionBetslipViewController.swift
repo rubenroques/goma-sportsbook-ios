@@ -678,7 +678,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.amountTextfield.textColor = UIColor.App.headingMain
-        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: "Amount", attributes: [
+        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("string_amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
         ])
