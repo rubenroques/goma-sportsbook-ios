@@ -11,12 +11,10 @@ import FirebaseMessaging
 
 class SplashViewController: UIViewController {
 
-    var cancellables = Set<AnyCancellable>()
+    private var isLoadingUserSessionSubscription: AnyCancellable?
+    private var loadingCompleted: () -> Void
 
-    typealias Loaded = () -> Void
-    var loadingCompleted: Loaded
-
-    init(loadingCompleted: @escaping Loaded) {
+    init(loadingCompleted: @escaping () -> Void) {
         self.loadingCompleted = loadingCompleted
         
         super.init(nibName: "SplashViewController", bundle: nil)
@@ -32,85 +30,21 @@ class SplashViewController: UIViewController {
 
         Logger.log("Starting connections")
 
-        NotificationCenter.default.publisher(for: .wampSocketConnected)
-            .setFailureType(to: EveryMatrix.APIError.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                Logger.log("completion \(completion)")
-                Logger.log("Services Bootstrap")
-            }, receiveValue: { [weak self] _ in
-                Logger.log("Socket connected: \(TSManager.shared.isConnected)")
-                self?.startUserSessionIfNeeded()
-            })
-            .store(in: &cancellables)
+        self.isLoadingUserSessionSubscription = Env.userSessionStore.isLoadingUserSessionPublisher
+            .sink { isLoadingUserSession in
+                if !isLoadingUserSession {
+                    self.splashLoadingCompleted()
+                }
+            }
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
 
-    func saveOperatorInfo(operatorInfo: EveryMatrix.OperatorInfo) {
-        if let operatorId = operatorInfo.ucsOperatorId {
-            Env.appSession.operatorId = String(operatorId)
-        }
-    }
-
-    func startUserSessionIfNeeded() {
-
-        guard
-            let user = UserSessionStore.loggedUserSession(),
-            let userPassword = UserSessionStore.storedUserPassword()
-        else {
-            self.splashLoadingCompleted()
-            return
-        }
-        Env.userSessionStore.loadLoggedUser()
-
-        // Get and store FCM token
-        Messaging.messaging().token { token, error in
-            if let error = error {
-                print("Error fetching FCM registration token: \(error)")
-            }
-            else if let token = token {
-                print("FCM registration token: \(token)")
-                Env.deviceFCMToken = token
-            }
-        }
-
-        TSManager.shared
-            .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
-            .receive(on: RunLoop.main)
-            .sink { completion in
-                switch completion {
-                case .finished:
-                    Env.favoritesManager.getUserMetadata()
-                    self.loginGomaAPI(username: user.username, password: user.userId)
-                case .failure(let error):
-                    print("error \(error)")
-                }
-            } receiveValue: { account in
-                print("User account: \(account)")
-                Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
-            }
-            .store(in: &cancellables)
-    }
-
     func splashLoadingCompleted() {
+        self.isLoadingUserSessionSubscription = nil
         self.loadingCompleted()
-    }
-
-    func loginGomaAPI(username: String, password: String) {
-        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
-
-        Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                self.splashLoadingCompleted()
-            }, receiveValue: { value in
-                Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
-            })
-            .store(in: &cancellables)
-
     }
 
 }

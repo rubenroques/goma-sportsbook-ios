@@ -17,12 +17,26 @@ class UserSessionStore {
 
     var cancellables = Set<AnyCancellable>()
 
+    var isLoadingUserSessionPublisher = CurrentValueSubject<Bool, Never>(true)
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
     var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
 
     var shouldRecordUserSession = true
-    //var isUserProfileIncomplete: Bool = true
     var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
+
+    init() {
+
+        NotificationCenter.default.publisher(for: .wampSocketConnected)
+            .setFailureType(to: EveryMatrix.APIError.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+
+            }, receiveValue: { [weak self] _ in
+                self?.startUserSessionIfNeeded()
+            })
+            .store(in: &cancellables)
+
+    }
 
     static func loggedUserSession() -> UserSession? {
         return UserDefaults.standard.userSession
@@ -185,6 +199,56 @@ extension UserSessionStore {
                 self.userBalanceWallet.send(realWallet)
             }
             .store(in: &cancellables)
+    }
+
+}
+
+extension UserSessionStore {
+    func startUserSessionIfNeeded() {
+
+        self.isLoadingUserSessionPublisher.send(true)
+
+        guard
+            let user = UserSessionStore.loggedUserSession(),
+            let userPassword = UserSessionStore.storedUserPassword()
+        else {
+            self.isLoadingUserSessionPublisher.send(false)
+            return
+        }
+
+        self.loadLoggedUser()
+
+        TSManager.shared
+            .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
+            .receive(on: RunLoop.main)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    Env.favoritesManager.getUserMetadata()
+                    self.loginGomaAPI(username: user.username, password: user.userId)
+                case .failure(let error):
+                    print("error \(error)")
+
+                }
+                self.isLoadingUserSessionPublisher.send(false)
+            } receiveValue: { account in
+                Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
+            }
+            .store(in: &cancellables)
+    }
+
+    func loginGomaAPI(username: String, password: String) {
+        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
+
+        Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+                
+            }, receiveValue: { value in
+                Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
+            })
+            .store(in: &cancellables)
+
     }
 
 }

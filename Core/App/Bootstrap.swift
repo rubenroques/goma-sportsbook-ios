@@ -18,7 +18,6 @@ struct Bootstrap {
     func boot() {
 
         _ = Env
-        _ = TSManager.shared.isConnected
 
         self.router.makeKeyAndVisible()
         Env.businessSettingsSocket.connect()
@@ -28,5 +27,9 @@ struct Bootstrap {
         }
 
     }
-    
+
+    func refreshSession() {
+
+    }
+
 }

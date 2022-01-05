@@ -282,8 +282,10 @@ class LoginViewController: UIViewController {
                 }
                 self.hideLoadingSpinner()
                 self.loginButton.isEnabled = true
-            }, receiveValue: { _ in
+            }, receiveValue: { user in
                 self.getProfileStatus()
+
+                self.loginGomaAPI(username: user.username, password: user.userId)
             })
             .store(in: &cancellables)
 
@@ -297,6 +299,19 @@ class LoginViewController: UIViewController {
             }, receiveValue: { value in
                 Env.userSessionStore.isUserProfileIncomplete.send(value.isProfileIncomplete)
                 self.showNextViewController()
+            })
+            .store(in: &cancellables)
+    }
+
+    func loginGomaAPI(username: String, password: String) {
+        let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
+
+        Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+
+            }, receiveValue: { value in
+                Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
             })
             .store(in: &cancellables)
     }

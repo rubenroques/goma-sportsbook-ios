@@ -69,5 +69,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("FCM token: \(fcmToken ?? "[Token Error]")")
     }
-    
+
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        Env.everyMatrixAPIClient.connectTS()
+    }
+
 }

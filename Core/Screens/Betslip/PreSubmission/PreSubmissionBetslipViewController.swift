@@ -189,6 +189,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
         self.betSuggestedCollectionView.delegate = self
         self.betSuggestedCollectionView.dataSource = self
+        self.betSuggestedCollectionView.showsVerticalScrollIndicator = false
+        self.betSuggestedCollectionView.showsHorizontalScrollIndicator = false
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self

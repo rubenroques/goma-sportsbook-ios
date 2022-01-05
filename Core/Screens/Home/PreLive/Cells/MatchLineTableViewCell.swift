@@ -125,17 +125,24 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
         let screenWidth = UIScreen.main.bounds.size.width
         let width = screenWidth*0.6
 
-        if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 70 {
-            self.tappedMatchLineAction?()
-            return
+        if scrollView.contentSize.width > screenWidth {
+            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 90 {
+                self.tappedMatchLineAction?()
+
+                let generator = UIImpactFeedbackGenerator(style: .medium)
+                generator.prepare()
+                generator.impactOccurred()
+
+                return
+            }
         }
 
-        if scrollView.contentOffset.x > width {
+        if scrollView.contentOffset.x > width && self.backSliderView.alpha != 1.0 {
             UIView.animate(withDuration: 0.2) {
                 self.backSliderView.alpha = 1.0
             }
         }
-        else {
+        else if self.backSliderView.alpha != 0.0 {
             UIView.animate(withDuration: 0.2) {
                 self.backSliderView.alpha = 0.0
             }

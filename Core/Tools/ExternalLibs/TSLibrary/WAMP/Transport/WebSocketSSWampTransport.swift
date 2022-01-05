@@ -73,7 +73,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        // print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(20))")
+        print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(80))")
         messageCounter += 1
         if let data = text.data(using: .utf8) {
             websocketDidReceiveData(socket: socket, data: data)
