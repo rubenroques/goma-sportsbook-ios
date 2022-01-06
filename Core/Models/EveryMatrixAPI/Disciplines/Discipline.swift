@@ -43,5 +43,26 @@ extension EveryMatrix {
             case displayChildren = "displayChildren"
             case showEventCategory = "showEventCategory"
         }
+
+        func sportUpdated(numberOfLiveEvents: Int?) -> Discipline {
+            return Discipline(
+                type: self.type,
+                id: self.id,
+                name: self.name,
+                shortName: self.shortName,
+                isVirtual: self.isVirtual,
+                numberOfEvents: self.numberOfEvents,
+                numberOfMarkets: self.numberOfMarkets,
+                numberOfBettingOffers: self.numberOfBettingOffers,
+                numberOfLiveEvents: numberOfLiveEvents ?? self.numberOfLiveEvents,
+                numberOfLiveMarkets: self.numberOfLiveMarkets,
+                numberOfLiveBettingOffers: self.numberOfLiveBettingOffers,
+                numberOfUpcomingMatches: self.numberOfUpcomingMatches,
+                childrenIds: self.childrenIds,
+                displayChildren: self.displayChildren,
+                showEventCategory: self.showEventCategory
+
+            )
+        }
     }
 }

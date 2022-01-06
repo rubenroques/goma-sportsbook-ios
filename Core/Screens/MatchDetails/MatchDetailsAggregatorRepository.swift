@@ -318,6 +318,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                 print("full match update")
             case .cashoutUpdate:
                 print("Cashout Update")
+            case .sportUpdate:
+                ()
             case .unknown:
                 print("uknown")
             }
@@ -750,6 +752,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                         matchesInfoForMatch[matchId] = newSet
                     }
                 }
+            case .sportUpdate:
+                ()
             case .unknown:
                 print("uknown")
             }

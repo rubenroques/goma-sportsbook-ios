@@ -28,6 +28,12 @@ class LiveEventsViewModel: NSObject {
 
     var isLoading: AnyPublisher<Bool, Never>
 
+    var selectedSportNumberofLiveEvents: Int = 0
+    var liveSportsPublisher: AnyCancellable?
+    var liveSportsRegister: EndpointPublisherIdentifiable?
+    var updateNumberOfLiveEventsAction: (() -> Void)?
+    var currentLiveSportsPublisher: CurrentValueSubject<EveryMatrix.Discipline, Never>?
+
     var didChangeSportType = false
     var selectedSportId: SportType {
         willSet {
@@ -49,7 +55,7 @@ class LiveEventsViewModel: NSObject {
     var didSelectMatchAction: ((Match) -> Void)?
     
     private var cancellables = Set<AnyCancellable>()
-
+    private var sportsCancellables = Set<AnyCancellable>()
     private var allMatchesPublisher: AnyCancellable?
     private var bannersInfoPublisher: AnyCancellable?
 
@@ -61,6 +67,7 @@ class LiveEventsViewModel: NSObject {
     private var allMatchesHasMorePages = true
 
     init(selectedSportId: SportType) {
+
         self.selectedSportId = selectedSportId
 
         isLoading = isLoadingAllEventsList.eraseToAnyPublisher()
@@ -74,6 +81,9 @@ class LiveEventsViewModel: NSObject {
         self.allMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
+
+        self.getSportsLive()
+
     }
 
     func fetchData() {
@@ -84,6 +94,82 @@ class LiveEventsViewModel: NSObject {
 
         self.fetchBanners()
         self.fetchAllMatches()
+
+        sportsCancellables.removeAll()
+
+        if let sportPublisher = Env.everyMatrixStorage.sportsLivePublisher[self.selectedSportId.rawValue] {
+
+            self.currentLiveSportsPublisher = sportPublisher
+
+            self.currentLiveSportsPublisher?
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: {[weak self] sport in
+                    self?.selectedSportNumberofLiveEvents = sport.numberOfLiveEvents ?? 0
+                    self?.updateNumberOfLiveEventsAction?()
+                })
+                .store(in: &sportsCancellables)
+        }
+    }
+
+    func getSportsLive() {
+
+        if let liveSportsRegister = liveSportsRegister {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
+        }
+
+        var endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
+                                                      language: "en")
+
+        self.liveSportsPublisher?.cancel()
+        self.liveSportsPublisher = nil
+
+        self.liveSportsPublisher = TSManager.shared
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("SportsSelectorViewController liveSportsPublisher connect")
+                    self?.liveSportsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("SportsSelectorViewController liveSportsPublisher initialContent")
+                    self?.setupSportsAggregatorProcessor(aggregator: aggregator)
+                case .updatedContent(let aggregatorUpdates):
+                    print("SportsSelectorViewController liveSportsPublisher updatedContent")
+                    self?.updateSportsAggregatorProcessor(aggregator: aggregatorUpdates)
+                case .disconnect:
+                    print("SportsSelectorViewController liveSportsPublisher disconnect")
+                }
+
+            })
+    }
+
+    func setupSportsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processSportsAggregator(aggregator)
+
+        if let sportPublisher = Env.everyMatrixStorage.sportsLivePublisher[self.selectedSportId.rawValue] {
+
+            self.currentLiveSportsPublisher = sportPublisher
+
+            self.currentLiveSportsPublisher?
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: {[weak self] sport in
+                    self?.selectedSportNumberofLiveEvents = sport.numberOfLiveEvents ?? 0
+                    self?.updateNumberOfLiveEventsAction?()
+                })
+                .store(in: &sportsCancellables)
+        }
+    }
+
+    func updateSportsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateSportsAggregator(aggregator)
     }
 
     func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {

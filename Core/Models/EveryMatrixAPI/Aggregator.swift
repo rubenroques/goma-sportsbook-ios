@@ -77,6 +77,7 @@ extension EveryMatrix {
         case matchInfo(id: String, paramFloat1: Int?, paramFloat2: Int?, paramEventPartName1: String?)
         case fullMatchInfoUpdate(matchInfo: EveryMatrix.MatchInfo)
         case cashoutUpdate(id: String, value: Double?, stake: Double?)
+        case sportUpdate(id: String, numberOfLiveEvents: Int?)
         case unknown(typeName: String)
 
         enum CodingKeys: String, CodingKey {
@@ -115,6 +116,16 @@ extension EveryMatrix {
             case contentId = "id"
             case value = "value"
             case stake = "stake"
+        }
+
+        enum SportsCodingKeys: String, CodingKey {
+            case numberOfMarkets = "numberOfMarkets"
+            case numberOfLiveMarkets = "numberOfLiveMarkets"
+            case numberOfLiveEvents = "numberOfLiveEvents"
+            case numberOfLiveBettingOffers = "numberOfLiveBettingOffers"
+            case numberOfEvents = "numberOfEvents"
+            case numberOfUpcomingMatches = "numberOfUpcomingMatches"
+            case numberOfBettingOffers = "numberOfBettingOffers"
         }
 
         init(from decoder: Decoder) throws {
@@ -181,6 +192,17 @@ extension EveryMatrix {
                         let value = try? changedPropertiesContainer.decode(Double.self, forKey: .value)
                         let stake = try? changedPropertiesContainer.decode(Double.self, forKey: .stake)
                         self = .cashoutUpdate(id: contentId, value: value, stake: stake)
+
+                    }
+                }
+                else if entityTypeString == "SPORT" {
+                    if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: SportsCodingKeys.self, forKey: .changedProperties) {
+
+                        let numberOfLiveEvents = try? changedPropertiesContainer.decode(Int.self, forKey: .numberOfLiveEvents)
+
+                        self = .sportUpdate(id: contentId, numberOfLiveEvents: numberOfLiveEvents)
+
+                        contentUpdateType = self
 
                     }
                 }

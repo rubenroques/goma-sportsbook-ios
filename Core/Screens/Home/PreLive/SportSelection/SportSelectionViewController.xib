@@ -11,6 +11,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SportSelectionViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="activityIndicatorView" destination="aZt-s5-qyb" id="CD4-bB-1Bi"/>
                 <outlet property="cancelButton" destination="cLs-ZG-bN5" id="Mwj-Ec-kwZ"/>
                 <outlet property="collectionView" destination="dwa-ZR-kCR" id="QAl-SA-fZK"/>
                 <outlet property="navigationLabel" destination="hS5-0I-Qx5" id="mjR-tv-cyA"/>
@@ -29,6 +30,9 @@
                     <rect key="frame" x="0.0" y="0.0" width="482" height="44"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="aZt-s5-qyb">
+                    <rect key="frame" x="222.5" y="506" width="37" height="37"/>
+                </activityIndicatorView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3C-TI-tYo">
                     <rect key="frame" x="0.0" y="44" width="482" height="50"/>
                     <subviews>
@@ -89,9 +93,11 @@
                 <constraint firstItem="pkR-v4-LqE" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="25" id="fZ7-n7-xzm"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="dwa-ZR-kCR" secondAttribute="trailing" constant="25" id="l0M-l4-n8s"/>
                 <constraint firstItem="l0T-7m-PZF" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="pK6-qZ-6fo"/>
+                <constraint firstItem="aZt-s5-qyb" firstAttribute="centerY" secondItem="dwa-ZR-kCR" secondAttribute="centerY" id="qmN-we-glD"/>
                 <constraint firstItem="pkR-v4-LqE" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" constant="-25" id="udg-N0-yk7"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="l0T-7m-PZF" secondAttribute="trailing" id="uoY-1V-zCd"/>
                 <constraint firstItem="q3C-TI-tYo" firstAttribute="top" secondItem="l0T-7m-PZF" secondAttribute="bottom" id="yRn-Uc-cyn"/>
+                <constraint firstItem="aZt-s5-qyb" firstAttribute="centerX" secondItem="dwa-ZR-kCR" secondAttribute="centerX" id="yjR-Na-ISO"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="123.18840579710145" y="71.651785714285708"/>

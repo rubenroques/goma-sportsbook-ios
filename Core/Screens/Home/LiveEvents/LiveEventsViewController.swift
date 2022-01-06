@@ -25,7 +25,9 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersButtonView: UIView!
 
     @IBOutlet private weak var filtersCountLabel: UILabel!
-    
+    @IBOutlet private weak var liveEventsCountView: UIView!
+    @IBOutlet private weak var liveEventsCountLabel: UILabel!
+
     var turnTimeRangeOn: Bool = false
     
     private lazy var betslipButtonView: UIView = {
@@ -80,6 +82,7 @@ class LiveEventsViewController: UIViewController {
         didSet {
             self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)")
             self.viewModel.selectedSportId = selectedSportType
+
         }
     }
 
@@ -110,6 +113,17 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+
+        self.viewModel.updateNumberOfLiveEventsAction = {
+            if self.viewModel.selectedSportNumberofLiveEvents != 0 {
+
+                self.liveEventsCountView.isHidden = false
+                self.liveEventsCountLabel.text = "\(self.viewModel.selectedSportNumberofLiveEvents)"
+            }
+            else {
+                self.liveEventsCountView.isHidden = true
+            }
         }
     }
 
@@ -185,6 +199,9 @@ class LiveEventsViewController: UIViewController {
         
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+
+        self.liveEventsCountView.isHidden = true
+        self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
         
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear

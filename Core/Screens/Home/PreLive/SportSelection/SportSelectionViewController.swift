@@ -16,6 +16,7 @@ class SportSelectionViewController: UIViewController {
     @IBOutlet private var cancelButton: UIButton!
     @IBOutlet private var collectionView: UICollectionView!
     @IBOutlet private var searchBar: UISearchBar!
+    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     // Variables
     weak var delegate: SportTypeSelectionViewDelegate?
@@ -53,9 +54,15 @@ class SportSelectionViewController: UIViewController {
     }
 
     func commonInit() {
+        self.activityIndicatorView.isHidden = true
+        self.view.bringSubviewToFront(self.activityIndicatorView)
 
-        getSports()
-        getSportsLive()
+        if isLiveSport {
+            getSportsLive()
+        }
+        else {
+            getSports()
+        }
 
         navigationLabel.text = localized("string_choose_sport")
         navigationLabel.font = AppFont.with(type: .bold, size: 16)
@@ -69,6 +76,7 @@ class SportSelectionViewController: UIViewController {
         collectionView.dataSource = self
 
         searchBar.delegate = self
+
     }
 
     func setupWithTheme() {
@@ -111,6 +119,8 @@ class SportSelectionViewController: UIViewController {
 
     func getSports() {
 
+        self.activityIndicatorView.isHidden = false
+
         let sports = EveryMatrixAPIClient().getDisciplinesData(payload: ["lang": "en"])
 
         sports.receive(on: RunLoop.main)
@@ -121,14 +131,9 @@ class SportSelectionViewController: UIViewController {
                 case .finished:
                     print("Data retrieved!")
                 }
+                self.activityIndicatorView.isHidden = true
             }, receiveValue: { value in
-                if self.isLiveSport {
-                    let filteredValue = value.records?.filter({$0.numberOfLiveEvents != 0})
-                    self.sportsData = filteredValue ?? []
-                }
-                else {
-                    self.sportsData = value.records ?? []
-                }
+                self.sportsData = value.records ?? []
                 self.fullSportsData = self.sportsData
                 self.collectionView.reloadData()
             })
@@ -137,44 +142,17 @@ class SportSelectionViewController: UIViewController {
     }
 
     func getSportsLive() {
-        if let liveSportsRegister = liveSportsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
-        }
+        self.activityIndicatorView.isHidden = false
 
-        var endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en")
+        self.sportsData = Array(Env.everyMatrixStorage.sportsLive.values)
+        let sortedArray = self.sportsData.sorted(by: {$0.id?.localizedStandardCompare($1.id ?? "1") == .orderedAscending})
+        self.sportsData = sortedArray
 
-        self.liveSportsPublisher?.cancel()
-        self.liveSportsPublisher = nil
+        self.fullSportsData = self.sportsData
 
-        self.liveSportsPublisher = TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
+        self.collectionView.reloadData()
+        self.activityIndicatorView.isHidden = true
 
-                case .finished:
-                    print("Data retrieved!")
-                }
-                //self?.isLoadingTodayList.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("SportsSelectorViewController liveSportsPublisher connect")
-                    self?.liveSportsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("SPORT AGG: \(aggregator)")
-                    print("SportsSelectorViewController liveSportsPublisher initialContent")
-                    //self?.setupTodayAggregatorProcessor(aggregator: aggregator, filtered: withFilter)
-                case .updatedContent(let aggregatorUpdates):
-                    print("SportsSelectorViewController liveSportsPublisher updatedContent")
-                    //self?.updateTodayAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("SportsSelectorViewController liveSportsPublisher disconnect")
-                }
-
-            })
     }
 
     @IBAction private func cancelAction() {
@@ -199,6 +177,9 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         if cell.sport?.id == self.defaultSport.typeId {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
+        }
+        if isLiveSport {
+            cell.setLiveSportCount()
         }
         return cell
     }
