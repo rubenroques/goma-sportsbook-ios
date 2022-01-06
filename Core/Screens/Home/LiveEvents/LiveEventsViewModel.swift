@@ -32,7 +32,7 @@ class LiveEventsViewModel: NSObject {
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
     var updateNumberOfLiveEventsAction: (() -> Void)?
-    var currentLiveSportsPublisher: CurrentValueSubject<EveryMatrix.Discipline, Never>?
+    var currentLiveSportsPublisher: AnyCancellable?
 
     var didChangeSportType = false
     var selectedSportId: SportType {
@@ -95,19 +95,14 @@ class LiveEventsViewModel: NSObject {
         self.fetchBanners()
         self.fetchAllMatches()
 
-        sportsCancellables.removeAll()
-
         if let sportPublisher = Env.everyMatrixStorage.sportsLivePublisher[self.selectedSportId.rawValue] {
 
             self.currentLiveSportsPublisher = sportPublisher
-
-            self.currentLiveSportsPublisher?
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: {[weak self] sport in
                     self?.selectedSportNumberofLiveEvents = sport.numberOfLiveEvents ?? 0
                     self?.updateNumberOfLiveEventsAction?()
                 })
-                .store(in: &sportsCancellables)
         }
     }
 
@@ -157,14 +152,11 @@ class LiveEventsViewModel: NSObject {
         if let sportPublisher = Env.everyMatrixStorage.sportsLivePublisher[self.selectedSportId.rawValue] {
 
             self.currentLiveSportsPublisher = sportPublisher
-
-            self.currentLiveSportsPublisher?
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: {[weak self] sport in
                     self?.selectedSportNumberofLiveEvents = sport.numberOfLiveEvents ?? 0
                     self?.updateNumberOfLiveEventsAction?()
                 })
-                .store(in: &sportsCancellables)
         }
     }
 
