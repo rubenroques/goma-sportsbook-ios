@@ -159,10 +159,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             return Double(displayBetValue)/Double(100)
         }
     }
-    var numberOfBets: Int = 1
-    var totalPossibleEarnings: Double = 0.0
-    var totalBetOdds: Double = 0.0
+
     var simpleOddsValues: [Double] = [0.0]
+
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
     private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
@@ -445,7 +444,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 return bettingValue > 0 && bettingValue < (self?.maxBetValue ?? 0)
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
-               
                 self?.placeBetButton.isEnabled = hasValidBettingValue
             })
             .store(in: &cancellables)
@@ -454,10 +452,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .map({ multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
-                    let totalValue = multiplier * betValue
-
-                    self.totalPossibleEarnings =  totalValue
-                    
+                    var totalValue = multiplier * betValue
+                    totalValue = Double(floor(totalValue * 100)/100)
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
                 }
                 else {
@@ -465,9 +461,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarnings in
-
                 self?.secondaryMultipleWinningsValueLabel.text = possibleEarnings
-
                 self?.multipleWinningsValueLabel.text = possibleEarnings
             })
             .store(in: &cancellables)
@@ -492,11 +486,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return "-.--€"
                 }
                 else {
-                    return CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
+                    expectedReturn = Double(floor(expectedReturn * 100)/100)
+                    return  CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
                 }
             })
             .sink(receiveValue: { [weak self] possibleEarningsString in
-
                 self?.simpleWinningsValueLabel.text = possibleEarningsString
             })
             .store(in: &cancellables)
@@ -525,20 +519,19 @@ class PreSubmissionBetslipViewController: UIViewController {
         Publishers.CombineLatest(self.listTypePublisher, self.isKeyboardShowingPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] (listType, isKeyboardShowing) in
-                switch (listType, isKeyboardShowing){
+                switch (listType, isKeyboardShowing) {
                 case (.simple, _):
                     self?.secondaryPlaceBetBaseView.isHidden = true
                     self?.secondaryAmountTextfield.resignFirstResponder()
                     self?.amountTextfield.resignFirstResponder()
-                case (.multiple , true):
+                case (.multiple, true):
                     self?.secondaryPlaceBetBaseView.isHidden = false
                     self?.secondaryMultipleWinningsBaseView.isHidden = false
                     self?.secondarySystemWinningsBaseView.isHidden = true
-                case (.system , true):
+                case (.system, true):
                     self?.secondaryPlaceBetBaseView.isHidden = false
                     self?.secondaryMultipleWinningsBaseView.isHidden = true
                     self?.secondarySystemWinningsBaseView.isHidden = false
-                
                 default :
                     self?.secondaryPlaceBetBaseView.isHidden = true
                 }
@@ -573,11 +566,10 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-
         self.suggestedBetsRetrievedPublisher
             .receive(on: DispatchQueue.main)
 
-            .sink(receiveValue: {[weak self] value in
+            .sink(receiveValue: { [weak self] value in
                 guard let self = self else { return }
                 let totalSuggestedBets = self.totalGomaSuggestedBets - self.suggestedBetsNotFound
 
@@ -590,7 +582,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
-
 
         self.setupWithTheme()
 
@@ -774,7 +765,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         ], for: .disabled)
 
         self.topSafeArea.backgroundColor = UIColor.App.mainBackground
-        self.bottomSafeArea.backgroundColor = UIColor.App.mainBackground
+        self.bottomSafeArea.backgroundColor = UIColor.App.contentBackground
+
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.mainBackground
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
@@ -806,10 +798,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.placeBetSendButtonBaseView.backgroundColor = UIColor.App.contentBackground
         
-        //self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
+        // self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
         self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-        
 
         self.plusOneButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
@@ -855,9 +846,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.contentBackground
         self.secondaryAmountBaseView.backgroundColor = UIColor.App.secondaryBackground
-        //self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
-        
-        
+        // self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
+
         self.secondaryMultipleWinningsTitleLabel.textColor = UIColor.App.headingDisabled
         self.secondaryMultipleWinningsValueLabel.textColor = UIColor.App.headingMain
 
@@ -904,10 +894,8 @@ class PreSubmissionBetslipViewController: UIViewController {
  
         case 1:
             self.listTypePublisher.value = .multiple
-            self.numberOfBets = 1
         case 2:
             self.listTypePublisher.value = .system
-            self.numberOfBets = 1
         default:
             ()
         }
@@ -921,7 +909,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.showingSystemBetOptionsSelector = true
     }
     
-    @objc func didTapAmountBaseView(){
+    @objc func didTapAmountBaseView() {
         self.secondaryAmountTextfield.becomeFirstResponder()
     }
 
@@ -1002,7 +990,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
         if let maxWinningNetto = selectedSystemBetWinnings.maxWinningNetto, maxWinningNetto != 0 {
-            self.totalPossibleEarnings = maxWinningNetto
             self.systemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
             self.secondarySystemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
         }
@@ -1015,37 +1002,14 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapDoneButton(){
         self.dismissKeyboard()
     }
-    
-    
-    
+
     @IBAction private func didTapPlaceBetButton() {
 
         self.isLoading = true
-        
-        
-        
-        if let simpleWinningsValueString = self.simpleWinningsValueLabel.text , simpleOddsValues.count != 1{
-            let valuesString = simpleWinningsValueString.components(separatedBy: "€")
-             if let winningsValue = Double(valuesString[1]){
-                 self.totalPossibleEarnings = winningsValue
-             }
 
-            simpleOddsValues =  Array(Set(simpleOddsValues))
-                self.totalBetOdds = 0.0
-                for odd in simpleOddsValues{
-                    self.totalBetOdds += odd
-                }
-            
-        }else if let multipleWinningsValueString = self.multipleOddsValueLabel.text {
-            if let valuesString = Double(multipleWinningsValueString){
-                 self.totalBetOdds = valuesString
-            }
-        }
-      
-        
+
         if self.listTypePublisher.value == .simple {
-            
-            self.numberOfBets = self.simpleBetsBettingValues.value.count
+
             Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
                 .receive(on: DispatchQueue.main)
                 .sink { completion in
@@ -1107,8 +1071,20 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.isKeyboardShowingPublisher.send(true)
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             self.tableView.contentInset.bottom = (keyboardSize.height - placeBetBaseView.frame.size.height)
-            
-            self.secondPlaceBetBaseViewConstraint.constant = keyboardSize.height
+
+            if
+                let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+                let curve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
+
+                UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(rawValue: curve)) {
+                    self.secondPlaceBetBaseViewConstraint.constant = keyboardSize.height
+                    self.view.layoutIfNeeded()
+                }
+            }
+            else {
+                self.secondPlaceBetBaseViewConstraint.constant = keyboardSize.height
+            }
+
         }
         
     }
@@ -1117,7 +1093,19 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.isKeyboardShowingPublisher.send(false)
         self.tableView.contentInset.bottom = 12
-        self.secondPlaceBetBaseViewConstraint.constant = 0
+
+        if
+            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
+            let curve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
+
+            UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(rawValue: curve)) {
+                self.secondPlaceBetBaseViewConstraint.constant = 0
+                self.view.layoutIfNeeded()
+            }
+        }
+        else {
+            self.secondPlaceBetBaseViewConstraint.constant = 0
+        }
     }
 
     @IBAction private func didTapPlusOneButton() {

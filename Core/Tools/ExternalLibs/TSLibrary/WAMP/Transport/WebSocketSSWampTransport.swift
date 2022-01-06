@@ -19,6 +19,8 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     var socket: WebSocket?
     let mode: WebsocketMode
 
+    let concurrentQueue = DispatchQueue(label: "websocket.swamp.queue", attributes: .concurrent)
+
     var messageCounter = 1
     
     fileprivate var disconnectionReason: String?
@@ -73,7 +75,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(80))")
+        print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(500))")
         messageCounter += 1
         if let data = text.data(using: .utf8) {
             websocketDidReceiveData(socket: socket, data: data)
@@ -81,7 +83,11 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
 
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-        delegate?.ssWampTransportReceivedData(data)
+
+        concurrentQueue.sync {
+            delegate?.ssWampTransportReceivedData(data)
+        }
+
     }
 
 }

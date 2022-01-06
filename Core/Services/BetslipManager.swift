@@ -288,7 +288,9 @@ extension BetslipManager {
 
         return TSManager.shared
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
-            .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
+            .map({ response in
+                return BetPlacedDetails.init(response: response, tickets: updatedTicketSelections)
+            })
             .eraseToAnyPublisher()
         
     }

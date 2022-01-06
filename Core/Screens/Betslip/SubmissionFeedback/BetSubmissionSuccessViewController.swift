@@ -21,25 +21,45 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var safeAreaBottomView: UIView!
     
-    @IBOutlet weak var possibleEarningsLabel: UILabel!
-    @IBOutlet weak var totalOddsLabel: UILabel!
-    @IBOutlet weak var betsMadeLabel: UILabel!
+    @IBOutlet private weak var possibleEarningsLabel: UILabel!
+    @IBOutlet private weak var totalOddsLabel: UILabel!
+    @IBOutlet private weak var betsMadeLabel: UILabel!
 
-    var betPlacedDetailsArray: [BetPlacedDetails]
     var totalOddsValue: String
     var possibleEarningsValue: String
-    var numberOfbets: Int
+    var numberOfBets: Int
 
     var willDismissAction: (() -> Void)?
 
-    init(betPlacedDetailsArray: [BetPlacedDetails], totalOddsValue: String, possibleEarningsValue: String, numberOfBets: Int ) {
+    init(betPlacedDetailsArray: [BetPlacedDetails]) {
 
-        self.betPlacedDetailsArray = betPlacedDetailsArray
-        self.possibleEarningsValue = possibleEarningsValue
-        self.totalOddsValue = totalOddsValue
-        self.numberOfbets = numberOfBets
-        
-        super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
+        //
+        // Possible Earnings
+        var possibleEarningsDouble = betPlacedDetailsArray
+            .map({ betPlacedDetails in
+                betPlacedDetails.response.maxWinning ?? 0.0
+            })
+            .reduce(0.0, +)
+
+        possibleEarningsDouble = Double(floor(possibleEarningsDouble * 100)/100)
+        self.possibleEarningsValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleEarningsDouble)) ?? "-.--€"
+
+        //
+        // Total Odd
+        let totalOddDouble = betPlacedDetailsArray
+            .map({ betPlacedDetails in
+                betPlacedDetails.response.totalPriceValue ?? 1.0
+            })
+            .reduce(1.0, *)
+
+        self.totalOddsValue = OddFormatter.formatOdd(withValue: totalOddDouble)
+
+        //
+        // Number Of Bets
+        self.numberOfBets = betPlacedDetailsArray.count
+
+        //
+         super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)
@@ -49,6 +69,10 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.possibleEarningsLabel.text = possibleEarningsValue
+        self.totalOddsLabel.text = totalOddsValue
+        self.betsMadeLabel.text = String(numberOfBets)
 
         self.setupWithTheme()
     }
@@ -70,13 +94,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.bottomView.backgroundColor = UIColor.App.mainBackground
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.mainBackground
-
-        self.possibleEarningsLabel.text = possibleEarningsValue
-        // self.possibleEarningsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
-        self.totalOddsLabel.text = totalOddsValue
-        // self.totalOddsLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
-        self.betsMadeLabel.text = String(numberOfbets)
-       // self.betsMadeLabel.font = UIFont.boldSystemFont(ofSize: 19.0)
         self.messageTitleLabel.textColor = UIColor.App.headingMain
         self.messageSubtitleLabel.textColor = UIColor.App.headingMain
 
@@ -92,29 +109,6 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBAction private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
-    }
-
-}
-
-extension BetSubmissionSuccessViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return self.betPlacedDetailsArray.count
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return 0 // self.betPlacedDetailsArray[safe: section].tickets.count ?? 0
-        case 1:
-            return 0 // 1
-        default:
-            return 0
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return UITableViewCell()
     }
 
 }
