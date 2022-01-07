@@ -10,8 +10,10 @@ import Combine
 
 class EveryMatrixAPIClient: ObservableObject {
 
-    private var cancellable = Set<AnyCancellable>()
     var manager: TSManager!
+
+    //
+    private var cancellable = Set<AnyCancellable>()
 
     init() {
         // The singleton init below is used to start up TS connection
@@ -24,16 +26,17 @@ class EveryMatrixAPIClient: ObservableObject {
             .store(in: &cancellable)
 
         NotificationCenter.default.publisher(for: .wampSocketDisconnected)
+            .receive(on: DispatchQueue.main)
             .sink { _ in
-                self.reconnectTS()
+                self.connectTS()
             }
             .store(in: &cancellable)
     }
 
-    private func reconnectTS() {
+    func connectTS() {
         debugPrint("***ShouldReconnectTS")
         TSManager.shared.destroySwampSession()
-        TSManager.reconnect()
+        TSManager.destroySharedInstance()
         manager = TSManager.shared
     }
 

@@ -170,8 +170,6 @@ class PopUpPromotionView: NibView {
 
         self.backgroundColor = UIColor.clear
 
-        baseView.layer.borderColor = UIColor.App.separatorLine.cgColor
-
         imageBaseView.backgroundColor = UIColor.clear
         baseView.backgroundColor = UIColor.App.secondaryBackground
 

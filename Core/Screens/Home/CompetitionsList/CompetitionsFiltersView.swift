@@ -189,12 +189,12 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             .sink(receiveValue: { count in
                 // swiftlint:disable empty_count
                 if count == 0 {
-                    self.titleLabel.text = "Choose competitions"
-                    self.smallTitleLabel.text = "Choose competitions"
+                    self.titleLabel.text = localized("string_choose_competitions")
+                    self.smallTitleLabel.text = localized("string_choose_competitions")
                 }
                 else {
-                    self.titleLabel.text = "Choose competitions (\(count))"
-                    self.smallTitleLabel.text = "Choose competitions (\(count))"
+                    self.titleLabel.text = localized("string_choose_competitions")+" (\(count))"
+                    self.smallTitleLabel.text = localized("string_choose_competitions")+" (\(count))"
                 }
             })
             .store(in: &cancellables)

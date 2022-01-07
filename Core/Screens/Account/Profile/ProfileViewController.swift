@@ -187,16 +187,19 @@ class ProfileViewController: UIViewController {
         depositButton.backgroundColor = .clear
         depositButton.layer.cornerRadius = CornerRadius.button
         depositButton.layer.masksToBounds = true
+        depositButton.setTitle(localized("string_deposit"), for: .normal)
 
         withdrawButton.backgroundColor = .clear
         withdrawButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.masksToBounds = true
         withdrawButton.layer.borderWidth = 2
+        withdrawButton.setTitle(localized("string_withdraw"), for: .normal)
 
         logoutButton.backgroundColor = .clear
         logoutButton.layer.cornerRadius = CornerRadius.button
         logoutButton.layer.masksToBounds = true
         logoutButton.layer.borderWidth = 2
+        logoutButton.setTitle(localized("string_logout"), for: .normal)
 
         personalInfoBaseView.layer.cornerRadius = CornerRadius.view
         personalInfoIconBaseView.layer.cornerRadius = CornerRadius.view
@@ -252,7 +255,7 @@ class ProfileViewController: UIViewController {
         let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
         supportBaseView.addGestureRecognizer(supportTapGesture)
 
-        currentBalanceLabel.text = "Loading"
+        currentBalanceLabel.text = localized("string_loading")
 
         //
         personalInfoLabel.text = localized("string_personal_info")
@@ -414,8 +417,8 @@ class ProfileViewController: UIViewController {
             self.navigationController?.pushViewController(depositViewController, animated: true)
         }
         else {
-            let alert = UIAlertController(title: localized("Profile Incomplete"),
-                                          message: "Please complete your profile before you can make deposits.",
+            let alert = UIAlertController(title: localized("string_profile_incomplete"),
+                                          message: localized("string_profile_incomplete_deposit"),
                                           preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -431,14 +434,13 @@ class ProfileViewController: UIViewController {
             self.navigationController?.pushViewController(withDrawViewController, animated: true)
         }
         else {
-            let alert = UIAlertController(title: localized("Profile Incomplete"),
-                                          message: "Please complete your profile before you can make withdraws.",
+            let alert = UIAlertController(title: localized("string_profile_incomplete"),
+                                          message: localized("string_profile_incomplete_withdraw"),
                                           preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
-
 
 }
 

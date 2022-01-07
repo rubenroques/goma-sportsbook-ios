@@ -57,7 +57,6 @@ class MyTicketsViewController: UIViewController {
         return betslipCountLabel
     }()
 
-
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
@@ -248,11 +247,11 @@ extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDat
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle("Resolved")
+            cell.setupWithTitle(localized("string_resolved"))
         case 1:
-            cell.setupWithTitle("Opened")
+            cell.setupWithTitle(localized("string_opened"))
         case 2:
-            cell.setupWithTitle("Won")
+            cell.setupWithTitle(localized("string_won"))
         default:
             ()
         }
