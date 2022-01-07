@@ -203,6 +203,14 @@ class HomeViewController: UIViewController {
         loginButton.setTitle(localized("string_login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
 
+        self.sportsTitleLabel.text = localized("string_sports")
+
+        self.liveTitleLabel.text = localized("string_live")
+
+        self.myTicketsTitleLabel.text = localized("string_my_tickets")
+
+
+
         let sportsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsTabItem))
         sportsButtonBaseView.addGestureRecognizer(sportsTapGesture)
 

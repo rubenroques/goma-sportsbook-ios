@@ -89,6 +89,9 @@ class SubmitedBetslipViewController: UIViewController {
     }
 
     private func requestCashout(betHistoryEntry: BetHistoryEntry) {
+
+        Logger.log("MyBets requestCashout \(betHistoryEntry.betId)", .debug)
+
         if let cashoutRegister = cashoutRegister {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
@@ -131,6 +134,8 @@ class SubmitedBetslipViewController: UIViewController {
     private func setupCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .cashouts,
                                                  shouldClear: true)
+
+        // TODO: Code Review -
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -140,6 +145,7 @@ class SubmitedBetslipViewController: UIViewController {
     private func updateCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
 
+        // TODO: Code Review -
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }
@@ -217,6 +223,7 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
 
         cell.configureWithBetHistoryEntry(entry)
 
+        // TODO: Code Review -
         let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
 
         if let betCashout = cashoutsPublisher[entry.betId].value {

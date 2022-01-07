@@ -74,19 +74,78 @@ struct BetslipSelectionState: Decodable {
 
 struct BetslipPlaceBetResponse: Decodable {
 
-    var betSucceed: Bool?
     var betId: String?
+    var betSucceed: Bool?
 
     var errorCode: String?
     var errorMessage: String?
 
-    var selections: [EveryMatrix.BetslipTicketSelection]?
+    var totalPriceValue: Double?
+    var oddsValidationType: String?
+    var maxWinningNetto: Double?
+    var totalStakeTax: Double?
+    var basePossibleProfit: Double?
+    var amount: Int?
+    var maxWinningTax: Double?
+    var terminalType: String?
+    var freeBetAmount: Double?
+    var minStake: Double?
+    var numberOfSelections: Int?
+    var bonusBetAmount: Double?
+    var maxStake: Double?
+    var type: String?
+    var totalStakeNetto: Double?
+    var eachWay: Bool?
+    var baseWinning: Double?
+    var possibleProfit: Double?
+    var freeBet: Bool?
+    var maxWinning: Double?
+
+    var selections: [BetslipPlaceEntry]?
 
     enum CodingKeys: String, CodingKey {
-        case betSucceed = "success"
         case betId = "betId"
+        case betSucceed = "success"
         case errorCode = "errorCode"
         case errorMessage = "errorMessage"
-        case selections
+
+        case totalPriceValue = "totalPriceValue"
+        case oddsValidationType = "oddsValidationType"
+        case maxWinningNetto = "maxWinningNetto"
+        case totalStakeTax = "totalStakeTax"
+        case basePossibleProfit = "basePossibleProfit"
+        case amount = "amount"
+        case maxWinningTax = "maxWinningTax"
+        case terminalType = "terminalType"
+        case freeBetAmount = "freeBetAmount"
+        case minStake = "minStake"
+        case numberOfSelections = "numberOfSelections"
+        case bonusBetAmount = "bonusBetAmount"
+        case maxStake = "maxStake"
+        case type = "type"
+        case totalStakeNetto = "totalStakeNetto"
+        case eachWay = "eachWay"
+        case baseWinning = "baseWinning"
+        case possibleProfit = "possibleProfit"
+        case freeBet = "freeBet"
+        case maxWinning = "maxWinning"
+
+        case selections = "selections"
     }
 }
+
+struct BetslipPlaceEntry: Codable {
+    let id: String
+    let outcomeId: String?
+    let eventId: String?
+    let priceValue: Double?
+
+    enum CodingKeys: String, CodingKey {
+        case id = "bettingOfferId"
+        case priceValue = "priceValue"
+        case eventId = "eventId"
+        case outcomeId = "outcomeId"
+    }
+
+}
+

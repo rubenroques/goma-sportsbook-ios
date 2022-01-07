@@ -17,7 +17,9 @@ protocol SportsbookTarget {
     static var environmentType: EnvironmentType { get }
 
     static var gomaGamingHost: String { get }
-    static var gomaGamingAuthEndpoint: String { get }
+
+    static var gomaGamingAnonymousAuthEndpoint: String { get }
+    static var gomaGamingLoggedAuthEndpoint: String { get }
 
     static var firebaseDatabaseURL: String { get }
 

@@ -488,7 +488,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         else {
             fatalError()
         }
-        headerView.sectionTitleLabel.text = "All Live Events"
+        headerView.sectionTitleLabel.text = localized("string_all_live_events")
         return headerView
     }
 

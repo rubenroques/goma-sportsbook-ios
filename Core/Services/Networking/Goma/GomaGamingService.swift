@@ -46,10 +46,6 @@ extension GomaGamingService: Endpoint {
             return "/api/betting/\(apiVersion)/betslip/suggestions"
         case .favorites:
             return "/api/favorites/\(apiVersion)"
-//        case .xpto, .foo:
-//            return "/api/v1/abcd"
-//        default:
-//            return ""
         }
     }
 
@@ -62,13 +58,6 @@ extension GomaGamingService: Endpoint {
                     URLQueryItem(name: "lng", value: longitude)]
         case .settings, .simpleRegister, .modalPopUpDetails, .login, .suggestedBets, .favorites:
             return nil
-            
-//        case .getPredictionSubmit(let userId, let userName, let eventId, let prediction, let message):
-//            return [URLQueryItem(name: "userId", value: userId),
-//                    URLQueryItem(name: "userName", value: userName),
-//                    URLQueryItem(name: "tip", value: prediction),
-//                    URLQueryItem(name: "id", value: eventId),
-//                    URLQueryItem(name: "message", value: message)]
         }
     }
 
@@ -97,10 +86,6 @@ extension GomaGamingService: Endpoint {
             return .get
         case .simpleRegister, .login, .favorites:
             return .post
-//        case .xpto, .foo, .bar:
-//            return .post
-//        default:
-//            return .get
         }
     }
 
