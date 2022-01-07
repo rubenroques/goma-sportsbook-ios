@@ -29,11 +29,22 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
     }
     var sport: EveryMatrix.Discipline?
     private var cancellable = Set<AnyCancellable>()
+    private var currentLiveSportsPublisher: AnyCancellable?
+    var viewModel: SportSelectionCollectionViewCellViewModel?
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        commonInit()
+        self.commonInit()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.iconImageView.image = nil
+        self.nameLabel.text = ""
+        self.sport = nil
+        self.eventCountLabel.text = ""
+        self.currentLiveSportsPublisher?.cancel()
     }
 
     func commonInit() {
@@ -56,35 +67,27 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
 
         eventCountView.isHidden = true
         eventCountView.layer.cornerRadius = eventCountView.frame.size.width/2
+        eventCountView.backgroundColor = UIColor.App.redIndicator
+
+        eventCountLabel.font = AppFont.with(type: .semibold, size: 9)
     }
 
-    func setSport(sport: EveryMatrix.Discipline) {
-        self.sport = sport
-        nameLabel.text = sport.name
-        iconImageView.image = UIImage(named: "sport_type_icon_\(sport.id ?? "")")
-    }
+    func configureCell(viewModel: SportSelectionCollectionViewCellViewModel) {
 
-    func setLiveSportCount() {
-        if let sportId = self.sport?.id, let sportPublisher = Env.everyMatrixStorage.sportsLivePublisher[sportId] {
+        self.viewModel = viewModel
 
+        self.sport = viewModel.sport
+
+        nameLabel.text = viewModel.sportName
+
+        iconImageView.image = UIImage(named: viewModel.sportIconName ?? "")
+
+        self.viewModel?.updateLiveEvents = {
             self.eventCountView.isHidden = false
 
-            sportPublisher.receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] sport in
-                    if let sportCount = sport.numberOfLiveEvents {
-                        self?.eventCountLabel.text = "\(sportCount)"
-                    }
+            self.eventCountLabel.text = self.viewModel?.numberOfLiveEvents
 
-                })
-                .store(in: &cancellable)
         }
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        iconImageView.image = nil
-        nameLabel.text = ""
-        sport = nil
     }
 
 }

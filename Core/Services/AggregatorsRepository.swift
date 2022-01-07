@@ -19,7 +19,6 @@ enum AggregatorListType {
     case cashouts
     case matchDetails
     case suggestedMatches
-    case sports
 }
 
 class AggregatorsRepository {
@@ -52,9 +51,6 @@ class AggregatorsRepository {
 
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     var matchesInfoForMatch: [String: Set<String> ] = [:]
-
-    var sportsLive: [String: EveryMatrix.Discipline] = [:]
-    var sportsLivePublisher: [String: CurrentValueSubject<EveryMatrix.Discipline, Never>] = [:]
 
     func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
 
@@ -158,8 +154,6 @@ class AggregatorsRepository {
                 () // print("Events aren't processed")
             case .eventPartScore:
                 ()
-            case .sport:
-               ()
             case .unknown:
                 () // print("Unknown type ignored")
             }
@@ -226,8 +220,6 @@ class AggregatorsRepository {
                         matchesInfoForMatch[matchId] = newSet
                     }
                 }
-            case .sportUpdate:
-                ()
             case .unknown:
                 print("uknown")
             }
@@ -381,45 +373,6 @@ class AggregatorsRepository {
     func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
         for tournament in tournaments {
             self.popularTournaments[tournament.id] = tournament
-        }
-    }
-
-    func processSportsAggregator(_ aggregator: EveryMatrix.Aggregator) {
-
-        for content in aggregator.content ?? [] {
-
-            switch content {
-
-            case .sport(let sport):
-                if let sportId = sport.id {
-                    self.sportsLive[sportId] = sport
-                    self.sportsLivePublisher[sportId] = .init(sport)
-                }
-            default:
-                ()
-            }
-        }
-    }
-
-    func processContentUpdateSportsAggregator(_ aggregator: EveryMatrix.Aggregator) {
-        guard
-            let contentUpdates = aggregator.contentUpdates
-        else {
-            return
-        }
-
-        for update in contentUpdates {
-            switch update {
-            case .sportUpdate(let id, let numberOfLiveEvents):
-                if let publisher = sportsLivePublisher[id] {
-
-                    let sport = publisher.value
-                    let updatedSport = sport.sportUpdated(numberOfLiveEvents: numberOfLiveEvents)
-                    publisher.send(updatedSport)
-                }
-            default:
-                ()
-            }
         }
     }
     

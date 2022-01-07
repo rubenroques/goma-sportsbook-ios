@@ -200,8 +200,11 @@ class LiveEventsViewController: UIViewController {
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
 
-        self.liveEventsCountView.isHidden = true
-        self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
+        liveEventsCountView.isHidden = true
+        liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
+        liveEventsCountView.backgroundColor = UIColor.App.redIndicator
+
+        liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
         
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear
@@ -312,7 +315,7 @@ class LiveEventsViewController: UIViewController {
     }
 
     @objc func handleSportsSelectionTap() {
-        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType, isLiveSport: true)
+        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType, isLiveSport: true, sportsRepository: self.viewModel.sportsRepository)
         sportSelectionVC.delegate = self
         self.present(sportSelectionVC, animated: true, completion: nil)
     }

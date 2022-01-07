@@ -28,6 +28,7 @@ class LiveEventsViewModel: NSObject {
 
     var isLoading: AnyPublisher<Bool, Never>
 
+    var sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()
     var selectedSportNumberofLiveEvents: Int = 0
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
@@ -95,7 +96,7 @@ class LiveEventsViewModel: NSObject {
         self.fetchBanners()
         self.fetchAllMatches()
 
-        if let sportPublisher = Env.everyMatrixStorage.sportsLivePublisher[self.selectedSportId.rawValue] {
+        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSportId.rawValue] {
 
             self.currentLiveSportsPublisher = sportPublisher
                 .receive(on: DispatchQueue.main)
@@ -119,7 +120,7 @@ class LiveEventsViewModel: NSObject {
         self.liveSportsPublisher = nil
 
         self.liveSportsPublisher = TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
@@ -146,10 +147,10 @@ class LiveEventsViewModel: NSObject {
             })
     }
 
-    func setupSportsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processSportsAggregator(aggregator)
+    func setupSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {
+        sportsRepository.processSportsAggregator(aggregator)
 
-        if let sportPublisher = Env.everyMatrixStorage.sportsLivePublisher[self.selectedSportId.rawValue] {
+        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSportId.rawValue] {
 
             self.currentLiveSportsPublisher = sportPublisher
                 .receive(on: DispatchQueue.main)
@@ -160,8 +161,10 @@ class LiveEventsViewModel: NSObject {
         }
     }
 
-    func updateSportsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processContentUpdateSportsAggregator(aggregator)
+    func updateSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {
+        sportsRepository.processContentUpdateSportsAggregator(aggregator)
+
+        
     }
 
     func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {

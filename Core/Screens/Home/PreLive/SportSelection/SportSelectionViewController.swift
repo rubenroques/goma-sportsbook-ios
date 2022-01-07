@@ -26,13 +26,15 @@ class SportSelectionViewController: UIViewController {
     var fullSportsData: [EveryMatrix.Discipline] = []
     var defaultSport: SportType
     var isLiveSport: Bool
+    var sportsRepository: SportsAggregatorRepository
 
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
     
-    init(defaultSport: SportType, isLiveSport: Bool = false) {
+    init(defaultSport: SportType, isLiveSport: Bool = false, sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()) {
         self.defaultSport = defaultSport
         self.isLiveSport = isLiveSport
+        self.sportsRepository = sportsRepository
         super.init(nibName: "SportSelectionViewController", bundle: nil)
     }
 
@@ -144,15 +146,32 @@ class SportSelectionViewController: UIViewController {
     func getSportsLive() {
         self.activityIndicatorView.isHidden = false
 
-        self.sportsData = Array(Env.everyMatrixStorage.sportsLive.values)
+        self.sportsData = Array(self.sportsRepository.sportsLive.values)
         let sortedArray = self.sportsData.sorted(by: {$0.id?.localizedStandardCompare($1.id ?? "1") == .orderedAscending})
         self.sportsData = sortedArray
 
         self.fullSportsData = self.sportsData
 
         self.collectionView.reloadData()
+
+        self.sportsRepository.changedSportsLivePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: {[weak self] _ in
+                self?.updateSportsLiveCollection()
+            })
+            .store(in: &cancellable)
         self.activityIndicatorView.isHidden = true
 
+    }
+
+    func updateSportsLiveCollection() {
+        self.sportsData = Array(self.sportsRepository.sportsLive.values)
+        let sortedArray = self.sportsData.sorted(by: {$0.id?.localizedStandardCompare($1.id ?? "1") == .orderedAscending})
+        self.sportsData = sortedArray
+
+        self.fullSportsData = self.sportsData
+
+        self.collectionView.reloadData()
     }
 
     @IBAction private func cancelAction() {
@@ -173,13 +192,17 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         else {
             fatalError()
         }
-        cell.setSport(sport: sportsData[indexPath.row])
-        if cell.sport?.id == self.defaultSport.typeId {
+
+        let viewModel = SportSelectionCollectionViewCellViewModel(sport: sportsData[indexPath.row])
+
+        cell.configureCell(viewModel: viewModel)
+
+        if cell.viewModel?.sport.id == self.defaultSport.typeId {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
         }
         if isLiveSport {
-            cell.setLiveSportCount()
+            cell.viewModel?.setSportPublisher(sportsRepository: self.sportsRepository)
         }
         return cell
     }
