@@ -200,6 +200,10 @@ class SubmitedBetslipViewController: UIViewController {
         self.tableView.endUpdates()
     }
 
+    func reloadTableViewAction() {
+        self.tableView.reloadData()
+    }
+
 }
 
 extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSource {
@@ -223,25 +227,12 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
 
         let viewModel = SubmitedBetTableViewCellViewModel(ticket: entry)
 
-        //cell.configureWithBetHistoryEntry(entry)
         cell.configureWithViewModel(viewModel: viewModel)
-        print("CASHOUT CELL: \(indexPath.row)")
-        // TODO: Code Review -
-        //let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
 
-//        if let betCashout = cashoutsPublisher[entry.betId].value {
-//            cell.setupCashout(cashout: betCashout.value)
-//            cell.cashoutAction = {
-//                self.submitCashout(betCashout: betCashout.value)
-//            }
-//            cell.infoAction = {
-//                self.showCashoutInfo()
-//            }
-//        }
         cell.needsRedraw = { [weak self] in
             if let betCashout = cell.viewModel?.cashout {
-                cell.cashoutAction = {
-                    self?.submitCashout(betCashout: betCashout)
+                cell.cashoutAction = { value in
+                    self?.submitCashout(betCashout: value)
                 }
                 cell.infoAction = {
                     self?.showCashoutInfo()
@@ -250,6 +241,22 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
                 self?.redrawTableViewAction()
             }
         }
+
+        cell.viewModel?.createdCashout
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadTableViewAction()
+                self?.redrawTableViewAction()
+            })
+            .store(in: &cancellables)
+
+        cell.viewModel?.deletedCashout
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadTableViewAction()
+                self?.redrawTableViewAction()
+            })
+            .store(in: &cancellables)
         
         return cell
     }

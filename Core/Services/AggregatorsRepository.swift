@@ -222,6 +222,10 @@ class AggregatorsRepository {
                 }
             case .unknown:
                 print("uknown")
+            case .cashoutCreate:
+                ()
+            case .cashoutDelete:
+                ()
             }
         }
     }
