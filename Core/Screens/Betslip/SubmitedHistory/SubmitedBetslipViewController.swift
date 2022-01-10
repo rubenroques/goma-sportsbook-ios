@@ -80,9 +80,9 @@ class SubmitedBetslipViewController: UIViewController {
                 print(completion)
             } receiveValue: { betHistoryEntry in
                 self.betHistoryEntries = betHistoryEntry
-                for bet in self.betHistoryEntries {
-                    self.requestCashout(betHistoryEntry: bet)
-                }
+//                for bet in self.betHistoryEntries {
+//                    self.requestCashout(betHistoryEntry: bet)
+//                }
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -102,6 +102,7 @@ class SubmitedBetslipViewController: UIViewController {
 
         TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -124,7 +125,7 @@ class SubmitedBetslipViewController: UIViewController {
 
                     print("UPDATE CASHOUT: \(Env.everyMatrixStorage.cashoutsPublisher.values)")
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
             .store(in: &cancellables)
@@ -133,22 +134,17 @@ class SubmitedBetslipViewController: UIViewController {
 
     private func setupCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .cashouts,
-                                                 shouldClear: true)
+                                                 shouldClear: false)
 
-        // TODO: Code Review -
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+        self.tableView.reloadData()
 
     }
 
     private func updateCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
 
-        // TODO: Code Review -
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+        self.tableView.reloadData()
+
     }
 
     func submitCashout(betCashout: EveryMatrix.Cashout) {
@@ -163,8 +159,7 @@ class SubmitedBetslipViewController: UIViewController {
 
             let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
 
-            // TODO: Code Review - se faz store não precisa guardar a variavel, muito menos numa variavel local que é desalocada no fim da func
-            let request = TSManager.shared
+            TSManager.shared
                 .getModel(router: route, decodingType: CashoutSubmission.self)
                 .sink(receiveCompletion: { _ in
 
@@ -200,6 +195,11 @@ class SubmitedBetslipViewController: UIViewController {
 
     }
 
+    func redrawTableViewAction() {
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
+    }
+
 }
 
 extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSource {
@@ -221,20 +221,36 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
             return UITableViewCell()
         }
 
-        cell.configureWithBetHistoryEntry(entry)
+        let viewModel = SubmitedBetTableViewCellViewModel(ticket: entry)
 
+        //cell.configureWithBetHistoryEntry(entry)
+        cell.configureWithViewModel(viewModel: viewModel)
+        print("CASHOUT CELL: \(indexPath.row)")
         // TODO: Code Review -
-        let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
+        //let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
 
-        if let betCashout = cashoutsPublisher[entry.betId].value {
-            cell.setupCashout(cashout: betCashout.value)
-            cell.cashoutAction = {
-                self.submitCashout(betCashout: betCashout.value)
-            }
-            cell.infoAction = {
-                self.showCashoutInfo()
+//        if let betCashout = cashoutsPublisher[entry.betId].value {
+//            cell.setupCashout(cashout: betCashout.value)
+//            cell.cashoutAction = {
+//                self.submitCashout(betCashout: betCashout.value)
+//            }
+//            cell.infoAction = {
+//                self.showCashoutInfo()
+//            }
+//        }
+        cell.needsRedraw = { [weak self] in
+            if let betCashout = cell.viewModel?.cashout {
+                cell.cashoutAction = {
+                    self?.submitCashout(betCashout: betCashout)
+                }
+                cell.infoAction = {
+                    self?.showCashoutInfo()
+                }
+
+                self?.redrawTableViewAction()
             }
         }
+        
         return cell
     }
 

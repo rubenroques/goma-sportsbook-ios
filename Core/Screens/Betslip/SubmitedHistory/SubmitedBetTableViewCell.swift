@@ -43,9 +43,11 @@ class SubmitedBetTableViewCell: UITableViewCell {
     private var cancellables = Set<AnyCancellable>()
 
     var betHistoryEntry: BetHistoryEntry?
+    var viewModel: SubmitedBetTableViewCellViewModel?
 
     var cashoutAction: (() -> Void)?
     var infoAction: (() -> Void)?
+    var needsRedraw: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -114,6 +116,8 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.stackView.removeAllArrangedSubviews()
 
         self.cashoutValueLabel.text = "-.--"
+
+        self.viewModel = nil
     }
 
     func setupWithTheme() {
@@ -141,6 +145,61 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.cashoutValueLabel.textColor = UIColor.App.headingMain
         self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
         self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
+
+    }
+
+    func configureWithViewModel(viewModel: SubmitedBetTableViewCellViewModel) {
+
+        self.viewModel = viewModel
+
+        let betHistoryEntry = viewModel.ticket
+
+        self.oddValueLabel.text = "-.--"
+
+        if betHistoryEntry.type == "MULTIPLE" {
+            let betCount = betHistoryEntry.selections?.count ?? 1
+            self.betTypeLabel.text = "Multiple (\(betCount))"
+            self.oddBaseView.isHidden = true
+        }
+        else if betHistoryEntry.type == "SINGLE" {
+            self.betTypeLabel.text = "Simple"
+            self.oddBaseView.isHidden = true
+        }
+        else if betHistoryEntry.type == "SYSTEM" {
+            self.betTypeLabel.text = "System"
+            self.oddBaseView.isHidden = true
+        }
+
+        if let maxWinnings = betHistoryEntry.maxWinning {
+            self.possibleWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) ?? "-.--€"
+        }
+
+        if let betAmount = betHistoryEntry.amount {
+            self.betAmountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betAmount)) ?? "-.--€"
+        }
+
+        self.stackView.removeAllArrangedSubviews()
+
+        for selection in betHistoryEntry.selections ?? [] {
+            let submitedBetSelectionView = SubmitedBetSelectionView(betHistoryEntrySelection: selection)
+            self.stackView.addArrangedSubview(submitedBetSelectionView)
+            NSLayoutConstraint.activate([
+                submitedBetSelectionView.heightAnchor.constraint(equalToConstant: 88)
+            ])
+        }
+
+//        if let cashout = viewModel.cashout {
+//            self.setupCashout(cashout: cashout)
+//        }
+
+        viewModel.hasCashoutEnabled
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { enabled in
+                if enabled, let cashout = viewModel.cashout {
+                    self.setupCashout(cashout: cashout)
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -187,6 +246,7 @@ class SubmitedBetTableViewCell: UITableViewCell {
         guard let cashoutValue = cashout.value else {return}
         self.cashoutValueLabel.text = "\(cashoutValue)"
         self.cashoutView.isHidden = false
+        self.needsRedraw?()
     }
 
     @objc private func showPopover(sender: UITapGestureRecognizer) {

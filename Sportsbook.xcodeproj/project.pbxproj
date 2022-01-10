@@ -704,6 +704,8 @@
 		A99622A42788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */; };
 		A99622A627887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */; };
 		A99622A727887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */; };
+		A99622A9278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */; };
+		A99622AA278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -1232,6 +1234,7 @@
 		A996229F2788563F00ABDF97 /* SportsAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregator.swift; sourceTree = "<group>"; };
 		A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregatorRepository.swift; sourceTree = "<group>"; };
 		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
+		A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetTableViewCellViewModel.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
@@ -2043,6 +2046,7 @@
 				457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */,
 				457F497427383A2B0047169D /* SubmitedBetSelectionView.swift */,
 				457F497727383A350047169D /* SubmitedBetSelectionView.xib */,
+				A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */,
 			);
 			path = SubmitedHistory;
 			sourceTree = "<group>";
@@ -3553,6 +3557,7 @@
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
 				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
+				A99622A9278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				45936CAA270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A90D8AF5277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A626E6557000269B05 /* Location.swift in Sources */,
@@ -3864,6 +3869,7 @@
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
 				45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */,
+				A99622AA278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				45936CAB270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
