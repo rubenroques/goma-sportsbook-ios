@@ -54,6 +54,7 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
         self.selectedColor = UIColor.App.mainTint
 
         self.setupWithSelection(self.selectedType)
+        self.titleLabel.textColor = UIColor.App.headingMain
     }
 
     func setupWithTitle(_ title: String) {

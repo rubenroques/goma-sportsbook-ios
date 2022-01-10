@@ -79,6 +79,7 @@ class PersonalInfoViewController: UIViewController {
 
         headerLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 17)
         headerLabel.text = localized("string_personal_info")
+       
 
         editButton.setTitle(localized("string_save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
@@ -155,6 +156,7 @@ class PersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setViewColor(UIColor.App.mainBackground)
         titleHeaderTextFieldView.setViewBorderColor(UIColor.App.headerTextField)
 
+        print(titleHeaderTextFieldView.text)
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
         firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
         firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
@@ -207,6 +209,7 @@ class PersonalInfoViewController: UIViewController {
         bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
         bankIdHeaderTextFieldView.isDisabled = true
 
+        
     }
 
     private func setupPublishers() {

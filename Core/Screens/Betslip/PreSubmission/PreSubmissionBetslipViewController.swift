@@ -98,6 +98,8 @@ class PreSubmissionBetslipViewController: UIViewController {
     
     @IBOutlet weak var secondarySystemWinningsSeparatorView: UIView!
     
+    @IBOutlet weak var dontHaveSelectionsBetslipInfoLabel: UILabel!
+    @IBOutlet weak var hereAreYourSuggestedBetLabel: UILabel!
     
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
@@ -108,6 +110,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private var suggestedBetsActivityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
+    
     
     
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
@@ -767,6 +770,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.topSafeArea.backgroundColor = UIColor.App.mainBackground
         self.bottomSafeArea.backgroundColor = UIColor.App.contentBackground
 
+        //self.betSuggestedCollectionView.backgroundColor = UIColor.App.secondaryBackground
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.mainBackground
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
@@ -775,14 +779,15 @@ class PreSubmissionBetslipViewController: UIViewController {
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
         ])
-        
+        self.clearButton.titleLabel?.textColor = UIColor.App.headingMain
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App.headingMain
         self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: "Amount", attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
         ])
-        
+        self.dontHaveSelectionsBetslipInfoLabel.textColor = UIColor.App.headingMain
+        self.hereAreYourSuggestedBetLabel.textColor = UIColor.App.headingMain
         self.amountBaseView.backgroundColor = UIColor.App.secondaryBackground
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackground
@@ -801,7 +806,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         // self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
         self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-
+        self.placeBetButton.backgroundColor = UIColor.App.primaryButtonNormal
         self.plusOneButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)

@@ -21,10 +21,14 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var safeAreaBottomView: UIView!
     
-    @IBOutlet private weak var possibleEarningsLabel: UILabel!
-    @IBOutlet private weak var totalOddsLabel: UILabel!
-    @IBOutlet private weak var betsMadeLabel: UILabel!
-
+    @IBOutlet private weak var possibleEarningsValueLabel: UILabel!
+    @IBOutlet private weak var totalOddsValueLabel: UILabel!
+    @IBOutlet private weak var betsMadeValueLabel: UILabel!
+    
+    @IBOutlet weak var totalOddsLabel: UILabel!
+    @IBOutlet weak var possibleEarningsLabel: UILabel!
+    @IBOutlet weak var betsMadeLabel: UILabel!
+    
     var totalOddsValue: String
     var possibleEarningsValue: String
     var numberOfBets: Int
@@ -70,9 +74,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.possibleEarningsLabel.text = possibleEarningsValue
-        self.totalOddsLabel.text = totalOddsValue
-        self.betsMadeLabel.text = String(numberOfBets)
+        self.possibleEarningsValueLabel.text = possibleEarningsValue
+        self.totalOddsValueLabel.text = totalOddsValue
+        self.betsMadeValueLabel.text = String(numberOfBets)
 
         self.setupWithTheme()
     }
@@ -96,7 +100,12 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.safeAreaBottomView.backgroundColor = UIColor.App.mainBackground
         self.messageTitleLabel.textColor = UIColor.App.headingMain
         self.messageSubtitleLabel.textColor = UIColor.App.headingMain
-
+        self.betsMadeLabel.textColor = UIColor.App.headingMain
+        self.totalOddsLabel.textColor = UIColor.App.headingMain
+        self.possibleEarningsLabel.textColor = UIColor.App.headingMain
+        self.betsMadeValueLabel.textColor = UIColor.App.headingMain
+        self.totalOddsValueLabel.textColor = UIColor.App.headingMain
+        self.possibleEarningsValueLabel.textColor = UIColor.App.headingMain
         StyleHelper.styleButton(button: self.continueButton)
     }
 

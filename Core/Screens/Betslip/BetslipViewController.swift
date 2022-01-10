@@ -20,7 +20,8 @@ class BetslipViewController: UIViewController {
 
     @IBOutlet private weak var closeButton: UIButton!
     @IBOutlet private weak var tabsBaseView: UIView!
-
+    @IBOutlet weak var betsLabel: UILabel!
+    
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource
 
@@ -126,7 +127,12 @@ class BetslipViewController: UIViewController {
 
         self.tabViewController.sliderBarColor = UIColor.App.mainTint
         self.tabViewController.barColor = UIColor.App.mainBackground
-        self.tabViewController.textColor = .white
+        self.tabViewController.textColor = UIColor.App.headingMain
+      
+        
+        self.closeButton.titleLabel?.textColor = UIColor.App.headingMain
+        
+        self.betsLabel.textColor = UIColor.App.headingMain
 
     }
 
