@@ -252,6 +252,7 @@ class HomeViewController: UIViewController {
         profilePictureBaseView.addGestureRecognizer(profileTapGesture)
 
         accountValueLabel.text = localized("string_loading")
+        accountValueLabel.font = AppFont.with(type: .bold, size: 12)
 
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
         accountValueView.addGestureRecognizer(accountValueTapGesture)

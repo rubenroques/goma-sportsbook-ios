@@ -73,7 +73,7 @@ class BetslipViewController: UIViewController {
         self.accountValuePlusView.clipsToBounds = true
 
         let tapAccountValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapAccountValue(_:)))
-        self.accountValuePlusView.addGestureRecognizer(tapAccountValue)
+        self.accountInfoBaseView.addGestureRecognizer(tapAccountValue)
 
         self.accountValueLabel.text = "Loading"
 
