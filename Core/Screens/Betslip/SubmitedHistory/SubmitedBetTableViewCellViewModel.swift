@@ -46,7 +46,7 @@ class SubmitedBetTableViewCellViewModel {
                                                  betId: ticket.betId)
 
         self.cashoutAvailabilitySubscription = TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.CashoutAggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -110,7 +110,7 @@ class SubmitedBetTableViewCellViewModel {
                         }
                     }
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
 

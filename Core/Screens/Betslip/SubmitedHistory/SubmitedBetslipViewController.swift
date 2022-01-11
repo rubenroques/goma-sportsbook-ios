@@ -23,6 +23,9 @@ class SubmitedBetslipViewController: UIViewController {
     private var cashoutRegister: EndpointPublisherIdentifiable?
     private var cashoutPublisher: AnyCancellable?
 
+    //Cached view models
+    var cachedViewModels: [String: SubmitedBetTableViewCellViewModel] = [:]
+
     init() {
         super.init(nibName: "SubmitedBetslipViewController", bundle: nil)
         self.title = "My Bets"
@@ -195,6 +198,25 @@ class SubmitedBetslipViewController: UIViewController {
 
     }
 
+    func viewModel(forIndex index: Int) -> SubmitedBetTableViewCellViewModel? {
+        let ticket: BetHistoryEntry?
+
+        ticket = self.betHistoryEntries[safe: index]
+
+        guard let ticket = ticket else {
+            return nil
+        }
+
+        if let viewModel = cachedViewModels[ticket.betId] {
+            return viewModel
+        }
+        else {
+            let viewModel =  SubmitedBetTableViewCellViewModel(ticket: ticket)
+            cachedViewModels[ticket.betId] = viewModel
+            return viewModel
+        }
+    }
+
     func redrawTableViewAction() {
         self.tableView.beginUpdates()
         self.tableView.endUpdates()
@@ -220,12 +242,11 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
 
         guard
             let cell = tableView.dequeueCellType(SubmitedBetTableViewCell.self),
-            let entry = self.betHistoryEntries[safe: indexPath.row]
+            let entry = self.betHistoryEntries[safe: indexPath.row],
+            let viewModel = self.viewModel(forIndex: indexPath.row)
         else {
             return UITableViewCell()
         }
-
-        let viewModel = SubmitedBetTableViewCellViewModel(ticket: entry)
 
         cell.configureWithViewModel(viewModel: viewModel)
 

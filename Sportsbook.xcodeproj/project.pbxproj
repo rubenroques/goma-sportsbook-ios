@@ -706,6 +706,8 @@
 		A99622A727887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */; };
 		A99622A9278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */; };
 		A99622AA278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */; };
+		A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
+		A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -1235,6 +1237,7 @@
 		A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregatorRepository.swift; sourceTree = "<group>"; };
 		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetTableViewCellViewModel.swift; sourceTree = "<group>"; };
+		A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutAggregator.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
@@ -2821,6 +2824,7 @@
 			children = (
 				A9BCF44F27552851006DD528 /* Cashout.swift */,
 				A9BCF45527554E88006DD528 /* CashoutSubmission.swift */,
+				A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */,
 			);
 			path = Cashouts;
 			sourceTree = "<group>";
@@ -3542,6 +3546,7 @@
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
+				A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E38275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
@@ -3854,6 +3859,7 @@
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
+				A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E39275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
