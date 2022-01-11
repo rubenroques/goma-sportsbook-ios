@@ -78,7 +78,7 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         textLabel.text = "\(localized("string_check_email_text1")) \(emailUser) \(localized("string_check_email_text2"))"
         textLabel.numberOfLines = 0
 
-        openEmailButton.setTitle(localized("string_continue"), for: .normal)
+        openEmailButton.setTitle(localized("string_continue_"), for: .normal)
         openEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         resendEmailButton.setTitle(localized("string_resend_email"), for: .normal)
