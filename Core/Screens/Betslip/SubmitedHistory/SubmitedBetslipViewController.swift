@@ -14,7 +14,15 @@ class SubmitedBetslipViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var activityIndicatorBaseView: UIView!
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
-
+    @IBOutlet weak var emptyBetsBaseView: UIView!
+    @IBOutlet weak var dontHaveAnyTicketsLabel: UILabel!
+    @IBOutlet weak var makeSomeBetsLabel: UILabel!
+    @IBOutlet weak var popularGamesButton: UIButton!
+    
+    @IBOutlet weak var firstTextNoBetsLabel: UILabel!
+    @IBOutlet weak var secondTextNoBetsLabel: UILabel!
+    @IBOutlet weak var noBetsImage: UIImageView!
+    
     private var cancellables = Set<AnyCancellable>()
     private var betHistoryEntries: [BetHistoryEntry] = []
     // private var cashouts: [EveryMatrix.Cashout] = []
@@ -47,7 +55,20 @@ class SubmitedBetslipViewController: UIViewController {
 
         self.activityIndicatorBaseView.isHidden = true
         self.view.bringSubviewToFront(self.activityIndicatorBaseView)
-
+        self.view.bringSubviewToFront(emptyBetsBaseView)
+        self.emptyBetsBaseView.isHidden = true
+        
+        
+        if let userSession = UserSessionStore.loggedUserSession() {
+            self.emptyBetsBaseView.isHidden = true
+        }else{
+            self.emptyBetsBaseView.isHidden = false
+            self.firstTextNoBetsLabel.text = "You aren't logged in!"
+            self.secondTextNoBetsLabel.text = "You need to be logged in to be able to see your tickets"
+           
+            self.popularGamesButton.setTitle("Login", for: .normal)
+            self.noBetsImage.image = UIImage(named: "no_internet_icon")
+        }
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -65,7 +86,12 @@ class SubmitedBetslipViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.mainBackground
         self.tableView.backgroundColor = UIColor.App.mainBackground
         self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackground
-
+        self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
+        
+        self.dontHaveAnyTicketsLabel.textColor = UIColor.App.headingMain
+        self.makeSomeBetsLabel.textColor = UIColor.App.headingMain
+        self.popularGamesButton.titleLabel?.textColor = UIColor.App.headingMain
+        self.popularGamesButton.backgroundColor = UIColor.App.primaryButtonNormal
     }
 
     private func requestHistory() {
@@ -79,6 +105,12 @@ class SubmitedBetslipViewController: UIViewController {
             .sink { completion in
                 print(completion)
             } receiveValue: { betHistoryEntry in
+                if betHistoryEntry.isEmpty {
+                    self.emptyBetsBaseView.isHidden = false
+                    self.popularGamesButton.isHidden = true
+                }else{
+                    self.emptyBetsBaseView.isHidden = true
+                }
                 self.betHistoryEntries = betHistoryEntry
                 for bet in self.betHistoryEntries {
                     self.requestCashout(betHistoryEntry: bet)

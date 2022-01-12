@@ -111,6 +111,8 @@ class PreLiveEventsViewModel: NSObject {
     private var todayMatchesPage = 1
     private var favoriteMatchesCount = 10
     private var favoriteMatchesPage = 1
+    
+    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init(selectedSportId: SportType) {
         self.selectedSportId = selectedSportId
@@ -202,6 +204,12 @@ class PreLiveEventsViewModel: NSObject {
 
         self.isLoadingCompetitions.send(false)
         self.isLoadingMyGamesList.send(false)
+        
+        if let userSession = UserSessionStore.loggedUserSession() {
+            self.isUserLoggedPublisher.send(true)
+        }else{
+            self.isUserLoggedPublisher.send(false)
+        }
     }
 
     func setMatchListType(_ matchListType: MatchListType) {
@@ -925,7 +933,7 @@ class PreLiveEventsViewModel: NSObject {
             })
 
     }
-
+    
     private func fetchFavoriteMatches() {
 
         if let favoriteMatchesRegister = favoriteMatchesRegister {

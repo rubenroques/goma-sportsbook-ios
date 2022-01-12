@@ -134,6 +134,7 @@ class PreLiveEventsViewController: UIViewController {
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
+
     }
 
     override func viewDidAppear(_ animated: Bool) {

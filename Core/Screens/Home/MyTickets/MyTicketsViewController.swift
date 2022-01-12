@@ -14,9 +14,20 @@ class MyTicketsViewController: UIViewController {
     @IBOutlet private var ticketTypesSeparatorLineView: UIView!
     @IBOutlet private var ticketsTableView: UITableView!
 
+
     @IBOutlet weak var loadingIndicatorView: UIActivityIndicatorView!
     private let refreshControl = UIRefreshControl()
-
+    @IBOutlet weak var emptyBaseView: UIView!
+    
+    @IBOutlet weak var firstTextFieldLabel: UILabel!
+    
+  
+    @IBOutlet weak var secondTextFieldLabel: UILabel!
+    
+    @IBOutlet weak var noBetsButton: UIButton!
+    
+    @IBOutlet weak var noBetsImage: UIImageView!
+    
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
         betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
@@ -70,7 +81,7 @@ class MyTicketsViewController: UIViewController {
 
     init() {
         self.viewModel = MyTicketsViewModel()
-
+        
         super.init(nibName: "MyTicketsViewController", bundle: nil)
     }
 
@@ -83,7 +94,7 @@ class MyTicketsViewController: UIViewController {
         super.viewDidLoad()
 
         self.loadingBaseView.isHidden = true
-
+        self.emptyBaseView.isHidden = true
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
@@ -133,7 +144,7 @@ class MyTicketsViewController: UIViewController {
 
         self.viewModel.isLoading
             .sink(receiveValue: { [weak self] isLoading in
-
+                
                 if !isLoading {
                     self?.loadingIndicatorView.stopAnimating()
                     self?.refreshControl.endRefreshing()
@@ -145,10 +156,56 @@ class MyTicketsViewController: UIViewController {
 
             })
             .store(in: &cancellables)
-
+        
+        self.viewModel.isUserLoggedInPublisher
+            .sink(receiveValue: { [weak self] isUserLoggedIn in
+                if isUserLoggedIn {
+                   self?.emptyBaseView.isHidden = true
+                }else{
+                    self?.emptyBaseView.isHidden = false
+                    self?.firstTextFieldLabel.text = "You aren't logged in!"
+                    self?.secondTextFieldLabel.text = "You need to be logged in to be able to see your tickets"
+                   
+                    self?.noBetsButton.setTitle("Login", for: .normal)
+                    self?.noBetsButton.isHidden = false
+                    self?.noBetsImage.image = UIImage(named: "no_internet_icon")
+                    
+                }
+            })
+            .store(in: &cancellables)
+        
+        
+        Publishers.CombineLatest(self.viewModel.isLoading, self.viewModel.isTicketsEmptyPublisher)
+            .map({ [weak self] isCursorLoading, isTicketsEmpty -> Bool in
+                print(isTicketsEmpty)
+                if isCursorLoading, !isTicketsEmpty{
+                    return true
+                }else if isCursorLoading, isTicketsEmpty{
+                    return true
+                }else if !isCursorLoading, isTicketsEmpty{
+                    return false
+                }else{
+                    return true
+                }
+            })
+            .sink(receiveValue: { [weak self] showEmptyBaseView in
+                self?.emptyBaseView.isHidden = showEmptyBaseView
+                if let userIsLoggedIn = self?.viewModel.isUserLoggedInPublisher.value {
+                    if userIsLoggedIn {
+                        self?.noBetsButton.isHidden = true
+                    }else{
+                        self?.noBetsButton.isHidden = false
+                    }
+                }
+                
+            })
+            .store(in: &cancellables)
+            
+        
+        
         self.viewModel.reloadTableViewAction = { [weak self] in
             self?.ticketsTableView.reloadData()
-
+        
         }
 
         self.viewModel.redrawTableViewAction = { [weak self] in
@@ -161,9 +218,10 @@ class MyTicketsViewController: UIViewController {
                 self.viewModel.refresh()
             }
             .store(in: &cancellables)
-
+        
         self.connectPublishers()
         self.setupWithTheme()
+        
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -186,7 +244,7 @@ class MyTicketsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground
 
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.contentBackground
+        self.ticketTypesCollectionView.backgroundColor = UIColor.App.mainBackground
 
         self.ticketTypesSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.ticketTypesSeparatorLineView.alpha = 0.5
@@ -196,7 +254,9 @@ class MyTicketsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.mainTint
-
+        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
+        self.firstTextFieldLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldLabel.textColor = UIColor.App.headingMain
     }
 
     func connectPublishers() {
@@ -226,6 +286,12 @@ class MyTicketsViewController: UIViewController {
         self.viewModel.refresh()
     }
 
+}
+extension MyTicketsViewController{
+    @IBAction private func didTapLoginButton() {
+        let loginViewController = Router.navigationController(with: LoginViewController())
+        self.present(loginViewController, animated: true, completion: nil)
+    }
 }
 
 extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -280,6 +346,7 @@ extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDat
         }
 
         self.ticketTypesCollectionView.reloadData()
+        
         self.ticketTypesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 

@@ -97,8 +97,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet weak var secondarySystemOddsValueLabel: UILabel!
     
     @IBOutlet weak var secondarySystemWinningsSeparatorView: UIView!
-    
-    
+
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
     @IBOutlet private weak var loadingBaseView: UIView!

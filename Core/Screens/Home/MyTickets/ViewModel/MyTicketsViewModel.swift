@@ -13,6 +13,9 @@ class MyTicketsViewModel: NSObject {
 
     private var selectedMyTicketsTypeIndex: Int = 0
     var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.resolved)
+    var isTicketsEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isUserLoggedInPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    
     enum MyTicketsType: Int {
         case resolved = 0
         case opened = 1
@@ -64,9 +67,17 @@ class MyTicketsViewModel: NSObject {
             self?.reloadTableView()
         }
         .store(in: &cancellables)
-
+        
+        if  UserSessionStore.isUserLogged() {
+            self.isUserLoggedInPublisher.send(true)
+        }else{
+            self.isUserLoggedInPublisher.send(false)
+            self.isTicketsEmptyPublisher.send(true)
+        }
+    
         self.loadLocations()
         self.initialLoadMyTickets()
+        
     }
 
     func setMyTicketsType(_ type: MyTicketsType) {
@@ -123,6 +134,7 @@ class MyTicketsViewModel: NSObject {
                 if case .resolved = self.myTicketsTypePublisher.value {
                     self.reloadTableView()
                 }
+                self.isTicketsEmptyPublisher.send(self.isEmpty())
             })
             .store(in: &cancellables)
     }
@@ -143,6 +155,7 @@ class MyTicketsViewModel: NSObject {
                 if case .opened = self.myTicketsTypePublisher.value {
                     self.reloadTableView()
                 }
+                self.isTicketsEmptyPublisher.send(self.isEmpty())
             })
             .store(in: &cancellables)
 
@@ -164,6 +177,7 @@ class MyTicketsViewModel: NSObject {
                 if case .won = self.myTicketsTypePublisher.value {
                     self.reloadTableView()
                 }
+                self.isTicketsEmptyPublisher.send(self.isEmpty())
             })
             .store(in: &cancellables)
 
@@ -203,6 +217,18 @@ class MyTicketsViewModel: NSObject {
             return openedMyTickets.value.count
         case .won:
             return wonMyTickets.value.count
+        }
+    }
+    
+    
+    func isEmpty() -> Bool {
+        switch myTicketsTypePublisher.value {
+        case .resolved:
+            return resolvedMyTickets.value.isEmpty
+        case .opened:
+            return openedMyTickets.value.isEmpty
+        case .won:
+            return wonMyTickets.value.isEmpty
         }
     }
 

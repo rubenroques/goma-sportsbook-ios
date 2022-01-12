@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Gilroy-Bold.ttf">
+            <string>Gilroy-Bold</string>
+        </array>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MyTicketsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="emptyBaseView" destination="GIT-G2-MgX" id="38n-g5-PmX"/>
+                <outlet property="firstTextFieldLabel" destination="NSD-he-oH5" id="h91-CN-bD1"/>
                 <outlet property="loadingBaseView" destination="P3q-Kh-mfv" id="Anb-Ki-H9J"/>
                 <outlet property="loadingIndicatorView" destination="BiE-rg-Q5X" id="wWk-3B-3dM"/>
                 <outlet property="loadingView" destination="yS4-Nl-68V" id="JIF-sc-qCm"/>
+                <outlet property="noBetsButton" destination="9QP-4d-L0p" id="3OZ-Od-c0K"/>
+                <outlet property="noBetsImage" destination="Zr1-IX-MMC" id="WCq-0w-PGf"/>
+                <outlet property="secondTextFieldLabel" destination="wJu-lK-SDR" id="aWn-7L-zVP"/>
                 <outlet property="ticketTypesCollectionView" destination="9c3-B6-Qac" id="Lcs-P3-ie6"/>
                 <outlet property="ticketTypesSeparatorLineView" destination="NX1-kb-QJi" id="sf5-qS-eas"/>
                 <outlet property="ticketsTableView" destination="AZQ-85-hF6" id="Cqz-sF-rjl"/>
@@ -67,6 +78,50 @@
                     <rect key="frame" x="193" y="263.5" width="37" height="37"/>
                     <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </activityIndicatorView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GIT-G2-MgX">
+                    <rect key="frame" x="0.0" y="70" width="423" height="460"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="You haven't made a bet yet, it's time to bet on your favourites." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJu-lK-SDR">
+                            <rect key="frame" x="10.5" y="261" width="402" height="14"/>
+                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There's no tickets here!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NSD-he-oH5">
+                            <rect key="frame" x="106" y="229" width="211" height="20"/>
+                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_content_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Zr1-IX-MMC">
+                            <rect key="frame" x="131" y="50" width="161" height="161"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9QP-4d-L0p">
+                            <rect key="frame" x="30" y="325" width="363" height="50"/>
+                            <color key="backgroundColor" name="mainTintColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="Ub4-4b-swD"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
+                            <state key="normal" title="Go to popular games"/>
+                            <connections>
+                                <action selector="didTapLoginButton" destination="-1" eventType="touchUpInside" id="iyl-LB-BBc"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="wJu-lK-SDR" firstAttribute="top" secondItem="NSD-he-oH5" secondAttribute="bottom" constant="12" id="1mg-Nh-sDC"/>
+                        <constraint firstItem="Zr1-IX-MMC" firstAttribute="top" secondItem="GIT-G2-MgX" secondAttribute="top" constant="50" id="E2e-VN-G0z"/>
+                        <constraint firstItem="wJu-lK-SDR" firstAttribute="centerX" secondItem="GIT-G2-MgX" secondAttribute="centerX" id="IHp-Y5-kEw"/>
+                        <constraint firstItem="Zr1-IX-MMC" firstAttribute="centerX" secondItem="GIT-G2-MgX" secondAttribute="centerX" id="REY-zB-Yn5"/>
+                        <constraint firstItem="NSD-he-oH5" firstAttribute="centerX" secondItem="GIT-G2-MgX" secondAttribute="centerX" id="Y9s-M9-AeF"/>
+                        <constraint firstAttribute="trailing" secondItem="9QP-4d-L0p" secondAttribute="trailing" constant="30" id="d7N-OY-GpI"/>
+                        <constraint firstItem="9QP-4d-L0p" firstAttribute="leading" secondItem="GIT-G2-MgX" secondAttribute="leading" constant="30" id="gep-8l-y18"/>
+                        <constraint firstItem="NSD-he-oH5" firstAttribute="top" secondItem="Zr1-IX-MMC" secondAttribute="bottom" constant="18" id="tV7-b5-laX"/>
+                        <constraint firstItem="9QP-4d-L0p" firstAttribute="top" secondItem="wJu-lK-SDR" secondAttribute="bottom" constant="50" id="vVQ-eW-ZwK"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -85,14 +140,22 @@
                 <constraint firstItem="9c3-B6-Qac" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="gsL-gw-aw4"/>
                 <constraint firstItem="P3q-Kh-mfv" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="gvj-iW-9GD"/>
                 <constraint firstItem="NX1-kb-QJi" firstAttribute="leading" secondItem="9c3-B6-Qac" secondAttribute="leading" id="iX8-Pa-TIx"/>
+                <constraint firstItem="GIT-G2-MgX" firstAttribute="top" secondItem="9c3-B6-Qac" secondAttribute="bottom" id="jvV-05-voI"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="GIT-G2-MgX" secondAttribute="bottom" id="kxH-o0-Zbm"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="GIT-G2-MgX" secondAttribute="trailing" id="qcB-sw-kCR"/>
                 <constraint firstItem="BiE-rg-Q5X" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="utu-F1-qEt"/>
                 <constraint firstAttribute="bottom" secondItem="AZQ-85-hF6" secondAttribute="bottom" id="ynO-Q2-PP4"/>
+                <constraint firstItem="GIT-G2-MgX" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="zPp-qS-VVY"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="131" y="-23"/>
+            <point key="canvasLocation" x="129.71014492753625" y="-23.4375"/>
         </view>
     </objects>
     <resources>
+        <image name="no_content_icon" width="161" height="161"/>
+        <namedColor name="mainTintColor">
+            <color red="0.14901960784313725" green="0.41568627450980394" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
