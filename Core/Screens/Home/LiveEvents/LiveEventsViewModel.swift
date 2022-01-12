@@ -82,7 +82,7 @@ class LiveEventsViewModel: NSObject {
         self.allMatchesPage = 1
         self.allMatchesHasMorePages = true
 
-        self.fetchBanners()
+        //self.fetchBanners()
         self.fetchAllMatches()
     }
 
@@ -132,8 +132,6 @@ class LiveEventsViewModel: NSObject {
     private func updateContentList() {
 
         self.allMatchesViewModelDataSource.allMatches = filterAllMatches(with: self.homeFilterOptions, matches: self.allMatches)
-
-        self.allMatchesViewModelDataSource.banners = self.banners
 
         if self.allMatches.isNotEmpty, self.allMatches.count < (self.allMatchesCount * self.allMatchesPage) {
             self.allMatchesHasMorePages = false

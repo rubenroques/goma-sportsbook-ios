@@ -292,7 +292,7 @@ class LoginViewController: UIViewController {
     }
 
     func getProfileStatus() {
-        Env.everyMatrixAPIClient.getProfileStatus()
+        Env.everyMatrixClient.getProfileStatus()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
                 self.hideLoadingSpinner()
@@ -311,7 +311,7 @@ class LoginViewController: UIViewController {
             .sink(receiveCompletion: { _ in
 
             }, receiveValue: { value in
-                Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
+                Env.gomaNetworkClient.refreshAuthToken(token: value)
             })
             .store(in: &cancellables)
     }
@@ -377,6 +377,7 @@ extension LoginViewController {
         #if DEBUG
         self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
         self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
+        self.loginButton.isEnabled = true
         #endif
     }
 

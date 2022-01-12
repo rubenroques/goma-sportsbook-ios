@@ -121,7 +121,7 @@ class HomeViewController: UIViewController {
                 if let userSession = userSession {
                     self.screenState = .logged(user: userSession)
 
-                    Env.everyMatrixAPIClient.getUserMetadata()
+                    Env.everyMatrixClient.getUserMetadata()
                         .receive(on: DispatchQueue.main)
                         .eraseToAnyPublisher()
                         .sink { _ in
@@ -159,14 +159,14 @@ class HomeViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.everyMatrixAPIClient.getOperatorInfo()
-            .receive(on: DispatchQueue.main)
-            .sink { completed in
-                print("getOperatorInfo \(completed)")
-            } receiveValue: { operatorInfo in
-                print("getOperatorInfo \(operatorInfo)")
-            }
-            .store(in: &cancellables)
+//        Env.everyMatrixClient.getOperatorInfo()
+//            .receive(on: DispatchQueue.main)
+//            .sink { completed in
+//                print("getOperatorInfo \(completed)")
+//            } receiveValue: { operatorInfo in
+//                print("getOperatorInfo \(operatorInfo)")
+//            }
+//            .store(in: &cancellables)
 
     }
 

@@ -1,40 +1,58 @@
-//
-//  EveryMatrixAPIClient.swift
-//  Sportsbook
-//
-//  Created by André Lascas on 01/09/2021.
-//
 
 import Foundation
 import Combine
+import Reachability
 
-class EveryMatrixAPIClient: ObservableObject {
+enum EveryMatrixServiceStatus {
+    case connected
+    case disconnected
+}
 
-    var manager: TSManager!
+class EveryMatrixServiceClient: ObservableObject {
+
+    var serviceStatusPublisher: CurrentValueSubject<EveryMatrixServiceStatus, Never> = .init(.disconnected)
 
     //
+    private var manager: TSManager!
     private var cancellable = Set<AnyCancellable>()
+
+    private let reachability = try! Reachability()
+    private var wasLostConnection = false
 
     init() {
         // The singleton init below is used to start up TS connection
         manager = TSManager.shared
 
-        NotificationCenter.default.publisher(for: .wampSocketConnected)
+        reachability.whenReachable = { [weak self] reachability in
+            if self?.wasLostConnection ?? false {
+                self?.connectTS()
+                self?.wasLostConnection = false
+            }
+        }
+
+        reachability.whenUnreachable = { [weak self] reachable in
+            self?.wasLostConnection = true
+        }
+
+
+        NotificationCenter.default.publisher(for: .sessionConnected)
             .sink { _ in
                 Logger.log("Socket connected: \(TSManager.shared.isConnected)")
+                self.serviceStatusPublisher.send(.connected)
             }
             .store(in: &cancellable)
 
-        NotificationCenter.default.publisher(for: .wampSocketDisconnected)
+        NotificationCenter.default.publisher(for: .sessionDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { _ in
+                self.serviceStatusPublisher.send(.disconnected)
                 self.connectTS()
             }
             .store(in: &cancellable)
     }
 
     func connectTS() {
-        debugPrint("***ShouldReconnectTS")
+        Logger.log("***ShouldReconnectTS")
         TSManager.shared.destroySwampSession()
         TSManager.destroySharedInstance()
         manager = TSManager.shared

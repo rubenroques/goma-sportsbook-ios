@@ -39,6 +39,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
 
         // FCM
+        Messaging.messaging().delegate = self
+
         UNUserNotificationCenter.current().delegate = self
 
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
@@ -49,7 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
         application.registerForRemoteNotifications()
 
-        Messaging.messaging().delegate = self
 
         self.window = UIWindow()
 
@@ -68,6 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("FCM token: \(fcmToken ?? "[Token Error]")")
+        Env.deviceFCMToken = fcmToken ?? ""
     }
 
 
@@ -76,7 +78,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        Env.everyMatrixAPIClient.connectTS()
+        Env.everyMatrixClient.connectTS()
     }
 
 }

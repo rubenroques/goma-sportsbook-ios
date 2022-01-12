@@ -71,7 +71,7 @@ class PasswordUpdateViewController: UIViewController {
 
         editButton.isEnabled = false
 
-        Env.everyMatrixAPIClient.getPolicy()
+        Env.everyMatrixClient.getPolicy()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
@@ -192,7 +192,7 @@ class PasswordUpdateViewController: UIViewController {
         }
 
         if validFields {
-            Env.everyMatrixAPIClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text, newPassword: newPasswordHeaderTextFieldView.text, captchaPublicKey: "", captchaChallenge: "", captchaResponse: "")
+            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text, newPassword: newPasswordHeaderTextFieldView.text, captchaPublicKey: "", captchaChallenge: "", captchaResponse: "")
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .sink( receiveCompletion: { completion in

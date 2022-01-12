@@ -201,7 +201,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixAPIClient.getCountries()
+        Env.everyMatrixClient.getCountries()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in

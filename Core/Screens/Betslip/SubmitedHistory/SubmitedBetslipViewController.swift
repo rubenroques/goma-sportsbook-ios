@@ -48,6 +48,14 @@ class SubmitedBetslipViewController: UIViewController {
         self.activityIndicatorBaseView.isHidden = true
         self.view.bringSubviewToFront(self.activityIndicatorBaseView)
 
+        Env.userSessionStore
+            .userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.requestHistory()
+            }
+            .store(in: &cancellables)
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

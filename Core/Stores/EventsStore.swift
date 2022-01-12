@@ -47,7 +47,7 @@ class EventsStore: NSObject {
     func getEvents() -> AnyPublisher<Events, Never> {
 
         let payload = ["lang": "en"]
-        return Env.everyMatrixAPIClient.getEvents(payload: payload)
+        return Env.everyMatrixClient.getEvents(payload: payload)
             .map { response in
                 return (response.records ?? [])
             }

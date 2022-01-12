@@ -40,6 +40,7 @@ class MyTicketsViewController: UIViewController {
 
         return betslipButtonView
     }()
+
     private lazy var betslipCountLabel: UILabel = {
         var betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false

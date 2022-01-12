@@ -235,13 +235,13 @@ open class SSWampSession: SSWampTransportDelegate {
    
     func ssWampTransportDidDisconnect(_ error: Error?, reason: String?) {
         if reason != nil {
-            delegate?.ssWampSessionEnded(reason!)
+            self.delegate?.ssWampSessionEnded(reason!)
         }
         else if error != nil {
-            delegate?.ssWampSessionEnded("Unexpected error: \(error!.localizedDescription)")
+            self.delegate?.ssWampSessionEnded("Unexpected error: \(error!.localizedDescription)")
         }
         else {
-            delegate?.ssWampSessionEnded("Unknown error.")
+            self.delegate?.ssWampSessionEnded("Unknown error.")
         }
     }
 
@@ -277,9 +277,7 @@ open class SSWampSession: SSWampTransportDelegate {
     open func ssWampTransportReceivedData(_ data: Data) {
         if let payload = self.serializer?.unpack(data) {
             if let message = SSWampMessages.createMessage(payload) {
-                objc_sync_enter(self)
                 self.handleMessage(message)
-                objc_sync_exit(self)
             }
         }
     }

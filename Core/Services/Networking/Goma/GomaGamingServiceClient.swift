@@ -8,12 +8,20 @@
 import Foundation
 import Combine
 
-struct GomaGamingServiceClient {
+class GomaGamingServiceClient {
 
-    var networkClient: NetworkManager
+    private var networkClient: NetworkManager
     
-    init(networkClient: NetworkManager) {
+    init(networkClient: NetworkManager = NetworkManager()) {
         self.networkClient = networkClient
+    }
+
+    func reconnectSession() {
+        self.networkClient = NetworkManager()
+    }
+
+    func refreshAuthToken(token: AuthToken) {
+        self.networkClient.refreshAuthToken(token: token)
     }
 
     func requestTest(deviceId: String) -> AnyPublisher<ExampleModel?, NetworkError> {

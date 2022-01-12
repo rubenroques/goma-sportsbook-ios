@@ -27,25 +27,22 @@ class FavoritesManager {
     }
 
     func getEvents(events: [String]) {
-        Env.everyMatrixAPIClient.getEvents(payload: ["lang": "en",
+        Env.everyMatrixClient.getEvents(payload: ["lang": "en",
                                                      "eventIds": events,
                                                      "dataWithoutOdds": true])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
 
             }, receiveValue: { value in
-
                 if let eventValues = value.records {
                     self.favoriteEventsWithTypePublisher.send(eventValues)
-
                 }
-
             })
             .store(in: &cancellables)
     }
 
     func getUserMetadata() {
-        Env.everyMatrixAPIClient.getUserMetadata()
+        Env.everyMatrixClient.getUserMetadata()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
@@ -60,7 +57,7 @@ class FavoritesManager {
     }
 
     func postUserMetadata(favoriteEvents: [String]) {
-        Env.everyMatrixAPIClient.postUserMetadata(favoriteEvents: favoriteEvents)
+        Env.everyMatrixClient.postUserMetadata(favoriteEvents: favoriteEvents)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in

@@ -17,7 +17,9 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     private var match: Match?
+
     private var shouldShowCountryFlag: Bool = true
+    private var showingBackSliderView: Bool = false
 
     private var liveMatch: Bool = false
 
@@ -126,25 +128,32 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
         let width = screenWidth*0.6
 
         if scrollView.contentSize.width > screenWidth {
-            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 90 {
-                self.tappedMatchLineAction?()
+            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 110 {
 
-                let generator = UIImpactFeedbackGenerator(style: .medium)
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
                 generator.prepare()
                 generator.impactOccurred()
+
+                self.tappedMatchLineAction?()
 
                 return
             }
         }
 
-        if scrollView.contentOffset.x > width && self.backSliderView.alpha != 1.0 {
-            UIView.animate(withDuration: 0.2) {
-                self.backSliderView.alpha = 1.0
+        if scrollView.contentOffset.x > width {
+            if !self.showingBackSliderView {
+                self.showingBackSliderView = true
+                UIView.animate(withDuration: 0.2) {
+                    self.backSliderView.alpha = 1.0
+                }
             }
         }
-        else if self.backSliderView.alpha != 0.0 {
-            UIView.animate(withDuration: 0.2) {
-                self.backSliderView.alpha = 0.0
+        else {
+            if self.showingBackSliderView {
+                self.showingBackSliderView = false
+                UIView.animate(withDuration: 0.2) {
+                    self.backSliderView.alpha = 0.0
+                }
             }
         }
     }
