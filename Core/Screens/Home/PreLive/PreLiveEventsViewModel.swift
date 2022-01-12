@@ -153,8 +153,15 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteGamesSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
+        self.favoriteGamesSportsViewModelDataSource.matchDataSourceWentLive = { [weak self] in
+            self?.dataDidChangedAction?()
+        }
+
         self.favoriteCompetitionSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
+        }
+        self.favoriteCompetitionSportsViewModelDataSource.matchDataSourceWentLive = { [weak self] in
+            self?.dataDidChangedAction?()
         }
 
     }
@@ -960,6 +967,7 @@ class PreLiveEventsViewModel: NSObject {
                     print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
                     self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
+                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
                     self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
                     print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
@@ -1686,6 +1694,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
 
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
+    var matchDataSourceWentLive: (() -> Void)?
 
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
@@ -1716,9 +1725,26 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
             if !self.userFavoriteMatches.isEmpty {
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                    let match = self.userFavoriteMatches[safe: indexPath.row] {
-                    cell.setupWithMatch(match)
+
+                    if Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
+
+                        cell.setupWithMatch(match, liveMatch: true)
+                    }
+                    else {
+                        cell.setupWithMatch(match)
+
+                    }
+                    cell.setupFavoriteMatchInfoPublisher(match: match)
+
                     cell.tappedMatchLineAction = {
                         self.didSelectMatchAction?(match)
+                    }
+
+                    cell.matchWentLive = {
+                        print("MATCH WENT LIVE: \(match.homeParticipant)")
+                        DispatchQueue.main.async {
+                            self.matchDataSourceWentLive?()
+                        }
                     }
 
                     return cell
@@ -1803,6 +1829,7 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var matchDataSourceWentLive: (() -> Void)?
 
     init(favoriteCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions
@@ -1830,10 +1857,19 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
             else {
                 fatalError()
             }
-            cell.setupWithMatch(match)
+            if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+                cell.setupWithMatch(match, liveMatch: true)
+            }
+            else {
+                cell.setupWithMatch(match)
+            }
+
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)
+            }
+            cell.matchWentLive = {
+                self.matchDataSourceWentLive?()
             }
 
             return cell
