@@ -215,6 +215,7 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingCompetitions.send(false)
         self.isLoadingMyGamesList.send(false)
         
+        
         if let userSession = UserSessionStore.loggedUserSession() {
             self.isUserLoggedPublisher.send(true)
         }else{
@@ -245,20 +246,26 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
 
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
-                    if numberOfFilters > 0 {
-                        if !self.hasContentForSelectedListType(){
-                            self.screenStatePublisher.send(.emptyAndFilter)
-                        }else{
-                            self.screenStatePublisher.send(.noEmptyAndFilter)
-                        }
-                    }else{
-                        if !self.hasContentForSelectedListType(){
-                            self.screenStatePublisher.send(.emptyNoFilter)
-                        }else{
-                            self.screenStatePublisher.send(.noEmptyNoFilter)
-                        }
-                    }
+            if numberOfFilters > 0 {
+                if !self.hasContentForSelectedListType(){
+                    self.screenStatePublisher.send(.emptyAndFilter)
+                }else{
+                    self.screenStatePublisher.send(.noEmptyAndFilter)
                 }
+            }else{
+                if !self.hasContentForSelectedListType(){
+                    self.screenStatePublisher.send(.emptyNoFilter)
+                }else{
+                    self.screenStatePublisher.send(.noEmptyNoFilter)
+                }
+            }
+        }else{
+            if !self.hasContentForSelectedListType(){
+                self.screenStatePublisher.send(.emptyNoFilter)
+            }else{
+                self.screenStatePublisher.send(.noEmptyNoFilter)
+            }
+        }
         
         //Todo - Code Review  
         DispatchQueue.main.async {
@@ -1010,6 +1017,7 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
        case .competitions:
            return self.competitionSportsViewModelDataSource.competitions.isNotEmpty
        case .favoriteGames:
+           print("favs \(self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches.count)")
            return self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches.isNotEmpty
        case .favoriteCompetitions:
           return self.favoriteCompetitionSportsViewModelDataSource.competitions.isNotEmpty

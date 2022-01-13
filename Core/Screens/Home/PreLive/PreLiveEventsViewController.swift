@@ -33,9 +33,6 @@ class PreLiveEventsViewController: UIViewController {
     @IBOutlet weak var emptyStateImage: UIImageView!
     @IBOutlet weak var emptyStateButton: UIButton!
     
-    
-    
-    
     var turnTimeRangeOn: Bool = false
 
     var betslipButtonViewBottomConstraint: NSLayoutConstraint?
@@ -337,15 +334,13 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyAndFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions {
+                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions  {
                         self?.setEmptyStateBaseView(firstLabelText: localized("string_empty_list_with_filters"), secondLabelText: localized("second_string_empty_list_with_filters"), isUserLoggedIn: true)
                     }
                 }
             })
             .store(in: &cancellables)
         
-     
-
         self.viewModel.matchListTypePublisher
             .map {  $0 == .competitions }
             .receive(on: DispatchQueue.main)
@@ -710,11 +705,9 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             self.setEmptyStateBaseView(firstLabelText: localized("string_empty_list"), secondLabelText: localized("second_string_empty_list"), isUserLoggedIn: true)
         case 3:
             self.viewModel.setMatchListType(.favoriteGames)
-            
             self.setEmptyStateBaseView(firstLabelText: localized("string_empty_my_games"), secondLabelText: localized("second_string_empty_my_games"), isUserLoggedIn: UserSessionStore.isUserLogged())
         case 4:
             self.viewModel.setMatchListType(.favoriteCompetitions)
-            
             self.setEmptyStateBaseView(firstLabelText: localized("string_empty_my_competitions"), secondLabelText: localized("second_string_empty_my_competitions"), isUserLoggedIn: UserSessionStore.isUserLogged())
         default:
             ()
