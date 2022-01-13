@@ -14,64 +14,23 @@ class MyTicketsViewController: UIViewController {
     @IBOutlet private var ticketTypesSeparatorLineView: UIView!
     @IBOutlet private var ticketsTableView: UITableView!
 
-    @IBOutlet weak var loadingIndicatorView: UIActivityIndicatorView!
-    private let refreshControl = UIRefreshControl()
-
-    private lazy var betslipButtonView: UIView = {
-        var betslipButtonView = UIView()
-        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
-
-        var iconImageView = UIImageView()
-        iconImageView.contentMode = .scaleAspectFit
-        iconImageView.image = UIImage(named: "betslip_button_icon")
-        iconImageView.translatesAutoresizingMaskIntoConstraints = false
-        betslipButtonView.addSubview(iconImageView)
-
-        NSLayoutConstraint.activate([
-            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
-            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
-
-            iconImageView.widthAnchor.constraint(equalToConstant: 30),
-            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
-
-            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
-            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
-        ])
-
-        return betslipButtonView
-    }()
-    private lazy var betslipCountLabel: UILabel = {
-        var betslipCountLabel = UILabel()
-        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        betslipCountLabel.textColor = .white
-        betslipCountLabel.backgroundColor = UIColor.App.alertError
-        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
-        betslipCountLabel.textAlignment = .center
-        betslipCountLabel.clipsToBounds = true
-        betslipCountLabel.layer.masksToBounds = true
-        betslipCountLabel.text = "0"
-        NSLayoutConstraint.activate([
-            betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            betslipCountLabel.widthAnchor.constraint(equalTo: betslipCountLabel.heightAnchor),
-        ])
-        return betslipCountLabel
-    }()
+    @IBOutlet private weak var loadingIndicatorView: UIActivityIndicatorView!
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
+    private let refreshControl = UIRefreshControl()
+    private var shouldShowCenterLoadingView = true
     private var viewModel: MyTicketsViewModel
 
     private var cancellables = Set<AnyCancellable>()
-
-    private var shouldShowCenterLoadingView = true
-
-    var didTapBetslipButtonAction: (() -> Void)?
 
     init() {
         self.viewModel = MyTicketsViewModel()
 
         super.init(nibName: "MyTicketsViewController", bundle: nil)
+
+        self.title = localized("string_my_bets")
     }
 
     @available(iOS, unavailable)
@@ -110,23 +69,8 @@ class MyTicketsViewController: UIViewController {
 
         //
         //
-        self.betslipButtonView.addSubview(self.betslipCountLabel)
-
-        self.view.addSubview(self.betslipButtonView)
-        self.betslipCountLabel.isHidden = true
-
-        NSLayoutConstraint.activate([
-            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
-            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
-
-            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
-            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12)
-        ])
 
         self.view.bringSubviewToFront(self.loadingBaseView)
-
-        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
@@ -148,7 +92,6 @@ class MyTicketsViewController: UIViewController {
 
         self.viewModel.reloadTableViewAction = { [weak self] in
             self?.ticketsTableView.reloadData()
-
         }
 
         self.viewModel.redrawTableViewAction = { [weak self] in
@@ -162,7 +105,6 @@ class MyTicketsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.connectPublishers()
         self.setupWithTheme()
     }
 
@@ -178,10 +120,7 @@ class MyTicketsViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
-        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-    }
+   }
 
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground
@@ -194,31 +133,6 @@ class MyTicketsViewController: UIViewController {
         self.ticketsTableView.backgroundColor = UIColor.App.contentBackground
         self.ticketsTableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipButtonView.backgroundColor = UIColor.App.mainTint
-
-    }
-
-    func connectPublishers() {
-
-        Env.betslipManager.bettingTicketsPublisher
-            .map(\.count)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipValue in
-                if betslipValue == 0 {
-                    self?.betslipCountLabel.isHidden = true
-                }
-                else {
-                    self?.betslipCountLabel.text = "\(betslipValue)"
-                    self?.betslipCountLabel.isHidden = false
-                }
-            })
-            .store(in: &cancellables)
-
-    }
-
-    @objc func didTapBetslipView() {
-        self.didTapBetslipButtonAction?()
     }
 
     @objc func refresh() {
@@ -246,11 +160,11 @@ extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDat
         }
 
         switch indexPath.row {
-        case 0:
-            cell.setupWithTitle(localized("string_resolved"))
-        case 1:
+        case MyTicketsViewModel.MyTicketsType.opened.rawValue :
             cell.setupWithTitle(localized("string_opened"))
-        case 2:
+        case MyTicketsViewModel.MyTicketsType.resolved.rawValue:
+            cell.setupWithTitle(localized("string_resolved"))
+        case MyTicketsViewModel.MyTicketsType.won.rawValue:
             cell.setupWithTitle(localized("string_won"))
         default:
             ()
@@ -269,11 +183,11 @@ extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDat
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         switch indexPath.row {
-        case 0:
-            self.viewModel.setMyTicketsType(.resolved)
-        case 1:
+        case MyTicketsViewModel.MyTicketsType.opened.rawValue:
             self.viewModel.setMyTicketsType(.opened)
-        case 2:
+        case MyTicketsViewModel.MyTicketsType.resolved.rawValue:
+            self.viewModel.setMyTicketsType(.resolved)
+        case MyTicketsViewModel.MyTicketsType.won.rawValue:
             self.viewModel.setMyTicketsType(.won)
         default:
             ()

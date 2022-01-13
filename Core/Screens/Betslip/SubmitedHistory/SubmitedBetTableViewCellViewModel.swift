@@ -17,7 +17,12 @@ class SubmitedBetTableViewCellViewModel {
     var hasCashoutEnabled = CurrentValueSubject<Bool, Never>.init(false)
 
     var cashout: EveryMatrix.Cashout?
-    private var cashoutSubscription: AnyCancellable?
+    var cashoutValueSubscription: CurrentValueSubject<Double, Never> = .init(0)
+    var cashoutSubscription: CurrentValueSubject<EveryMatrix.Cashout, Never>?
+
+    var updateCashoutValue: PassthroughSubject<Void, Never> = .init()
+    var createdCashout: PassthroughSubject<Void, Never> = .init()
+    var deletedCashout: PassthroughSubject<Void, Never> = .init()
 
     init(ticket: BetHistoryEntry) {
         self.ticket = ticket
@@ -41,7 +46,7 @@ class SubmitedBetTableViewCellViewModel {
                                                  betId: ticket.betId)
 
         self.cashoutAvailabilitySubscription = TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.CashoutAggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -62,6 +67,8 @@ class SubmitedBetTableViewCellViewModel {
                         case .cashout(let cashout):
                             if let value = cashout.value {
                                 self?.cashout = cashout
+                                self?.cashoutSubscription = .init(cashout)
+                                self?.cashoutValueSubscription.send(value)
                                 self?.hasCashoutEnabled.send(true)
                             }
                         default: ()
@@ -82,13 +89,28 @@ class SubmitedBetTableViewCellViewModel {
                             if let cashout = self?.cashout {
                                 let updatedCashout = cashout.cashoutUpdated(value: value, stake: stake)
                                 self?.cashout = updatedCashout
+                                self?.cashoutSubscription?.send(updatedCashout)
+                                self?.updateCashoutValue.send()
+                                if let cashoutValue = self?.cashout?.value {
+                                    self?.cashoutValueSubscription.send(cashoutValue)
+                                }
+                            }
+                        case .cashoutCreate(let cashout):
+                            self?.cashout = cashout
+                            self?.createdCashout.send()
+                            self?.hasCashoutEnabled.send(true)
+                        case .cashoutDelete(let cashoutId):
+                            if let cashout = self?.cashout {
+                                self?.cashout = nil
+                                self?.hasCashoutEnabled.send(false)
+                                self?.deletedCashout.send()
                             }
                         default:
                             ()
                         }
                     }
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
 

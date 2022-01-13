@@ -86,7 +86,7 @@ class BannerCellViewModel {
 
     func requestMatchInfo(_ matchId: String) {
         let language = "en"
-        Env.everyMatrixAPIClient.getMatchDetails(language: language, matchId: matchId)
+        Env.everyMatrixClient.getMatchDetails(language: language, matchId: matchId)
             .sink { _ in
 
             } receiveValue: { response in

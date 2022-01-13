@@ -264,8 +264,6 @@ class LiveEventsViewController: UIViewController {
 
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
-//            self.tableView.layoutIfNeeded()
-//            self.tableView.setContentOffset(.zero, animated: true)
         }
 
         Env.betslipManager.bettingTicketsPublisher

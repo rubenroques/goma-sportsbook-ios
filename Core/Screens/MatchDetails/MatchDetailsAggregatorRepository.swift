@@ -320,6 +320,10 @@ class MatchDetailsAggregatorRepository: NSObject {
                 print("Cashout Update")
             case .unknown:
                 print("uknown")
+            case .cashoutCreate:
+                ()
+            case .cashoutDelete:
+                ()
             }
         }
     }
@@ -750,6 +754,10 @@ class MatchDetailsAggregatorRepository: NSObject {
                 }
             case .unknown:
                 print("uknown")
+            case .cashoutCreate:
+                ()
+            case .cashoutDelete:
+                ()
             }
         }
     }

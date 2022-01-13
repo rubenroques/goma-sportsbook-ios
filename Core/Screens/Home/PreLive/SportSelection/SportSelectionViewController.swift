@@ -123,7 +123,7 @@ class SportSelectionViewController: UIViewController {
 
         self.activityIndicatorView.isHidden = false
 
-        let sports = EveryMatrixAPIClient().getDisciplinesData(payload: ["lang": "en"])
+        let sports = EveryMatrixServiceClient().getDisciplinesData(payload: ["lang": "en"])
 
         sports.receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in

@@ -23,6 +23,9 @@ class SubmitedBetslipViewController: UIViewController {
     private var cashoutRegister: EndpointPublisherIdentifiable?
     private var cashoutPublisher: AnyCancellable?
 
+    //Cached view models
+    var cachedViewModels: [String: SubmitedBetTableViewCellViewModel] = [:]
+
     init() {
         super.init(nibName: "SubmitedBetslipViewController", bundle: nil)
         self.title = "My Bets"
@@ -47,6 +50,14 @@ class SubmitedBetslipViewController: UIViewController {
 
         self.activityIndicatorBaseView.isHidden = true
         self.view.bringSubviewToFront(self.activityIndicatorBaseView)
+
+        Env.userSessionStore
+            .userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.requestHistory()
+            }
+            .store(in: &cancellables)
 
     }
 
@@ -195,9 +206,32 @@ class SubmitedBetslipViewController: UIViewController {
 
     }
 
+    func viewModel(forIndex index: Int) -> SubmitedBetTableViewCellViewModel? {
+        let ticket: BetHistoryEntry?
+
+        ticket = self.betHistoryEntries[safe: index]
+
+        guard let ticket = ticket else {
+            return nil
+        }
+
+        if let viewModel = cachedViewModels[ticket.betId] {
+            return viewModel
+        }
+        else {
+            let viewModel =  SubmitedBetTableViewCellViewModel(ticket: ticket)
+            cachedViewModels[ticket.betId] = viewModel
+            return viewModel
+        }
+    }
+
     func redrawTableViewAction() {
         self.tableView.beginUpdates()
         self.tableView.endUpdates()
+    }
+
+    func reloadTableViewAction() {
+        self.tableView.reloadData()
     }
 
 }
@@ -216,32 +250,18 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
 
         guard
             let cell = tableView.dequeueCellType(SubmitedBetTableViewCell.self),
-            let entry = self.betHistoryEntries[safe: indexPath.row]
+            let entry = self.betHistoryEntries[safe: indexPath.row],
+            let viewModel = self.viewModel(forIndex: indexPath.row)
         else {
             return UITableViewCell()
         }
 
-        let viewModel = SubmitedBetTableViewCellViewModel(ticket: entry)
-
-        //cell.configureWithBetHistoryEntry(entry)
         cell.configureWithViewModel(viewModel: viewModel)
-        print("CASHOUT CELL: \(indexPath.row)")
-        // TODO: Code Review -
-        //let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
 
-//        if let betCashout = cashoutsPublisher[entry.betId].value {
-//            cell.setupCashout(cashout: betCashout.value)
-//            cell.cashoutAction = {
-//                self.submitCashout(betCashout: betCashout.value)
-//            }
-//            cell.infoAction = {
-//                self.showCashoutInfo()
-//            }
-//        }
         cell.needsRedraw = { [weak self] in
             if let betCashout = cell.viewModel?.cashout {
-                cell.cashoutAction = {
-                    self?.submitCashout(betCashout: betCashout)
+                cell.cashoutAction = { value in
+                    self?.submitCashout(betCashout: value)
                 }
                 cell.infoAction = {
                     self?.showCashoutInfo()
@@ -250,6 +270,22 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
                 self?.redrawTableViewAction()
             }
         }
+
+        cell.viewModel?.createdCashout
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadTableViewAction()
+                self?.redrawTableViewAction()
+            })
+            .store(in: &cancellables)
+
+        cell.viewModel?.deletedCashout
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadTableViewAction()
+                self?.redrawTableViewAction()
+            })
+            .store(in: &cancellables)
         
         return cell
     }

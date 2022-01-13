@@ -69,7 +69,7 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
         securityAnswerHeaderTextFieldView.setPlaceholderText(localized("string_security_answer"))
 
-        continueButton.setTitle(localized("string_continue"), for: .normal)
+        continueButton.setTitle(localized("string_continue_"), for: .normal)
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         continueButton.isEnabled = false
 

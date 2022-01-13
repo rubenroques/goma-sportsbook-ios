@@ -77,6 +77,8 @@ extension EveryMatrix {
         case matchInfo(id: String, paramFloat1: Int?, paramFloat2: Int?, paramEventPartName1: String?)
         case fullMatchInfoUpdate(matchInfo: EveryMatrix.MatchInfo)
         case cashoutUpdate(id: String, value: Double?, stake: Double?)
+        case cashoutCreate(cashout: EveryMatrix.Cashout)
+        case cashoutDelete(cashoutId: String)
         case unknown(typeName: String)
 
         enum CodingKeys: String, CodingKey {
@@ -182,6 +184,8 @@ extension EveryMatrix {
                         let stake = try? changedPropertiesContainer.decode(Double.self, forKey: .stake)
                         self = .cashoutUpdate(id: contentId, value: value, stake: stake)
 
+                        contentUpdateType = self
+
                     }
                 }
 
@@ -194,7 +198,17 @@ extension EveryMatrix {
 
                     }
                 }
+                else if entityTypeString == "CASHOUT" {
 
+                    if let cashout = try? container.decode(EveryMatrix.Cashout.self, forKey: .entity) {
+                        contentUpdateType = .cashoutCreate(cashout: cashout)
+
+                    }
+                }
+
+            }
+            else if changeTypeString == "DELETE", let contentId = try? container.decode(String.self, forKey: .contentId) {
+                contentUpdateType = .cashoutDelete(cashoutId: contentId)
             }
 
             if let contentUpdateTypeValue = contentUpdateType {

@@ -8,13 +8,12 @@
 import UIKit
 import Combine
 import OrderedCollections
+
 // swiftlint:disable type_body_length
 
 class PreLiveEventsViewModel: NSObject {
 
     private var banners: [EveryMatrix.BannerInfo] = []
-    private var bannersViewModel: BannerLineCellViewModel?
-    private var userMessages: [String] = []
 
     private var userFavoriteMatches: [Match] = []
     private var popularMatches: [Match] = []
@@ -25,9 +24,7 @@ class PreLiveEventsViewModel: NSObject {
     private var competitions: [Competition] = []
 
     private var favoriteMatches: [Match] = []
-
     private var favoriteCompetitions: [Competition] = []
-    private var favoriteCompetitionMatches: [Match] = []
 
     var competitionGroupsPublisher: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
 
@@ -153,8 +150,15 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteGamesSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
+        self.favoriteGamesSportsViewModelDataSource.matchDataSourceWentLive = { [weak self] in
+            self?.dataDidChangedAction?()
+        }
+
         self.favoriteCompetitionSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
+        }
+        self.favoriteCompetitionSportsViewModelDataSource.matchDataSourceWentLive = { [weak self] in
+            self?.dataDidChangedAction?()
         }
 
     }
@@ -527,8 +531,6 @@ class PreLiveEventsViewModel: NSObject {
 
         let appMatches = Env.everyMatrixStorage.matchesForListType(.favoriteCompetitionEvents)
 
-        self.favoriteCompetitionMatches = appMatches
-
         var competitionsMatches = OrderedDictionary<String, [Match]>()
         for match in appMatches {
             if let matchesForId = competitionsMatches[match.competitionId] {
@@ -822,6 +824,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.competitionsMatchesPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
@@ -860,6 +863,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitionsMatchesPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -884,48 +888,6 @@ class PreLiveEventsViewModel: NSObject {
             })
     }
 
-    func fetchBanners() {
-
-        if let bannersInfoRegister = bannersInfoRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
-        }
-
-        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
-
-        self.bannersInfoPublisher?.cancel()
-        self.bannersInfoPublisher = nil
-
-        self.bannersInfoPublisher = TSManager.shared
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.bannersInfoRegister = publisherIdentifiable
-                case .initialContent(let responde):
-                    print("PreLiveEventsViewModel bannersInfoPublisher initialContent")
-                    self?.banners = responde.records ?? []
-                    let sortedBanners = self?.banners.sorted {
-                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
-                    }
-                    self?.banners = sortedBanners ?? []
-
-                case .updatedContent:
-                    print("PreLiveEventsViewModel bannersInfoPublisher updatedContent")
-                case .disconnect:
-                    print("PreLiveEventsViewModel bannersInfoPublisher disconnect")
-                }
-                self?.updateContentList()
-            })
-
-    }
-
     private func fetchFavoriteMatches() {
 
         if let favoriteMatchesRegister = favoriteMatchesRegister {
@@ -943,6 +905,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteMatchesPublisher = TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -960,11 +923,53 @@ class PreLiveEventsViewModel: NSObject {
                     print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
                     self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
+                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
                     self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
                     print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
                 }
 
+            })
+    }
+
+    func fetchBanners() {
+
+        if let bannersInfoRegister = bannersInfoRegister {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
+        }
+
+        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
+
+        self.bannersInfoPublisher?.cancel()
+        self.bannersInfoPublisher = nil
+
+        self.bannersInfoPublisher = TSManager.shared
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("BannersInfoPublisher Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    self?.bannersInfoRegister = publisherIdentifiable
+                case .initialContent(let responde):
+                    print("PreLiveEventsViewModel bannersInfoPublisher initialContent")
+                    let sortedBanners = (responde.records ?? []).sorted {
+                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
+                    }
+                    self?.banners = sortedBanners
+
+                case .updatedContent:
+                    print("PreLiveEventsViewModel bannersInfoPublisher updatedContent")
+                case .disconnect:
+                    print("PreLiveEventsViewModel bannersInfoPublisher disconnect")
+                }
+                self?.updateContentList()
             })
 
     }
@@ -1713,6 +1718,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
 
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
+    var matchDataSourceWentLive: (() -> Void)?
 
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
@@ -1743,9 +1749,25 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
             if !self.userFavoriteMatches.isEmpty {
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                    let match = self.userFavoriteMatches[safe: indexPath.row] {
-                    cell.setupWithMatch(match)
+
+                    if Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
+
+                        cell.setupWithMatch(match, liveMatch: true)
+                    }
+                    else {
+                        cell.setupWithMatch(match)
+
+                    }
+                    cell.setupFavoriteMatchInfoPublisher(match: match)
+
                     cell.tappedMatchLineAction = {
                         self.didSelectMatchAction?(match)
+                    }
+
+                    cell.matchWentLive = {
+                        DispatchQueue.main.async {
+                            self.matchDataSourceWentLive?()
+                        }
                     }
 
                     return cell
@@ -1830,6 +1852,7 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var matchDataSourceWentLive: (() -> Void)?
 
     init(favoriteCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions
@@ -1857,10 +1880,19 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
             else {
                 fatalError()
             }
-            cell.setupWithMatch(match)
+            if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+                cell.setupWithMatch(match, liveMatch: true)
+            }
+            else {
+                cell.setupWithMatch(match)
+            }
+
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)
+            }
+            cell.matchWentLive = {
+                self.matchDataSourceWentLive?()
             }
 
             return cell

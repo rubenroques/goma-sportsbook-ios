@@ -9,6 +9,7 @@ import Foundation
 
 enum GomaGamingService {
     case test
+    case log(type: String, message: String)
     case geolocation(latitude: String, longitude: String)
     case settings
     case simpleRegister(username: String, email: String, phone: String, birthDate: String, userProviderId: String, deviceToken: String)
@@ -32,6 +33,8 @@ extension GomaGamingService: Endpoint {
         switch self {
         case .test:
             return "/api/\(apiVersion)/me"
+        case .log:
+            return "/log/api/\(apiVersion)"
         case .geolocation:
             return "/api/settings/\(apiVersion)/geolocation"
         case .settings:
@@ -51,7 +54,7 @@ extension GomaGamingService: Endpoint {
 
     var query: [URLQueryItem]? {
         switch self {
-        case .test:
+        case .log, .test:
             return nil
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
@@ -84,7 +87,7 @@ extension GomaGamingService: Endpoint {
             return .get
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets:
             return .get
-        case .simpleRegister, .login, .favorites:
+        case .log, .simpleRegister, .login, .favorites:
             return .post
         }
     }
@@ -92,6 +95,12 @@ extension GomaGamingService: Endpoint {
     var body: Data? {
 
         switch self {
+        case .log(let type, let message):
+            let body = """
+                       {"type": "\(type)","text": "\(message)"}
+                       """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
         case .simpleRegister(let username, let email, let phone, let birthDate, let userProviderId, let deviceToken):
             let body = """
                        {"type": "small_register",

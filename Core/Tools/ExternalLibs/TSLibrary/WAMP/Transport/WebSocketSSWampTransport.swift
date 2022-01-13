@@ -19,10 +19,9 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     var socket: WebSocket?
     let mode: WebsocketMode
 
-    let concurrentQueue = DispatchQueue(label: "websocket.swamp.queue", attributes: .concurrent)
-
     var messageCounter = 1
-    
+    var isConnected = false
+
     fileprivate var disconnectionReason: String?
     
     public init(wsEndpoint: URL, userAgent: String, origin: String) {
@@ -56,7 +55,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     open func sendData(_ data: Data) {
         if mode == .text {
             let textData = String(data: data, encoding: .utf8)!
-            print("TSWebSocketClient sendData \(textData)")
+            //print("TSWebSocketClient sendData \(textData)")
             socket?.write(string: textData)
         }
         else {
@@ -66,16 +65,21 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
         
     public func websocketDidConnect(socket: WebSocketClient) {
         print("TSWebSocketClient connect")
+        isConnected = true
         delegate?.ssWampTransportDidConnectWithSerializer(JSONSSWampSerializer())
     }
 
     public func websocketDidDisconnect(socket: WebSocketClient, error: Error?) {
         print("TSWebSocketClient disconnect")
-        delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
+
+        if isConnected {
+            delegate?.ssWampTransportDidDisconnect(error, reason: disconnectionReason)
+        }
+        isConnected = false
     }
 
     public func websocketDidReceiveMessage(socket: WebSocketClient, text: String) {
-        print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(500))")
+        //print("TSWebSocketClient receiveMessage [\(messageCounter)] with \(text.prefix(500))")
         messageCounter += 1
         if let data = text.data(using: .utf8) {
             websocketDidReceiveData(socket: socket, data: data)
@@ -83,11 +87,7 @@ class WebSocketSSWampTransport: SSWampTransport, WebSocketDelegate {
     }
 
     public func websocketDidReceiveData(socket: WebSocketClient, data: Data) {
-
-        concurrentQueue.sync {
-            delegate?.ssWampTransportReceivedData(data)
-        }
-
+        delegate?.ssWampTransportReceivedData(data)
     }
 
 }
