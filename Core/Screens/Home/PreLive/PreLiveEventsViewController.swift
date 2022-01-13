@@ -86,7 +86,13 @@ class PreLiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSportType: SportType {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)")
+            if let sportIconImage = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)") {
+                self.sportTypeIconImageView.image = sportIconImage
+            }
+            else {
+                self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
+            }
+
             self.viewModel.selectedSportId = selectedSportType
             self.competitionsFiltersView?.resetSelection()
         }

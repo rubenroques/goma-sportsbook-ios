@@ -80,7 +80,12 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
 
         nameLabel.text = viewModel.sportName
 
-        iconImageView.image = UIImage(named: viewModel.sportIconName ?? "")
+        if let sportIconName = viewModel.sportIconName, let sportIconImage = UIImage(named: sportIconName) {
+            iconImageView.image = sportIconImage
+        }
+        else {
+            iconImageView.image = UIImage(named: "sport_type_icon_default")
+        }
 
         self.viewModel?.updateLiveEvents = {
             self.eventCountView.isHidden = false

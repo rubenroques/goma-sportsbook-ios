@@ -1269,6 +1269,9 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
     }
 
     private var bannersViewModel: BannerLineCellViewModel?
+    var cachedBannerCellViewModel: [String: BannerCellViewModel] = [:]
+    var cachedBannerLineCellViewModel: BannerLineCellViewModel?
+    var didCachedBanners: Bool = false
 
     var matches: [Match] = []
 
@@ -1359,13 +1362,26 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
             }
         case 1:
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
-                if let viewModel = self.bannersViewModel {
-                    cell.setupWithViewModel(viewModel)
+                if !didCachedBanners {
+                    if let cachedViewModel = self.cachedBannerLineCellViewModel {
+                        cell.setupWithViewModel(cachedViewModel)
 
-                    cell.tappedBannerMatchAction = { match in
-                        self.didSelectMatchAction?(match)
+                        cell.tappedBannerMatchAction = { match in
+                            self.didSelectMatchAction?(match)
+                        }
+                        didCachedBanners = true
                     }
                 }
+//                else {
+//                    if let viewModel = self.bannersViewModel {
+//                        cell.setupWithViewModel(viewModel)
+//
+//                        cell.tappedBannerMatchAction = { match in
+//                            self.didSelectMatchAction?(match)
+//                        }
+//                    }
+//                }
+
                 return cell
             }
         case 2:
@@ -1404,9 +1420,20 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
         }
         var cells = [BannerCellViewModel]()
         for banner in self.banners {
-            cells.append(BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? ""))
+            if let cachedBannerCell = cachedBannerCellViewModel[banner.id] {
+                cells.append(cachedBannerCell)
+            }
+            else {
+                cells.append(BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? ""))
+            }
         }
-        return BannerLineCellViewModel(banners: cells)
+        if let cachedBannerLineCellViewModel = cachedBannerLineCellViewModel {
+            return cachedBannerLineCellViewModel
+        }
+        else {
+            cachedBannerLineCellViewModel = BannerLineCellViewModel(banners: cells)
+            return cachedBannerLineCellViewModel
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
