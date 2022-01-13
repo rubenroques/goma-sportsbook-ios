@@ -212,7 +212,7 @@ class AggregatorsRepository {
                     }
                 }
             case .fullMatchInfoUpdate(let matchInfo):
-                print("FULL MATCH INFO: \(matchInfo)")
+                // print("FULL MATCH INFO: \(matchInfo)")
                 matchesInfo[matchInfo.id] = matchInfo
 
                 if let matchId = matchInfo.matchId {

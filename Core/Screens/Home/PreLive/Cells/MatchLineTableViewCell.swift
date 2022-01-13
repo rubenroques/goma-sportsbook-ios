@@ -120,15 +120,15 @@ class MatchLineTableViewCell: UITableViewCell {
         if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
             self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
                 .sink(receiveValue: { [weak self] value in
-                    print("NEW MATCH INFO: \(value)")
                     if value.contains(match.id) {
+                        // print("NEW MATCH INFO FOUND!")
                         self?.matchInfoPublisher?.cancel()
                         self?.matchInfoPublisher = nil
                         self?.matchWentLive?()
                     }
                 })
         }
-        print("CELL MATCH INFO: \(match.id)")
+        // print("CELL MATCH INFO: \(match.id)")
 
     }
 

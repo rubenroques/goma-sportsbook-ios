@@ -1741,7 +1741,6 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
                     }
 
                     cell.matchWentLive = {
-                        print("MATCH WENT LIVE: \(match.homeParticipant)")
                         DispatchQueue.main.async {
                             self.matchDataSourceWentLive?()
                         }
