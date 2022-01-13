@@ -698,6 +698,16 @@
 		A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */; };
 		A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
 		A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
+		A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
+		A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
+		A99622A32788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */; };
+		A99622A42788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */; };
+		A99622A627887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */; };
+		A99622A727887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */; };
+		A99622A9278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */; };
+		A99622AA278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */; };
+		A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
+		A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -1223,6 +1233,11 @@
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
+		A996229F2788563F00ABDF97 /* SportsAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregator.swift; sourceTree = "<group>"; };
+		A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregatorRepository.swift; sourceTree = "<group>"; };
+		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
+		A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetTableViewCellViewModel.swift; sourceTree = "<group>"; };
+		A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutAggregator.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
@@ -2034,6 +2049,7 @@
 				457F496C2737F9330047169D /* SubmitedBetTableViewCell.xib */,
 				457F497427383A2B0047169D /* SubmitedBetSelectionView.swift */,
 				457F497727383A350047169D /* SubmitedBetSelectionView.xib */,
+				A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */,
 			);
 			path = SubmitedHistory;
 			sourceTree = "<group>";
@@ -2565,6 +2581,7 @@
 			children = (
 				A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */,
 				A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */,
+				A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2701,6 +2718,8 @@
 			isa = PBXGroup;
 			children = (
 				A9B840C626E1285200269B05 /* Discipline.swift */,
+				A996229F2788563F00ABDF97 /* SportsAggregator.swift */,
+				A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */,
 			);
 			path = Disciplines;
 			sourceTree = "<group>";
@@ -2805,6 +2824,7 @@
 			children = (
 				A9BCF44F27552851006DD528 /* Cashout.swift */,
 				A9BCF45527554E88006DD528 /* CashoutSubmission.swift */,
+				A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */,
 			);
 			path = Cashouts;
 			sourceTree = "<group>";
@@ -3395,6 +3415,7 @@
 				455A0C5426BD902C00EC572D /* AppDelegate.swift in Sources */,
 				45D712F827033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */,
 				457816B52707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
 				454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */,
 				45E5190C270C8B570052794F /* Color+Extensions.swift in Sources */,
@@ -3407,6 +3428,7 @@
 				4589F40326BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				4589F42926C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				45B7DAE226F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
+				A99622A32788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */,
 				455A0CE626BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
 				45A0B302274FA3B800211A85 /* MarketGroup.swift in Sources */,
 				454E0AC82733FBF200794E0C /* StyleHelpers.swift in Sources */,
@@ -3507,6 +3529,7 @@
 				457816A92706679400F66878 /* MatchLineTableViewCell.swift in Sources */,
 				45BD39C6270213DE001DD51D /* KeychainInterface.swift in Sources */,
 				4589F42226BF395E005DF543 /* UserDefaults.swift in Sources */,
+				A99622A627887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
 				A96279EB273ED1E40001E1D5 /* ActivationAlertView.swift in Sources */,
 				455A0D1926BDABA100EC572D /* Internationalization.swift in Sources */,
 				455A0CF226BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
@@ -3523,6 +3546,7 @@
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
+				A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E38275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
@@ -3538,6 +3562,7 @@
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
 				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
+				A99622A9278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				45936CAA270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A90D8AF5277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A626E6557000269B05 /* Location.swift in Sources */,
@@ -3703,6 +3728,7 @@
 				455A0CA326BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				45D712F927033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */,
 				457816B62707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
 				454E0A922732A78B00794E0C /* BetslipManager.swift in Sources */,
 				45E5190D270C8B570052794F /* Color+Extensions.swift in Sources */,
@@ -3715,6 +3741,7 @@
 				4589F40426BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
 				45B7DAE326F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
+				A99622A42788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */,
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
 				45A0B303274FA3B800211A85 /* MarketGroup.swift in Sources */,
 				454E0AC92733FBF200794E0C /* StyleHelpers.swift in Sources */,
@@ -3815,6 +3842,7 @@
 				457816AA2706679400F66878 /* MatchLineTableViewCell.swift in Sources */,
 				45BD39C7270213DE001DD51D /* KeychainInterface.swift in Sources */,
 				4589F42326BF395E005DF543 /* UserDefaults.swift in Sources */,
+				A99622A727887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
 				A96279EC273ED1E40001E1D5 /* ActivationAlertView.swift in Sources */,
 				455A0D1A26BDABA100EC572D /* Internationalization.swift in Sources */,
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
@@ -3831,6 +3859,7 @@
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
+				A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E39275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
@@ -3846,6 +3875,7 @@
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
 				45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */,
+				A99622AA278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				45936CAB270E1C1A00E8260E /* SportTypeSelectorView.swift in Sources */,
 				A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,

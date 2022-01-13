@@ -154,7 +154,6 @@ class AggregatorsRepository {
                 () // print("Events aren't processed")
             case .eventPartScore:
                 ()
-                
             case .unknown:
                 () // print("Unknown type ignored")
             }
@@ -218,6 +217,10 @@ class AggregatorsRepository {
                 }
             case .unknown:
                 print("uknown")
+            case .cashoutCreate:
+                ()
+            case .cashoutDelete:
+                ()
             }
         }
     }

@@ -223,6 +223,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.oddsStackView.alpha = 1.0
         
         self.awayBaseView.isHidden = false
+
+        self.isFavorite = false
+
     }
 
     func setupWithTheme() {

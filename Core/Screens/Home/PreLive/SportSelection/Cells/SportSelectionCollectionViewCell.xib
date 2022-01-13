@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -33,6 +34,24 @@
                             <constraint firstItem="Rtg-lG-e5O" firstAttribute="top" secondItem="1GK-PR-V5Z" secondAttribute="top" constant="15" id="jMz-5n-aJj"/>
                         </constraints>
                     </view>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vy2-Ek-71H">
+                        <rect key="frame" x="45" y="0.0" width="20" height="20"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wqg-uD-MLO">
+                                <rect key="frame" x="6" y="3" width="8" height="14.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" name="headingMainColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" name="alertErrorColor"/>
+                        <constraints>
+                            <constraint firstItem="wqg-uD-MLO" firstAttribute="centerY" secondItem="vy2-Ek-71H" secondAttribute="centerY" id="8Bz-fX-t0d"/>
+                            <constraint firstAttribute="height" constant="20" id="IjI-Vj-3Uf"/>
+                            <constraint firstItem="wqg-uD-MLO" firstAttribute="centerX" secondItem="vy2-Ek-71H" secondAttribute="centerX" id="Isd-Wz-ADu"/>
+                            <constraint firstAttribute="width" constant="20" id="KYo-9l-oBx"/>
+                        </constraints>
+                    </view>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cfv-NU-i8s">
                         <rect key="frame" x="0.0" y="70" width="65" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -45,14 +64,18 @@
             <constraints>
                 <constraint firstItem="1GK-PR-V5Z" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="BIm-hg-Lh6"/>
                 <constraint firstAttribute="trailing" secondItem="cfv-NU-i8s" secondAttribute="trailing" id="Fyn-Et-90G"/>
+                <constraint firstItem="vy2-Ek-71H" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="GUX-8P-eKL"/>
                 <constraint firstItem="cfv-NU-i8s" firstAttribute="top" secondItem="1GK-PR-V5Z" secondAttribute="bottom" constant="5" id="YPh-wm-DeX"/>
                 <constraint firstItem="1GK-PR-V5Z" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="eUd-AC-8UG"/>
                 <constraint firstItem="1GK-PR-V5Z" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" constant="-17.5" id="fyP-uv-UId"/>
                 <constraint firstItem="cfv-NU-i8s" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="kmf-gt-jmY"/>
+                <constraint firstAttribute="trailing" secondItem="vy2-Ek-71H" secondAttribute="trailing" id="sgh-7D-G6l"/>
                 <constraint firstItem="1GK-PR-V5Z" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="zrz-FB-vFH"/>
             </constraints>
             <connections>
                 <outlet property="containerView" destination="1GK-PR-V5Z" id="zwj-RB-L7y"/>
+                <outlet property="eventCountLabel" destination="wqg-uD-MLO" id="4eG-kb-hJg"/>
+                <outlet property="eventCountView" destination="vy2-Ek-71H" id="QiY-6Y-mER"/>
                 <outlet property="iconImageView" destination="Rtg-lG-e5O" id="4xd-3C-EHk"/>
                 <outlet property="nameLabel" destination="cfv-NU-i8s" id="RrH-kl-GB1"/>
             </connections>
@@ -60,6 +83,12 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <namedColor name="alertErrorColor">
+            <color red="0.8784313725490196" green="0.14117647058823529" blue="0.23137254901960785" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="headingMainColor">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
