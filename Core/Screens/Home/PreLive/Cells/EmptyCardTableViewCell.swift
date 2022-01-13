@@ -11,41 +11,55 @@ class EmptyCardTableViewCell: UITableViewCell {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var iconImageView: UIImageView!
-    @IBOutlet private var descriptionLabel: UILabel!
-
+    @IBOutlet private var firstTextFieldLabel: UILabel!
+    @IBOutlet weak var secondTextFieldLabel: UILabel!
+    @IBOutlet weak var loginButton: UIButton!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.setup()
 
         self.setupWithTheme()
     }
 
-    func setup() {
-        self.iconImageView.image = UIImage(named: "warning_alert_icon")
-
-        self.descriptionLabel.text = "Lorem ipsum"
-        self.descriptionLabel.numberOfLines = 0
-    }
+   
 
     func setupWithTheme() {
 
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.secondaryBackground
+        self.containerView.backgroundColor = UIColor.App.mainBackground
         self.containerView.layer.cornerRadius = CornerRadius.modal
         self.containerView.layer.masksToBounds = true
 
         self.iconImageView.backgroundColor = .clear
         self.iconImageView.tintColor = UIColor.App.headingMain
 
-        self.descriptionLabel.textColor = UIColor.App.headingMain
-        self.descriptionLabel.font = AppFont.with(type: .semibold, size: 14)
+        self.firstTextFieldLabel.textColor = UIColor.App.headingMain
+        self.firstTextFieldLabel.font = AppFont.with(type: .semibold, size: 20)
+        
+        self.secondTextFieldLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldLabel.font = AppFont.with(type: .semibold, size: 14)
+        self.firstTextFieldLabel.numberOfLines = 2
+        
+        self.iconImageView.image = UIImage(named: "no_content_icon")
+        
+        self.loginButton.isHidden = true
+    }
+    
+    func setDescription(primaryText : String, secondaryText : String, userIsLoggedIn : Bool ){
+        self.firstTextFieldLabel.text = primaryText
+        self.secondTextFieldLabel.text = secondaryText
+        if userIsLoggedIn{
+            
+            self.loginButton.isHidden = true
+        }else{
+            
+            self.loginButton.setTitle("Login", for: .normal)
+            self.loginButton.isHidden = false
+        }
     }
 
-    func setDescription(text: String) {
-        self.descriptionLabel.text = text
-    }
 
 }

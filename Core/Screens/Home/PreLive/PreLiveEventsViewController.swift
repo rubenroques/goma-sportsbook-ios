@@ -26,6 +26,7 @@ class PreLiveEventsViewController: UIViewController {
     
     @IBOutlet private weak var filtersCountView: UIView!
 
+    @IBOutlet weak var emptyBaseView: UIView!
     @IBOutlet weak var filtersCountLabel: UILabel!
 
     var turnTimeRangeOn: Bool = false
@@ -134,6 +135,14 @@ class PreLiveEventsViewController: UIViewController {
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
+        if self.viewModel.isTicketsEmptyPublisher.value {
+            print(self.viewModel.isTicketsEmptyPublisher.value)
+            self.tableView.isHidden = true
+            self.emptyBaseView.isHidden = false
+        }else{
+            self.tableView.isHidden = false
+            self.emptyBaseView.isHidden = true
+        }
 
     }
 
@@ -627,19 +636,29 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         case 0:
             AnalyticsClient.sendEvent(event: .myGamesScreen)
             self.viewModel.setMatchListType(.myGames)
+            self.emptyBaseView.isHidden = !self.viewModel.isTicketsEmptyPublisher.value
+            self.tableView.isHidden = self.viewModel.isTicketsEmptyPublisher.value
             turnTimeRangeOn = false
         case 1:
             AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.today)
+            self.emptyBaseView.isHidden = !self.viewModel.isTicketsEmptyPublisher.value
+            self.tableView.isHidden = self.viewModel.isTicketsEmptyPublisher.value
             turnTimeRangeOn = true
         case 2:
             AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
+            self.emptyBaseView.isHidden = !self.viewModel.isTicketsEmptyPublisher.value
+            self.tableView.isHidden = self.viewModel.isTicketsEmptyPublisher.value
             turnTimeRangeOn = false
         case 3:
             self.viewModel.setMatchListType(.favoriteGames)
+            self.emptyBaseView.isHidden = !self.viewModel.isTicketsEmptyPublisher.value
+            self.tableView.isHidden = self.viewModel.isTicketsEmptyPublisher.value
         case 4:
             self.viewModel.setMatchListType(.favoriteCompetitions)
+            self.emptyBaseView.isHidden = !self.viewModel.isTicketsEmptyPublisher.value
+            self.tableView.isHidden = self.viewModel.isTicketsEmptyPublisher.value
         default:
             ()
         }

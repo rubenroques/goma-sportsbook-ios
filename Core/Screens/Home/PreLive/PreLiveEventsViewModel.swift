@@ -40,6 +40,9 @@ class PreLiveEventsViewModel: NSObject {
         case favoriteCompetitions
     }
 
+    var isTicketsEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+   
+    
     private var popularMatchesViewModelDataSource = PopularMatchesViewModelDataSource(banners: [], matches: [])
     private var todaySportsViewModelDataSource = TodaySportsViewModelDataSource(todayMatches: [])
     private var competitionSportsViewModelDataSource = CompetitionSportsViewModelDataSource(competitions: [])
@@ -210,6 +213,7 @@ class PreLiveEventsViewModel: NSObject {
         }else{
             self.isUserLoggedPublisher.send(false)
         }
+
     }
 
     func setMatchListType(_ matchListType: MatchListType) {
@@ -233,10 +237,46 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
 
+        switch self.matchListTypePublisher.value {
+        case .myGames:
+            if self.popularMatchesViewModelDataSource.matches.isNotEmpty {
+                self.isTicketsEmptyPublisher.send(false)
+            }else{
+                self.isTicketsEmptyPublisher.send(true)
+            }
+        case .today:
+            if  self.todaySportsViewModelDataSource.todayMatches.isNotEmpty {
+                self.isTicketsEmptyPublisher.send(false)
+            }else{
+                self.isTicketsEmptyPublisher.send(true)
+            }
+        case .competitions:
+            if  self.competitionSportsViewModelDataSource.competitions.isNotEmpty {
+                self.isTicketsEmptyPublisher.send(false)
+            } else {
+                self.isTicketsEmptyPublisher.send(true)
+            }
+        case .favoriteGames:
+            if  self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches.isNotEmpty {
+                self.isTicketsEmptyPublisher.send(false)
+            }else{
+                self.isTicketsEmptyPublisher.send(true)
+            }
+        default :
+            if  self.favoriteCompetitionSportsViewModelDataSource.competitions.isNotEmpty {
+                self.isTicketsEmptyPublisher.send(false)
+            }else{
+                self.isTicketsEmptyPublisher.send(true)
+            }
+        }
+        
+        
         //Todo - Code Review  
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
+        
+        
     }
 
     private func updateContentListFiltered() {
@@ -625,6 +665,12 @@ class PreLiveEventsViewModel: NSObject {
                                                         language: "en",
                                                         sportId: self.selectedSportId.typeId,
                                                         matchesCount: matchesCount)
+        
+        if matchesCount != 0 {
+            self.isTicketsEmptyPublisher.send(false)
+        }else{
+            self.isTicketsEmptyPublisher.send(true)
+        }
 
         self.popularMatchesPublisher?.cancel()
         self.popularMatchesPublisher = nil
@@ -655,7 +701,7 @@ class PreLiveEventsViewModel: NSObject {
                     print("PreLiveEventsViewModel popularMatchesPublisher disconnect")
                 }
             })
-
+        
     }
 
     private func fetchTodayMatchesNextPage() {
@@ -1734,10 +1780,11 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
             }
             else {
                 if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
-                    cell.setDescription(text: localized("string_empty_my_games"))
+                    cell.setDescription(primaryText: localized("string_empty_my_games"), secondaryText: localized("second_string_empty_my_games"), userIsLoggedIn: UserSessionStore.isUserLogged() )
 
                     return cell
                 }
+                
             }
         default:
             ()
@@ -1775,7 +1822,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
             return 70
         case 0:
             if self.userFavoriteMatches.isEmpty {
-                return 70
+                return 600
             }
             else {
                 return 155
@@ -1852,7 +1899,7 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
                 else {
                     fatalError()
                 }
-            cell.setDescription(text: localized("string_empty_my_competitions"))
+            cell.setDescription(primaryText: localized("string_empty_my_competitions"), secondaryText: localized("string_empty_my_competitions"), userIsLoggedIn: UserSessionStore.isUserLogged() )
 
             return cell
         }
@@ -1915,8 +1962,10 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
             return 0
         }
         if competitions.isEmpty {
-            return 70
+            return 600
         }
+        
+        
         return UITableView.automaticDimension
     }
 
