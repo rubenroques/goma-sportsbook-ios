@@ -51,6 +51,7 @@ class AggregatorsRepository {
 
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     var matchesInfoForMatch: [String: Set<String> ] = [:]
+    var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
 
     func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
 
@@ -94,6 +95,9 @@ class AggregatorsRepository {
                         var newSet = Set<String>.init()
                         newSet.insert(matchInfo.id)
                         matchesInfoForMatch[matchId] = newSet
+                        var matchIdArray = matchesInfoForMatchPublisher.value
+                        matchIdArray.append(matchId)
+                        matchesInfoForMatchPublisher.send(matchIdArray)
                     }
                 }
 
@@ -202,6 +206,7 @@ class AggregatorsRepository {
                     }
                 }
             case .fullMatchInfoUpdate(let matchInfo):
+                // print("FULL MATCH INFO: \(matchInfo)")
                 matchesInfo[matchInfo.id] = matchInfo
 
                 if let matchId = matchInfo.matchId {
@@ -214,6 +219,9 @@ class AggregatorsRepository {
                         newSet.insert(matchInfo.id)
                         matchesInfoForMatch[matchId] = newSet
                     }
+                    var matchIdArray = matchesInfoForMatchPublisher.value
+                    matchIdArray.append(matchId)
+                    matchesInfoForMatchPublisher.send(matchIdArray)
                 }
             case .unknown:
                 print("uknown")

@@ -225,7 +225,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayBaseView.isHidden = false
 
         self.isFavorite = false
-
     }
 
     func setupWithTheme() {

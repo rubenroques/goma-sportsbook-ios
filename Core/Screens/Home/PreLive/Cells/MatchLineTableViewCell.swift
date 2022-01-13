@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class MatchLineTableViewCell: UITableViewCell {
 
@@ -23,7 +24,10 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private var liveMatch: Bool = false
 
+    private var matchInfoPublisher: AnyCancellable?
+
     var tappedMatchLineAction: (() -> Void)?
+    var matchWentLive: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -67,6 +71,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.addGestureRecognizer(backSliderTapGesture)
 
         self.setupWithTheme()
+
     }
 
     override func prepareForReuse() {
@@ -83,6 +88,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: false)
 
         self.match = nil
+        self.matchInfoPublisher?.cancel()
+        self.matchInfoPublisher = nil
         self.collectionView.reloadData()
         
     }
@@ -109,6 +116,22 @@ class MatchLineTableViewCell: UITableViewCell {
         self.match = match
         self.liveMatch = liveMatch
         self.collectionView.reloadData()
+    }
+
+    func setupFavoriteMatchInfoPublisher(match: Match) {
+        if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
+            self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
+                .sink(receiveValue: { [weak self] value in
+                    if value.contains(match.id) {
+                        // print("NEW MATCH INFO FOUND!")
+                        self?.matchInfoPublisher?.cancel()
+                        self?.matchInfoPublisher = nil
+                        self?.matchWentLive?()
+                    }
+                })
+        }
+        // print("CELL MATCH INFO: \(match.id)")
+
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
