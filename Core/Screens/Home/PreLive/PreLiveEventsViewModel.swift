@@ -40,7 +40,14 @@ class PreLiveEventsViewModel: NSObject {
         case favoriteCompetitions
     }
 
-    var isTicketsEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    enum screenState {
+            case emptyAndFilter
+            case emptyNoFilter
+            case noEmptyNoFilter
+            case noEmptyAndFilter
+        }
+    
+    var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
    
     
     private var popularMatchesViewModelDataSource = PopularMatchesViewModelDataSource(banners: [], matches: [])
@@ -237,39 +244,21 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
 
-        switch self.matchListTypePublisher.value {
-        case .myGames:
-            if self.popularMatchesViewModelDataSource.matches.isNotEmpty {
-                self.isTicketsEmptyPublisher.send(false)
-            }else{
-                self.isTicketsEmptyPublisher.send(true)
-            }
-        case .today:
-            if  self.todaySportsViewModelDataSource.todayMatches.isNotEmpty {
-                self.isTicketsEmptyPublisher.send(false)
-            }else{
-                self.isTicketsEmptyPublisher.send(true)
-            }
-        case .competitions:
-            if  self.competitionSportsViewModelDataSource.competitions.isNotEmpty {
-                self.isTicketsEmptyPublisher.send(false)
-            } else {
-                self.isTicketsEmptyPublisher.send(true)
-            }
-        case .favoriteGames:
-            if  self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches.isNotEmpty {
-                self.isTicketsEmptyPublisher.send(false)
-            }else{
-                self.isTicketsEmptyPublisher.send(true)
-            }
-        default :
-            if  self.favoriteCompetitionSportsViewModelDataSource.competitions.isNotEmpty {
-                self.isTicketsEmptyPublisher.send(false)
-            }else{
-                self.isTicketsEmptyPublisher.send(true)
-            }
-        }
-        
+        if let numberOfFilters = self.homeFilterOptions?.countFilters {
+                    if numberOfFilters > 0 {
+                        if !self.hasContentForSelectedListType(){
+                            self.screenStatePublisher.send(.emptyAndFilter)
+                        }else{
+                            self.screenStatePublisher.send(.noEmptyAndFilter)
+                        }
+                    }else{
+                        if !self.hasContentForSelectedListType(){
+                            self.screenStatePublisher.send(.emptyNoFilter)
+                        }else{
+                            self.screenStatePublisher.send(.noEmptyNoFilter)
+                        }
+                    }
+                }
         
         //Todo - Code Review  
         DispatchQueue.main.async {
@@ -279,26 +268,7 @@ class PreLiveEventsViewModel: NSObject {
         
     }
 
-    private func updateContentListFiltered() {
-
-        self.isLoadingMyGamesList.send(false)
-
-        self.popularMatchesViewModelDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
-
-        self.popularMatchesViewModelDataSource.banners = self.banners
-
-        self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
-
-        self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
-
-        self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
-
-        self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
-
-        DispatchQueue.main.async {
-            self.dataDidChangedAction?()
-        }
-    }
+   
 
     func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
         guard let filterOptionsValue = filtersOptions else {
@@ -454,19 +424,15 @@ class PreLiveEventsViewModel: NSObject {
         self.updateContentList()
     }
 
-    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator, filtered: Bool = false) {
+    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .todayEvents,
                                                  shouldClear: true)
         self.todayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
 
         self.isLoadingTodayList.send(false)
 
-        if filtered {
-            self.updateContentListFiltered()
-        }
-        else {
-            self.updateContentList()
-        }
+        self.updateContentList()
+       
     }
 
     private func setupCompetitionGroups() {
@@ -665,13 +631,6 @@ class PreLiveEventsViewModel: NSObject {
                                                         language: "en",
                                                         sportId: self.selectedSportId.typeId,
                                                         matchesCount: matchesCount)
-        
-        if matchesCount != 0 {
-            self.isTicketsEmptyPublisher.send(false)
-        }else{
-            self.isTicketsEmptyPublisher.send(true)
-        }
-
         self.popularMatchesPublisher?.cancel()
         self.popularMatchesPublisher = nil
         
@@ -750,7 +709,7 @@ class PreLiveEventsViewModel: NSObject {
                     self?.todayMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
                     print("PreLiveEventsViewModel todayMatchesPublisher initialContent")
-                    self?.setupTodayAggregatorProcessor(aggregator: aggregator, filtered: withFilter)
+                    self?.setupTodayAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateTodayAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
@@ -1025,105 +984,6 @@ class PreLiveEventsViewModel: NSObject {
 
 }
 
-extension PreLiveEventsViewModel {
-//
-//    var numberOfSections: Int {
-//        return 4
-//    }
-//
-//    func itemsForSection(_ section: Int) -> Int {
-//        switch section {
-//        case 0:
-//            if case .myGames = matchListTypePublisher.value {
-//                return banners.isEmpty ? 0 : 1
-//            }
-//            return 0
-//        case 1:
-//            return 0
-//        case 2:
-//            return self.selectedFilterMatches().count
-//        default:
-//            return 0
-//        }
-//
-//    }
-
-//    func cellForRowAt(indexPath: IndexPath, onTableView tableView: UITableView) -> UITableViewCell {
-//
-//        switch indexPath.section {
-//        case 0:
-//            if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
-//                if let viewModel = self.bannersViewModel {
-//                    cell.setupWithViewModel(viewModel)
-//                }
-//                cell.backgroundView?.backgroundColor = .clear
-//                cell.backgroundColor = .clear
-//                cell.contentView.backgroundColor = .clear
-//                return cell
-//            }
-//        case 1:
-//            if let cell = tableView.dequeueCellType(UITableViewCell.self) {
-//                return cell
-//            }
-//        case 2:
-//            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-//               let match = self.selectedFilterMatches()[safe: indexPath.row] {
-//                cell.setupWithMatch(match)
-//                return cell
-//            }
-//        default:
-//            fatalError()
-//        }
-//        return UITableViewCell()
-//    }
-
-//    func viewForHeaderInSection(_  section: Int, tableView: UITableView) -> UIView? {
-//        switch (section, matchListTypePublisher.value) {
-//        case (2, .myGames):
-//            if  let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-//                    as? TitleTableViewHeader {
-//                headerView.sectionTitleLabel.text = "Popular Games"
-//                return headerView
-//            }
-//        case (2, .today):
-//            if  let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-//                    as? TitleTableViewHeader {
-//                headerView.sectionTitleLabel.text = "Today’s Highlights"
-//                return headerView
-//            }
-//        default:
-//            return nil
-//        }
-//        return nil
-//    }
-
-//    func heightForHeaderInSection(section: Int, tableView: UITableView) -> CGFloat {
-//        switch (section, matchListTypePublisher.value) {
-//        case (2, .myGames):
-//            return 54
-//        case (2, .today):
-//            return 54
-//        default:
-//            return 0.001
-//        }
-//    }
-//
-//
-//    func selectedFilterMatches() -> [Match] {
-//        if case .myGames = matchListTypePublisher.value {
-//            return self.popularMatches
-//        }
-//        else if case .today = matchListTypePublisher.value {
-//            return self.todayMatches
-//        }
-//        else if case .competitions = matchListTypePublisher.value {
-//            return self.competitionsMatches
-//        }
-//        return []
-//    }
-
-}
-
 extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -1141,47 +1001,21 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
         }
     }
 
-    func hasGames(in tableView: UITableView) -> Bool {
-        switch self.matchListTypePublisher.value {
-        case .myGames:
-            
-            if self.popularMatchesViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .today:
-            if self.todaySportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .competitions:
-            if self.competitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .favoriteGames:
-            if self.favoriteGamesSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .favoriteCompetitions:
-            if self.favoriteCompetitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        }
-    }
-
+    func hasContentForSelectedListType() -> Bool {
+       switch self.matchListTypePublisher.value {
+       case .myGames:
+           return self.popularMatchesViewModelDataSource.matches.isNotEmpty
+       case .today:
+           return self.todaySportsViewModelDataSource.todayMatches.isNotEmpty
+       case .competitions:
+           return self.competitionSportsViewModelDataSource.competitions.isNotEmpty
+       case .favoriteGames:
+           return self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches.isNotEmpty
+       case .favoriteCompetitions:
+          return self.favoriteCompetitionSportsViewModelDataSource.competitions.isNotEmpty
+       }
+   }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {
         case .myGames:
@@ -1781,7 +1615,6 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
             else {
                 if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
                     cell.setDescription(primaryText: localized("string_empty_my_games"), secondaryText: localized("second_string_empty_my_games"), userIsLoggedIn: UserSessionStore.isUserLogged() )
-
                     return cell
                 }
                 
