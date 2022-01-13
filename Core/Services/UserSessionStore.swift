@@ -109,7 +109,8 @@ class UserSessionStore {
 
         UserDefaults.standard.userSession = nil
         userSessionPublisher.send(nil)
-
+        userBalanceWallet.send(nil)
+        
         Env.gomaNetworkClient.reconnectSession()
 
         Env.everyMatrixClient

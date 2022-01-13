@@ -23,17 +23,23 @@ class EveryMatrixServiceClient: ObservableObject {
         // The singleton init below is used to start up TS connection
         manager = TSManager.shared
 
-        reachability.whenReachable = { [weak self] reachability in
+        reachability.whenReachable = { [weak self] _ in
             if self?.wasLostConnection ?? false {
                 self?.connectTS()
                 self?.wasLostConnection = false
             }
         }
 
-        reachability.whenUnreachable = { [weak self] reachable in
+        reachability.whenUnreachable = { [weak self] _ in
             self?.wasLostConnection = true
         }
 
+        do {
+            try reachability.startNotifier()
+        }
+        catch {
+            Logger.log("Reachability startNotifier error")
+        }
 
         NotificationCenter.default.publisher(for: .sessionConnected)
             .sink { _ in

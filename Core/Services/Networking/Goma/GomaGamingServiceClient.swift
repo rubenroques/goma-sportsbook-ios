@@ -24,6 +24,12 @@ class GomaGamingServiceClient {
         self.networkClient.refreshAuthToken(token: token)
     }
 
+    func sendLog(type: String, message: String) -> AnyPublisher<String, NetworkError> {
+        let endpoint = GomaGamingService.log(type: type, message: message)
+        let requestPublisher: AnyPublisher<String, NetworkError> = networkClient.requestEndpoint(deviceId: "logs", endpoint: endpoint)
+        return requestPublisher
+    }
+
     func requestTest(deviceId: String) -> AnyPublisher<ExampleModel?, NetworkError> {
         let endpoint = GomaGamingService.test
         let requestPublisher: AnyPublisher<ExampleModel?, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)

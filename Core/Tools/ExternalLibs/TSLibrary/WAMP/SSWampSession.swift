@@ -312,8 +312,9 @@ open class SSWampSession: SSWampTransportDelegate {
 
         case let message as ResultSSWampMessage:
             let requestId = message.requestId
-            if let (callback, _) = self.callRequests.removeValue(forKey: requestId) {
+            if let (callback, _) = self.callRequests[requestId] {
                 callback(message.details, message.results, message.kwResults, message.arrResults)
+                self.callRequests[requestId] = nil
             }
             else {
                 // log this erroneous situation
@@ -321,10 +322,13 @@ open class SSWampSession: SSWampTransportDelegate {
 
         case let message as RegisteredSSWampMessage:
             let requestId = message.requestId
-            if let (callback, _, eventCallback) = self.registerRequests.removeValue(forKey: requestId) {
+            if let (callback, _, eventCallback) = self.registerRequests[requestId] {
                 // Notify user and delegate him to unsubscribe this subscription
                 let registration = Registration(session: self, registration: message.registration, onEvent: eventCallback)
                 callback(registration)
+
+                self.registerRequests[requestId] = nil
+
                 // Subscription succeeded, we should store event callback for when it's fired
                 self.registers[message.registration] = registration
             }
@@ -333,10 +337,12 @@ open class SSWampSession: SSWampTransportDelegate {
             }
         case let message as UnregisteredSSWampMessage:
             let requestId = message.requestId
-            if let (subscription, callback, _) = self.unregisterRequests.removeValue(forKey: requestId) {
-                if let subscription = self.registers.removeValue(forKey: subscription) {
-                    subscription.invalidate()
+            if let (subscription, callback, _) = self.unregisterRequests[requestId] {
+                if let subscriptionIn = self.registers[subscription] {
+                    subscriptionIn.invalidate()
                     callback()
+                    self.registers[subscription] = nil
+                    self.unregisterRequests[requestId] = nil
                 }
                 else {
                     // log this erroneous situation
@@ -348,10 +354,13 @@ open class SSWampSession: SSWampTransportDelegate {
 
         case let message as SubscribedSSWampMessage:
             let requestId = message.requestId
-            if let (callback, _, eventCallback) = self.subscribeRequests.removeValue(forKey: requestId) {
+            if let (callback, _, eventCallback) = self.subscribeRequests[requestId] {
                 // Notify user and delegate him to unsubscribe this subscription
                 let subscription = Subscription(session: self, subscription: message.subscription, onEvent: eventCallback)
                 callback(subscription)
+
+                self.subscribeRequests[requestId] = nil
+
                 // Subscription succeeded, we should store event callback for when it's fired
                 self.subscriptions[message.subscription] = subscription
             }
@@ -371,10 +380,12 @@ open class SSWampSession: SSWampTransportDelegate {
         //
         case let message as UnsubscribedSSWampMessage:
             let requestId = message.requestId
-            if let (subscription, callback, _) = self.unsubscribeRequests.removeValue(forKey: requestId) {
-                if let subscription = self.subscriptions.removeValue(forKey: subscription) {
-                    subscription.invalidate()
+            if let (subscription, callback, _) = self.unsubscribeRequests[requestId] {
+                if let subscriptionIn = self.subscriptions[subscription] {
+                    subscriptionIn.invalidate()
                     callback()
+                    self.unsubscribeRequests[requestId] = nil
+                    self.subscriptions[subscription] = nil
                 }
                 else {
                     // log this erroneous situation
@@ -385,8 +396,9 @@ open class SSWampSession: SSWampTransportDelegate {
             }
         case let message as PublishedSSWampMessage:
             let requestId = message.requestId
-            if let (callback, _) = self.publishRequests.removeValue(forKey: requestId) {
+            if let (callback, _) = self.publishRequests[requestId] {
                 callback()
+                self.publishRequests[requestId] = nil
             }
             else {
                 // log this erroneous situation
@@ -396,29 +408,33 @@ open class SSWampSession: SSWampTransportDelegate {
         case let message as ErrorSSWampMessage:
             switch message.requestType {
             case SSWampMessages.call:
-                if let (_, errorCallback) = self.callRequests.removeValue(forKey: message.requestId) {
+                if let (_, errorCallback) = self.callRequests[message.requestId] {
                     errorCallback(message.details, message.error, message.args, message.kwargs)
+                    self.callRequests[message.requestId] = nil
                 }
                 else {
                     // log this erroneous situation
                 }
             case SSWampMessages.subscribe:
-                if let (_, errorCallback, _) = self.subscribeRequests.removeValue(forKey: message.requestId) {
+                if let (_, errorCallback, _) = self.subscribeRequests[message.requestId] {
                     errorCallback(message.details, message.error)
+                    self.subscribeRequests[message.requestId] = nil
                 }
                 else {
                     // log this erroneous situation
                 }
             case SSWampMessages.unsubscribe:
-                if let (_, _, errorCallback) = self.unsubscribeRequests.removeValue(forKey: message.requestId) {
+                if let (_, _, errorCallback) = self.unsubscribeRequests[message.requestId] {
                     errorCallback(message.details, message.error)
+                    self.unsubscribeRequests[message.requestId] = nil
                 }
                 else {
                     // log this erroneous situation
                 }
             case SSWampMessages.publish:
-                if let(_, errorCallback) = self.publishRequests.removeValue(forKey: message.requestId) {
+                if let(_, errorCallback) = self.publishRequests[message.requestId] {
                     errorCallback(message.details, message.error)
+                    self.publishRequests[message.requestId] = nil
                 }
                 else {
                     // log this erroneous situation
@@ -484,8 +500,9 @@ open class SSWampSession: SSWampTransportDelegate {
 
     fileprivate func sendMessage(_ message: SSWampMessage) {
         let marshalledMessage = message.marshal()
-        let data = self.serializer!.pack(marshalledMessage as [Any])!
-        self.transport.sendData(data)
+        if let data = self.serializer?.pack(marshalledMessage as [Any]) {
+            self.transport.sendData(data)
+        }
     }
 
     fileprivate func generateRequestId() -> Int {

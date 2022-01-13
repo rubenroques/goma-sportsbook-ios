@@ -72,7 +72,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         Env.deviceFCMToken = fcmToken ?? ""
     }
 
-
     func applicationDidEnterBackground(_ application: UIApplication) {
 
     }

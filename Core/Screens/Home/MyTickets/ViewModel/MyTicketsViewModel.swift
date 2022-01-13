@@ -12,10 +12,10 @@ import Combine
 class MyTicketsViewModel: NSObject {
 
     private var selectedMyTicketsTypeIndex: Int = 0
-    var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.resolved)
+    var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
     enum MyTicketsType: Int {
-        case resolved = 0
-        case opened = 1
+        case opened = 0
+        case resolved = 1
         case won = 2
     }
 
