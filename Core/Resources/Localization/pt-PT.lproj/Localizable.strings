@@ -44,7 +44,7 @@
 "string_email_already_registered" = "This email address is already registered.";
 "string_username_already_registered" = "This username is already registered.";
 "string_forgot" = "Forgot Password?";
-"string_continue" = "Continue";
+"string_continue_" = "Continue";
 
 "string_new_create_account" = "New here? Create a new account";
 "string_create_account" = "Create a new account";
@@ -132,7 +132,7 @@ Terms of use, Privacy Policy and EULA";
 "string_info" = "Info";
 "string_info_text" = "This is some info about this item";
 "string_personal_information" = "Personal Information";
-"string_continue" = "Continue";
+"string_continue_" = "Continue";
 "string_complete_signup" = "Complete Sign Up";
 "string_close" = "Close";
 "string_address_country" = "Address and Country";
