@@ -46,7 +46,6 @@ class PreLiveEventsViewModel: NSObject {
     
     var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
    
-    
     private var popularMatchesViewModelDataSource = PopularMatchesViewModelDataSource(banners: [], matches: [])
     private var todaySportsViewModelDataSource = TodaySportsViewModelDataSource(todayMatches: [])
     private var competitionSportsViewModelDataSource = CompetitionSportsViewModelDataSource(competitions: [])
@@ -186,7 +185,7 @@ class PreLiveEventsViewModel: NSObject {
 
         Env.userSessionStore.isUserProfileIncomplete
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { value in
+            .sink(receiveValue: { _ in
                 self.popularMatchesViewModelDataSource.refetchAlerts()
             })
             .store(in: &cancellables)
@@ -219,13 +218,8 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingCompetitions.send(false)
         self.isLoadingMyGamesList.send(false)
         
-        
-        if let userSession = UserSessionStore.loggedUserSession() {
-            self.isUserLoggedPublisher.send(true)
-        }else{
-            self.isUserLoggedPublisher.send(false)
-        }
-
+        self.isUserLoggedPublisher.send(UserSessionStore.isUserLogged())
+    
     }
 
     func setMatchListType(_ matchListType: MatchListType) {
@@ -251,35 +245,37 @@ class PreLiveEventsViewModel: NSObject {
 
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
             if numberOfFilters > 0 {
-                if !self.hasContentForSelectedListType(){
+                if !self.hasContentForSelectedListType() {
                     self.screenStatePublisher.send(.emptyAndFilter)
-                }else{
+                }
+                else {
                     self.screenStatePublisher.send(.noEmptyAndFilter)
                 }
-            }else{
-                if !self.hasContentForSelectedListType(){
+            }
+            else {
+                if !self.hasContentForSelectedListType() {
                     self.screenStatePublisher.send(.emptyNoFilter)
-                }else{
+                }
+                else {
                     self.screenStatePublisher.send(.noEmptyNoFilter)
                 }
             }
-        }else{
-            if !self.hasContentForSelectedListType(){
+        }
+        else {
+            if !self.hasContentForSelectedListType() {
                 self.screenStatePublisher.send(.emptyNoFilter)
-            }else{
+            }
+            else {
                 self.screenStatePublisher.send(.noEmptyNoFilter)
             }
         }
         
-        //Todo - Code Review  
+        // Todo - Code Review
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
         
-        
     }
-
-   
 
     func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
         guard let filterOptionsValue = filtersOptions else {
@@ -1837,7 +1833,6 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
         if competitions.isEmpty {
             return 600
         }
-        
         
         return UITableView.automaticDimension
     }

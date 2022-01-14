@@ -244,7 +244,6 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
-    
         tableView.delegate = self
         tableView.dataSource = self
 
@@ -315,13 +314,11 @@ class PreLiveEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        
         self.viewModel.dataDidChangedAction = { [unowned self] in
             self.tableView.reloadData()
             
         }
         
-       
         self.viewModel.screenStatePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState in
@@ -342,7 +339,7 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyAndFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions  {
+                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions {
                         self?.setEmptyStateBaseView(firstLabelText: localized("string_empty_list_with_filters"), secondLabelText: localized("second_string_empty_list_with_filters"), isUserLoggedIn: true)
                     }
                 }
@@ -530,14 +527,15 @@ class PreLiveEventsViewController: UIViewController {
         self.didTapBetslipButtonAction?()
     }
     
-    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool){
+    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool) {
     
         if isUserLoggedIn {
             self.emptyStateImage.image = UIImage(named: "no_content_icon")
             self.firstTextFieldEmptyStateLabel.text = firstLabelText
             self.secondTextFieldEmptyStateLabel.text = secondLabelText
             self.emptyStateButton.isHidden = isUserLoggedIn
-        }else{
+        }
+        else {
             self.emptyStateImage.image = UIImage(named: "no_internet_icon")
             self.firstTextFieldEmptyStateLabel.text = localized("string_empty_no_login")
             self.secondTextFieldEmptyStateLabel.text = localized("second_string_empty_no_login")
@@ -570,7 +568,6 @@ class PreLiveEventsViewController: UIViewController {
     }
 
 }
-
 
 extension PreLiveEventsViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
