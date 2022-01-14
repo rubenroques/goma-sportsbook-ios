@@ -24,24 +24,13 @@ final class TSManager {
     private var globalCancellable = Set<AnyCancellable>()
     
     private let tsQueue = DispatchQueue(label: "com.goma.games.TSQueue")
-    
-    private static var sharedInstance: TSManager?
-    
-    class var shared: TSManager {
-        guard let sharedInstance = self.sharedInstance else {
-            let sharedInstance = TSManager()
-            self.sharedInstance = sharedInstance
-            return sharedInstance
-        }
-        return sharedInstance
-    }
-    
+
     var swampSession: SSWampSession?
     var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
     let origin = "https://clientsample-sports-stage.everymatrix.com/"
 
-    private init() {
+    init() {
 
         Logger.log("TSManager init")
 
@@ -74,9 +63,9 @@ final class TSManager {
 
 
 
-    class func destroySharedInstance() {
-        sharedInstance = nil
-    }
+//    class func destroySharedInstance() {
+//        sharedInstance = nil
+//    }
 
     func destroySwampSession() {
         self.disconnect()

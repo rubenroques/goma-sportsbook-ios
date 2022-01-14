@@ -120,7 +120,7 @@ class GeoLocationManager: NSObject, CLLocationManagerDelegate {
         Env.gomaNetworkClient.requestGeoLocation(deviceId: Env.deviceId,
                                                  latitude: location.coordinate.latitude,
                                                  longitude: location.coordinate.longitude)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:

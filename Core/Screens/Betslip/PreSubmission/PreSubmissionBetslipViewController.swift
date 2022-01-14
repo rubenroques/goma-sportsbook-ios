@@ -642,12 +642,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         for bet in betArray {
 
             if let suggestedBetsRegister = suggestedBetsRegister {
-                TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetsRegister)
+                Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetsRegister)
             }
 
             let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
 
-            TSManager.shared
+            Env.everyMatrixClient.manager
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
                 .sink(receiveCompletion: { _ in
 
@@ -949,7 +949,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         let route = TSRouter.getSystemBetTypes(tickets: ticketSelections)
 
-        TSManager.shared.getModel(router: route, decodingType: SystemBetResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: route, decodingType: SystemBetResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
                 self.systemBetTypeLoadingView.stopAnimating()

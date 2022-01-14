@@ -441,7 +441,7 @@ extension PersonalInfoViewController {
             self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
         }
         self.titleHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -452,7 +452,7 @@ extension PersonalInfoViewController {
         }
         self.firstNameHeaderTextFieldView.setText(profile.fields.firstname)
         self.firstNameHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -463,7 +463,7 @@ extension PersonalInfoViewController {
         }
         self.lastNameHeaderTextFieldView.setText(profile.fields.surname)
         self.lastNameHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -483,7 +483,7 @@ extension PersonalInfoViewController {
 
         self.adress1HeaderTextFieldView.setText(profile.fields.address1)
         self.adress1HeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -491,7 +491,7 @@ extension PersonalInfoViewController {
 
         self.adress2HeaderTextFieldView.setText(profile.fields.address2)
         self.adress2HeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -499,7 +499,7 @@ extension PersonalInfoViewController {
 
         self.cityHeaderTextFieldView.setText(profile.fields.city)
         self.cityHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -507,7 +507,7 @@ extension PersonalInfoViewController {
 
         self.postalCodeHeaderTextFieldView.setText(profile.fields.postalCode)
         self.postalCodeHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -522,7 +522,7 @@ extension PersonalInfoViewController {
 
         self.cardIdHeaderTextFieldView.setText(profile.fields.personalID)
         self.cardIdHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })

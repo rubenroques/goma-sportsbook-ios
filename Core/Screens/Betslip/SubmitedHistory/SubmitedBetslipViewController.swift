@@ -83,7 +83,7 @@ class SubmitedBetslipViewController: UIViewController {
 
         let route = TSRouter.getOpenBets(language: "en", records: 100, page: 0)
 
-        TSManager.shared.getModel(router: route, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: route, decodingType: BetHistoryResponse.self)
             .map(\.betList)
             .compactMap({$0})
             .receive(on: DispatchQueue.main)
@@ -104,14 +104,14 @@ class SubmitedBetslipViewController: UIViewController {
         Logger.log("MyBets requestCashout \(betHistoryEntry.betId)", .debug)
 
         if let cashoutRegister = cashoutRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
 
         let endpoint = TSRouter.cashoutPublisher(operatorId: Env.appSession.operatorId,
                                                  language: "en",
                                                  betId: betHistoryEntry.betId)
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -170,7 +170,7 @@ class SubmitedBetslipViewController: UIViewController {
 
             let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
 
-            TSManager.shared
+            Env.everyMatrixClient.manager
                 .getModel(router: route, decodingType: CashoutSubmission.self)
                 .sink(receiveCompletion: { _ in
 

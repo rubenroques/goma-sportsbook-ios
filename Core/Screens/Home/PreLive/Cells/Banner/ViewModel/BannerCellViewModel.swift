@@ -68,7 +68,7 @@ class BannerCellViewModel {
     func requestMatchOdds() {
         guard let matchId = self.matchId else {return}
         
-        let matchPublisher = TSManager.shared
+        let matchPublisher = Env.everyMatrixClient.manager
             .getModel(router: TSRouter.getMatchOdds(language: "en", matchId: matchId, bettingTypeId: "69"),
                       decodingType: EveryMatrix.MatchOdds.self)
             .eraseToAnyPublisher()

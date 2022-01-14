@@ -117,14 +117,14 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
     func setupPublishers() {
         self.securityQuestionTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.securityAnswerHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })

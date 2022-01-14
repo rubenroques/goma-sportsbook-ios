@@ -91,7 +91,7 @@ class MyTicketsViewModel: NSObject {
     //
     func loadLocations() {
         let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        TSManager.shared.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
             .sink(receiveCompletion: { _ in
 
             },
@@ -129,7 +129,7 @@ class MyTicketsViewModel: NSObject {
         self.isLoadingResolved.send(true)
 
         let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
-        TSManager.shared.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -161,7 +161,7 @@ class MyTicketsViewModel: NSObject {
         self.isLoadingOpened.send(true)
 
         let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
-        TSManager.shared.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -194,7 +194,7 @@ class MyTicketsViewModel: NSObject {
         self.isLoadingWon.send(true)
 
         let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
-        TSManager.shared.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {

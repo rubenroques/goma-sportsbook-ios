@@ -159,7 +159,7 @@ extension BetslipManager {
                                                      betType: .single,
                                                      tickets: ticketSelections)
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .handleEvents(receiveOutput: { betslipSelectionState in
                 self.simpleBetslipSelectionState.send(betslipSelectionState)
@@ -183,7 +183,7 @@ extension BetslipManager {
                                                      betType: .multiple,
                                                      tickets: ticketSelections)
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -206,7 +206,7 @@ extension BetslipManager {
                                                        systemBetType: systemBetType,
                                                        tickets: ticketSelections)
 
-        return TSManager.shared
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .handleEvents(receiveOutput: { betslipSelectionState in
                 self.simpleBetslipSelectionState.send(betslipSelectionState)
@@ -286,7 +286,7 @@ extension BetslipManager {
 
         print("#BetslipManager# Submitting bet: \(route)")
 
-        return TSManager.shared
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
             .map({ response in
                 return BetPlacedDetails.init(response: response, tickets: updatedTicketSelections)
@@ -306,7 +306,7 @@ extension BetslipManager {
                                       betType: .multiple,
                                       tickets: ticketSelections)
 
-        return TSManager.shared
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
             .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
@@ -329,7 +329,7 @@ extension BetslipManager {
                                             systemBetType: systemBetType,
                                             tickets: ticketSelections)
 
-        return TSManager.shared
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
             .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in

@@ -233,7 +233,7 @@ class WithdrawViewController: UIViewController {
 
     func setupPublishers() {
         self.withdrawHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })

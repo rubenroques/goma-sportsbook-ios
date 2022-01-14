@@ -213,56 +213,56 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         .store(in: &cancellables)
 
         self.titleHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.firstNameHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.lastNameHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.countryHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.address1HeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.address2HeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.cityHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.postalCodeHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })

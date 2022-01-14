@@ -610,7 +610,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchPopularMatches() {
 
         if let popularMatchesRegister = popularMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
         }
 
         let matchesCount = self.popularMatchesCount * self.popularMatchesPage
@@ -623,7 +623,7 @@ class PreLiveEventsViewModel: NSObject {
         self.popularMatchesPublisher?.cancel()
         self.popularMatchesPublisher = nil
         
-        self.popularMatchesPublisher = TSManager.shared
+        self.popularMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -660,7 +660,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
 
         if let todayMatchesRegister = todayMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: todayMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: todayMatchesRegister)
         }
 
         let matchesCount = self.todayMatchesCount * self.todayMatchesPage
@@ -680,7 +680,7 @@ class PreLiveEventsViewModel: NSObject {
         self.todayMatchesPublisher?.cancel()
         self.todayMatchesPublisher = nil
 
-        self.todayMatchesPublisher = TSManager.shared
+        self.todayMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -713,16 +713,16 @@ class PreLiveEventsViewModel: NSObject {
         let language = "en"
         let sportId = self.selectedSportId.typeId
 
-        let popularTournamentsPublisher = TSManager.shared
+        let popularTournamentsPublisher = Env.everyMatrixClient.manager
             .getModel(router: TSRouter.getCustomTournaments(language: language, sportId: sportId),
                       decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
             .eraseToAnyPublisher()
 
         if let tournamentsRegister = tournamentsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
         }
 
-        self.tournamentsPublisher = TSManager.shared
+        self.tournamentsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(TSRouter.tournamentsPublisher(operatorId: Env.appSession.operatorId,
                                                               language: language,
                                                               sportId: sportId),
@@ -743,10 +743,10 @@ class PreLiveEventsViewModel: NSObject {
             .eraseToAnyPublisher()
 
         if let locationsRegister = locationsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
         }
 
-        self.locationsPublisher = TSManager.shared
+        self.locationsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(TSRouter.locationsPublisher(operatorId: Env.appSession.operatorId,
                                                           language: language,
                                                           sportId: sportId),
@@ -791,11 +791,11 @@ class PreLiveEventsViewModel: NSObject {
                 self?.zip3Publisher = nil
 
                 if let locationsRegister = self?.locationsRegister {
-                    TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
+                    Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
                 }
 
                 if let tournamentsRegister = self?.tournamentsRegister {
-                    TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
+                    Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
                 }
 
             }, receiveValue: { [weak self] popularTournaments, tournaments, locations in
@@ -814,7 +814,7 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingCompetitions.send(true)
 
         if let competitionsMatchesRegister = competitionsMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
         }
 
         let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId, language: "en", sportId: self.selectedSportId.typeId, events: ids)
@@ -822,7 +822,7 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsMatchesPublisher?.cancel()
         self.competitionsMatchesPublisher = nil
 
-        self.competitionsMatchesPublisher = TSManager.shared
+        self.competitionsMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -853,7 +853,7 @@ class PreLiveEventsViewModel: NSObject {
     func fetchFavoriteCompetitionsMatchesWithIds(_ ids: [String]) {
 
         if let favoriteCompetitionsMatchesRegister = favoriteCompetitionsMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
         }
 
         let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId, language: "en", sportId: self.selectedSportId.typeId, events: ids)
@@ -861,7 +861,7 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteCompetitionsMatchesPublisher?.cancel()
         self.favoriteCompetitionsMatchesPublisher = nil
 
-        self.favoriteCompetitionsMatchesPublisher = TSManager.shared
+        self.favoriteCompetitionsMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -891,7 +891,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchFavoriteMatches() {
 
         if let favoriteMatchesRegister = favoriteMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
         }
 
         guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
@@ -903,7 +903,7 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteMatchesPublisher?.cancel()
         self.favoriteMatchesPublisher = nil
 
-        self.favoriteMatchesPublisher = TSManager.shared
+        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -935,7 +935,7 @@ class PreLiveEventsViewModel: NSObject {
     func fetchBanners() {
 
         if let bannersInfoRegister = bannersInfoRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
         }
 
         let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
@@ -943,7 +943,7 @@ class PreLiveEventsViewModel: NSObject {
         self.bannersInfoPublisher?.cancel()
         self.bannersInfoPublisher = nil
 
-        self.bannersInfoPublisher = TSManager.shared
+        self.bannersInfoPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in

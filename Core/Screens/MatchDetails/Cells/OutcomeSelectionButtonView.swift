@@ -75,7 +75,7 @@ class OutcomeSelectionButtonView: NibView {
         self.debouncerSubscription = nil
 
         if let oddUpdatesRegister = oddUpdatesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
         }
     }
 
@@ -139,7 +139,7 @@ class OutcomeSelectionButtonView: NibView {
 
         self.debouncerSubscription?.handler = { [weak self] in
             print(" debouncerSubscription called ")
-            self?.oddUpdatesPublisher = TSManager.shared.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            self?.oddUpdatesPublisher = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { completion in
                     switch completion {

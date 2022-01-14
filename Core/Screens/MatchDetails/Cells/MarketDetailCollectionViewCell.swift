@@ -67,7 +67,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.oddUpdatesPublisher = nil
 
         if let oddUpdatesRegister = oddUpdatesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
         }
 
         self.isOutcomeButtonSelected = false
@@ -108,7 +108,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
                                                       language: "en",
                                                       bettingOfferId: outcome.bettingOffer.id)
 
-        self.oddUpdatesPublisher = TSManager.shared.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+        self.oddUpdatesPublisher = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {

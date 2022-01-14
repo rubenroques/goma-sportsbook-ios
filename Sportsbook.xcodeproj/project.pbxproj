@@ -343,6 +343,12 @@
 		457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457816B92707632400F66878 /* TitleTableViewHeader.swift */; };
 		457816BD2707632400F66878 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816BA2707632400F66878 /* TitleTableViewHeader.xib */; };
 		457816BE2707632400F66878 /* TitleTableViewHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457816BA2707632400F66878 /* TitleTableViewHeader.xib */; };
+		457EDAC32791D39B00DDCD83 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 457EDAC22791D39B00DDCD83 /* SwiftyBeaver */; };
+		457EDAC52791D3AC00DDCD83 /* SwiftyBeaver in Frameworks */ = {isa = PBXBuildFile; productRef = 457EDAC42791D3AC00DDCD83 /* SwiftyBeaver */; };
+		457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457EDAC62792002300DDCD83 /* MatchFieldWebViewController.swift */; };
+		457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457EDAC62792002300DDCD83 /* MatchFieldWebViewController.swift */; };
+		457EDACA2792002300DDCD83 /* MatchFieldWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457EDAC72792002300DDCD83 /* MatchFieldWebViewController.xib */; };
+		457EDACB2792002300DDCD83 /* MatchFieldWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457EDAC72792002300DDCD83 /* MatchFieldWebViewController.xib */; };
 		457F495C2737C2280047169D /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		457F495D2737C2280047169D /* UserBalance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495B2737C2280047169D /* UserBalance.swift */; };
 		457F49602737C3630047169D /* BetslipSelectionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457F495F2737C3630047169D /* BetslipSelectionState.swift */; };
@@ -1061,6 +1067,8 @@
 		457816B42707631000F66878 /* TournamentTableViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TournamentTableViewHeader.xib; sourceTree = "<group>"; };
 		457816B92707632400F66878 /* TitleTableViewHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewHeader.swift; sourceTree = "<group>"; };
 		457816BA2707632400F66878 /* TitleTableViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewHeader.xib; sourceTree = "<group>"; };
+		457EDAC62792002300DDCD83 /* MatchFieldWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFieldWebViewController.swift; sourceTree = "<group>"; };
+		457EDAC72792002300DDCD83 /* MatchFieldWebViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFieldWebViewController.xib; sourceTree = "<group>"; };
 		457F495B2737C2280047169D /* UserBalance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBalance.swift; sourceTree = "<group>"; };
 		457F495F2737C3630047169D /* BetslipSelectionState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipSelectionState.swift; sourceTree = "<group>"; };
 		457F49622737D9110047169D /* BetSubmissionSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSubmissionSuccessViewController.swift; sourceTree = "<group>"; };
@@ -1331,6 +1339,7 @@
 				452047AF2703597500B277B5 /* FirebaseAuth in Frameworks */,
 				45D871C22710769600F5B87B /* Collections in Frameworks */,
 				45166D2C26F3D89B00E69D65 /* CombineCocoa in Frameworks */,
+				457EDAC32791D39B00DDCD83 /* SwiftyBeaver in Frameworks */,
 				452047B12703597500B277B5 /* FirebaseCrashlytics in Frameworks */,
 				452047AD2703597500B277B5 /* FirebaseAnalytics in Frameworks */,
 				45D871C62710769600F5B87B /* OrderedCollections in Frameworks */,
@@ -1361,6 +1370,7 @@
 				45D871C8271076B800F5B87B /* Collections in Frameworks */,
 				45166D2E26F3D8AC00E69D65 /* CombineCocoa in Frameworks */,
 				45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */,
+				457EDAC52791D3AC00DDCD83 /* SwiftyBeaver in Frameworks */,
 				A9B841A326E26C0B00269B05 /* Starscream in Frameworks */,
 				A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */,
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
@@ -2789,6 +2799,8 @@
 				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				4591358027602960009D1193 /* MarketGroupOrganizer.swift */,
 				A9BCF43A274FB589006DD528 /* Cells */,
+				457EDAC62792002300DDCD83 /* MatchFieldWebViewController.swift */,
+				457EDAC72792002300DDCD83 /* MatchFieldWebViewController.xib */,
 			);
 			path = MatchDetails;
 			sourceTree = "<group>";
@@ -2933,6 +2945,7 @@
 				F4E3B75D2742BF9C00855C58 /* SweeterSwift */,
 				F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */,
 				45F8B153274BC3B60087652B /* FirebaseMessaging */,
+				457EDAC22791D39B00DDCD83 /* SwiftyBeaver */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -2988,6 +3001,7 @@
 				F4E3B7622742BFE300855C58 /* SweeterSwift */,
 				F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */,
 				A96B70B82739891200FEF07D /* FirebaseMessaging */,
+				457EDAC42791D3AC00DDCD83 /* SwiftyBeaver */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -3033,6 +3047,7 @@
 				454E0AD62735C76600794E0C /* XCRemoteSwiftPackageReference "CombineExt" */,
 				F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */,
 				F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */,
+				457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -3132,6 +3147,7 @@
 				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
 				A99A972426FE16D500F8D163 /* FullRegisterAddressCountryViewController.xib in Resources */,
 				A99A971E26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */,
+				457EDACA2792002300DDCD83 /* MatchFieldWebViewController.xib in Resources */,
 				457816B12706699900F66878 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				A9B840A726DE831400269B05 /* RequestLocationAccessViewController.xib in Resources */,
 				457F497827383A350047169D /* SubmitedBetSelectionView.xib in Resources */,
@@ -3212,6 +3228,7 @@
 				45DDBAB126F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
 				45DDBA9726F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
 				4589F3FA26BF017A005DF543 /* WelcomeViewController.xib in Resources */,
+				457EDACB2792002300DDCD83 /* MatchFieldWebViewController.xib in Resources */,
 				45EF5439270C603D00D1E13E /* MatchFiltersViewController.xib in Resources */,
 				45D871CD27108F5900F5B87B /* CountryFlags.xcassets in Resources */,
 				A9BCF431274BBE8D006DD528 /* PolicyLinkView.xib in Resources */,
@@ -3472,6 +3489,7 @@
 				45BEA48526F4DC9900680181 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				45166CF526F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
+				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				A983466B2774CA000053FA75 /* EmptyCardTableViewCell.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
@@ -3785,6 +3803,7 @@
 				45BEA48626F4DC9900680181 /* SimpleRegisterEmailSentViewController.swift in Sources */,
 				45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
+				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				A983466C2774CA000053FA75 /* EmptyCardTableViewCell.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
@@ -4121,7 +4140,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00227;
+				CURRENT_PROJECT_VERSION = 00229;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4147,7 +4166,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00227;
+				CURRENT_PROJECT_VERSION = 00229;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4351,6 +4370,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyBeaver/SwiftyBeaver.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		45D871C02710769600F5B87B /* XCRemoteSwiftPackageReference "swift-collections" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-collections.git";
@@ -4463,6 +4490,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 454E0AD62735C76600794E0C /* XCRemoteSwiftPackageReference "CombineExt" */;
 			productName = CombineExt;
+		};
+		457EDAC22791D39B00DDCD83 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
+		};
+		457EDAC42791D3AC00DDCD83 /* SwiftyBeaver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */;
+			productName = SwiftyBeaver;
 		};
 		45D871C12710769600F5B87B /* Collections */ = {
 			isa = XCSwiftPackageProductDependency;

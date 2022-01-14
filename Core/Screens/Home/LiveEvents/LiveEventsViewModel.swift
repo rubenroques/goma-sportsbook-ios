@@ -110,7 +110,7 @@ class LiveEventsViewModel: NSObject {
     func getSportsLive() {
 
         if let liveSportsRegister = liveSportsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
         }
 
         var endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
@@ -119,7 +119,7 @@ class LiveEventsViewModel: NSObject {
         self.liveSportsPublisher?.cancel()
         self.liveSportsPublisher = nil
 
-        self.liveSportsPublisher = TSManager.shared
+        self.liveSportsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -252,7 +252,7 @@ class LiveEventsViewModel: NSObject {
     private func fetchAllMatches() {
 
         if let allMatchesRegister = allMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)
         }
 
         let matchesCount = self.allMatchesCount * self.allMatchesPage
@@ -265,7 +265,7 @@ class LiveEventsViewModel: NSObject {
         self.allMatchesPublisher?.cancel()
         self.allMatchesPublisher = nil
 
-        self.allMatchesPublisher = TSManager.shared
+        self.allMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -295,7 +295,7 @@ class LiveEventsViewModel: NSObject {
     func fetchBanners() {
 
         if let bannersInfoRegister = bannersInfoRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
         }
 
         let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
@@ -303,7 +303,7 @@ class LiveEventsViewModel: NSObject {
         self.bannersInfoPublisher?.cancel()
         self.bannersInfoPublisher = nil
 
-        self.bannersInfoPublisher = TSManager.shared
+        self.bannersInfoPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
             .sink(receiveCompletion: { completion in
                 switch completion {

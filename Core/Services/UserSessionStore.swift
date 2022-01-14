@@ -27,11 +27,11 @@ class UserSessionStore {
     init() {
 
         NotificationCenter.default.publisher(for: .sessionConnected)
-            .setFailureType(to: EveryMatrix.APIError.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
 
             }, receiveValue: { [weak self] _ in
+                Logger.log("SessionConnected recieved")
                 self?.startUserSessionIfNeeded()
             })
             .store(in: &cancellables)
@@ -39,8 +39,9 @@ class UserSessionStore {
 
         NotificationCenter.default.publisher(for: .sessionForcedLogoutDisconnected)
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.logout()
+            .sink { [weak self] _ in
+                Logger.log("SessionForcedLogoutDisconnected recieved will logout user")
+                self?.logout()
             }
             .store(in: &cancellables)
 
@@ -197,7 +198,7 @@ extension UserSessionStore {
 
     func forceWalletUpdate() {
         let route = TSRouter.getUserBalance
-        TSManager.shared.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
+        Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
             .sink { completion in
                 print(completion)
             } receiveValue: { userBalance in
@@ -233,9 +234,9 @@ extension UserSessionStore {
 
         self.loadLoggedUser()
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                 case .finished:
