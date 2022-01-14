@@ -206,6 +206,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.isLoadingCompetitions.send(false)
         self.isLoadingMyGamesList.send(false)
+
     }
 
     func setMatchListType(_ matchListType: MatchListType) {
@@ -233,6 +234,7 @@ class PreLiveEventsViewModel: NSObject {
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
+
     }
 
     private func updateContentListFiltered() {

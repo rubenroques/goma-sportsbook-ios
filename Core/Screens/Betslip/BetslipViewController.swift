@@ -36,13 +36,18 @@ class BetslipViewController: UIViewController {
     init() {
         preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
 
-        myTicketsViewController = MyTicketsViewController()
-        viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
+        //myTicketsViewController = MyTicketsViewController()
+        viewControllers = [preSubmissionBetslipViewController]
         
         viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
         tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
         super.init(nibName: "BetslipViewController", bundle: nil)
+    }
+
+    deinit {
+        print("DEINIT BETSLIP")
+        preSubmissionBetslipViewController.removeFromParent()
     }
 
     @available(iOS, unavailable)
@@ -86,8 +91,8 @@ class BetslipViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.accountValueLabel.text = value
+            .sink { [weak self] value in
+                self?.accountValueLabel.text = value
             }
             .store(in: &cancellables)
 

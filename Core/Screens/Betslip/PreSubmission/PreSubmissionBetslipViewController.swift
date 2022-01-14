@@ -69,7 +69,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var placeBetButton: UIButton!
 
     @IBOutlet private weak var placeBetBottomConstraint: NSLayoutConstraint!
-    
 
     @IBOutlet weak var secondaryPlaceBetBaseView: UIView!
     
@@ -98,8 +97,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet weak var secondarySystemOddsValueLabel: UILabel!
     
     @IBOutlet weak var secondarySystemWinningsSeparatorView: UIView!
-    
-    
+
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
     @IBOutlet private weak var loadingBaseView: UIView!
@@ -109,8 +107,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private var suggestedBetsActivityIndicator: UIActivityIndicatorView!
     
     @IBOutlet weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
-    
-    
+
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
     private var systemBettingTicketDataSource = SystemBettingTicketDataSource(bettingTickets: [])
@@ -187,7 +184,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
-    private var suggestedBetsRegister: EndpointPublisherIdentifiable?
     private var suggestedBetsPublisher: AnyCancellable?
     private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
     private var suggestedBetsNotFound: Int = 0
@@ -196,8 +192,17 @@ class PreSubmissionBetslipViewController: UIViewController {
     var suggestedBetsArray: [Int: [Match]] = [:]
     var totalGomaSuggestedBets: Int = 0
 
+    var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
+    var suggestedCancellables = Set<AnyCancellable>()
+    var isSuggestedBetsLoading: Bool = false {
+        didSet {
+            self.suggestedBetsActivityIndicator.isHidden = !isSuggestedBetsLoading
+        }
+    }
+
     // Suggested Aggregator Variables
     var matches: [String: EveryMatrix.Match] = [:]
+    var match: EveryMatrix.Match?
     var marketsForMatch: [String: Set<String>] = [:]
     var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]
     var bettingOffers: [String: EveryMatrix.BettingOffer] = [:]
@@ -207,7 +212,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     var mainMarketsOrder: OrderedSet<String> = []
     var bettingOutcomesForMarket: [String: Set<String>] = [:]
 
-    //Publishers
+    // Publishers
     var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
     var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
 
@@ -215,6 +220,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
         self.title = "Betslip"
+    }
+
+    deinit {
+        print("DEINIT PRESUBMISSIONVC")
     }
 
     @available(iOS, unavailable)
@@ -302,16 +311,16 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.didChangeSegmentValue(self.betTypeSegmentControl)
         }
 
-        singleBettingTicketDataSource.didUpdateBettingValueAction = { id, value in
+        singleBettingTicketDataSource.didUpdateBettingValueAction = { [weak self] id, value in
             if value == 0 {
-                self.simpleBetsBettingValues.value[id] = nil
+                self?.simpleBetsBettingValues.value[id] = nil
             }
             else {
-                self.simpleBetsBettingValues.value[id] = value
+                self?.simpleBetsBettingValues.value[id] = value
             }
         }
-        singleBettingTicketDataSource.bettingValueForId = { id in
-            self.simpleBetsBettingValues.value[id]
+        singleBettingTicketDataSource.bettingValueForId = { [weak self] id in
+            self?.simpleBetsBettingValues.value[id]
         }
 
         Env.betslipManager.bettingTicketsPublisher
@@ -370,8 +379,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 let multiple: Double = newArray.reduce(1.0, *)
                 return multiple
             })
-            .sink(receiveValue: { multiplier in
-                self.multiplierPublisher.send(multiplier)
+            .sink(receiveValue: { [weak self] multiplier in
+                self?.multiplierPublisher.send(multiplier)
             })
             .store(in: &cancellables)
 
@@ -386,12 +395,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .map(\.isEmpty)
-            .sink(receiveValue: { isEmpty in
-                self.emptyBetsBaseView.isHidden = !isEmpty
+            .sink(receiveValue: { [weak self] isEmpty in
+                self?.emptyBetsBaseView.isHidden = !isEmpty
 
                 if isEmpty {
-                    self.isSuggestedBetsLoading(true)
-                    self.getSuggestedBets()
+                    self?.isSuggestedBetsLoading = true
+                    self?.getSuggestedBets()
                 }
             })
             .store(in: &cancellables)
@@ -487,12 +496,12 @@ class PreSubmissionBetslipViewController: UIViewController {
             .filter { betslipType, _, _ in
                 betslipType == .simple
             }
-            .map({ _, simpleBetsBettingValues, tickets -> String in
+            .map({ [weak self] _, simpleBetsBettingValues, tickets -> String in
                 var expectedReturn = 0.0
                 
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
-                        self.simpleOddsValues.append(ticket.value)
+                        self?.simpleOddsValues.append(ticket.value)
                         let expectedTicketReturn = ticket.value * betValue
                           expectedReturn += expectedTicketReturn
                         
@@ -534,7 +543,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         Publishers.CombineLatest(self.listTypePublisher, self.isKeyboardShowingPublisher)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] (listType, isKeyboardShowing) in
+            .sink(receiveValue: { [weak self] listType, isKeyboardShowing in
                 switch (listType, isKeyboardShowing) {
                 case (.simple, _):
                     self?.secondaryPlaceBetBaseView.isHidden = true
@@ -561,11 +570,11 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { completion in
                 print(completion)
-            } receiveValue: { betPlacedDetails in
+            } receiveValue: { [weak self] betPlacedDetails in
                 if !betPlacedDetails.isEmpty {
                     let errorMessage = betPlacedDetails[0].response.errorMessage
                     let response = betPlacedDetails[0].response
-                    self.showErrorView(errorMessage: errorMessage)
+                    self?.showErrorView(errorMessage: errorMessage)
 
                     Env.betslipManager.addBetslipPlacedBetErrorResponse(betPlacedError: [response])
                 }
@@ -577,8 +586,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             .sink { completion in
                 print(completion)
                 // self.isLoading = false
-            } receiveValue: { _ in
-                self.tableView.reloadData()
+            } receiveValue: { [weak self] _ in
+                self?.tableView.reloadData()
             }
             .store(in: &cancellables)
 
@@ -592,45 +601,41 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if value == totalSuggestedBets && value != 0 {
 
                     self.betSuggestedCollectionView.reloadData()
-                    self.isSuggestedBetsLoading(false)
+                    self.isSuggestedBetsLoading = false
                     self.suggestedBetsRetrievedPublisher.send(0)
                     self.suggestedBetsNotFound = 0
+                    TSManager.shared.swampSession?.printMemoryLogs()
+
                 }
             })
             .store(in: &cancellables)
 
         self.setupWithTheme()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         self.placeBetButton.isEnabled = false
-    }
 
-    func isSuggestedBetsLoading(_ loading: Bool) {
-        if loading {
-            self.suggestedBetsActivityIndicator.isHidden = false
-        }
-        else {
-            self.suggestedBetsActivityIndicator.isHidden = true
-        }
+        //TSManager.shared.swampSession?.printMemoryLogs()
+
     }
 
     func getSuggestedBets() {
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
             .sink(receiveCompletion: { _ in
             },
-            receiveValue: { gomaBetsArray in
+            receiveValue: { [weak self] gomaBetsArray in
 
                 guard let betsArray = gomaBetsArray else {return}
 
-                self.gomaSuggestedBetsResponse = betsArray
+                self?.gomaSuggestedBetsResponse = betsArray
 
-                let totalGomaCount = self.gomaSuggestedBetsResponse.flatMap({$0}).count
-                self.totalGomaSuggestedBets = totalGomaCount
+                let totalGomaCount = self?.gomaSuggestedBetsResponse.flatMap({$0}).count
+                self?.totalGomaSuggestedBets = totalGomaCount ?? 0
 
                 for (index, betArray) in betsArray.enumerated() {
-                    self.subscribeSuggestedBet(betArray: betArray, index: index)
+                    self?.subscribeSuggestedBet(betArray: betArray, index: index)
                 }
             })
             .store(in: &cancellables)
@@ -641,10 +646,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         for bet in betArray {
 
-            if let suggestedBetsRegister = suggestedBetsRegister {
-                TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetsRegister)
-            }
-
             let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
 
             TSManager.shared
@@ -654,7 +655,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }, receiveValue: { [weak self] state in
                     switch state {
                     case .connect(let publisherIdentifiable):
-                        self?.suggestedBetsRegister = publisherIdentifiable
+                        print(publisherIdentifiable)
+                        self?.suggestedBetsRegisters.append(publisherIdentifiable)
                     case .initialContent(let aggregator):
                         self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
                     case .updatedContent:
@@ -663,20 +665,19 @@ class PreSubmissionBetslipViewController: UIViewController {
                         ()
                     }
                 })
-                .store(in: &cancellables)
+                .store(in: &suggestedCancellables)
         }
 
     }
 
     private func setupSuggestedMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator, index: Int) {
-        // Env.everyMatrixStorage.processAggregator(aggregator, withListType: .suggestedMatches, shouldClear: true)
+
         self.processSuggestedMatchAggregator(aggregator)
 
-        // let suggestedMatchArray = Env.everyMatrixStorage.matchesForListType(.suggestedMatches)
-        let suggestedMatchArray = self.processSuggestedMatch()
+        let processedSuggestedMatch = self.processSuggestedMatch()
 
         if let suggestedMatch =
-            suggestedMatchArray[safe: 0] {
+            processedSuggestedMatch {
 
             if self.suggestedBetsArray[index] != nil {
                 self.suggestedBetsArray[index]?.append(suggestedMatch)
@@ -745,6 +746,15 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        for suggestedBetRegister in self.suggestedBetsRegisters {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        }
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -819,7 +829,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         // self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.secondaryBackground
         self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
-
 
         self.plusOneButtonView.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
@@ -902,6 +911,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.clearAllBettingTickets()
         self.gomaSuggestedBetsResponse = []
         self.suggestedBetsArray = [:]
+
+        for suggestedBetRegister in self.suggestedBetsRegisters {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        }
+
         self.betSuggestedCollectionView.reloadData()
     }
 
@@ -951,13 +965,13 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         TSManager.shared.getModel(router: route, decodingType: SystemBetResponse.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                self.systemBetTypeLoadingView.stopAnimating()
-            }, receiveValue: { systemBetResponse in
-                self.systemBetOptions = systemBetResponse.systemBets
-                self.systemBetTypePickerView.reloadAllComponents()
-                self.selectedSystemBet = self.systemBetOptions.first
-                self.requestSystemBetInfo()
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.systemBetTypeLoadingView.stopAnimating()
+            }, receiveValue: { [weak self] systemBetResponse in
+                self?.systemBetOptions = systemBetResponse.systemBets
+                self?.systemBetTypePickerView.reloadAllComponents()
+                self?.selectedSystemBet = self?.systemBetOptions.first
+                self?.requestSystemBetInfo()
             })
             .store(in: &cancellables)
     }
@@ -1018,14 +1032,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    @IBAction private func didTapDoneButton(){
+    @IBAction private func didTapDoneButton() {
         self.dismissKeyboard()
     }
 
     @IBAction private func didTapPlaceBetButton() {
 
         self.isLoading = true
-
 
         if self.listTypePublisher.value == .simple {
 
@@ -1038,9 +1051,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     default: ()
                     }
                     self.isLoading = false
-                } receiveValue: { betPlacedDetailsArray in
+                } receiveValue: { [weak self] betPlacedDetailsArray in
                     
-                    self.betPlacedAction?(betPlacedDetailsArray)
+                    self?.betPlacedAction?(betPlacedDetailsArray)
 
                 }
                 .store(in: &cancellables)
@@ -1049,12 +1062,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         else if self.listTypePublisher.value == .multiple {
             Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue)
                 .receive(on: DispatchQueue.main)
-                .sink { completion in
+                .sink { [weak self] completion in
                     print(completion)
-                    self.isLoading = false
-                } receiveValue: { betPlacedDetails in
-                    self.isLoading = false
-                    self.betPlacedAction?([betPlacedDetails])
+                    self?.isLoading = false
+                } receiveValue: { [weak self] betPlacedDetails in
+                    self?.isLoading = false
+                    self?.betPlacedAction?([betPlacedDetails])
                 }
                 .store(in: &cancellables)
         }
@@ -1062,12 +1075,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         else if self.listTypePublisher.value == .system, let selectedSystemBet = self.selectedSystemBet {
             Env.betslipManager.placeSystemBet(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBet)
                 .receive(on: DispatchQueue.main)
-                .sink { completion in
+                .sink { [weak self] completion in
                     print(completion)
-                    self.isLoading = false
-                } receiveValue: { betPlacedDetails in
-                    self.isLoading = false
-                    self.betPlacedAction?([betPlacedDetails])
+                    self?.isLoading = false
+                } receiveValue: { [weak self] betPlacedDetails in
+                    self?.isLoading = false
+                    self?.betPlacedAction?([betPlacedDetails])
                 }
                 .store(in: &cancellables)
         }
@@ -1095,9 +1108,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
                 let curve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
 
-                UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(rawValue: curve)) {
-                    self.secondPlaceBetBaseViewConstraint.constant = keyboardSize.height
-                    self.view.layoutIfNeeded()
+                UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(rawValue: curve)) { [weak self] in
+                    self?.secondPlaceBetBaseViewConstraint.constant = keyboardSize.height
+                    self?.view.layoutIfNeeded()
                 }
             }
             else {
@@ -1117,9 +1130,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
             let curve = notification.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt {
 
-            UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(rawValue: curve)) {
-                self.secondPlaceBetBaseViewConstraint.constant = 0
-                self.view.layoutIfNeeded()
+            UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions(rawValue: curve)) { [weak self] in
+                self?.secondPlaceBetBaseViewConstraint.constant = 0
+                self?.view.layoutIfNeeded()
             }
         }
         else {
@@ -1168,7 +1181,6 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         
         secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
 
-        
     }
 
 }
@@ -1226,7 +1238,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.gomaSuggestedBetsResponse.count
+        return self.suggestedBetsArray.count
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -1453,7 +1465,7 @@ extension PreSubmissionBetslipViewController {
 
     func processSuggestedMatchAggregator(_ aggregator: EveryMatrix.Aggregator) {
 
-        self.matches = [:]
+        self.match = nil
 
         for content in aggregator.content ?? [] {
             switch content {
@@ -1462,7 +1474,7 @@ extension PreSubmissionBetslipViewController {
 
             case .match(let matchContent):
 
-                matches[matchContent.id] = matchContent
+                match = matchContent
 
             case .matchInfo:
                 ()
@@ -1526,100 +1538,96 @@ extension PreSubmissionBetslipViewController {
 
     }
 
-    func processSuggestedMatch() -> [Match] {
+    func processSuggestedMatch() -> Match? {
 
-        guard let match = matches.first?.value else {return []}
+        guard let rawMatch = match else { return nil }
 
-        let rawMatchesList = [match]
+        var processedMatch: Match?
 
-        var matchesList: [Match] = []
+        var matchMarkets: [Market] = []
 
-        for rawMatch in rawMatchesList {
+        let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
 
-            var matchMarkets: [Market] = []
+        let rawMarketsList = marketsIds.map { [weak self] id in
+            return self?.marketsPublishers[id]?.value
+        }
+        .compactMap({$0})
 
-            let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
-            let rawMarketsList = marketsIds.map { id in
-                return self.marketsPublishers[id]?.value
+        for rawMarket  in rawMarketsList {
+
+            let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
+
+            let rawOutcomesList = rawOutcomeIds.map { [weak self] id in
+                return self?.betOutcomes[id]
             }
             .compactMap({$0})
 
-            for rawMarket  in rawMarketsList {
+            var outcomes: [Outcome] = []
+            for rawOutcome in rawOutcomesList {
 
-                let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
+                if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
+                    let bettingOffer = BettingOffer(id: rawBettingOffer.id,
+                                                    value: rawBettingOffer.oddsValue ?? 0.0)
 
-                let rawOutcomesList = rawOutcomeIds.map { id in
-                    return self.betOutcomes[id]
+                    let outcome = Outcome(id: rawOutcome.id,
+                                          codeName: rawOutcome.headerNameKey ?? "",
+                                          typeName: rawOutcome.headerName ?? "",
+                                          translatedName: rawOutcome.translatedName ?? "",
+                                          nameDigit1: rawOutcome.paramFloat1,
+                                          nameDigit2: rawOutcome.paramFloat2,
+                                          nameDigit3: rawOutcome.paramFloat3,
+                                          paramBoolean1: rawOutcome.paramBoolean1,
+                                          marketName: rawMarket.shortName ?? "",
+                                          marketId: rawMarket.id,
+                                          bettingOffer: bettingOffer)
+                    outcomes.append(outcome)
                 }
-                .compactMap({$0})
-
-                var outcomes: [Outcome] = []
-                for rawOutcome in rawOutcomesList {
-
-                    if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
-                        let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                        value: rawBettingOffer.oddsValue ?? 0.0)
-
-                        let outcome = Outcome(id: rawOutcome.id,
-                                              codeName: rawOutcome.headerNameKey ?? "",
-                                              typeName: rawOutcome.headerName ?? "",
-                                              translatedName: rawOutcome.translatedName ?? "",
-                                              nameDigit1: rawOutcome.paramFloat1,
-                                              nameDigit2: rawOutcome.paramFloat2,
-                                              nameDigit3: rawOutcome.paramFloat3,
-                                              paramBoolean1: rawOutcome.paramBoolean1,
-                                              marketName: rawMarket.shortName ?? "",
-                                              marketId: rawMarket.id,
-                                              bettingOffer: bettingOffer)
-                        outcomes.append(outcome)
-                    }
-                }
-
-                let sortedOutcomes = outcomes.sorted { out1, out2 in
-                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
-                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
-                    return out1Value < out2Value
-                }
-
-                let market = Market(id: rawMarket.id,
-                                    typeId: rawMarket.bettingTypeId ?? "",
-                                    name: rawMarket.shortName ?? "",
-                                    nameDigit1: rawMarket.paramFloat1,
-                                    nameDigit2: rawMarket.paramFloat2,
-                                    nameDigit3: rawMarket.paramFloat3,
-                                    outcomes: sortedOutcomes)
-                matchMarkets.append(market)
             }
 
-            let sortedMarkets = matchMarkets.sorted { market1, market2 in
-                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 100
-                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 100
-                return position1 < position2
+            let sortedOutcomes = outcomes.sorted { out1, out2 in
+                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
+                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+                return out1Value < out2Value
             }
 
-            var location: Location?
-            if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
-                location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
-            }
-
-            let match = Match(id: rawMatch.id,
-                              competitionId: rawMatch.parentId ?? "",
-                              competitionName: rawMatch.parentName ?? "",
-                              homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
-                                                           name: rawMatch.homeParticipantName ?? ""),
-                              awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
-                                                           name: rawMatch.awayParticipantName ?? ""),
-                              date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
-                              sportType: rawMatch.sportId ?? "",
-                              venue: location,
-                              numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                              markets: sortedMarkets,
-                              rootPartId: rawMatch.rootPartId ?? "")
-
-            matchesList.append(match)
+            let market = Market(id: rawMarket.id,
+                                typeId: rawMarket.bettingTypeId ?? "",
+                                name: rawMarket.shortName ?? "",
+                                nameDigit1: rawMarket.paramFloat1,
+                                nameDigit2: rawMarket.paramFloat2,
+                                nameDigit3: rawMarket.paramFloat3,
+                                outcomes: sortedOutcomes)
+            matchMarkets.append(market)
         }
 
-        return matchesList
+        let sortedMarkets = matchMarkets.sorted { market1, market2 in
+            let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 100
+            let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 100
+            return position1 < position2
+        }
+
+        var location: Location?
+        if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
+            location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
+        }
+
+        let match = Match(id: rawMatch.id,
+                          competitionId: rawMatch.parentId ?? "",
+                          competitionName: rawMatch.parentName ?? "",
+                          homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
+                                                       name: rawMatch.homeParticipantName ?? ""),
+                          awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
+                                                       name: rawMatch.awayParticipantName ?? ""),
+                          date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
+                          sportType: rawMatch.sportId ?? "",
+                          venue: location,
+                          numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
+                          markets: sortedMarkets,
+                          rootPartId: rawMatch.rootPartId ?? "")
+
+        processedMatch = match
+
+        return processedMatch
 
     }
 

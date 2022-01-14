@@ -142,8 +142,8 @@ class ProfileViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.currentBalanceLabel.text = value
+            .sink { [weak self] value in
+                self?.currentBalanceLabel.text = value
             }
             .store(in: &cancellables)
 
