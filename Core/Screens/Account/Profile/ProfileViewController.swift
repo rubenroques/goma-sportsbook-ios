@@ -331,7 +331,7 @@ class ProfileViewController: UIViewController {
 
         safeAreaTopView.backgroundColor = UIColor.App.mainBackground
         profileBaseView.backgroundColor = UIColor.App.mainBackground
-        profilePictureBaseView.backgroundColor = UIColor.App.mainTint
+        profilePictureBaseView.backgroundColor = UIColor.App2.highlightSecondary
         currentBalanceBaseView.backgroundColor = UIColor.App.secondaryBackground
         scrollBaseView.backgroundColor = UIColor.App.mainBackground
         profilePictureImageView.backgroundColor = .clear
