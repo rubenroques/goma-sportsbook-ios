@@ -188,7 +188,7 @@
     </objects>
     <resources>
         <namedColor name="mainTintColor">
-            <color red="0.016000000759959221" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.14901960784313725" green="0.41568627450980394" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

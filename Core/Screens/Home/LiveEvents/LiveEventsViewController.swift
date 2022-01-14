@@ -25,6 +25,13 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersButtonView: UIView!
 
     @IBOutlet private weak var filtersCountLabel: UILabel!
+    
+    @IBOutlet weak var emptyBaseView: UIView!
+    @IBOutlet weak var firstTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet weak var secondTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet weak var emptyStateImage: UIImageView!
+    @IBOutlet weak var emptyStateButton: UIButton!
+    
     @IBOutlet private weak var liveEventsCountView: UIView!
     @IBOutlet private weak var liveEventsCountLabel: UILabel!
 
@@ -125,6 +132,9 @@ class LiveEventsViewController: UIViewController {
                 self.liveEventsCountView.isHidden = true
             }
         }
+        
+        self.tableView.isHidden = false
+        self.emptyBaseView.isHidden = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -279,6 +289,33 @@ class LiveEventsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+        
+        self.viewModel.screenStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] screenState in
+              
+            
+                switch screenState {
+                case .noEmptyNoFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+          
+                case .emptyNoFilter:
+                    self?.setEmptyStateBaseView(firstLabelText: localized("string_empty_list"), secondLabelText: localized("second_string_empty_list"), isUserLoggedIn: true)
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+                    
+                case .noEmptyAndFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+                case .emptyAndFilter:
+                    self?.setEmptyStateBaseView(firstLabelText: localized("string_empty_list_with_filters"), secondLabelText: localized("second_string_empty_list_with_filters"), isUserLoggedIn: true)
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+            
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -294,6 +331,11 @@ class LiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.mainTint
+        
+        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
+        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.emptyStateButton.backgroundColor = UIColor.App.primaryButtonNormal
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
@@ -321,6 +363,24 @@ class LiveEventsViewController: UIViewController {
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
+    
+    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool){
+    
+        if isUserLoggedIn {
+            self.emptyStateImage.image = UIImage(named: "no_content_icon")
+            self.firstTextFieldEmptyStateLabel.text = firstLabelText
+            self.secondTextFieldEmptyStateLabel.text = secondLabelText
+            self.emptyStateButton.isHidden = isUserLoggedIn
+        }else{
+            self.emptyStateImage.image = UIImage(named: "no_internet_icon")
+            self.firstTextFieldEmptyStateLabel.text = localized("string_empty_no_login")
+            self.secondTextFieldEmptyStateLabel.text = localized("second_string_empty_no_login")
+            self.emptyStateButton.isHidden = isUserLoggedIn
+            self.emptyStateButton.setTitle("Login", for: .normal)
+        }
+        
+    }
+
 
 }
 

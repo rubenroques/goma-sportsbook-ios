@@ -127,7 +127,6 @@ class BetslipViewController: UIViewController {
         self.tabViewController.sliderBarColor = UIColor.App.mainTint
         self.tabViewController.barColor = UIColor.App.mainBackground
         self.tabViewController.textColor = .white
-
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {

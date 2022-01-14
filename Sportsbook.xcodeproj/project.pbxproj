@@ -682,10 +682,6 @@
 		A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		A979CA562762247900230E93 /* GomaSuggestedBets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA552762247900230E93 /* GomaSuggestedBets.swift */; };
 		A979CA572762247900230E93 /* GomaSuggestedBets.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA552762247900230E93 /* GomaSuggestedBets.swift */; };
-		A983466B2774CA000053FA75 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98346692774CA000053FA75 /* EmptyCardTableViewCell.swift */; };
-		A983466C2774CA000053FA75 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98346692774CA000053FA75 /* EmptyCardTableViewCell.swift */; };
-		A983466D2774CA000053FA75 /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A983466A2774CA000053FA75 /* EmptyCardTableViewCell.xib */; };
-		A983466E2774CA000053FA75 /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A983466A2774CA000053FA75 /* EmptyCardTableViewCell.xib */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -858,6 +854,10 @@
 		F48CB9A327628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */; };
 		F4A438E5274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4A438E6274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
+		F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */; };
+		F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */; };
+		F4B32D9B2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */; };
+		F4B32D9C2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */; };
 		F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68422742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683E2742CD8A003413AE /* MultiSlider.swift */; };
@@ -1230,8 +1230,6 @@
 		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
 		A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchOddsContent.swift; sourceTree = "<group>"; };
 		A979CA552762247900230E93 /* GomaSuggestedBets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaSuggestedBets.swift; sourceTree = "<group>"; };
-		A98346692774CA000053FA75 /* EmptyCardTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyCardTableViewCell.swift; sourceTree = "<group>"; };
-		A983466A2774CA000053FA75 /* EmptyCardTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EmptyCardTableViewCell.xib; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -1316,6 +1314,8 @@
 		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
 		F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetSuggestedCollectionViewCell.xib; sourceTree = "<group>"; };
 		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
+		F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCardTableViewCell.swift; sourceTree = "<group>"; };
+		F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCardTableViewCell.xib; sourceTree = "<group>"; };
 		F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Drag.swift"; sourceTree = "<group>"; };
 		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
@@ -1645,6 +1645,8 @@
 		454E0AC0273305BE00794E0C /* Cells */ = {
 			isa = PBXGroup;
 			children = (
+				F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */,
+				F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */,
 				F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */,
 				F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */,
 				454E0AC1273305E200794E0C /* SingleBettingTicketTableViewCell.swift */,
@@ -2409,8 +2411,6 @@
 				A9627A0B274548610001E1D5 /* ActivationAlertCollectionViewCell.xib */,
 				A9627A13274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift */,
 				A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */,
-				A98346692774CA000053FA75 /* EmptyCardTableViewCell.swift */,
-				A983466A2774CA000053FA75 /* EmptyCardTableViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3094,7 +3094,7 @@
 				45BEA48726F4DC9900680181 /* SimpleRegisterEmailCheckViewController.xib in Resources */,
 				A9B8409926DE65BF00269B05 /* RefusedAccessViewController.xib in Resources */,
 				457F496F2737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
-				A983466D2774CA000053FA75 /* EmptyCardTableViewCell.xib in Resources */,
+				F4B32D9B2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */,
 				A9BCF43F274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.xib in Resources */,
 				A9627A17274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45626E3A275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
@@ -3210,7 +3210,7 @@
 				4589F41326BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				457816B22706699900F66878 /* MatchWidgetCollectionViewCell.xib in Resources */,
 				457816B82707631000F66878 /* TournamentTableViewHeader.xib in Resources */,
-				A983466E2774CA000053FA75 /* EmptyCardTableViewCell.xib in Resources */,
+				F4B32D9C2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */,
 				45CD7B5B271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
 				45936CC0270EF14300E8260E /* SportTypeCollectionViewCell.xib in Resources */,
@@ -3491,7 +3491,6 @@
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
-				A983466B2774CA000053FA75 /* EmptyCardTableViewCell.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
@@ -3608,6 +3607,7 @@
 				45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF626BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342726C18257009D7D27 /* Logger.swift in Sources */,
+				F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896726C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
 				455C962826FE11CA00456F30 /* HomeViewController.swift in Sources */,
@@ -3805,7 +3805,6 @@
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
-				A983466C2774CA000053FA75 /* EmptyCardTableViewCell.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
@@ -3922,6 +3921,7 @@
 				45166CE626F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF726BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342826C18257009D7D27 /* Logger.swift in Sources */,
+				F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE826F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896826C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
 				455C962926FE11CA00456F30 /* HomeViewController.swift in Sources */,

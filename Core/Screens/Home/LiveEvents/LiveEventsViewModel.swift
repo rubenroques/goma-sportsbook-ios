@@ -22,6 +22,15 @@ class LiveEventsViewModel: NSObject {
         case allMatches
     }
 
+    enum screenState {
+            case emptyAndFilter
+            case emptyNoFilter
+            case noEmptyNoFilter
+            case noEmptyAndFilter
+        }
+    
+    var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
+    
     private var allMatchesViewModelDataSource = AllMatchesViewModelDataSource(banners: [], allMatches: [])
 
     private var isLoadingAllEventsList: CurrentValueSubject<Bool, Never> = .init(true)
@@ -222,6 +231,33 @@ class LiveEventsViewModel: NSObject {
             self.allMatchesViewModelDataSource.shouldShowLoadingCell = true
         }
 
+        if let numberOfFilters = self.homeFilterOptions?.countFilters {
+            if numberOfFilters > 0 {
+                if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                    self.screenStatePublisher.send(.emptyAndFilter)
+                }else{
+                    self.screenStatePublisher.send(.noEmptyAndFilter)
+                }
+            }else{
+                if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                    self.screenStatePublisher.send(.emptyNoFilter)
+                }else{
+                    self.screenStatePublisher.send(.noEmptyNoFilter)
+                }
+            }
+        }else{
+            if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                self.screenStatePublisher.send(.emptyNoFilter)
+            }else{
+                self.screenStatePublisher.send(.noEmptyNoFilter)
+            }
+        }
+        
+        //Todo - Code Review
+        DispatchQueue.main.async {
+            self.dataDidChangedAction?()
+        }
+        
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
@@ -339,6 +375,7 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.allMatchesViewModelDataSource.numberOfSections(in: tableView)
         }
     }
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {
