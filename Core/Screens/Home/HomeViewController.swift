@@ -51,6 +51,7 @@ class HomeViewController: UIViewController {
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
 
+    var currentSport: Sport
     var currentSportType: SportType
 
     // Combine
@@ -286,7 +287,6 @@ class HomeViewController: UIViewController {
     func setupWithState(_ state: ScreenState) {
         switch state {
         case let .logged(user):
-            //self.loginButton.isHidden = true
             self.loginBaseView.isHidden = true
             Logger.log("User session updated, user: \(user)")
             self.profileBaseView.isHidden = false
@@ -296,7 +296,6 @@ class HomeViewController: UIViewController {
             Env.userSessionStore.forceWalletUpdate()
 
         case .anonymous:
-            //self.loginButton.isHidden = false
             self.loginBaseView.isHidden = false
             self.profileBaseView.isHidden = true
             self.accountValueBaseView.isHidden = true
@@ -305,10 +304,10 @@ class HomeViewController: UIViewController {
         }
     }
 
-    func didChangedPreLiveSportType(sportType: SportType) {
-        self.currentSportType = sportType
+    func didChangedPreLiveSport(sport: Sport) {
+        self.currentSport = sport
         if liveEventsViewControllerLoaded {
-            self.liveEventsViewController.selectedSportType = sportType
+            self.liveEventsViewController.selectedSportType = sport.type
         }
     }
 
@@ -329,6 +328,7 @@ class HomeViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: {
 
         })
+
     }
 
     func reloadChildViewControllersData() {
@@ -341,7 +341,6 @@ class HomeViewController: UIViewController {
     }
 
     @IBAction func didTapLogin() {
-        print("LOGIN!")
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
@@ -353,8 +352,8 @@ extension HomeViewController {
         if case .sports = tab, !preLiveViewControllerLoaded {
             self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
             self.preLiveViewController.selectedSportType = self.currentSportType
-            self.preLiveViewController.didChangeSportType = { [weak self] newSportType in
-                self?.didChangedPreLiveSportType(sportType: newSportType)
+            self.preLiveViewController.didChangeSport = { [weak self] newSport in
+                self?.didChangedPreLiveSport(sportType: newSport)
             }
             self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
@@ -380,12 +379,9 @@ extension HomeViewController {
 
     // ToDo: Not implemented on the flow
     @IBAction private func didTapLoginButton() {
-        print("LOGIN!")
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
-
-
 
     @objc private func didTapProfileButton() {
         self.pushProfileViewController()
@@ -398,7 +394,7 @@ extension HomeViewController {
     }
 
     private func pushProfileViewController() {
-        if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
+        if let loggedUser = UserSessionStore.loggedUserSession() {
             let profileViewController = ProfileViewController(userSession: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)
             self.present(navigationViewController, animated: true, completion: nil)

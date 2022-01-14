@@ -7,8 +7,7 @@
 
 import Foundation
 
-typealias SportTypes = [SportType]
-enum SportType: String, Identifiable, Hashable, CaseIterable {
+enum SportType: String, Identifiable, Hashable {
 
     case football = "1"
     case golf = "2"
@@ -99,7 +98,7 @@ enum SportType: String, Identifiable, Hashable, CaseIterable {
     case skateboarding = "153"
     case sportClimbing = "154"
     case kabaddi = "155"
-    case unknown
+    case unknown = "-1"
 
     init?(id: String) {
         switch id {

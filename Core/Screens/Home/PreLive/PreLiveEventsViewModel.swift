@@ -52,17 +52,19 @@ class PreLiveEventsViewModel: NSObject {
 
     var isLoading: AnyPublisher<Bool, Never>
 
-    var didChangeSportType = false
-    var selectedSportId: SportType {
+    var didChangeSport = false
+
+    var selectedSport: Sport {
         willSet {
-            if newValue != self.selectedSportId {
-                didChangeSportType = true
+            if newValue.id != self.selectedSport.id {
+                didChangeSport = true
             }
         }
         didSet {
             self.fetchData()
         }
     }
+
     var homeFilterOptions: HomeFilterOptions? {
         didSet {
             if let lowerTimeRange = homeFilterOptions?.lowerBoundTimeRange, let highTimeRange = homeFilterOptions?.highBoundTimeRange {
@@ -109,8 +111,8 @@ class PreLiveEventsViewModel: NSObject {
     private var favoriteMatchesCount = 10
     private var favoriteMatchesPage = 1
 
-    init(selectedSportId: SportType) {
-        self.selectedSportId = selectedSportId
+    init(selectedSport: Sport) {
+        self.selectedSport = selectedSport
         
         isLoading = Publishers.CombineLatest4(isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions)
             .map({ isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions in
@@ -396,7 +398,7 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteMatches = Env.everyMatrixStorage.matchesForListType(.favoriteMatchEvents)
 
         self.favoriteMatches = self.favoriteMatches.filter({
-            $0.sportType == self.selectedSportId.id
+            $0.sportType == self.selectedSport.type.id
         })
 
         self.updateContentList()
@@ -429,8 +431,7 @@ class PreLiveEventsViewModel: NSObject {
         var addedCompetitionIds: [String] = []
 
         var popularCompetitions = [Competition]()
-        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values
-        where (popularCompetition.sportId ?? "") == self.selectedSportId.typeId {
+        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values where (popularCompetition.sportId ?? "") == self.selectedSport.type.typeId {
 
             let competition = Competition(id: popularCompetition.id, name: popularCompetition.name ?? "")
             addedCompetitionIds.append(popularCompetition.id)
@@ -452,7 +453,7 @@ class PreLiveEventsViewModel: NSObject {
 
                 guard
                     let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
-                    (rawCompetition.sportId ?? "") == self.selectedSportId.typeId
+                    (rawCompetition.sportId ?? "") == self.selectedSport.type.typeId
                 else {
                     continue
                 }
@@ -547,7 +548,7 @@ class PreLiveEventsViewModel: NSObject {
         for competitionId in competitionsMatches.keys {
             if let tournament = Env.everyMatrixStorage.tournaments[competitionId], let tournamentSportTypeId = tournament.sportId {
 
-                if tournamentSportTypeId == self.selectedSportId.id {
+                if tournamentSportTypeId == self.selectedSport.type.id {
 
                     var location: Location?
                     if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
@@ -617,7 +618,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                         language: "en",
-                                                        sportId: self.selectedSportId.typeId,
+                                                        sportId: self.selectedSport.type.typeId,
                                                         matchesCount: matchesCount)
 
         self.popularMatchesPublisher?.cancel()
@@ -667,13 +668,13 @@ class PreLiveEventsViewModel: NSObject {
 
         var endpoint = TSRouter.todayMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                       language: "en",
-                                                      sportId: self.selectedSportId.typeId,
+                                                      sportId: self.selectedSport.type.typeId,
                                                       matchesCount: matchesCount)
 
         if withFilter {
             endpoint = TSRouter.todayMatchesFilterPublisher(operatorId: Env.appSession.operatorId,
                                                           language: "en",
-                                                          sportId: self.selectedSportId.typeId,
+                                                            sportId: self.selectedSport.type.typeId,
                                                           matchesCount: matchesCount, timeRange: timeRange)
         }
 
@@ -711,7 +712,7 @@ class PreLiveEventsViewModel: NSObject {
     func fetchCompetitionsFilters() {
 
         let language = "en"
-        let sportId = self.selectedSportId.typeId
+        let sportId = self.selectedSport.type.typeId
 
         let popularTournamentsPublisher = TSManager.shared
             .getModel(router: TSRouter.getCustomTournaments(language: language, sportId: sportId),
@@ -817,7 +818,10 @@ class PreLiveEventsViewModel: NSObject {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
         }
 
-        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId, language: "en", sportId: self.selectedSportId.typeId, events: ids)
+        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
+                                                             language: "en",
+                                                             sportId: self.selectedSport.type.typeId,
+                                                             events: ids)
 
         self.competitionsMatchesPublisher?.cancel()
         self.competitionsMatchesPublisher = nil
@@ -856,7 +860,10 @@ class PreLiveEventsViewModel: NSObject {
             TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
         }
 
-        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId, language: "en", sportId: self.selectedSportId.typeId, events: ids)
+        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
+                                                             language: "en",
+                                                             sportId: self.selectedSport.type.typeId,
+                                                             events: ids)
 
         self.favoriteCompetitionsMatchesPublisher?.cancel()
         self.favoriteCompetitionsMatchesPublisher = nil

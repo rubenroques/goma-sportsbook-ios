@@ -33,16 +33,20 @@ class HomeFilterViewController: UIViewController {
     var highBoundTimeRange: CGFloat = 48.0
     var lowerBoundOddsRange: CGFloat = 1.0
     var highBoundOddsRange: CGFloat = 30.0
+    var countFilters: Int = 0
+
     var defaultMarket: MainMarketType = .homeDrawAway
     var marketViews: [FilterRowView] = []
     var filterValues: HomeFilterOptions?
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
+
     var sportsModel: PreLiveEventsViewModel
     var liveEventsViewModel: LiveEventsViewModel
-    weak var delegate: HomeFilterOptionsViewDelegate?
-    var countFilters: Int = 0
 
-    init(sportsModel: PreLiveEventsViewModel = PreLiveEventsViewModel(selectedSportId: .football), liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football)) {
+    var delegate: HomeFilterOptionsViewDelegate?
+
+    init(sportsModel: PreLiveEventsViewModel = PreLiveEventsViewModel(selectedSport: Sport.football),
+         liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football)) {
         self.sportsModel = sportsModel
         self.liveEventsViewModel = liveEventsViewModel
         super.init(nibName: "HomeFilterViewController", bundle: nil)

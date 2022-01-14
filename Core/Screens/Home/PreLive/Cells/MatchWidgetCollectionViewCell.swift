@@ -426,6 +426,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.tappedMatchWidgetAction?()
     }
 
+    // TODO: This func is called even if the cell is reused
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {

@@ -84,29 +84,30 @@ class PreLiveEventsViewController: UIViewController {
     var viewModel: PreLiveEventsViewModel
 
     var filterSelectedOption: Int = 0
-    var selectedSportType: SportType {
+    var selectedSport: Sport {
         didSet {
-            if let sportIconImage = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)") {
+
+            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.type.typeId)") {
                 self.sportTypeIconImageView.image = sportIconImage
             }
             else {
                 self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
             }
 
-            self.viewModel.selectedSportId = selectedSportType
+            self.viewModel.selectedSport = selectedSport
             self.competitionsFiltersView?.resetSelection()
         }
     }
 
-    var didChangeSportType: ((SportType) -> Void)?
+    var didChangeSport: ((Sport) -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
     private var lastContentOffset: CGFloat = 0
     private var shouldDetectScrollMovement = false
 
-    init(selectedSportType: SportType = .football) {
-        self.selectedSportType = selectedSportType
-        self.viewModel = PreLiveEventsViewModel(selectedSportId: self.selectedSportType)
+    init(selectedSportType: Sport) {
+        self.selectedSport = selectedSport
+        self.viewModel = PreLiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "PreLiveEventsViewController", bundle: nil)
     }
 
@@ -427,9 +428,9 @@ class PreLiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSportToType(_ sportType: SportType) {
-        self.selectedSportType = sportType
-        self.didChangeSportType?(sportType)
+    func changedSportTo(_ sport: Sport) {
+        self.selectedSport = sport
+        self.didChangeSport?(sport)
     }
 
     func openCompetitionsFilters() {
@@ -664,13 +665,14 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
 }
 
-protocol SportTypeSelectionViewDelegate: AnyObject {
-    func setSportType(_ sportType: SportType)
-}
 
 extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     func setSportType(_ sportType: SportType) {
         self.changedSportToType(sportType)
+    }
+
+    func selectedSport(_ sport: Sport) {
+        self.changedSportToType()
     }
 }
 

@@ -111,10 +111,12 @@ final class TSManager {
                                 1 - Session is expired. When all the sessions associated with the same login are idle
                                    for more than 20 minutes, they will be terminated.
                                 2 - Session is logged off. This occurs when the logout method is called.
-                                3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
-                                5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
-                                6 - Session is terminated because self exclusion is enabled.
-                                */
+
+                                 3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
+                                 5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
+                                 6 - Session is terminated because self exclusion is enabled.
+
+                                 */
                                 
                                 if code == 1 {
                                     DispatchQueue.main.async {

@@ -8,6 +8,13 @@
 import UIKit
 import Combine
 
+
+protocol SportTypeSelectionViewDelegate: AnyObject {
+    func setSportType(_ sportType: SportType)
+    func selectedSport(_ sport: Sport)
+}
+
+
 class SportSelectionViewController: UIViewController {
 
     @IBOutlet private var topView: UIView!
@@ -19,9 +26,6 @@ class SportSelectionViewController: UIViewController {
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     // Variables
-    weak var delegate: SportTypeSelectionViewDelegate?
-    private var cancellable = Set<AnyCancellable>()
-
     var sportsData: [EveryMatrix.Discipline] = []
     var fullSportsData: [EveryMatrix.Discipline] = []
     var defaultSport: SportType
@@ -30,7 +34,11 @@ class SportSelectionViewController: UIViewController {
 
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
+
+    var selectionDelegate: SportTypeSelectionViewDelegate?
     
+    private var cancellable = Set<AnyCancellable>()
+
     init(defaultSport: SportType, isLiveSport: Bool = false, sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()) {
         self.defaultSport = defaultSport
         self.isLiveSport = isLiveSport
@@ -56,6 +64,7 @@ class SportSelectionViewController: UIViewController {
     }
 
     func commonInit() {
+        
         self.activityIndicatorView.isHidden = true
         self.view.bringSubviewToFront(self.activityIndicatorView)
 
@@ -82,16 +91,12 @@ class SportSelectionViewController: UIViewController {
     }
 
     func setupWithTheme() {
+
         self.view.backgroundColor = UIColor.App.mainBackground
-
         topView.backgroundColor = UIColor.App.mainBackground
-
         navigationView.backgroundColor = UIColor.App.mainBackground
-
         navigationLabel.textColor = UIColor.App.headingMain
-
         cancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
-
         collectionView.backgroundColor = UIColor.App.mainBackground
 
         self.searchBar.searchBarStyle = UISearchBar.Style.prominent
@@ -125,7 +130,8 @@ class SportSelectionViewController: UIViewController {
 
         let sports = EveryMatrixServiceClient().getDisciplinesData(payload: ["lang": "en"])
 
-        sports.receive(on: RunLoop.main)
+        sports
+            .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -216,16 +222,17 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         guard
             let sportTypeAtIndex = sportsData[safe:indexPath.row],
             let sportTypeIdAtIndex = sportTypeAtIndex.id,
-            let newSportType = SportType(id: sportTypeIdAtIndex)
+            let newSportType = SportType(id: sportTypeIdAtIndex),
+            let cell = collectionView.cellForItem(at: indexPath) as? SportSelectionCollectionViewCell
         else {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
         }
 
-        let cell = collectionView.cellForItem(at: indexPath) as! SportSelectionCollectionViewCell
         cell.isSelected = true
         self.defaultSport = newSportType
-        delegate?.setSportType(self.defaultSport)
+
+        selectionDelegate?.setSportType(self.defaultSport)
 
         self.dismiss(animated: true, completion: nil)
         AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport.id ))
