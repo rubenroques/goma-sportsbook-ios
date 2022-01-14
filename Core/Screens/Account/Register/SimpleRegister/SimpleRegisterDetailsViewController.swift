@@ -188,7 +188,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixAPIClient.getCountries()
+        Env.everyMatrixClient.getCountries()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
@@ -428,7 +428,7 @@ extension SimpleRegisterDetailsViewController {
     }
 
     private func requestValidUsernameCheck(_ username: String) {
-        Env.everyMatrixAPIClient
+        Env.everyMatrixClient
             .validateUsername(username)
             .receive(on: DispatchQueue.main)
             .sink { _ in

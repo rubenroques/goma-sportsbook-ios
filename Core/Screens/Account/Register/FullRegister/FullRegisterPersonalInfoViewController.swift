@@ -104,7 +104,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
 
-        continueButton.setTitle(localized("string_continue"), for: .normal)
+        continueButton.setTitle(localized("string_continue_"), for: .normal)
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         continueButton.isEnabled = false
 
@@ -201,7 +201,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixAPIClient.getCountries()
+        Env.everyMatrixClient.getCountries()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in

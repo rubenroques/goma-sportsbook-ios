@@ -23,6 +23,9 @@ class SubmitedBetslipViewController: UIViewController {
     private var cashoutRegister: EndpointPublisherIdentifiable?
     private var cashoutPublisher: AnyCancellable?
 
+    //Cached view models
+    var cachedViewModels: [String: SubmitedBetTableViewCellViewModel] = [:]
+
     init() {
         super.init(nibName: "SubmitedBetslipViewController", bundle: nil)
         self.title = "My Bets"
@@ -47,6 +50,14 @@ class SubmitedBetslipViewController: UIViewController {
 
         self.activityIndicatorBaseView.isHidden = true
         self.view.bringSubviewToFront(self.activityIndicatorBaseView)
+
+        Env.userSessionStore
+            .userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.requestHistory()
+            }
+            .store(in: &cancellables)
 
     }
 
@@ -80,9 +91,9 @@ class SubmitedBetslipViewController: UIViewController {
                 print(completion)
             } receiveValue: { betHistoryEntry in
                 self.betHistoryEntries = betHistoryEntry
-                for bet in self.betHistoryEntries {
-                    self.requestCashout(betHistoryEntry: bet)
-                }
+//                for bet in self.betHistoryEntries {
+//                    self.requestCashout(betHistoryEntry: bet)
+//                }
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -102,6 +113,7 @@ class SubmitedBetslipViewController: UIViewController {
 
         TSManager.shared
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -124,7 +136,7 @@ class SubmitedBetslipViewController: UIViewController {
 
                     print("UPDATE CASHOUT: \(Env.everyMatrixStorage.cashoutsPublisher.values)")
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
             .store(in: &cancellables)
@@ -133,22 +145,17 @@ class SubmitedBetslipViewController: UIViewController {
 
     private func setupCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .cashouts,
-                                                 shouldClear: true)
+                                                 shouldClear: false)
 
-        // TODO: Code Review -
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+        self.tableView.reloadData()
 
     }
 
     private func updateCashoutAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
 
-        // TODO: Code Review -
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-        }
+        self.tableView.reloadData()
+
     }
 
     func submitCashout(betCashout: EveryMatrix.Cashout) {
@@ -163,8 +170,7 @@ class SubmitedBetslipViewController: UIViewController {
 
             let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
 
-            // TODO: Code Review - se faz store não precisa guardar a variavel, muito menos numa variavel local que é desalocada no fim da func
-            let request = TSManager.shared
+            TSManager.shared
                 .getModel(router: route, decodingType: CashoutSubmission.self)
                 .sink(receiveCompletion: { _ in
 
@@ -200,6 +206,34 @@ class SubmitedBetslipViewController: UIViewController {
 
     }
 
+    func viewModel(forIndex index: Int) -> SubmitedBetTableViewCellViewModel? {
+        let ticket: BetHistoryEntry?
+
+        ticket = self.betHistoryEntries[safe: index]
+
+        guard let ticket = ticket else {
+            return nil
+        }
+
+        if let viewModel = cachedViewModels[ticket.betId] {
+            return viewModel
+        }
+        else {
+            let viewModel =  SubmitedBetTableViewCellViewModel(ticket: ticket)
+            cachedViewModels[ticket.betId] = viewModel
+            return viewModel
+        }
+    }
+
+    func redrawTableViewAction() {
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
+    }
+
+    func reloadTableViewAction() {
+        self.tableView.reloadData()
+    }
+
 }
 
 extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSource {
@@ -216,25 +250,43 @@ extension SubmitedBetslipViewController: UITableViewDelegate, UITableViewDataSou
 
         guard
             let cell = tableView.dequeueCellType(SubmitedBetTableViewCell.self),
-            let entry = self.betHistoryEntries[safe: indexPath.row]
+            let entry = self.betHistoryEntries[safe: indexPath.row],
+            let viewModel = self.viewModel(forIndex: indexPath.row)
         else {
             return UITableViewCell()
         }
 
-        cell.configureWithBetHistoryEntry(entry)
+        cell.configureWithViewModel(viewModel: viewModel)
 
-        // TODO: Code Review -
-        let cashoutsPublisher = Env.everyMatrixStorage.cashoutsPublisher
+        cell.needsRedraw = { [weak self] in
+            if let betCashout = cell.viewModel?.cashout {
+                cell.cashoutAction = { value in
+                    self?.submitCashout(betCashout: value)
+                }
+                cell.infoAction = {
+                    self?.showCashoutInfo()
+                }
 
-        if let betCashout = cashoutsPublisher[entry.betId].value {
-            cell.setupCashout(cashout: betCashout.value)
-            cell.cashoutAction = {
-                self.submitCashout(betCashout: betCashout.value)
-            }
-            cell.infoAction = {
-                self.showCashoutInfo()
+                self?.redrawTableViewAction()
             }
         }
+
+        cell.viewModel?.createdCashout
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadTableViewAction()
+                self?.redrawTableViewAction()
+            })
+            .store(in: &cancellables)
+
+        cell.viewModel?.deletedCashout
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadTableViewAction()
+                self?.redrawTableViewAction()
+            })
+            .store(in: &cancellables)
+        
         return cell
     }
 

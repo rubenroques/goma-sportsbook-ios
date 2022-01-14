@@ -411,7 +411,7 @@ class DepositViewController: UIViewController {
             self.activityIndicatorView.isHidden = true
         }
 
-        Env.everyMatrixAPIClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
+        Env.everyMatrixClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
                 self.activityIndicatorView.isHidden = true

@@ -83,7 +83,14 @@ class GameSuggestedView: NibView {
     }
 
     func setMatchFlag(isoCode: String) {
-        self.gameImageView.image = UIImage(named: Assets.flagName(withCountryCode: isoCode))
+        let gameFlag = Assets.flagName(withCountryCode: isoCode)
+
+        if gameFlag != "country_flag_" {
+            self.gameImageView.image = UIImage(named: gameFlag)
+        }
+        else {
+            self.gameImageView.image = UIImage(named: "sport_type_soccer_icon")
+        }
 
     }
 

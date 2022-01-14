@@ -43,9 +43,13 @@ class SubmitedBetTableViewCell: UITableViewCell {
     private var cancellables = Set<AnyCancellable>()
 
     var betHistoryEntry: BetHistoryEntry?
+    var viewModel: SubmitedBetTableViewCellViewModel?
+    var cashoutEnabledSubscription: AnyCancellable?
+    var cashoutValuePublisher: AnyCancellable?
 
-    var cashoutAction: (() -> Void)?
+    var cashoutAction: ((EveryMatrix.Cashout) -> Void)?
     var infoAction: (() -> Void)?
+    var needsRedraw: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -71,7 +75,7 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.cashoutTitleLabel.text = localized("string_cashout_available")
         self.cashoutTitleLabel.font = AppFont.with(type: .semibold, size: 12)
 
-        self.cashoutValueLabel.text = "-.--"
+        self.cashoutValueLabel.text = ""
         self.cashoutValueLabel.font = AppFont.with(type: .semibold, size: 14)
 
         self.cashoutButton.setTitle(localized("string_cashout"), for: .normal)
@@ -113,7 +117,14 @@ class SubmitedBetTableViewCell: UITableViewCell {
 
         self.stackView.removeAllArrangedSubviews()
 
-        self.cashoutValueLabel.text = "-.--"
+        self.cashoutValueLabel.text = ""
+
+        self.viewModel = nil
+        self.cashoutEnabledSubscription = nil
+        self.cashoutEnabledSubscription?.cancel()
+
+        self.cashoutValuePublisher = nil
+        self.cashoutValuePublisher?.cancel()
     }
 
     func setupWithTheme() {
@@ -144,8 +155,11 @@ class SubmitedBetTableViewCell: UITableViewCell {
 
     }
 
-    func configureWithBetHistoryEntry(_ betHistoryEntry: BetHistoryEntry) {
-        self.betHistoryEntry = betHistoryEntry
+    func configureWithViewModel(viewModel: SubmitedBetTableViewCellViewModel) {
+
+        self.viewModel = viewModel
+
+        let betHistoryEntry = viewModel.ticket
 
         self.oddValueLabel.text = "-.--"
 
@@ -181,12 +195,40 @@ class SubmitedBetTableViewCell: UITableViewCell {
             ])
         }
 
+        self.cashoutEnabledSubscription = viewModel.hasCashoutEnabled
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] enabled in
+                if !enabled && viewModel.cashout == nil {
+                    self?.removeCashout()
+                }
+                if enabled, let cashout = viewModel.cashout {
+                    self?.setupCashout(cashout: cashout)
+                }
+
+            })
+
+        self.cashoutValuePublisher = self.viewModel?.cashoutValueSubscription
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] value in
+                self?.cashoutValueLabel.text = "\(value)"
+            })
+
     }
 
     func setupCashout(cashout: EveryMatrix.Cashout) {
-        guard let cashoutValue = cashout.value else {return}
-        self.cashoutValueLabel.text = "\(cashoutValue)"
-        self.cashoutView.isHidden = false
+        if let cashoutValue = cashout.value {
+            self.cashoutValueLabel.text = "\(cashoutValue)"
+            self.cashoutView.isHidden = false
+            self.needsRedraw?()
+            self.cashoutEnabledSubscription?.cancel()
+        }
+
+    }
+
+    func removeCashout() {
+        self.cashoutView.isHidden = true
+        self.needsRedraw?()
+        
     }
 
     @objc private func showPopover(sender: UITapGestureRecognizer) {
@@ -194,7 +236,9 @@ class SubmitedBetTableViewCell: UITableViewCell {
     }
 
     @IBAction private func cashoutButtonAction(_ sender: Any) {
-        self.cashoutAction?()
+        if let cashout = self.viewModel?.cashout {
+            self.cashoutAction?(cashout)
+        }
     }
 
 }

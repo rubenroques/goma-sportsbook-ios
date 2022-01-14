@@ -12,40 +12,48 @@ class FavoritesManager {
 
     var favoriteEventsIdPublisher: CurrentValueSubject<[String], Never>
     var favoriteEventsWithTypePublisher: CurrentValueSubject<[Event], Never>
+    var postGomaFavoritesPublisher: CurrentValueSubject<Bool, Never>
     var cancellables = Set<AnyCancellable>()
 
     init(eventsId: [String] = []) {
         self.favoriteEventsIdPublisher = .init(eventsId)
         self.favoriteEventsWithTypePublisher = .init([])
-
+        self.postGomaFavoritesPublisher = .init(false)
         self.favoriteEventsIdPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { value in
                 self.getEvents(events: value)
             })
             .store(in: &cancellables)
+
+        Publishers.CombineLatest(self.favoriteEventsWithTypePublisher, self.postGomaFavoritesPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] favoriteEvents, postGoma in
+                if postGoma && (favoriteEvents.count == self?.favoriteEventsIdPublisher.value.count ) {
+                    self?.postFavoritesToGoma()
+                    self?.postGomaFavoritesPublisher.send(false)
+                }
+            })
+            .store(in: &cancellables)
     }
 
     func getEvents(events: [String]) {
-        Env.everyMatrixAPIClient.getEvents(payload: ["lang": "en",
+        Env.everyMatrixClient.getEvents(payload: ["lang": "en",
                                                      "eventIds": events,
                                                      "dataWithoutOdds": true])
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
 
             }, receiveValue: { value in
-
                 if let eventValues = value.records {
                     self.favoriteEventsWithTypePublisher.send(eventValues)
-
                 }
-
             })
             .store(in: &cancellables)
     }
 
     func getUserMetadata() {
-        Env.everyMatrixAPIClient.getUserMetadata()
+        Env.everyMatrixClient.getUserMetadata()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
@@ -60,12 +68,13 @@ class FavoritesManager {
     }
 
     func postUserMetadata(favoriteEvents: [String]) {
-        Env.everyMatrixAPIClient.postUserMetadata(favoriteEvents: favoriteEvents)
+        Env.everyMatrixClient.postUserMetadata(favoriteEvents: favoriteEvents)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
             } receiveValue: { _ in
-                self.postFavoritesToGoma()
+                //self.postFavoritesToGoma()
+                self.postGomaFavoritesPublisher.send(true)
             }
             .store(in: &cancellables)
     }

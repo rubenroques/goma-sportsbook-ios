@@ -26,7 +26,7 @@ class UserSessionStore {
 
     init() {
 
-        NotificationCenter.default.publisher(for: .wampSocketConnected)
+        NotificationCenter.default.publisher(for: .sessionConnected)
             .setFailureType(to: EveryMatrix.APIError.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
@@ -34,6 +34,14 @@ class UserSessionStore {
             }, receiveValue: { [weak self] _ in
                 self?.startUserSessionIfNeeded()
             })
+            .store(in: &cancellables)
+
+
+        NotificationCenter.default.publisher(for: .sessionForcedLogoutDisconnected)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.logout()
+            }
             .store(in: &cancellables)
 
     }
@@ -101,8 +109,11 @@ class UserSessionStore {
 
         UserDefaults.standard.userSession = nil
         userSessionPublisher.send(nil)
+        userBalanceWallet.send(nil)
+        
+        Env.gomaNetworkClient.reconnectSession()
 
-        Env.everyMatrixAPIClient
+        Env.everyMatrixClient
             .logout()
             .sink(receiveCompletion: { completion in
                 Logger.log("User logout \(completion)")
@@ -110,11 +121,12 @@ class UserSessionStore {
 
             })
             .store(in: &cancellables)
+
     }
 
     func loginUser(withUsername username: String, password: String) -> AnyPublisher<UserSession, UserSessionError> {
 
-        let publisher = Env.everyMatrixAPIClient
+        let publisher = Env.everyMatrixClient
             .loginComplete(username: username, password: password)
             .mapError { (error: EveryMatrix.APIError) -> UserSessionError in
                 switch error {
@@ -139,7 +151,7 @@ class UserSessionStore {
     }
 
     func registerUser(form: EveryMatrix.SimpleRegisterForm) -> AnyPublisher<Bool, EveryMatrix.APIError> {
-        return Env.everyMatrixAPIClient
+        return Env.everyMatrixClient
             .simpleRegister(form: form)
             .map { _ in return true }
             .handleEvents(receiveOutput: { registered in
@@ -212,9 +224,12 @@ extension UserSessionStore {
             let user = UserSessionStore.loggedUserSession(),
             let userPassword = UserSessionStore.storedUserPassword()
         else {
+            Logger.log("User Session not found - not needed")
             self.isLoadingUserSessionPublisher.send(false)
             return
         }
+
+        Logger.log("User Session found - login needed")
 
         self.loadLoggedUser()
 
@@ -245,7 +260,7 @@ extension UserSessionStore {
             .sink(receiveCompletion: { _ in
                 
             }, receiveValue: { value in
-                Env.gomaNetworkClient.networkClient.refreshAuthToken(token: value)
+                Env.gomaNetworkClient.refreshAuthToken(token: value)
             })
             .store(in: &cancellables)
 

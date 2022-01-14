@@ -26,7 +26,7 @@ class BetslipViewController: UIViewController {
     private var viewControllerTabDataSource: TitleTabularDataSource
 
     private var preSubmissionBetslipViewController: PreSubmissionBetslipViewController
-    private var submitedBetslipViewController: SubmitedBetslipViewController
+    private var myTicketsViewController: MyTicketsViewController
 
     private var viewControllers: [UIViewController] = []
 
@@ -36,9 +36,9 @@ class BetslipViewController: UIViewController {
 
     init() {
         preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
-  
-        submitedBetslipViewController = SubmitedBetslipViewController()
-        viewControllers = [preSubmissionBetslipViewController, submitedBetslipViewController]
+
+        myTicketsViewController = MyTicketsViewController()
+        viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
         
         viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
         tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
@@ -74,7 +74,7 @@ class BetslipViewController: UIViewController {
         self.accountValuePlusView.clipsToBounds = true
 
         let tapAccountValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapAccountValue(_:)))
-        self.accountValuePlusView.addGestureRecognizer(tapAccountValue)
+        self.accountInfoBaseView.addGestureRecognizer(tapAccountValue)
 
         self.accountValueLabel.text = "Loading"
 
@@ -180,6 +180,8 @@ class BetslipViewController: UIViewController {
             }
             return
         }
+
+        Logger.log("Bet placed without erros. Will show feedback screen.")
 
         let betSubmissionSuccessViewController = BetSubmissionSuccessViewController(betPlacedDetailsArray: betPlacedDetailsArray)
         betSubmissionSuccessViewController.willDismissAction = self.willDismissAction

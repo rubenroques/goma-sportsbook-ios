@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class MatchLineTableViewCell: UITableViewCell {
 
@@ -17,11 +18,16 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     private var match: Match?
+
     private var shouldShowCountryFlag: Bool = true
+    private var showingBackSliderView: Bool = false
 
     private var liveMatch: Bool = false
 
+    private var matchInfoPublisher: AnyCancellable?
+
     var tappedMatchLineAction: (() -> Void)?
+    var matchWentLive: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -65,6 +71,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.addGestureRecognizer(backSliderTapGesture)
 
         self.setupWithTheme()
+
     }
 
     override func prepareForReuse() {
@@ -81,6 +88,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: false)
 
         self.match = nil
+        self.matchInfoPublisher?.cancel()
+        self.matchInfoPublisher = nil
         self.collectionView.reloadData()
         
     }
@@ -109,6 +118,22 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
+    func setupFavoriteMatchInfoPublisher(match: Match) {
+        if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
+            self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
+                .sink(receiveValue: { [weak self] value in
+                    if value.contains(match.id) {
+                        // print("NEW MATCH INFO FOUND!")
+                        self?.matchInfoPublisher?.cancel()
+                        self?.matchInfoPublisher = nil
+                        self?.matchWentLive?()
+                    }
+                })
+        }
+        // print("CELL MATCH INFO: \(match.id)")
+
+    }
+
     func shouldShowCountryFlag(_ show: Bool) {
         self.shouldShowCountryFlag = show
     }
@@ -126,25 +151,32 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
         let width = screenWidth*0.6
 
         if scrollView.contentSize.width > screenWidth {
-            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 90 {
-                self.tappedMatchLineAction?()
+            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 110 {
 
-                let generator = UIImpactFeedbackGenerator(style: .medium)
+                let generator = UIImpactFeedbackGenerator(style: .heavy)
                 generator.prepare()
                 generator.impactOccurred()
+
+                self.tappedMatchLineAction?()
 
                 return
             }
         }
 
-        if scrollView.contentOffset.x > width && self.backSliderView.alpha != 1.0 {
-            UIView.animate(withDuration: 0.2) {
-                self.backSliderView.alpha = 1.0
+        if scrollView.contentOffset.x > width {
+            if !self.showingBackSliderView {
+                self.showingBackSliderView = true
+                UIView.animate(withDuration: 0.2) {
+                    self.backSliderView.alpha = 1.0
+                }
             }
         }
-        else if self.backSliderView.alpha != 0.0 {
-            UIView.animate(withDuration: 0.2) {
-                self.backSliderView.alpha = 0.0
+        else {
+            if self.showingBackSliderView {
+                self.showingBackSliderView = false
+                UIView.animate(withDuration: 0.2) {
+                    self.backSliderView.alpha = 0.0
+                }
             }
         }
     }

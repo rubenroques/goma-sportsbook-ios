@@ -214,7 +214,7 @@ class PersonalInfoViewController: UIViewController {
 
     private func setupPublishers() {
 
-        Env.everyMatrixAPIClient.getCountries()
+        Env.everyMatrixClient.getCountries()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
@@ -225,7 +225,7 @@ class PersonalInfoViewController: UIViewController {
             }
         .store(in: &cancellables)
 
-        Env.everyMatrixAPIClient.getProfile()
+        Env.everyMatrixClient.getProfile()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
@@ -371,7 +371,7 @@ class PersonalInfoViewController: UIViewController {
     }
 
     private func updateProfile(form: EveryMatrix.ProfileForm) {
-        Env.everyMatrixAPIClient.updateProfile(form: form)
+        Env.everyMatrixClient.updateProfile(form: form)
             .breakpointOnError()
             .receive(on: DispatchQueue.main)
             .sink { completion in

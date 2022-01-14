@@ -272,6 +272,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         if let market = match.markets.first {
+
             if let outcome = market.outcomes[safe: 0] {
                 self.homeOddTitleLabel.text = outcome.typeName
                 self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
@@ -306,6 +307,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     })
                 
             }
+
             if let outcome = market.outcomes[safe: 1] {
                 self.drawOddTitleLabel.text = outcome.typeName
                 self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
@@ -339,6 +341,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                     })
             }
+
             if let outcome = market.outcomes[safe: 2] {
                 self.awayOddTitleLabel.text = outcome.typeName
                 self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
