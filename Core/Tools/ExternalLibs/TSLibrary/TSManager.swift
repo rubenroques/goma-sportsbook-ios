@@ -105,9 +105,40 @@ final class TSManager {
                             promise(.failure(.requestError(value: errorStr)))
                         }) { details, results, kwResults in
                             if let code = kwResults?["code"] as? Int {
-                                if code == 3 {
+
+                                /**
+                                0 - Session is logged-in.
+                                1 - Session is expired. When all the sessions associated with the same login are idle
+                                   for more than 20 minutes, they will be terminated.
+                                2 - Session is logged off. This occurs when the logout method is called.
+                                3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
+                                5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
+                                6 - Session is terminated because self exclusion is enabled.
+                                */
+                                
+                                if code == 1 {
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+                                    }
+                                }
+                                else if code == 2 {
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+                                    }
+                                }
+                                else if code == 3 {
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                    }
+                                }
+                                else if code == 5 {
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                    }
+                                }
+                                else if code == 6 {
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 0 {
@@ -201,16 +232,16 @@ final class TSManager {
                     }, onError: { (details: [String: Any], errorStr: String) in
                         promise(.failure(.requestError(value: errorStr)))
                     }, onEvent: {( details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
-                        if let code = kwResults?["code"] as? Int {
-                            if code == 3 {
-                                DispatchQueue.main.async {
-                                    NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
-                                }
-                            }
-                            else if code == 0 {
-                                print("Subscribed!")
-                            }
-                        }
+//                        if let code = kwResults?["code"] as? Int {
+//                            if code == 3 {
+//                                DispatchQueue.main.async {
+//                                    NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
+//                                }
+//                            }
+//                            else if code == 0 {
+//                                print("Subscribed!")
+//                            }
+//                        }
                     })
                 }
             }
@@ -242,18 +273,18 @@ final class TSManager {
             subject.send(completion: .failure(.requestError(value: errorStr)))
         },
         onEvent: { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
-            if let code = kwResults?["code"] as? Int {
-                if code == 3 {
-                    DispatchQueue.main.async {
-                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
-                    }
-                    subject.send(TSSubscriptionContent.disconnect)
-                    subject.send(completion: .failure(.notConnected))
-                }
-                else if code == 0 {
-                    print("Subscribed!")
-                }
-            }
+//            if let code = kwResults?["code"] as? Int {
+//                if code == 3 {
+//                    DispatchQueue.main.async {
+//                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
+//                    }
+//                    subject.send(TSSubscriptionContent.disconnect)
+//                    subject.send(completion: .failure(.notConnected))
+//                }
+//                else if code == 0 {
+//                    print("Subscribed!")
+//                }
+//            }
         })
 
         return subject.eraseToAnyPublisher()
@@ -346,20 +377,19 @@ extension TSManager: SSWampSessionDelegate {
     }
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
+
+        NotificationCenter.default.post(name: .sessionConnected, object: nil)
+
         sessionStateChanged()
             .sink(receiveCompletion: { completion in
                 Logger.log("TSManager sessionStateChanged completion: \(completion)")
             }, receiveValue: { connected in
                 Logger.log("TSManager sessionStateChanged \(connected)")
-
-                if connected {
-                    NotificationCenter.default.post(name: .wampSocketConnected, object: nil)
-                }
             })
             .store(in: &globalCancellable)
     }
     
     func ssWampSessionEnded(_ reason: String) {
-        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
+        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
     }
 }

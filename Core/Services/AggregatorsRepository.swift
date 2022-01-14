@@ -51,6 +51,7 @@ class AggregatorsRepository {
 
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     var matchesInfoForMatch: [String: Set<String> ] = [:]
+    var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
 
     func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
 
@@ -94,6 +95,9 @@ class AggregatorsRepository {
                         var newSet = Set<String>.init()
                         newSet.insert(matchInfo.id)
                         matchesInfoForMatch[matchId] = newSet
+                        var matchIdArray = matchesInfoForMatchPublisher.value
+                        matchIdArray.append(matchId)
+                        matchesInfoForMatchPublisher.send(matchIdArray)
                     }
                 }
 
@@ -154,7 +158,6 @@ class AggregatorsRepository {
                 () // print("Events aren't processed")
             case .eventPartScore:
                 ()
-                
             case .unknown:
                 () // print("Unknown type ignored")
             }
@@ -174,11 +177,6 @@ class AggregatorsRepository {
             switch update {
             case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
-
-                    if isLive != nil || isAvailable != nil {
-                        print("break")
-                    }
-
                     let bettingOffer = publisher.value
                     let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
                                                                                isLive: isLive,
@@ -208,6 +206,7 @@ class AggregatorsRepository {
                     }
                 }
             case .fullMatchInfoUpdate(let matchInfo):
+                // print("FULL MATCH INFO: \(matchInfo)")
                 matchesInfo[matchInfo.id] = matchInfo
 
                 if let matchId = matchInfo.matchId {
@@ -220,9 +219,16 @@ class AggregatorsRepository {
                         newSet.insert(matchInfo.id)
                         matchesInfoForMatch[matchId] = newSet
                     }
+                    var matchIdArray = matchesInfoForMatchPublisher.value
+                    matchIdArray.append(matchId)
+                    matchesInfoForMatchPublisher.send(matchIdArray)
                 }
             case .unknown:
                 print("uknown")
+            case .cashoutCreate:
+                ()
+            case .cashoutDelete:
+                ()
             }
         }
     }

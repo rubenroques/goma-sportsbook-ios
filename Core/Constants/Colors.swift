@@ -38,12 +38,11 @@ extension UIColor {
         static let alertError = UIColor(named: "alertErrorColor")!
         static let alertSuccess = UIColor(named: "alertSuccessColor")!
 
-
         static let statusWon = UIColor(named: "statusWon")!
         static let statusDraw = UIColor(named: "statusDraw")!
         static let statusLoss = UIColor(named: "statusLoss")!
 
-
+        static let redIndicator = UIColor(named: "redIndicatorColor")
     }
 
 }

@@ -16,7 +16,6 @@ class HomeViewController: UIViewController {
 
     @IBOutlet private weak var preLiveBaseView: UIView!
     @IBOutlet private weak var liveBaseView: UIView!
-    @IBOutlet private weak var myTicketsBaseView: UIView!
 
     @IBOutlet private weak var tabBarView: UIView!
     @IBOutlet private weak var bottomSafeAreaView: UIView!
@@ -29,27 +28,28 @@ class HomeViewController: UIViewController {
     @IBOutlet private weak var liveIconImageView: UIImageView!
     @IBOutlet private weak var liveTitleLabel: UILabel!
 
-    @IBOutlet private weak var myTicketsButtonBaseView: UIView!
-    @IBOutlet private weak var myTicketsIconImageView: UIImageView!
-    @IBOutlet private weak var myTicketsTitleLabel: UILabel!
-
+    @IBOutlet private weak var profileBaseView: UIView!
     @IBOutlet private weak var profilePictureBaseView: UIView!
     @IBOutlet private weak var profilePictureImageView: UIImageView!
 
     @IBOutlet private weak var searchButton: UIButton!
     @IBOutlet private weak var logoImageView: UIImageView!
 
-    @IBOutlet private weak var loginButton: UIButton!
+    @IBOutlet private var loginBaseView: UIView!
+    @IBOutlet private var loginButton: UIButton!
+
+    @IBOutlet private var accountValueBaseView: UIView!
+    @IBOutlet private var accountValueView: UIView!
+    @IBOutlet private var accountPlusView: UIView!
+    @IBOutlet private var accountValueLabel: UILabel!
 
     // Child view controllers
     lazy var preLiveViewController = PreLiveEventsViewController()
     lazy var liveEventsViewController = LiveEventsViewController()
-    lazy var myTicketsViewController = MyTicketsViewController()
 
     // Loaded view controllers
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
-    var myTicketsViewControllerLoaded = false
 
     var currentSportType: SportType
 
@@ -64,7 +64,6 @@ class HomeViewController: UIViewController {
     enum TabItem {
         case sports
         case live
-        case myTickets
     }
     var selectedTabItem: TabItem {
         didSet {
@@ -73,8 +72,6 @@ class HomeViewController: UIViewController {
                 self.selectSportsTabBarItem()
             case .live:
                 self.selectLiveTabBarItem()
-            case .myTickets:
-                self.selectMyTicketTabBarItem()
             }
         }
     }
@@ -121,7 +118,7 @@ class HomeViewController: UIViewController {
                 if let userSession = userSession {
                     self.screenState = .logged(user: userSession)
 
-                    Env.everyMatrixAPIClient.getUserMetadata()
+                    Env.everyMatrixClient.getUserMetadata()
                         .receive(on: DispatchQueue.main)
                         .eraseToAnyPublisher()
                         .sink { _ in
@@ -159,19 +156,31 @@ class HomeViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        Env.everyMatrixAPIClient.getOperatorInfo()
-            .receive(on: DispatchQueue.main)
-            .sink { completed in
-                print("getOperatorInfo \(completed)")
-            } receiveValue: { operatorInfo in
-                print("getOperatorInfo \(operatorInfo)")
-            }
-            .store(in: &cancellables)
+//        Env.everyMatrixClient.getOperatorInfo()
+//            .receive(on: DispatchQueue.main)
+//            .sink { completed in
+//                print("getOperatorInfo \(completed)")
+//            } receiveValue: { operatorInfo in
+//                print("getOperatorInfo \(operatorInfo)")
+//            }
+//            .store(in: &cancellables)
 
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
+        Env.userSessionStore.userBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
+            .receive(on: DispatchQueue.main)
+            .sink { value in
+                self.accountValueLabel.text = value
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.forceWalletUpdate()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -193,12 +202,22 @@ class HomeViewController: UIViewController {
 
         profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
+        profilePictureImageView.layer.borderWidth = 1
+        profilePictureImageView.layer.borderColor = UIColor.App.mainBackground.cgColor
+        profilePictureImageView.layer.masksToBounds = true
+
+        accountValueView.layer.cornerRadius = CornerRadius.view
+        accountValueView.layer.masksToBounds = true
+        accountValueView.isUserInteractionEnabled = true
+
+        accountPlusView.layer.cornerRadius = CornerRadius.squareView
+        accountPlusView.layer.masksToBounds = true
+
     }
 
     func commonInit() {
 
         liveButtonBaseView.alpha = 0.2
-        myTicketsButtonBaseView.alpha = 0.2
 
         loginButton.setTitle(localized("string_login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
@@ -207,9 +226,6 @@ class HomeViewController: UIViewController {
 
         self.liveTitleLabel.text = localized("string_live")
 
-        self.myTicketsTitleLabel.text = localized("string_my_tickets")
-
-
 
         let sportsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsTabItem))
         sportsButtonBaseView.addGestureRecognizer(sportsTapGesture)
@@ -217,18 +233,21 @@ class HomeViewController: UIViewController {
         let liveTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLiveTabItem))
         liveButtonBaseView.addGestureRecognizer(liveTapGesture)
 
-        let myTicketTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapMyTicketsTabItem))
-        myTicketsButtonBaseView.addGestureRecognizer(myTicketTapGesture)
-
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
         profilePictureBaseView.addGestureRecognizer(profileTapGesture)
+
+        accountValueLabel.text = localized("string_loading")
+        accountValueLabel.font = AppFont.with(type: .bold, size: 12)
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        accountValueView.addGestureRecognizer(accountValueTapGesture)
+
     }
 
     func setupWithTheme() {
 
         preLiveBaseView.backgroundColor = UIColor.App.mainBackground
         liveBaseView.backgroundColor = UIColor.App.mainBackground
-        myTicketsBaseView.backgroundColor = UIColor.App.mainBackground
 
         topSafeAreaView.backgroundColor = UIColor.App.mainBackground
         topBarView.backgroundColor = UIColor.App.mainBackground
@@ -248,7 +267,6 @@ class HomeViewController: UIViewController {
 
         sportsButtonBaseView.backgroundColor = .clear
         liveButtonBaseView.backgroundColor = .clear
-        myTicketsButtonBaseView.backgroundColor = .clear
 
         profilePictureBaseView.backgroundColor = UIColor.App.mainTint
 
@@ -259,15 +277,31 @@ class HomeViewController: UIViewController {
         loginButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.view
         loginButton.layer.masksToBounds = true
+
+        accountValueView.backgroundColor = UIColor.App.contentBackground
+
+        accountPlusView.backgroundColor = UIColor.App.mainTint
     }
 
     func setupWithState(_ state: ScreenState) {
         switch state {
         case let .logged(user):
-            self.loginButton.isHidden = true
+            //self.loginButton.isHidden = true
+            self.loginBaseView.isHidden = true
             Logger.log("User session updated, user: \(user)")
+            self.profileBaseView.isHidden = false
+            self.accountValueBaseView.isHidden = false
+            self.searchButton.isHidden = false
+
+            Env.userSessionStore.forceWalletUpdate()
+
         case .anonymous:
-            self.loginButton.isHidden = false
+            //self.loginButton.isHidden = false
+            self.loginBaseView.isHidden = false
+            self.profileBaseView.isHidden = true
+            self.accountValueBaseView.isHidden = true
+            self.searchButton.isHidden = true
+
         }
     }
 
@@ -305,6 +339,13 @@ class HomeViewController: UIViewController {
             self.liveEventsViewController.reloadData()
         }
     }
+
+    @IBAction func didTapLogin() {
+        print("LOGIN!")
+        let loginViewController = Router.navigationController(with: LoginViewController())
+        self.present(loginViewController, animated: true, completion: nil)
+    }
+
 }
 
 extension HomeViewController {
@@ -331,13 +372,7 @@ extension HomeViewController {
             }
             liveEventsViewControllerLoaded = true
         }
-        if case .myTickets = tab, !myTicketsViewControllerLoaded {
-            self.addChildViewController(self.myTicketsViewController, toView: self.myTicketsBaseView)
-            self.myTicketsViewController.didTapBetslipButtonAction = { [weak self] in
-                self?.openBetslipModal()
-            }
-            myTicketsViewControllerLoaded = true
-        }
+
     }
 }
 
@@ -345,12 +380,21 @@ extension HomeViewController {
 
     // ToDo: Not implemented on the flow
     @IBAction private func didTapLoginButton() {
+        print("LOGIN!")
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
 
+
+
     @objc private func didTapProfileButton() {
         self.pushProfileViewController()
+    }
+
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        //self.present(depositViewController, animated: true, completion: nil)
+        self.navigationController?.pushViewController(depositViewController, animated: true)
     }
 
     private func pushProfileViewController() {
@@ -466,44 +510,26 @@ extension HomeViewController {
         self.selectedTabItem = .live
     }
 
-    @objc private func didTapMyTicketsTabItem() {
-        self.selectedTabItem = .myTickets
-    }
 
     func selectSportsTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .sports)
 
         self.liveBaseView.isHidden = true
-        self.myTicketsBaseView.isHidden = true
         self.preLiveBaseView.isHidden = false
 
         sportsButtonBaseView.alpha = 1.0
         liveButtonBaseView.alpha = 0.2
-        myTicketsButtonBaseView.alpha = 0.2
     }
 
     func selectLiveTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .live)
 
         self.preLiveBaseView.isHidden = true
-        self.myTicketsBaseView.isHidden = true
         self.liveBaseView.isHidden = false
 
         sportsButtonBaseView.alpha = 0.2
         liveButtonBaseView.alpha = 1.0
-        myTicketsButtonBaseView.alpha = 0.2
     }
 
-    func selectMyTicketTabBarItem() {
-        self.loadChildViewControllerIfNeeded(tab: .myTickets)
-
-        self.myTicketsBaseView.isHidden = false
-        self.preLiveBaseView.isHidden = true
-        self.liveBaseView.isHidden = true
-
-        sportsButtonBaseView.alpha = 0.2
-        liveButtonBaseView.alpha = 0.2
-        myTicketsButtonBaseView.alpha = 1.0
-    }
 
 }

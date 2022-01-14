@@ -128,7 +128,7 @@ class ProfileViewController: UIViewController {
             self.userIdLabel.text = user.userId
         }
 
-        Env.everyMatrixAPIClient.getProfileStatus()
+        Env.everyMatrixClient.getProfileStatus()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in

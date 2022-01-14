@@ -158,7 +158,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
             return
         }
 
-        Env.everyMatrixAPIClient.validateEmail(email)
+        Env.everyMatrixClient.validateEmail(email)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] _ in
                 self?.loadingEmailValidityView.startAnimating()
@@ -205,7 +205,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 extension SimpleRegisterEmailCheckViewController {
 
     func requestValidEmailCheck(email: String) {
-        Env.everyMatrixAPIClient.validateEmail(email)
+        Env.everyMatrixClient.validateEmail(email)
             .receive(on: RunLoop.main)
             .sink { _ in
                 self.loadingEmailValidityView.stopAnimating()

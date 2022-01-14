@@ -9,4 +9,6 @@ import Foundation
 
 class AppSession {
     var operatorId: String = "2474"
+    var currency: String = "EUR"
+    var language: String = "en"
 }

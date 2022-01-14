@@ -139,7 +139,7 @@ class FullRegisterDocumentsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.everyMatrixAPIClient.getProfile()
+        Env.everyMatrixClient.getProfile()
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
@@ -258,7 +258,7 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     private func fullRegisterProfile(form: EveryMatrix.ProfileForm) {
-        Env.everyMatrixAPIClient.updateProfile(form: form)
+        Env.everyMatrixClient.updateProfile(form: form)
             .breakpointOnError()
             .receive(on: DispatchQueue.main)
             .sink { completion in

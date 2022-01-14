@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 let Logger = LoggerService(destination: logsPath()) // swiftlint:disable:this identifier_name
 
@@ -46,8 +47,11 @@ class LoggerService {
         return nil
     }()
 
+    private var cancellables: Set<AnyCancellable>
+
     init(destination: URL) {
         self.destination = destination
+        self.cancellables = []
     }
 
     deinit {
@@ -72,6 +76,21 @@ class LoggerService {
 
         printToConsole(prefix + logMessage)
         printToDestination(prefix + logMessage)
+
+//        var type = ""
+//        switch logType {
+//        case .info:
+//            type = "info"
+//        case .debug:
+//            type = "debug"
+//        case .warning:
+//            type = "info"
+//        case .error:
+//            type = "error"
+//        }
+//
+//        printToServer(type, logMessage: logMessage)
+
     }
 }
 
@@ -95,4 +114,40 @@ private extension LoggerService {
             print("Serious error in logging: could not encode logged string into data.")
         }
     }
+
+    func printToServer(_ type: String, logMessage: String) {
+
+//        Env.gomaNetworkClient.sendLog(type: type, message: logMessage)
+//            .sink(receiveCompletion: { completion in
+//
+//            }, receiveValue: { response in
+//
+//            })
+//            .store(in: &cancellables)
+
+        //"ht tps://sportsbook-api.gomagaming.com" + logs
+        let urlString = TargetVariables.gomaGamingHost + "/logs/api/v1"
+        var request = URLRequest(url: URL(string: urlString)! )
+        request.httpMethod = "POST"
+
+        let bodyJSON = [
+            "type": type,
+            "text": logMessage
+        ]
+
+        let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
+        request.httpBody = jsonData
+
+        URLSession.shared.dataTaskPublisher(for: request)
+            .sink(receiveCompletion: { _ in
+
+            })
+            { data, response  in
+                let stringData = String(data: data, encoding: .utf8)
+                print(stringData)
+            }
+            .store(in: &cancellables)
+
+    }
+
 }

@@ -288,7 +288,7 @@ class WithdrawViewController: UIViewController {
             self.activityIndicatorView.isHidden = true
         }
 
-        Env.everyMatrixAPIClient.getWithdrawResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
+        Env.everyMatrixClient.getWithdrawResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
                 self.activityIndicatorView.isHidden = true

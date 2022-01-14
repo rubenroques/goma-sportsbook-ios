@@ -12,13 +12,13 @@ import Combine
 class MyTicketsViewModel: NSObject {
 
     private var selectedMyTicketsTypeIndex: Int = 0
-    var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.resolved)
+    var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
     var isTicketsEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isUserLoggedInPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
     enum MyTicketsType: Int {
-        case resolved = 0
-        case opened = 1
+        case opened = 0
+        case resolved = 1
         case won = 2
     }
 
@@ -75,6 +75,17 @@ class MyTicketsViewModel: NSObject {
             self.isTicketsEmptyPublisher.send(true)
         }
     
+
+        Env.userSessionStore
+            .userSessionPublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.refresh()
+            }
+            .store(in: &cancellables)
+
+
         self.loadLocations()
         self.initialLoadMyTickets()
         
@@ -118,6 +129,13 @@ class MyTicketsViewModel: NSObject {
 
     }
 
+    func clearData() {
+        self.resolvedMyTickets.value = []
+        self.openedMyTickets.value = []
+        self.wonMyTickets.value = []
+        self.reloadTableView()
+    }
+
     func loadResolvedTickets(page: Int) {
 
         self.isLoadingResolved.send(true)
@@ -125,7 +143,19 @@ class MyTicketsViewModel: NSObject {
         let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
         TSManager.shared.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+                        self.clearData()
+                    default:
+                        ()
+                    }
+                    print("\(apiError)")
+                case .finished:
+                    ()
+                }
                 self.isLoadingResolved.send(false)
             },
             receiveValue: { betHistoryResponse in
@@ -146,7 +176,19 @@ class MyTicketsViewModel: NSObject {
         let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
         TSManager.shared.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+                        self.clearData()
+                    default:
+                        ()
+                    }
+                    print("\(apiError)")
+                case .finished:
+                    ()
+                }
                 self.isLoadingOpened.send(false)
             },
             receiveValue: { betHistoryResponse in
@@ -168,7 +210,19 @@ class MyTicketsViewModel: NSObject {
         let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
         TSManager.shared.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+                        self.clearData()
+                    default:
+                        ()
+                    }
+                    print("\(apiError)")
+                case .finished:
+                    ()
+                }
                 self.isLoadingWon.send(false)
             },
             receiveValue: { betHistoryResponse in

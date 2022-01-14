@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -27,6 +27,8 @@
                 <outlet property="filtersSeparatorLineView" destination="X95-AQ-boc" id="PEo-w7-ZNO"/>
                 <outlet property="firstTextFieldEmptyStateLabel" destination="zMi-Yy-kfr" id="pkM-I4-60i"/>
                 <outlet property="leftGradientBaseView" destination="av1-cX-BKP" id="mb8-XN-XOE"/>
+                <outlet property="liveEventsCountLabel" destination="8FA-nH-Muj" id="Cse-Xg-5RD"/>
+                <outlet property="liveEventsCountView" destination="ULw-jS-y6v" id="qb4-c0-0br"/>
                 <outlet property="loadingBaseView" destination="MFb-Vr-zVA" id="Msz-v6-6xG"/>
                 <outlet property="loadingView" destination="S3Z-e2-gBX" id="M1R-uq-0bX"/>
                 <outlet property="rightGradientBaseView" destination="lTR-Hc-701" id="cQG-qV-RDP"/>
@@ -177,14 +179,34 @@
                                         <constraint firstAttribute="height" constant="23" id="uag-aL-nH5"/>
                                     </constraints>
                                 </imageView>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ULw-jS-y6v">
+                                    <rect key="frame" x="22" y="0.5" width="15" height="15"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8FA-nH-Muj">
+                                            <rect key="frame" x="3.5" y="0.5" width="8" height="14.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <color key="textColor" name="headingMainColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" name="alertErrorColor"/>
+                                    <constraints>
+                                        <constraint firstItem="8FA-nH-Muj" firstAttribute="centerX" secondItem="ULw-jS-y6v" secondAttribute="centerX" id="LP8-fV-7zy"/>
+                                        <constraint firstAttribute="width" constant="15" id="f2h-ND-PUI"/>
+                                        <constraint firstItem="8FA-nH-Muj" firstAttribute="centerY" secondItem="ULw-jS-y6v" secondAttribute="centerY" id="mu8-Yu-ZJP"/>
+                                        <constraint firstAttribute="height" constant="15" id="wJy-hP-4f4"/>
+                                    </constraints>
+                                </view>
                             </subviews>
                             <color key="backgroundColor" name="secundaryBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="4K7-2i-ld7" firstAttribute="leading" secondItem="E3s-l3-XNu" secondAttribute="leading" constant="9" id="XaU-t9-eac"/>
                                 <constraint firstItem="Da0-Ux-YuR" firstAttribute="centerY" secondItem="E3s-l3-XNu" secondAttribute="centerY" constant="1" id="ZUE-aj-fHA"/>
+                                <constraint firstItem="ULw-jS-y6v" firstAttribute="top" secondItem="4K7-2i-ld7" secondAttribute="top" constant="-8" id="ZeU-0b-55d"/>
                                 <constraint firstItem="4K7-2i-ld7" firstAttribute="centerY" secondItem="E3s-l3-XNu" secondAttribute="centerY" id="bfr-Xa-wWi"/>
                                 <constraint firstAttribute="width" constant="55" id="fn2-iH-hUF"/>
                                 <constraint firstAttribute="height" constant="40" id="ksX-vP-4oA"/>
+                                <constraint firstItem="ULw-jS-y6v" firstAttribute="trailing" secondItem="4K7-2i-ld7" secondAttribute="trailing" constant="5" id="o0z-CZ-K5y"/>
                                 <constraint firstAttribute="trailing" secondItem="Da0-Ux-YuR" secondAttribute="trailing" constant="8" id="rmq-wH-bTE"/>
                             </constraints>
                         </view>
@@ -251,7 +273,10 @@
         <image name="match_filters_icons" width="19" height="20"/>
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
-        <namedColor name="headingMainColor">
+        <namedColor name="alertErrorColor">
+            <color red="0.8784313725490196" green="0.14117647058823529" blue="0.23137254901960785" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+         <namedColor name="headingMainColor">
             <color red="0.090196078431372548" green="0.10196078431372549" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <namedColor name="mainBackgroundColor">
@@ -270,7 +295,7 @@
             <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

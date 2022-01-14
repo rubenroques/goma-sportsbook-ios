@@ -6,12 +6,15 @@
 //
 
 import UIKit
+import Combine
 
 class SportSelectionCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var iconImageView: UIImageView!
     @IBOutlet private var nameLabel: UILabel!
+    @IBOutlet private var eventCountView: UIView!
+    @IBOutlet private var eventCountLabel: UILabel!
 
     // Variables
     override var isSelected: Bool {
@@ -25,11 +28,23 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         }
     }
     var sport: EveryMatrix.Discipline?
+    private var cancellable = Set<AnyCancellable>()
+    private var currentLiveSportsPublisher: AnyCancellable?
+    var viewModel: SportSelectionCollectionViewCellViewModel?
 
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        commonInit()
+        self.commonInit()
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.iconImageView.image = nil
+        self.nameLabel.text = ""
+        self.sport = nil
+        self.eventCountLabel.text = ""
+        self.currentLiveSportsPublisher?.cancel()
     }
 
     func commonInit() {
@@ -49,19 +64,30 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         nameLabel.font = AppFont.with(type: .bold, size: 12)
         nameLabel.textColor = UIColor.App.headingMain
         nameLabel.numberOfLines = 2
+
+        eventCountView.isHidden = true
+        eventCountView.layer.cornerRadius = eventCountView.frame.size.width/2
+        eventCountView.backgroundColor = UIColor.App.redIndicator
+
+        eventCountLabel.font = AppFont.with(type: .semibold, size: 9)
     }
 
-    func setSport(sport: EveryMatrix.Discipline) {
-        self.sport = sport
-        nameLabel.text = sport.name
-        iconImageView.image = UIImage(named: "sport_type_icon_\(sport.id ?? "")")
-    }
+    func configureCell(viewModel: SportSelectionCollectionViewCellViewModel) {
 
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        iconImageView.image = nil
-        nameLabel.text = ""
-        sport = nil
+        self.viewModel = viewModel
+
+        self.sport = viewModel.sport
+
+        nameLabel.text = viewModel.sportName
+
+        iconImageView.image = UIImage(named: viewModel.sportIconName ?? "")
+
+        self.viewModel?.updateLiveEvents = {
+            self.eventCountView.isHidden = false
+
+            self.eventCountLabel.text = self.viewModel?.numberOfLiveEvents
+
+        }
     }
 
 }

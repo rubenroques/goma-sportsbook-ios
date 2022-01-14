@@ -7,14 +7,14 @@
 
 import Foundation
 
-var Env = Environment() // swiftlint:disable:this identifier_name
+let Env = Environment() // swiftlint:disable:this identifier_name
 
-struct Environment {
+class Environment {
 
     let appSession = AppSession()
 
-    let gomaNetworkClient = GomaGamingServiceClient(networkClient: NetworkManager()) // session: Environment.pulseConnectedSession()))
-    let everyMatrixAPIClient = EveryMatrixAPIClient()
+    let gomaNetworkClient = GomaGamingServiceClient() // session: Environment.pulseConnectedSession()))
+    let everyMatrixClient = EveryMatrixServiceClient()
     let everyMatrixStorage = AggregatorsRepository()
 
     let betslipManager = BetslipManager()
