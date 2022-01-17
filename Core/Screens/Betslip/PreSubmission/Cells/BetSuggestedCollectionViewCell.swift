@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
@@ -25,21 +26,33 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     var betslipTickets: [BettingTicket] = []
 
     var betNowCallbackAction: (() -> Void)?
-    
+    var viewModel: BetSuggestedCollectionViewCellViewModel?
+    var cancellables = Set<AnyCancellable>()
+    var needsReload: PassthroughSubject<Void, Never> = .init()
+
     override func awakeFromNib() {
         super.awakeFromNib()
         setupWithTheme()
         betNowButton.layer.cornerRadius = 5.0
         layer.cornerRadius = 5.0
-        // Initialization code
     }
     override func prepareForReuse() {
         super.prepareForReuse()
-
-        self.betsArray = []
-        self.gomaArray = []
-        self.betslipTickets = []
         
+        self.viewModel = nil
+        
+    }
+
+    func setupWithViewModel(viewModel: BetSuggestedCollectionViewCellViewModel) {
+        self.viewModel = viewModel
+
+        self.viewModel?.isViewModelFinishedLoading
+            .sink(receiveValue: { [weak self] value in
+                if value {
+                    self?.setupStackBetView()
+                }
+            })
+            .store(in: &cancellables)
     }
     
     func setupWithTheme() {
@@ -49,8 +62,26 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.betsStackView.removeAllArrangedSubviews()
        
     }
+
+    func setupStackBetView() {
+        betsStackView.removeAllArrangedSubviews()
+
+        if let viewModel = self.viewModel {
+
+            for gameSuggestedView in viewModel.gameSuggestedViewsArray {
+                betsStackView.addArrangedSubview(gameSuggestedView)
+            }
+
+            self.setupInfoBetValues(totalOdd: viewModel.totalOdd, numberOfSelection: viewModel.numberOfSelection)
+
+            self.betslipTickets = viewModel.betslipTickets
+
+            self.needsReload.send()
+        }
+
+    }
     
-    func setupStackBetView(betValues: [Match], gomaValues: [GomaSuggestedBets]) {
+    func setupStackBetView2(betValues: [Match], gomaValues: [GomaSuggestedBets]) {
      
         betsStackView.removeAllArrangedSubviews()
 

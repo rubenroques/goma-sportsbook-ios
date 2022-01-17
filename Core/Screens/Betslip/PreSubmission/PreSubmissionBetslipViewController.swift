@@ -184,13 +184,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
-    private var suggestedBetsPublisher: AnyCancellable?
-    private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
-    private var suggestedBetsNotFound: Int = 0
-
     var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
-    var suggestedBetsArray: [Int: [Match]] = [:]
-    var totalGomaSuggestedBets: Int = 0
 
     var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
     var suggestedCancellables = Set<AnyCancellable>()
@@ -199,6 +193,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.suggestedBetsActivityIndicator.isHidden = !isSuggestedBetsLoading
         }
     }
+    var cachedBetSuggestedCollectionViewCellViewModels: [Int: BetSuggestedCollectionViewCellViewModel] = [:]
 
     // Suggested Aggregator Variables
     var matches: [String: EveryMatrix.Match] = [:]
@@ -225,6 +220,10 @@ class PreSubmissionBetslipViewController: UIViewController {
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        cachedBetSuggestedCollectionViewCellViewModels = [:]
     }
 
     override func viewDidLoad() {
@@ -587,24 +586,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.suggestedBetsRetrievedPublisher
-            .receive(on: DispatchQueue.main)
-
-            .sink(receiveValue: { [weak self] value in
-                guard let self = self else { return }
-                let totalSuggestedBets = self.totalGomaSuggestedBets - self.suggestedBetsNotFound
-
-                if value == totalSuggestedBets && value != 0 {
-
-                    self.betSuggestedCollectionView.reloadData()
-                    self.isSuggestedBetsLoading = false
-                    self.suggestedBetsRetrievedPublisher.send(0)
-                    self.suggestedBetsNotFound = 0
-
-                }
-            })
-            .store(in: &cancellables)
-
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -624,69 +605,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 self?.gomaSuggestedBetsResponse = betsArray
 
-                let totalGomaCount = self?.gomaSuggestedBetsResponse.flatMap({$0}).count
-                self?.totalGomaSuggestedBets = totalGomaCount ?? 0
-
-                for (index, betArray) in betsArray.enumerated() {
-                    self?.subscribeSuggestedBet(betArray: betArray, index: index)
+                DispatchQueue.main.async {
+                    self?.betSuggestedCollectionView.reloadData()
                 }
             })
             .store(in: &cancellables)
-
-    }
-
-    func subscribeSuggestedBet(betArray: [GomaSuggestedBets], index: Int) {
-
-        for bet in betArray {
-
-            let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
-
-            TSManager.shared
-                .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .sink(receiveCompletion: { _ in
-
-                }, receiveValue: { [weak self] state in
-                    switch state {
-                    case .connect(let publisherIdentifiable):
-                        print(publisherIdentifiable)
-                        self?.suggestedBetsRegisters.append(publisherIdentifiable)
-                    case .initialContent(let aggregator):
-                        self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
-                    case .updatedContent:
-                        print("MyBets suggestedBets updatedContent")
-                    case .disconnect:
-                        ()
-                    }
-                })
-                .store(in: &suggestedCancellables)
-        }
-
-    }
-
-    private func setupSuggestedMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator, index: Int) {
-
-        self.processSuggestedMatchAggregator(aggregator)
-
-        let processedSuggestedMatch = self.processSuggestedMatch()
-
-        if let suggestedMatch =
-            processedSuggestedMatch {
-
-            if self.suggestedBetsArray[index] != nil {
-                self.suggestedBetsArray[index]?.append(suggestedMatch)
-            }
-            else {
-                self.suggestedBetsArray[index] = [suggestedMatch]
-            }
-
-            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
-            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
-        }
-        else {
-            self.suggestedBetsNotFound += 1
-            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
-            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount)
-        }
 
     }
 
@@ -739,15 +662,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
-        }
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -903,11 +817,13 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
         self.gomaSuggestedBetsResponse = []
-        self.suggestedBetsArray = [:]
 
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        for cachedBetSuggestedViewModel in self.cachedBetSuggestedCollectionViewCellViewModels.values {
+
+            cachedBetSuggestedViewModel.unregisterSuggestedBets()
         }
+
+        self.cachedBetSuggestedCollectionViewCellViewModels = [:]
 
         self.betSuggestedCollectionView.reloadData()
     }
@@ -1231,7 +1147,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.suggestedBetsArray.count
+        return self.gomaSuggestedBetsResponse.count
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -1249,13 +1165,33 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         else {
             fatalError()
         }
-       
-        if let suggestedBetCard = self.suggestedBetsArray[indexPath.row] {
-            cell.setupStackBetView(betValues: suggestedBetCard, gomaValues: self.gomaSuggestedBetsResponse[indexPath.row])
-            cell.betNowCallbackAction = {
-                self.isSuggestedMultiple = true
-            }
+
+        if let cachedViewModel = self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row].value {
+
+            cell.setupWithViewModel(viewModel: cachedViewModel)
+
         }
+        else {
+            let viewModel = BetSuggestedCollectionViewCellViewModel(gomaArray: gomaSuggestedBetsResponse[indexPath.row])
+
+            cell.setupWithViewModel(viewModel: viewModel)
+
+        }
+
+        cell.betNowCallbackAction = {
+            self.isSuggestedMultiple = true
+        }
+
+        cell.needsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+
+                self?.isSuggestedBetsLoading = false
+                // collectionView.reloadData()
+
+            })
+            .store(in: &cancellables)
+
         return cell
     }
 
@@ -1263,7 +1199,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
 
         let bottomBarHeigth = 60.0
         var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
-        if let arrayValues = self.suggestedBetsArray[indexPath.row] {
+        if !self.gomaSuggestedBetsResponse[indexPath.row].isEmpty {
 //            if arrayValues.count == 3 {
 //                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 3 * 60)
 //            }else{

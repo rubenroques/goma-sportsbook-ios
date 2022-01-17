@@ -698,6 +698,8 @@
 		A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */; };
 		A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
 		A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
+		A98F3A562795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift */; };
+		A98F3A572795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift */; };
 		A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A32788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */; };
@@ -1233,6 +1235,7 @@
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
+		A98F3A552795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		A996229F2788563F00ABDF97 /* SportsAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregator.swift; sourceTree = "<group>"; };
 		A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregatorRepository.swift; sourceTree = "<group>"; };
 		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
@@ -1643,6 +1646,7 @@
 				454E0ACB2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib */,
 				F47BF2622763953900648440 /* GameSuggestedView.swift */,
 				F47BF2652763986300648440 /* GameSuggestedView.xib */,
+				A98F3A552795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3401,6 +3405,7 @@
 				A9C82FC326F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
 				F4CE68452742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				A9BCF45027552851006DD528 /* Cashout.swift in Sources */,
+				A98F3A562795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift in Sources */,
 				45936CB9270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
 				45166CE126F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -3714,6 +3719,7 @@
 				A9C82FC426F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
 				F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				A9BCF45127552851006DD528 /* Cashout.swift in Sources */,
+				A98F3A572795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift in Sources */,
 				45936CBA270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
 				45166CE226F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
