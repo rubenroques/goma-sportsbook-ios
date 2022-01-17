@@ -36,18 +36,13 @@ class BetslipViewController: UIViewController {
     init() {
         preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
 
-        //myTicketsViewController = MyTicketsViewController()
-        viewControllers = [preSubmissionBetslipViewController]
-        
+        myTicketsViewController = MyTicketsViewController()
+        viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
+
         viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
         tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
         super.init(nibName: "BetslipViewController", bundle: nil)
-    }
-
-    deinit {
-        print("DEINIT BETSLIP")
-        preSubmissionBetslipViewController.removeFromParent()
     }
 
     @available(iOS, unavailable)
@@ -99,6 +94,7 @@ class BetslipViewController: UIViewController {
         Env.userSessionStore.forceWalletUpdate()
 
         self.setupWithTheme()
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

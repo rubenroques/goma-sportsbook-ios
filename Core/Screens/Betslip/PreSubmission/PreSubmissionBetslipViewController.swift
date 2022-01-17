@@ -222,10 +222,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.title = "Betslip"
     }
 
-    deinit {
-        print("DEINIT PRESUBMISSIONVC")
-    }
-
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -604,7 +600,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self.isSuggestedBetsLoading = false
                     self.suggestedBetsRetrievedPublisher.send(0)
                     self.suggestedBetsNotFound = 0
-                    TSManager.shared.swampSession?.printMemoryLogs()
 
                 }
             })
@@ -612,12 +607,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.setupWithTheme()
 
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-//        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
         
         self.placeBetButton.isEnabled = false
-
-        //TSManager.shared.swampSession?.printMemoryLogs()
 
     }
 

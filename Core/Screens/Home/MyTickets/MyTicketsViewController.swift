@@ -67,9 +67,6 @@ class MyTicketsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         self.ticketsTableView.addSubview(self.refreshControl)
 
-        //
-        //
-
         self.view.bringSubviewToFront(self.loadingBaseView)
 
         self.view.setNeedsLayout()
@@ -100,12 +97,13 @@ class MyTicketsViewController: UIViewController {
         }
 
         Env.betslipManager.newBetsPlacedPublisher
-            .sink {
-                self.viewModel.refresh()
+            .sink { [weak self] in
+                self?.viewModel.refresh()
             }
             .store(in: &cancellables)
 
         self.setupWithTheme()
+
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
