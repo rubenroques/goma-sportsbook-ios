@@ -41,7 +41,6 @@ class MyTicketCellViewModel {
             }
         }
     }
-    
 
     init(ticket: BetHistoryEntry) {
         self.ticket = ticket
@@ -91,8 +90,9 @@ class MyTicketCellViewModel {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    self?.cashoutRegister = publisherIdentifiable
 
+                    self?.cashoutRegister = publisherIdentifiable
+                    
                 case .initialContent(let aggregator):
                     print("MyBets cashoutPublisher initialContent")
 
@@ -110,7 +110,7 @@ class MyTicketCellViewModel {
                 case .updatedContent(let aggregatorUpdates):
                     print("MyBets cashoutPublisher updatedContent")
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
 
@@ -153,6 +153,19 @@ class MyTicketCellViewModel {
             }, receiveValue: { _ in
 
             })
+    }
+
+    func unregisterCashoutSubscription() {
+        if let cashoutRegister = self.cashoutRegister {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+        }
+
+        self.cashoutAvailabilitySubscription?.cancel()
+        self.cashoutAvailabilitySubscription = nil
+
+        self.cashoutSubscription?.cancel()
+        self.cashoutSubscription = nil
+
     }
 
 }

@@ -219,7 +219,6 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingMyGamesList.send(false)
         
         self.isUserLoggedPublisher.send(UserSessionStore.isUserLogged())
-    
     }
 
     func setMatchListType(_ matchListType: MatchListType) {

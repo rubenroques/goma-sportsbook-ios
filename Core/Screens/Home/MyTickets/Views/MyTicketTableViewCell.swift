@@ -12,8 +12,6 @@ class MyTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var baseView: UIView!
 
-
-
     @IBOutlet private weak var topStatusView: UIView!
 
     @IBOutlet private weak var headerBaseView: UIView!

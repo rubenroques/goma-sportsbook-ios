@@ -26,6 +26,15 @@ class MyTicketBetLineViewModel {
         }
     }
 
+    deinit {
+        self.goalsSubscription?.cancel()
+        self.goalsSubscription = nil
+
+        if let goalsRegister = goalsRegister {
+            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+        }
+    }
+
     private func requestGoals(forMatchWithId id: String) {
 
         self.goalsSubscription?.cancel()
@@ -66,8 +75,9 @@ class MyTicketBetLineViewModel {
                 case .updatedContent(let aggregatorUpdates):
                     print("MyBets cashoutPublisher updatedContent")
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
     }
+
 }

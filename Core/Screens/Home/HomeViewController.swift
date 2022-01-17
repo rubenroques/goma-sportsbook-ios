@@ -341,7 +341,6 @@ class HomeViewController: UIViewController {
     }
 
     @IBAction func didTapLogin() {
-        print("LOGIN!")
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
