@@ -45,7 +45,6 @@ enum Assets {
     }
 }
 
-// swiftlint:disable line_length
 enum CountryFlagHelper {
     static func flag(forCode code: String) -> String? {
 

@@ -158,7 +158,10 @@ class ProfileLimitsManagementViewController: UIViewController {
         exclusionLabel.font = AppFont.with(type: .semibold, size: 17)
 
         exclusionSelectTextFieldView.isIconArray = true
-        exclusionSelectTextFieldView.setSelectionPicker(["Active", "Limited", "Permanent"], iconArray: [UIImage(named: "icon_active")!, UIImage(named: "icon_limited")!, UIImage(named: "icon_excluded")!])
+        exclusionSelectTextFieldView.setSelectionPicker(["Active", "Limited", "Permanent"],
+                                                        iconArray: [UIImage(named: "icon_active")!,
+                                                                    UIImage(named: "icon_limited")!,
+                                                                    UIImage(named: "icon_excluded")!])
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -212,8 +215,13 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
 
-        guard let userInfo = notification.userInfo else { return }
-        var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        guard
+            let userInfo = notification.userInfo,
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+        
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset

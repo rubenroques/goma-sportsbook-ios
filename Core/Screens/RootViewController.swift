@@ -96,7 +96,7 @@ class RootViewController: UIViewController {
     @IBAction private func testSubscriptionInitialDump() {
 
         if let savedRegistration = savedRegistration {
-            TSManager.shared.swampSession?.unregister(savedRegistration.registration, onSuccess: {
+            Env.everyMatrixClient.manager.swampSession?.unregister(savedRegistration.registration, onSuccess: {
                 self.savedRegistration = nil
             }, onError: { _, _ in
                 self.savedRegistration = nil

@@ -10,31 +10,31 @@ import Combine
 
 class MultipleBettingTicketTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
-    @IBOutlet weak var topBaseView: UIView!
-    @IBOutlet weak var outcomeNameLabel: UILabel!
-    @IBOutlet weak var oddBaseView: UIView!
-    @IBOutlet weak var oddValueLabel: UILabel!
+    @IBOutlet private weak var topBaseView: UIView!
+    @IBOutlet private weak var outcomeNameLabel: UILabel!
+    @IBOutlet private weak var oddBaseView: UIView!
+    @IBOutlet private weak var oddValueLabel: UILabel!
 
-    @IBOutlet weak var upChangeOddValueImage: UIImageView!
-    @IBOutlet weak var downChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var upChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
-    @IBOutlet weak var deleteBetButton: UIButton!
+    @IBOutlet private weak var deleteBetButton: UIButton!
 
-    @IBOutlet weak var separatorView: UIView!
+    @IBOutlet private weak var separatorView: UIView!
 
-    @IBOutlet weak var bottomBaseView: UIView!
-    @IBOutlet weak var marketNameLabel: UILabel!
-    @IBOutlet weak var matchDetailLabel: UILabel!
+    @IBOutlet private weak var bottomBaseView: UIView!
+    @IBOutlet private weak var marketNameLabel: UILabel!
+    @IBOutlet private weak var matchDetailLabel: UILabel!
 
-    @IBOutlet private var stackView: UIStackView!
+    @IBOutlet private weak var stackView: UIStackView!
 
-    @IBOutlet private var errorView: UIView!
-    @IBOutlet private var errorLabel: UILabel!
+    @IBOutlet private weak var errorView: UIView!
+    @IBOutlet private weak var errorLabel: UILabel!
 
-    @IBOutlet private var errorLateralTopView: UIView!
-    @IBOutlet private var errorLateralBottomView: UIView!
+    @IBOutlet private weak var errorLateralTopView: UIView!
+    @IBOutlet private weak var errorLateralBottomView: UIView!
 
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?

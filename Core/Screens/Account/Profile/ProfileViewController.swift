@@ -142,8 +142,8 @@ class ProfileViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.currentBalanceLabel.text = value
+            .sink { [weak self] value in
+                self?.currentBalanceLabel.text = value
             }
             .store(in: &cancellables)
 
@@ -286,7 +286,10 @@ class ProfileViewController: UIViewController {
 
         if let userEmailVerified = userSession?.isEmailVerified {
             if !userEmailVerified {
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"),
+                                                               description: localized("string_app_full_potential"),
+                                                               linkLabel: localized("string_verify_my_account"),
+                                                               alertType: .email)
                 alertsArray.append(emailActivationAlertData)
                 showActivationAlertScrollableView = true
             }
@@ -294,7 +297,10 @@ class ProfileViewController: UIViewController {
 
         if let userSession = userSession {
             if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"),
+                                                               description: localized("string_complete_profile_description"),
+                                                               linkLabel: localized("string_finish_up_profile"),
+                                                               alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
                 showActivationAlertScrollableView = true

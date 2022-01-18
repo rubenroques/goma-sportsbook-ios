@@ -8,10 +8,10 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Core/Tools
 
 line_length:
-  warning: 300
+  warning: 150
   # Some improbably large number because we don't want compile errors
   # just because of style problems
-  error: 300
+  error: 200
   ignores_urls: true
   ignores_comments: true
 
@@ -34,11 +34,12 @@ enum_case_associated_values_count: # Number of associated values in an enum case
   - 6 # warning - default: 5
   - 7 # error - default: 6
 
-
+private_outlet:
+  severity: error
 force_cast:
-  warning
+  error
 force_try:
-  warning
+  error
 
 statement_position:
   statement_mode: uncuddled_else

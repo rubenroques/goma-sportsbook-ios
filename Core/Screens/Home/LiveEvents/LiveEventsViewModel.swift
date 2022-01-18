@@ -22,6 +22,15 @@ class LiveEventsViewModel: NSObject {
         case allMatches
     }
 
+    enum screenState {
+            case emptyAndFilter
+            case emptyNoFilter
+            case noEmptyNoFilter
+            case noEmptyAndFilter
+        }
+    
+    var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
+    
     private var allMatchesViewModelDataSource = AllMatchesViewModelDataSource(banners: [], allMatches: [])
 
     private var isLoadingAllEventsList: CurrentValueSubject<Bool, Never> = .init(true)
@@ -110,7 +119,7 @@ class LiveEventsViewModel: NSObject {
     func getSportsLive() {
 
         if let liveSportsRegister = liveSportsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
         }
 
         var endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
@@ -119,7 +128,7 @@ class LiveEventsViewModel: NSObject {
         self.liveSportsPublisher?.cancel()
         self.liveSportsPublisher = nil
 
-        self.liveSportsPublisher = TSManager.shared
+        self.liveSportsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -222,6 +231,33 @@ class LiveEventsViewModel: NSObject {
             self.allMatchesViewModelDataSource.shouldShowLoadingCell = true
         }
 
+        if let numberOfFilters = self.homeFilterOptions?.countFilters {
+            if numberOfFilters > 0 {
+                if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                    self.screenStatePublisher.send(.emptyAndFilter)
+                }else{
+                    self.screenStatePublisher.send(.noEmptyAndFilter)
+                }
+            }else{
+                if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                    self.screenStatePublisher.send(.emptyNoFilter)
+                }else{
+                    self.screenStatePublisher.send(.noEmptyNoFilter)
+                }
+            }
+        }else{
+            if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                self.screenStatePublisher.send(.emptyNoFilter)
+            }else{
+                self.screenStatePublisher.send(.noEmptyNoFilter)
+            }
+        }
+        
+        //Todo - Code Review
+        DispatchQueue.main.async {
+            self.dataDidChangedAction?()
+        }
+        
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
@@ -252,7 +288,7 @@ class LiveEventsViewModel: NSObject {
     private func fetchAllMatches() {
 
         if let allMatchesRegister = allMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: allMatchesRegister)
         }
 
         let matchesCount = self.allMatchesCount * self.allMatchesPage
@@ -265,7 +301,7 @@ class LiveEventsViewModel: NSObject {
         self.allMatchesPublisher?.cancel()
         self.allMatchesPublisher = nil
 
-        self.allMatchesPublisher = TSManager.shared
+        self.allMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -295,7 +331,7 @@ class LiveEventsViewModel: NSObject {
     func fetchBanners() {
 
         if let bannersInfoRegister = bannersInfoRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
         }
 
         let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
@@ -303,7 +339,7 @@ class LiveEventsViewModel: NSObject {
         self.bannersInfoPublisher?.cancel()
         self.bannersInfoPublisher = nil
 
-        self.bannersInfoPublisher = TSManager.shared
+        self.bannersInfoPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -339,6 +375,7 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.allMatchesViewModelDataSource.numberOfSections(in: tableView)
         }
     }
+
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {
@@ -486,7 +523,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         else {
             fatalError()
         }
-        headerView.sectionTitleLabel.text = localized("string_all_live_events")
+        headerView.configureWithTitle(localized("string_all_live_events")) 
         return headerView
     }
 
@@ -538,7 +575,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.section == 3, self.allMatches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.activityIndicatorView.startAnimating()
+                typedCell.startAnimating()
             }
             self.requestNextPage?()
         }

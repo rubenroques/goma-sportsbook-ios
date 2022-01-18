@@ -41,7 +41,6 @@ class MyTicketCellViewModel {
             }
         }
     }
-    
 
     init(ticket: BetHistoryEntry) {
         self.ticket = ticket
@@ -72,14 +71,14 @@ class MyTicketCellViewModel {
         self.cashoutAvailabilitySubscription = nil
 
         if let cashoutRegister = cashoutRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
 
         let endpoint = TSRouter.cashoutPublisher(operatorId: Env.appSession.operatorId,
                                                  language: "en",
                                                  betId: ticket.betId)
 
-        self.cashoutAvailabilitySubscription = TSManager.shared
+        self.cashoutAvailabilitySubscription = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -91,8 +90,9 @@ class MyTicketCellViewModel {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    self?.cashoutRegister = publisherIdentifiable
 
+                    self?.cashoutRegister = publisherIdentifiable
+                    
                 case .initialContent(let aggregator):
                     print("MyBets cashoutPublisher initialContent")
 
@@ -110,7 +110,7 @@ class MyTicketCellViewModel {
                 case .updatedContent(let aggregatorUpdates):
                     print("MyBets cashoutPublisher updatedContent")
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
 
@@ -144,15 +144,28 @@ class MyTicketCellViewModel {
         self.isLoadingCellData.send(true)
 
         let route = TSRouter.cashoutBet(language: "en", betId: cashout.id)
-        self.cashoutSubscription = TSManager.shared
+        self.cashoutSubscription = Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: CashoutSubmission.self)
-            .delay(for: .seconds(5), scheduler: RunLoop.main)
+            .delay(for: .seconds(5), scheduler: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] _ in
                 self?.requestDataRefreshAction?()
                 self?.isLoadingCellData.send(false)
             }, receiveValue: { _ in
 
             })
+    }
+
+    func unregisterCashoutSubscription() {
+        if let cashoutRegister = self.cashoutRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+        }
+
+        self.cashoutAvailabilitySubscription?.cancel()
+        self.cashoutAvailabilitySubscription = nil
+
+        self.cashoutSubscription?.cancel()
+        self.cashoutSubscription = nil
+
     }
 
 }

@@ -14,6 +14,12 @@ class MyTicketsViewController: UIViewController {
     @IBOutlet private var ticketTypesSeparatorLineView: UIView!
     @IBOutlet private var ticketsTableView: UITableView!
 
+    @IBOutlet private weak var emptyBaseView: UIView!
+    @IBOutlet private weak var firstTextFieldLabel: UILabel!
+    @IBOutlet private weak var secondTextFieldLabel: UILabel!
+    @IBOutlet private weak var noBetsButton: UIButton!
+    @IBOutlet private weak var noBetsImage: UIImageView!
+
     @IBOutlet private weak var loadingIndicatorView: UIActivityIndicatorView!
 
     @IBOutlet private weak var loadingBaseView: UIView!
@@ -27,7 +33,7 @@ class MyTicketsViewController: UIViewController {
 
     init() {
         self.viewModel = MyTicketsViewModel()
-
+        
         super.init(nibName: "MyTicketsViewController", bundle: nil)
 
         self.title = localized("string_my_bets")
@@ -42,7 +48,7 @@ class MyTicketsViewController: UIViewController {
         super.viewDidLoad()
 
         self.loadingBaseView.isHidden = true
-
+        self.emptyBaseView.isHidden = true
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
@@ -67,9 +73,6 @@ class MyTicketsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
         self.ticketsTableView.addSubview(self.refreshControl)
 
-        //
-        //
-
         self.view.bringSubviewToFront(self.loadingBaseView)
 
         self.view.setNeedsLayout()
@@ -77,7 +80,7 @@ class MyTicketsViewController: UIViewController {
 
         self.viewModel.isLoading
             .sink(receiveValue: { [weak self] isLoading in
-
+                
                 if !isLoading {
                     self?.loadingIndicatorView.stopAnimating()
                     self?.refreshControl.endRefreshing()
@@ -87,6 +90,50 @@ class MyTicketsViewController: UIViewController {
                     self?.loadingIndicatorView.startAnimating()
                 }
 
+            })
+            .store(in: &cancellables)
+        
+        self.viewModel.isUserLoggedInPublisher
+            .sink(receiveValue: { [weak self] isUserLoggedIn in
+                if isUserLoggedIn {
+                   self?.emptyBaseView.isHidden = true
+                }
+                else {
+                    self?.emptyBaseView.isHidden = false
+                    self?.firstTextFieldLabel.text = localized("string_empty_no_login")
+                    self?.secondTextFieldLabel.text = localized("second_string_empty_no_login")
+                    self?.noBetsButton.setTitle("Login", for: .normal)
+                    self?.noBetsButton.isHidden = false
+                    self?.noBetsImage.image = UIImage(named: "no_internet_icon")
+                }
+            })
+            .store(in: &cancellables)
+        
+        Publishers.CombineLatest(self.viewModel.isLoading, self.viewModel.isTicketsEmptyPublisher)
+            .map({ isLoading, isTicketsEmpty -> Bool in
+                if isLoading, !isTicketsEmpty {
+                    return true
+                }
+                else if isLoading, isTicketsEmpty {
+                    return true
+                }
+                else if !isLoading, isTicketsEmpty {
+                    return false
+                }
+                else {
+                    return true
+                }
+            })
+            .sink(receiveValue: { [weak self] showEmptyBaseView in
+                self?.emptyBaseView.isHidden = showEmptyBaseView
+                if let userIsLoggedIn = self?.viewModel.isUserLoggedInPublisher.value {
+                    if userIsLoggedIn {
+                        self?.noBetsButton.isHidden = true
+                    }
+                    else {
+                        self?.noBetsButton.isHidden = false
+                    }
+                }
             })
             .store(in: &cancellables)
 
@@ -100,12 +147,13 @@ class MyTicketsViewController: UIViewController {
         }
 
         Env.betslipManager.newBetsPlacedPublisher
-            .sink {
-                self.viewModel.refresh()
+            .sink { [weak self] in
+                self?.viewModel.refresh()
             }
             .store(in: &cancellables)
 
         self.setupWithTheme()
+        
     }
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -125,13 +173,17 @@ class MyTicketsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground
 
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.contentBackground
+        self.ticketTypesCollectionView.backgroundColor = UIColor.App.mainBackground
 
         self.ticketTypesSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.ticketTypesSeparatorLineView.alpha = 0.5
 
         self.ticketsTableView.backgroundColor = UIColor.App.contentBackground
         self.ticketsTableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
+
+        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
+        self.firstTextFieldLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldLabel.textColor = UIColor.App.headingMain
 
     }
 
@@ -140,6 +192,13 @@ class MyTicketsViewController: UIViewController {
         self.viewModel.refresh()
     }
 
+}
+
+extension MyTicketsViewController {
+    @IBAction private func didTapLoginButton() {
+        let loginViewController = Router.navigationController(with: LoginViewController())
+        self.present(loginViewController, animated: true, completion: nil)
+    }
 }
 
 extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -194,6 +253,7 @@ extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDat
         }
 
         self.ticketTypesCollectionView.reloadData()
+        
         self.ticketTypesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 

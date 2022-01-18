@@ -128,10 +128,10 @@ class SportSelectionViewController: UIViewController {
 
         self.activityIndicatorView.isHidden = false
 
-        let sports = EveryMatrixServiceClient().getDisciplinesData(payload: ["lang": "en"])
+        let sports = Env.everyMatrixClient.getDisciplinesData(payload: ["lang": "en"])
 
         sports
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:

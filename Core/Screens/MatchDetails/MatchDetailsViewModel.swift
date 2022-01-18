@@ -64,7 +64,7 @@ class MatchDetailsViewModel: NSObject {
             .store(in: &cancellables)
 
         self.store.totalMarketsPublisher
-            .debounce(for: 0.2, scheduler: DispatchQueue.main)
+            .debounce(for: 0.7, scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.reloadTableViewContent()

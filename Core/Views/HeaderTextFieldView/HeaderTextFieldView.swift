@@ -4,11 +4,11 @@ import Combine
 
 class HeaderTextFieldView: NibView {
 
-    @IBOutlet private var containerView: UIView!
+    @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
-    @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var headerLabel: UILabel! // swiftlint:disable:this private_outlet
+    @IBOutlet weak var textField: UITextField! // swiftlint:disable:this private_outlet
 
     @IBOutlet private weak var bottomLineView: UIView!
     @IBOutlet private weak var tipLabel: UILabel!
@@ -23,7 +23,7 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var showPasswordLabel: UILabel!
 
     @IBOutlet private weak var usernameLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private var bottomStackView: UIStackView!
+    @IBOutlet private weak var bottomStackView: UIStackView!
 
     var textPublisher: AnyPublisher<String?, Never> {
         return self.textField.textPublisher
@@ -554,7 +554,6 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if self.isCurrency {
-            print(string)
             let decimals = CharacterSet(charactersIn: "0123456789.")
             if range.length>0  && range.location == 0 {
                 return false

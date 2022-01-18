@@ -14,6 +14,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailView: UIView!
     @IBOutlet private var headerDetailTopView: UIView!
     @IBOutlet private var backButton: UIButton!
+    @IBOutlet private var matchStatsButton: UIButton!
     @IBOutlet private var headerCompetitionDetailView: UIView!
     @IBOutlet private var headerCompetitionLabel: UILabel!
     @IBOutlet private var headerCompetitionImageView: UIImageView!
@@ -135,6 +136,11 @@ class MatchDetailsViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
 
+        self.matchStatsButton.isHidden = true
+        if self.match.sportType == "1" || self.match.sportType == "3" {
+            self.matchStatsButton.isHidden = false
+        }
+
         self.viewModel.marketGroupsTypesDataChanged = { [weak self] in
             self?.marketTypesCollectionView.reloadData()
         }
@@ -181,7 +187,7 @@ class MatchDetailsViewController: UIViewController {
 
     deinit {
         if let matchDetailsRegister = matchDetailsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
         }
     }
 
@@ -341,7 +347,7 @@ class MatchDetailsViewController: UIViewController {
 
     func setupMatchDetailPublisher() {
         if let matchDetailsRegister = matchDetailsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
         }
 
         let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
@@ -350,7 +356,7 @@ class MatchDetailsViewController: UIViewController {
         self.matchDetailsAggregatorPublisher?.cancel()
         self.matchDetailsAggregatorPublisher = nil
 
-        self.matchDetailsAggregatorPublisher = TSManager.shared
+        self.matchDetailsAggregatorPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -487,6 +493,11 @@ class MatchDetailsViewController: UIViewController {
     
     @IBAction private func didTapBackAction() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction private func didTapMatchStatsButton() {
+        let matchFieldWebViewController = MatchFieldWebViewController(match: self.match)
+        self.navigationController?.pushViewController(matchFieldWebViewController, animated: true)
     }
 
 }

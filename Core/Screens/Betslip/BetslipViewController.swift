@@ -38,7 +38,7 @@ class BetslipViewController: UIViewController {
 
         myTicketsViewController = MyTicketsViewController()
         viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
-        
+
         viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
         tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
@@ -86,14 +86,15 @@ class BetslipViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.accountValueLabel.text = value
+            .sink { [weak self] value in
+                self?.accountValueLabel.text = value
             }
             .store(in: &cancellables)
 
         Env.userSessionStore.forceWalletUpdate()
 
         self.setupWithTheme()
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -127,7 +128,6 @@ class BetslipViewController: UIViewController {
         self.tabViewController.sliderBarColor = UIColor.App.mainTint
         self.tabViewController.barColor = UIColor.App.mainBackground
         self.tabViewController.textColor = .white
-
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {

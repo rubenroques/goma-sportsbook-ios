@@ -9,8 +9,6 @@ import UIKit
 import Combine
 import OrderedCollections
 
-// swiftlint:disable type_body_length
-
 class PreLiveEventsViewModel: NSObject {
 
     private var banners: [EveryMatrix.BannerInfo] = []
@@ -37,15 +35,23 @@ class PreLiveEventsViewModel: NSObject {
         case favoriteCompetitions
     }
 
-    private var popularMatchesViewModelDataSource = PopularMatchesViewModelDataSource(banners: [], matches: [])
-    private var todaySportsViewModelDataSource = TodaySportsViewModelDataSource(todayMatches: [])
-    private var competitionSportsViewModelDataSource = CompetitionSportsViewModelDataSource(competitions: [])
-    private var favoriteGamesSportsViewModelDataSource = FavoriteGamesSportsViewModelDataSource(userFavoriteMatches: [])
-    private var favoriteCompetitionSportsViewModelDataSource = FavoriteCompetitionSportsViewModelDataSource(favoriteCompetitions: [])
+    enum ScreenState {
+        case emptyAndFilter
+        case emptyNoFilter
+        case noEmptyNoFilter
+        case noEmptyAndFilter
+    }
+    
+    var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.noEmptyNoFilter)
+   
+    private var popularMatchesDataSource = PopularMatchesDataSource(banners: [], matches: [])
+    private var todayMatchesDataSource = TodayMatchesDataSource(todayMatches: [])
+    private var competitionsDataSource = CompetitionsDataSource(competitions: [])
+    private var favoriteMatchesDataSource = FavoriteMatchesDataSource(userFavoriteMatches: [])
+    private var favoriteCompetitionsDataSource = FavoriteCompetitionsDataSource(favoriteCompetitions: [])
 
     private var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
-    private var isLoadingMyGamesList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingCompetitions: CurrentValueSubject<Bool, Never> = .init(true)
 
     var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
@@ -86,10 +92,11 @@ class PreLiveEventsViewModel: NSObject {
 
     private var zip3Publisher: AnyCancellable?
 
-    private var popularMatchesPublisher: AnyCancellable?
-    private var todayMatchesPublisher: AnyCancellable?
     private var tournamentsPublisher: AnyPublisher<[EveryMatrix.Tournament], EveryMatrix.APIError>?
     private var locationsPublisher: AnyPublisher<[EveryMatrix.Location], EveryMatrix.APIError>?
+
+    private var popularMatchesPublisher: AnyCancellable?
+    private var todayMatchesPublisher: AnyCancellable?
     private var competitionsMatchesPublisher: AnyCancellable?
     private var bannersInfoPublisher: AnyCancellable?
     private var favoriteMatchesPublisher: AnyCancellable?
@@ -106,18 +113,25 @@ class PreLiveEventsViewModel: NSObject {
 
     private var popularMatchesCount = 10
     private var popularMatchesPage = 1
+    private var popularMatchesHasNextPage = true
     private var todayMatchesCount = 10
     private var todayMatchesPage = 1
-    private var favoriteMatchesCount = 10
-    private var favoriteMatchesPage = 1
+    private var todayMatchesHasNextPage = true
+    
+    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init(selectedSport: Sport) {
         self.selectedSport = selectedSport
         
-        isLoading = Publishers.CombineLatest4(isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions)
-            .map({ isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions in
-                let isLoading = isLoadingTodayList || isLoadingPopularList || isLoadingMyGamesList || isLoadingCompetitions
-                return isLoading
+        isLoading = Publishers.CombineLatest4(matchListTypePublisher, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitions)
+            .map({ matchListType, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitions in
+                switch matchListType {
+                case .myGames: return isLoadingPopularList
+                case .today: return isLoadingTodayList
+                case .competitions: return isLoadingCompetitions
+                case .favoriteGames: return false
+                case .favoriteCompetitions: return false
+                }
             })
             .eraseToAnyPublisher()
 
@@ -125,44 +139,45 @@ class PreLiveEventsViewModel: NSObject {
 
         // ActivationAlertAction
         //
-        self.popularMatchesViewModelDataSource.didSelectActivationAlertAction = { [weak self] alertType in
+        self.popularMatchesDataSource.didSelectActivationAlertAction = { [weak self] alertType in
             self?.didSelectActivationAlertAction?(alertType)
         }
 
         // NextPage
         //
-        self.popularMatchesViewModelDataSource.requestNextPageAction = { [weak self] in
+        self.popularMatchesDataSource.requestNextPageAction = { [weak self] in
             self?.fetchPopularMatchesNextPage()
         }
-        self.todaySportsViewModelDataSource.requestNextPageAction = { [weak self] in
+        self.todayMatchesDataSource.requestNextPageAction = { [weak self] in
             self?.fetchTodayMatchesNextPage()
         }
 
         // didSelectMatchA
         //
-        self.popularMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
+        self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
-        self.todaySportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+        self.todayMatchesDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
-        self.competitionSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+        self.competitionsDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
-        self.favoriteGamesSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+        self.favoriteMatchesDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
-        self.favoriteGamesSportsViewModelDataSource.matchDataSourceWentLive = { [weak self] in
+        self.favoriteMatchesDataSource.matchDataSourceWentLive = { [weak self] in
             self?.dataDidChangedAction?()
         }
 
-        self.favoriteCompetitionSportsViewModelDataSource.didSelectMatchAction = { [weak self] match in
+        self.favoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
-        self.favoriteCompetitionSportsViewModelDataSource.matchDataSourceWentLive = { [weak self] in
+        self.favoriteCompetitionsDataSource.matchDataSourceWentLive = { [weak self] in
             self?.dataDidChangedAction?()
         }
 
+        self.setupPublishers()
     }
 
     func setupPublishers() {
@@ -176,8 +191,8 @@ class PreLiveEventsViewModel: NSObject {
 
         Env.userSessionStore.isUserProfileIncomplete
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { value in
-                self.popularMatchesViewModelDataSource.refetchAlerts()
+            .sink(receiveValue: { _ in
+                self.popularMatchesDataSource.refetchAlerts()
             })
             .store(in: &cancellables)
     }
@@ -185,14 +200,15 @@ class PreLiveEventsViewModel: NSObject {
     func fetchData() {
         self.isLoadingPopularList.send(true)
         self.isLoadingTodayList.send(true)
-        self.isLoadingMyGamesList.send(true)
         self.isLoadingCompetitions.send(true)
         self.isLoadingCompetitionGroups.send(true)
 
         self.popularMatchesPage = 1
         self.todayMatchesPage = 1
-        self.favoriteMatchesPage = 1
-        
+
+        self.popularMatchesHasNextPage = true
+        self.todayMatchesHasNextPage = true
+
         self.competitionsMatches = []
         self.competitions = []
 
@@ -204,10 +220,7 @@ class PreLiveEventsViewModel: NSObject {
         self.fetchTodayMatches()
         self.fetchCompetitionsFilters()
 
-        self.setupPublishers()
-
-        self.isLoadingCompetitions.send(false)
-        self.isLoadingMyGamesList.send(false)
+        self.isUserLoggedPublisher.send(UserSessionStore.isUserLogged())
     }
 
     func setMatchListType(_ matchListType: MatchListType) {
@@ -217,45 +230,53 @@ class PreLiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.isLoadingMyGamesList.send(false)
+        self.popularMatchesDataSource.matches = filterPopularMatches(with: self.homeFilterOptions,
+                                                                              matches: self.popularMatches)
 
-        self.popularMatchesViewModelDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
+        self.popularMatchesDataSource.banners = self.banners
 
-        self.popularMatchesViewModelDataSource.banners = self.banners
+        self.todayMatchesDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions,
+                                                                              matches: self.todayMatches)
 
-        self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
+        self.competitionsDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions,
+                                                                                          competitions: self.competitions)
 
-        self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
+        self.favoriteMatchesDataSource.userFavoriteMatches = self.favoriteMatches
 
-        self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
+        self.favoriteCompetitionsDataSource.competitions = self.favoriteCompetitions
 
-        self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
-
-        //Todo - Code Review  
+        if let numberOfFilters = self.homeFilterOptions?.countFilters {
+            if numberOfFilters > 0 {
+                if !self.hasContentForSelectedListType() {
+                    self.screenStatePublisher.send(.emptyAndFilter)
+                }
+                else {
+                    self.screenStatePublisher.send(.noEmptyAndFilter)
+                }
+            }
+            else {
+                if !self.hasContentForSelectedListType() {
+                    self.screenStatePublisher.send(.emptyNoFilter)
+                }
+                else {
+                    self.screenStatePublisher.send(.noEmptyNoFilter)
+                }
+            }
+        }
+        else {
+            if !self.hasContentForSelectedListType() {
+                self.screenStatePublisher.send(.emptyNoFilter)
+            }
+            else {
+                self.screenStatePublisher.send(.noEmptyNoFilter)
+            }
+        }
+        
+        // Todo - Code Review
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
-    }
-
-    private func updateContentListFiltered() {
-
-        self.isLoadingMyGamesList.send(false)
-
-        self.popularMatchesViewModelDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
-
-        self.popularMatchesViewModelDataSource.banners = self.banners
-
-        self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
-
-        self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
-
-        self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
-
-        self.favoriteCompetitionSportsViewModelDataSource.competitions = self.favoriteCompetitions
-
-        DispatchQueue.main.async {
-            self.dataDidChangedAction?()
-        }
+        
     }
 
     func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
@@ -315,10 +336,8 @@ class PreLiveEventsViewModel: NSObject {
             var marketSort: [Market] = []
             let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
-            for market in match.markets {
-                if market.typeId != marketSort[0].typeId {
-                    marketSort.append(market)
-                }
+            for market in match.markets where market.typeId != marketSort[0].typeId {
+                marketSort.append(market)
             }
             // Check time range
 //            var timeInRange = false
@@ -356,38 +375,36 @@ class PreLiveEventsViewModel: NSObject {
 
         var filteredMatches: [Match] = []
         var filteredCompetitions: [Competition] = []
-        for competition in competitions {
-            if !competition.matches.isEmpty {
-                for match in competition.matches {
-                    // Check default market order
-                    var marketSort: [Market] = []
-                    let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
-                    marketSort.append(match.markets[favoriteMarketIndex ?? 0])
-                    for market in match.markets {
-                        if market.typeId != marketSort[0].typeId {
-                            marketSort.append(market)
-                        }
+        for competition in competitions where competition.matches.isNotEmpty {
+            for match in competition.matches {
+                // Check default market order
+                var marketSort: [Market] = []
+                let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
+                marketSort.append(match.markets[favoriteMarketIndex ?? 0])
+                for market in match.markets {
+                    if market.typeId != marketSort[0].typeId {
+                        marketSort.append(market)
                     }
-
-                    // Check odds filter
-                    let matchOdds = marketSort[0].outcomes
-                    let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
-                    for odd in matchOdds {
-                        let oddValue = CGFloat(odd.bettingOffer.value)
-                        if oddsRange.contains(oddValue) {
-                            var newMatch = match
-                            newMatch.markets = marketSort
-
-                            filteredMatches.append(newMatch)
-                            break
-                        }
-                    }
-
                 }
-                var newCompetition = competition
-                newCompetition.matches = filteredMatches
-                filteredCompetitions.append(newCompetition)
+
+                // Check odds filter
+                let matchOdds = marketSort[0].outcomes
+                let oddsRange = filterOptionsValue.lowerBoundOddsRange...filterOptionsValue.highBoundOddsRange
+                for odd in matchOdds {
+                    let oddValue = CGFloat(odd.bettingOffer.value)
+                    if oddsRange.contains(oddValue) {
+                        var newMatch = match
+                        newMatch.markets = marketSort
+
+                        filteredMatches.append(newMatch)
+                        break
+                    }
+                }
+
             }
+            var newCompetition = competition
+            newCompetition.matches = filteredMatches
+            filteredCompetitions.append(newCompetition)
         }
         return filteredCompetitions
     }
@@ -407,24 +424,33 @@ class PreLiveEventsViewModel: NSObject {
     private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .popularEvents,
                                                  shouldClear: true)
-        self.popularMatches = Env.everyMatrixStorage.matchesForListType(.popularEvents)
+
+        let localPopularMatches = Env.everyMatrixStorage.matchesForListType(.popularEvents)
+        if localPopularMatches.count < self.popularMatchesCount * self.popularMatchesPage {
+            self.popularMatchesHasNextPage = false
+        }
+
+        self.popularMatches = localPopularMatches
+
         self.isLoadingPopularList.send(false)
         self.updateContentList()
     }
 
-    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator, filtered: Bool = false) {
+    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .todayEvents,
                                                  shouldClear: true)
-        self.todayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
+
+        let localTodayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
+        if localTodayMatches.count < self.todayMatchesCount * self.todayMatchesPage {
+            self.todayMatchesHasNextPage = false
+        }
+
+        self.todayMatches = localTodayMatches
 
         self.isLoadingTodayList.send(false)
 
-        if filtered {
-            self.updateContentListFiltered()
-        }
-        else {
-            self.updateContentList()
-        }
+        self.updateContentList()
+       
     }
 
     private func setupCompetitionGroups() {
@@ -569,12 +595,6 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitions = processedCompetitions
 
-//        self.favoriteCompetitions = self.favoriteCompetitions.filter({
-//            $0. == self.selectedSportId.id
-//        })
-
-        self.isLoadingCompetitions.send(false)
-
         self.updateContentList()
     }
 
@@ -604,6 +624,9 @@ class PreLiveEventsViewModel: NSObject {
     //
 
     private func fetchPopularMatchesNextPage() {
+        if !popularMatchesHasNextPage {
+            return
+        }
         self.popularMatchesPage += 1
         self.fetchPopularMatches()
     }
@@ -611,7 +634,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchPopularMatches() {
 
         if let popularMatchesRegister = popularMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularMatchesRegister)
         }
 
         let matchesCount = self.popularMatchesCount * self.popularMatchesPage
@@ -620,11 +643,10 @@ class PreLiveEventsViewModel: NSObject {
                                                         language: "en",
                                                         sportId: self.selectedSport.type.typeId,
                                                         matchesCount: matchesCount)
-
         self.popularMatchesPublisher?.cancel()
         self.popularMatchesPublisher = nil
         
-        self.popularMatchesPublisher = TSManager.shared
+        self.popularMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -640,7 +662,6 @@ class PreLiveEventsViewModel: NSObject {
                     print("PreLiveEventsViewModel popularMatchesPublisher connect")
                     self?.popularMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    
                     print("PreLiveEventsViewModel popularMatchesPublisher initialContent")
                     self?.setupPopularAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
@@ -650,7 +671,7 @@ class PreLiveEventsViewModel: NSObject {
                     print("PreLiveEventsViewModel popularMatchesPublisher disconnect")
                 }
             })
-
+        
     }
 
     private func fetchTodayMatchesNextPage() {
@@ -661,7 +682,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchTodayMatches(withFilter: Bool = false, timeRange: String = "") {
 
         if let todayMatchesRegister = todayMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: todayMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: todayMatchesRegister)
         }
 
         let matchesCount = self.todayMatchesCount * self.todayMatchesPage
@@ -681,7 +702,7 @@ class PreLiveEventsViewModel: NSObject {
         self.todayMatchesPublisher?.cancel()
         self.todayMatchesPublisher = nil
 
-        self.todayMatchesPublisher = TSManager.shared
+        self.todayMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -699,13 +720,12 @@ class PreLiveEventsViewModel: NSObject {
                     self?.todayMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
                     print("PreLiveEventsViewModel todayMatchesPublisher initialContent")
-                    self?.setupTodayAggregatorProcessor(aggregator: aggregator, filtered: withFilter)
+                    self?.setupTodayAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateTodayAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
                     print("PreLiveEventsViewModel todayMatchesPublisher disconnect")
                 }
-
             })
     }
 
@@ -714,16 +734,16 @@ class PreLiveEventsViewModel: NSObject {
         let language = "en"
         let sportId = self.selectedSport.type.typeId
 
-        let popularTournamentsPublisher = TSManager.shared
+        let popularTournamentsPublisher = Env.everyMatrixClient.manager
             .getModel(router: TSRouter.getCustomTournaments(language: language, sportId: sportId),
                       decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
             .eraseToAnyPublisher()
 
         if let tournamentsRegister = tournamentsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
         }
 
-        self.tournamentsPublisher = TSManager.shared
+        self.tournamentsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(TSRouter.tournamentsPublisher(operatorId: Env.appSession.operatorId,
                                                               language: language,
                                                               sportId: sportId),
@@ -744,10 +764,10 @@ class PreLiveEventsViewModel: NSObject {
             .eraseToAnyPublisher()
 
         if let locationsRegister = locationsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
         }
 
-        self.locationsPublisher = TSManager.shared
+        self.locationsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(TSRouter.locationsPublisher(operatorId: Env.appSession.operatorId,
                                                           language: language,
                                                           sportId: sportId),
@@ -792,11 +812,11 @@ class PreLiveEventsViewModel: NSObject {
                 self?.zip3Publisher = nil
 
                 if let locationsRegister = self?.locationsRegister {
-                    TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
+                    Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
                 }
 
                 if let tournamentsRegister = self?.tournamentsRegister {
-                    TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
+                    Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: tournamentsRegister)
                 }
 
             }, receiveValue: { [weak self] popularTournaments, tournaments, locations in
@@ -815,7 +835,7 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingCompetitions.send(true)
 
         if let competitionsMatchesRegister = competitionsMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
         }
 
         let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
@@ -826,7 +846,7 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsMatchesPublisher?.cancel()
         self.competitionsMatchesPublisher = nil
 
-        self.competitionsMatchesPublisher = TSManager.shared
+        self.competitionsMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -857,7 +877,7 @@ class PreLiveEventsViewModel: NSObject {
     func fetchFavoriteCompetitionsMatchesWithIds(_ ids: [String]) {
 
         if let favoriteCompetitionsMatchesRegister = favoriteCompetitionsMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
         }
 
         let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
@@ -868,7 +888,7 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteCompetitionsMatchesPublisher?.cancel()
         self.favoriteCompetitionsMatchesPublisher = nil
 
-        self.favoriteCompetitionsMatchesPublisher = TSManager.shared
+        self.favoriteCompetitionsMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -898,7 +918,7 @@ class PreLiveEventsViewModel: NSObject {
     private func fetchFavoriteMatches() {
 
         if let favoriteMatchesRegister = favoriteMatchesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
         }
 
         guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
@@ -910,7 +930,7 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteMatchesPublisher?.cancel()
         self.favoriteMatchesPublisher = nil
 
-        self.favoriteMatchesPublisher = TSManager.shared
+        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -942,7 +962,7 @@ class PreLiveEventsViewModel: NSObject {
     func fetchBanners() {
 
         if let bannersInfoRegister = bannersInfoRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
         }
 
         let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
@@ -950,7 +970,7 @@ class PreLiveEventsViewModel: NSObject {
         self.bannersInfoPublisher?.cancel()
         self.bannersInfoPublisher = nil
 
-        self.bannersInfoPublisher = TSManager.shared
+        self.bannersInfoPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -983,175 +1003,50 @@ class PreLiveEventsViewModel: NSObject {
 
 }
 
-extension PreLiveEventsViewModel {
-//
-//    var numberOfSections: Int {
-//        return 4
-//    }
-//
-//    func itemsForSection(_ section: Int) -> Int {
-//        switch section {
-//        case 0:
-//            if case .myGames = matchListTypePublisher.value {
-//                return banners.isEmpty ? 0 : 1
-//            }
-//            return 0
-//        case 1:
-//            return 0
-//        case 2:
-//            return self.selectedFilterMatches().count
-//        default:
-//            return 0
-//        }
-//
-//    }
-
-//    func cellForRowAt(indexPath: IndexPath, onTableView tableView: UITableView) -> UITableViewCell {
-//
-//        switch indexPath.section {
-//        case 0:
-//            if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
-//                if let viewModel = self.bannersViewModel {
-//                    cell.setupWithViewModel(viewModel)
-//                }
-//                cell.backgroundView?.backgroundColor = .clear
-//                cell.backgroundColor = .clear
-//                cell.contentView.backgroundColor = .clear
-//                return cell
-//            }
-//        case 1:
-//            if let cell = tableView.dequeueCellType(UITableViewCell.self) {
-//                return cell
-//            }
-//        case 2:
-//            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-//               let match = self.selectedFilterMatches()[safe: indexPath.row] {
-//                cell.setupWithMatch(match)
-//                return cell
-//            }
-//        default:
-//            fatalError()
-//        }
-//        return UITableViewCell()
-//    }
-
-//    func viewForHeaderInSection(_  section: Int, tableView: UITableView) -> UIView? {
-//        switch (section, matchListTypePublisher.value) {
-//        case (2, .myGames):
-//            if  let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-//                    as? TitleTableViewHeader {
-//                headerView.sectionTitleLabel.text = "Popular Games"
-//                return headerView
-//            }
-//        case (2, .today):
-//            if  let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-//                    as? TitleTableViewHeader {
-//                headerView.sectionTitleLabel.text = "Today’s Highlights"
-//                return headerView
-//            }
-//        default:
-//            return nil
-//        }
-//        return nil
-//    }
-
-//    func heightForHeaderInSection(section: Int, tableView: UITableView) -> CGFloat {
-//        switch (section, matchListTypePublisher.value) {
-//        case (2, .myGames):
-//            return 54
-//        case (2, .today):
-//            return 54
-//        default:
-//            return 0.001
-//        }
-//    }
-//
-//
-//    func selectedFilterMatches() -> [Match] {
-//        if case .myGames = matchListTypePublisher.value {
-//            return self.popularMatches
-//        }
-//        else if case .today = matchListTypePublisher.value {
-//            return self.todayMatches
-//        }
-//        else if case .competitions = matchListTypePublisher.value {
-//            return self.competitionsMatches
-//        }
-//        return []
-//    }
-
-}
-
 extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.numberOfSections(in: tableView)
+            return self.popularMatchesDataSource.numberOfSections(in: tableView)
         case .today:
-            return self.todaySportsViewModelDataSource.numberOfSections(in: tableView)
+            return self.todayMatchesDataSource.numberOfSections(in: tableView)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.numberOfSections(in: tableView)
+            return self.competitionsDataSource.numberOfSections(in: tableView)
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.numberOfSections(in: tableView)
+            return self.favoriteMatchesDataSource.numberOfSections(in: tableView)
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.numberOfSections(in: tableView)
+            return self.favoriteCompetitionsDataSource.numberOfSections(in: tableView)
         }
     }
 
-    func hasGames(in tableView: UITableView) -> Bool {
-        switch self.matchListTypePublisher.value {
-        case .myGames:
-            
-            if self.popularMatchesViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .today:
-            if self.todaySportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .competitions:
-            if self.competitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .favoriteGames:
-            if self.favoriteGamesSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        case .favoriteCompetitions:
-            if self.favoriteCompetitionSportsViewModelDataSource.numberOfSections(in: tableView) != 0 {
-                return true
-            }
-            else {
-                return false
-            }
-        }
-    }
-
+    func hasContentForSelectedListType() -> Bool {
+       switch self.matchListTypePublisher.value {
+       case .myGames:
+           return self.popularMatchesDataSource.matches.isNotEmpty
+       case .today:
+           return self.todayMatchesDataSource.todayMatches.isNotEmpty
+       case .competitions:
+           return self.competitionsDataSource.competitions.isNotEmpty
+       case .favoriteGames:
+           return self.favoriteMatchesDataSource.userFavoriteMatches.isNotEmpty
+       case .favoriteCompetitions:
+          return self.favoriteCompetitionsDataSource.competitions.isNotEmpty
+       }
+   }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+            return self.popularMatchesDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .today:
-            return self.todaySportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+            return self.todayMatchesDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+            return self.competitionsDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+            return self.favoriteMatchesDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, numberOfRowsInSection: section)
+            return self.favoriteCompetitionsDataSource.tableView(tableView, numberOfRowsInSection: section)
         }
     }
 
@@ -1159,15 +1054,15 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
         var cell: UITableViewCell
         switch self.matchListTypePublisher.value {
         case .myGames:
-            cell = self.popularMatchesViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+            cell = self.popularMatchesDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .today:
-            cell = self.todaySportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+            cell = self.todayMatchesDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .competitions:
-            cell = self.competitionSportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+            cell = self.competitionsDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .favoriteGames:
-            cell = self.favoriteGamesSportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+            cell = self.favoriteMatchesDataSource.tableView(tableView, cellForRowAt: indexPath)
         case .favoriteCompetitions:
-            cell = self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, cellForRowAt: indexPath)
+            cell = self.favoriteCompetitionsDataSource.tableView(tableView, cellForRowAt: indexPath)
         }
         return cell
     }
@@ -1175,90 +1070,90 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+            return self.popularMatchesDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         case .today:
-            return self.todaySportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+            return self.todayMatchesDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+            ()
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+            ()
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+            ()
         }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+            return self.popularMatchesDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .today:
-            return self.todaySportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+            return self.todayMatchesDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+            return self.competitionsDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+            return self.favoriteMatchesDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, viewForHeaderInSection: section)
+            return self.favoriteCompetitionsDataSource.tableView(tableView, viewForHeaderInSection: section)
         }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+            return self.popularMatchesDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .today:
-            return self.todaySportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+            return self.todayMatchesDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+            return self.competitionsDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+            return self.favoriteMatchesDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, heightForRowAt: indexPath)
+            return self.favoriteCompetitionsDataSource.tableView(tableView, heightForRowAt: indexPath)
         }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+            return self.popularMatchesDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .today:
-            return self.todaySportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+            return self.todayMatchesDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+            return self.competitionsDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+            return self.favoriteMatchesDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+            return self.favoriteCompetitionsDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+            return self.popularMatchesDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .today:
-            return self.todaySportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+            return self.todayMatchesDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+            return self.competitionsDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+            return self.favoriteMatchesDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, heightForHeaderInSection: section)
+            return self.favoriteCompetitionsDataSource.tableView(tableView, heightForHeaderInSection: section)
         }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         switch self.matchListTypePublisher.value {
         case .myGames:
-            return self.popularMatchesViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+            return self.popularMatchesDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .today:
-            return self.todaySportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+            return self.todayMatchesDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .competitions:
-            return self.competitionSportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+            return self.competitionsDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .favoriteGames:
-            return self.favoriteGamesSportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+            return self.favoriteMatchesDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .favoriteCompetitions:
-            return self.favoriteCompetitionSportsViewModelDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+            return self.favoriteCompetitionsDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         }
     }
 
@@ -1268,740 +1163,6 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return 0.01
-    }
-
-}
-
-class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
-
-    var banners: [EveryMatrix.BannerInfo] = [] {
-        didSet {
-            self.bannersViewModel = self.createBannersViewModel()
-        }
-    }
-
-    private var bannersViewModel: BannerLineCellViewModel?
-    var cachedBannerCellViewModel: [String: BannerCellViewModel] = [:]
-    var cachedBannerLineCellViewModel: BannerLineCellViewModel?
-    var didCachedBanners: Bool = false
-
-    var matches: [Match] = []
-
-    var alertsArray: [ActivationAlert] = []
-
-    var requestNextPageAction: (() -> Void)?
-    var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
-    var didSelectMatchAction: ((Match) -> Void)?
-
-    init(banners: [EveryMatrix.BannerInfo], matches: [Match]) {
-        self.banners = banners
-        self.matches = matches
-
-        if let userSession = UserSessionStore.loggedUserSession() {
-            if !userSession.isEmailVerified {
-
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
-
-                alertsArray.append(emailActivationAlertData)
-            }
-
-            if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
-
-                alertsArray.append(completeProfileAlertData)
-            }
-        }
-
-        super.init()
-    }
-
-    func refetchAlerts() {
-        alertsArray = []
-
-        if let userSession = UserSessionStore.loggedUserSession() {
-            if !userSession.isEmailVerified {
-
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
-
-                alertsArray.append(emailActivationAlertData)
-            }
-
-            if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
-
-                alertsArray.append(completeProfileAlertData)
-            }
-        }
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        4
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
-                if !loggedUser.isEmailVerified {
-                    return 1
-                }
-                else if Env.userSessionStore.isUserProfileIncomplete.value {
-                    return 1
-                }
-            }
-            return 0
-        case 1:
-            return banners.isEmpty ? 0 : 1
-        case 2:
-            return self.matches.count
-        case 3:
-            return 1
-        default:
-            return 0
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.section {
-        case 0:
-            // return UITableViewCell()
-            if let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self) {
-                cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
-                    self.didSelectActivationAlertAction?(alertType)
-                }
-                cell.setAlertArrayData(arrayData: alertsArray)
-                return cell
-            }
-        case 1:
-            if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
-                if !didCachedBanners {
-                    if let cachedViewModel = self.cachedBannerLineCellViewModel {
-                        cell.setupWithViewModel(cachedViewModel)
-
-                        cell.tappedBannerMatchAction = { match in
-                            self.didSelectMatchAction?(match)
-                        }
-                        didCachedBanners = true
-                    }
-                }
-//                else {
-//                    if let viewModel = self.bannersViewModel {
-//                        cell.setupWithViewModel(viewModel)
-//
-//                        cell.tappedBannerMatchAction = { match in
-//                            self.didSelectMatchAction?(match)
-//                        }
-//                    }
-//                }
-
-                return cell
-            }
-        case 2:
-            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let match = self.matches[safe: indexPath.row] {
-                cell.setupWithMatch(match)
-
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
-                }
-                return cell
-            }
-        case 3:
-            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
-                return cell
-            }
-        default:
-            fatalError()
-        }
-        return UITableViewCell()
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
-        else {
-            fatalError()
-        }
-        headerView.sectionTitleLabel.text = "Popular Games"
-        return headerView
-    }
-
-    private func createBannersViewModel() -> BannerLineCellViewModel? {
-        if self.banners.isEmpty {
-            return nil
-        }
-        var cells = [BannerCellViewModel]()
-        for banner in self.banners {
-            if let cachedBannerCell = cachedBannerCellViewModel[banner.id] {
-                cells.append(cachedBannerCell)
-            }
-            else {
-                cells.append(BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? ""))
-            }
-        }
-        if let cachedBannerLineCellViewModel = cachedBannerLineCellViewModel {
-            return cachedBannerLineCellViewModel
-        }
-        else {
-            cachedBannerLineCellViewModel = BannerLineCellViewModel(banners: cells)
-            return cachedBannerLineCellViewModel
-        }
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 2 {
-            return 54
-        }
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == 2 {
-            return 54
-        }
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0:
-            return 132
-        case 3:
-            // Loading cell
-            return 70
-        default:
-            return 155
-        }
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 0:
-            return 130
-        case 3:
-            // Loading cell
-            return 70
-        default:
-            return 155
-        }
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 3, self.matches.isNotEmpty {
-            if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.activityIndicatorView.startAnimating()
-            }
-            self.requestNextPageAction?()
-        }
-    }
-
-}
-
-class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
-
-    var todayMatches: [Match] = []
-
-    var requestNextPageAction: (() -> Void)?
-    var didSelectMatchAction: ((Match) -> Void)?
-
-    init(todayMatches: [Match]) {
-        self.todayMatches = todayMatches
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return self.todayMatches.count
-        case 1:
-            return 1
-        default:
-            return 0
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        switch indexPath.section {
-        case 0:
-            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let match = self.todayMatches[safe: indexPath.row] {
-                cell.setupWithMatch(match)
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
-                }
-                return cell
-            }
-        case 1:
-            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
-                cell.activityIndicatorView.startAnimating()
-                return cell
-            }
-        default:
-            ()
-        }
-        fatalError()
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-            as? TitleTableViewHeader {
-            headerView.sectionTitleLabel.text = localized("string_upcoming_highlights")
-            return headerView
-        }
-        return nil
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 54
-        }
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 54
-        }
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 1:
-            // Loading cell
-            return 70
-        default:
-            return 155
-        }
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 1:
-            // Loading cell
-            return 70
-        default:
-            return 155
-        }
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 1, self.todayMatches.isNotEmpty {
-            if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.activityIndicatorView.startAnimating()
-            }
-            self.requestNextPageAction?()
-        }
-    }
-}
-
-class CompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
-
-    var competitions: [Competition] = [] {
-        didSet {
-            self.collapsedCompetitionsSections = []
-        }
-    }
-    var collapsedCompetitionsSections: Set<Int> = []
-
-    var didSelectMatchAction: ((Match) -> Void)?
-
-    init(competitions: [Competition]) {
-        self.competitions = competitions
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return competitions.count
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let competition = competitions[safe: section] {
-            return competition.matches.count
-        }
-        return 0
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-            let competition = self.competitions[safe: indexPath.section],
-            let match = competition.matches[safe: indexPath.row]
-        else {
-            fatalError()
-        }
-        cell.setupWithMatch(match)
-        cell.shouldShowCountryFlag(false)
-        cell.tappedMatchLineAction = {
-            self.didSelectMatchAction?(match)
-        }
-
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TournamentTableViewHeader.identifier)
-                as? TournamentTableViewHeader,
-            let competition = self.competitions[safe: section]
-        else {
-            fatalError()
-        }
-
-        headerView.nameTitleLabel.text = competition.name
-        headerView.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
-        headerView.sectionIndex = section
-        headerView.competition = competition
-        headerView.didToggleHeaderViewAction = { [weak self, weak tableView] section in
-            guard
-                let weakSelf = self,
-                let weakTableView = tableView
-            else { return }
-
-            if weakSelf.collapsedCompetitionsSections.contains(section) {
-                weakSelf.collapsedCompetitionsSections.remove(section)
-            }
-            else {
-                weakSelf.collapsedCompetitionsSections.insert(section)
-            }
-            weakSelf.needReloadSection(section, tableView: weakTableView)
-        }
-        if self.collapsedCompetitionsSections.contains(section) {
-            headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
-        }
-        else {
-            headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
-        }
-
-        return headerView
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 54
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 54
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
-        }
-        return UITableView.automaticDimension
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
-        }
-        return 155
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-
-    }
-
-    func needReloadSection(_ section: Int, tableView: UITableView) {
-
-        guard let competition = self.competitions[safe: section] else { return }
-
-        let rows = (0 ..< competition.matches.count).map({ IndexPath(row: $0, section: section) }) // all section rows
-
-        tableView.beginUpdates()
-        tableView.reloadRows(at: rows, with: .automatic)
-        tableView.endUpdates()
-
-    }
-
-}
-
-class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
-
-    var userFavoriteMatches: [Match] = []
-
-    var requestNextPage: (() -> Void)?
-    var didSelectMatchAction: ((Match) -> Void)?
-    var matchDataSourceWentLive: (() -> Void)?
-
-    init(userFavoriteMatches: [Match]) {
-        self.userFavoriteMatches = userFavoriteMatches
-
-        super.init()
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch section {
-        case 0:
-            if self.userFavoriteMatches.isEmpty {
-                return 1
-            }
-            return self.userFavoriteMatches.count
-        default:
-            return 0
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        switch indexPath.section {
-        case 0:
-            if !self.userFavoriteMatches.isEmpty {
-                if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-                   let match = self.userFavoriteMatches[safe: indexPath.row] {
-
-                    if Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-
-                        cell.setupWithMatch(match, liveMatch: true)
-                    }
-                    else {
-                        cell.setupWithMatch(match)
-
-                    }
-                    cell.setupFavoriteMatchInfoPublisher(match: match)
-
-                    cell.tappedMatchLineAction = {
-                        self.didSelectMatchAction?(match)
-                    }
-
-                    cell.matchWentLive = {
-                        DispatchQueue.main.async {
-                            self.matchDataSourceWentLive?()
-                        }
-                    }
-
-                    return cell
-                }
-            }
-            else {
-                if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
-                    cell.setDescription(text: localized("string_empty_my_games"))
-
-                    return cell
-                }
-            }
-        default:
-            ()
-        }
-        fatalError()
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-            as? TitleTableViewHeader {
-            headerView.sectionTitleLabel.text = localized("string_my_games")
-            return headerView
-        }
-        return nil
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 54
-        }
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0 {
-            return 54
-        }
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 1:
-            // Loading cell
-            return 70
-        case 0:
-            if self.userFavoriteMatches.isEmpty {
-                return 70
-            }
-            else {
-                return 155
-            }
-        default:
-            return 155
-        }
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.section {
-        case 1:
-            // Loading cell
-            return 70
-        default:
-            return 155
-        }
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-
-    }
-
-}
-
-class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
-
-    var competitions: [Competition] = [] {
-        didSet {
-            self.collapsedCompetitionsSections = []
-        }
-    }
-    var collapsedCompetitionsSections: Set<Int> = []
-
-    var didSelectMatchAction: ((Match) -> Void)?
-    var matchDataSourceWentLive: (() -> Void)?
-
-    init(favoriteCompetitions: [Competition]) {
-        self.competitions = favoriteCompetitions
-    }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return competitions.isEmpty ? 1 : competitions.count
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let competition = competitions[safe: section] {
-            return competition.matches.count
-        }
-        else {
-            return 1
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if !competitions.isEmpty {
-            guard
-                let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-                let competition = self.competitions[safe: indexPath.section],
-                let match = competition.matches[safe: indexPath.row]
-            else {
-                fatalError()
-            }
-            if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
-                cell.setupWithMatch(match, liveMatch: true)
-            }
-            else {
-                cell.setupWithMatch(match)
-            }
-
-            cell.shouldShowCountryFlag(false)
-            cell.tappedMatchLineAction = {
-                self.didSelectMatchAction?(match)
-            }
-            cell.matchWentLive = {
-                self.matchDataSourceWentLive?()
-            }
-
-            return cell
-        }
-        else {
-            guard
-                let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self)
-                else {
-                    fatalError()
-                }
-            cell.setDescription(text: localized("string_empty_my_competitions"))
-
-            return cell
-        }
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TournamentTableViewHeader.identifier)
-                as? TournamentTableViewHeader,
-            let competition = self.competitions[safe: section]
-        else {
-            // fatalError()
-            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-                as? TitleTableViewHeader {
-                headerView.sectionTitleLabel.text = localized("string_my_competitions")
-                return headerView
-
-            }
-            return UIView()
-        }
-
-        headerView.nameTitleLabel.text = competition.name
-        headerView.countryFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: competition.venue?.isoCode ?? ""))
-        headerView.sectionIndex = section
-        headerView.competition = competition
-        headerView.didToggleHeaderViewAction = { [weak self, weak tableView] section in
-            guard
-                let weakSelf = self,
-                let weakTableView = tableView
-            else { return }
-
-            if weakSelf.collapsedCompetitionsSections.contains(section) {
-                weakSelf.collapsedCompetitionsSections.remove(section)
-            }
-            else {
-                weakSelf.collapsedCompetitionsSections.insert(section)
-            }
-            weakSelf.needReloadSection(section, tableView: weakTableView)
-        }
-        if self.collapsedCompetitionsSections.contains(section) {
-            headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
-        }
-        else {
-            headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
-        }
-
-        return headerView
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 54
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return 54
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
-        }
-        if competitions.isEmpty {
-            return 70
-        }
-        return UITableView.automaticDimension
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
-        }
-        if competitions.isEmpty {
-            return 70
-        }
-        return 155
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-
-    }
-
-    func needReloadSection(_ section: Int, tableView: UITableView) {
-
-        guard let competition = self.competitions[safe: section] else { return }
-
-        let rows = (0 ..< competition.matches.count).map({ IndexPath(row: $0, section: section) }) // all section rows
-
-        tableView.beginUpdates()
-        tableView.reloadRows(at: rows, with: .automatic)
-        tableView.endUpdates()
-
     }
 
 }

@@ -202,8 +202,19 @@ Terms of use, Privacy Policy and EULA";
 "string_withdraw_value" = "Withdraw Value";
 "string_minimum_withdraw_value" = "Minimum Value: 10€";
 
-"string_empty_my_games" = "You don't have favorite games for the selected sport.";
-"string_empty_my_competitions" = "You don't have favorite competitions for the selected sport.";
+"string_empty_my_games" = "You don't have favorite games for this sport!";
+"second_string_empty_my_games" = "Go to the games list and mark them as favorites.";
+"string_empty_my_competitions" = "You don't have favorite competitions for this sport!";
+"second_string_empty_my_competitions" = "Go to the competitions list and mark them as favorites.";
+
+"string_empty_no_login" = "You aren't logged in!";
+"second_string_empty_no_login" = "You need to be logged in to be able to see your tickets.";
+
+"string_empty_list" = "There are no results for this selection.";
+"second_string_empty_list" = "Please try something else!";
+
+"string_empty_list_with_filters" = "There are no results for this filters.";
+"second_string_empty_list_with_filters" = "Please try something else!";
 
 "string_my_games" = "My Games";
 "string_my_competitions" = "My Competitions";

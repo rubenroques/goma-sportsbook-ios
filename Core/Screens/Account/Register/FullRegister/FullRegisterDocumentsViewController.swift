@@ -133,7 +133,7 @@ class FullRegisterDocumentsViewController: UIViewController {
 
     func setupPublishers() {
         self.idHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
@@ -187,9 +187,7 @@ class FullRegisterDocumentsViewController: UIViewController {
 
     func setupFullRegisterUserInfoForm() {
         let idText = idHeaderTextFieldView.text
-
         registerForm.personalID = idText
-        print(registerForm)
     }
 
     private func openFile() {
@@ -266,10 +264,8 @@ class FullRegisterDocumentsViewController: UIViewController {
                 case .failure(let error):
                     switch error {
                     case let .requestError(message):
-                        print(message)
                         self.showAlert(type: .error, text: message)
                     default:
-                        print(error)
                         self.showAlert(type: .error, text: "\(error)")
                     }
                 case .finished:
@@ -290,8 +286,13 @@ class FullRegisterDocumentsViewController: UIViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
 
-        guard let userInfo = notification.userInfo else { return }
-        var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        guard
+            let userInfo = notification.userInfo,
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset

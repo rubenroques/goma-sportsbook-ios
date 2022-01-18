@@ -167,6 +167,7 @@ class AggregatorsRepository {
     }
 
     func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
+
         guard
             let contentUpdates = aggregator.contentUpdates
         else {
@@ -206,7 +207,6 @@ class AggregatorsRepository {
                     }
                 }
             case .fullMatchInfoUpdate(let matchInfo):
-                // print("FULL MATCH INFO: \(matchInfo)")
                 matchesInfo[matchInfo.id] = matchInfo
 
                 if let matchId = matchInfo.matchId {
@@ -223,12 +223,12 @@ class AggregatorsRepository {
                     matchIdArray.append(matchId)
                     matchesInfoForMatchPublisher.send(matchIdArray)
                 }
-            case .unknown:
-                print("uknown")
             case .cashoutCreate:
                 ()
             case .cashoutDelete:
                 ()
+            case .unknown:
+                print("uknown")
             }
         }
     }
@@ -356,12 +356,14 @@ class AggregatorsRepository {
     }
 
     func storeLocations(locations: [EveryMatrix.Location]) {
+        self.locations = [:]
         for location in locations {
             self.locations[location.id] = location
         }
     }
 
     func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.tournaments = [:]
         for tournament in tournaments {
             self.tournaments[tournament.id] = tournament
 
@@ -378,6 +380,7 @@ class AggregatorsRepository {
     }
 
     func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.popularTournaments = [:]
         for tournament in tournaments {
             self.popularTournaments[tournament.id] = tournament
         }

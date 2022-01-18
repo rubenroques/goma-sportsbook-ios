@@ -77,6 +77,8 @@ class LoggerService {
         printToConsole(prefix + logMessage)
         printToDestination(prefix + logMessage)
 
+        swiftyBeaverLog.info(logMessage)
+
 //        var type = ""
 //        switch logType {
 //        case .info:
@@ -126,27 +128,28 @@ private extension LoggerService {
 //            .store(in: &cancellables)
 
         //"ht tps://sportsbook-api.gomagaming.com" + logs
-        let urlString = TargetVariables.gomaGamingHost + "/logs/api/v1"
-        var request = URLRequest(url: URL(string: urlString)! )
-        request.httpMethod = "POST"
 
-        let bodyJSON = [
-            "type": type,
-            "text": logMessage
-        ]
-
-        let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
-        request.httpBody = jsonData
-
-        URLSession.shared.dataTaskPublisher(for: request)
-            .sink(receiveCompletion: { _ in
-
-            })
-            { data, response  in
-                let stringData = String(data: data, encoding: .utf8)
-                print(stringData)
-            }
-            .store(in: &cancellables)
+//        let urlString = TargetVariables.gomaGamingHost + "/logs/api/v1"
+//        var request = URLRequest(url: URL(string: urlString)! )
+//        request.httpMethod = "POST"
+//
+//        let bodyJSON = [
+//            "type": type,
+//            "text": logMessage
+//        ]
+//
+//        let jsonData = try! JSONEncoder().encode(bodyJSON) // swiftlint:disable:this force_try
+//        request.httpBody = jsonData
+//
+//        URLSession.shared.dataTaskPublisher(for: request)
+//            .sink(receiveCompletion: { _ in
+//
+//            })
+//            { data, response  in
+//                let stringData = String(data: data, encoding: .utf8)
+//                print(stringData)
+//            }
+//            .store(in: &cancellables)
 
     }
 

@@ -376,10 +376,8 @@ class PersonalInfoViewController: UIViewController {
                 case .failure(let error):
                     switch error {
                     case let .requestError(message):
-                        print(message)
                         self.showAlert(type: .error, text: message)
                     default:
-                        print(error)
                         self.showAlert(type: .error, text: "\(error)")
                     }
                 case .finished:
@@ -441,7 +439,7 @@ extension PersonalInfoViewController {
             self.titleHeaderTextFieldView.setSelectedPickerOption(option: optionIndex)
         }
         self.titleHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -452,7 +450,7 @@ extension PersonalInfoViewController {
         }
         self.firstNameHeaderTextFieldView.setText(profile.fields.firstname)
         self.firstNameHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -463,7 +461,7 @@ extension PersonalInfoViewController {
         }
         self.lastNameHeaderTextFieldView.setText(profile.fields.surname)
         self.lastNameHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -483,7 +481,7 @@ extension PersonalInfoViewController {
 
         self.adress1HeaderTextFieldView.setText(profile.fields.address1)
         self.adress1HeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -491,7 +489,7 @@ extension PersonalInfoViewController {
 
         self.adress2HeaderTextFieldView.setText(profile.fields.address2)
         self.adress2HeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -499,7 +497,7 @@ extension PersonalInfoViewController {
 
         self.cityHeaderTextFieldView.setText(profile.fields.city)
         self.cityHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -507,7 +505,7 @@ extension PersonalInfoViewController {
 
         self.postalCodeHeaderTextFieldView.setText(profile.fields.postalCode)
         self.postalCodeHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -522,7 +520,7 @@ extension PersonalInfoViewController {
 
         self.cardIdHeaderTextFieldView.setText(profile.fields.personalID)
         self.cardIdHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkProfileInfoChanged()
             })
@@ -534,8 +532,13 @@ extension PersonalInfoViewController {
 extension PersonalInfoViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return }
-        var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        guard
+            let userInfo = notification.userInfo,
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset

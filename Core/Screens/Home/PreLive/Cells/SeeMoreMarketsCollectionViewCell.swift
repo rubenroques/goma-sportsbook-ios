@@ -9,10 +9,10 @@ import UIKit
 
 class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var baseView: UIView!
-    @IBOutlet weak var arrowImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet private weak var baseView: UIView!
+    @IBOutlet private weak var arrowImageView: UIImageView!
+    @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var subtitleLabel: UILabel!
 
     var tappedAction: (() -> Void)?
 
@@ -53,8 +53,12 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
         self.subtitleLabel.textColor = UIColor.App.headingSecondary
     }
 
-    @IBAction func didTapMatchView(_ sender: Any) {
+    @IBAction private func didTapMatchView(_ sender: Any) {
         self.tappedAction?()
     }
 
+    func configureWithSubtitleString(_ subtitle: String) {
+        self.subtitleLabel.text = subtitle
+    }
+    
 }
