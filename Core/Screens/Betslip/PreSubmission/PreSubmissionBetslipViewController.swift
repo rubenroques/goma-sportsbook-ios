@@ -745,7 +745,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         super.viewDidDisappear(animated)
 
         for suggestedBetRegister in self.suggestedBetsRegisters {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
         }
 
     }
@@ -906,7 +906,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.suggestedBetsArray = [:]
 
         for suggestedBetRegister in self.suggestedBetsRegisters {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
         }
 
         self.betSuggestedCollectionView.reloadData()

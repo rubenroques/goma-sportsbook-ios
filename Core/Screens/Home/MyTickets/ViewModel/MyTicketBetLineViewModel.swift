@@ -31,7 +31,7 @@ class MyTicketBetLineViewModel {
         self.goalsSubscription = nil
 
         if let goalsRegister = goalsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
         }
     }
 

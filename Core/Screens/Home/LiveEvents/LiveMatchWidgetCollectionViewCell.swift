@@ -30,6 +30,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var resultLabel: UILabel!
     @IBOutlet private weak var matchTimeLabel: UILabel!
+    @IBOutlet private weak var liveIndicatorImageView: UIImageView!
 
     @IBOutlet private weak var oddsStackView: UIStackView!
 
@@ -147,6 +148,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.locationFlagImageView.image = nil
         self.suspendedBaseView.isHidden = true
+
+        self.liveIndicatorImageView.image = UIImage(named: "icon_live")
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.homeBaseView.addGestureRecognizer(tapLeftOddButton)
