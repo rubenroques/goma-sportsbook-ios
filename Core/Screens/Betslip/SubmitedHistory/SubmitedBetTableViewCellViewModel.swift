@@ -99,6 +99,7 @@ class SubmitedBetTableViewCellViewModel {
                             self?.cashout = cashout
                             self?.createdCashout.send()
                             self?.hasCashoutEnabled.send(true)
+                            
                         case .cashoutDelete(let cashoutId):
                             if let cashout = self?.cashout {
                                 self?.cashout = nil

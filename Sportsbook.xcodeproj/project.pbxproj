@@ -508,6 +508,16 @@
 		45BEA48E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */; };
 		45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BF4E6C270DC37D00785E79 /* FilterLineView.swift */; };
 		45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45BF4E6C270DC37D00785E79 /* FilterLineView.swift */; };
+		45C26DC827976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */; };
+		45C26DC927976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */; };
+		45C26DCB27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */; };
+		45C26DCC27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */; };
+		45C26DCE27976AA500513D41 /* CompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DCD27976AA500513D41 /* CompetitionsDataSource.swift */; };
+		45C26DCF27976AA600513D41 /* CompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DCD27976AA500513D41 /* CompetitionsDataSource.swift */; };
+		45C26DD127976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD027976ADF00513D41 /* TodayMatchesDataSource.swift */; };
+		45C26DD227976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD027976ADF00513D41 /* TodayMatchesDataSource.swift */; };
+		45C26DD427976B2100513D41 /* PopularMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */; };
+		45C26DD527976B2100513D41 /* PopularMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */; };
 		45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */; };
 		45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */; };
 		45C3D2B72773B1B500B3EF44 /* EventPartScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */; };
@@ -1147,6 +1157,11 @@
 		45BEA47D26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SimpleRegisterEmailSentViewController.xib; sourceTree = "<group>"; };
 		45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleRegisterSendEmailCodeViewController.swift; sourceTree = "<group>"; };
 		45BF4E6C270DC37D00785E79 /* FilterLineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterLineView.swift; sourceTree = "<group>"; };
+		45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCompetitionsDataSource.swift; sourceTree = "<group>"; };
+		45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMatchesDataSource.swift; sourceTree = "<group>"; };
+		45C26DCD27976AA500513D41 /* CompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionsDataSource.swift; sourceTree = "<group>"; };
+		45C26DD027976ADF00513D41 /* TodayMatchesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayMatchesDataSource.swift; sourceTree = "<group>"; };
+		45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularMatchesDataSource.swift; sourceTree = "<group>"; };
 		45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketCellViewModel.swift; sourceTree = "<group>"; };
 		45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPartScore.swift; sourceTree = "<group>"; };
 		45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketBetLineViewModel.swift; sourceTree = "<group>"; };
@@ -2318,6 +2333,18 @@
 			path = SimpleRegister;
 			sourceTree = "<group>";
 		};
+		45C26DC627976A1000513D41 /* DataSources */ = {
+			isa = PBXGroup;
+			children = (
+				45C26DC727976A3900513D41 /* FavoriteCompetitionsDataSource.swift */,
+				45C26DCA27976A7300513D41 /* FavoriteMatchesDataSource.swift */,
+				45C26DCD27976AA500513D41 /* CompetitionsDataSource.swift */,
+				45C26DD027976ADF00513D41 /* TodayMatchesDataSource.swift */,
+				45C26DD327976B2100513D41 /* PopularMatchesDataSource.swift */,
+			);
+			path = DataSources;
+			sourceTree = "<group>";
+		};
 		45CD7B492716F5CB003044C5 /* OddCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2359,6 +2386,7 @@
 				45D712F127031DDE00AC0364 /* PreLiveEventsViewController.xib */,
 				458F4C912712AB1900AC13DB /* PreLiveEventsViewModel.swift */,
 				45D728CC2714AD8C00EFE04D /* MatchWidgetCellViewModel.swift */,
+				45C26DC627976A1000513D41 /* DataSources */,
 				A98D3B272714817C003BAE6F /* SportSelection */,
 				45D871CE271098F100F5B87B /* Cells */,
 				45A16E112707B69200A95C01 /* Filters */,
@@ -3405,6 +3433,7 @@
 				A92F5D872719D5E600884BDF /* FilterSliderInfoView.swift in Sources */,
 				45D3DE3A271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897726C33C7800BCD5DA /* Environment.swift in Sources */,
+				45C26DD127976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */,
 				45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
 				45D3DE332714889200717124 /* Date+Extension.swift in Sources */,
@@ -3487,6 +3516,7 @@
 				A9C82FBB26F4E50D00059DCD /* EditAlertView.swift in Sources */,
 				4589F42C26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
 				45BEA48526F4DC9900680181 /* SimpleRegisterEmailSentViewController.swift in Sources */,
+				45C26DCE27976AA500513D41 /* CompetitionsDataSource.swift in Sources */,
 				45166CF526F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
@@ -3518,6 +3548,7 @@
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CED26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
 				A9875795276CA50F0099990D /* DepositViewController.swift in Sources */,
+				45C26DD427976B2100513D41 /* PopularMatchesDataSource.swift in Sources */,
 				A9627A05274529670001E1D5 /* ActivationAlertScrollableView.swift in Sources */,
 				454E0AB22732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48926F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
@@ -3555,6 +3586,7 @@
 				A96279FF27440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408626D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				45626E34275530990069B89B /* OddFormatter.swift in Sources */,
+				45C26DCB27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */,
 				458BAC812770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
@@ -3573,6 +3605,7 @@
 				455C960C26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4027149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
 				454E0AC3273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
+				45C26DC827976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				454E0AAE2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
 				45C3D2BA2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
 				A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */,
@@ -3719,6 +3752,7 @@
 				A9B841AF26E674AA00269B05 /* Match.swift in Sources */,
 				45D3DE3B271499DB00717124 /* BannerScrollTableViewCell.swift in Sources */,
 				45A2897826C33C7800BCD5DA /* Environment.swift in Sources */,
+				45C26DD227976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */,
 				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
 				45D3DE342714889200717124 /* Date+Extension.swift in Sources */,
@@ -3801,6 +3835,7 @@
 				45166CF826F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				4589F42D26C02F01005DF543 /* DebugTableViewDescription.swift in Sources */,
 				45BEA48626F4DC9900680181 /* SimpleRegisterEmailSentViewController.swift in Sources */,
+				45C26DCF27976AA600513D41 /* CompetitionsDataSource.swift in Sources */,
 				45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
@@ -3832,6 +3867,7 @@
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
 				45166CEE26F3548D00E69D65 /* PublishSSWampMessage.swift in Sources */,
 				A9875796276CA50F0099990D /* DepositViewController.swift in Sources */,
+				45C26DD527976B2100513D41 /* PopularMatchesDataSource.swift in Sources */,
 				A9627A06274529670001E1D5 /* ActivationAlertScrollableView.swift in Sources */,
 				454E0AB32732C58D00794E0C /* TabularBarView.swift in Sources */,
 				45BEA48A26F4DC9900680181 /* SimpleRegisterDetailsViewController.swift in Sources */,
@@ -3869,6 +3905,7 @@
 				A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
+				45C26DCC27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */,
 				458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
@@ -3887,6 +3924,7 @@
 				455C960D26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4127149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
 				454E0AC4273305E200794E0C /* SingleBettingTicketTableViewCell.swift in Sources */,
+				45C26DC927976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				454E0AAF2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
 				45C3D2BB2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
 				A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */,
