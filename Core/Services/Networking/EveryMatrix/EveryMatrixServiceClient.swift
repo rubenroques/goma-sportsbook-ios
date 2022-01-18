@@ -1,35 +1,39 @@
-
 import Foundation
 import Combine
 import Reachability
 
-enum EveryMatrixServiceStatus {
+enum EveryMatrixServiceSocketStatus {
     case connected
     case disconnected
 }
 
+enum EveryMatrixServiceUserSessionStatus {
+    case anonymous
+    case logged
+}
+
 class EveryMatrixServiceClient: ObservableObject {
 
-    var serviceStatusPublisher: CurrentValueSubject<EveryMatrixServiceStatus, Never> = .init(.disconnected)
+    var serviceStatusPublisher: CurrentValueSubject<EveryMatrixServiceSocketStatus, Never> = .init(.disconnected)
+    var userSessionStatusPublisher: CurrentValueSubject<EveryMatrixServiceUserSessionStatus, Never> = .init(.anonymous)
 
     //
     var manager: TSManager = TSManager()
 
     private var cancellable = Set<AnyCancellable>()
 
-    private let reachability = try! Reachability()
+    private let reachability = try! Reachability() // swiftlint:disable:this force_try
     private var isInitialConnectionCheck = true
 
     init() {
         // The singleton init below is used to start up TS connection
-
 
         reachability.whenReachable = { [weak self] _ in
             if self?.isInitialConnectionCheck ?? true {
                 self?.isInitialConnectionCheck = false
                 return
             }
-            self?.connectTS()
+            self?.reconnectSocket()
         }
 
         do {
@@ -39,33 +43,58 @@ class EveryMatrixServiceClient: ObservableObject {
             Logger.log("Reachability startNotifier error")
         }
 
-        NotificationCenter.default.publisher(for: .sessionConnected)
+        // =====
+        // User session state
+        NotificationCenter.default.publisher(for: .userSessionConnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("Socket connected: \(self?.manager.isConnected)")
+                Logger.log("EMSessionLoginFLow - User Session Connected")
+                self?.userSessionStatusPublisher.send(.logged)
+            }
+            .store(in: &cancellable)
+
+        NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - User Session Forced Logout Disconnected")
+                self?.userSessionStatusPublisher.send(.anonymous)
+            }
+            .store(in: &cancellable)
+
+        NotificationCenter.default.publisher(for: .userSessionDisconnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - User Session Disconnected")
+                self?.userSessionStatusPublisher.send(.anonymous)
+            }
+            .store(in: &cancellable)
+
+        // =====
+        // Socket state
+        NotificationCenter.default.publisher(for: .socketConnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - Socket Session Connected")
                 self?.serviceStatusPublisher.send(.connected)
             }
             .store(in: &cancellable)
 
-        NotificationCenter.default.publisher(for: .sessionDisconnected)
+        NotificationCenter.default.publisher(for: .socketDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - Socket Session Disconnected")
                 self?.serviceStatusPublisher.send(.disconnected)
-                self?.connectTS()
+                self?.reconnectSocket()
             }
             .store(in: &cancellable)
     }
 
-    func connectTS() {
-        Logger.log("***ShouldReconnectTS")
+    func reconnectSocket() {
 
         self.manager.destroySwampSession()
 
-        //TSManager.destroySharedInstance()
-
         manager = TSManager()
-        
-        //manager = TSManager.shared
+        Logger.log("EMSessionLoginFLow - Created new socket session")
     }
 
     static func operatorInfo() -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> {
@@ -161,7 +190,11 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-    func changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?) -> AnyPublisher<EveryMatrix.PasswordChange, EveryMatrix.APIError> {
+    func changePassword(oldPassword: String,
+                        newPassword: String,
+                        captchaPublicKey: String?,
+                        captchaChallenge: String?,
+                        captchaResponse: String?) -> AnyPublisher<EveryMatrix.PasswordChange, EveryMatrix.APIError> {
         return self.manager.getModel(router: .changePassword(oldPassword: oldPassword,
                                                                               newPassword: newPassword,
                                                                               captchaPublicKey: captchaPublicKey ?? "",
@@ -181,7 +214,8 @@ class EveryMatrixServiceClient: ObservableObject {
     }
 
     func getMatchDetails(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError> {
-        return self.manager.getModel(router: .getMatchDetails(language: language, matchId: matchId), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
+        return self.manager.getModel(router: .getMatchDetails(language: language, matchId: matchId),
+                                     decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
     }
 
     func getEvents(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Event>, EveryMatrix.APIError> {
@@ -192,13 +226,17 @@ class EveryMatrixServiceClient: ObservableObject {
         return self.manager.getModel(router: .odds(payload: payload), decodingType: EveryMatrixSocketResponse<Odd>.self)
     }
 
-    func getDepositResponse(currency: String, amount: String, gamingAccountId: String) -> AnyPublisher<EveryMatrix.DepositResponse, EveryMatrix.APIError> {
-        return self.manager.getModel(router: .getDepositCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId), decodingType: EveryMatrix.DepositResponse.self)
+    func getDepositResponse(currency: String, amount: String, gamingAccountId: String)
+    -> AnyPublisher<EveryMatrix.DepositResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getDepositCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId),
+                                     decodingType: EveryMatrix.DepositResponse.self)
             .eraseToAnyPublisher()
     }
 
-    func getWithdrawResponse(currency: String, amount: String, gamingAccountId: String) -> AnyPublisher<EveryMatrix.WithdrawResponse, EveryMatrix.APIError> {
-        return self.manager.getModel(router: .getWithdrawCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId), decodingType: EveryMatrix.WithdrawResponse.self)
+    func getWithdrawResponse(currency: String, amount: String, gamingAccountId: String)
+    -> AnyPublisher<EveryMatrix.WithdrawResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getWithdrawCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId),
+                                     decodingType: EveryMatrix.WithdrawResponse.self)
             .eraseToAnyPublisher()
     }
 

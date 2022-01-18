@@ -78,7 +78,8 @@ class PasswordUpdateViewController: UIViewController {
             } receiveValue: { [weak self] policy in
                 self?.passwordRegex = policy.regularExpression
                 self?.passwordRegexMessage = policy.message
-                self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.headerTextField)
+                self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "",
+                                                             color: UIColor.App.headerTextField)
             }
             .store(in: &cancellables)
 
@@ -89,7 +90,9 @@ class PasswordUpdateViewController: UIViewController {
                 if self.passwordRegex == "" {
                     return false
                 }
-                if oldPassword == "" || new?.range(of: self.passwordRegex, options: .regularExpression) == nil || confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+                if oldPassword == "" ||
+                    new?.range(of: self.passwordRegex, options: .regularExpression) == nil ||
+                    confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
                     return false
                 }
                 if (new ?? "") != (confirm ?? "") {
@@ -192,7 +195,11 @@ class PasswordUpdateViewController: UIViewController {
         }
 
         if validFields {
-            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text, newPassword: newPasswordHeaderTextFieldView.text, captchaPublicKey: "", captchaChallenge: "", captchaResponse: "")
+            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
+                                                 newPassword: newPasswordHeaderTextFieldView.text,
+                                                 captchaPublicKey: "",
+                                                 captchaChallenge: "",
+                                                 captchaResponse: "")
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .sink( receiveCompletion: { completion in

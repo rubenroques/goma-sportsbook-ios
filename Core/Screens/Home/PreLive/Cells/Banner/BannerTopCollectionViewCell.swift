@@ -10,8 +10,8 @@ import Kingfisher
 
 class BannerTopCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var baseView: UIView!
-    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet private weak var baseView: UIView!
+    @IBOutlet private weak var imageView: UIImageView!
 
     var viewModel: BannerCellViewModel?
 

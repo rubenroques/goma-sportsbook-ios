@@ -26,21 +26,20 @@ class UserSessionStore {
 
     init() {
 
-        NotificationCenter.default.publisher(for: .sessionConnected)
+        NotificationCenter.default.publisher(for: .socketConnected)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
 
             }, receiveValue: { [weak self] _ in
-                Logger.log("SessionConnected recieved")
+                Logger.log("EMSessionLoginFLow - Socket Connected received will login if needed")
                 self?.startUserSessionIfNeeded()
             })
             .store(in: &cancellables)
 
-
-        NotificationCenter.default.publisher(for: .sessionForcedLogoutDisconnected)
+        NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("SessionForcedLogoutDisconnected recieved will logout user")
+                Logger.log("EMSessionLoginFLow - SessionForcedLogoutDisconnected received will logout local user")
                 self?.logout()
             }
             .store(in: &cancellables)
@@ -175,8 +174,8 @@ class UserSessionStore {
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)
-            .sink { registered in
-                print("User registered on goma api \(registered)")
+            .sink { _ in
+
             }
             .store(in: &cancellables)
     }
@@ -199,15 +198,13 @@ extension UserSessionStore {
     func forceWalletUpdate() {
         let route = TSRouter.getUserBalance
         Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
-            .sink { completion in
-                print(completion)
+            .sink { _ in
+                
             } receiveValue: { userBalance in
                 var realWallet: EveryMatrix.UserBalanceWallet?
-                for wallet in userBalance.wallets {
-                    if wallet.vendor == "CasinoWallet" {
-                        realWallet = wallet
-                        break
-                    }
+                for wallet in userBalance.wallets where wallet.vendor == "CasinoWallet" {
+                    realWallet = wallet
+                    break
                 }
                 self.userBalanceWallet.send(realWallet)
             }
@@ -225,12 +222,12 @@ extension UserSessionStore {
             let user = UserSessionStore.loggedUserSession(),
             let userPassword = UserSessionStore.storedUserPassword()
         else {
-            Logger.log("User Session not found - not needed")
+            Logger.log("EMSessionLoginFLow - User Session not found - login not needed")
             self.isLoadingUserSessionPublisher.send(false)
             return
         }
 
-        Logger.log("User Session found - login needed")
+        Logger.log("EMSessionLoginFLow - User Session found - login needed")
 
         self.loadLoggedUser()
 
@@ -244,7 +241,6 @@ extension UserSessionStore {
                     self.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
                     print("error \(error)")
-
                 }
                 self.isLoadingUserSessionPublisher.send(false)
             } receiveValue: { account in

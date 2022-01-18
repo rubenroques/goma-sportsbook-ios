@@ -217,13 +217,14 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
         guard
             let sportTypeAtIndex = sportsData[safe:indexPath.row],
             let sportTypeIdAtIndex = sportTypeAtIndex.id,
-            let newSportType = SportType(id: sportTypeIdAtIndex)
+            let newSportType = SportType(id: sportTypeIdAtIndex),
+            let cell = collectionView.cellForItem(at: indexPath) as? SportSelectionCollectionViewCell
         else {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
         }
 
-        let cell = collectionView.cellForItem(at: indexPath) as! SportSelectionCollectionViewCell
+
         cell.isSelected = true
         self.defaultSport = newSportType
         delegate?.setSportType(self.defaultSport)

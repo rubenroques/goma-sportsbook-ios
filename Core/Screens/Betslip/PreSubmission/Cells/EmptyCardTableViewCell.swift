@@ -12,17 +12,14 @@ class EmptyCardTableViewCell: UITableViewCell {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var iconImageView: UIImageView!
     @IBOutlet private var firstTextFieldLabel: UILabel!
-    @IBOutlet weak var secondTextFieldLabel: UILabel!
-    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet private var secondTextFieldLabel: UILabel!
+    @IBOutlet private var loginButton: UIButton!
     
     override func awakeFromNib() {
         super.awakeFromNib()
 
-
         self.setupWithTheme()
     }
-
-   
 
     func setupWithTheme() {
 
@@ -48,18 +45,16 @@ class EmptyCardTableViewCell: UITableViewCell {
         self.loginButton.isHidden = true
     }
     
-    func setDescription(primaryText : String, secondaryText : String, userIsLoggedIn : Bool ){
+    func setDescription(primaryText: String, secondaryText: String, userIsLoggedIn: Bool) {
         self.firstTextFieldLabel.text = primaryText
         self.secondTextFieldLabel.text = secondaryText
-        if userIsLoggedIn{
-            
+        if userIsLoggedIn {
             self.loginButton.isHidden = true
-        }else{
-            
+        }
+        else {
             self.loginButton.setTitle("Login", for: .normal)
             self.loginButton.isHidden = false
         }
     }
-
 
 }

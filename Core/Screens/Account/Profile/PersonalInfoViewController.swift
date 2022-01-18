@@ -376,10 +376,8 @@ class PersonalInfoViewController: UIViewController {
                 case .failure(let error):
                     switch error {
                     case let .requestError(message):
-                        print(message)
                         self.showAlert(type: .error, text: message)
                     default:
-                        print(error)
                         self.showAlert(type: .error, text: "\(error)")
                     }
                 case .finished:
@@ -534,8 +532,13 @@ extension PersonalInfoViewController {
 extension PersonalInfoViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
-        guard let userInfo = notification.userInfo else { return }
-        var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        guard
+            let userInfo = notification.userInfo,
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset

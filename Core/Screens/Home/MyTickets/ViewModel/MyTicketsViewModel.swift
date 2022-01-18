@@ -61,27 +61,50 @@ class MyTicketsViewModel: NSObject {
 
         super.init()
 
-        myTicketsTypePublisher.sink { [weak self] myTicketsType in
+        myTicketsTypePublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] myTicketsType in
             self?.selectedMyTicketsTypeIndex =  myTicketsType.rawValue
 
             self?.reloadTableView()
         }
         .store(in: &cancellables)
         
-        if  UserSessionStore.isUserLogged() {
+        if UserSessionStore.isUserLogged() {
             self.isUserLoggedInPublisher.send(true)
-        }else{
+        }
+        else {
             self.isUserLoggedInPublisher.send(false)
             self.isTicketsEmptyPublisher.send(true)
         }
-    
 
-        Env.userSessionStore
-            .userSessionPublisher
-            .dropFirst()
+//        Publishers.CombineLatest(Env.userSessionStore.userSessionPublisher, Env.everyMatrixClient.userSessionStatusPublisher)
+//            .map({ userSessionState, serviceStatus in
+//                return (userSessionState != nil, serviceStatus)
+//            })
+//            .filter({ userSessionState, serviceStatus in
+//
+//                Logger.log("EMSessionLoginFLow - filter - \(userSessionState),\(serviceStatus) ")
+//                switch serviceStatus {
+//                case .logged: return true
+//                case .anonymous: return false
+//                }
+//           })
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] userSessionState, serviceStatus in
+//                Logger.log("EMSessionLoginFLow - sink - \(userSessionState),\(serviceStatus) ")
+//                self?.refresh()
+//            }
+//            .store(in: &cancellables)
+
+        Env.everyMatrixClient.userSessionStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.refresh()
+            .sink { [weak self] userSessionStatus in
+                switch userSessionStatus {
+                case .logged: self?.refresh()
+                case .anonymous: self?.clearData()
+                }
             }
             .store(in: &cancellables)
 
@@ -125,11 +148,9 @@ class MyTicketsViewModel: NSObject {
     }
 
     func initialLoadMyTickets() {
-
         self.loadResolvedTickets(page: 0)
         self.loadOpenedTickets(page: 0)
         self.loadWonTickets(page: 0)
-
     }
 
     func clearData() {
@@ -152,10 +173,11 @@ class MyTicketsViewModel: NSObject {
                     switch apiError {
                     case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
                         self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
                     default:
                         ()
                     }
-                    print("\(apiError)")
                 case .finished:
                     ()
                 }
@@ -167,7 +189,8 @@ class MyTicketsViewModel: NSObject {
                 if case .resolved = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
-                self.isTicketsEmptyPublisher.send(self.isEmpty())
+
+                self?.isTicketsEmptyPublisher.send( self?.isEmpty() ?? true )
             })
             .store(in: &cancellables)
     }
@@ -185,10 +208,11 @@ class MyTicketsViewModel: NSObject {
                     switch apiError {
                     case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
                         self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
                     default:
                         ()
                     }
-                    print("\(apiError)")
                 case .finished:
                     ()
                 }
@@ -200,7 +224,8 @@ class MyTicketsViewModel: NSObject {
                 if case .opened = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
-                self.isTicketsEmptyPublisher.send(self.isEmpty())
+
+                self?.isTicketsEmptyPublisher.send( self?.isEmpty() ?? true )
             })
             .store(in: &cancellables)
 
@@ -219,10 +244,11 @@ class MyTicketsViewModel: NSObject {
                     switch apiError {
                     case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
                         self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
                     default:
                         ()
                     }
-                    print("\(apiError)")
                 case .finished:
                     ()
                 }
@@ -234,7 +260,7 @@ class MyTicketsViewModel: NSObject {
                 if case .won = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
-                self.isTicketsEmptyPublisher.send(self.isEmpty())
+                self?.isTicketsEmptyPublisher.send( self?.isEmpty() ?? true )
             })
             .store(in: &cancellables)
 
@@ -346,8 +372,6 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
         else {
             fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
         }
-
-        debugPrint("MyTicketCellViewModel \(viewModel)")
 
         let locationsCodes = (ticketValue.selections ?? [])
             .map({ event -> String in

@@ -9,7 +9,7 @@ import UIKit
 
 class LoadingMoreTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var activityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -37,5 +37,13 @@ class LoadingMoreTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
     }
-    
+
+    func startAnimating() {
+        self.activityIndicatorView.startAnimating()
+    }
+
+    func stopAnimating() {
+        self.activityIndicatorView.stopAnimating()
+    }
+
 }

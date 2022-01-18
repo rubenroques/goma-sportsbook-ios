@@ -70,33 +70,33 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var placeBetBottomConstraint: NSLayoutConstraint!
 
-    @IBOutlet weak var secondaryPlaceBetBaseView: UIView!
+    @IBOutlet private weak var secondaryPlaceBetBaseView: UIView!
     
-    @IBOutlet weak var secondaryPlaceBetButtonsBaseView: UIView!
-    @IBOutlet weak var secondaryPlaceBetButtonsSeparatorView: UIView!
-    @IBOutlet weak var secondaryAmountBaseView: UIView!
-    @IBOutlet weak var secondaryAmountTextfield: UITextField!
+    @IBOutlet private weak var secondaryPlaceBetButtonsBaseView: UIView!
+    @IBOutlet private weak var secondaryPlaceBetButtonsSeparatorView: UIView!
+    @IBOutlet private weak var secondaryAmountBaseView: UIView!
+    @IBOutlet private weak var secondaryAmountTextfield: UITextField!
     
-    @IBOutlet weak var secondaryPlaceBetButton: UIButton!
+    @IBOutlet private weak var secondaryPlaceBetButton: UIButton!
     
-    @IBOutlet weak var secondaryPlusOneButtonView: UIButton!
-    @IBOutlet weak var secondaryPlusFiveButtonView: UIButton!
-    @IBOutlet weak var secondaryMaxButtonView: UIButton!
+    @IBOutlet private weak var secondaryPlusOneButtonView: UIButton!
+    @IBOutlet private weak var secondaryPlusFiveButtonView: UIButton!
+    @IBOutlet private weak var secondaryMaxButtonView: UIButton!
     
-    @IBOutlet weak var secondaryMultipleWinningsBaseView: UIView!
-    @IBOutlet weak var secondaryMultipleWinningsValueLabel: UILabel!
-    @IBOutlet weak var secondaryMultipleWinningsTitleLabel: UILabel!
-    @IBOutlet weak var secondaryMultipleOddsTitleLabel: UILabel!
-    @IBOutlet weak var secondaryMultipleOddsValueLabel: UILabel!
-    @IBOutlet weak var secondaryMultipleWinningsSeparatorView: UIView!
+    @IBOutlet private weak var secondaryMultipleWinningsBaseView: UIView!
+    @IBOutlet private weak var secondaryMultipleWinningsValueLabel: UILabel!
+    @IBOutlet private weak var secondaryMultipleWinningsTitleLabel: UILabel!
+    @IBOutlet private weak var secondaryMultipleOddsTitleLabel: UILabel!
+    @IBOutlet private weak var secondaryMultipleOddsValueLabel: UILabel!
+    @IBOutlet private weak var secondaryMultipleWinningsSeparatorView: UIView!
 
-    @IBOutlet weak var secondarySystemWinningsBaseView: UIView!
-    @IBOutlet weak var secondarySystemWinningsValueLabel: UILabel!
-    @IBOutlet weak var secondarySystemOddsTitleLabel: UILabel!
-    @IBOutlet weak var secondarySystemWinningsTitleLabel: UILabel!
-    @IBOutlet weak var secondarySystemOddsValueLabel: UILabel!
+    @IBOutlet private weak var secondarySystemWinningsBaseView: UIView!
+    @IBOutlet private weak var secondarySystemWinningsValueLabel: UILabel!
+    @IBOutlet private weak var secondarySystemOddsTitleLabel: UILabel!
+    @IBOutlet private weak var secondarySystemWinningsTitleLabel: UILabel!
+    @IBOutlet private weak var secondarySystemOddsValueLabel: UILabel!
     
-    @IBOutlet weak var secondarySystemWinningsSeparatorView: UIView!
+    @IBOutlet private weak var secondarySystemWinningsSeparatorView: UIView!
 
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
@@ -104,9 +104,9 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     @IBOutlet private weak var betSuggestedCollectionView: UICollectionView!
-    @IBOutlet private var suggestedBetsActivityIndicator: UIActivityIndicatorView!
+    @IBOutlet private weak var suggestedBetsActivityIndicator: UIActivityIndicatorView!
     
-    @IBOutlet weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
 
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -225,6 +225,12 @@ class PreSubmissionBetslipViewController: UIViewController {
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    deinit {
+        for suggestedBetRegister in self.suggestedBetsRegisters {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        }
     }
 
     override func viewDidLoad() {
@@ -395,7 +401,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.emptyBetsBaseView.isHidden = !isEmpty
 
                 if isEmpty {
-                    self?.isSuggestedBetsLoading = true
                     self?.getSuggestedBets()
                 }
             })
@@ -564,8 +569,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Env.betslipManager.betPlacedDetailsErrorsPublisher
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print(completion)
+            .sink { _ in
+                
             } receiveValue: { [weak self] betPlacedDetails in
                 if !betPlacedDetails.isEmpty {
                     let errorMessage = betPlacedDetails[0].response.errorMessage
@@ -579,8 +584,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Env.betslipManager.betslipPlaceBetResponseErrorsPublisher
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print(completion)
+            .sink { _ in
                 // self.isLoading = false
             } receiveValue: { [weak self] _ in
                 self?.tableView.reloadData()
@@ -615,6 +619,13 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     func getSuggestedBets() {
+
+        self.isSuggestedBetsLoading = true
+
+        for suggestedBetRegister in self.suggestedBetsRegisters {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        }
+
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
             .sink(receiveCompletion: { _ in
             },
@@ -639,7 +650,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         for bet in betArray {
 
-            let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
+            let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId,
+                                                    language: "en", matchId: "\(bet.matchId)",
+                                                    bettingType: "\(bet.bettingType)",
+                                                    eventPartId: "\(bet.eventPartId)")
 
             Env.everyMatrixClient.manager
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
@@ -648,7 +662,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }, receiveValue: { [weak self] state in
                     switch state {
                     case .connect(let publisherIdentifiable):
-                        print(publisherIdentifiable)
                         self?.suggestedBetsRegisters.append(publisherIdentifiable)
                     case .initialContent(let aggregator):
                         self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
@@ -735,19 +748,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryMaxButtonView.clipsToBounds = true
 
         self.secondaryAmountBaseView.layer.cornerRadius = CornerRadius.view
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
-        }
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -902,12 +902,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
+
         self.gomaSuggestedBetsResponse = []
         self.suggestedBetsArray = [:]
-
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
-        }
 
         self.betSuggestedCollectionView.reloadData()
     }
@@ -987,8 +984,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager
             .requestSystemBetslipSelectionState(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBet)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print(completion)
+            .sink { _ in
+
             } receiveValue: { [weak self] betDetails in
                
                 self?.configureWithSystemBetInfo(systemBetInfo: betDetails)
@@ -1040,7 +1037,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 .sink { completion in
                     switch completion {
                     case .failure(let error):
-                        print(error)
+                        Logger.log("Place AllSingleBets error \(error)")
                     default: ()
                     }
                     self.isLoading = false
@@ -1055,8 +1052,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         else if self.listTypePublisher.value == .multiple {
             Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue)
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] completion in
-                    print(completion)
+                .sink { [weak self] _ in
                     self?.isLoading = false
                 } receiveValue: { [weak self] betPlacedDetails in
                     self?.isLoading = false
@@ -1068,8 +1064,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         else if self.listTypePublisher.value == .system, let selectedSystemBet = self.selectedSystemBet {
             Env.betslipManager.placeSystemBet(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBet)
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] completion in
-                    print(completion)
+                .sink { [weak self] _ in
                     self?.isLoading = false
                 } receiveValue: { [weak self] betPlacedDetails in
                     self?.isLoading = false

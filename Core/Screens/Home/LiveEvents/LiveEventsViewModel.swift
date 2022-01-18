@@ -523,7 +523,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         else {
             fatalError()
         }
-        headerView.sectionTitleLabel.text = localized("string_all_live_events")
+        headerView.configureWithTitle(localized("string_all_live_events")) 
         return headerView
     }
 
@@ -575,7 +575,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.section == 3, self.allMatches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.activityIndicatorView.startAnimating()
+                typedCell.startAnimating()
             }
             self.requestNextPage?()
         }

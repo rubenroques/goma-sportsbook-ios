@@ -70,7 +70,7 @@ class MatchFieldWebViewController: UIViewController {
     }
 }
 
-extension MatchFieldWebViewController:  WKNavigationDelegate {
+extension MatchFieldWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicatorView.stopAnimating()
     }

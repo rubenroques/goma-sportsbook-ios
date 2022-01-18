@@ -10,21 +10,21 @@ import Combine
 
 class SubmitedBetTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
-    @IBOutlet weak var topView: UIView!
+    @IBOutlet private weak var topView: UIView!
 
-    @IBOutlet weak var betTypeLabel: UILabel!
-    @IBOutlet weak var oddBaseView: UIView!
-    @IBOutlet weak var oddValueLabel: UILabel!
-    @IBOutlet weak var upChangeOddValueImage: UIImageView!
-    @IBOutlet weak var downChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var betTypeLabel: UILabel!
+    @IBOutlet private weak var oddBaseView: UIView!
+    @IBOutlet private weak var oddValueLabel: UILabel!
+    @IBOutlet private weak var upChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
-    @IBOutlet weak var stackBaseView: UIView!
-    @IBOutlet weak var stackView: UIStackView!
+    @IBOutlet private weak var stackBaseView: UIView!
+    @IBOutlet private weak var stackView: UIStackView!
 
-    @IBOutlet weak var bottomSeparatorView: UIView!
-    @IBOutlet weak var bottomView: UIView!
+    @IBOutlet private weak var bottomSeparatorView: UIView!
+    @IBOutlet private weak var bottomView: UIView!
 
     @IBOutlet private weak var betAmountTitleLabel: UILabel!
     @IBOutlet private weak var betAmountValueLabel: UILabel!
@@ -32,13 +32,13 @@ class SubmitedBetTableViewCell: UITableViewCell {
     @IBOutlet private weak var possibleWinningsTitleLabel: UILabel!
     @IBOutlet private weak var possibleWinningsValueLabel: UILabel!
 
-    @IBOutlet private var cashoutStackView: UIStackView!
-    @IBOutlet private var cashoutView: UIView!
-    @IBOutlet private var cashoutLogoImageView: UIImageView!
-    @IBOutlet private var cashoutTitleLabel: UILabel!
-    @IBOutlet private var cashoutValueLabel: UILabel!
-    @IBOutlet private var cashoutButton: UIButton!
-    @IBOutlet private var cashoutSeparatorView: UIView!
+    @IBOutlet private weak var cashoutStackView: UIStackView!
+    @IBOutlet private weak var cashoutView: UIView!
+    @IBOutlet private weak var cashoutLogoImageView: UIImageView!
+    @IBOutlet private weak var cashoutTitleLabel: UILabel!
+    @IBOutlet private weak var cashoutValueLabel: UILabel!
+    @IBOutlet private weak var cashoutButton: UIButton!
+    @IBOutlet private weak var cashoutSeparatorView: UIView!
 
     private var cancellables = Set<AnyCancellable>()
 

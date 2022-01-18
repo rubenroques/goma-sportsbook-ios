@@ -153,7 +153,6 @@ class MatchDetailsAggregatorRepository: NSObject {
             }
 
             if (marketGroup.numberOfMarkets ?? 0) == 0 {
-                print("")
                 continue
             }
 

@@ -157,7 +157,7 @@ class MyTicketCellViewModel {
 
     func unregisterCashoutSubscription() {
         if let cashoutRegister = self.cashoutRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
 
         self.cashoutAvailabilitySubscription?.cancel()

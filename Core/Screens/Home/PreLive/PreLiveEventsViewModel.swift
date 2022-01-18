@@ -37,14 +37,14 @@ class PreLiveEventsViewModel: NSObject {
         case favoriteCompetitions
     }
 
-    enum screenState {
-            case emptyAndFilter
-            case emptyNoFilter
-            case noEmptyNoFilter
-            case noEmptyAndFilter
-        }
+    enum ScreenState {
+        case emptyAndFilter
+        case emptyNoFilter
+        case noEmptyNoFilter
+        case noEmptyAndFilter
+    }
     
-    var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
+    var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.noEmptyNoFilter)
    
     private var popularMatchesViewModelDataSource = PopularMatchesViewModelDataSource(banners: [], matches: [])
     private var todaySportsViewModelDataSource = TodaySportsViewModelDataSource(todayMatches: [])
@@ -54,7 +54,6 @@ class PreLiveEventsViewModel: NSObject {
 
     private var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
-    private var isLoadingMyGamesList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingCompetitions: CurrentValueSubject<Bool, Never> = .init(true)
 
     var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
@@ -113,20 +112,25 @@ class PreLiveEventsViewModel: NSObject {
 
     private var popularMatchesCount = 10
     private var popularMatchesPage = 1
+    private var popularMatchesHasNextPage = true
     private var todayMatchesCount = 10
     private var todayMatchesPage = 1
-    private var favoriteMatchesCount = 10
-    private var favoriteMatchesPage = 1
+    private var todayMatchesHasNextPage = true
     
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init(selectedSportId: SportType) {
         self.selectedSportId = selectedSportId
         
-        isLoading = Publishers.CombineLatest4(isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions)
-            .map({ isLoadingTodayList, isLoadingPopularList, isLoadingMyGamesList, isLoadingCompetitions in
-                let isLoading = isLoadingTodayList || isLoadingPopularList || isLoadingMyGamesList || isLoadingCompetitions
-                return isLoading
+        isLoading = Publishers.CombineLatest4(matchListTypePublisher, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitions)
+            .map({ matchListType, isLoadingTodayList, isLoadingPopularList, isLoadingCompetitions in
+                switch matchListType {
+                case .myGames: return isLoadingPopularList
+                case .today: return isLoadingTodayList
+                case .competitions: return isLoadingCompetitions
+                case .favoriteGames: return false
+                case .favoriteCompetitions: return false
+                }
             })
             .eraseToAnyPublisher()
 
@@ -172,6 +176,7 @@ class PreLiveEventsViewModel: NSObject {
             self?.dataDidChangedAction?()
         }
 
+        self.setupPublishers()
     }
 
     func setupPublishers() {
@@ -194,14 +199,15 @@ class PreLiveEventsViewModel: NSObject {
     func fetchData() {
         self.isLoadingPopularList.send(true)
         self.isLoadingTodayList.send(true)
-        self.isLoadingMyGamesList.send(true)
         self.isLoadingCompetitions.send(true)
         self.isLoadingCompetitionGroups.send(true)
 
         self.popularMatchesPage = 1
         self.todayMatchesPage = 1
-        self.favoriteMatchesPage = 1
-        
+
+        self.popularMatchesHasNextPage = true
+        self.todayMatchesHasNextPage = true
+
         self.competitionsMatches = []
         self.competitions = []
 
@@ -213,11 +219,6 @@ class PreLiveEventsViewModel: NSObject {
         self.fetchTodayMatches()
         self.fetchCompetitionsFilters()
 
-        self.setupPublishers()
-
-        self.isLoadingCompetitions.send(false)
-        self.isLoadingMyGamesList.send(false)
-        
         self.isUserLoggedPublisher.send(UserSessionStore.isUserLogged())
     }
 
@@ -228,15 +229,16 @@ class PreLiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.isLoadingMyGamesList.send(false)
-
-        self.popularMatchesViewModelDataSource.matches = filterPopularMatches(with: self.homeFilterOptions, matches: self.popularMatches)
+        self.popularMatchesViewModelDataSource.matches = filterPopularMatches(with: self.homeFilterOptions,
+                                                                              matches: self.popularMatches)
 
         self.popularMatchesViewModelDataSource.banners = self.banners
 
-        self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions, matches: self.todayMatches)
+        self.todaySportsViewModelDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions,
+                                                                              matches: self.todayMatches)
 
-        self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions, competitions: self.competitions)
+        self.competitionSportsViewModelDataSource.competitions = filterCompetitionMatches(with: self.homeFilterOptions,
+                                                                                          competitions: self.competitions)
 
         self.favoriteGamesSportsViewModelDataSource.userFavoriteMatches = self.favoriteMatches
 
@@ -425,7 +427,14 @@ class PreLiveEventsViewModel: NSObject {
     private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .popularEvents,
                                                  shouldClear: true)
-        self.popularMatches = Env.everyMatrixStorage.matchesForListType(.popularEvents)
+
+        var cachedPopularMatches = Env.everyMatrixStorage.matchesForListType(.popularEvents)
+        if cachedPopularMatches.count < self.popularMatchesCount * self.popularMatchesPage {
+            self.popularMatchesHasNextPage = false
+        }
+
+        self.popularMatches = cachedPopularMatches
+
         self.isLoadingPopularList.send(false)
         self.updateContentList()
     }
@@ -433,7 +442,13 @@ class PreLiveEventsViewModel: NSObject {
     private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processAggregator(aggregator, withListType: .todayEvents,
                                                  shouldClear: true)
-        self.todayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
+
+        var cachedTodayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
+        if cachedTodayMatches.count < self.todayMatchesCount * self.todayMatchesPage {
+            self.todayMatchesHasNextPage = false
+        }
+
+        self.todayMatches = cachedTodayMatches
 
         self.isLoadingTodayList.send(false)
 
@@ -584,12 +599,6 @@ class PreLiveEventsViewModel: NSObject {
 
         self.favoriteCompetitions = processedCompetitions
 
-//        self.favoriteCompetitions = self.favoriteCompetitions.filter({
-//            $0. == self.selectedSportId.id
-//        })
-
-        self.isLoadingCompetitions.send(false)
-
         self.updateContentList()
     }
 
@@ -619,6 +628,9 @@ class PreLiveEventsViewModel: NSObject {
     //
 
     private func fetchPopularMatchesNextPage() {
+        if !popularMatchesHasNextPage {
+            return
+        }
         self.popularMatchesPage += 1
         self.fetchPopularMatches()
     }
@@ -654,7 +666,6 @@ class PreLiveEventsViewModel: NSObject {
                     print("PreLiveEventsViewModel popularMatchesPublisher connect")
                     self?.popularMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    
                     print("PreLiveEventsViewModel popularMatchesPublisher initialContent")
                     self?.setupPopularAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
@@ -1184,13 +1195,18 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
 
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"),
+                                                               description: localized("string_app_full_potential"),
+                                                               linkLabel: localized("string_verify_my_account"), alertType: .email)
 
                 alertsArray.append(emailActivationAlertData)
             }
 
             if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"),
+                                                               description: localized("string_complete_profile_description"),
+                                                               linkLabel: localized("string_finish_up_profile"),
+                                                               alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
             }
@@ -1205,13 +1221,19 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
 
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"),
+                                                               description: localized("string_app_full_potential"),
+                                                               linkLabel: localized("string_verify_my_account"),
+                                                               alertType: .email)
 
                 alertsArray.append(emailActivationAlertData)
             }
 
             if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"),
+                                                               description: localized("string_complete_profile_description"),
+                                                               linkLabel: localized("string_finish_up_profile"),
+                                                               alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
             }
@@ -1306,7 +1328,7 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
         else {
             fatalError()
         }
-        headerView.sectionTitleLabel.text = "Popular Games"
+        headerView.configureWithTitle("Popular Games")
         return headerView
     }
 
@@ -1373,7 +1395,7 @@ class PopularMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITabl
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.section == 3, self.matches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.activityIndicatorView.startAnimating()
+                typedCell.startAnimating()
             }
             self.requestNextPageAction?()
         }
@@ -1421,7 +1443,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
             }
         case 1:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
-                cell.activityIndicatorView.startAnimating()
+                cell.startAnimating()
                 return cell
             }
         default:
@@ -1433,7 +1455,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
             as? TitleTableViewHeader {
-            headerView.sectionTitleLabel.text = localized("string_upcoming_highlights")
+            headerView.configureWithTitle(localized("string_upcoming_highlights"))
             return headerView
         }
         return nil
@@ -1476,7 +1498,7 @@ class TodaySportsViewModelDataSource: NSObject, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.section == 1, self.todayMatches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
-                typedCell.activityIndicatorView.startAnimating()
+                typedCell.startAnimating()
             }
             self.requestNextPageAction?()
         }
@@ -1680,7 +1702,7 @@ class FavoriteGamesSportsViewModelDataSource: NSObject, UITableViewDataSource, U
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
             as? TitleTableViewHeader {
-            headerView.sectionTitleLabel.text = localized("string_my_games")
+            headerView.configureWithTitle(localized("string_my_games")) 
             return headerView
         }
         return nil
@@ -1794,7 +1816,9 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
                 else {
                     fatalError()
                 }
-            cell.setDescription(primaryText: localized("string_empty_my_competitions"), secondaryText: localized("string_empty_my_competitions"), userIsLoggedIn: UserSessionStore.isUserLogged() )
+            cell.setDescription(primaryText: localized("string_empty_my_competitions"),
+                                secondaryText: localized("string_empty_my_competitions"),
+                                userIsLoggedIn: UserSessionStore.isUserLogged() )
 
             return cell
         }
@@ -1806,12 +1830,10 @@ class FavoriteCompetitionSportsViewModelDataSource: NSObject, UITableViewDataSou
                 as? TournamentTableViewHeader,
             let competition = self.competitions[safe: section]
         else {
-            // fatalError()
             if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
                 as? TitleTableViewHeader {
-                headerView.sectionTitleLabel.text = localized("string_my_competitions")
+                headerView.configureWithTitle(localized("string_my_competitions"))
                 return headerView
-
             }
             return UIView()
         }

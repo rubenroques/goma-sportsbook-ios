@@ -351,7 +351,12 @@ class HomeFilterViewController: UIViewController {
            countFilters += 1
         }
         
-        let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange, highBoundTimeRange: highBoundTimeRange, defaultMarket: defaultMarket, lowerBoundOddsRange: lowerBoundOddsRange, highBoundOddsRange: highBoundOddsRange, countFilters: countFilters)
+        let homeFilterOptions = HomeFilterOptions(lowerBoundTimeRange: lowerBoundTimeRange,
+                                                  highBoundTimeRange: highBoundTimeRange,
+                                                  defaultMarket: defaultMarket,
+                                                  lowerBoundOddsRange: lowerBoundOddsRange,
+                                                  highBoundOddsRange: highBoundOddsRange,
+                                                  countFilters: countFilters)
         delegate?.setHomeFilters(homeFilters: homeFilterOptions)
         
         self.dismiss(animated: true, completion: nil)

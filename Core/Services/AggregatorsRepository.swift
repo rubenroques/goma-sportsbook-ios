@@ -356,12 +356,14 @@ class AggregatorsRepository {
     }
 
     func storeLocations(locations: [EveryMatrix.Location]) {
+        self.locations = [:]
         for location in locations {
             self.locations[location.id] = location
         }
     }
 
     func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.tournaments = [:]
         for tournament in tournaments {
             self.tournaments[tournament.id] = tournament
 
@@ -378,6 +380,7 @@ class AggregatorsRepository {
     }
 
     func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.popularTournaments = [:]
         for tournament in tournaments {
             self.popularTournaments[tournament.id] = tournament
         }

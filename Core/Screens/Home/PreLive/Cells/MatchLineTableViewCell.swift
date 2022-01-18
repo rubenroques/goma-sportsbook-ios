@@ -208,7 +208,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 fatalError()
             }
             if let match = self.match {
-                cell.subtitleLabel.text = "\(match.numberTotalOfMarkets) Markets"
+                cell.configureWithSubtitleString("\(match.numberTotalOfMarkets) Markets")
             }
             cell.tappedAction = {
                 self.tappedMatchLineAction?()

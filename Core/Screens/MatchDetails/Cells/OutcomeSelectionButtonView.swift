@@ -14,8 +14,8 @@ class OutcomeSelectionButtonView: NibView {
     @IBOutlet private var marketTypeLabel: UILabel!
     @IBOutlet private var marketOddLabel: UILabel!
 
-    @IBOutlet weak var upChangeOddValueImage: UIImageView!
-    @IBOutlet weak var downChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var upChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
     var match: Match?
     var outcome: Outcome?

@@ -14,14 +14,14 @@ class SubmitedBetslipViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var activityIndicatorBaseView: UIView!
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
-    @IBOutlet weak var emptyBetsBaseView: UIView!
-    @IBOutlet weak var dontHaveAnyTicketsLabel: UILabel!
-    @IBOutlet weak var makeSomeBetsLabel: UILabel!
-    @IBOutlet weak var popularGamesButton: UIButton!
+    @IBOutlet private weak var emptyBetsBaseView: UIView!
+    @IBOutlet private weak var dontHaveAnyTicketsLabel: UILabel!
+    @IBOutlet private weak var makeSomeBetsLabel: UILabel!
+    @IBOutlet private weak var popularGamesButton: UIButton!
     
-    @IBOutlet weak var firstTextNoBetsLabel: UILabel!
-    @IBOutlet weak var secondTextNoBetsLabel: UILabel!
-    @IBOutlet weak var noBetsImage: UIImageView!
+    @IBOutlet private weak var firstTextNoBetsLabel: UILabel!
+    @IBOutlet private weak var secondTextNoBetsLabel: UILabel!
+    @IBOutlet private weak var noBetsImage: UIImageView!
     
     private var cancellables = Set<AnyCancellable>()
     private var betHistoryEntries: [BetHistoryEntry] = []
@@ -114,19 +114,17 @@ class SubmitedBetslipViewController: UIViewController {
             .map(\.betList)
             .compactMap({$0})
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print(completion)
+            .sink { _ in
+
             } receiveValue: { betHistoryEntry in
                 if betHistoryEntry.isEmpty {
                     self.emptyBetsBaseView.isHidden = false
                     self.popularGamesButton.isHidden = true
-                }else{
+                }
+                else {
                     self.emptyBetsBaseView.isHidden = true
                 }
                 self.betHistoryEntries = betHistoryEntry
-//                for bet in self.betHistoryEntries {
-//                    self.requestCashout(betHistoryEntry: bet)
-//                }
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -196,7 +194,9 @@ class SubmitedBetslipViewController: UIViewController {
         guard let betCashoutValue = betCashout.value else {
             return
         }
-        let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"), message: localized("string_return_money") + "€\(betCashoutValue)", preferredStyle: UIAlertController.Style.alert)
+        let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"),
+                                                   message: localized("string_return_money") + "€\(betCashoutValue)",
+                                                   preferredStyle: UIAlertController.Style.alert)
 
         submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { _ in
             self.activityIndicatorBaseView.isHidden = false
@@ -208,7 +208,6 @@ class SubmitedBetslipViewController: UIViewController {
                 .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { value in
-                    print(value)
                     if value.cashoutSucceed {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.requestHistory()

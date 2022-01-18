@@ -89,6 +89,7 @@ final class TSManager {
                 if self.swampSession != nil {
                     if self.swampSession!.isConnected() {
                         self.swampSession?.subscribe(TSRouter.sessionStateChange.procedure, onSuccess: { subscription in
+                            Logger.log("EMSessionLoginFLow - sessionStateChanged subscribed")
                             promise(.success(true))
                         }, onError: { details, errorStr in
                             promise(.failure(.requestError(value: errorStr)))
@@ -106,32 +107,42 @@ final class TSManager {
                                 */
                                 
                                 if code == 1 {
+                                    Logger.log("EMSessionLoginFLow - Expired")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 2 {
+                                    Logger.log("EMSessionLoginFLow - Logged off")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 3 {
+                                    Logger.log("EMSessionLoginFLow - Forced logout")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 5 {
+                                    Logger.log("EMSessionLoginFLow - Forced logout")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 6 {
+                                    Logger.log("EMSessionLoginFLow - Forced logout")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 0 {
                                     // TODO: sessionStateChange success handler to be added here - KVO mechanism as above can be used
+                                    Logger.log("EMSessionLoginFLow - Logged")
+
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .userSessionConnected, object: nil)
+                                    }
                                 }
                             }
                         }
@@ -367,7 +378,7 @@ extension TSManager: SSWampSessionDelegate {
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
 
-        NotificationCenter.default.post(name: .sessionConnected, object: nil)
+        NotificationCenter.default.post(name: .socketConnected, object: nil)
 
         sessionStateChanged()
             .sink(receiveCompletion: { completion in
@@ -379,6 +390,7 @@ extension TSManager: SSWampSessionDelegate {
     }
     
     func ssWampSessionEnded(_ reason: String) {
-        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+        NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
+        NotificationCenter.default.post(name: .socketDisconnected, object: nil)
     }
 }

@@ -59,7 +59,6 @@ class UploadView: NibView {
 
     func setProgressBar(_ progress: Float) {
         progressView.progress = progress
-        print(progress)
         if progressView.progress == 1 {
             progressView.progressTintColor = UIColor.App.alertSuccess
             progressLabel.text = localized("string_upload_complete")

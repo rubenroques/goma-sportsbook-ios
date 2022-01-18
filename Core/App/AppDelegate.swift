@@ -22,7 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         let file = FileDestination()  // log to default swiftybeaver.log file
-        let cloud = SBPlatformDestination(appID: "jxEpzL", appSecret: "Zgv4mfejLv3Es3fzlBacHja9yznw2ytr", encryptionKey: "7vxwxubvlRtgrtaAwybl5hdxstrns8Ik") // to cloud
+        let cloud = SBPlatformDestination(appID: "jxEpzL",
+                                          appSecret: "Zgv4mfejLv3Es3fzlBacHja9yznw2ytr",
+                                          encryptionKey: "7vxwxubvlRtgrtaAwybl5hdxstrns8Ik") // to cloud
 
         swiftyBeaverLog.addDestination(file)
         swiftyBeaverLog.addDestination(cloud)
@@ -60,7 +62,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
         application.registerForRemoteNotifications()
 
-
+        //
         self.window = UIWindow()
 
         self.bootstrap = Bootstrap(router: Router(window: self.window!))
@@ -86,7 +88,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        Env.everyMatrixClient.connectTS()
+        Env.everyMatrixClient.reconnectSocket()
     }
 
 }

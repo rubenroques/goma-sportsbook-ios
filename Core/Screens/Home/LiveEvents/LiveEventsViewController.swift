@@ -26,11 +26,11 @@ class LiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var filtersCountLabel: UILabel!
     
-    @IBOutlet weak var emptyBaseView: UIView!
-    @IBOutlet weak var firstTextFieldEmptyStateLabel: UILabel!
-    @IBOutlet weak var secondTextFieldEmptyStateLabel: UILabel!
-    @IBOutlet weak var emptyStateImage: UIImageView!
-    @IBOutlet weak var emptyStateButton: UIButton!
+    @IBOutlet private weak var emptyBaseView: UIView!
+    @IBOutlet private weak var firstTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var secondTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var emptyStateImage: UIImageView!
+    @IBOutlet private weak var emptyStateButton: UIButton!
     
     @IBOutlet private weak var liveEventsCountView: UIView!
     @IBOutlet private weak var liveEventsCountLabel: UILabel!

@@ -97,29 +97,30 @@ class MyTicketsViewController: UIViewController {
             .sink(receiveValue: { [weak self] isUserLoggedIn in
                 if isUserLoggedIn {
                    self?.emptyBaseView.isHidden = true
-                }else{
+                }
+                else {
                     self?.emptyBaseView.isHidden = false
                     self?.firstTextFieldLabel.text = localized("string_empty_no_login")
                     self?.secondTextFieldLabel.text = localized("second_string_empty_no_login")
                     self?.noBetsButton.setTitle("Login", for: .normal)
                     self?.noBetsButton.isHidden = false
                     self?.noBetsImage.image = UIImage(named: "no_internet_icon")
-                    
                 }
             })
             .store(in: &cancellables)
         
-        
         Publishers.CombineLatest(self.viewModel.isLoading, self.viewModel.isTicketsEmptyPublisher)
-            .map({ [weak self] isCursorLoading, isTicketsEmpty -> Bool in
-                print(isTicketsEmpty)
-                if isCursorLoading, !isTicketsEmpty{
+            .map({ isLoading, isTicketsEmpty -> Bool in
+                if isLoading, !isTicketsEmpty {
                     return true
-                }else if isCursorLoading, isTicketsEmpty{
+                }
+                else if isLoading, isTicketsEmpty {
                     return true
-                }else if !isCursorLoading, isTicketsEmpty{
+                }
+                else if !isLoading, isTicketsEmpty {
                     return false
-                }else{
+                }
+                else {
                     return true
                 }
             })
@@ -128,16 +129,14 @@ class MyTicketsViewController: UIViewController {
                 if let userIsLoggedIn = self?.viewModel.isUserLoggedInPublisher.value {
                     if userIsLoggedIn {
                         self?.noBetsButton.isHidden = true
-                    }else{
+                    }
+                    else {
                         self?.noBetsButton.isHidden = false
                     }
                 }
-                
             })
             .store(in: &cancellables)
-            
-        
-        
+
         self.viewModel.reloadTableViewAction = { [weak self] in
             self?.ticketsTableView.reloadData()
         }
@@ -195,7 +194,7 @@ class MyTicketsViewController: UIViewController {
 
 }
 
-extension MyTicketsViewController{
+extension MyTicketsViewController {
     @IBAction private func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
