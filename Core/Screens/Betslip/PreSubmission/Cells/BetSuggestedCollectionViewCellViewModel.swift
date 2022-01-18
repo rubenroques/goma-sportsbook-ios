@@ -19,12 +19,16 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
     var numberOfSelection: Int = 0
     var suggestedBetsArray: [Int: [Match]] = [:]
     var totalGomaSuggestedBets: Int = 0
+    var reloadedState: Bool = false
 
     var suggestedCancellables = Set<AnyCancellable>()
     var cancellables = Set<AnyCancellable>()
     var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
-    private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
-    private var suggestedBetsNotFound: Int = 0
+    var suggestedBet1RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var suggestedBet2RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var suggestedBet3RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var suggestedBet4RetrievedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var suggestedBetsRetrievedPublishers: [CurrentValueSubject<Bool, Never>] = []
     var isViewModelFinishedLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
     // Suggested Aggregator Variables
@@ -51,19 +55,17 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
         self.subscribeSuggestedBet(betArray: self.gomaArray)
 
-        self.suggestedBetsRetrievedPublisher
+        self.suggestedBetsRetrievedPublishers.append(suggestedBet1RetrievedPublisher)
+        self.suggestedBetsRetrievedPublishers.append(suggestedBet2RetrievedPublisher)
+        self.suggestedBetsRetrievedPublishers.append(suggestedBet3RetrievedPublisher)
+        self.suggestedBetsRetrievedPublishers.append(suggestedBet4RetrievedPublisher)
+
+        Publishers.CombineLatest4(self.suggestedBet1RetrievedPublisher, self.suggestedBet2RetrievedPublisher, self.suggestedBet3RetrievedPublisher, self.suggestedBet4RetrievedPublisher)
             .receive(on: DispatchQueue.main)
-
-            .sink(receiveValue: { [weak self] value in
-                guard let self = self else { return }
-                let totalSuggestedBets = self.totalGomaSuggestedBets - self.suggestedBetsNotFound
-
-                if value == totalSuggestedBets && value != 0 {
-
-                    self.suggestedBetsRetrievedPublisher.send(0)
-                    self.suggestedBetsNotFound = 0
+            .sink(receiveValue: { bet1, bet2, bet3, bet4 in
+                if bet1 && bet2 && bet3 && bet4 {
+                    print("ALL SUGGESTED RETRIEVED")
                     self.setupBets()
-
                 }
             })
             .store(in: &cancellables)
@@ -71,7 +73,6 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
     }
 
     deinit {
-        print("BET SUGGESTED VIEW MODEL DEINIT")
         self.unregisterSuggestedBets()
     }
 
@@ -124,8 +125,6 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
                                     self.gameSuggestedViewsArray.append(gameSuggestedView)
 
-//                                    betsStackView.addArrangedSubview(gameSuggestedView)
-//
                                     self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
                                 }
                             }
@@ -171,7 +170,6 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
                                     gameSuggestedView.frame.size.height = 60
 
                                     self.gameSuggestedViewsArray.append(gameSuggestedView)
-                                    //betsStackView.addArrangedSubview(gameSuggestedView)
 
                                     self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
                                 }
@@ -209,7 +207,7 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
         self.totalGomaSuggestedBets = betArray.count
 
-        for bet in betArray {
+        for (index, bet) in betArray.enumerated() {
 
             let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
 
@@ -223,7 +221,7 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
                         print(publisherIdentifiable)
                         self?.suggestedBetsRegisters.append(publisherIdentifiable)
                     case .initialContent(let aggregator):
-                        self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator)
+                        self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
                     case .updatedContent:
                         print("MyBets suggestedBets updatedContent")
                     case .disconnect:
@@ -235,7 +233,7 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
     }
 
-    private func setupSuggestedMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+    private func setupSuggestedMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator, index: Int) {
 
         self.processSuggestedMatchAggregator(aggregator)
 
@@ -246,14 +244,9 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
             self.betsArray.append(suggestedMatch)
 
-            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
-            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
         }
-        else {
-            self.suggestedBetsNotFound += 1
-            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
-            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount)
-        }
+
+        self.suggestedBetsRetrievedPublishers[index].send(true)
 
     }
 
