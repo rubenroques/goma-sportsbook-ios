@@ -122,7 +122,7 @@ class SelectTextFieldView: NibView {
     func dismissPickerView() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: localized("string_done"), style: .plain, target: self, action: #selector(pickerAction))
+        let button = UIBarButtonItem(title: localized("done"), style: .plain, target: self, action: #selector(pickerAction))
 
         toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
         toolBar.isUserInteractionEnabled = true

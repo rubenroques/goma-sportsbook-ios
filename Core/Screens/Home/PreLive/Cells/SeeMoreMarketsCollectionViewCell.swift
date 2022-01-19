@@ -22,7 +22,7 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
         self.baseView.layer.cornerRadius = 9
 
-        self.titleLabel.text = "See All"
+        self.titleLabel.text = localized("see_all")
         self.setupWithTheme()
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))

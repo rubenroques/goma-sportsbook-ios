@@ -37,11 +37,11 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         didSet {
             if isExpanded {
                 self.expandArrowImageView.image = UIImage(named: "arrow_up_icon")
-                self.expandLabel.text = "See less"
+                self.expandLabel.text = localized("see_less")
             }
             else {
                 self.expandArrowImageView.image = UIImage(named: "arrow_down_icon")
-                self.expandLabel.text = "See all"
+                self.expandLabel.text = localized("see_all")
             }
         }
     }
@@ -54,7 +54,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
 
         self.containerView.layer.cornerRadius = CornerRadius.button
 
-        self.titleLabel.text = "Market"
+        self.titleLabel.text = localized("market")
         self.titleLabel.font = AppFont.with(type: .bold, size: 14)
 
         let expandTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapExpandBaseView))

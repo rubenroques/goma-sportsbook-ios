@@ -204,7 +204,7 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
             fatalError()
         }
 
-        cell.setupWithTitle(item.translatedName ?? localized("string_market"))
+        cell.setupWithTitle(item.translatedName ?? localized("market"))
 
         if marketTypeSelectedOptionIndex == indexPath.row {
             cell.setSelectedType(true)

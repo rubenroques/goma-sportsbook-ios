@@ -52,13 +52,13 @@ class MyTicketCellViewModel {
         }
 
         if ticket.type == "SINGLE" {
-            self.title = "Single - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+            self.title = localized("single") + " - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
         }
         else if ticket.type == "MULTIPLE" {
-            self.title = "Multiple - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+            self.title = localized("multiple") + " - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
         }
         else if ticket.type == "SYSTEM" {
-            self.title = "System - \(ticket.systemBetType?.capitalized ?? "") - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+            self.title = localized("system") + " - \(ticket.systemBetType?.capitalized ?? "") - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
         }
 
     }
@@ -118,14 +118,14 @@ class MyTicketCellViewModel {
 
     private func betStatusText(forCode code: String) -> String {
         switch code {
-        case "OPEN": return "Open"
-        case "DRAW": return "Draw"
-        case "WON": return "Won"
-        case "HALF_WON": return "Half Won"
-        case "LOST": return "Lost"
-        case "HALF_LOST": return "Half Lost"
-        case "CANCELLED": return "Cancelled"
-        case "CASHED_OUT": return "Cashed Out"
+        case "OPEN": return localized("open")
+        case "DRAW": return localized("draw")
+        case "WON": return localized("won")
+        case "HALF_WON": return localized("half_won")
+        case "LOST": return localized("lost")
+        case "HALF_LOST": return localized("half_lost")
+        case "CANCELLED": return localized("cancelled")
+        case "CASHED_OUT": return localized("cashed_out")
         default: return ""
         }
     }

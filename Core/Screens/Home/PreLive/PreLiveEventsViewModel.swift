@@ -464,7 +464,7 @@ class PreLiveEventsViewModel: NSObject {
         }
 
         let popularCompetitionGroup = CompetitionGroup(id: "0",
-                                                        name: localized("string_popular_competitions"),
+                                                        name: localized("popular_competitions"),
                                                         aggregationType: CompetitionGroup.AggregationType.popular,
                                                         competitions: popularCompetitions)
         var popularCompetitionGroups = [popularCompetitionGroup]

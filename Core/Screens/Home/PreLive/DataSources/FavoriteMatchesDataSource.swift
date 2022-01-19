@@ -70,7 +70,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
             }
             else {
                 if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
-                    cell.setDescription(primaryText: localized("string_empty_my_games"),
+                    cell.setDescription(primaryText: localized("empty_my_games"),
                                         secondaryText: localized("second_string_empty_my_games"),
                                         userIsLoggedIn: UserSessionStore.isUserLogged() )
                     return cell
@@ -86,7 +86,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
             as? TitleTableViewHeader {
-            headerView.configureWithTitle(localized("string_my_games"))
+            headerView.configureWithTitle(localized("my_games"))
             return headerView
         }
         return nil

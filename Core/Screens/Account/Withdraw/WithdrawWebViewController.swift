@@ -46,7 +46,7 @@ class WithdrawWebViewController: UIViewController {
     }
 
     func commonInit() {
-        self.navigationLabel.text = localized("string_withdraw")
+        self.navigationLabel.text = localized("withdraw")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
         self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)

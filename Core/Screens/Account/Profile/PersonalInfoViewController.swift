@@ -78,47 +78,47 @@ class PersonalInfoViewController: UIViewController {
     func commonInit() {
 
         headerLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 17)
-        headerLabel.text = localized("string_personal_info")
+        headerLabel.text = localized("personal_info")
 
-        editButton.setTitle(localized("string_save"), for: .normal)
+        editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        titleHeaderTextFieldView.setPlaceholderText(localized("Title"))
+        titleHeaderTextFieldView.setPlaceholderText(localized("title"))
         titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
-        firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
-        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"),
+        firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
+        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"),
                                                         color: UIColor.App.headerTextField)
 
-        lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
+        lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
 
-        countryHeaderTextFieldView.setPlaceholderText(localized("string_nationality"))
+        countryHeaderTextFieldView.setPlaceholderText(localized("nationality"))
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         countryHeaderTextFieldView.shouldBeginEditing = { return false }
 
-        birthDateHeaderTextFieldView.setPlaceholderText(localized("string_birth_date"))
+        birthDateHeaderTextFieldView.setPlaceholderText(localized("birth_date"))
         birthDateHeaderTextFieldView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         birthDateHeaderTextFieldView.setDatePickerMode()
 
-        adress1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
+        adress1HeaderTextFieldView.setPlaceholderText(localized("address_1"))
 
-        adress2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
+        adress2HeaderTextFieldView.setPlaceholderText(localized("address_2"))
 
-        cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
+        cityHeaderTextFieldView.setPlaceholderText(localized("city"))
 
-        postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
+        postalCodeHeaderTextFieldView.setPlaceholderText(localized("postal_code"))
 
-        usernameHeaderTextFieldView.setPlaceholderText(localized("string_username"))
+        usernameHeaderTextFieldView.setPlaceholderText(localized("username"))
 
-        emailHeaderTextFieldView.setPlaceholderText(localized("string_email"))
+        emailHeaderTextFieldView.setPlaceholderText(localized("email"))
 
-        cardIdHeaderTextFieldView.setPlaceholderText(localized("string_id_number"))
+        cardIdHeaderTextFieldView.setPlaceholderText(localized("id_number"))
 
-        bankIdHeaderTextFieldView.setPlaceholderText(localized("string_bank_id"))
+        bankIdHeaderTextFieldView.setPlaceholderText(localized("bank_id"))
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -283,23 +283,23 @@ class PersonalInfoViewController: UIViewController {
 
         // Verify required fields
         if firstName == "" {
-            firstNameHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            firstNameHeaderTextFieldView.showErrorOnField(text: localized("required_field"))
             validFields = false
         }
         else if lastName == "" {
-            lastNameHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            lastNameHeaderTextFieldView.showErrorOnField(text: localized("required_field"))
             validFields = false
         }
         else if address1 == "" {
-            adress1HeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            adress1HeaderTextFieldView.showErrorOnField(text: localized("required_field"))
             validFields = false
         }
         else if city == "" {
-            cityHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            cityHeaderTextFieldView.showErrorOnField(text: localized("required_field"))
             validFields = false
         }
         else if postalCode == "" {
-            postalCodeHeaderTextFieldView.showErrorOnField(text: localized("string_required_field"))
+            postalCodeHeaderTextFieldView.showErrorOnField(text: localized("required_field"))
             validFields = false
         }
 
@@ -384,7 +384,7 @@ class PersonalInfoViewController: UIViewController {
                     ()
                 }
             } receiveValue: { _ in
-                self.showAlert(type: .success, text: localized("string_profile_updated_success"))
+                self.showAlert(type: .success, text: localized("profile_updated_success"))
             }
             .store(in: &cancellables)
     }

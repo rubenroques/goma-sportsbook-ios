@@ -127,7 +127,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     var selectedSystemBet: SystemBetType? {
         didSet {
             if let systemBetType = self.selectedSystemBet {
-                self.systemBetTypeLabel.text = systemBetType.name ?? "System bet"
+                self.systemBetTypeLabel.text = systemBetType.name ?? localized("system_bet")
             }
         }
     }
@@ -272,11 +272,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryMultipleOddsValueLabel.text = "-.--"
         
         self.systemWinningsValueLabel.text = "-.--€"
-        self.systemOddsTitleLabel.text = "Total bet amount"
+        self.systemOddsTitleLabel.text = localized("total_bet_amount")
         self.systemOddsValueLabel.text = "-.--€"
         
         self.secondarySystemWinningsValueLabel.text = "-.--€"
-        self.secondarySystemOddsTitleLabel.text = "Total bet amount"
+        self.secondarySystemOddsTitleLabel.text = localized("total_bet_amount")
         self.secondarySystemOddsValueLabel.text = "-.--€"
         
         self.tableView.separatorStyle = .none
@@ -707,7 +707,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         let errorView = BetslipErrorView()
         errorView.alpha = 0
-        errorView.setDescription(description: errorMessage ?? "Error")
+        errorView.setDescription(description: errorMessage ?? localized("error"))
         errorView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(errorView)
 
@@ -793,14 +793,14 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.amountTextfield.textColor = UIColor.App.headingMain
-        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("string_amount"), attributes: [
+        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
         ])
         
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App.headingMain
-        self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: "Amount", attributes: [
+        self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
         ])
@@ -1304,13 +1304,13 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
             let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
             var hasFoundCorrespondingId = false
-            var errorMessage = "Error"
+            var errorMessage = localized("error")
             for bettingError in bettingTicketErrors {
                 if let bettingSelections = bettingError.selections {
                     for selection in bettingSelections {
                         if selection.id == bettingTicket.bettingId {
                             hasFoundCorrespondingId = true
-                            errorMessage = bettingError.errorMessage ?? "Error"
+                            errorMessage = bettingError.errorMessage ?? localized("error")
                         }
                     }
                 }
@@ -1370,7 +1370,7 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                         if let bettingErrorMessage = bettingError.errorMessage {
                             if bettingErrorMessage.contains(bettingTicket.bettingId) {
                                 hasFoundCorrespondingId = true
-                                errorMessage = bettingError.errorMessage ?? "Error"
+                                errorMessage = bettingError.errorMessage ?? localized("error")
                                 break
                             }
 
@@ -1382,7 +1382,7 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
 
                                 if selection.id == bettingTicket.bettingId {
                                     hasFoundCorrespondingId = true
-                                    errorMessage = bettingError.errorMessage ?? "Error"
+                                    errorMessage = bettingError.errorMessage ?? localized("error")
                                     break
                                 }
 

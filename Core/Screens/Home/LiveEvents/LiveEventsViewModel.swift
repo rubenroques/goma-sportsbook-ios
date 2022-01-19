@@ -523,7 +523,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         else {
             fatalError()
         }
-        headerView.configureWithTitle(localized("string_all_live_events")) 
+        headerView.configureWithTitle(localized("all_live_events")) 
         return headerView
     }
 

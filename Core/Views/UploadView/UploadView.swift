@@ -61,7 +61,7 @@ class UploadView: NibView {
         progressView.progress = progress
         if progressView.progress == 1 {
             progressView.progressTintColor = UIColor.App.alertSuccess
-            progressLabel.text = localized("string_upload_complete")
+            progressLabel.text = localized("upload_complete")
         }
     }
 

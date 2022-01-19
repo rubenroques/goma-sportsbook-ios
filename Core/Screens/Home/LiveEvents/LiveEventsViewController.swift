@@ -301,7 +301,7 @@ class LiveEventsViewController: UIViewController {
                     self?.tableView.isHidden = false
           
                 case .emptyNoFilter:
-                    self?.setEmptyStateBaseView(firstLabelText: localized("string_empty_list"), secondLabelText: localized("second_string_empty_list"), isUserLoggedIn: true)
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_string_empty_list"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
                     
@@ -309,7 +309,7 @@ class LiveEventsViewController: UIViewController {
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
                 case .emptyAndFilter:
-                    self?.setEmptyStateBaseView(firstLabelText: localized("string_empty_list_with_filters"), secondLabelText: localized("second_string_empty_list_with_filters"), isUserLoggedIn: true)
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_string_empty_list_with_filters"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
             
@@ -373,10 +373,10 @@ class LiveEventsViewController: UIViewController {
             self.emptyStateButton.isHidden = isUserLoggedIn
         }else{
             self.emptyStateImage.image = UIImage(named: "no_internet_icon")
-            self.firstTextFieldEmptyStateLabel.text = localized("string_empty_no_login")
+            self.firstTextFieldEmptyStateLabel.text = localized("empty_no_login")
             self.secondTextFieldEmptyStateLabel.text = localized("second_string_empty_no_login")
             self.emptyStateButton.isHidden = isUserLoggedIn
-            self.emptyStateButton.setTitle("Login", for: .normal)
+            self.emptyStateButton.setTitle(localized("login"), for: .normal)
         }
         
     }
@@ -451,7 +451,7 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle(localized("string_all"))
+            cell.setupWithTitle(localized("all"))
         default:
             ()
         }

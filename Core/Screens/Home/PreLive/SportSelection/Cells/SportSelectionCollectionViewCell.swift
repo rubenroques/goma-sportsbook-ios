@@ -60,7 +60,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         iconImageView.image = UIImage(named: "sport_type_icon")
         iconImageView.contentMode = .scaleAspectFit
 
-        nameLabel.text = "Sport"
+        nameLabel.text = localized("sport")
         nameLabel.font = AppFont.with(type: .bold, size: 12)
         nameLabel.textColor = UIColor.App.headingMain
         nameLabel.numberOfLines = 2

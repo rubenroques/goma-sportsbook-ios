@@ -52,7 +52,7 @@ class EmptyCardTableViewCell: UITableViewCell {
             self.loginButton.isHidden = true
         }
         else {
-            self.loginButton.setTitle("Login", for: .normal)
+            self.loginButton.setTitle(localized("login"), for: .normal)
             self.loginButton.isHidden = false
         }
     }

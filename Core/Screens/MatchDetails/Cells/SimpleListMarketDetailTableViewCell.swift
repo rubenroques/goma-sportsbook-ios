@@ -31,7 +31,7 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
         self.containerView.layer.cornerRadius = CornerRadius.button
 
-        self.titleLabel.text = "Market"
+        self.titleLabel.text = localized("market")
         self.titleLabel.font = AppFont.with(type: .bold, size: 14)
 
         self.collectionView.delegate = self

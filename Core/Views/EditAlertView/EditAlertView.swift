@@ -28,19 +28,19 @@ class EditAlertView: NibView {
             switch self.alertState {
             case .success:
                 alertImageView.image = UIImage(named: "success_circle_icon")
-                alertLabel.text = localized("string_success")
+                alertLabel.text = localized("success")
                 alertLabel.textColor = UIColor.App.alertSuccess
-                alertTextLabel.text = localized("string_success_edit")
+                alertTextLabel.text = localized("success_edit")
             case .error:
                 alertImageView.image = UIImage(named: "error_input_icon")
                 alertLabel.textColor = UIColor.App.alertError
-                alertLabel.text = localized("string_error")
-                alertTextLabel.text = localized("string_error_edit")
+                alertLabel.text = localized("error")
+                alertTextLabel.text = localized("error_edit")
             case .info:
                 alertImageView.image = UIImage(named: "question_circle_icon")
                 alertLabel.textColor = UIColor.App.headingMain
-                alertLabel.text = localized("string_info")
-                alertTextLabel.text = localized("string_info_text")
+                alertLabel.text = localized("info")
+                alertTextLabel.text = localized("info_text")
             }
         }
     }

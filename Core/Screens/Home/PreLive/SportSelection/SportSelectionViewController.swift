@@ -66,10 +66,10 @@ class SportSelectionViewController: UIViewController {
             getSports()
         }
 
-        navigationLabel.text = localized("string_choose_sport")
+        navigationLabel.text = localized("choose_sport")
         navigationLabel.font = AppFont.with(type: .bold, size: 16)
 
-        cancelButton.setTitle(localized("string_cancel"), for: .normal)
+        cancelButton.setTitle(localized("cancel"), for: .normal)
         cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
         collectionView.register(SportSelectionCollectionViewCell.nib,
@@ -99,7 +99,7 @@ class SportSelectionViewController: UIViewController {
         self.searchBar.isTranslucent = false
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
-        self.searchBar.placeholder = localized("string_search")
+        self.searchBar.placeholder = localized("search")
 
         self.searchBar.delegate = self
 
@@ -107,7 +107,7 @@ class SportSelectionViewController: UIViewController {
             textfield.backgroundColor = UIColor.App.secondaryBackground
             textfield.textColor = .white
             textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("string_search_field"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.fadeOutHeading])
 
