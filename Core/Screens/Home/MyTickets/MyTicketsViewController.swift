@@ -36,7 +36,7 @@ class MyTicketsViewController: UIViewController {
         
         super.init(nibName: "MyTicketsViewController", bundle: nil)
 
-        self.title = localized("string_my_bets")
+        self.title = localized("my_bets")
     }
 
     @available(iOS, unavailable)
@@ -79,6 +79,7 @@ class MyTicketsViewController: UIViewController {
         self.view.layoutIfNeeded()
 
         self.viewModel.isLoading
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 
                 if !isLoading {
@@ -100,9 +101,9 @@ class MyTicketsViewController: UIViewController {
                 }
                 else {
                     self?.emptyBaseView.isHidden = false
-                    self?.firstTextFieldLabel.text = localized("string_empty_no_login")
+                    self?.firstTextFieldLabel.text = localized("empty_no_login")
                     self?.secondTextFieldLabel.text = localized("second_string_empty_no_login")
-                    self?.noBetsButton.setTitle("Login", for: .normal)
+                    self?.noBetsButton.setTitle(localized("login"), for: .normal)
                     self?.noBetsButton.isHidden = false
                     self?.noBetsImage.image = UIImage(named: "no_internet_icon")
                 }
@@ -220,11 +221,11 @@ extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDat
 
         switch indexPath.row {
         case MyTicketsViewModel.MyTicketsType.opened.rawValue :
-            cell.setupWithTitle(localized("string_opened"))
+            cell.setupWithTitle(localized("opened"))
         case MyTicketsViewModel.MyTicketsType.resolved.rawValue:
-            cell.setupWithTitle(localized("string_resolved"))
+            cell.setupWithTitle(localized("resolved"))
         case MyTicketsViewModel.MyTicketsType.won.rawValue:
-            cell.setupWithTitle(localized("string_won"))
+            cell.setupWithTitle(localized("won"))
         default:
             ()
         }

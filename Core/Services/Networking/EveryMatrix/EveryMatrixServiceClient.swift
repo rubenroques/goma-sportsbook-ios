@@ -87,6 +87,7 @@ class EveryMatrixServiceClient: ObservableObject {
                 self?.reconnectSocket()
             }
             .store(in: &cancellable)
+
     }
 
     func reconnectSocket() {
@@ -167,6 +168,11 @@ class EveryMatrixServiceClient: ObservableObject {
 
     func getProfile() -> AnyPublisher<EveryMatrix.UserProfileField, EveryMatrix.APIError> {
         return self.manager.getModel(router: .getProfile, decodingType: EveryMatrix.UserProfileField.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getAccountBalanceWatcher() -> AnyPublisher<EveryMatrix.AccountBalanceWatcher, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .watchBalance, decodingType: EveryMatrix.AccountBalanceWatcher.self)
             .eraseToAnyPublisher()
     }
 

@@ -203,16 +203,16 @@ extension Date {
         if day < 7 {
             if day == 1 {
                 if isPast {
-                    return strings?[.oneDayPast] ?? NSLocalizedString(localized("string_yesterday"), comment: "Date format")
+                    return strings?[.oneDayPast] ?? NSLocalizedString(localized("yesterday"), comment: "Date format")
                 }
                 else {
-                    return strings?[.oneDayFuture] ?? NSLocalizedString(localized("string_tomorrow"), comment: "Date format")
+                    return strings?[.oneDayFuture] ?? NSLocalizedString(localized("tomorrow"), comment: "Date format")
                 }
             }
             else {
                 let string: String
                 if isPast {
-                    string = strings?[.daysPast] ?? localized("string_days_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
+                    string = strings?[.daysPast] ?? localized("days_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
                 }
                 else {
                     string = strings?[.daysFuture] ?? NSLocalizedString("in %.f days", comment: "Date format")
@@ -226,7 +226,7 @@ extension Date {
                     return strings?[.oneWeekPast] ?? NSLocalizedString("last week", comment: "Date format")
                 }
                 else {
-                    let string = strings?[.weeksPast] ?? localized("string_weeks_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
+                    let string = strings?[.weeksPast] ?? localized("weeks_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
                     return String(format: string, Double(abs(since(Env.date(), in: .week))))
                 }
             }
@@ -246,7 +246,7 @@ extension Date {
                     return strings?[.oneMonthPast] ?? NSLocalizedString("last month", comment: "Date format")
                 }
                 else {
-                    let string = strings?[.monthsPast] ?? localized("string_months_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
+                    let string = strings?[.monthsPast] ?? localized("months_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
                     return String(format: string, Double(abs(since(Env.date(), in: .month))))
                 }
             }
@@ -265,7 +265,7 @@ extension Date {
                 return strings?[.oneYearPast] ?? NSLocalizedString("last year", comment: "Date format")
             }
             else {
-                let string = strings?[.yearsPast] ?? localized("string_years_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
+                let string = strings?[.yearsPast] ?? localized("years_ago").replacingOccurrences(of: "#x# ", with: "%.f ")
                 return String(format: string, Double(abs(since(Env.date(), in: .year))))
             }
         }

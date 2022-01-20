@@ -41,10 +41,10 @@ class MatchFiltersViewController: UIViewController {
     }
 
     func commonInit() {
-        navigationLabel.text = localized("string_choose_sport")
+        navigationLabel.text = localized("choose_sport")
         navigationLabel.font = AppFont.with(type: .bold, size: 16)
 
-        cancelButton.setTitle(localized("string_cancel"), for: .normal)
+        cancelButton.setTitle(localized("cancel"), for: .normal)
         cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
     }
 

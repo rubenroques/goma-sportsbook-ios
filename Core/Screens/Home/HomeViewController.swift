@@ -165,6 +165,15 @@ class HomeViewController: UIViewController {
 //            }
 //            .store(in: &cancellables)
 
+//        Env.userSessionStore.userBalanceWallet
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] wallet in
+//                if let walletAmount = wallet?.amount {
+//                    self?.accountValueLabel.text = "\(walletAmount)"
+//                }
+//            })
+//            .store(in: &cancellables)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -175,8 +184,8 @@ class HomeViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.accountValueLabel.text = value
+            .sink { [weak self] value in
+                self?.accountValueLabel.text = value
             }
             .store(in: &cancellables)
 
@@ -219,12 +228,12 @@ class HomeViewController: UIViewController {
 
         liveButtonBaseView.alpha = 0.2
 
-        loginButton.setTitle(localized("string_login"), for: .normal)
+        loginButton.setTitle(localized("login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
 
-        self.sportsTitleLabel.text = localized("string_sports")
+        self.sportsTitleLabel.text = localized("sports")
 
-        self.liveTitleLabel.text = localized("string_live")
+        self.liveTitleLabel.text = localized("live")
 
 
         let sportsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsTabItem))
@@ -236,7 +245,7 @@ class HomeViewController: UIViewController {
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
         profilePictureBaseView.addGestureRecognizer(profileTapGesture)
 
-        accountValueLabel.text = localized("string_loading")
+        accountValueLabel.text = localized("loading")
         accountValueLabel.font = AppFont.with(type: .bold, size: 12)
 
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
@@ -389,7 +398,6 @@ extension HomeViewController {
 
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
-        //self.present(depositViewController, animated: true, completion: nil)
         self.navigationController?.pushViewController(depositViewController, animated: true)
     }
 

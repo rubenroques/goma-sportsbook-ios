@@ -68,8 +68,8 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
                 else {
                     fatalError()
                 }
-            cell.setDescription(primaryText: localized("string_empty_my_competitions"),
-                                secondaryText: localized("string_empty_my_competitions"),
+            cell.setDescription(primaryText: localized("empty_my_competitions"),
+                                secondaryText: localized("empty_my_competitions"),
                                 userIsLoggedIn: UserSessionStore.isUserLogged() )
 
             return cell
@@ -84,7 +84,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
         else {
             if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
                 as? TitleTableViewHeader {
-                headerView.configureWithTitle(localized("string_my_competitions"))
+                headerView.configureWithTitle(localized("my_competitions"))
                 return headerView
             }
             return UIView()

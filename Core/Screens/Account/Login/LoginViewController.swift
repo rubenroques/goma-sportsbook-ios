@@ -99,21 +99,21 @@ class LoginViewController: UIViewController {
         }
 
         skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 18)
-        skipButton.setTitle(localized("string_skip"), for: .normal)
+        skipButton.setTitle(localized("skip"), for: .normal)
 
         logoImageView.image = UIImage(named: "logo_horizontal_large")
         logoImageView.sizeToFit()
 
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
-        loginLabel.text = localized("string_login")
+        loginLabel.text = localized("login")
 
-        self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
-        self.passwordHeaderTextFieldView.setPlaceholderText("Password")
+        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email_address_or_username"))
+        self.passwordHeaderTextFieldView.setPlaceholderText(localized("password"))
 
         self.usernameHeaderTextFieldView.highlightColor = .white
         self.passwordHeaderTextFieldView.highlightColor = .white
 
-        rememberLabel.text = localized("string_remember")
+        rememberLabel.text = localized("remember")
         rememberLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 12)
         rememberToggleView.layer.cornerRadius = CornerRadius.checkBox
         rememberImageView.backgroundColor = .clear
@@ -121,10 +121,10 @@ class LoginViewController: UIViewController {
 
         self.enableRememberUser()
 
-        forgotButton.setTitle(localized("string_forgot"), for: .normal)
+        forgotButton.setTitle(localized("forgot"), for: .normal)
         forgotButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 14)
 
-        loginButton.setTitle(localized("string_login"), for: .normal)
+        loginButton.setTitle(localized("login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         self.passwordHeaderTextFieldView.setSecureField(true)
@@ -136,7 +136,7 @@ class LoginViewController: UIViewController {
         rememberView.isUserInteractionEnabled = true
         rememberView.addGestureRecognizer(tapImageGestureRecognizer)
 
-        registerLabel.highlightTextLabel(fullString: localized("string_new_create_account"), highlightString: localized("string_create_account"))
+        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
         registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
 
         checkPolicyLinks()
@@ -350,18 +350,18 @@ class LoginViewController: UIViewController {
     }
 
     private func showWrongPasswordStatus() {
-        let alert = UIAlertController(title: localized("string_login_error_title"),
-                                      message: localized("string_login_error_message"),
+        let alert = UIAlertController(title: localized("login_error_title"),
+                                      message: localized("login_error_message"),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
     private func showServerErrorStatus() {
-        let alert = UIAlertController(title: localized("string_login_error_title"),
-                                      message: localized("string_server_error_message"),
+        let alert = UIAlertController(title: localized("login_error_title"),
+                                      message: localized("server_error_message"),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 

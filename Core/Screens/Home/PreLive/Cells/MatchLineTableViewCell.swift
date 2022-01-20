@@ -209,7 +209,17 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 fatalError()
             }
             if let match = self.match {
-                cell.configureWithSubtitleString("\(match.numberTotalOfMarkets) Markets")
+                let marketsRawString = localized("number_of_markets")
+                let singularMarketRawString = localized("number_of_market_singular")
+                var marketString = ""
+                if match.numberTotalOfMarkets > 1 {
+                    marketString = marketsRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                }
+                else {
+                    marketString = singularMarketRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                }
+
+                cell.configureWithSubtitleString(marketString)
             }
             cell.tappedAction = {
                 self.tappedMatchLineAction?()

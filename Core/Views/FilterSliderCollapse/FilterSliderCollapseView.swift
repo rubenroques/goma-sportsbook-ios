@@ -182,8 +182,8 @@ class FilterSliderCollapseView: NibView {
     }
 
     func updateOddsLabels(fromText: String, toText: String) {
-        leftContentView.setLabels(topTitle: "\(localized("string_from")):", bottomTitle: fromText)
-        rightContentView.setLabels(topTitle: "\(localized("string_to")):", bottomTitle: toText)
+        leftContentView.setLabels(topTitle: "\(localized("from")):", bottomTitle: fromText)
+        rightContentView.setLabels(topTitle: "\(localized("to")):", bottomTitle: toText)
     }
 
     func getContentView() -> UIView {

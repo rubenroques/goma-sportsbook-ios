@@ -28,7 +28,7 @@ class BetslipErrorView: NibView {
     }
 
     override func commonInit() {
-        self.descriptionLabel.text = "Error text"
+        self.descriptionLabel.text = localized("error")
         self.descriptionLabel.numberOfLines = 0
 
         self.logoImageView.image = UIImage(named: "warning_alert_icon")

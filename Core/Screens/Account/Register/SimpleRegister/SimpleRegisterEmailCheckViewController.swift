@@ -50,18 +50,18 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     }
 
     func commonInit() {
-        skipButton.setTitle(localized("string_skip"), for: .normal)
+        skipButton.setTitle(localized("skip"), for: .normal)
         skipButton.titleLabel?.font = AppFont.with(type: .semibold, size: 18)
 
         logoImageView.image = UIImage(named: "logo_horizontal_large")
         logoImageView.sizeToFit()
 
         registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)
-        registerTitleLabel.text = localized("string_signup")
+        registerTitleLabel.text = localized("signup")
 
         emailHeadertextFieldView.setPlaceholderText("Email Address")
 
-        registerButton.setTitle(localized("string_get_started"), for: .normal)
+        registerButton.setTitle(localized("get_started"), for: .normal)
         registerButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
@@ -224,11 +224,11 @@ extension SimpleRegisterEmailCheckViewController {
     }
 
     func showWrongEmailFormatError() {
-        self.emailHeadertextFieldView.showErrorOnField(text: localized("string_invalid_email"), color: UIColor.App.alertError)
+        self.emailHeadertextFieldView.showErrorOnField(text: localized("invalid_email"), color: UIColor.App.alertError)
     }
 
     func showEmailUsedError() {
-        self.emailHeadertextFieldView.showErrorOnField(text: localized("string_email_already_registered"), color: UIColor.App.alertError)
+        self.emailHeadertextFieldView.showErrorOnField(text: localized("email_already_registered"), color: UIColor.App.alertError)
     }
 
     func hideEmailError() {

@@ -100,7 +100,7 @@ class MyTicketBetLineView: NibView {
 
         self.marketLabel.text = self.betHistoryEntrySelection.marketName ?? ""
         self.outcomeLabel.text = self.betHistoryEntrySelection.betName ?? ""
-        self.oddTitleLabel.text = "Odd"
+        self.oddTitleLabel.text = localized("odd")
 
         if let oddValue = self.betHistoryEntrySelection.priceValue {
             self.oddValueLabel.text = String(format: "%.2f", Double(floor(oddValue * 100)/100))

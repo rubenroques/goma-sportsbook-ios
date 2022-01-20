@@ -36,7 +36,7 @@ class SubmitedBetslipViewController: UIViewController {
 
     init() {
         super.init(nibName: "SubmitedBetslipViewController", bundle: nil)
-        self.title = "My Bets"
+        self.title = localized("my_bets")
     }
 
     @available(iOS, unavailable)
@@ -66,10 +66,10 @@ class SubmitedBetslipViewController: UIViewController {
             self.emptyBetsBaseView.isHidden = true
         }else{
             self.emptyBetsBaseView.isHidden = false
-            self.firstTextNoBetsLabel.text = "You aren't logged in!"
-            self.secondTextNoBetsLabel.text = "You need to be logged in to be able to see your tickets"
+            self.firstTextNoBetsLabel.text = localized("you_not_logged_in")
+            self.secondTextNoBetsLabel.text = localized("need_login_tickets")
            
-            self.popularGamesButton.setTitle("Login", for: .normal)
+            self.popularGamesButton.setTitle(localized("login"), for: .normal)
             self.noBetsImage.image = UIImage(named: "no_internet_icon")
         }
 
@@ -165,7 +165,6 @@ class SubmitedBetslipViewController: UIViewController {
                     print("MyBets cashoutPublisher updatedContent")
                     self?.updateCashoutAggregatorProcessor(aggregator: aggregatorUpdates)
 
-                    print("UPDATE CASHOUT: \(Env.everyMatrixStorage.cashoutsPublisher.values)")
                 case .disconnect:
                     print("MyBets cashoutPublisher disconnect")
                 }
@@ -194,11 +193,15 @@ class SubmitedBetslipViewController: UIViewController {
         guard let betCashoutValue = betCashout.value else {
             return
         }
-        let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"),
-                                                   message: localized("string_return_money") + "€\(betCashoutValue)",
+
+        let cashoutRawMessageString = localized("cashout_prompt_message")
+        let cashoutMessageString = cashoutRawMessageString.replacingOccurrences(of: "%s", with: "\(betCashoutValue)")
+
+        let submitCashoutAlert = UIAlertController(title: localized("cashout_verification"),
+                                                   message: cashoutMessageString,
                                                    preferredStyle: UIAlertController.Style.alert)
 
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { _ in
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
             self.activityIndicatorBaseView.isHidden = false
 
             let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
@@ -230,9 +233,9 @@ class SubmitedBetslipViewController: UIViewController {
     }
 
     func showCashoutInfo() {
-        let infoCashoutAlert = UIAlertController(title: localized("string_cashout"), message: localized("string_cashout_info"), preferredStyle: UIAlertController.Style.alert)
+        let infoCashoutAlert = UIAlertController(title: localized("cashout"), message: localized("cashout_info"), preferredStyle: UIAlertController.Style.alert)
 
-        infoCashoutAlert.addAction(UIAlertAction(title: "OK", style: .default))
+        infoCashoutAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
 
         present(infoCashoutAlert, animated: true, completion: nil)
 

@@ -38,17 +38,17 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
 
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"),
-                                                               description: localized("string_app_full_potential"),
-                                                               linkLabel: localized("string_verify_my_account"), alertType: .email)
+                let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+                                                               description: localized("app_full_potential"),
+                                                               linkLabel: localized("verify_my_account"), alertType: .email)
 
                 alertsArray.append(emailActivationAlertData)
             }
 
             if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"),
-                                                               description: localized("string_complete_profile_description"),
-                                                               linkLabel: localized("string_finish_up_profile"),
+                let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+                                                               description: localized("complete_profile_description"),
+                                                               linkLabel: localized("finish_up_profile"),
                                                                alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
@@ -64,18 +64,18 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
 
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"),
-                                                               description: localized("string_app_full_potential"),
-                                                               linkLabel: localized("string_verify_my_account"),
+                let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+                                                               description: localized("app_full_potential"),
+                                                               linkLabel: localized("verify_my_account"),
                                                                alertType: .email)
 
                 alertsArray.append(emailActivationAlertData)
             }
 
             if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"),
-                                                               description: localized("string_complete_profile_description"),
-                                                               linkLabel: localized("string_finish_up_profile"),
+                let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+                                                               description: localized("complete_profile_description"),
+                                                               linkLabel: localized("finish_up_profile"),
                                                                alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
@@ -169,7 +169,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         else {
             fatalError()
         }
-        headerView.configureWithTitle("Popular Games")
+        headerView.configureWithTitle(localized("popular_games"))
         return headerView
     }
 
@@ -183,7 +183,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 cells.append(cachedBannerCell)
             }
             else {
-                cells.append(BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? ""))
+                let cachedBannerCell = BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? "")
+                cachedBannerCellViewModel[banner.id] = cachedBannerCell
+                cells.append(cachedBannerCell)
             }
         }
         if let cachedBannerLineCellViewModel = cachedBannerLineCellViewModel {
@@ -243,4 +245,3 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
 }
-

@@ -65,7 +65,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
             as? TitleTableViewHeader {
-            headerView.configureWithTitle(localized("string_upcoming_highlights"))
+            headerView.configureWithTitle(localized("upcoming_highlights"))
             return headerView
         }
         return nil

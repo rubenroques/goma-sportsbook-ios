@@ -82,11 +82,11 @@ class HeaderTextFieldView: NibView {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
-                self.showPasswordLabel.text = localized("string_hide")
+                self.showPasswordLabel.text = localized("hide")
             }
             else {
                 self.textField.isSecureTextEntry = true
-                self.showPasswordLabel.text = localized("string_show")
+                self.showPasswordLabel.text = localized("show")
             }
         }
     }
@@ -188,13 +188,13 @@ class HeaderTextFieldView: NibView {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapShowPassword))
         self.showPassImageView.addGestureRecognizer(tapGestureRecognizer)
 
-        showPasswordLabel.text = localized("string_show")
+        showPasswordLabel.text = localized("show")
         showPasswordLabel.font = AppFont.with(type: .regular, size: 14.0)
         showPasswordLabel.textColor =  UIColor.App.headingMain
 
-        let text = localized("string_show")
+        let text = localized("show")
         let underlineAttriString = NSMutableAttributedString(string: text)
-        let range = (text as NSString).range(of: localized("string_show"))
+        let range = (text as NSString).range(of: localized("show"))
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
         showPasswordLabel.attributedText = underlineAttriString
         showPasswordLabel.isHidden = true
@@ -351,7 +351,7 @@ class HeaderTextFieldView: NibView {
         }
         datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
 
-        let doneButton = UIBarButtonItem.init(title: localized("string_done"), style: .done, target: self, action: #selector(self.datePickerDone))
+        let doneButton = UIBarButtonItem.init(title: localized("done"), style: .done, target: self, action: #selector(self.datePickerDone))
 
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -415,7 +415,7 @@ class HeaderTextFieldView: NibView {
     func dismissPickerView() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: localized("string_done"), style: .plain, target: self, action: #selector(pickerAction))
+        let button = UIBarButtonItem(title: localized("done"), style: .plain, target: self, action: #selector(pickerAction))
 
         toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
         toolBar.isUserInteractionEnabled = true

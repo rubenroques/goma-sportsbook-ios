@@ -56,20 +56,20 @@ class FullRegisterAddressCountryViewController: UIViewController {
     }
 
     func commonInit() {
-        closeButton.setTitle(localized("string_close"), for: .normal)
+        closeButton.setTitle(localized("close"), for: .normal)
         closeButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        progressLabel.text = localized("string_complete_signup")
+        progressLabel.text = localized("complete_signup")
         progressLabel.font = AppFont.with(type: .bold, size: 24)
 
-        titleLabel.text = localized("string_account_security")
+        titleLabel.text = localized("account_security")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        securityQuestionTextFieldView.setPlaceholderText(localized("string_security_question"))
+        securityQuestionTextFieldView.setPlaceholderText(localized("security_question"))
 
-        securityAnswerHeaderTextFieldView.setPlaceholderText(localized("string_security_answer"))
+        securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
 
-        continueButton.setTitle(localized("string_continue_"), for: .normal)
+        continueButton.setTitle(localized("continue_"), for: .normal)
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         continueButton.isEnabled = false
 

@@ -64,21 +64,21 @@ class SubmitedBetTableViewCell: UITableViewCell {
 
         self.baseView.layer.cornerRadius = 9
         
-        self.betAmountTitleLabel.text = "Bet Amount"
-        self.possibleWinningsTitleLabel.text = "Possible Winnings"
+        self.betAmountTitleLabel.text = localized("bet_amount")
+        self.possibleWinningsTitleLabel.text = localized("possible_winnings")
 
         self.cashoutLogoImageView.image = UIImage(systemName: "info.circle")
         let logoGesture = UITapGestureRecognizer(target: self, action: #selector(self.showPopover))
         self.cashoutLogoImageView.addGestureRecognizer(logoGesture)
         self.cashoutLogoImageView.isUserInteractionEnabled = true
 
-        self.cashoutTitleLabel.text = localized("string_cashout_available")
+        self.cashoutTitleLabel.text = localized("cashout_available")
         self.cashoutTitleLabel.font = AppFont.with(type: .semibold, size: 12)
 
         self.cashoutValueLabel.text = ""
         self.cashoutValueLabel.font = AppFont.with(type: .semibold, size: 14)
 
-        self.cashoutButton.setTitle(localized("string_cashout"), for: .normal)
+        self.cashoutButton.setTitle(localized("cashout"), for: .normal)
         self.cashoutButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         StyleHelper.styleButton(button: self.cashoutButton)
         self.cashoutButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
@@ -165,15 +165,15 @@ class SubmitedBetTableViewCell: UITableViewCell {
 
         if betHistoryEntry.type == "MULTIPLE" {
             let betCount = betHistoryEntry.selections?.count ?? 1
-            self.betTypeLabel.text = "Multiple (\(betCount))"
+            self.betTypeLabel.text = localized("multiple") + " (\(betCount))"
             self.oddBaseView.isHidden = true
         }
         else if betHistoryEntry.type == "SINGLE" {
-            self.betTypeLabel.text = "Simple"
+            self.betTypeLabel.text = localized("single")
             self.oddBaseView.isHidden = true
         }
         else if betHistoryEntry.type == "SYSTEM" {
-            self.betTypeLabel.text = "System"
+            self.betTypeLabel.text = localized("system")
             self.oddBaseView.isHidden = true
         }
 

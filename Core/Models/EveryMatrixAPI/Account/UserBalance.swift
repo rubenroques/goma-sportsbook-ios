@@ -33,5 +33,38 @@ extension EveryMatrix {
             case vendor = "vendor"
             case isBonus = "isBonusAccount"
         }
+
+        func userBalanceWalletUpdated(amount: Double?) -> Self {
+
+            return Self(id: self.id,
+                        name: self.name,
+                        currency: self.currency,
+                        amount: amount ?? self.amount,
+                        vendor: self.vendor,
+                        isBonus: self.isBonus
+            )
+        }
+    }
+
+    struct AccountBalance: Decodable {
+
+        var id: Int
+        var vendor: String
+        var type: String
+        var amount: Double
+        var bonusAmount: Double
+        var isFirstDeposit: Bool
+
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case vendor = "vendor"
+            case type = "type"
+            case amount = "amount"
+            case bonusAmount = "bonusAmount"
+            case isFirstDeposit = "isFirstDeposit"
+        }
+    }
+
+    struct AccountBalanceWatcher: Decodable {
     }
 }

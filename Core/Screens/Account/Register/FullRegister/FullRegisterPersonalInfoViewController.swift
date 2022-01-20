@@ -70,41 +70,41 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     func commonInit() {
 
-        closeButton.setTitle(localized("string_close"), for: .normal)
+        closeButton.setTitle(localized("close"), for: .normal)
         closeButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        progressLabel.text = localized("string_complete_signup")
+        progressLabel.text = localized("complete_signup")
         progressLabel.font = AppFont.with(type: .bold, size: 24)
 
-        titleLabel.text = localized("string_personal_information")
+        titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        titleHeaderTextFieldView.setPlaceholderText(localized("string_title"))
+        titleHeaderTextFieldView.setPlaceholderText(localized("title"))
         titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
-        firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
-        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextField)
+        firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
+        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.headerTextField)
 
-        lastNameHeaderTextFieldView.setPlaceholderText(localized("string_last_name"))
-        lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"), color: UIColor.App.headerTextField)
+        lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
+        lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.headerTextField)
 
-        countryHeaderTextFieldView.setPlaceholderText(localized("string_country"))
+        countryHeaderTextFieldView.setPlaceholderText(localized("country"))
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         countryHeaderTextFieldView.isUserInteractionEnabled = false
 
-        address1HeaderTextFieldView.setPlaceholderText(localized("string_address_1"))
+        address1HeaderTextFieldView.setPlaceholderText(localized("address_1"))
 
-        address2HeaderTextFieldView.setPlaceholderText(localized("string_address_2"))
+        address2HeaderTextFieldView.setPlaceholderText(localized("address_2"))
 
-        cityHeaderTextFieldView.setPlaceholderText(localized("string_city"))
+        cityHeaderTextFieldView.setPlaceholderText(localized("city"))
 
-        postalCodeHeaderTextFieldView.setPlaceholderText(localized("string_postal_code"))
+        postalCodeHeaderTextFieldView.setPlaceholderText(localized("postal_code"))
 
-        continueButton.setTitle(localized("string_continue_"), for: .normal)
+        continueButton.setTitle(localized("continue_"), for: .normal)
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         continueButton.isEnabled = false
 

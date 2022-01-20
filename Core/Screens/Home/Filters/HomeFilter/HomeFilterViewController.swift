@@ -86,13 +86,13 @@ class HomeFilterViewController: UIViewController {
         
         defaultMarket = filterValues!.defaultMarket
 
-        navigationLabel.text = localized("string_filters")
+        navigationLabel.text = localized("filters")
         navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
-        navigationResetButton.setTitle(localized("string_reset"), for: .normal)
+        navigationResetButton.setTitle(localized("reset"), for: .normal)
         navigationResetButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
-        navigationCancelButton.setTitle(localized("string_cancel"), for: .normal)
+        navigationCancelButton.setTitle(localized("cancel"), for: .normal)
         navigationCancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
         sortByFilterCollapseView.isHidden = true
@@ -105,7 +105,7 @@ class HomeFilterViewController: UIViewController {
         
         setupOddsSection()
 
-        applyButton.setTitle(localized("string_apply"), for: .normal)
+        applyButton.setTitle(localized("apply"), for: .normal)
         applyButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
         applyButton.layer.cornerRadius = CornerRadius.button
 
@@ -153,14 +153,14 @@ class HomeFilterViewController: UIViewController {
         }
         lowerBoundTimeRange = values[0]
         highBoundTimeRange = values[1]
-        timeRangeCollapseView.setTitle(title: localized("string_time_today_only"))
+        timeRangeCollapseView.setTitle(title: localized("time_today_only"))
         timeRangeCollapseView.hasCheckbox = false
 
         let contentView = timeRangeCollapseView.getContentView()
         self.timeRangeMultiSlider = MultiSlider()
         timeRangeMultiSlider?.backgroundColor = UIColor.App.secondaryBackground
         timeRangeMultiSlider?.orientation = .horizontal
-        timeRangeMultiSlider?.minimumTextualValue = "Now"
+        timeRangeMultiSlider?.minimumTextualValue = localized("now")
         timeRangeMultiSlider?.minimumValue = minValue
         timeRangeMultiSlider?.maximumValue = maxValue
         timeRangeMultiSlider?.outerTrackColor = UIColor.App.fadedGrayLine
@@ -194,7 +194,7 @@ class HomeFilterViewController: UIViewController {
     }
 
     func setupAvailableMarketsSection(value: String) {
-        availableMarketsCollapseView.setTitle(title: localized("string_default_market"))
+        availableMarketsCollapseView.setTitle(title: localized("default_market"))
         availableMarketsCollapseView.hasCheckbox = false
 
         var filterMarketsId: [String] = []
@@ -240,7 +240,7 @@ class HomeFilterViewController: UIViewController {
         
         if let defaultMarketInit = MainMarketType.init(rawValue: String(viewTapped.viewId)) {
             defaultMarket = defaultMarketInit
-            oddsCollapseView.setTitleWithBold(title: localized("string_odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
+            oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
         }
         
     }
@@ -251,7 +251,7 @@ class HomeFilterViewController: UIViewController {
 
         lowerBoundOddsRange = filterValues!.lowerBoundOddsRange
         highBoundOddsRange = filterValues!.highBoundOddsRange
-        oddsCollapseView.setTitleWithBold(title: localized("string_odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
+        oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
         oddsCollapseView.hasCheckbox = false
         let contentView = oddsCollapseView.getContentView()
   

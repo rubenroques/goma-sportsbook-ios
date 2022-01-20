@@ -15,5 +15,5 @@ extension Notification.Name {
     static let userSessionConnected = Notification.Name("userSessionConnected")
     static let userSessionDisconnected = Notification.Name("userSessionDisconnected")
     static let userSessionForcedLogoutDisconnected = Notification.Name("userSessionForcedLogoutDisconnected")
-    
+
 }

@@ -60,21 +60,21 @@ class RequestLocationAccessViewController: UIViewController {
         permissionImageView.contentMode = .scaleAspectFill
         permissionTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 20)
         permissionTitleLabel.numberOfLines = 0
-        permissionTitleLabel.text = localized("string_permission_location")
+        permissionTitleLabel.text = localized("permission_location")
         permissionTitleLabel.sizeToFit()
         permissionTextLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         permissionTextLabel.numberOfLines = 0
-        permissionTextLabel.text = localized("string_permission_location_text")
+        permissionTextLabel.text = localized("permission_location_text")
         permissionTextLabel.sizeToFit()
         permissionSubtitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
         permissionSubtitleLabel.numberOfLines = 0
-        permissionSubtitleLabel.text = localized("string_permission_location_subtitle")
+        permissionSubtitleLabel.text = localized("permission_location_subtitle")
         permissionSubtitleLabel.sizeToFit()
 
         locationButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         locationButton.layer.cornerRadius = 5
         locationButton.layer.borderWidth = 1
-        locationButton.setTitle(localized("string_enable_location"), for: .normal)
+        locationButton.setTitle(localized("enable_location"), for: .normal)
     }
 
     @IBAction private func enableLocationAction() {

@@ -77,18 +77,18 @@ class FullRegisterDocumentsViewController: UIViewController {
 
     func commonInit() {
         //
-        closeButton.setTitle(localized("string_close"), for: .normal)
+        closeButton.setTitle(localized("close"), for: .normal)
         closeButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        progressLabel.text = localized("string_complete_signup")
+        progressLabel.text = localized("complete_signup")
         progressLabel.font = AppFont.with(type: .bold, size: 24)
 
-        titleLabel.text = localized("string_documents_id")
+        titleLabel.text = localized("documents_id")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        idHeaderTextFieldView.setPlaceholderText(localized("string_id_number"))
+        idHeaderTextFieldView.setPlaceholderText(localized("id_number"))
 
-        submitButton.setTitle(localized("string_submit"), for: .normal)
+        submitButton.setTitle(localized("submit"), for: .normal)
         submitButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         submitButton.isEnabled = false
 
@@ -272,7 +272,7 @@ class FullRegisterDocumentsViewController: UIViewController {
                     ()
                 }
             } receiveValue: { _ in
-                self.showAlert(type: .success, text: localized("string_profile_updated_success"))
+                self.showAlert(type: .success, text: localized("profile_updated_success"))
             }
             .store(in: &cancellables)
     }

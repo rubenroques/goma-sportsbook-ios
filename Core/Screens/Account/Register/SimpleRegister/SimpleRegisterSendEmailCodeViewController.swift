@@ -62,17 +62,17 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
     func commonInit() {
 
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 26)
-        titleLabel.text = localized("string_enter_code")
+        titleLabel.text = localized("enter_code")
 
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 15)
-        textLabel.text = localized("string_enter_code_text")
+        textLabel.text = localized("enter_code_text")
 
-        codeHeaderTextFieldView.setPlaceholderText(localized("string_code"))
+        codeHeaderTextFieldView.setPlaceholderText(localized("code"))
 
-        doneButton.setTitle(localized("string_done"), for: .normal)
+        doneButton.setTitle(localized("done"), for: .normal)
         doneButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
 
-        pasteClipboardButton.setTitle(localized("string_paste_clipboard"), for: .normal)
+        pasteClipboardButton.setTitle(localized("paste_clipboard"), for: .normal)
         pasteClipboardButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 18)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
