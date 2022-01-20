@@ -17,6 +17,7 @@ enum GomaGamingService {
     case login(username: String, password: String, deviceToken: String)
     case suggestedBets
     case favorites(favorites: String)
+    case matchStats(matchId: String)
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
 }
 
@@ -49,6 +50,8 @@ extension GomaGamingService: Endpoint {
             return "/api/betting/\(apiVersion)/betslip/suggestions"
         case .favorites:
             return "/api/favorites/\(apiVersion)"
+        case .matchStats(let matchId):
+            return "/api/betting/\(apiVersion)/events/\(matchId)/stats"
         }
     }
 
@@ -59,7 +62,8 @@ extension GomaGamingService: Endpoint {
         case .geolocation(let latitude, let longitude):
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
-        case .settings, .simpleRegister, .modalPopUpDetails, .login, .suggestedBets, .favorites:
+        case .settings, .simpleRegister, .modalPopUpDetails, .login,
+                .suggestedBets, .favorites, .matchStats:
             return nil
         }
     }
@@ -85,7 +89,8 @@ extension GomaGamingService: Endpoint {
         switch self {
         case .test:
             return .get
-        case .geolocation, .settings, .modalPopUpDetails, .suggestedBets:
+        case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
+                .matchStats:
             return .get
         case .log, .simpleRegister, .login, .favorites:
             return .post

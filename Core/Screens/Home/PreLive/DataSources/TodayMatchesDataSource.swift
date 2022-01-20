@@ -11,6 +11,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var todayMatches: [Match] = []
 
+    var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
@@ -27,7 +28,12 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         case 0:
             return self.todayMatches.count
         case 1:
-            return 1
+            if self.canRequestNextPageAction?() ?? true {
+                return 1
+            }
+            else {
+                return 0
+            }
         default:
             return 0
         }

@@ -45,9 +45,9 @@ class LiveEventsViewModel: NSObject {
     var currentLiveSportsPublisher: AnyCancellable?
 
     var didChangeSportType = false
-    var selectedSportId: SportType {
+    var selectedSport: Sport {
         willSet {
-            if newValue != self.selectedSportId {
+            if newValue.id != self.selectedSport.id {
                 didChangeSportType = true
             }
         }
@@ -76,9 +76,9 @@ class LiveEventsViewModel: NSObject {
     private var allMatchesPage = 1
     private var allMatchesHasMorePages = true
 
-    init(selectedSportId: SportType) {
+    init(selectedSport: Sport) {
 
-        self.selectedSportId = selectedSportId
+        self.selectedSport = selectedSport
 
         isLoading = isLoadingAllEventsList.eraseToAnyPublisher()
 
@@ -105,7 +105,7 @@ class LiveEventsViewModel: NSObject {
         //self.fetchBanners()
         self.fetchAllMatches()
 
-        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSportId.rawValue] {
+        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
 
             self.currentLiveSportsPublisher = sportPublisher
                 .receive(on: DispatchQueue.main)
@@ -122,7 +122,7 @@ class LiveEventsViewModel: NSObject {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: liveSportsRegister)
         }
 
-        var endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
+        let endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
                                                       language: "en")
 
         self.liveSportsPublisher?.cancel()
@@ -130,13 +130,12 @@ class LiveEventsViewModel: NSObject {
 
         self.liveSportsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
-
+                    print("Error retrieving liveSportsPublisher data!")
                 case .finished:
-                    print("Data retrieved!")
+                    ()
                 }
             }, receiveValue: { [weak self] state in
                 switch state {
@@ -159,7 +158,7 @@ class LiveEventsViewModel: NSObject {
     func setupSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {
         sportsRepository.processSportsAggregator(aggregator)
 
-        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSportId.rawValue] {
+        if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
 
             self.currentLiveSportsPublisher = sportPublisher
                 .receive(on: DispatchQueue.main)
@@ -294,9 +293,9 @@ class LiveEventsViewModel: NSObject {
         let matchesCount = self.allMatchesCount * self.allMatchesPage
 
         let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                     sportId: self.selectedSportId.typeId,
-                                                        matchesCount: matchesCount)
+                                                     language: "en",
+                                                     sportId: self.selectedSport.id,
+                                                     matchesCount: matchesCount)
 
         self.allMatchesPublisher?.cancel()
         self.allMatchesPublisher = nil
@@ -314,16 +313,16 @@ class LiveEventsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("SportsViewModel popularMatchesPublisher connect")
+                    print("LiveEventsViewModel popularMatchesPublisher connect")
                     self?.allMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("SportsViewModel popularMatchesPublisher initialContent")
+                    print("LiveEventsViewModel popularMatchesPublisher initialContent")
                     self?.setupAllMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateAllMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-                    print("SportsViewModel popularMatchesPublisher updatedContent")
+                    print("LiveEventsViewModel popularMatchesPublisher updatedContent")
                 case .disconnect:
-                    print("SportsViewModel popularMatchesPublisher disconnect")
+                    print("LiveEventsViewModel popularMatchesPublisher disconnect")
                 }
             })
     }
@@ -353,12 +352,12 @@ class LiveEventsViewModel: NSObject {
                 case .connect(let publisherIdentifiable):
                     self?.bannersInfoRegister = publisherIdentifiable
                 case .initialContent(let responde):
-                    print("SportsViewModel bannersInfoPublisher initialContent")
+                    print("LiveEventsViewModel bannersInfoPublisher initialContent")
                     self?.banners = responde.records ?? []
                 case .updatedContent:
-                    print("SportsViewModel bannersInfoPublisher updatedContent")
+                    print("LiveEventsViewModel bannersInfoPublisher updatedContent")
                 case .disconnect:
-                    print("SportsViewModel bannersInfoPublisher disconnect")
+                    print("LiveEventsViewModel bannersInfoPublisher disconnect")
                 }
                 self?.updateContentList()
             })

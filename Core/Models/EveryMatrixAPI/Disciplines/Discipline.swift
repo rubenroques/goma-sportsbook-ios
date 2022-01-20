@@ -11,7 +11,7 @@ extension EveryMatrix {
     struct Discipline: Decodable {
 
         let type: String
-        let id: String?
+        let id: String
         let name: String?
         let numberOfLiveEvents: Int?
         let showEventCategory: Bool?

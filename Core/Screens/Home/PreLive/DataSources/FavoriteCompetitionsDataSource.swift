@@ -17,7 +17,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
-    var matchDataSourceWentLive: (() -> Void)?
+    var matchWentLiveAction: (() -> Void)?
 
     init(favoriteCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions
@@ -57,7 +57,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
                 self.didSelectMatchAction?(match)
             }
             cell.matchWentLive = {
-                self.matchDataSourceWentLive?()
+                self.matchWentLiveAction?()
             }
 
             return cell

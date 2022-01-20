@@ -14,6 +14,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var participantsNameLabel: UILabel!
     @IBOutlet private weak var participantsCountryImageView: UIImageView!
+
+    @IBOutlet private weak var marketStatsStackView: UIStackView!
     @IBOutlet private weak var marketNameLabel: UILabel!
 
     @IBOutlet private weak var oddsStackView: UIStackView!
@@ -33,6 +35,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var leftDownChangeOddValueImage: UIImageView!
     @IBOutlet private weak var rightUpChangeOddValueImage: UIImageView!
     @IBOutlet private weak var rightDownChangeOddValueImage: UIImageView!
+
+    @IBOutlet private weak var statsBaseView: UIView!
 
     var match: Match?
     var market: Market?
@@ -99,6 +103,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        let stackSubviews = self.marketStatsStackView.arrangedSubviews
+        stackSubviews.forEach({
+            if $0 != self.marketNameLabel {
+                self.marketStatsStackView.removeArrangedSubview($0)
+                $0.removeFromSuperview()
+            }
+        })
+
         self.match = nil
         self.market = nil
 
@@ -159,6 +171,20 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
+
+        let randomInt = Int.random(in: 0..<11)
+
+        if randomInt > 7 {
+            let homeAwayCardStatsView = HomeAwayCardStatsView()
+            self.marketStatsStackView.addArrangedSubview(homeAwayCardStatsView)
+        }
+        else if randomInt > 3 {
+            let headToHeadCardStatsView = HeadToHeadCardStatsView()
+            self.marketStatsStackView.addArrangedSubview(headToHeadCardStatsView)
+        }
+        else {
+
+        }
 
         self.match = match
         self.market = market

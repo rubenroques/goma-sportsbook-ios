@@ -11,6 +11,30 @@ import OrderedCollections
 
 class PreLiveEventsViewModel: NSObject {
 
+    var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
+
+    var competitionGroupsPublisher: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
+
+    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.myGames)
+    enum MatchListType {
+        case myGames
+        case today
+        case competitions
+        case favoriteGames
+        case favoriteCompetitions
+    }
+
+    var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.noEmptyNoFilter)
+    enum ScreenState {
+        case emptyAndFilter
+        case emptyNoFilter
+        case noEmptyNoFilter
+        case noEmptyAndFilter
+    }
+
+    //
+    // Private vars
+    //
     private var banners: [EveryMatrix.BannerInfo] = []
 
     private var userFavoriteMatches: [Match] = []
@@ -24,31 +48,13 @@ class PreLiveEventsViewModel: NSObject {
     private var favoriteMatches: [Match] = []
     private var favoriteCompetitions: [Competition] = []
 
-    var competitionGroupsPublisher: CurrentValueSubject<[CompetitionGroup], Never> = .init([])
-
-    var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.myGames)
-    enum MatchListType {
-        case myGames
-        case today
-        case competitions
-        case favoriteGames
-        case favoriteCompetitions
-    }
-
-    enum ScreenState {
-        case emptyAndFilter
-        case emptyNoFilter
-        case noEmptyNoFilter
-        case noEmptyAndFilter
-    }
-    
-    var screenStatePublisher: CurrentValueSubject<ScreenState, Never> = .init(.noEmptyNoFilter)
-   
     private var popularMatchesDataSource = PopularMatchesDataSource(banners: [], matches: [])
     private var todayMatchesDataSource = TodayMatchesDataSource(todayMatches: [])
     private var competitionsDataSource = CompetitionsDataSource(competitions: [])
     private var favoriteMatchesDataSource = FavoriteMatchesDataSource(userFavoriteMatches: [])
     private var favoriteCompetitionsDataSource = FavoriteCompetitionsDataSource(favoriteCompetitions: [])
+
+    private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     private var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
@@ -84,7 +90,6 @@ class PreLiveEventsViewModel: NSObject {
         }
     }
 
-    var dataDidChangedAction: (() -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
@@ -113,10 +118,18 @@ class PreLiveEventsViewModel: NSObject {
 
     private var popularMatchesCount = 10
     private var popularMatchesPage = 1
-    private var popularMatchesHasNextPage = true
+    private var popularMatchesHasNextPage = true {
+        didSet {
+
+        }
+    }
     private var todayMatchesCount = 10
     private var todayMatchesPage = 1
-    private var todayMatchesHasNextPage = true
+    private var todayMatchesHasNextPage = true {
+        didSet {
+
+        }
+    }
     
     var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
@@ -143,8 +156,20 @@ class PreLiveEventsViewModel: NSObject {
             self?.didSelectActivationAlertAction?(alertType)
         }
 
+        // Match Stats ViewModel for Match
+//        self.popularMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
+//            return self?.matchStatsViewModel(forMatch: match)
+//        }
+
         // NextPage
         //
+        self.popularMatchesDataSource.canRequestNextPageAction = { [weak self] in
+            return self?.popularMatchesHasNextPage ?? false
+        }
+        self.todayMatchesDataSource.canRequestNextPageAction = { [weak self] in
+            return self?.todayMatchesHasNextPage ?? false
+        }
+
         self.popularMatchesDataSource.requestNextPageAction = { [weak self] in
             self?.fetchPopularMatchesNextPage()
         }
@@ -152,7 +177,7 @@ class PreLiveEventsViewModel: NSObject {
             self?.fetchTodayMatchesNextPage()
         }
 
-        // didSelectMatchA
+        // Did Select a Match
         //
         self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
@@ -166,15 +191,17 @@ class PreLiveEventsViewModel: NSObject {
         self.favoriteMatchesDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
-        self.favoriteMatchesDataSource.matchDataSourceWentLive = { [weak self] in
-            self?.dataDidChangedAction?()
-        }
-
         self.favoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
-        self.favoriteCompetitionsDataSource.matchDataSourceWentLive = { [weak self] in
-            self?.dataDidChangedAction?()
+
+        // Did Select a Match
+        //
+        self.favoriteMatchesDataSource.matchWentLiveAction = { [weak self] in
+            self?.dataChangedPublisher.send()
+        }
+        self.favoriteCompetitionsDataSource.matchWentLiveAction = { [weak self] in
+            self?.dataChangedPublisher.send()
         }
 
         self.setupPublishers()
@@ -271,14 +298,24 @@ class PreLiveEventsViewModel: NSObject {
                 self.screenStatePublisher.send(.noEmptyNoFilter)
             }
         }
-        
-        // Todo - Code Review
-        DispatchQueue.main.async {
-            self.dataDidChangedAction?()
-        }
-        
+
+        self.dataChangedPublisher.send()
     }
 
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+        if let viewModel = cachedMatchStatsViewModels[match.id] {
+            return viewModel
+        }
+        else {
+            let viewModel = MatchStatsViewModel(match: match)
+            cachedMatchStatsViewModels[match.id] = viewModel
+            return viewModel
+        }
+    }
+
+    //
+    // MARK: - Filters
+    //
     func filterPopularMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
         guard let filterOptionsValue = filtersOptions else {
             return matches
@@ -409,215 +446,6 @@ class PreLiveEventsViewModel: NSObject {
         return filteredCompetitions
     }
 
-    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents,
-                                                 shouldClear: true)
-        self.favoriteMatches = Env.everyMatrixStorage.matchesForListType(.favoriteMatchEvents)
-
-        self.favoriteMatches = self.favoriteMatches.filter({
-            $0.sportType == self.selectedSport.type.id
-        })
-
-        self.updateContentList()
-    }
-
-    private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .popularEvents,
-                                                 shouldClear: true)
-
-        let localPopularMatches = Env.everyMatrixStorage.matchesForListType(.popularEvents)
-        if localPopularMatches.count < self.popularMatchesCount * self.popularMatchesPage {
-            self.popularMatchesHasNextPage = false
-        }
-
-        self.popularMatches = localPopularMatches
-
-        self.isLoadingPopularList.send(false)
-        self.updateContentList()
-    }
-
-    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .todayEvents,
-                                                 shouldClear: true)
-
-        let localTodayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
-        if localTodayMatches.count < self.todayMatchesCount * self.todayMatchesPage {
-            self.todayMatchesHasNextPage = false
-        }
-
-        self.todayMatches = localTodayMatches
-
-        self.isLoadingTodayList.send(false)
-
-        self.updateContentList()
-       
-    }
-
-    private func setupCompetitionGroups() {
-        var addedCompetitionIds: [String] = []
-
-        var popularCompetitions = [Competition]()
-        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values where (popularCompetition.sportId ?? "") == self.selectedSport.type.typeId {
-
-            let competition = Competition(id: popularCompetition.id, name: popularCompetition.name ?? "")
-            addedCompetitionIds.append(popularCompetition.id)
-            popularCompetitions.append(competition)
-        }
-
-        let popularCompetitionGroup = CompetitionGroup(id: "0",
-                                                        name: localized("string_popular_competitions"),
-                                                        aggregationType: CompetitionGroup.AggregationType.popular,
-                                                        competitions: popularCompetitions)
-        var popularCompetitionGroups = [popularCompetitionGroup]
-
-        var competitionsGroups = [CompetitionGroup]()
-        for location in Env.everyMatrixStorage.locations.values {
-
-            var locationCompetitions = [Competition]()
-
-            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? []) {
-
-                guard
-                    let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
-                    (rawCompetition.sportId ?? "") == self.selectedSport.type.typeId
-                else {
-                    continue
-                }
-
-                let competition = Competition(id: rawCompetition.id, name: rawCompetition.name ?? "")
-                addedCompetitionIds.append(rawCompetition.id)
-                locationCompetitions.append(competition)
-            }
-
-            let locationCompetitionGroup = CompetitionGroup(id: location.id,
-                                                            name: location.name ?? "",
-                                                            aggregationType: CompetitionGroup.AggregationType.region,
-                                                            competitions: locationCompetitions)
-
-            if locationCompetitions.isNotEmpty {
-                competitionsGroups.append(locationCompetitionGroup)
-            }
-        }
-        
-        popularCompetitionGroups.append(contentsOf: competitionsGroups)
-
-        self.competitionGroupsPublisher.send(popularCompetitionGroups)
-
-        self.updateContentList()
-    }
-
-    private func setupCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .competitions,
-                                                 shouldClear: true)
-
-        let appMatches = Env.everyMatrixStorage.matchesForListType(.competitions)
-
-        self.competitionsMatches = appMatches
-
-        var competitionsMatches = OrderedDictionary<String, [Match]>()
-        for match in appMatches {
-            if let matchesForId = competitionsMatches[match.competitionId] {
-                var newMatchesForId = matchesForId
-                newMatchesForId.append(match)
-                competitionsMatches[match.competitionId] = newMatchesForId
-            }
-            else {
-                competitionsMatches[match.competitionId] = [match]
-            }
-        }
-
-        var processedCompetitions: [Competition] = []
-        for competitionId in competitionsMatches.keys {
-            if let tournament = Env.everyMatrixStorage.tournaments[competitionId] {
-
-                var location: Location?
-                if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
-                    location = Location(id: rawLocation.id,
-                                    name: rawLocation.name ?? "",
-                                    isoCode: rawLocation.code ?? "")
-                }
-
-                let competition = Competition(id: competitionId,
-                                              name: tournament.name ?? "",
-                                              matches: (competitionsMatches[competitionId] ?? []),
-                                              venue: location)
-                processedCompetitions.append(competition)
-            }
-        }
-
-        self.competitions = processedCompetitions
-        
-        self.isLoadingCompetitions.send(false)
-
-        self.updateContentList()
-    }
-
-    private func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteCompetitionEvents,
-                                                 shouldClear: true)
-
-        let appMatches = Env.everyMatrixStorage.matchesForListType(.favoriteCompetitionEvents)
-
-        var competitionsMatches = OrderedDictionary<String, [Match]>()
-        for match in appMatches {
-            if let matchesForId = competitionsMatches[match.competitionId] {
-                var newMatchesForId = matchesForId
-                newMatchesForId.append(match)
-                competitionsMatches[match.competitionId] = newMatchesForId
-            }
-            else {
-                competitionsMatches[match.competitionId] = [match]
-            }
-        }
-
-        var processedCompetitions: [Competition] = []
-        for competitionId in competitionsMatches.keys {
-            if let tournament = Env.everyMatrixStorage.tournaments[competitionId], let tournamentSportTypeId = tournament.sportId {
-
-                if tournamentSportTypeId == self.selectedSport.type.id {
-
-                    var location: Location?
-                    if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
-                        location = Location(id: rawLocation.id,
-                                        name: rawLocation.name ?? "",
-                                        isoCode: rawLocation.code ?? "")
-                    }
-
-                    let competition = Competition(id: competitionId,
-                                                  name: tournament.name ?? "",
-                                                  matches: (competitionsMatches[competitionId] ?? []),
-                                                  venue: location)
-                    processedCompetitions.append(competition)
-                }
-
-            }
-        }
-
-        self.favoriteCompetitions = processedCompetitions
-
-        self.updateContentList()
-    }
-
-    private func updatePopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-    }
-
-    private func updateTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-    }
-
-    private func updateCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-    }
-
-    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-    }
-
-    private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
-    }
-
     //
     // MARK: - Fetches
     //
@@ -641,7 +469,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                         language: "en",
-                                                        sportId: self.selectedSport.type.typeId,
+                                                        sportId: self.selectedSport.id,
                                                         matchesCount: matchesCount)
         self.popularMatchesPublisher?.cancel()
         self.popularMatchesPublisher = nil
@@ -675,6 +503,9 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     private func fetchTodayMatchesNextPage() {
+        if !todayMatchesHasNextPage {
+            return
+        }
         self.todayMatchesPage += 1
         self.fetchTodayMatches()
     }
@@ -689,13 +520,13 @@ class PreLiveEventsViewModel: NSObject {
 
         var endpoint = TSRouter.todayMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                       language: "en",
-                                                      sportId: self.selectedSport.type.typeId,
+                                                      sportId: self.selectedSport.id,
                                                       matchesCount: matchesCount)
 
         if withFilter {
             endpoint = TSRouter.todayMatchesFilterPublisher(operatorId: Env.appSession.operatorId,
                                                           language: "en",
-                                                            sportId: self.selectedSport.type.typeId,
+                                                            sportId: self.selectedSport.id,
                                                           matchesCount: matchesCount, timeRange: timeRange)
         }
 
@@ -732,7 +563,7 @@ class PreLiveEventsViewModel: NSObject {
     func fetchCompetitionsFilters() {
 
         let language = "en"
-        let sportId = self.selectedSport.type.typeId
+        let sportId = self.selectedSport.id
 
         let popularTournamentsPublisher = Env.everyMatrixClient.manager
             .getModel(router: TSRouter.getCustomTournaments(language: language, sportId: sportId),
@@ -840,7 +671,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                              language: "en",
-                                                             sportId: self.selectedSport.type.typeId,
+                                                             sportId: self.selectedSport.id,
                                                              events: ids)
 
         self.competitionsMatchesPublisher?.cancel()
@@ -882,7 +713,7 @@ class PreLiveEventsViewModel: NSObject {
 
         let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
                                                              language: "en",
-                                                             sportId: self.selectedSport.type.typeId,
+                                                             sportId: self.selectedSport.id,
                                                              events: ids)
 
         self.favoriteCompetitionsMatchesPublisher?.cancel()
@@ -998,8 +829,221 @@ class PreLiveEventsViewModel: NSObject {
                 }
                 self?.updateContentList()
             })
+    }
+
+    //
+    //
+    // MARK: - Setups
+    //
+
+    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents,
+                                                 shouldClear: true)
+        self.favoriteMatches = Env.everyMatrixStorage.matchesForListType(.favoriteMatchEvents)
+
+        self.favoriteMatches = self.favoriteMatches.filter({
+            $0.sportType == self.selectedSport.id
+        })
+
+        self.updateContentList()
+    }
+
+    private func setupPopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .popularEvents,
+                                                 shouldClear: true)
+
+        let localPopularMatches = Env.everyMatrixStorage.matchesForListType(.popularEvents)
+        if localPopularMatches.count < self.popularMatchesCount * self.popularMatchesPage {
+            self.popularMatchesHasNextPage = false
+        }
+
+        self.popularMatches = localPopularMatches
+
+        self.isLoadingPopularList.send(false)
+        self.updateContentList()
+    }
+
+    private func setupTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .todayEvents,
+                                                 shouldClear: true)
+
+        let localTodayMatches = Env.everyMatrixStorage.matchesForListType(.todayEvents)
+        if localTodayMatches.count < self.todayMatchesCount * self.todayMatchesPage {
+            self.todayMatchesHasNextPage = false
+        }
+        self.todayMatches = localTodayMatches
+
+        self.isLoadingTodayList.send(false)
+
+        self.updateContentList()
 
     }
+
+    private func setupCompetitionGroups() {
+        var addedCompetitionIds: [String] = []
+
+        var popularCompetitions = [Competition]()
+        for popularCompetition in Env.everyMatrixStorage.popularTournaments.values where (popularCompetition.sportId ?? "") == self.selectedSport.id {
+
+            let competition = Competition(id: popularCompetition.id, name: popularCompetition.name ?? "")
+            addedCompetitionIds.append(popularCompetition.id)
+            popularCompetitions.append(competition)
+        }
+
+        let popularCompetitionGroup = CompetitionGroup(id: "0",
+                                                        name: localized("string_popular_competitions"),
+                                                        aggregationType: CompetitionGroup.AggregationType.popular,
+                                                        competitions: popularCompetitions)
+        var popularCompetitionGroups = [popularCompetitionGroup]
+
+        var competitionsGroups = [CompetitionGroup]()
+        for location in Env.everyMatrixStorage.locations.values {
+
+            var locationCompetitions = [Competition]()
+
+            for rawCompetitionId in (Env.everyMatrixStorage.tournamentsForLocation[location.id] ?? []) {
+
+                guard
+                    let rawCompetition = Env.everyMatrixStorage.tournaments[rawCompetitionId],
+                    (rawCompetition.sportId ?? "") == self.selectedSport.id
+                else {
+                    continue
+                }
+
+                let competition = Competition(id: rawCompetition.id, name: rawCompetition.name ?? "")
+                addedCompetitionIds.append(rawCompetition.id)
+                locationCompetitions.append(competition)
+            }
+
+            let locationCompetitionGroup = CompetitionGroup(id: location.id,
+                                                            name: location.name ?? "",
+                                                            aggregationType: CompetitionGroup.AggregationType.region,
+                                                            competitions: locationCompetitions)
+
+            if locationCompetitions.isNotEmpty {
+                competitionsGroups.append(locationCompetitionGroup)
+            }
+        }
+
+        popularCompetitionGroups.append(contentsOf: competitionsGroups)
+
+        self.competitionGroupsPublisher.send(popularCompetitionGroups)
+
+        self.updateContentList()
+    }
+
+    private func setupCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .competitions,
+                                                 shouldClear: true)
+
+        let appMatches = Env.everyMatrixStorage.matchesForListType(.competitions)
+
+        self.competitionsMatches = appMatches
+
+        var competitionsMatches = OrderedDictionary<String, [Match]>()
+        for match in appMatches {
+            if let matchesForId = competitionsMatches[match.competitionId] {
+                var newMatchesForId = matchesForId
+                newMatchesForId.append(match)
+                competitionsMatches[match.competitionId] = newMatchesForId
+            }
+            else {
+                competitionsMatches[match.competitionId] = [match]
+            }
+        }
+
+        var processedCompetitions: [Competition] = []
+        for competitionId in competitionsMatches.keys {
+            if let tournament = Env.everyMatrixStorage.tournaments[competitionId] {
+
+                var location: Location?
+                if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
+                    location = Location(id: rawLocation.id,
+                                    name: rawLocation.name ?? "",
+                                    isoCode: rawLocation.code ?? "")
+                }
+
+                let competition = Competition(id: competitionId,
+                                              name: tournament.name ?? "",
+                                              matches: (competitionsMatches[competitionId] ?? []),
+                                              venue: location)
+                processedCompetitions.append(competition)
+            }
+        }
+
+        self.competitions = processedCompetitions
+
+        self.isLoadingCompetitions.send(false)
+
+        self.updateContentList()
+    }
+
+    private func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteCompetitionEvents,
+                                                 shouldClear: true)
+
+        let appMatches = Env.everyMatrixStorage.matchesForListType(.favoriteCompetitionEvents)
+
+        var competitionsMatches = OrderedDictionary<String, [Match]>()
+        for match in appMatches {
+            if let matchesForId = competitionsMatches[match.competitionId] {
+                var newMatchesForId = matchesForId
+                newMatchesForId.append(match)
+                competitionsMatches[match.competitionId] = newMatchesForId
+            }
+            else {
+                competitionsMatches[match.competitionId] = [match]
+            }
+        }
+
+        var processedCompetitions: [Competition] = []
+        for competitionId in competitionsMatches.keys {
+            if let tournament = Env.everyMatrixStorage.tournaments[competitionId], let tournamentSportTypeId = tournament.sportId {
+
+                if tournamentSportTypeId == self.selectedSport.id {
+
+                    var location: Location?
+                    if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
+                        location = Location(id: rawLocation.id,
+                                        name: rawLocation.name ?? "",
+                                        isoCode: rawLocation.code ?? "")
+                    }
+
+                    let competition = Competition(id: competitionId,
+                                                  name: tournament.name ?? "",
+                                                  matches: (competitionsMatches[competitionId] ?? []),
+                                                  venue: location)
+                    processedCompetitions.append(competition)
+                }
+
+            }
+        }
+
+        self.favoriteCompetitions = processedCompetitions
+
+        self.updateContentList()
+    }
+
+    private func updatePopularAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+    }
+
+    private func updateTodayAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+    }
+
+    private func updateCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+    }
+
+    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+    }
+
+    private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
+    }
+
 
 }
 

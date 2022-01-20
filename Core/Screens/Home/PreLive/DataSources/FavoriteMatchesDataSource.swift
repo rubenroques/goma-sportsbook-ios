@@ -11,9 +11,8 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
 
     var userFavoriteMatches: [Match] = []
 
-    var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
-    var matchDataSourceWentLive: (() -> Void)?
+    var matchWentLiveAction: (() -> Void)?
 
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
@@ -61,7 +60,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
 
                     cell.matchWentLive = {
                         DispatchQueue.main.async {
-                            self.matchDataSourceWentLive?()
+                            self.matchWentLiveAction?()
                         }
                     }
 

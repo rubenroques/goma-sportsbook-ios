@@ -44,7 +44,7 @@ class HomeViewController: UIViewController {
     @IBOutlet private var accountValueLabel: UILabel!
 
     // Child view controllers
-    lazy var preLiveViewController = PreLiveEventsViewController()
+    lazy var preLiveViewController = PreLiveEventsViewController(selectedSport: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
 
     // Loaded view controllers
@@ -52,7 +52,6 @@ class HomeViewController: UIViewController {
     var liveEventsViewControllerLoaded = false
 
     var currentSport: Sport
-    var currentSportType: SportType
 
     // Combine
     var cancellables = Set<AnyCancellable>()
@@ -91,7 +90,7 @@ class HomeViewController: UIViewController {
     //
     init(initialScreen: TabItem = .sports) {
         self.selectedTabItem = initialScreen
-        self.currentSportType = .football
+        self.currentSport = Sport.football
         super.init(nibName: "HomeViewController", bundle: nil)
     }
 
@@ -304,17 +303,18 @@ class HomeViewController: UIViewController {
         }
     }
 
-    func didChangedPreLiveSport(sport: Sport) {
+    func didChangedPreLiveSport(_ sport: Sport) {
         self.currentSport = sport
         if liveEventsViewControllerLoaded {
-            self.liveEventsViewController.selectedSportType = sport.type
+            self.liveEventsViewController.selectedSport = sport
         }
     }
 
-    func didChangedLiveSportType(sportType: SportType) {
-        self.currentSportType = sportType
+    func didChangedLiveSport(_ sport: Sport) {
+        self.currentSport = sport
         if preLiveViewControllerLoaded {
-            self.preLiveViewController.selectedSportType = sportType
+            // self.preLiveViewController.selectedSport = sportType
+            // TODO: Sport Selection
         }
     }
 
@@ -351,9 +351,9 @@ extension HomeViewController {
     func loadChildViewControllerIfNeeded(tab: TabItem) {
         if case .sports = tab, !preLiveViewControllerLoaded {
             self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
-            self.preLiveViewController.selectedSportType = self.currentSportType
+            self.preLiveViewController.selectedSport = self.currentSport
             self.preLiveViewController.didChangeSport = { [weak self] newSport in
-                self?.didChangedPreLiveSport(sportType: newSport)
+                self?.didChangedPreLiveSport(newSport)
             }
             self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
@@ -362,9 +362,9 @@ extension HomeViewController {
         }
         if case .live = tab, !liveEventsViewControllerLoaded {
             self.addChildViewController(self.liveEventsViewController, toView: self.liveBaseView)
-            self.liveEventsViewController.selectedSportType = self.currentSportType
-            self.liveEventsViewController.didChangeSportType = { [weak self] newSportType in
-                self?.didChangedLiveSportType(sportType: newSportType)
+            self.liveEventsViewController.selectedSport = self.currentSport
+            self.liveEventsViewController.didChangeSport = { [weak self] newSport in
+                self?.didChangedLiveSport(newSport)
             }
             self.liveEventsViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()

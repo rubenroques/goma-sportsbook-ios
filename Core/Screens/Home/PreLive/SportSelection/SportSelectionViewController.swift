@@ -8,12 +8,9 @@
 import UIKit
 import Combine
 
-
 protocol SportTypeSelectionViewDelegate: AnyObject {
-    func setSportType(_ sportType: SportType)
     func selectedSport(_ sport: Sport)
 }
-
 
 class SportSelectionViewController: UIViewController {
 
@@ -28,7 +25,7 @@ class SportSelectionViewController: UIViewController {
     // Variables
     var sportsData: [EveryMatrix.Discipline] = []
     var fullSportsData: [EveryMatrix.Discipline] = []
-    var defaultSport: SportType
+    var defaultSport: Sport
     var isLiveSport: Bool
     var sportsRepository: SportsAggregatorRepository
 
@@ -39,7 +36,7 @@ class SportSelectionViewController: UIViewController {
     
     private var cancellable = Set<AnyCancellable>()
 
-    init(defaultSport: SportType, isLiveSport: Bool = false, sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()) {
+    init(defaultSport: Sport, isLiveSport: Bool = false, sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()) {
         self.defaultSport = defaultSport
         self.isLiveSport = isLiveSport
         self.sportsRepository = sportsRepository
@@ -153,7 +150,7 @@ class SportSelectionViewController: UIViewController {
         self.activityIndicatorView.isHidden = false
 
         self.sportsData = Array(self.sportsRepository.sportsLive.values)
-        let sortedArray = self.sportsData.sorted(by: {$0.id?.localizedStandardCompare($1.id ?? "1") == .orderedAscending})
+        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
         self.sportsData = sortedArray
 
         self.fullSportsData = self.sportsData
@@ -172,7 +169,7 @@ class SportSelectionViewController: UIViewController {
 
     func updateSportsLiveCollection() {
         self.sportsData = Array(self.sportsRepository.sportsLive.values)
-        let sortedArray = self.sportsData.sorted(by: {$0.id?.localizedStandardCompare($1.id ?? "1") == .orderedAscending})
+        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
         self.sportsData = sortedArray
 
         self.fullSportsData = self.sportsData
@@ -203,7 +200,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
 
         cell.configureCell(viewModel: viewModel)
 
-        if cell.viewModel?.sport.id == self.defaultSport.typeId {
+        if cell.viewModel?.sport.id == self.defaultSport.id {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
         }
@@ -221,18 +218,20 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
 
         guard
             let sportTypeAtIndex = sportsData[safe:indexPath.row],
-            let sportTypeIdAtIndex = sportTypeAtIndex.id,
-            let newSportType = SportType(id: sportTypeIdAtIndex),
             let cell = collectionView.cellForItem(at: indexPath) as? SportSelectionCollectionViewCell
         else {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
         }
 
-        cell.isSelected = true
-        self.defaultSport = newSportType
+        let selectedSport = Sport(id: sportTypeAtIndex.id,
+                          name: sportTypeAtIndex.name ?? "",
+                          showEventCategory: sportTypeAtIndex.showEventCategory ?? false)
 
-        selectionDelegate?.setSportType(self.defaultSport)
+        cell.isSelected = true
+        self.defaultSport = selectedSport
+
+        self.selectionDelegate?.selectedSport(selectedSport)
 
         self.dismiss(animated: true, completion: nil)
         AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport.id ))

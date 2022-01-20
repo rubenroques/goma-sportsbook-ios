@@ -93,8 +93,7 @@ class PreLiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
-
-            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.type.typeId)") {
+            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
             }
             else {
@@ -112,7 +111,7 @@ class PreLiveEventsViewController: UIViewController {
     private var lastContentOffset: CGFloat = 0
     private var shouldDetectScrollMovement = false
 
-    init(selectedSportType: Sport) {
+    init(selectedSport: Sport) {
         self.selectedSport = selectedSport
         self.viewModel = PreLiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "PreLiveEventsViewController", bundle: nil)
@@ -261,7 +260,6 @@ class PreLiveEventsViewController: UIViewController {
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
 
-
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
@@ -334,10 +332,11 @@ class PreLiveEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.viewModel.dataDidChangedAction = { [weak self] in
-            self?.tableView.reloadData()
-            
-        }
+        self.viewModel.dataChangedPublisher
+            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
         
         self.viewModel.screenStatePublisher
             .receive(on: DispatchQueue.main)
@@ -450,9 +449,9 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
-        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType)
-        sportSelectionVC.delegate = self
-        self.present(sportSelectionVC, animated: true, completion: nil)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport)
+        sportSelectionViewController.selectionDelegate = self
+        self.present(sportSelectionViewController, animated: true, completion: nil)
     }
 
     private func setupWithTheme() {
@@ -490,7 +489,7 @@ class PreLiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSportTo(_ sport: Sport) {
+    func changedSport(_ sport: Sport) {
         self.selectedSport = sport
         self.didChangeSport?(sport)
     }
@@ -767,12 +766,8 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
 
 extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
-    func setSportType(_ sportType: SportType) {
-        self.changedSportToType(sportType)
-    }
-
     func selectedSport(_ sport: Sport) {
-        self.changedSportToType()
+        self.changedSport(sport)
     }
 }
 

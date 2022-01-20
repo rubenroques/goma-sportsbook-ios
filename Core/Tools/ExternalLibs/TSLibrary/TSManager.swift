@@ -155,7 +155,7 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
     
-    func getModel<T: Decodable>(router: TSRouter, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
+    func getModel<T: Decodable>(router: TSRouter,initialDumpProcedure: String? = nil, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
         return Future<T, EveryMatrix.APIError> { [self] promise in
             tsQueue.async {
 
@@ -166,7 +166,12 @@ final class TSManager {
                     return
                 }
 
-                Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+                if let initialDumpProcedure = initialDumpProcedure {
+                    Logger.log("TSManager getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [] )")
+                }
+                else {
+                    Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+                }
 
                 if swampSession.isConnected() {
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
@@ -191,7 +196,7 @@ final class TSManager {
                             }
                         }
                         catch {
-                            // print("TSManager Decoding Error: \(error)")
+                            //print("TSManager Decoding Error: \(error)")
                             promise(.failure(.decodingError))
                         }
                     }, onError: { _, error, _, kwargs in
@@ -328,12 +333,11 @@ final class TSManager {
             subject.send(TSSubscriptionContent.connect(publisherIdentifiable: registration))
 
             if let initialDumpEndpoint = endpoint.intiailDumpRequest {
-                self.getModel(router: initialDumpEndpoint, decodingType: decodingType)
+                self.getModel(router: initialDumpEndpoint, initialDumpProcedure: endpoint.procedure, decodingType: decodingType)
                     .sink { completion in
                         if case .failure(let error) = completion {
                             subject.send(TSSubscriptionContent.disconnect)
                             subject.send(completion: .failure(error))
-
                         }
                     } receiveValue: { decoded in
                         subject.send(.initialContent(decoded))

@@ -85,20 +85,19 @@ class LiveEventsViewController: UIViewController {
     var viewModel: LiveEventsViewModel
 
     var filterSelectedOption: Int = 0
-    var selectedSportType: SportType {
+    var selectedSport: Sport {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)")
-            self.viewModel.selectedSportId = selectedSportType
-
+            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSport.id)")
+            self.viewModel.selectedSport = selectedSport
         }
     }
 
-    var didChangeSportType: ((SportType) -> Void)?
+    var didChangeSport: ((Sport) -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
-    init(selectedSportType: SportType = .football) {
-        self.selectedSportType = selectedSportType
-        self.viewModel = LiveEventsViewModel(selectedSportId: self.selectedSportType)
+    init(selectedSport: Sport = Sport.football) {
+        self.selectedSport = selectedSport
+        self.viewModel = LiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "LiveEventsViewController", bundle: nil)
     }
 
@@ -349,15 +348,17 @@ class LiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSportToType(_ sportType: SportType) {
-        self.selectedSportType = sportType
-        self.didChangeSportType?(sportType)
+    func changedSport(_ sport: Sport) {
+        self.selectedSport = sport
+        self.didChangeSport?(sport)
     }
 
     @objc func handleSportsSelectionTap() {
-        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType, isLiveSport: true, sportsRepository: self.viewModel.sportsRepository)
-        sportSelectionVC.delegate = self
-        self.present(sportSelectionVC, animated: true, completion: nil)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport,
+                                                            isLiveSport: true,
+                                                            sportsRepository: self.viewModel.sportsRepository)
+        sportSelectionViewController.selectionDelegate = self
+        self.present(sportSelectionViewController, animated: true, completion: nil)
     }
 
     @objc func didTapBetslipView() {
@@ -504,7 +505,9 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
 }
 
 extension LiveEventsViewController: SportTypeSelectionViewDelegate {
-    func setSportType(_ sportType: SportType) {
-        self.changedSportToType(sportType)
+
+    func selectedSport(_ sport: Sport) {
+        self.changedSport(sport)
     }
+
 }
