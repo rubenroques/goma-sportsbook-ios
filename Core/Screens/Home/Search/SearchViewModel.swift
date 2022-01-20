@@ -10,9 +10,23 @@ import Combine
 
 class SearchViewModel: NSObject {
 
-    private var recentSearches: Int?
+    var recentSearchesPublisher: CurrentValueSubject<[String], Never> = .init([])
+    var searchInfoPublisher: CurrentValueSubject<[String: Any], Never> = .init([:])
+    var searchInfo: [Int: [Any]] = [:]
 
     override init() {
-        self.recentSearches = 0
+       
+    }
+
+    func fetchSearchInfo() {
+        searchInfoPublisher.value["1"] = "FOOTBALL"
+        searchInfoPublisher.value["8"] = "BASKETBALL"
+        searchInfoPublisher.send(searchInfoPublisher.value)
+
+    }
+
+    func addRecentSearch(search: String) {
+        recentSearchesPublisher.value.append(search)
+        recentSearchesPublisher.send(recentSearchesPublisher.value)
     }
 }
