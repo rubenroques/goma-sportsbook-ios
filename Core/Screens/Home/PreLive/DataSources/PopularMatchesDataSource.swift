@@ -171,7 +171,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 cells.append(cachedBannerCell)
             }
             else {
-                cells.append(BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? ""))
+                let cachedBannerCell = BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? "")
+                cachedBannerCellViewModel[banner.id] = cachedBannerCell
+                cells.append(cachedBannerCell)
             }
         }
         if let cachedBannerLineCellViewModel = cachedBannerLineCellViewModel {
@@ -231,4 +233,3 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
 }
-

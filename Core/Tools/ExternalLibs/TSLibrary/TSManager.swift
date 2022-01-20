@@ -249,16 +249,18 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
 
-    func subscribeEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) throws -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
+    func subscribeEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
+
+        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
 
         guard
             let swampSession = self.swampSession,
             swampSession.isConnected()
         else {
-            throw EveryMatrix.APIError.notConnected
+            subject.send(completion: .failure(.notConnected))
+            return subject.eraseToAnyPublisher()
         }
 
-        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
 
         let args: [String: Any] = endpoint.kwargs ?? [:]
 
@@ -267,27 +269,51 @@ final class TSManager {
         swampSession.subscribe(endpoint.procedure, options: args,
         onSuccess: { (subscription: Subscription) in
             subject.send(TSSubscriptionContent.connect(publisherIdentifiable: subscription))
+
+            if let initialDumpEndpoint = endpoint.intiailDumpRequest {
+                self.getModel(router: initialDumpEndpoint, decodingType: decodingType)
+                    .sink { completion in
+                        if case .failure(let error) = completion {
+                            subject.send(TSSubscriptionContent.disconnect)
+                            subject.send(completion: .failure(error))
+
+                        }
+                    } receiveValue: { decoded in
+                        subject.send(.initialContent(decoded))
+                    }
+                    .store(in: &self.globalCancellable)
+            }
         },
         onError: { (details: [String: Any], errorStr: String) in
             subject.send(TSSubscriptionContent.disconnect)
             subject.send(completion: .failure(.requestError(value: errorStr)))
         },
         onEvent: { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
-//            if let code = kwResults?["code"] as? Int {
-//                if code == 3 {
-//                    DispatchQueue.main.async {
-//                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
-//                    }
-//                    subject.send(TSSubscriptionContent.disconnect)
-//                    subject.send(completion: .failure(.notConnected))
-//                }
-//                else if code == 0 {
-//                    print("Subscribed!")
-//                }
-//            }
+            do {
+                if kwResults != nil {
+                    let decoder = DictionaryDecoder()
+                    decoder.dateDecodingStrategy = .iso8601
+                    let decoded = try decoder.decode(decodingType, from: kwResults!)
+                    subject.send(.updatedContent(decoded))
+                }
+                else {
+                    subject.send(completion: .failure(.noResultsReceived))
+                }
+            }
+            catch {
+                // print("TSManager Decoding Error: \(error)")
+                subject.send(completion: .failure(.decodingError))
+            }
         })
 
-        return subject.eraseToAnyPublisher()
+        return subject.handleEvents(receiveOutput: { content in
+
+        }, receiveCompletion: { completion in
+            print("completion \(completion)")
+        }, receiveCancel: {
+
+        }).eraseToAnyPublisher()
+
     }
 
     func unregisterFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
@@ -387,6 +413,7 @@ extension TSManager: SSWampSessionDelegate {
                 Logger.log("TSManager sessionStateChanged \(connected)")
             })
             .store(in: &globalCancellable)
+
     }
     
     func ssWampSessionEnded(_ reason: String) {

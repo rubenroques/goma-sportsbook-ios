@@ -69,6 +69,8 @@ enum TSRouter {
     case eventPartScoresPublisher(operatorId: String, language: String, matchId: String)
 
     case sportsListPublisher(operatorId: String, language: String)
+    
+    case accountBalancePublisher
 
     // Others
     case registrationDismissed
@@ -244,6 +246,9 @@ enum TSRouter {
 
         case .sportsListPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/disciplines/LIVE/BOTH"
+
+        case .accountBalancePublisher:
+            return "/account/balanceChanged"
 
         //
         //

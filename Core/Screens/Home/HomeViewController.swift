@@ -165,16 +165,14 @@ class HomeViewController: UIViewController {
 //            }
 //            .store(in: &cancellables)
 
-        Env.userSessionStore.userBalanceWallet
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] wallet in
-                print("WALLET: \(wallet)")
-                if let walletAmount = wallet?.amount {
-                    self?.accountValueLabel.text = "\(walletAmount)"
-
-                }
-            })
-            .store(in: &cancellables)
+//        Env.userSessionStore.userBalanceWallet
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] wallet in
+//                if let walletAmount = wallet?.amount {
+//                    self?.accountValueLabel.text = "\(walletAmount)"
+//                }
+//            })
+//            .store(in: &cancellables)
 
     }
 
@@ -186,8 +184,8 @@ class HomeViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.accountValueLabel.text = value
+            .sink { [weak self] value in
+                self?.accountValueLabel.text = value
             }
             .store(in: &cancellables)
 
