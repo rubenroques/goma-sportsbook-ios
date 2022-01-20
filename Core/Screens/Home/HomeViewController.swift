@@ -165,15 +165,6 @@ class HomeViewController: UIViewController {
 //            }
 //            .store(in: &cancellables)
 
-//        Env.userSessionStore.userBalanceWallet
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] wallet in
-//                if let walletAmount = wallet?.amount {
-//                    self?.accountValueLabel.text = "\(walletAmount)"
-//                }
-//            })
-//            .store(in: &cancellables)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -352,6 +343,13 @@ class HomeViewController: UIViewController {
     @IBAction func didTapLogin() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+
+
+    @IBAction func didTapSearchButton() {
+        let searchViewController = SearchViewController()
+
+        self.present(searchViewController, animated: true, completion: nil)
     }
 
 }

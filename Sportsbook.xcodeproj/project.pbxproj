@@ -710,6 +710,12 @@
 		A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */; };
 		A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
 		A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */; };
+		A995C195279991A100151462 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
+		A995C196279991A100151462 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
+		A995C197279991A100151462 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C194279991A100151462 /* SearchViewController.xib */; };
+		A995C198279991A100151462 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C194279991A100151462 /* SearchViewController.xib */; };
+		A995C19A2799AF1100151462 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1992799AF1100151462 /* SearchViewModel.swift */; };
+		A995C19B2799AF1100151462 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1992799AF1100151462 /* SearchViewModel.swift */; };
 		A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A32788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */; };
@@ -1254,6 +1260,9 @@
 		A98D3B29271481A8003BAE6F /* SportSelectionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionViewController.xib; sourceTree = "<group>"; };
 		A98D3B2F27148921003BAE6F /* SportSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
 		A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
+		A995C193279991A100151462 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		A995C194279991A100151462 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
+		A995C1992799AF1100151462 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		A996229F2788563F00ABDF97 /* SportsAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregator.swift; sourceTree = "<group>"; };
 		A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregatorRepository.swift; sourceTree = "<group>"; };
 		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
@@ -1905,6 +1914,7 @@
 		455C962526FE11B300456F30 /* Home */ = {
 			isa = PBXGroup;
 			children = (
+				A995C1922799917100151462 /* Search */,
 				455C962626FE11CA00456F30 /* HomeViewController.swift */,
 				455C962726FE11CA00456F30 /* HomeViewController.xib */,
 				45D712EC27031C4F00AC0364 /* PreLive */,
@@ -2623,6 +2633,16 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		A995C1922799917100151462 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				A995C193279991A100151462 /* SearchViewController.swift */,
+				A995C194279991A100151462 /* SearchViewController.xib */,
+				A995C1992799AF1100151462 /* SearchViewModel.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
 		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
 			isa = PBXGroup;
 			children = (
@@ -3170,6 +3190,7 @@
 				454E0ACE2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
 				A9BCF445274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
+				A995C197279991A100151462 /* SearchViewController.xib in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
 				A9BCF436274D1A77006DD528 /* MatchDetailsViewController.xib in Resources */,
 				A9C82FB726F3AFB400059DCD /* PersonalInfoViewController.xib in Resources */,
@@ -3241,6 +3262,7 @@
 				F4B32D9C2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */,
 				45CD7B5B271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
+				A995C198279991A100151462 /* SearchViewController.xib in Resources */,
 				45936CC0270EF14300E8260E /* SportTypeCollectionViewCell.xib in Resources */,
 				A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */,
@@ -3387,6 +3409,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A995C195279991A100151462 /* SearchViewController.swift in Sources */,
 				457F4972273804810047169D /* BetslipHistory.swift in Sources */,
 				45D9CBE1270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E0AB62732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
@@ -3536,6 +3559,7 @@
 				A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				45626E442755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
+				A995C19A2799AF1100151462 /* SearchViewModel.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A98757A1276CDB990099990D /* DepositResponse.swift in Sources */,
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
@@ -3706,6 +3730,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A995C196279991A100151462 /* SearchViewController.swift in Sources */,
 				457F4973273804810047169D /* BetslipHistory.swift in Sources */,
 				45D9CBE2270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E0AB72732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
@@ -3855,6 +3880,7 @@
 				A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45626E452755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
+				A995C19B2799AF1100151462 /* SearchViewModel.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A98757A2276CDB990099990D /* DepositResponse.swift in Sources */,
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
