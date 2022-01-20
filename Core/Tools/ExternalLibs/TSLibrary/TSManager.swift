@@ -316,6 +316,21 @@ final class TSManager {
 
     }
 
+    func unsubscribeFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
+        guard
+            let swampSession = self.swampSession,
+            swampSession.isConnected()
+        else {
+            return
+        }
+
+        swampSession.unsubscribe(endpointPublisherIdentifiable.identificationCode) {
+            ()
+        } onError: { details, error in
+            // print("UnregisterFromEndpoint error \(details) \(error)")
+        }
+    }
+
     func unregisterFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
         guard
             let swampSession = self.swampSession,
