@@ -189,8 +189,7 @@ class MyTicketsViewModel: NSObject {
                 if case .resolved = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
-
-                self?.isTicketsEmptyPublisher.send( self?.isEmpty() ?? true )
+                self?.isTicketsEmptyPublisher.send(self?.isEmpty() ?? false)
             })
             .store(in: &cancellables)
     }
@@ -224,8 +223,7 @@ class MyTicketsViewModel: NSObject {
                 if case .opened = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
-
-                self?.isTicketsEmptyPublisher.send( self?.isEmpty() ?? true )
+                self?.isTicketsEmptyPublisher.send(self?.isEmpty() ?? false)
             })
             .store(in: &cancellables)
 
@@ -260,7 +258,7 @@ class MyTicketsViewModel: NSObject {
                 if case .won = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
-                self?.isTicketsEmptyPublisher.send( self?.isEmpty() ?? true )
+                self?.isTicketsEmptyPublisher.send(self?.isEmpty() ?? false)
             })
             .store(in: &cancellables)
 

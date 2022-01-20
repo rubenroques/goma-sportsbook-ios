@@ -750,6 +750,19 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryAmountBaseView.layer.cornerRadius = CornerRadius.view
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+
+        for suggestedBetRegister in self.suggestedBetsRegisters {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        }
+
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -905,6 +918,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.gomaSuggestedBetsResponse = []
         self.suggestedBetsArray = [:]
+
+        for suggestedBetRegister in self.suggestedBetsRegisters {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        }
 
         self.betSuggestedCollectionView.reloadData()
     }
