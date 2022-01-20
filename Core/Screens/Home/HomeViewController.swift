@@ -282,7 +282,7 @@ class HomeViewController: UIViewController {
 
         accountValueView.backgroundColor = UIColor.App2.backgroundSecondary
         accountValueLabel.textColor = UIColor.App2.textPrimary
-        accountPlusView.backgroundColor = UIColor.App2.backgroundSecondary
+        accountPlusView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
     }
 
     func setupWithState(_ state: ScreenState) {

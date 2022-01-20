@@ -231,7 +231,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     func setupWithTheme() {
         self.baseView.backgroundColor = UIColor.App2.backgroundCards
-
         self.numberOfBetsLabels.textColor = UIColor.App2.textPrimary
         self.eventNameLabel.textColor = UIColor.App2.textSecond
         self.homeParticipantNameLabel.textColor = UIColor.App2.textPrimary
@@ -469,7 +468,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func deselectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapLeftOddButton() {
@@ -511,7 +510,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func deselectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapMiddleOddButton() {
@@ -551,7 +550,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func deselectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapRightOddButton() {

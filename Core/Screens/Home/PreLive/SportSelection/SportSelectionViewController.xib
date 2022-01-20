@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -31,10 +31,10 @@
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="aZt-s5-qyb">
-                    <rect key="frame" x="222.5" y="506" width="37" height="37"/>
+                    <rect key="frame" x="222.5" y="510" width="37" height="37"/>
                 </activityIndicatorView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q3C-TI-tYo">
-                    <rect key="frame" x="0.0" y="44" width="482" height="50"/>
+                    <rect key="frame" x="0.0" y="52" width="482" height="50"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hS5-0I-Qx5">
                             <rect key="frame" x="72" y="14.5" width="338" height="21"/>
@@ -65,7 +65,7 @@
                     </constraints>
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="dwa-ZR-kCR">
-                    <rect key="frame" x="25" y="153" width="432" height="743"/>
+                    <rect key="frame" x="25" y="161" width="432" height="735"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="15" minimumInteritemSpacing="15" id="97Y-qr-kai">
                         <size key="itemSize" width="65" height="100"/>
@@ -75,7 +75,10 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="pkR-v4-LqE">
-                    <rect key="frame" x="25" y="94" width="432" height="51"/>
+                    <rect key="frame" x="25" y="102" width="432" height="51"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="51" id="1hc-Ls-7Lx"/>
+                    </constraints>
                     <textInputTraits key="textInputTraits"/>
                 </searchBar>
             </subviews>
@@ -93,10 +96,10 @@
                 <constraint firstItem="pkR-v4-LqE" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="25" id="fZ7-n7-xzm"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="dwa-ZR-kCR" secondAttribute="trailing" constant="25" id="l0M-l4-n8s"/>
                 <constraint firstItem="l0T-7m-PZF" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="pK6-qZ-6fo"/>
+                <constraint firstItem="q3C-TI-tYo" firstAttribute="top" secondItem="l0T-7m-PZF" secondAttribute="bottom" constant="8" id="qKC-JP-qe8"/>
                 <constraint firstItem="aZt-s5-qyb" firstAttribute="centerY" secondItem="dwa-ZR-kCR" secondAttribute="centerY" id="qmN-we-glD"/>
                 <constraint firstItem="pkR-v4-LqE" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" constant="-25" id="udg-N0-yk7"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="l0T-7m-PZF" secondAttribute="trailing" id="uoY-1V-zCd"/>
-                <constraint firstItem="q3C-TI-tYo" firstAttribute="top" secondItem="l0T-7m-PZF" secondAttribute="bottom" id="yRn-Uc-cyn"/>
                 <constraint firstItem="aZt-s5-qyb" firstAttribute="centerX" secondItem="dwa-ZR-kCR" secondAttribute="centerX" id="yjR-Na-ISO"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

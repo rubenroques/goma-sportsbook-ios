@@ -133,11 +133,11 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
 
-        self.stackBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.stackView.backgroundColor = UIColor.App.secondaryBackground
+        self.stackBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.stackView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
-        self.baseView.backgroundColor = UIColor.App.secondaryBackground
+        self.bottomSeparatorView.backgroundColor = UIColor.App2.separatorLine
+        self.baseView.backgroundColor = UIColor.App2.backgroundSecondary
 
         for view in stackView.arrangedSubviews {
             if let typedView = view as? SubmitedBetSelectionView {
@@ -145,13 +145,13 @@ class SubmitedBetTableViewCell: UITableViewCell {
             }
         }
 
-        self.cashoutStackView.backgroundColor = UIColor.App.secondaryBackground
-        self.cashoutView.backgroundColor = UIColor.App.secondaryBackground
+        self.cashoutStackView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.cashoutView.backgroundColor = UIColor.App2.backgroundSecondary
         self.cashoutLogoImageView.backgroundColor = .clear
-        self.cashoutTitleLabel.textColor = UIColor.App.headingSecondary
-        self.cashoutValueLabel.textColor = UIColor.App.headingMain
-        self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.cashoutTitleLabel.textColor = UIColor.App2.textSecond
+        self.cashoutValueLabel.textColor = UIColor.App2.textPrimary
+        self.cashoutButton.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
+        self.cashoutSeparatorView.backgroundColor = UIColor.App2.separatorLine
 
     }
 

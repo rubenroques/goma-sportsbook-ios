@@ -54,17 +54,17 @@ class SelectTextFieldView: NibView {
 
     func setup() {
 
-        self.backgroundColor = UIColor.App.mainBackground
+        self.backgroundColor = UIColor.App2.backgroundPrimary
         self.layer.cornerRadius = CornerRadius.headerInput
-        self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.App.headerTextField.withAlphaComponent(1).cgColor
+        self.layer.borderWidth = 0
+        self.layer.borderColor = UIColor.App2.inputTextTitle.withAlphaComponent(1).cgColor
 
-        containerView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App2.backgroundPrimary
 
         selectLabel.text = "Lorem"
         selectLabel.font = AppFont.with(type: .regular, size: 14.0)
-        selectLabel.textColor =  UIColor.App.headingMain
-
+        selectLabel.textColor =  UIColor.App2.textPrimary
+        
         selectImageView.image = UIImage(named: "arrow_down_icon")
 
         textField.autocorrectionType = .no
@@ -100,8 +100,6 @@ class SelectTextFieldView: NibView {
         if isIconArray {
             labelLeadingConstraint.isActive = false
             labelImageConstraint.isActive = true
-            textFieldLeadingConstraint.isActive = false
-            textFieldImageConstraint.isActive = true
             iconLabelImageView.isHidden = false
             iconLabelImageView.image = iconArray[0]
             selectionIconArray = iconArray

@@ -89,26 +89,26 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
 
-        self.baseView.backgroundColor = UIColor.App.secondaryBackground
+        self.baseView.backgroundColor = UIColor.App2.backgroundCards
 
-        self.topBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.separatorView.backgroundColor = UIColor.App.separatorLine
-        self.bottomBaseView.backgroundColor = UIColor.App.secondaryBackground
+        self.topBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.separatorView.backgroundColor = UIColor.App2.separatorLine
+        self.bottomBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.outcomeNameLabel.textColor = UIColor.App.headingMain
-        self.oddValueLabel.textColor = UIColor.App.headingMain
-        self.marketNameLabel.textColor = UIColor.App.headingMain
-        self.matchDetailLabel.textColor = UIColor.App.headingDisabled
+        self.outcomeNameLabel.textColor = UIColor.App2.textPrimary
+        self.oddValueLabel.textColor = UIColor.App2.textPrimary
+        self.marketNameLabel.textColor = UIColor.App2.textPrimary
+        self.matchDetailLabel.textColor = UIColor.App2.textPrimary
 
-        self.stackView.backgroundColor = UIColor.App.secondaryBackground
+        self.stackView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.errorView.backgroundColor = UIColor.App.secondaryBackground
+        self.errorView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.errorLabel.textColor = UIColor.App.headingMain
+        self.errorLabel.textColor = UIColor.App2.textPrimary
         self.errorLabel.font = AppFont.with(type: .bold, size: 15)
 
-        self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
-        self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
+        self.errorLateralTopView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.errorLateralBottomView.backgroundColor = UIColor.App2.backgroundSecondary
 
     }
 
@@ -116,7 +116,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -129,7 +129,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -168,14 +168,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             })
 
         if errorBetting != nil {
-            self.errorLateralTopView.backgroundColor = UIColor.App.alertError
-            self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
+            self.errorLateralTopView.backgroundColor = UIColor.App2.alertError
+            self.errorLateralBottomView.backgroundColor = UIColor.App2.alertError
         }
         else {
-            self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
-            self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
+            self.errorLateralTopView.backgroundColor = UIColor.App2.backgroundSecondary
+            self.errorLateralBottomView.backgroundColor = UIColor.App2.backgroundSecondary
         }
-        
     }
 
     @IBAction private func didTapDeleteButton() {

@@ -223,6 +223,7 @@ class PreLiveEventsViewController: UIViewController {
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
         filtersCountLabel.layer.masksToBounds = true
+        filtersCountLabel.backgroundColor = UIColor.App2.highlightSecondary
         
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear

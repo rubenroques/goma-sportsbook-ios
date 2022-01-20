@@ -101,20 +101,20 @@ class FilterSliderCollapseView: NibView {
 
     func setup() {
 
-        self.backgroundColor = UIColor.App.mainBackground
+        self.backgroundColor = UIColor.App2.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.secondaryBackground
+        containerView.backgroundColor = UIColor.App2.backgroundSecondary
 
         containerView.layer.cornerRadius = CornerRadius.modal
 
-        topView.backgroundColor = UIColor.App.secondaryBackground
+        topView.backgroundColor = UIColor.App2.backgroundSecondary
         topView.layer.cornerRadius = CornerRadius.modal
 
         titleLabel.text = "Test"
         titleLabel.font = AppFont.with(type: .bold, size: 16)
-        titleLabel.textColor = UIColor.App.headingMain
+        titleLabel.textColor = UIColor.App2.textPrimary
 
-        toggleButton.backgroundColor = UIColor.App.secondaryBackground
+        toggleButton.backgroundColor = UIColor.App2.backgroundSecondary
 
         checkboxButton.isHidden = true
         checkboxButton.didTapCheckbox = { value in
@@ -139,9 +139,9 @@ class FilterSliderCollapseView: NibView {
             }
         }
 
-        contentView.backgroundColor = UIColor.App.secondaryBackground
+        contentView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        stackView.backgroundColor = UIColor.App.secondaryBackground
+        stackView.backgroundColor = UIColor.App2.backgroundSecondary
         stackView.isHidden = true
 
     }

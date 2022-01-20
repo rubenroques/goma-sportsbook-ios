@@ -27,18 +27,18 @@ class FilterSliderInfoView: NibView {
     }
 
     func setup() {
-        self.backgroundColor = UIColor.App.fadedGrayLine
+        self.backgroundColor = UIColor.App2.separatorLine
         self.layer.cornerRadius = CornerRadius.modal
 
-        containerView.backgroundColor = UIColor.App.fadedGrayLine
+        containerView.backgroundColor = UIColor.App2.separatorLine
         containerView.layer.cornerRadius = CornerRadius.modal
 
         topLabel.text = "Top"
-        topLabel.textColor = UIColor.App.headerTextField
+        topLabel.textColor = UIColor.App2.textPrimary
         topLabel.font = AppFont.with(type: .semibold, size: 12)
 
         bottomLabel.text = "Bottom"
-        bottomLabel.textColor = UIColor.App.headingMain
+        bottomLabel.textColor = UIColor.App2.textPrimary
         bottomLabel.font = AppFont.with(type: .semibold, size: 16)
     }
 

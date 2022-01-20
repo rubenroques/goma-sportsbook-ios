@@ -280,8 +280,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
-        cell.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
-        cell.backgroundColor = UIColor.App2.backgroundPrimary
+        cell.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
+        cell.backgroundColor = UIColor.App2.backgroundCards
         cell.layer.cornerRadius = 9
         return cell
     }
