@@ -25,9 +25,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var totalOddsValueLabel: UILabel!
     @IBOutlet private weak var betsMadeValueLabel: UILabel!
     
-    @IBOutlet weak var totalOddsLabel: UILabel!
-    @IBOutlet weak var possibleEarningsLabel: UILabel!
-    @IBOutlet weak var betsMadeLabel: UILabel!
+    @IBOutlet private weak var totalOddsLabel: UILabel!
+    @IBOutlet private weak var possibleEarningsLabel: UILabel!
+    @IBOutlet private weak var betsMadeLabel: UILabel!
     
     var totalOddsValue: String
     var possibleEarningsValue: String

@@ -20,7 +20,7 @@ class BetslipViewController: UIViewController {
 
     @IBOutlet private weak var closeButton: UIButton!
     @IBOutlet private weak var tabsBaseView: UIView!
-    @IBOutlet weak var betsLabel: UILabel!
+    @IBOutlet private weak var betsLabel: UILabel!
     
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource

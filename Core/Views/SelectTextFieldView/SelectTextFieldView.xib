@@ -12,10 +12,7 @@
             <connections>
                 <outlet property="containerView" destination="day-vo-sb5" id="gI9-S5-3lL"/>
                 <outlet property="iconLabelImageView" destination="y5L-DZ-fCD" id="dqC-3v-1ba"/>
-                <outlet property="labelImageConstraint" destination="bd3-aW-Byr" id="IKK-8o-yON"/>
-                <outlet property="labelLeadingConstraint" destination="2nO-4a-ct3" id="Wc7-0p-eOW"/>
                 <outlet property="selectImageView" destination="fRK-gj-WMe" id="iXF-hq-Uq6"/>
-                <outlet property="selectLabel" destination="XO6-ec-esq" id="Yyz-4X-bc8"/>
                 <outlet property="textField" destination="0lh-dk-Q5D" id="2Be-PW-P5C"/>
             </connections>
         </placeholder>
@@ -27,12 +24,6 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="day-vo-sb5">
                     <rect key="frame" x="16" y="8" width="382" height="64"/>
                     <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XO6-ec-esq">
-                            <rect key="frame" x="0.0" y="21.5" width="342" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
-                            <nil key="highlightedColor"/>
-                        </label>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fRK-gj-WMe">
                             <rect key="frame" x="361" y="24.5" width="15" height="15"/>
                             <constraints>
@@ -40,7 +31,7 @@
                                 <constraint firstAttribute="height" constant="15" id="Jp2-y5-waK"/>
                             </constraints>
                         </imageView>
-                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0lh-dk-Q5D">
+                        <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="0lh-dk-Q5D">
                             <rect key="frame" x="0.0" y="0.0" width="382" height="64"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
@@ -55,25 +46,16 @@
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
-                        <constraint firstItem="XO6-ec-esq" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" id="2nO-4a-ct3"/>
-                        <constraint firstAttribute="leading" secondItem="XO6-ec-esq" secondAttribute="trailing" constant="-342" id="3MB-Kn-k0S"/>
                         <constraint firstAttribute="trailing" secondItem="fRK-gj-WMe" secondAttribute="trailing" constant="6" id="9i4-0G-Zrh"/>
                         <constraint firstItem="0lh-dk-Q5D" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" id="A43-y7-DtI"/>
                         <constraint firstAttribute="trailing" secondItem="0lh-dk-Q5D" secondAttribute="trailing" id="HYk-5x-kaF"/>
+                        <constraint firstItem="y5L-DZ-fCD" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="MZw-Kn-N5P"/>
                         <constraint firstItem="0lh-dk-Q5D" firstAttribute="top" secondItem="day-vo-sb5" secondAttribute="top" id="UpH-BZ-lQS"/>
-                        <constraint firstItem="XO6-ec-esq" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="15" id="bd3-aW-Byr"/>
-                        <constraint firstItem="y5L-DZ-fCD" firstAttribute="centerY" secondItem="XO6-ec-esq" secondAttribute="centerY" id="c34-fw-hsv"/>
                         <constraint firstAttribute="bottom" secondItem="0lh-dk-Q5D" secondAttribute="bottom" id="giz-se-DkH"/>
                         <constraint firstItem="y5L-DZ-fCD" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="-6" id="jT0-cp-l3t"/>
-                        <constraint firstItem="XO6-ec-esq" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="nxu-jk-ukd"/>
                         <constraint firstItem="0lh-dk-Q5D" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="r7K-L4-8E3"/>
                         <constraint firstItem="fRK-gj-WMe" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="sko-xd-b0p"/>
                     </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="bd3-aW-Byr"/>
-                        </mask>
-                    </variation>
                 </view>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
