@@ -44,6 +44,68 @@ extension UIColor {
 
         static let redIndicator = UIColor(named: "redIndicatorColor")
     }
+    
+    struct App2 {
+        
+        static let backgroundPrimary: UIColor = UIColor(named: "backgroundPrimary")!
+        static let backgroundSecondary = UIColor(named: "backgroundSecondary")!
+        static let backgroundTertiary = UIColor(named: "backgroundTertiary")!
+        static let backgroundBorder = UIColor(named: "backgroundBorder")!
+
+        static let backgroundCards = UIColor(named: "backgroundCards")!
+        
+        static let textPrimary = UIColor(named: "textPrimary")!
+        static let textHeadlinePrimary = UIColor(named: "textHeadlinePrimary")!
+        static let textDisablePrimary = UIColor(named: "textDisablePrimary")!
+        static let textSecond = UIColor(named: "textSecond")!
+        
+        static let iconPrimary = UIColor(named: "iconPrimary")!
+        static let iconSecond = UIColor(named: "iconSecond")!
+
+        static let backgroundOdds = UIColor(named: "backgroundOdds")!
+        static let backgroundDisabledOdds = UIColor(named: "backgroundDisabledOdds")!
+        
+        static let separatorLine = UIColor(named: "separatorLine")!
+        static let separatorLineHighlightSecondary = UIColor(named: "separatorLineHighlightSecondary")!
+        static let separatorLineHighlightPrimary = UIColor(named: "separatorLineHighlightPrimary")!
+        
+        static let scroll = UIColor(named: "scroll")!
+        
+        static let inputBackground = UIColor(named: "inputBackground")!
+        static let inputBorderActive = UIColor(named: "inputBorderActive")!
+        static let inputTextTitle = UIColor(named: "inputTextTitle")!
+        static let inputText = UIColor(named: "inputText")!
+        static let inputError = UIColor(named: "inputError")!
+        
+        static let backgroundDrop: UIColor = UIColor(named: "backgroundDrop")!
+        static let borderDrop = UIColor(named: "borderDrop")!
+        
+        static let highlightPrimary = UIColor(named: "highlightPrimary")!
+        static let highlightSecondary = UIColor(named: "highlightSecondary")!
+
+        static let buttonTextPrimary = UIColor(named: "buttonTextPrimary")!
+        static let buttonBackgroundPrimary = UIColor(named: "buttonBackgroundPrimary")!
+        static let buttonActiveHoverPrimary = UIColor(named: "buttonActiveHoverPrimary")!
+        static let buttonDisablePrimary = UIColor(named: "buttonDisablePrimary")!
+        static let buttonTextDisablePrimary = UIColor(named: "buttonTextDisablePrimary")!
+        
+        static let buttonBackgroundSecondary = UIColor(named: "buttonBackgroundSecondary")!
+        static let buttonActiveHoverSecondary = UIColor(named: "buttonActiveHoverSecondary")!
+
+        static let bubblesPrimary = UIColor(named: "bubblesPrimary")!
+        
+        static let alertError = UIColor(named: "alertError")!
+        static let alertSuccess = UIColor(named: "alertSuccess")!
+        static let alertWarning = UIColor(named: "alertWarning")!
+    
+        static let myTicketsLost = UIColor(named: "myTicketsLost")!
+        static let myTicketsLostFaded = UIColor(named: "myTicketsLostFaded")!
+        
+        static let myTicketsWon = UIColor(named: "myTicketsWon")!
+        static let myTicketsWonFaded = UIColor(named: "myTicketsWonFaded")!
+        
+        static let myTicketsOther = UIColor(named: "myTicketsOther")!
+    }
 
 }
 

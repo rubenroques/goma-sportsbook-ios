@@ -64,7 +64,7 @@ class LiveEventsViewController: UIViewController {
         var betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
         betslipCountLabel.textColor = .white
-        betslipCountLabel.backgroundColor = UIColor.App.alertError
+        betslipCountLabel.backgroundColor = UIColor.App2.alertError
         betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
         betslipCountLabel.textAlignment = .center
         betslipCountLabel.clipsToBounds = true
@@ -160,7 +160,7 @@ class LiveEventsViewController: UIViewController {
     private func commonInit() {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_1")
-        let color = UIColor.App.contentBackground
+        let color = UIColor.App2.backgroundPrimary
 
         leftGradientBaseView.backgroundColor = color
         let leftGradientMaskLayer = CAGradientLayer()
@@ -181,13 +181,13 @@ class LiveEventsViewController: UIViewController {
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
-        filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
+        filtersBarBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         filtersCollectionView.backgroundColor = .clear
 
-        sportsSelectorButtonView.backgroundColor = UIColor.App.mainTint
+        sportsSelectorButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App.secondaryBackground
+        filtersButtonView.backgroundColor = UIColor.App2.backgroundSecondary
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -208,10 +208,11 @@ class LiveEventsViewController: UIViewController {
         
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+        filtersCountLabel.backgroundColor = UIColor.App2.highlightSecondary
 
         liveEventsCountView.isHidden = true
         liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
-        liveEventsCountView.backgroundColor = UIColor.App.redIndicator
+        liveEventsCountView.backgroundColor = UIColor.App2.highlightSecondary
 
         liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
         
@@ -319,18 +320,18 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
-        self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.filtersBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.filtersSeparatorLineView.backgroundColor = UIColor.App2.separatorLineHighlightPrimary
         self.filtersSeparatorLineView.alpha = 0.5
 
-        self.tableView.backgroundColor = UIColor.App.contentBackground
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
+        self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipButtonView.backgroundColor = UIColor.App.mainTint
-        
+        self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
+        self.betslipButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+    
         self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain

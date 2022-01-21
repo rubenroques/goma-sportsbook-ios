@@ -160,37 +160,37 @@ class LoginViewController: UIViewController {
 
     func setupWithTheme() {
         
-        self.view.backgroundColor = UIColor.App.mainBackground
-        skipView.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        skipView.backgroundColor = UIColor.App2.backgroundPrimary
 
         skipButton.setTitleColor(UIColor.white, for: .normal)
         skipButton.backgroundColor = .clear
 
-        loginLabel.textColor = .white
+        loginLabel.textColor = UIColor.App2.textHeadlinePrimary
 
-        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-
-        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
+    
+        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        passwordHeaderTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
 
         rememberView.backgroundColor = .clear
-        rememberLabel.textColor = UIColor.App.headingMain
+        rememberLabel.textColor = UIColor.App2.textPrimary
         if self.shouldRememberUser {
-            rememberToggleView.backgroundColor =  UIColor.App.mainTint
+            rememberToggleView.backgroundColor =  UIColor.App2.buttonBackgroundPrimary
         }
         else {
-            rememberToggleView.backgroundColor =  UIColor.App.secondaryBackground
+            rememberToggleView.backgroundColor =  UIColor.App2.buttonBackgroundPrimary
         }
 
-        forgotButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        forgotButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
 
-        loginButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
         loginButton.backgroundColor = .clear
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.button
         loginButton.layer.masksToBounds = true
 
@@ -228,13 +228,13 @@ class LoginViewController: UIViewController {
 
     private func enableRememberUser() {
         rememberImageView.image = UIImage(named: "active_toggle_icon")
-        rememberToggleView.backgroundColor = UIColor.App.mainTint
+        rememberToggleView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         Env.userSessionStore.shouldRecordUserSession = true
     }
 
     private func disableRememberUser() {
         rememberImageView.image = nil
-        rememberToggleView.backgroundColor = UIColor.App.secondaryBackground
+        rememberToggleView.backgroundColor = UIColor.App2.buttonBackgroundSecondary
         Env.userSessionStore.shouldRecordUserSession = false
     }
 

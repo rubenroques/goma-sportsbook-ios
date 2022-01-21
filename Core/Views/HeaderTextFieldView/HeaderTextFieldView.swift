@@ -117,7 +117,7 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var highlightColor = UIColor.App.mainTint {
+    var highlightColor = UIColor.App2.highlightPrimary {
         didSet {
             if self.isActive {
             }
@@ -129,12 +129,12 @@ class HeaderTextFieldView: NibView {
     var isDisabled: Bool = false {
         didSet {
             if self.isDisabled {
-                self.textField.textColor = UIColor.App.headingMain.withAlphaComponent(0.3)
+                self.textField.textColor = UIColor.App2.textPrimary.withAlphaComponent(0.3)
                 self.textField.isUserInteractionEnabled = false
             }
             else {
                 self.headerLabel.isHidden = false
-                self.textField.textColor = UIColor.App.headingMain
+                self.textField.textColor = UIColor.App2.textPrimary
                 self.textField.isUserInteractionEnabled = true
             }
         }
@@ -158,11 +158,11 @@ class HeaderTextFieldView: NibView {
             self.slideUp()
         }        
 
-        containerView.backgroundColor = UIColor.App.secondaryBackground
+        containerView.backgroundColor = UIColor.App2.backgroundSecondary
         containerView.layer.cornerRadius = CornerRadius.headerInput
 
         containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.App.secondaryBackground.withAlphaComponent(0).cgColor
+        containerView.layer.borderColor = UIColor.App2.backgroundSecondary.withAlphaComponent(0).cgColor
         
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType
@@ -190,7 +190,7 @@ class HeaderTextFieldView: NibView {
 
         showPasswordLabel.text = localized("show")
         showPasswordLabel.font = AppFont.with(type: .regular, size: 14.0)
-        showPasswordLabel.textColor =  UIColor.App.headingMain
+        showPasswordLabel.textColor =  UIColor.App2.textPrimary
 
         let text = localized("show")
         let underlineAttriString = NSMutableAttributedString(string: text)
@@ -511,7 +511,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             self.showPasswordLabel.isHidden = false
         }
 
-        self.highlightColor = UIColor.App.headingMain
+        self.highlightColor = UIColor.App2.textPrimary
         self.containerView.layer.borderColor = self.highlightColor.cgColor
 
         self.slideUp()

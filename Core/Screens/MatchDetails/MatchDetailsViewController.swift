@@ -313,7 +313,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.headerCompetitionDetailView.backgroundColor = UIColor.App.secondaryBackground
 
-        self.headerCompetitionLabel.textColor = UIColor.App.headingDisabled
+        self.headerCompetitionLabel.textColor = UIColor.App.headingMain
 
         self.headerDetailStackView.backgroundColor = UIColor.App.secondaryBackground
 

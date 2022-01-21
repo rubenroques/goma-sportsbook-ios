@@ -15,13 +15,13 @@ class CheckboxButton: UIButton {
         didSet {
             if isChecked {
                 self.setImage(UIImage(named: "active_toggle_icon"), for: .normal)
-                self.backgroundColor = UIColor.App.mainTint
-                self.layer.borderColor = UIColor.App.mainTint.cgColor
+                self.backgroundColor = UIColor.App2.highlightPrimary
+                self.layer.borderColor = UIColor.App2.highlightPrimary.cgColor
             }
             else {
                 self.setImage(nil, for: .normal)
-                self.backgroundColor = UIColor.App.secondaryBackground
-                self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
+                self.backgroundColor = UIColor.App2.backgroundSecondary
+                self.layer.borderColor = UIColor.App2.separatorLine.cgColor
             }
         }
     }
@@ -29,13 +29,13 @@ class CheckboxButton: UIButton {
     override func awakeFromNib() {
         self.addTarget(self, action: #selector(buttonClicked(sender:)), for: UIControl.Event.touchUpInside)
 
-        self.backgroundColor = UIColor.App.secondaryBackground
+        self.backgroundColor = UIColor.App2.backgroundSecondary
 
         self.layer.borderWidth = 2
-        self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
+        self.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
         self.layer.cornerRadius = 4
 
-        self.tintColor = UIColor.App.headingMain
+        self.tintColor = UIColor.App2.textPrimary
 
     }
 

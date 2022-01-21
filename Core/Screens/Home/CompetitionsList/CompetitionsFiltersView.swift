@@ -140,13 +140,13 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.backgroundImage = UIImage()
         self.searchBarView.tintColor = .white
         self.searchBarView.barTintColor = .white
-        self.searchBarView.backgroundImage = UIColor.App.mainBackground.image()
+        self.searchBarView.backgroundImage = UIColor.App2.backgroundPrimary.image()
         // self.searchBarView.placeholder = localized("search")
 
         self.searchBarView.delegate = self
 
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.secondaryBackground
+            textfield.backgroundColor = UIColor.App2.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.font = AppFont.with(type: .semibold, size: 15)
@@ -217,29 +217,29 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.buttonSeparatorBaseVIew.backgroundColor = UIColor.App.separatorLine
+        self.buttonSeparatorBaseVIew.backgroundColor = UIColor.App2.separatorLine
         self.buttonSeparatorBaseVIew.alpha = 0.5
 
-        self.headerBaseView.backgroundColor = UIColor.App.mainBackground
-        self.searchBarBaseView.backgroundColor = UIColor.App.mainBackground
+        self.headerBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.searchBarBaseView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.titleLabel.textColor = UIColor.App.headingMain
-        self.smallTitleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.textColor = UIColor.App2.textPrimary
+        self.smallTitleLabel.textColor = UIColor.App2.textPrimary
 
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackground
-        self.tableView.backgroundColor = UIColor.App.mainBackground
-        self.buttonBaseVIew.backgroundColor = UIColor.App.mainBackground
+        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.buttonBaseVIew.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.applyButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        self.applyButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
         self.applyButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         self.applyButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
 
-        self.applyButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
-        self.applyButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        self.applyButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        self.applyButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
 
-        self.searchBarView.backgroundImage = UIColor.App.mainBackground.image()
+        self.searchBarView.backgroundImage = UIColor.App2.backgroundPrimary.image()
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.secondaryBackground
+            textfield.backgroundColor = UIColor.App2.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),

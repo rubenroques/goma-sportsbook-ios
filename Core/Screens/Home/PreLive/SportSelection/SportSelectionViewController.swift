@@ -89,24 +89,24 @@ class SportSelectionViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackground
-        topView.backgroundColor = UIColor.App.mainBackground
-        navigationView.backgroundColor = UIColor.App.mainBackground
-        navigationLabel.textColor = UIColor.App.headingMain
-        cancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
-        collectionView.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        topView.backgroundColor = UIColor.App2.backgroundPrimary
+        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
+        navigationLabel.textColor = UIColor.App2.textPrimary
+        cancelButton.setTitleColor(UIColor.App2.highlightPrimary, for: .normal)
+        collectionView.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.searchBar.searchBarStyle = UISearchBar.Style.prominent
         self.searchBar.sizeToFit()
         self.searchBar.isTranslucent = false
         self.searchBar.backgroundImage = UIImage()
-        self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
+        self.searchBar.backgroundImage = UIColor.App2.backgroundPrimary.image()
         self.searchBar.placeholder = localized("search")
 
         self.searchBar.delegate = self
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.secondaryBackground
+            textfield.backgroundColor = UIColor.App2.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
