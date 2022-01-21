@@ -115,10 +115,10 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                 return 600
             }
             else {
-                return 155
+                return UITableView.automaticDimension
             }
         default:
-            return 155
+            return UITableView.automaticDimension
         }
     }
 
@@ -128,7 +128,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
             // Loading cell
             return 70
         default:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         }
     }
 

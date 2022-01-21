@@ -157,9 +157,9 @@ class PreLiveEventsViewModel: NSObject {
         }
 
         // Match Stats ViewModel for Match
-//        self.popularMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
-//            return self?.matchStatsViewModel(forMatch: match)
-//        }
+        self.popularMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
+            return self?.matchStatsViewModel(forMatch: match)
+        }
 
         // NextPage
         //

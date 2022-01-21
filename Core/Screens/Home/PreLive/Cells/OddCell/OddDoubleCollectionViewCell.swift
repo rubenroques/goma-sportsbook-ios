@@ -97,6 +97,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
 
+        self.statsBaseView.isHidden = true
+        
         self.setupWithTheme()
     }
 

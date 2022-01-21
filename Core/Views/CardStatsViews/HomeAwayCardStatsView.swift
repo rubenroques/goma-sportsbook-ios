@@ -45,11 +45,11 @@ class HomeAwayCardStatsView: NibView {
 
     func setupWithTheme() {
 
-        self.homeValueLabel.textColor = UIColor.App.headingSecondary
+        self.homeValueLabel.textColor = UIColor.App.headingMain
         self.homeProgressBar.trackTintColor = UIColor.App.tertiaryBackground
         self.homeProgressBar.progressTintColor = UIColor(hex: 0xD99F00)
 
-        self.awayValueLabel.textColor = UIColor.App.headingSecondary
+        self.awayValueLabel.textColor = UIColor.App.headingMain
         self.awayProgressBar.trackTintColor = UIColor.App.tertiaryBackground
         self.awayProgressBar.progressTintColor = UIColor(hex: 0x46C1A7)
 
@@ -57,7 +57,7 @@ class HomeAwayCardStatsView: NibView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 38)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 52)
     }
 
 }

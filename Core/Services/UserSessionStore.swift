@@ -119,7 +119,7 @@ class UserSessionStore {
         UserDefaults.standard.userSession = nil
         userSessionPublisher.send(nil)
         userBalanceWallet.send(nil)
-        self.unsubscribeWallet()
+        self.unsubscribeWalletUpdates()
         
         Env.gomaNetworkClient.reconnectSession()
 
@@ -243,12 +243,12 @@ extension UserSessionStore {
             .sink(receiveCompletion: { _ in
             }, receiveValue: { [weak self] value in
                 print("\(value)")
-                self?.subscribeWallet()
+                self?.subscribeWalletUpdates()
             })
             .store(in: &cancellables)
     }
 
-    func subscribeWallet() {
+    func subscribeWalletUpdates() {
         let endpoint = TSRouter.accountBalancePublisher
 
         self.userWalletPublisher?.cancel()
@@ -281,11 +281,9 @@ extension UserSessionStore {
             })
     }
 
-    func unsubscribeWallet() {
+    func unsubscribeWalletUpdates() {
         if let walletRegister = self.userWalletRegister {
-
             Env.everyMatrixClient.manager.unsubscribeFromEndpoint(endpointPublisherIdentifiable: walletRegister)
-
         }
     }
 

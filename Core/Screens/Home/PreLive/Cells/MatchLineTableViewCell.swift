@@ -297,19 +297,26 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
 
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
     }
 
@@ -318,7 +325,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: 133)
+            return CGSize(width: 99, height: MatchWidgetCollectionViewCell.cellHeight)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -328,7 +335,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 width = 390
             }
             
-            return CGSize(width: width, height: 133) // design width: 331
+            return CGSize(width: width, height: MatchWidgetCollectionViewCell.cellHeight) // design width: 331
         }
     }
 }

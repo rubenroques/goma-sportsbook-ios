@@ -73,9 +73,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    private var leftOddButtonSubscriber: AnyCancellable?
-    private var middleOddButtonSubscriber: AnyCancellable?
-    private var rightOddButtonSubscriber: AnyCancellable?
+    static var cellHeight: CGFloat = 156
 
     var match: Match?
 
@@ -89,6 +87,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+
+    var tappedMatchWidgetAction: (() -> Void)?
+
+
+    private var leftOddButtonSubscriber: AnyCancellable?
+    private var middleOddButtonSubscriber: AnyCancellable?
+    private var rightOddButtonSubscriber: AnyCancellable?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -114,7 +119,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    var tappedMatchWidgetAction: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()

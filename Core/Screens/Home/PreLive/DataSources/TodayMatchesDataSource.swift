@@ -91,7 +91,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             // Loading cell
             return 70
         default:
-            return 155
+            return UITableView.automaticDimension
         }
     }
 
@@ -101,7 +101,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             // Loading cell
             return 70
         default:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         }
     }
 

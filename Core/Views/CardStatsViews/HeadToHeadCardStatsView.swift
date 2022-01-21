@@ -46,18 +46,18 @@ class HeadToHeadCardStatsView: NibView {
     override func commonInit() {
         self.setupWithTheme()
 
-        self.winHomeValueLabel.text = "9/10"
+        self.winHomeValueLabel.text = "9"
         self.winHomeProgressBar.progress = 0.9
-        self.drawHomeValueLabel.text = "0/10"
+        self.drawHomeValueLabel.text = "0"
         self.drawHomeProgressBar.progress = 0.0
-        self.lossHomeValueLabel.text = "1/10"
+        self.lossHomeValueLabel.text = "1"
         self.lossHomeProgressBar.progress = 0.1
 
-        self.winAwayValueLabel.text = "2/10"
+        self.winAwayValueLabel.text = "2"
         self.winAwayProgressBar.progress = 0.2
-        self.drawAwayValueLabel.text = "5/10"
+        self.drawAwayValueLabel.text = "5"
         self.drawAwayProgressBar.progress = 0.5
-        self.lossAwayValueLabel.text = "3/10"
+        self.lossAwayValueLabel.text = "3"
         self.lossAwayProgressBar.progress = 0.3
 
     }
@@ -108,7 +108,7 @@ class HeadToHeadCardStatsView: NibView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 38)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 52)
     }
 
 }
