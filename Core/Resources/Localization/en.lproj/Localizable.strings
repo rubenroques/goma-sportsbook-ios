@@ -303,3 +303,12 @@ Terms of use, Privacy Policy and EULA";
 
 "search_for_teams_competitions" = "Search for Teams or Competitions…";
 "no_recent_searches" = "No recent searches";
+"results_count" = "%s Results";
+"results_count_singular" = "%s Result";
+
+"sport_id_1_name" = "Football";
+"sport_id_2_name" = "Golf";
+"sport_id_3_name" = "Tennis";
+"sport_id_8_name" = "Basketball";
+
+

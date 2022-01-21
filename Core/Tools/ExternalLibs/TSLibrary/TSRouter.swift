@@ -49,6 +49,8 @@ enum TSRouter {
     case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
 
+    case searchV2(language: String, limit: Int, query: String, eventInfoTypes: [Int])
+
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
@@ -194,6 +196,9 @@ enum TSRouter {
 
         case .matchDetailsAggregatorPublisher(let operatorId, let language, let matchId):
             return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
+
+        case .searchV2:
+            return "/sports#searchV2"
 
         //
         // EM Subscription
@@ -538,6 +543,12 @@ enum TSRouter {
                     "betStatuses": ticketsType.queryArray,
                     "nrOfRecords": records,
                     "page": page]
+
+        case .searchV2(let language, let limit, let query, let eventInfoTypes):
+            return ["lang": language,
+                    "limit": limit,
+                    "query": query,
+                    "eventInfoTypes": eventInfoTypes]
 
         //
         //

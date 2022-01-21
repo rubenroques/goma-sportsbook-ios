@@ -18,10 +18,16 @@ class SearchViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var emptySearchView: UIView!
     @IBOutlet private weak var emptySearchLabel: UILabel!
+    @IBOutlet private weak var noResultsView: UIView!
+    @IBOutlet private weak var noResultsImageView: UIImageView!
+    @IBOutlet private weak var noResultsLabel: UILabel!
+
 
     // Variables
     var viewModel: SearchViewModel
     var cancellables = Set<AnyCancellable>()
+
+    var didSelectMatchAction: ((Match) -> Void)?
 
     var showSearchResultsTableView: Bool = false {
         didSet {
@@ -33,6 +39,21 @@ class SearchViewController: UIViewController {
                 self.tableView.isHidden = true
                 self.emptySearchView.isHidden = false
             }
+            self.noResultsView.isHidden = true
+        }
+    }
+
+    var showNoResultsView: Bool = false {
+        didSet {
+            if showNoResultsView {
+                self.tableView.isHidden = true
+                self.noResultsView.isHidden = false
+            }
+            else {
+                self.tableView.isHidden = false
+                self.noResultsView.isHidden = true
+            }
+            self.emptySearchView.isHidden = true
         }
     }
 
@@ -69,6 +90,11 @@ class SearchViewController: UIViewController {
         self.cancelButton.tintColor = UIColor.App.headingMain
 
         self.emptySearchLabel.textColor = UIColor.App.fadeOutHeading
+
+        self.noResultsView.backgroundColor = .clear
+        self.noResultsImageView.backgroundColor = .clear
+
+        self.noResultsLabel.textColor = UIColor.App.headingMain
     }
 
     func commonInit() {
@@ -112,7 +138,7 @@ class SearchViewController: UIViewController {
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
-        self.tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
+        self.tableView.register(SearchTitleSectionUITableViewHeaderFooterView.nib, forHeaderFooterViewReuseIdentifier: SearchTitleSectionUITableViewHeaderFooterView.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         self.tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
@@ -126,9 +152,18 @@ class SearchViewController: UIViewController {
 
         self.showSearchResultsTableView = false
 
-        //Empty Search View
+        // Empty Search View
         self.emptySearchLabel.text = localized("no_recent_searches")
         self.emptySearchLabel.font = AppFont.with(type: .bold, size: 16)
+
+        // No Results View
+        self.noResultsView.isHidden = true
+
+        self.noResultsImageView.image = UIImage(named: "no_search_results_icon")
+        self.noResultsImageView.layer.cornerRadius = self.noResultsImageView.frame.width/2
+
+        self.noResultsLabel.text = ""
+        self.noResultsLabel.font = AppFont.with(type: .bold, size: 22)
     }
 
     func setupPublishers() {
@@ -137,27 +172,47 @@ class SearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] value in
                 if !value.isEmpty {
-                    self?.emptySearchLabel.text = self?.viewModel.recentSearchesPublisher.value[0]
+//                    self?.emptySearchLabel.text = self?.viewModel.recentSearchesPublisher.value[0]
                 }
                 else {
-                    //self?.showSearchResultsTableView = true
+                    // self?.showSearchResultsTableView = true
                 }
             })
             .store(in: &cancellables)
 
-        self.viewModel.searchInfoPublisher
+        self.viewModel.searchMatchesPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] searchInfo in
                 if !searchInfo.isEmpty {
+                    self?.showNoResultsView = false
                     self?.showSearchResultsTableView = true
                     self?.tableView.reloadData()
                 }
+                else if searchInfo.isEmpty && self?.viewModel.hasDoneSearch == true {
+                    self?.showSearchResultsTableView = false
+                    self?.configureNoResultsViewText()
+                    self?.showNoResultsView = true
+                }
                 else {
                     self?.showSearchResultsTableView = false
+
                 }
             })
             .store(in: &cancellables)
 
+        self.didSelectMatchAction = { match in
+            let matchDetailsViewController = MatchDetailsViewController(match: match)
+            //self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+            self.present(matchDetailsViewController, animated: true, completion: nil)
+        }
+
+    }
+
+    func configureNoResultsViewText() {
+        if let searchBarText = self.searchBarView.text {
+            self.noResultsLabel.text = "No results for '\(searchBarText)'"
+
+        }
     }
 
     @IBAction private func didTapCancelButton() {
@@ -172,28 +227,31 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController: UISearchBarDelegate {
 
-    func searchMatches(recentSearch: String = "") {
+    func searchMatches(searchQuery: String = "") {
 
-        if recentSearch != "" {
-            self.viewModel.addRecentSearch(search: recentSearch)
+        if searchQuery != "" {
+            self.viewModel.fetchSearchInfo(searchQuery: searchQuery)
         }
-
-        self.viewModel.fetchSearchInfo()
+        else {
+            self.showSearchResultsTableView = false
+        }
 
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchBar.text?.count ?? 0 > 2 {
-            self.searchMatches()
-        }
-        else {
+        if searchBar.text?.count ?? 0 < 3 {
+            self.showNoResultsView = false
             self.showSearchResultsTableView = false
         }
     }
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let recentSearch = searchBar.text {
-            self.searchMatches(recentSearch: recentSearch)
+            self.searchMatches(searchQuery: recentSearch)
+
+            if recentSearch != "" {
+                self.viewModel.addRecentSearch(search: recentSearch)
+            }
         }
         self.searchBarView.resignFirstResponder()
     }
@@ -207,16 +265,20 @@ extension SearchViewController: UISearchBarDelegate {
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.searchInfoPublisher.value.count
+        return self.viewModel.sportMatchesArrayPublisher.value.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.searchInfoPublisher.value.count
+        return self.viewModel.sportMatchesArrayPublisher.value[section].matches.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
-
+            let cellMatch = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
+            cell.setupWithMatch(cellMatch)
+            cell.tappedMatchLineAction = {
+                self.didSelectMatchAction?(cellMatch)
+            }
             return cell
         }
         return UITableViewCell()
@@ -229,11 +291,19 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchTitleSectionUITableViewHeaderFooterView.identifier) as? SearchTitleSectionUITableViewHeaderFooterView
         else {
             fatalError()
         }
-        headerView.configureWithTitle("Match")
+
+        let sportId = "\(self.viewModel.sportMatchesArrayPublisher.value[section].sportType)"
+
+        let sportIdName = localized("sport_id_\(sportId)_name")
+
+        let resultsLabel = self.viewModel.setHeaderSectionTitle(section: section)
+        
+        headerView.configureLabels(nameText: "\(sportIdName) - ", countText: resultsLabel)
+
         return headerView
     }
 

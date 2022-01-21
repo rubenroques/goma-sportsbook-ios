@@ -716,6 +716,12 @@
 		A995C198279991A100151462 /* SearchViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C194279991A100151462 /* SearchViewController.xib */; };
 		A995C19A2799AF1100151462 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1992799AF1100151462 /* SearchViewModel.swift */; };
 		A995C19B2799AF1100151462 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1992799AF1100151462 /* SearchViewModel.swift */; };
+		A995C19E279AD52300151462 /* SearchV2Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C19D279AD52300151462 /* SearchV2Response.swift */; };
+		A995C19F279AD52300151462 /* SearchV2Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C19D279AD52300151462 /* SearchV2Response.swift */; };
+		A995C1AC279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */; };
+		A995C1AD279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */; };
+		A995C1AE279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */; };
+		A995C1AF279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */; };
 		A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A32788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */; };
@@ -1263,6 +1269,9 @@
 		A995C193279991A100151462 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		A995C194279991A100151462 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
 		A995C1992799AF1100151462 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		A995C19D279AD52300151462 /* SearchV2Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchV2Response.swift; sourceTree = "<group>"; };
+		A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTitleSectionUITableViewHeaderFooterView.swift; sourceTree = "<group>"; };
+		A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchTitleSectionUITableViewHeaderFooterView.xib; sourceTree = "<group>"; };
 		A996229F2788563F00ABDF97 /* SportsAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregator.swift; sourceTree = "<group>"; };
 		A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregatorRepository.swift; sourceTree = "<group>"; };
 		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
@@ -2636,11 +2645,29 @@
 		A995C1922799917100151462 /* Search */ = {
 			isa = PBXGroup;
 			children = (
+				A995C1A0279B0BC500151462 /* Cells */,
 				A995C193279991A100151462 /* SearchViewController.swift */,
 				A995C194279991A100151462 /* SearchViewController.xib */,
 				A995C1992799AF1100151462 /* SearchViewModel.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		A995C19C279AD50100151462 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				A995C19D279AD52300151462 /* SearchV2Response.swift */,
+			);
+			path = Search;
+			sourceTree = "<group>";
+		};
+		A995C1A0279B0BC500151462 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */,
+				A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
@@ -2750,6 +2777,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				A995C19C279AD50100151462 /* Search */,
 				A90D8AFF277228A300DF88EB /* Withdraws */,
 				A987579F276CDB860099990D /* Deposits */,
 				A9BCF44E2755283B006DD528 /* Cashouts */,
@@ -3189,6 +3217,7 @@
 				A96279F52743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
 				454E0ACE2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
+				A995C1AE279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */,
 				A9BCF445274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
 				A995C197279991A100151462 /* SearchViewController.xib in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
@@ -3358,6 +3387,7 @@
 				45726334272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
+				A995C1AF279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */,
 				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
 				455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */,
 				458BAC842770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */,
@@ -3468,6 +3498,7 @@
 				A9B8409F26DE712500269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42526C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				A9C82FC326F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
+				A995C19E279AD52300151462 /* SearchV2Response.swift in Sources */,
 				F4CE68452742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				A9BCF45027552851006DD528 /* Cashout.swift in Sources */,
 				45936CB9270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
@@ -3664,6 +3695,7 @@
 				45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF626BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342726C18257009D7D27 /* Logger.swift in Sources */,
+				A995C1AC279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */,
 				F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896726C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
@@ -3789,6 +3821,7 @@
 				A9B840A126DE749000269B05 /* EnabledAccessViewController.swift in Sources */,
 				4589F42626C02DF3005DF543 /* TableViewDescriptor.swift in Sources */,
 				A9C82FC426F89B4500059DCD /* PasswordUpdateViewController.swift in Sources */,
+				A995C19F279AD52300151462 /* SearchV2Response.swift in Sources */,
 				F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				A9BCF45127552851006DD528 /* Cashout.swift in Sources */,
 				45936CBA270EF08B00E8260E /* SportsTypeStore.swift in Sources */,
@@ -3985,6 +4018,7 @@
 				45166CE626F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF726BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342826C18257009D7D27 /* Logger.swift in Sources */,
+				A995C1AD279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */,
 				F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE826F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896826C32D3F00BCD5DA /* NetworkModels.swift in Sources */,

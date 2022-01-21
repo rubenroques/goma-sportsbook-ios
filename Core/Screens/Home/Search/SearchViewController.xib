@@ -15,6 +15,9 @@
                 <outlet property="containerView" destination="jFx-km-kNQ" id="Wn8-nm-ErO"/>
                 <outlet property="emptySearchLabel" destination="hN8-rZ-Swy" id="qjV-dp-38G"/>
                 <outlet property="emptySearchView" destination="Cqu-nv-cd3" id="M0d-vJ-8bP"/>
+                <outlet property="noResultsImageView" destination="5p3-cV-kTd" id="nox-v6-r2c"/>
+                <outlet property="noResultsLabel" destination="gdZ-TQ-2EP" id="Nep-Tq-XdJ"/>
+                <outlet property="noResultsView" destination="JjD-8h-NkQ" id="Ec3-KQ-CzT"/>
                 <outlet property="searchBarView" destination="NBz-vD-V4I" id="vrr-dS-Z33"/>
                 <outlet property="searchView" destination="3XU-fx-AUl" id="pRj-Ww-bbv"/>
                 <outlet property="tableView" destination="qTz-Oi-ZnW" id="fc2-ic-tCF"/>
@@ -62,11 +65,11 @@
                                 <constraint firstItem="fe8-ok-HJs" firstAttribute="leading" secondItem="NBz-vD-V4I" secondAttribute="trailing" constant="8" id="wsC-gc-J5k"/>
                             </constraints>
                         </view>
-                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Jgh-9u-OGD">
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="Jgh-9u-OGD">
                             <rect key="frame" x="0.0" y="60" width="414" height="758"/>
                             <subviews>
-                                <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Cqu-nv-cd3">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="128"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Cqu-nv-cd3">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="252.5"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hN8-rZ-Swy">
                                             <rect key="frame" x="15" y="30" width="384" height="20.5"/>
@@ -82,8 +85,34 @@
                                         <constraint firstItem="hN8-rZ-Swy" firstAttribute="top" secondItem="Cqu-nv-cd3" secondAttribute="top" constant="30" id="fzb-3N-SrR"/>
                                     </constraints>
                                 </view>
-                                <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qTz-Oi-ZnW">
-                                    <rect key="frame" x="0.0" y="128" width="414" height="630"/>
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JjD-8h-NkQ">
+                                    <rect key="frame" x="0.0" y="252.5" width="414" height="253"/>
+                                    <subviews>
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_search_results_icon" translatesAutoresizingMaskIntoConstraints="NO" id="5p3-cV-kTd">
+                                            <rect key="frame" x="149.5" y="100" width="115" height="115"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="115" id="0uK-ln-Ttd"/>
+                                                <constraint firstAttribute="height" constant="115" id="JBC-PB-FoT"/>
+                                            </constraints>
+                                        </imageView>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gdZ-TQ-2EP">
+                                            <rect key="frame" x="30" y="250" width="354" height="20.5"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                    <constraints>
+                                        <constraint firstItem="5p3-cV-kTd" firstAttribute="top" secondItem="JjD-8h-NkQ" secondAttribute="top" constant="100" id="65S-81-kG0"/>
+                                        <constraint firstItem="gdZ-TQ-2EP" firstAttribute="leading" secondItem="JjD-8h-NkQ" secondAttribute="leading" constant="30" id="FDf-3Q-i2g"/>
+                                        <constraint firstItem="5p3-cV-kTd" firstAttribute="centerX" secondItem="JjD-8h-NkQ" secondAttribute="centerX" id="Sk5-ti-Nid"/>
+                                        <constraint firstAttribute="trailing" secondItem="gdZ-TQ-2EP" secondAttribute="trailing" constant="30" id="Yka-OG-XqS"/>
+                                        <constraint firstItem="gdZ-TQ-2EP" firstAttribute="top" secondItem="5p3-cV-kTd" secondAttribute="bottom" constant="35" id="wA5-Qa-l5w"/>
+                                    </constraints>
+                                </view>
+                                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qTz-Oi-ZnW">
+                                    <rect key="frame" x="0.0" y="505.5" width="414" height="252.5"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 </tableView>
                             </subviews>
@@ -117,6 +146,7 @@
         </view>
     </objects>
     <resources>
+        <image name="no_search_results_icon" width="161" height="161"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
