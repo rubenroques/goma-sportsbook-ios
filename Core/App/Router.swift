@@ -73,8 +73,9 @@ class Router {
             .store(in: &cancellables)
 
         Env.businessSettingsSocket.requiredVersionPublisher
-            .receive(on: RunLoop.main)
-            .delay(for: 3, scheduler: RunLoop.main).sink { serverVersion in
+            .receive(on: DispatchQueue.main)
+            .delay(for: 3, scheduler: DispatchQueue.main)
+            .sink { serverVersion in
 
                 guard
                     let currentVersion = Bundle.main.versionNumber,
@@ -97,7 +98,7 @@ class Router {
             .store(in: &cancellables)
 
         Env.locationManager.locationStatus
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { locationStatus in
 
                 Logger.log("Router.locationManager received \(locationStatus)")

@@ -70,6 +70,7 @@ extension EveryMatrix {
     }
 
     enum CashoutContentUpdate: Decodable {
+
         // UPDATES
         case cashoutUpdate(id: String, value: Double?, stake: Double?)
         // CREATES
@@ -107,26 +108,20 @@ extension EveryMatrix {
             var contentUpdateType: CashoutContentUpdate?
 
             if changeTypeString == "UPDATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
-
                 if entityTypeString == "CASHOUT" {
                     if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: CashoutCodingKeys.self, forKey: .changedProperties) {
-
                         let value = try? changedPropertiesContainer.decode(Double.self, forKey: .value)
                         let stake = try? changedPropertiesContainer.decode(Double.self, forKey: .stake)
                         self = .cashoutUpdate(id: contentId, value: value, stake: stake)
-
                         contentUpdateType = self
-
                     }
                 }
 
             }
             else if changeTypeString == "CREATE", let contentId = try? container.decode(String.self, forKey: .contentId) {
                 if entityTypeString == "CASHOUT" {
-
                     if let cashout = try? container.decode(EveryMatrix.Cashout.self, forKey: .entity) {
                         contentUpdateType = .cashoutCreate(cashout: cashout)
-
                     }
                 }
             }

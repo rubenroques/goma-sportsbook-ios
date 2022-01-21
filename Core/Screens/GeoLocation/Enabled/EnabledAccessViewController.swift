@@ -58,13 +58,13 @@ class EnabledAccessViewController: UIViewController {
 
         enabledLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         enabledLabel.numberOfLines = 0
-        enabledLabel.text = localized("string_success_location")
+        enabledLabel.text = localized("success_location")
         enabledLabel.sizeToFit()
 
         dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         dismissButton.layer.cornerRadius = 5
         dismissButton.layer.borderWidth = 1
-        dismissButton.setTitle(localized("string_done"), for: .normal)
+        dismissButton.setTitle(localized("done"), for: .normal)
     }
 
     @IBAction private func dismissAction() {

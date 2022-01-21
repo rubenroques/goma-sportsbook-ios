@@ -50,15 +50,15 @@ class RefusedAccessViewController: UIViewController {
         refusedImageView.contentMode = .scaleAspectFill
         refusedTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         refusedTitleLabel.numberOfLines = 0
-        refusedTitleLabel.text = localized("string_refused_location")
+        refusedTitleLabel.text = localized("refused_location")
         refusedTitleLabel.sizeToFit()
         refusedSubtitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
         refusedSubtitleLabel.numberOfLines = 0
-        refusedSubtitleLabel.text = localized("string_refused_location_subtitle")
+        refusedSubtitleLabel.text = localized("refused_location_subtitle")
         locationButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         locationButton.layer.cornerRadius = 5
         locationButton.layer.borderWidth = 1
-        locationButton.setTitle(localized("string_enable_location"), for: .normal)
+        locationButton.setTitle(localized("enable_location"), for: .normal)
     }
 
     @IBAction private func enableLocationAction() {

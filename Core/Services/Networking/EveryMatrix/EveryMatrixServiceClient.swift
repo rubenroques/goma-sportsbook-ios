@@ -1,37 +1,39 @@
-
 import Foundation
 import Combine
 import Reachability
 
-enum EveryMatrixServiceStatus {
+enum EveryMatrixServiceSocketStatus {
     case connected
     case disconnected
 }
 
+enum EveryMatrixServiceUserSessionStatus {
+    case anonymous
+    case logged
+}
+
 class EveryMatrixServiceClient: ObservableObject {
 
-    var serviceStatusPublisher: CurrentValueSubject<EveryMatrixServiceStatus, Never> = .init(.disconnected)
+    var serviceStatusPublisher: CurrentValueSubject<EveryMatrixServiceSocketStatus, Never> = .init(.disconnected)
+    var userSessionStatusPublisher: CurrentValueSubject<EveryMatrixServiceUserSessionStatus, Never> = .init(.anonymous)
 
     //
-    private var manager: TSManager!
+    var manager: TSManager = TSManager()
+
     private var cancellable = Set<AnyCancellable>()
 
-    private let reachability = try! Reachability()
-    private var wasLostConnection = false
+    private let reachability = try! Reachability() // swiftlint:disable:this force_try
+    private var isInitialConnectionCheck = true
 
     init() {
         // The singleton init below is used to start up TS connection
-        manager = TSManager.shared
 
         reachability.whenReachable = { [weak self] _ in
-            if self?.wasLostConnection ?? false {
-                self?.connectTS()
-                self?.wasLostConnection = false
+            if self?.isInitialConnectionCheck ?? true {
+                self?.isInitialConnectionCheck = false
+                return
             }
-        }
-
-        reachability.whenUnreachable = { [weak self] _ in
-            self?.wasLostConnection = true
+            self?.reconnectSocket()
         }
 
         do {
@@ -41,31 +43,63 @@ class EveryMatrixServiceClient: ObservableObject {
             Logger.log("Reachability startNotifier error")
         }
 
-        NotificationCenter.default.publisher(for: .sessionConnected)
-            .sink { _ in
-                Logger.log("Socket connected: \(TSManager.shared.isConnected)")
-                self.serviceStatusPublisher.send(.connected)
+        // =====
+        // User session state
+        NotificationCenter.default.publisher(for: .userSessionConnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - User Session Connected")
+                self?.userSessionStatusPublisher.send(.logged)
             }
             .store(in: &cancellable)
 
-        NotificationCenter.default.publisher(for: .sessionDisconnected)
+        NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.serviceStatusPublisher.send(.disconnected)
-                self.connectTS()
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - User Session Forced Logout Disconnected")
+                self?.userSessionStatusPublisher.send(.anonymous)
             }
             .store(in: &cancellable)
+
+        NotificationCenter.default.publisher(for: .userSessionDisconnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - User Session Disconnected")
+                self?.userSessionStatusPublisher.send(.anonymous)
+            }
+            .store(in: &cancellable)
+
+        // =====
+        // Socket state
+        NotificationCenter.default.publisher(for: .socketConnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - Socket Session Connected")
+                self?.serviceStatusPublisher.send(.connected)
+            }
+            .store(in: &cancellable)
+
+        NotificationCenter.default.publisher(for: .socketDisconnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - Socket Session Disconnected")
+                self?.serviceStatusPublisher.send(.disconnected)
+                self?.reconnectSocket()
+            }
+            .store(in: &cancellable)
+
     }
 
-    func connectTS() {
-        Logger.log("***ShouldReconnectTS")
-        TSManager.shared.destroySwampSession()
-        TSManager.destroySharedInstance()
-        manager = TSManager.shared
+    func reconnectSocket() {
+
+        self.manager.destroySwampSession()
+
+        manager = TSManager()
+        Logger.log("EMSessionLoginFLow - Created new socket session")
     }
 
     static func operatorInfo() -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getOperatorInfo, decodingType: EveryMatrix.OperatorInfo.self)
+        return Env.everyMatrixClient.manager.getModel(router: .getOperatorInfo, decodingType: EveryMatrix.OperatorInfo.self)
             .handleEvents(receiveOutput: { (operatorInfo: EveryMatrix.OperatorInfo) in
                 print("OperatorInfo \(operatorInfo)")
             })
@@ -73,9 +107,9 @@ class EveryMatrixServiceClient: ObservableObject {
     }
 
     func login(username: String, password: String) -> AnyPublisher<LoginAccount, EveryMatrix.APIError> {
-        return TSManager.shared
+        return self.manager
             .getModel(router: .login(username: username, password: password), decodingType: LoginAccount.self)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
@@ -87,186 +121,128 @@ class EveryMatrixServiceClient: ObservableObject {
     }
 
     func logout() -> AnyPublisher<Bool, EveryMatrix.APIError> {
-        return TSManager.shared
+        return self.manager
             .getModel(router: .logout, decodingType: Bool.self)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
     }
 
     func getSessionInfo() -> AnyPublisher<SessionInfo, EveryMatrix.APIError> {
-        return TSManager.shared
+        return self.manager
             .getModel(router: .getSessionInfo, decodingType: SessionInfo.self)
             .eraseToAnyPublisher()
     }
 
     func getOperatorInfo() -> AnyPublisher<EveryMatrix.OperatorInfo, EveryMatrix.APIError> {
-        return TSManager.shared
+        return self.manager
             .getModel(router: .getOperatorInfo, decodingType: EveryMatrix.OperatorInfo.self)
             .eraseToAnyPublisher()
     }
 
     func validateEmail(_ email: String) -> AnyPublisher<EveryMatrix.EmailAvailability, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .validateEmail(email: email), decodingType: EveryMatrix.EmailAvailability.self)
+        return self.manager.getModel(router: .validateEmail(email: email), decodingType: EveryMatrix.EmailAvailability.self)
             .eraseToAnyPublisher()
     }
 
     func validateUsername(_ username: String) -> AnyPublisher<EveryMatrix.UsernameAvailability, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .validateUsername(username: username), decodingType: EveryMatrix.UsernameAvailability.self)
+        return self.manager.getModel(router: .validateUsername(username: username), decodingType: EveryMatrix.UsernameAvailability.self)
             .eraseToAnyPublisher()
     }
 
     func simpleRegister(form: EveryMatrix.SimpleRegisterForm) -> AnyPublisher<EveryMatrix.RegistrationResponse, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .simpleRegister(form: form), decodingType: EveryMatrix.RegistrationResponse.self)
+        return self.manager.getModel(router: .simpleRegister(form: form), decodingType: EveryMatrix.RegistrationResponse.self)
             .breakpointOnError()
             .eraseToAnyPublisher()
     }
 
     func updateProfile(form: EveryMatrix.ProfileForm) -> AnyPublisher<EveryMatrix.ProfileUpdateResponse, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .profileUpdate(form: form), decodingType: EveryMatrix.ProfileUpdateResponse.self)
+        return self.manager.getModel(router: .profileUpdate(form: form), decodingType: EveryMatrix.ProfileUpdateResponse.self)
             .breakpointOnError()
             .eraseToAnyPublisher()
     }
 
     func getCountries() -> AnyPublisher<EveryMatrix.CountryListing, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getCountries, decodingType: EveryMatrix.CountryListing.self)
+        return self.manager.getModel(router: .getCountries, decodingType: EveryMatrix.CountryListing.self)
             .eraseToAnyPublisher()
     }
 
     func getProfile() -> AnyPublisher<EveryMatrix.UserProfileField, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getProfile, decodingType: EveryMatrix.UserProfileField.self)
+        return self.manager.getModel(router: .getProfile, decodingType: EveryMatrix.UserProfileField.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getAccountBalanceWatcher() -> AnyPublisher<EveryMatrix.AccountBalanceWatcher, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .watchBalance, decodingType: EveryMatrix.AccountBalanceWatcher.self)
             .eraseToAnyPublisher()
     }
 
     func getPolicy() -> AnyPublisher<EveryMatrix.PasswordPolicy, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getPolicy, decodingType: EveryMatrix.PasswordPolicy.self)
+        return self.manager.getModel(router: .getPolicy, decodingType: EveryMatrix.PasswordPolicy.self)
             .eraseToAnyPublisher()
     }
 
     func getUserMetadata() -> AnyPublisher<EveryMatrix.UserMetadata, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getUserMetaData, decodingType: EveryMatrix.UserMetadata.self)
+        return self.manager.getModel(router: .getUserMetaData, decodingType: EveryMatrix.UserMetadata.self)
             .eraseToAnyPublisher()
     }
 
     func postUserMetadata(favoriteEvents: [String]) -> AnyPublisher<EveryMatrix.UserMetadata, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .postUserMetadata(favoriteEvents: favoriteEvents), decodingType: EveryMatrix.UserMetadata.self)
+        return self.manager.getModel(router: .postUserMetadata(favoriteEvents: favoriteEvents), decodingType: EveryMatrix.UserMetadata.self)
             .eraseToAnyPublisher()
     }
 
     func getProfileStatus() -> AnyPublisher<EveryMatrix.ProfileStatus, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getProfileStatus, decodingType: EveryMatrix.ProfileStatus.self)
+        return self.manager.getModel(router: .getProfileStatus, decodingType: EveryMatrix.ProfileStatus.self)
             .eraseToAnyPublisher()
     }
 
-    func changePassword(oldPassword: String, newPassword: String, captchaPublicKey: String?, captchaChallenge: String?, captchaResponse: String?) -> AnyPublisher<EveryMatrix.PasswordChange, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .changePassword(oldPassword: oldPassword, newPassword: newPassword, captchaPublicKey: captchaPublicKey ?? "", captchaChallenge: captchaChallenge ?? "", captchaResponse: captchaResponse ?? ""), decodingType: EveryMatrix.PasswordChange.self)
+    func changePassword(oldPassword: String,
+                        newPassword: String,
+                        captchaPublicKey: String?,
+                        captchaChallenge: String?,
+                        captchaResponse: String?) -> AnyPublisher<EveryMatrix.PasswordChange, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .changePassword(oldPassword: oldPassword,
+                                                                              newPassword: newPassword,
+                                                                              captchaPublicKey: captchaPublicKey ?? "",
+                                                                              captchaChallenge: captchaChallenge ?? "",
+                                                                              captchaResponse: captchaResponse ?? ""),
+                                                      decodingType: EveryMatrix.PasswordChange.self)
             .eraseToAnyPublisher()
     }
 
     func getDisciplinesData(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
+        return self.manager.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .eraseToAnyPublisher()
-    }
-
-    func getDisciplines(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellable)
-    }
-
-    func getLocations(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .locations(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellable)
-    }
-
-    func getTournaments(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .tournaments(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellable)
-    }
-
-    func getPopularTournaments(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .popularTournaments(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellable)
     }
 
     func getMatches(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .matches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
+        return self.manager.getModel(router: .matches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
     }
 
     func getMatchDetails(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Match>, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getMatchDetails(language: language, matchId: matchId), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
-    }
-
-    func getPopularMatches(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .popularMatches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellable)
-    }
-
-    func getTodayMatches(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .todayMatches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellable)
-    }
-
-    func getNextMatches(payload: [String: Any]?) {
-        TSManager.shared.getModel(router: .nextMatches(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { _ in
-
-            })
-            .store(in: &cancellable)
+        return self.manager.getModel(router: .getMatchDetails(language: language, matchId: matchId),
+                                     decodingType: EveryMatrixSocketResponse<EveryMatrix.Match>.self)
     }
 
     func getEvents(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Event>, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .events(payload: payload), decodingType: EveryMatrixSocketResponse<Event>.self)
+        return self.manager.getModel(router: .events(payload: payload), decodingType: EveryMatrixSocketResponse<Event>.self)
     }
 
     func getOdds(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<Odd>, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .odds(payload: payload), decodingType: EveryMatrixSocketResponse<Odd>.self)
+        return self.manager.getModel(router: .odds(payload: payload), decodingType: EveryMatrixSocketResponse<Odd>.self)
     }
 
-    func getDepositResponse(currency: String, amount: String, gamingAccountId: String) -> AnyPublisher<EveryMatrix.DepositResponse, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getDepositCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId), decodingType: EveryMatrix.DepositResponse.self)
+    func getDepositResponse(currency: String, amount: String, gamingAccountId: String)
+    -> AnyPublisher<EveryMatrix.DepositResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getDepositCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId),
+                                     decodingType: EveryMatrix.DepositResponse.self)
             .eraseToAnyPublisher()
     }
 
-    func getWithdrawResponse(currency: String, amount: String, gamingAccountId: String) -> AnyPublisher<EveryMatrix.WithdrawResponse, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .getWithdrawCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId), decodingType: EveryMatrix.WithdrawResponse.self)
+    func getWithdrawResponse(currency: String, amount: String, gamingAccountId: String)
+    -> AnyPublisher<EveryMatrix.WithdrawResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getWithdrawCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId),
+                                     decodingType: EveryMatrix.WithdrawResponse.self)
             .eraseToAnyPublisher()
     }
 
@@ -274,7 +250,7 @@ class EveryMatrixServiceClient: ObservableObject {
         do {
 
             let operatorId = Env.appSession.operatorId
-            let publisher = try TSManager.shared.subscribeEndpoint(.oddsMatch(operatorId: operatorId,
+            let publisher = try self.manager.subscribeEndpoint(.oddsMatch(operatorId: operatorId,
                                                                               language: language,
                                                                               matchId: matchId),
                                                                    decodingType: EveryMatrixSocketResponse<Odd>.self)
@@ -297,59 +273,8 @@ class EveryMatrixServiceClient: ObservableObject {
         }
     }
 
-    func subscribeSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
-        do {
-            let sportId = sportType.rawValue
-            let operatorId = Env.appSession.operatorId
-            let publisher = try TSManager.shared.subscribeEndpoint( .sportsStatus(operatorId: operatorId,
-                                                                                  language: language,
-                                                                                  sportId: sportId),
-                                                                    decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
-
-                .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Discipline>>) -> EveryMatrixSocketResponse<EveryMatrix.Discipline>? in
-                    print("subscriptionContent \(subscriptionContent)")
-                    switch subscriptionContent {
-                    case let .updatedContent(oddsData):
-                        return oddsData
-                    default:
-                        return nil
-                    }
-                }
-                .compactMap({ $0 })
-
-            return publisher.eraseToAnyPublisher()
-        }
-        catch {
-            return Fail.init(outputType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self, failure: EveryMatrix.APIError.notConnected).eraseToAnyPublisher()
-        }
-    }
-
-    func registerOnSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
-
-        let sportId = sportType.rawValue
-        let operatorId = Env.appSession.operatorId
-        let publisher = TSManager.shared.registerOnEndpoint(.sportsStatus(operatorId: operatorId,
-                                                                              language: language,
-                                                                              sportId: sportId),
-                                                            decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
-
-            .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Discipline>>) -> EveryMatrixSocketResponse<EveryMatrix.Discipline>? in
-                print("subscriptionContent \(subscriptionContent)")
-                switch subscriptionContent {
-                case let .updatedContent(oddsData):
-                    return oddsData
-                default:
-                    return nil
-                }
-            }
-            .compactMap({ $0 })
-
-        return publisher.eraseToAnyPublisher()
-
-    }
-
     func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrix.APIError> {
-        return TSManager.shared.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
+        return self.manager.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
     }
 
 }

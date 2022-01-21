@@ -72,7 +72,7 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     func setupWithViewModel(_ viewModel: BannerLineCellViewModel) {
         self.viewModel = viewModel
-        //self.collectionView.reloadData()
+        self.collectionView.reloadData()
     }
 
 }

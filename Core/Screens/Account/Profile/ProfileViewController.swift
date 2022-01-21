@@ -142,8 +142,8 @@ class ProfileViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.currentBalanceLabel.text = value
+            .sink { [weak self] value in
+                self?.currentBalanceLabel.text = value
             }
             .store(in: &cancellables)
 
@@ -176,7 +176,7 @@ class ProfileViewController: UIViewController {
         shadowView.layer.shadowOpacity = 0.4
 
         closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 18)
-        closeButton.setTitle(localized("string_close"), for: .normal)
+        closeButton.setTitle(localized("close"), for: .normal)
         closeButton.backgroundColor = .clear
 
         currentBalanceBaseView.layer.cornerRadius = CornerRadius.view
@@ -187,19 +187,19 @@ class ProfileViewController: UIViewController {
         depositButton.backgroundColor = .clear
         depositButton.layer.cornerRadius = CornerRadius.button
         depositButton.layer.masksToBounds = true
-        depositButton.setTitle(localized("string_deposit"), for: .normal)
+        depositButton.setTitle(localized("deposit"), for: .normal)
 
         withdrawButton.backgroundColor = UIColor.App2.buttonBackgroundSecondary
         withdrawButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.masksToBounds = true
         withdrawButton.layer.borderWidth = 2
-        withdrawButton.setTitle(localized("string_withdraw"), for: .normal)
+        withdrawButton.setTitle(localized("withdraw"), for: .normal)
 
         logoutButton.backgroundColor = .clear
         logoutButton.layer.cornerRadius = CornerRadius.button
         logoutButton.layer.masksToBounds = true
         logoutButton.layer.borderWidth = 2
-        logoutButton.setTitle(localized("string_logout"), for: .normal)
+        logoutButton.setTitle(localized("logout"), for: .normal)
 
         personalInfoBaseView.layer.cornerRadius = CornerRadius.view
         personalInfoIconBaseView.layer.cornerRadius = CornerRadius.view
@@ -256,22 +256,25 @@ class ProfileViewController: UIViewController {
         let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
         supportBaseView.addGestureRecognizer(supportTapGesture)
 
-        currentBalanceLabel.text = localized("string_loading")
+        currentBalanceLabel.text = localized("loading")
 
         //
-        personalInfoLabel.text = localized("string_personal_info")
-        passwordUpdateLabel.text = localized("string_update_password")
-        walletLabel.text = localized("string_wallet")
-        documentsLabel.text = localized("string_documents")
-        bonusLabel.text = localized("string_bonus")
-        historyLabel.text = localized("string_history")
-        limitsLabel.text = localized("string_limits_management")
-        appSettingsLabel.text = localized("string_app_settings")
-        supportLabel.text = localized("string_support")
+        personalInfoLabel.text = localized("personal_info")
+        passwordUpdateLabel.text = localized("update_password")
+        walletLabel.text = localized("wallet")
+        documentsLabel.text = localized("documents")
+        bonusLabel.text = localized("bonus")
+        historyLabel.text = localized("history")
+        limitsLabel.text = localized("limits_management")
+        appSettingsLabel.text = localized("app_settings")
+        supportLabel.text = localized("support")
 
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
-            self.infoLabel.text = "App Version \(versionNumber)(\(buildNumber))\nSportsbook® All Rights Reserved"
+            let appVersionRawString = localized("app_version_profile")
+            let appVersionBuildNumberString = appVersionRawString.replacingOccurrences(of: "(%s)", with: "(\(buildNumber))")
+            let appVersionStringFinal = appVersionBuildNumberString.replacingOccurrences(of: "%s", with: "\(versionNumber)")
+            self.infoLabel.text = appVersionStringFinal
         }
 
         activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
@@ -287,7 +290,10 @@ class ProfileViewController: UIViewController {
 
         if let userEmailVerified = userSession?.isEmailVerified {
             if !userEmailVerified {
-                let emailActivationAlertData = ActivationAlert(title: localized("string_verify_email"), description: localized("string_app_full_potential"), linkLabel: localized("string_verify_my_account"), alertType: .email)
+                let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+                                                               description: localized("app_full_potential"),
+                                                               linkLabel: localized("verify_my_account"),
+                                                               alertType: .email)
                 alertsArray.append(emailActivationAlertData)
                 showActivationAlertScrollableView = true
             }
@@ -295,7 +301,10 @@ class ProfileViewController: UIViewController {
 
         if let userSession = userSession {
             if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("string_complete_your_profile"), description: localized("string_complete_profile_description"), linkLabel: localized("string_finish_up_profile"), alertType: .profile)
+                let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+                                                               description: localized("complete_profile_description"),
+                                                               linkLabel: localized("finish_up_profile"),
+                                                               alertType: .profile)
 
                 alertsArray.append(completeProfileAlertData)
                 showActivationAlertScrollableView = true
@@ -418,10 +427,10 @@ class ProfileViewController: UIViewController {
             self.navigationController?.pushViewController(depositViewController, animated: true)
         }
         else {
-            let alert = UIAlertController(title: localized("string_profile_incomplete"),
-                                          message: localized("string_profile_incomplete_deposit"),
+            let alert = UIAlertController(title: localized("profile_incomplete"),
+                                          message: localized("profile_incomplete_deposit"),
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
 
@@ -435,10 +444,10 @@ class ProfileViewController: UIViewController {
             self.navigationController?.pushViewController(withDrawViewController, animated: true)
         }
         else {
-            let alert = UIAlertController(title: localized("string_profile_incomplete"),
-                                          message: localized("string_profile_incomplete_withdraw"),
+            let alert = UIAlertController(title: localized("profile_incomplete"),
+                                          message: localized("profile_incomplete_withdraw"),
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }

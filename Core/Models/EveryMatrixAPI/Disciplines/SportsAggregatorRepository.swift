@@ -18,22 +18,18 @@ class SportsAggregatorRepository {
     func processSportsAggregator(_ aggregator: EveryMatrix.SportsAggregator) {
 
         for content in aggregator.content ?? [] {
-
             switch content {
-
             case .sport(let sport):
-                if let sportId = sport.id {
-                    self.sportsLive[sportId] = sport
-                    self.sportsLivePublisher[sportId] = .init(sport)
-                }
+                self.sportsLive[sport.id] = sport
+                self.sportsLivePublisher[sport.id] = .init(sport)
             default:
                 ()
             }
         }
-
     }
 
     func processContentUpdateSportsAggregator(_ aggregator: EveryMatrix.SportsAggregator) {
+
         guard
             let contentUpdates = aggregator.contentUpdates
         else {
@@ -44,23 +40,19 @@ class SportsAggregatorRepository {
             switch update {
             case .sportUpdate(let id, let numberOfLiveEvents):
                 if let publisher = sportsLivePublisher[id] {
-
                     let sport = publisher.value
                     let updatedSport = sport.sportUpdated(numberOfLiveEvents: numberOfLiveEvents)
                     publisher.send(updatedSport)
                 }
-            case .fullSportUpdate(let sport):
-                if let sportId = sport.id {
-                    sportsLivePublisher[sportId] = .init(sport)
-                    sportsLive[sportId] = sport
 
-                }
+            case .fullSportUpdate(let sport):
+                self.sportsLivePublisher[sport.id] = .init(sport)
+                self.sportsLive[sport.id] = sport
                 changedSportsLivePublisher.send()
+
             case .sportDelete(let sportId):
-                if let sport = sportsLivePublisher[sportId] {
-                    sportsLivePublisher.removeValue(forKey: sportId)
-                    sportsLive.removeValue(forKey: sportId)
-                }
+                sportsLivePublisher.removeValue(forKey: sportId)
+                sportsLive.removeValue(forKey: sportId)
                 changedSportsLivePublisher.send()
 
             default:

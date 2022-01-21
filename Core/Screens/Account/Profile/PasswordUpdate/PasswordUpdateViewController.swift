@@ -50,14 +50,14 @@ class PasswordUpdateViewController: UIViewController {
 
     func commonInit() {
         headerLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
-        headerLabel.text = localized("string_update_password")
+        headerLabel.text = localized("update_password")
 
-        editButton.setTitle(localized("string_save"), for: .normal)
+        editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        oldPasswordHeaderTextFieldView.setPlaceholderText(localized("string_old_password"))
-        newPasswordHeaderTextFieldView.setPlaceholderText(localized("string_new_password"))
-        confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("string_confirm_password"))
+        oldPasswordHeaderTextFieldView.setPlaceholderText(localized("old_password"))
+        newPasswordHeaderTextFieldView.setPlaceholderText(localized("new_password"))
+        confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("confirm_password"))
 
         oldPasswordHeaderTextFieldView.setSecureField(true)
         oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
@@ -89,11 +89,13 @@ class PasswordUpdateViewController: UIViewController {
                 if self.passwordRegex == "" {
                     return false
                 }
-                if oldPassword == "" || new?.range(of: self.passwordRegex, options: .regularExpression) == nil || confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+                if oldPassword == "" ||
+                    new?.range(of: self.passwordRegex, options: .regularExpression) == nil ||
+                    confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
                     return false
                 }
                 if (new ?? "") != (confirm ?? "") {
-                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
+                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
                     return false
                 }
 
@@ -192,7 +194,11 @@ class PasswordUpdateViewController: UIViewController {
         }
 
         if validFields {
-            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text, newPassword: newPasswordHeaderTextFieldView.text, captchaPublicKey: "", captchaChallenge: "", captchaResponse: "")
+            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
+                                                 newPassword: newPasswordHeaderTextFieldView.text,
+                                                 captchaPublicKey: "",
+                                                 captchaChallenge: "",
+                                                 captchaResponse: "")
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .sink( receiveCompletion: { completion in
@@ -221,7 +227,7 @@ class PasswordUpdateViewController: UIViewController {
 
                     }
                 }, receiveValue: { _ in
-                    self.showAlert(type: .success, text: localized("string_success_edit_password"))
+                    self.showAlert(type: .success, text: localized("success_edit_password"))
                     UserDefaults.standard.userSession?.password = self.newPasswordHeaderTextFieldView.text
                 }).store(in: &cancellables)
 

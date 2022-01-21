@@ -75,33 +75,33 @@ class SimpleRegisterDetailsViewController: UIViewController {
     func commonInit() {
 
         registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)
-        registerTitleLabel.text = localized("string_signup")
+        registerTitleLabel.text = localized("signup")
 
-        usernameHeaderTextView.setPlaceholderText(localized("string_username"))
+        usernameHeaderTextView.setPlaceholderText(localized("username"))
 
-        emailHeaderTextView.setPlaceholderText(localized("string_email"))
+        emailHeaderTextView.setPlaceholderText(localized("email"))
         emailHeaderTextView.setSecureField(false)
         emailHeaderTextView.setTextFieldDefaultValue(self.emailAddress)
         emailHeaderTextView.isDisabled = true
 
         // dateHeaderTextView.shouldBeginEditing = { return false }
-        dateHeaderTextView.setPlaceholderText(localized("string_birth_date"))
+        dateHeaderTextView.setPlaceholderText(localized("birth_date"))
         dateHeaderTextView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
         dateHeaderTextView.setDatePickerMode()
 
-        indicativeHeaderTextView.setPlaceholderText(localized("string_phone_prefix"))
+        indicativeHeaderTextView.setPlaceholderText(localized("phone_prefix"))
         indicativeHeaderTextView.setText("----")
         indicativeHeaderTextView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!, size: 10)
         indicativeHeaderTextView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
         indicativeHeaderTextView.isUserInteractionEnabled = false
 
-        phoneHeaderTextView.setPlaceholderText(localized("string_phone_number"))
+        phoneHeaderTextView.setPlaceholderText(localized("phone_number"))
         phoneHeaderTextView.setKeyboardType(.numberPad)
 
-        passwordHeaderTextView.setPlaceholderText(localized("string_password"))
-        confirmPasswordHeaderTextView.setPlaceholderText(localized("string_confirm_password"))
+        passwordHeaderTextView.setPlaceholderText(localized("password"))
+        confirmPasswordHeaderTextView.setPlaceholderText(localized("confirm_password"))
 
-        signUpButton.setTitle(localized("string_signup"), for: .normal)
+        signUpButton.setTitle(localized("signup"), for: .normal)
         signUpButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
@@ -256,16 +256,16 @@ class SimpleRegisterDetailsViewController: UIViewController {
         let emailVerificationURL = EveryMatrixInfo.emailVerificationURL(withUserEmail: email)
 
         if password != confirmPassword {
-            passwordHeaderTextView.showErrorOnField(text: localized("string_password_not_match"), color: UIColor.App.alertError)
+            passwordHeaderTextView.showErrorOnField(text: localized("password_not_match"), color: UIColor.App.alertError)
             validFields = false
         }
         else if password.count < 8 {
-            passwordHeaderTextView.showTip(text: localized("string_weak_password"))
+            passwordHeaderTextView.showTip(text: localized("weak_password"))
             validFields = false
         }
 
 //        if dateHeaderTextView.text.isEmpty {
-//            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+//            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
 //            validFields = false
 //        }
         validFields = checkDateBirth()
@@ -289,14 +289,14 @@ class SimpleRegisterDetailsViewController: UIViewController {
     private func checkDateBirth() -> Bool {
 
         if dateHeaderTextView.text.isEmpty {
-            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             return false
         }
         else {
 
             let textDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
             if textDate > dateHeaderTextView.datePicker.date {
-                dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+                dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
                 return false
             }
         }
@@ -367,19 +367,19 @@ extension SimpleRegisterDetailsViewController {
 
     func showUsernameTakenErrorStatus() {
         self.usernameHeaderTextView
-            .showErrorOnField(text: localized("string_username_already_registered"), color: UIColor.App.alertError)
+            .showErrorOnField(text: localized("username_already_registered"), color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
 
     func showEmailTakenErrorStatus() {
         self.usernameHeaderTextView
-            .showErrorOnField(text: localized("string_email_already_registered"), color: UIColor.App.alertError)
+            .showErrorOnField(text: localized("email_already_registered"), color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
 
     func showPasswordTooWeakErrorStatus() {
         self.disableSignUpButton()
-        self.passwordHeaderTextView.showErrorOnField(text: localized("string_password_too_weak"), color: UIColor.App.alertError)
+        self.passwordHeaderTextView.showErrorOnField(text: localized("password_too_weak"), color: UIColor.App.alertError)
     }
 
     func showServerErrorStatus() {
@@ -496,7 +496,7 @@ extension SimpleRegisterDetailsViewController {
         // let fieldDate = dateHeaderTextView.datePicker.date
         let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
         if fieldDate > maxDate {
-            dateHeaderTextView.showErrorOnField(text: localized("string_invalid_birthDate"), color: UIColor.App.alertError)
+            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             dateHeaderTextView.datePicker.maximumDate = maxDate
         }
     }

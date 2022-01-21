@@ -56,20 +56,20 @@ class FullRegisterAddressCountryViewController: UIViewController {
     }
 
     func commonInit() {
-        closeButton.setTitle(localized("string_close"), for: .normal)
+        closeButton.setTitle(localized("close"), for: .normal)
         closeButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        progressLabel.text = localized("string_complete_signup")
+        progressLabel.text = localized("complete_signup")
         progressLabel.font = AppFont.with(type: .bold, size: 24)
 
-        titleLabel.text = localized("string_account_security")
+        titleLabel.text = localized("account_security")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        securityQuestionTextFieldView.setPlaceholderText(localized("string_security_question"))
+        securityQuestionTextFieldView.setPlaceholderText(localized("security_question"))
 
-        securityAnswerHeaderTextFieldView.setPlaceholderText(localized("string_security_answer"))
+        securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
 
-        continueButton.setTitle(localized("string_continue_"), for: .normal)
+        continueButton.setTitle(localized("continue_"), for: .normal)
         continueButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         continueButton.isEnabled = false
 
@@ -117,14 +117,14 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
     func setupPublishers() {
         self.securityQuestionTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
             .store(in: &cancellables)
 
         self.securityAnswerHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
@@ -152,7 +152,6 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
         registerForm.securityQuestion = securityQuestionText
         registerForm.securityAnswer = securityAnswerText
-        print(registerForm)
     }
 
     @IBAction private func backAction() {
@@ -175,8 +174,14 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
 
-        guard let userInfo = notification.userInfo else { return }
-        var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        guard
+            let userInfo = notification.userInfo,
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+
+
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset

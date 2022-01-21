@@ -25,6 +25,13 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersButtonView: UIView!
 
     @IBOutlet private weak var filtersCountLabel: UILabel!
+    
+    @IBOutlet private weak var emptyBaseView: UIView!
+    @IBOutlet private weak var firstTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var secondTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var emptyStateImage: UIImageView!
+    @IBOutlet private weak var emptyStateButton: UIButton!
+    
     @IBOutlet private weak var liveEventsCountView: UIView!
     @IBOutlet private weak var liveEventsCountLabel: UILabel!
 
@@ -78,20 +85,19 @@ class LiveEventsViewController: UIViewController {
     var viewModel: LiveEventsViewModel
 
     var filterSelectedOption: Int = 0
-    var selectedSportType: SportType {
+    var selectedSport: Sport {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)")
-            self.viewModel.selectedSportId = selectedSportType
-
+            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSport.id)")
+            self.viewModel.selectedSport = selectedSport
         }
     }
 
-    var didChangeSportType: ((SportType) -> Void)?
+    var didChangeSport: ((Sport) -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
-    init(selectedSportType: SportType = .football) {
-        self.selectedSportType = selectedSportType
-        self.viewModel = LiveEventsViewModel(selectedSportId: self.selectedSportType)
+    init(selectedSport: Sport = Sport.football) {
+        self.selectedSport = selectedSport
+        self.viewModel = LiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "LiveEventsViewController", bundle: nil)
     }
 
@@ -125,6 +131,9 @@ class LiveEventsViewController: UIViewController {
                 self.liveEventsCountView.isHidden = true
             }
         }
+        
+        self.tableView.isHidden = false
+        self.emptyBaseView.isHidden = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -280,6 +289,33 @@ class LiveEventsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+        
+        self.viewModel.screenStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] screenState in
+              
+            
+                switch screenState {
+                case .noEmptyNoFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+          
+                case .emptyNoFilter:
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_string_empty_list"), isUserLoggedIn: true)
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+                    
+                case .noEmptyAndFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+                case .emptyAndFilter:
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_string_empty_list_with_filters"), isUserLoggedIn: true)
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+            
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -295,6 +331,11 @@ class LiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
         self.betslipButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+    
+        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
+        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.emptyStateButton.backgroundColor = UIColor.App.primaryButtonNormal
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
@@ -308,20 +349,40 @@ class LiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSportToType(_ sportType: SportType) {
-        self.selectedSportType = sportType
-        self.didChangeSportType?(sportType)
+    func changedSport(_ sport: Sport) {
+        self.selectedSport = sport
+        self.didChangeSport?(sport)
     }
 
     @objc func handleSportsSelectionTap() {
-        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType, isLiveSport: true, sportsRepository: self.viewModel.sportsRepository)
-        sportSelectionVC.delegate = self
-        self.present(sportSelectionVC, animated: true, completion: nil)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport,
+                                                            isLiveSport: true,
+                                                            sportsRepository: self.viewModel.sportsRepository)
+        sportSelectionViewController.selectionDelegate = self
+        self.present(sportSelectionViewController, animated: true, completion: nil)
     }
 
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
+    
+    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool){
+    
+        if isUserLoggedIn {
+            self.emptyStateImage.image = UIImage(named: "no_content_icon")
+            self.firstTextFieldEmptyStateLabel.text = firstLabelText
+            self.secondTextFieldEmptyStateLabel.text = secondLabelText
+            self.emptyStateButton.isHidden = isUserLoggedIn
+        }else{
+            self.emptyStateImage.image = UIImage(named: "no_internet_icon")
+            self.firstTextFieldEmptyStateLabel.text = localized("empty_no_login")
+            self.secondTextFieldEmptyStateLabel.text = localized("second_string_empty_no_login")
+            self.emptyStateButton.isHidden = isUserLoggedIn
+            self.emptyStateButton.setTitle(localized("login"), for: .normal)
+        }
+        
+    }
+
 
 }
 
@@ -392,7 +453,7 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle(localized("string_all"))
+            cell.setupWithTitle(localized("all"))
         default:
             ()
         }
@@ -445,7 +506,9 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
 }
 
 extension LiveEventsViewController: SportTypeSelectionViewDelegate {
-    func setSportType(_ sportType: SportType) {
-        self.changedSportToType(sportType)
+
+    func selectedSport(_ sport: Sport) {
+        self.changedSport(sport)
     }
+
 }

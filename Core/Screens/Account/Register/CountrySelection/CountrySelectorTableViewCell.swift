@@ -11,8 +11,8 @@ class CountrySelectorTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var containerView: UIView!
 
-    @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var prefixLabel: UILabel!
+    @IBOutlet private weak var nameLabel: UILabel!
+    @IBOutlet private weak var prefixLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

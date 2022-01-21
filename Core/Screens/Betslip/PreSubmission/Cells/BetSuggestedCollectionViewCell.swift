@@ -9,16 +9,16 @@ import UIKit
 
 class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var betsStackView: UIStackView!
-    @IBOutlet weak var competitionTitleLabel: UILabel!
+    @IBOutlet private weak var betsStackView: UIStackView!
+    @IBOutlet private weak var competitionTitleLabel: UILabel!
 
-    @IBOutlet weak var informationBetView: UIView!
+    @IBOutlet private weak var informationBetView: UIView!
     
-    @IBOutlet weak var numberOfSelectionsLabel: UILabel!
-    @IBOutlet weak var numberOfSelectionsValueLabel: UILabel!
-    @IBOutlet weak var totalOddLabel: UILabel!
-    @IBOutlet weak var totalOddValueLabel: UILabel!
-    @IBOutlet weak var betNowButton: UIButton!
+    @IBOutlet private weak var numberOfSelectionsLabel: UILabel!
+    @IBOutlet private weak var numberOfSelectionsValueLabel: UILabel!
+    @IBOutlet private weak var totalOddLabel: UILabel!
+    @IBOutlet private weak var totalOddValueLabel: UILabel!
+    @IBOutlet private weak var betNowButton: UIButton!
 
     var betsArray: [Match] = []
     var gomaArray: [GomaSuggestedBets] = []

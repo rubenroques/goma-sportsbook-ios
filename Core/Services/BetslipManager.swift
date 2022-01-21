@@ -159,7 +159,7 @@ extension BetslipManager {
                                                      betType: .single,
                                                      tickets: ticketSelections)
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .handleEvents(receiveOutput: { betslipSelectionState in
                 self.simpleBetslipSelectionState.send(betslipSelectionState)
@@ -183,7 +183,7 @@ extension BetslipManager {
                                                      betType: .multiple,
                                                      tickets: ticketSelections)
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .receive(on: DispatchQueue.main)
             .sink { completion in
@@ -206,7 +206,7 @@ extension BetslipManager {
                                                        systemBetType: systemBetType,
                                                        tickets: ticketSelections)
 
-        return TSManager.shared
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .handleEvents(receiveOutput: { betslipSelectionState in
                 self.simpleBetslipSelectionState.send(betslipSelectionState)
@@ -217,7 +217,6 @@ extension BetslipManager {
 
     ///
     ///
-
     func placeAllSingleBets(withSkateAmount amounts: [String: Double]) -> AnyPublisher<[BetPlacedDetails], EveryMatrix.APIError> {
 
         let future = Future<[BetPlacedDetails], EveryMatrix.APIError>.init({ promise in
@@ -235,7 +234,10 @@ extension BetslipManager {
         return future
     }
 
-    private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails], amounts: [String: Double], completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void) {
+    private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails],
+                                     amounts: [String: Double],
+                                     completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void) {
+
         let ticketSelections = self.updatedBettingTicketsOdds()
         
         if ticketSelections.isEmpty {
@@ -248,8 +250,6 @@ extension BetslipManager {
             placeSingleBet(betTicketId: lastTicket.id, amount: lastTicketAmount)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { (publisherCompletion: Subscribers.Completion<EveryMatrix.APIError>) -> Void in
-                    print(publisherCompletion)
-
                     switch publisherCompletion {
                     case .failure(let error):
                         completion( .failure(error) )
@@ -284,9 +284,9 @@ extension BetslipManager {
                                       betType: .single,
                                       tickets: ticketSelections)
 
-        print("#BetslipManager# Submitting bet: \(route)")
+        Logger.log("BetslipManager - Submitting single bet: \(route)")
 
-        return TSManager.shared
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
             .map({ response in
                 return BetPlacedDetails.init(response: response, tickets: updatedTicketSelections)
@@ -306,7 +306,9 @@ extension BetslipManager {
                                       betType: .multiple,
                                       tickets: ticketSelections)
 
-        return TSManager.shared
+        Logger.log("BetslipManager - Submitting multiple bet: \(route)")
+
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
             .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
@@ -329,7 +331,9 @@ extension BetslipManager {
                                             systemBetType: systemBetType,
                                             tickets: ticketSelections)
 
-        return TSManager.shared
+        Logger.log("BetslipManager - Submitting system bet: \(route)")
+        
+        return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
             .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in

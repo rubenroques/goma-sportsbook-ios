@@ -20,6 +20,7 @@ class FavoritesManager {
         self.favoriteEventsWithTypePublisher = .init([])
         self.postGomaFavoritesPublisher = .init(false)
         self.favoriteEventsIdPublisher
+            .filter(\.isNotEmpty)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { value in
                 self.getEvents(events: value)

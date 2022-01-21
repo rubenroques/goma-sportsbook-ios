@@ -14,6 +14,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var participantsNameLabel: UILabel!
     @IBOutlet private weak var participantsCountryImageView: UIImageView!
+
+    @IBOutlet private weak var marketStatsStackView: UIStackView!
     @IBOutlet private weak var marketNameLabel: UILabel!
 
     @IBOutlet private weak var oddsStackView: UIStackView!

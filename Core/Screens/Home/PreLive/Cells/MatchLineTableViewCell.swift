@@ -26,6 +26,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private var matchInfoPublisher: AnyCancellable?
 
+    var matchStatsViewModel: MatchStatsViewModel?
+
     var tappedMatchLineAction: (() -> Void)?
     var matchWentLive: (() -> Void)?
 
@@ -88,6 +90,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: false)
 
         self.match = nil
+        self.matchStatsViewModel = nil
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
         self.collectionView.reloadData()
@@ -121,17 +124,15 @@ class MatchLineTableViewCell: UITableViewCell {
     func setupFavoriteMatchInfoPublisher(match: Match) {
         if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
             self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
+                .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] value in
                     if value.contains(match.id) {
-                        // print("NEW MATCH INFO FOUND!")
                         self?.matchInfoPublisher?.cancel()
                         self?.matchInfoPublisher = nil
                         self?.matchWentLive?()
                     }
                 })
         }
-        // print("CELL MATCH INFO: \(match.id)")
-
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -208,7 +209,17 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 fatalError()
             }
             if let match = self.match {
-                cell.subtitleLabel.text = "\(match.numberTotalOfMarkets) Markets"
+                let marketsRawString = localized("number_of_markets")
+                let singularMarketRawString = localized("number_of_market_singular")
+                var marketString = ""
+                if match.numberTotalOfMarkets > 1 {
+                    marketString = marketsRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                }
+                else {
+                    marketString = singularMarketRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                }
+
+                cell.configureWithSubtitleString(marketString)
             }
             cell.tappedAction = {
                 self.tappedMatchLineAction?()

@@ -36,7 +36,7 @@ class DocumentPickerView: NibView {
 
         containerView.backgroundColor = UIColor.App.mainBackground
 
-        addFileButton.setTitle(localized("string_add_file"), for: .normal)
+        addFileButton.setTitle(localized("add_file"), for: .normal)
         addFileButton.titleLabel?.font = AppFont.with(type: .bold, size: 16.0)
         addFileButton.setTitleColor(UIColor.App.headingMain, for: .normal)
         addFileButton.backgroundColor = UIColor.App.mainBackground

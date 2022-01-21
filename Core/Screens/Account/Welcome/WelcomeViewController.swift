@@ -48,7 +48,11 @@ class WelcomeViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        UIView.animate(withDuration: 0.7, delay: 0.0, usingSpringWithDamping: 0.84, initialSpringVelocity: 0.0, options: UIView.AnimationOptions.allowUserInteraction) {
+        UIView.animate(withDuration: 0.7,
+                       delay: 0.0,
+                       usingSpringWithDamping: 0.84,
+                       initialSpringVelocity: 0.0,
+                       options: UIView.AnimationOptions.allowUserInteraction) {
 
             self.contentBaseView.transform = CGAffineTransform.identity
             self.contentBaseView.alpha = 1.0

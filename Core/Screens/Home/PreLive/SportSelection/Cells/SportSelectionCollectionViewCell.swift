@@ -60,7 +60,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         iconImageView.image = UIImage(named: "sport_type_icon")
         iconImageView.contentMode = .scaleAspectFit
 
-        nameLabel.text = "Sport"
+        nameLabel.text = localized("sport")
         nameLabel.font = AppFont.with(type: .bold, size: 12)
         nameLabel.textColor = UIColor.App2.textPrimary
         nameLabel.numberOfLines = 2
@@ -80,7 +80,12 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
 
         nameLabel.text = viewModel.sportName
 
-        iconImageView.image = UIImage(named: viewModel.sportIconName ?? "")
+        if let sportIconName = viewModel.sportIconName, let sportIconImage = UIImage(named: sportIconName) {
+            iconImageView.image = sportIconImage
+        }
+        else {
+            iconImageView.image = UIImage(named: "sport_type_icon_default")
+        }
 
         self.viewModel?.updateLiveEvents = {
             self.eventCountView.isHidden = false

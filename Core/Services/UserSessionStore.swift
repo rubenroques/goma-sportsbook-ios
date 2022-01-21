@@ -20,30 +20,39 @@ class UserSessionStore {
     var isLoadingUserSessionPublisher = CurrentValueSubject<Bool, Never>(true)
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
     var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
+    var userWalletPublisher: AnyCancellable?
+    var userWalletRegister: EndpointPublisherIdentifiable?
 
     var shouldRecordUserSession = true
     var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
 
     init() {
 
-        NotificationCenter.default.publisher(for: .sessionConnected)
-            .setFailureType(to: EveryMatrix.APIError.self)
+        NotificationCenter.default.publisher(for: .socketConnected)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
 
             }, receiveValue: { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - Socket Connected received will login if needed")
                 self?.startUserSessionIfNeeded()
             })
             .store(in: &cancellables)
 
-
-        NotificationCenter.default.publisher(for: .sessionForcedLogoutDisconnected)
+        NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
             .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.logout()
+            .sink { [weak self] _ in
+                Logger.log("EMSessionLoginFLow - SessionForcedLogoutDisconnected received will logout local user")
+                self?.logout()
             }
             .store(in: &cancellables)
 
+        NotificationCenter.default.publisher(for: .userSessionConnected)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                self?.subscribeAccountBalanceWatcher()
+            }
+            .store(in: &cancellables)
+        
     }
 
     static func loggedUserSession() -> UserSession? {
@@ -110,6 +119,7 @@ class UserSessionStore {
         UserDefaults.standard.userSession = nil
         userSessionPublisher.send(nil)
         userBalanceWallet.send(nil)
+        self.unsubscribeWallet()
         
         Env.gomaNetworkClient.reconnectSession()
 
@@ -118,7 +128,6 @@ class UserSessionStore {
             .sink(receiveCompletion: { completion in
                 Logger.log("User logout \(completion)")
             }, receiveValue: { _ in
-
             })
             .store(in: &cancellables)
 
@@ -174,8 +183,8 @@ class UserSessionStore {
         Env.gomaNetworkClient
             .requestUserRegister(deviceId: deviceId, userRegisterForm: userRegisterForm)
             .replaceError(with: MessageNetworkResponse.failed)
-            .sink { registered in
-                print("User registered on goma api \(registered)")
+            .sink { _ in
+
             }
             .store(in: &cancellables)
     }
@@ -197,20 +206,87 @@ extension UserSessionStore {
 
     func forceWalletUpdate() {
         let route = TSRouter.getUserBalance
-        TSManager.shared.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
-            .sink { completion in
-                print(completion)
+        Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
+            .sink { _ in
+                
             } receiveValue: { userBalance in
                 var realWallet: EveryMatrix.UserBalanceWallet?
-                for wallet in userBalance.wallets {
-                    if wallet.vendor == "CasinoWallet" {
-                        realWallet = wallet
-                        break
-                    }
+                for wallet in userBalance.wallets where wallet.vendor == "CasinoWallet" {
+                    realWallet = wallet
+                    break
                 }
                 self.userBalanceWallet.send(realWallet)
             }
             .store(in: &cancellables)
+    }
+
+    func subscribeAccountBalanceWatcher() {
+        let route = TSRouter.getUserBalance
+        Env.everyMatrixClient.manager.getModel(router: route, decodingType: EveryMatrix.UserBalance.self)
+            .sink { _ in
+
+            } receiveValue: { userBalance in
+                var realWallet: EveryMatrix.UserBalanceWallet?
+                for wallet in userBalance.wallets where wallet.vendor == "CasinoWallet" {
+                    realWallet = wallet
+                    break
+                }
+                self.userBalanceWallet.send(realWallet)
+                self.setupAccountBalanceWatcher()
+            }
+            .store(in: &cancellables)
+    }
+
+    func setupAccountBalanceWatcher() {
+        Env.everyMatrixClient.getAccountBalanceWatcher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+            }, receiveValue: { [weak self] value in
+                print("\(value)")
+                self?.subscribeWallet()
+            })
+            .store(in: &cancellables)
+    }
+
+    func subscribeWallet() {
+        let endpoint = TSRouter.accountBalancePublisher
+
+        self.userWalletPublisher?.cancel()
+        self.userWalletPublisher = nil
+
+        self.userWalletPublisher = Env.everyMatrixClient.manager
+            .subscribeEndpoint(endpoint, decodingType: EveryMatrix.AccountBalance.self)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("userWalletPublisher Error retrieving data!")
+                case .finished:
+                    print("userWalletPublisher Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("userWalletPublisher connect")
+                    self?.userWalletRegister = publisherIdentifiable
+                case .initialContent(_):
+                    print("userWalletPublisher initialContent")
+                case .updatedContent(let walletUpdates):
+                    print("userWalletPublisher updatedContent")
+
+                    let updatedUserBalanceWallet = Env.userSessionStore.userBalanceWallet.value?.userBalanceWalletUpdated(amount: walletUpdates.amount)
+                    Env.userSessionStore.userBalanceWallet.send(updatedUserBalanceWallet)
+                case .disconnect:
+                    print("userWalletPublisher disconnect")
+                }
+            })
+    }
+
+    func unsubscribeWallet() {
+        if let walletRegister = self.userWalletRegister {
+
+            Env.everyMatrixClient.manager.unsubscribeFromEndpoint(endpointPublisherIdentifiable: walletRegister)
+
+        }
     }
 
 }
@@ -224,18 +300,18 @@ extension UserSessionStore {
             let user = UserSessionStore.loggedUserSession(),
             let userPassword = UserSessionStore.storedUserPassword()
         else {
-            Logger.log("User Session not found - not needed")
+            Logger.log("EMSessionLoginFLow - User Session not found - login not needed")
             self.isLoadingUserSessionPublisher.send(false)
             return
         }
 
-        Logger.log("User Session found - login needed")
+        Logger.log("EMSessionLoginFLow - User Session found - login needed")
 
         self.loadLoggedUser()
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink { completion in
                 switch completion {
                 case .finished:
@@ -243,7 +319,6 @@ extension UserSessionStore {
                     self.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
                     print("error \(error)")
-
                 }
                 self.isLoadingUserSessionPublisher.send(false)
             } receiveValue: { account in

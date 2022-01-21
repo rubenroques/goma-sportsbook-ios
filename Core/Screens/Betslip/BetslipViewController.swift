@@ -39,7 +39,7 @@ class BetslipViewController: UIViewController {
 
         myTicketsViewController = MyTicketsViewController()
         viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
-        
+
         viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
         tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
@@ -76,7 +76,7 @@ class BetslipViewController: UIViewController {
         let tapAccountValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapAccountValue(_:)))
         self.accountInfoBaseView.addGestureRecognizer(tapAccountValue)
 
-        self.accountValueLabel.text = "Loading"
+        self.accountValueLabel.text = localized("loading")
 
         preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
@@ -87,14 +87,15 @@ class BetslipViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.accountValueLabel.text = value
+            .sink { [weak self] value in
+                self?.accountValueLabel.text = value
             }
             .store(in: &cancellables)
 
         Env.userSessionStore.forceWalletUpdate()
 
         self.setupWithTheme()
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -144,10 +145,10 @@ class BetslipViewController: UIViewController {
             self.navigationController?.pushViewController(depositViewController, animated: true)
         }
         else {
-            let alert = UIAlertController(title: localized("Profile Incomplete"),
-                                          message: "Please complete your profile before you can make deposits.",
+            let alert = UIAlertController(title: localized("profile_incomplete"),
+                                          message: localized("profile_incomplete_2"),
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -173,7 +174,7 @@ class BetslipViewController: UIViewController {
         }
 
         if errorCode != nil {
-            let message = errorMessage != nil ? errorMessage! : "Error placing Bet."
+            let message = errorMessage != nil ? errorMessage! : localized("error_placing_bet")
 
             if let betPlaced = errorBetPlaced {
                 Env.betslipManager.addBetPlacedDetailsError(betPlacedDetails: [betPlaced])

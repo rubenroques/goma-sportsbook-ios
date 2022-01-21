@@ -141,7 +141,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.tintColor = .white
         self.searchBarView.barTintColor = .white
         self.searchBarView.backgroundImage = UIColor.App.mainBackground.image()
-        // self.searchBarView.placeholder = localized("string_search")
+        // self.searchBarView.placeholder = localized("search")
 
         self.searchBarView.delegate = self
 
@@ -150,7 +150,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.font = AppFont.with(type: .semibold, size: 15)
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("string_search_field_competitions"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),
                                                             attributes: [
                     .foregroundColor: UIColor.App.fadeOutHeading,
                     .font: AppFont.with(type: .semibold, size: 15)
@@ -189,12 +189,12 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             .sink(receiveValue: { count in
                 // swiftlint:disable empty_count
                 if count == 0 {
-                    self.titleLabel.text = localized("string_choose_competitions")
-                    self.smallTitleLabel.text = localized("string_choose_competitions")
+                    self.titleLabel.text = localized("choose_competitions")
+                    self.smallTitleLabel.text = localized("choose_competitions")
                 }
                 else {
-                    self.titleLabel.text = localized("string_choose_competitions")+" (\(count))"
-                    self.smallTitleLabel.text = localized("string_choose_competitions")+" (\(count))"
+                    self.titleLabel.text = localized("choose_competitions")+" (\(count))"
+                    self.smallTitleLabel.text = localized("choose_competitions")+" (\(count))"
                 }
             })
             .store(in: &cancellables)
@@ -242,7 +242,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             textfield.backgroundColor = UIColor.App.secondaryBackground
             textfield.textColor = .white
             textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("string_search_field_competitions"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.fadeOutHeading])
 

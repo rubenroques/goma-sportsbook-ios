@@ -9,8 +9,8 @@ import UIKit
 
 class TitleTableViewHeader: UITableViewHeaderFooterView {
 
-    @IBOutlet weak var baseView: UIView!
-    @IBOutlet weak var sectionTitleLabel: UILabel!
+    @IBOutlet private weak var baseView: UIView!
+    @IBOutlet private weak var sectionTitleLabel: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -34,6 +34,10 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
         self.backgroundView?.backgroundColor = .clear
 
         self.sectionTitleLabel.textColor = UIColor.App2.textPrimary
+    }
+
+    func configureWithTitle(_ title: String) {
+        self.sectionTitleLabel.text = title
     }
 
 }

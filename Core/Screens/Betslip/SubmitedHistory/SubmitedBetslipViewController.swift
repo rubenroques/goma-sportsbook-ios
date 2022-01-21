@@ -14,7 +14,15 @@ class SubmitedBetslipViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var activityIndicatorBaseView: UIView!
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
-
+    @IBOutlet private weak var emptyBetsBaseView: UIView!
+    @IBOutlet private weak var dontHaveAnyTicketsLabel: UILabel!
+    @IBOutlet private weak var makeSomeBetsLabel: UILabel!
+    @IBOutlet private weak var popularGamesButton: UIButton!
+    
+    @IBOutlet private weak var firstTextNoBetsLabel: UILabel!
+    @IBOutlet private weak var secondTextNoBetsLabel: UILabel!
+    @IBOutlet private weak var noBetsImage: UIImageView!
+    
     private var cancellables = Set<AnyCancellable>()
     private var betHistoryEntries: [BetHistoryEntry] = []
     // private var cashouts: [EveryMatrix.Cashout] = []
@@ -28,7 +36,7 @@ class SubmitedBetslipViewController: UIViewController {
 
     init() {
         super.init(nibName: "SubmitedBetslipViewController", bundle: nil)
-        self.title = "My Bets"
+        self.title = localized("my_bets")
     }
 
     @available(iOS, unavailable)
@@ -50,6 +58,20 @@ class SubmitedBetslipViewController: UIViewController {
 
         self.activityIndicatorBaseView.isHidden = true
         self.view.bringSubviewToFront(self.activityIndicatorBaseView)
+        self.view.bringSubviewToFront(emptyBetsBaseView)
+        self.emptyBetsBaseView.isHidden = true
+        
+        
+        if let userSession = UserSessionStore.loggedUserSession() {
+            self.emptyBetsBaseView.isHidden = true
+        }else{
+            self.emptyBetsBaseView.isHidden = false
+            self.firstTextNoBetsLabel.text = localized("you_not_logged_in")
+            self.secondTextNoBetsLabel.text = localized("need_login_tickets")
+           
+            self.popularGamesButton.setTitle(localized("login"), for: .normal)
+            self.noBetsImage.image = UIImage(named: "no_internet_icon")
+        }
 
         Env.userSessionStore
             .userSessionPublisher
@@ -76,24 +98,33 @@ class SubmitedBetslipViewController: UIViewController {
         self.view.backgroundColor = UIColor.App2.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
-
+        self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
+        
+        self.dontHaveAnyTicketsLabel.textColor = UIColor.App.headingMain
+        self.makeSomeBetsLabel.textColor = UIColor.App.headingMain
+        self.popularGamesButton.titleLabel?.textColor = UIColor.App.headingMain
+        self.popularGamesButton.backgroundColor = UIColor.App.primaryButtonNormal
     }
 
     private func requestHistory() {
 
         let route = TSRouter.getOpenBets(language: "en", records: 100, page: 0)
 
-        TSManager.shared.getModel(router: route, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: route, decodingType: BetHistoryResponse.self)
             .map(\.betList)
             .compactMap({$0})
             .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print(completion)
+            .sink { _ in
+
             } receiveValue: { betHistoryEntry in
+                if betHistoryEntry.isEmpty {
+                    self.emptyBetsBaseView.isHidden = false
+                    self.popularGamesButton.isHidden = true
+                }
+                else {
+                    self.emptyBetsBaseView.isHidden = true
+                }
                 self.betHistoryEntries = betHistoryEntry
-//                for bet in self.betHistoryEntries {
-//                    self.requestCashout(betHistoryEntry: bet)
-//                }
                 self.tableView.reloadData()
             }
             .store(in: &cancellables)
@@ -104,14 +135,14 @@ class SubmitedBetslipViewController: UIViewController {
         Logger.log("MyBets requestCashout \(betHistoryEntry.betId)", .debug)
 
         if let cashoutRegister = cashoutRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
 
         let endpoint = TSRouter.cashoutPublisher(operatorId: Env.appSession.operatorId,
                                                  language: "en",
                                                  betId: betHistoryEntry.betId)
 
-        TSManager.shared
+        Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -134,7 +165,6 @@ class SubmitedBetslipViewController: UIViewController {
                     print("MyBets cashoutPublisher updatedContent")
                     self?.updateCashoutAggregatorProcessor(aggregator: aggregatorUpdates)
 
-                    print("UPDATE CASHOUT: \(Env.everyMatrixStorage.cashoutsPublisher.values)")
                 case .disconnect:
                     print("MyBets cashoutPublisher disconnect")
                 }
@@ -163,19 +193,24 @@ class SubmitedBetslipViewController: UIViewController {
         guard let betCashoutValue = betCashout.value else {
             return
         }
-        let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"), message: localized("string_return_money") + "€\(betCashoutValue)", preferredStyle: UIAlertController.Style.alert)
 
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { _ in
+        let cashoutRawMessageString = localized("cashout_prompt_message")
+        let cashoutMessageString = cashoutRawMessageString.replacingOccurrences(of: "%s", with: "\(betCashoutValue)")
+
+        let submitCashoutAlert = UIAlertController(title: localized("cashout_verification"),
+                                                   message: cashoutMessageString,
+                                                   preferredStyle: UIAlertController.Style.alert)
+
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
             self.activityIndicatorBaseView.isHidden = false
 
             let route = TSRouter.cashoutBet(language: "en", betId: betCashout.id)
 
-            TSManager.shared
+            Env.everyMatrixClient.manager
                 .getModel(router: route, decodingType: CashoutSubmission.self)
                 .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { value in
-                    print(value)
                     if value.cashoutSucceed {
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                             self.requestHistory()
@@ -198,9 +233,9 @@ class SubmitedBetslipViewController: UIViewController {
     }
 
     func showCashoutInfo() {
-        let infoCashoutAlert = UIAlertController(title: localized("string_cashout"), message: localized("string_cashout_info"), preferredStyle: UIAlertController.Style.alert)
+        let infoCashoutAlert = UIAlertController(title: localized("cashout"), message: localized("cashout_info"), preferredStyle: UIAlertController.Style.alert)
 
-        infoCashoutAlert.addAction(UIAlertAction(title: "OK", style: .default))
+        infoCashoutAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
 
         present(infoCashoutAlert, animated: true, completion: nil)
 

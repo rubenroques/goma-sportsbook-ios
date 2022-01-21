@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -19,16 +19,21 @@
             <connections>
                 <outlet property="competitionsFiltersBaseView" destination="JDo-j5-eFq" id="wH3-i5-qwV"/>
                 <outlet property="competitionsFiltersDarkBackgroundView" destination="1Zb-TC-NS9" id="vf1-pP-AQ0"/>
+                <outlet property="emptyBaseView" destination="Dx9-on-mts" id="Akd-Z7-dse"/>
+                <outlet property="emptyStateButton" destination="ZSB-0l-30Q" id="ZjW-qa-jFX"/>
+                <outlet property="emptyStateImage" destination="umq-Q8-DGC" id="ovk-1H-o9h"/>
                 <outlet property="filtersBarBaseView" destination="vRj-e2-Szx" id="GDJ-9C-fEL"/>
                 <outlet property="filtersButtonView" destination="6zP-Po-yfR" id="5I1-zh-JcS"/>
                 <outlet property="filtersCollectionView" destination="bdq-E7-Xtb" id="BQH-oR-m5A"/>
                 <outlet property="filtersCountLabel" destination="qjl-vo-aTc" id="nGh-ol-PSU"/>
                 <outlet property="filtersSeparatorLineView" destination="B0m-AP-ENY" id="9xu-In-76T"/>
+                <outlet property="firstTextFieldEmptyStateLabel" destination="VDj-Nq-fGI" id="GM5-4h-Ex4"/>
                 <outlet property="leftGradientBaseView" destination="Ond-vd-nhl" id="4CI-b7-Yno"/>
                 <outlet property="loadingBaseView" destination="kGb-Bw-Z5y" id="DzJ-v2-UsN"/>
                 <outlet property="loadingView" destination="R1v-pN-KYj" id="l8c-Hq-phP"/>
                 <outlet property="openedCompetitionsFiltersConstraint" destination="QEY-gK-pFr" id="9vt-3h-1zZ"/>
                 <outlet property="rightGradientBaseView" destination="FxX-ck-Cyp" id="Y6G-dS-iww"/>
+                <outlet property="secondTextFieldEmptyStateLabel" destination="giU-qb-DgU" id="4QA-Yy-qBa"/>
                 <outlet property="sportTypeIconImageView" destination="iOi-Sv-wfK" id="bdC-qr-Mbb"/>
                 <outlet property="sportsSelectorButtonView" destination="L0P-hR-PWM" id="M7W-hm-vQU"/>
                 <outlet property="tableView" destination="AbP-eF-dUy" id="fhv-On-x1u"/>
@@ -52,6 +57,54 @@
                     <constraints>
                         <constraint firstItem="R1v-pN-KYj" firstAttribute="centerX" secondItem="kGb-Bw-Z5y" secondAttribute="centerX" id="6K5-Cx-cXA"/>
                         <constraint firstItem="R1v-pN-KYj" firstAttribute="centerY" secondItem="kGb-Bw-Z5y" secondAttribute="centerY" id="L72-bf-x0e"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dx9-on-mts">
+                    <rect key="frame" x="0.0" y="35" width="346" height="758"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_content_icon" translatesAutoresizingMaskIntoConstraints="NO" id="umq-Q8-DGC">
+                            <rect key="frame" x="92.5" y="100" width="161" height="161"/>
+                        </imageView>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZSB-0l-30Q">
+                            <rect key="frame" x="30" y="335" width="286" height="50"/>
+                            <color key="backgroundColor" name="mainBackgroundColor"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="50" id="1DU-VD-a1J"/>
+                            </constraints>
+                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
+                            <state key="normal" title="Go to popular games"/>
+                            <connections>
+                                <action selector="didTapLoginButton" destination="-1" eventType="touchUpInside" id="LUz-QB-ncQ"/>
+                            </connections>
+                        </button>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="749" text="" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VDj-Nq-fGI">
+                            <rect key="frame" x="8" y="273" width="330" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="giU-qb-DgU">
+                            <rect key="frame" x="8" y="285" width="330" height="0.0"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <color key="textColor" name="headingMainColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.69999999999999996" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstItem="giU-qb-DgU" firstAttribute="top" secondItem="VDj-Nq-fGI" secondAttribute="bottom" constant="12" id="15l-sE-MeR"/>
+                        <constraint firstAttribute="trailing" secondItem="VDj-Nq-fGI" secondAttribute="trailing" constant="8" id="2c4-ew-f1h"/>
+                        <constraint firstItem="giU-qb-DgU" firstAttribute="leading" secondItem="Dx9-on-mts" secondAttribute="leading" constant="8" id="2fO-B0-ZU5"/>
+                        <constraint firstItem="VDj-Nq-fGI" firstAttribute="top" secondItem="umq-Q8-DGC" secondAttribute="bottom" constant="12" id="76f-jQ-BMw"/>
+                        <constraint firstItem="umq-Q8-DGC" firstAttribute="centerX" secondItem="Dx9-on-mts" secondAttribute="centerX" id="8Qu-4R-qRS"/>
+                        <constraint firstItem="VDj-Nq-fGI" firstAttribute="leading" secondItem="Dx9-on-mts" secondAttribute="leading" constant="8" id="OsH-56-M1M"/>
+                        <constraint firstItem="VDj-Nq-fGI" firstAttribute="centerX" secondItem="Dx9-on-mts" secondAttribute="centerX" id="TvU-C9-tik"/>
+                        <constraint firstAttribute="trailing" secondItem="giU-qb-DgU" secondAttribute="trailing" constant="8" id="Vw1-AE-Gg6"/>
+                        <constraint firstAttribute="trailing" secondItem="ZSB-0l-30Q" secondAttribute="trailing" constant="30" id="WlI-kG-ayH"/>
+                        <constraint firstItem="giU-qb-DgU" firstAttribute="centerX" secondItem="Dx9-on-mts" secondAttribute="centerX" id="nUB-tT-b9H"/>
+                        <constraint firstItem="umq-Q8-DGC" firstAttribute="top" secondItem="Dx9-on-mts" secondAttribute="top" constant="100" id="oNR-os-EYG"/>
+                        <constraint firstItem="ZSB-0l-30Q" firstAttribute="top" secondItem="giU-qb-DgU" secondAttribute="bottom" constant="50" id="uzB-nT-ses"/>
+                        <constraint firstItem="ZSB-0l-30Q" firstAttribute="leading" secondItem="Dx9-on-mts" secondAttribute="leading" constant="30" id="vxJ-jG-j3l"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vRj-e2-Szx">
@@ -193,13 +246,18 @@
                 <constraint firstItem="JDo-j5-eFq" firstAttribute="leading" secondItem="AbP-eF-dUy" secondAttribute="leading" constant="10" id="5tN-YF-CSI"/>
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="bottom" secondItem="AbP-eF-dUy" secondAttribute="bottom" id="6zi-Qj-gEX"/>
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="leading" secondItem="AbP-eF-dUy" secondAttribute="leading" id="Fct-Xl-L5y"/>
+                <constraint firstItem="Dx9-on-mts" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="35" id="Fns-xL-DZ9"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="HEp-3X-9bd"/>
                 <constraint firstItem="JDo-j5-eFq" firstAttribute="trailing" secondItem="AbP-eF-dUy" secondAttribute="trailing" constant="-10" id="HQm-Hc-qZl"/>
+                <constraint firstItem="AbP-eF-dUy" firstAttribute="bottom" secondItem="1Zb-TC-NS9" secondAttribute="bottom" id="PCi-DK-lcm"/>
                 <constraint firstAttribute="bottom" secondItem="JDo-j5-eFq" secondAttribute="bottom" id="QEY-gK-pFr"/>
+                <constraint firstItem="Dx9-on-mts" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="QZt-Pr-8UV"/>
                 <constraint firstItem="JDo-j5-eFq" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" constant="-18" id="TEn-np-FZP"/>
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="top" secondItem="AbP-eF-dUy" secondAttribute="top" id="Vhe-3N-zHL"/>
+                <constraint firstItem="Dx9-on-mts" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="Zhd-e2-7Wb"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="kGb-Bw-Z5y" secondAttribute="trailing" id="czS-Rh-7Xt"/>
                 <constraint firstItem="1Zb-TC-NS9" firstAttribute="trailing" secondItem="AbP-eF-dUy" secondAttribute="trailing" id="d0K-F1-pyi"/>
+                <constraint firstItem="Dx9-on-mts" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="eHH-ga-Wvy"/>
                 <constraint firstItem="JDo-j5-eFq" firstAttribute="height" secondItem="AbP-eF-dUy" secondAttribute="height" multiplier="0.988" id="g6n-H3-T9M"/>
                 <constraint firstItem="vRj-e2-Szx" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="h8G-p6-8JQ"/>
                 <constraint firstItem="AbP-eF-dUy" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="iR1-oI-fNa"/>
@@ -223,7 +281,14 @@
     <resources>
         <image name="expand_top_down_arrows_icon" width="9" height="14"/>
         <image name="match_filters_icons" width="19" height="20"/>
+        <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
+        <namedColor name="headingMainColor">
+            <color red="0.090196078431372548" green="0.10196078431372549" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="mainBackgroundColor">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <namedColor name="secundaryBackgroundColor">
             <color red="0.19200000166893005" green="0.20800000429153442" blue="0.2630000114440918" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>

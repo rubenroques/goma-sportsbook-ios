@@ -9,9 +9,9 @@ import UIKit
 
 class ActivationAlertScrollableTableViewCell: UITableViewCell {
 
-    @IBOutlet private var collectionView: UICollectionView!
-    @IBOutlet var pageControl: UIPageControl!
-    // Variables
+    @IBOutlet private weak var collectionView: UICollectionView!
+    @IBOutlet private weak var pageControl: UIPageControl!
+
     var alertDataArray: [ActivationAlert] = []
     var activationAlertCollectionViewCellLinkLabelAction: ((ActivationAlertType) -> Void)?
 

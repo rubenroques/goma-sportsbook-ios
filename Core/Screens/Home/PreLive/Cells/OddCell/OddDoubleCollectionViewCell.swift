@@ -10,29 +10,33 @@ import Combine
 
 class OddDoubleCollectionViewCell: UICollectionViewCell {
 
-    @IBOutlet weak var baseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
-    @IBOutlet weak var participantsNameLabel: UILabel!
-    @IBOutlet weak var participantsCountryImageView: UIImageView!
-    @IBOutlet weak var marketNameLabel: UILabel!
+    @IBOutlet private weak var participantsNameLabel: UILabel!
+    @IBOutlet private weak var participantsCountryImageView: UIImageView!
 
-    @IBOutlet weak var oddsStackView: UIStackView!
+    @IBOutlet private weak var marketStatsStackView: UIStackView!
+    @IBOutlet private weak var marketNameLabel: UILabel!
 
-    @IBOutlet weak var leftBaseView: UIView!
-    @IBOutlet weak var leftOddTitleLabel: UILabel!
-    @IBOutlet weak var leftOddValueLabel: UILabel!
+    @IBOutlet private weak var oddsStackView: UIStackView!
 
-    @IBOutlet weak var rightBaseView: UIView!
-    @IBOutlet weak var rightOddTitleLabel: UILabel!
-    @IBOutlet weak var rightOddValueLabel: UILabel!
+    @IBOutlet private weak var leftBaseView: UIView!
+    @IBOutlet private weak var leftOddTitleLabel: UILabel!
+    @IBOutlet private weak var leftOddValueLabel: UILabel!
 
-    @IBOutlet weak var suspendedBaseView: UIView!
-    @IBOutlet weak var suspendedLabel: UILabel!
+    @IBOutlet private weak var rightBaseView: UIView!
+    @IBOutlet private weak var rightOddTitleLabel: UILabel!
+    @IBOutlet private weak var rightOddValueLabel: UILabel!
 
-    @IBOutlet weak var leftUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var leftDownChangeOddValueImage: UIImageView!
-    @IBOutlet weak var rightUpChangeOddValueImage: UIImageView!
-    @IBOutlet weak var rightDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var suspendedBaseView: UIView!
+    @IBOutlet private weak var suspendedLabel: UILabel!
+
+    @IBOutlet private weak var leftUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var leftDownChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var rightUpChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var rightDownChangeOddValueImage: UIImageView!
+
+    @IBOutlet private weak var statsBaseView: UIView!
 
     var match: Match?
     var market: Market?
@@ -99,6 +103,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        let stackSubviews = self.marketStatsStackView.arrangedSubviews
+        stackSubviews.forEach({
+            if $0 != self.marketNameLabel {
+                self.marketStatsStackView.removeArrangedSubview($0)
+                $0.removeFromSuperview()
+            }
+        })
+
         self.match = nil
         self.market = nil
 
@@ -159,6 +171,20 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
+
+        let randomInt = Int.random(in: 0..<11)
+
+        if randomInt > 7 {
+            let homeAwayCardStatsView = HomeAwayCardStatsView()
+            self.marketStatsStackView.addArrangedSubview(homeAwayCardStatsView)
+        }
+        else if randomInt > 3 {
+            let headToHeadCardStatsView = HeadToHeadCardStatsView()
+            self.marketStatsStackView.addArrangedSubview(headToHeadCardStatsView)
+        }
+        else {
+
+        }
 
         self.match = match
         self.market = market

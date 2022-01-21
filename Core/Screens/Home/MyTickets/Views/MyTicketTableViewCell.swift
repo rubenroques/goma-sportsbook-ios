@@ -12,8 +12,6 @@ class MyTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var baseView: UIView!
 
-
-
     @IBOutlet private weak var topStatusView: UIView!
 
     @IBOutlet private weak var headerBaseView: UIView!
@@ -114,9 +112,9 @@ class MyTicketTableViewCell: UITableViewCell {
         self.titleLabel.text = ""
         self.subtitleLabel.text = ""
 
-        self.totalOddTitleLabel.text = localized("string_total_odd")
-        self.betAmountTitleLabel.text = localized("string_bet_amount")
-        self.winningsTitleLabel.text = localized("string_return")
+        self.totalOddTitleLabel.text = localized("total_odd")
+        self.betAmountTitleLabel.text = localized("bet_amount")
+        self.winningsTitleLabel.text = localized("return")
 
         self.totalOddSubtitleLabel.text = "-"
         self.betAmountSubtitleLabel.text = "-"
@@ -176,9 +174,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
     func configureCashoutButton(withState state: MyTicketCellViewModel.CashoutButtonState) {
         if case .visible(let cashoutValue) = state {
-            self.cashoutButton.setTitle(localized("string_cashout"), for: .normal)
+            self.cashoutButton.setTitle(localized("cashout"), for: .normal)
             if let cashoutValueString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: cashoutValue)) {
-                self.cashoutButton.setTitle(localized("string_cashout")+"  \(cashoutValueString)", for: .normal)
+                self.cashoutButton.setTitle(localized("cashout")+"  \(cashoutValueString)", for: .normal)
             }
             self.cashoutValue = cashoutValue
             self.showCashoutButton = true
@@ -230,13 +228,13 @@ class MyTicketTableViewCell: UITableViewCell {
 
         //
         if betHistoryEntry.type == "SINGLE" {
-            self.titleLabel.text = localized("string_single")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("single")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
         }
         else if betHistoryEntry.type == "MULTIPLE" {
-            self.titleLabel.text = localized("string_multiple")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("multiple")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
         }
         else if betHistoryEntry.type == "SYSTEM" {
-            self.titleLabel.text = localized("string_system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
+            self.titleLabel.text = localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))"
         }
 
         if let date = betHistoryEntry.placedDate {
@@ -253,7 +251,7 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         //
-        self.winningsTitleLabel.text = localized("string_possible_winnings")
+        self.winningsTitleLabel.text = localized("possible_winnings")
         if let maxWinnings = betHistoryEntry.maxWinning,
            let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
             self.winningsSubtitleLabel.text = maxWinningsString
@@ -263,7 +261,7 @@ class MyTicketTableViewCell: UITableViewCell {
             switch status {
             case "WON", "HALF_WON":
                 self.highlightCard(withColor: UIColor.App.statusWon)
-                self.winningsTitleLabel.text = localized("string_return")  // Titulo
+                self.winningsTitleLabel.text = localized("return")  // Titulo
                 if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
@@ -271,7 +269,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             case "LOST", "HALF_LOST":
                 self.highlightCard(withColor: UIColor.App.statusLoss)
-                self.winningsTitleLabel.text = localized("string_possible_winnings") // Titulo
+                self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
                 if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
@@ -279,7 +277,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             case "CASHED_OUT":
                 self.highlightCard(withColor: UIColor.App.statusDraw)
-                self.winningsTitleLabel.text = localized("string_return") // Titulo
+                self.winningsTitleLabel.text = localized("return") // Titulo
                 if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
@@ -287,7 +285,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             case "DRAW":
                 self.highlightCard(withColor: UIColor.App.statusDraw)
-                self.winningsTitleLabel.text = localized("string_return")  // Titulo
+                self.winningsTitleLabel.text = localized("return")  // Titulo
                 if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
@@ -295,7 +293,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             case "CANCELLED":
                 self.highlightCard(withColor: UIColor.App.statusDraw)
-                self.winningsTitleLabel.text = localized("string_possible_winnings") // Titulo
+                self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
                 if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
@@ -303,7 +301,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
             case "OPEN":
                 self.resetHighlightedCard()
-                self.winningsTitleLabel.text = localized("string_possible_winnings") // Titulo
+                self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
                 if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                     self.winningsSubtitleLabel.text = maxWinningsString
@@ -324,14 +322,14 @@ class MyTicketTableViewCell: UITableViewCell {
             return
         }
 
-        let cashoutAlertMessage = "\(localized("string_return_money")) \(cashoutValueString)"
+        let cashoutAlertMessage = "\(localized("return_money")) \(cashoutValueString)"
 
-        let submitCashoutAlert = UIAlertController(title: localized("string_cashout_verification"), message: cashoutAlertMessage, preferredStyle: UIAlertController.Style.alert)
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cashout"), style: .default, handler: { _ in
+        let submitCashoutAlert = UIAlertController(title: localized("cashout_verification"), message: cashoutAlertMessage, preferredStyle: UIAlertController.Style.alert)
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
             self.viewModel?.requestCashout()
         }))
 
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("string_cancel"), style: .cancel))
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
 
         self.viewController?.present(submitCashoutAlert, animated: true, completion: nil)
 
@@ -353,14 +351,14 @@ class MyTicketTableViewCell: UITableViewCell {
 
     private func betStatusText(forCode code: String) -> String {
         switch code {
-        case "OPEN": return localized("string_open")
-        case "DRAW": return localized("string_draw")
-        case "WON": return localized("string_won")
-        case "HALF_WON": return localized("string_half_won")
-        case "LOST": return localized("string_lost")
-        case "HALF_LOST": return localized("string_half_lost")
-        case "CANCELLED": return localized("string_cancelled")
-        case "CASHED_OUT": return localized("string_cashed_out")
+        case "OPEN": return localized("open")
+        case "DRAW": return localized("draw")
+        case "WON": return localized("won")
+        case "HALF_WON": return localized("half_won")
+        case "LOST": return localized("lost")
+        case "HALF_LOST": return localized("half_lost")
+        case "CANCELLED": return localized("cancelled")
+        case "CASHED_OUT": return localized("cashed_out")
         default: return ""
         }
     }

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Gilroy-Medium.ttf">
+            <string>Gilroy-Medium</string>
+        </array>
+        <array key="Gilroy-Regular.ttf">
+            <string>Gilroy-Regular</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HomeAwayCardStatsView" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="awayProgressBar" destination="5Nd-h1-tgw" id="NqM-gt-3ht"/>
+                <outlet property="awayValueLabel" destination="tQf-8e-QlF" id="h4K-oX-H3o"/>
+                <outlet property="captionLabel" destination="RQZ-L9-ekc" id="PwQ-xh-LaW"/>
+                <outlet property="homeProgressBar" destination="92w-OK-FLc" id="nGm-IW-77v"/>
+                <outlet property="homeValueLabel" destination="psJ-2l-aIN" id="fs1-dj-eg2"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="419" height="38"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LDA-bn-K99">
+                    <rect key="frame" x="114" y="8" width="191.5" height="20"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="H5p-Fb-2TL">
+                            <rect key="frame" x="0.0" y="0.0" width="191.5" height="20"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="9TV-X2-GQk">
+                                    <rect key="frame" x="0.0" y="0.0" width="130" height="20"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bfx-9W-obA">
+                                            <rect key="frame" x="0.0" y="0.0" width="130" height="10"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="92w-OK-FLc">
+                                                    <rect key="frame" x="1" y="3" width="128" height="4"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="128" id="p4Z-Jw-hhM"/>
+                                                    </constraints>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="92w-OK-FLc" firstAttribute="centerX" secondItem="bfx-9W-obA" secondAttribute="centerX" id="MXe-fx-QEM"/>
+                                                <constraint firstItem="92w-OK-FLc" firstAttribute="centerY" secondItem="bfx-9W-obA" secondAttribute="centerY" id="VcL-S4-Jtt"/>
+                                                <constraint firstItem="92w-OK-FLc" firstAttribute="leading" secondItem="bfx-9W-obA" secondAttribute="leading" constant="1" id="eQw-d2-G94"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="njz-nR-oil">
+                                            <rect key="frame" x="0.0" y="10" width="130" height="10"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="5Nd-h1-tgw">
+                                                    <rect key="frame" x="1" y="3" width="128" height="4"/>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="5Nd-h1-tgw" firstAttribute="centerX" secondItem="njz-nR-oil" secondAttribute="centerX" id="0Zc-zG-VW0"/>
+                                                <constraint firstItem="5Nd-h1-tgw" firstAttribute="centerY" secondItem="njz-nR-oil" secondAttribute="centerY" id="8tv-kh-J36"/>
+                                                <constraint firstItem="5Nd-h1-tgw" firstAttribute="leading" secondItem="njz-nR-oil" secondAttribute="leading" constant="1" id="KF3-41-uaB"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="qPa-sF-dqB">
+                                    <rect key="frame" x="138" y="0.0" width="53.5" height="20"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="psJ-2l-aIN">
+                                            <rect key="frame" x="0.0" y="0.0" width="53.5" height="10"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="10" id="vy3-BA-2oP"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tQf-8e-QlF">
+                                            <rect key="frame" x="0.0" y="10" width="53.5" height="10"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="H5p-Fb-2TL" secondAttribute="bottom" id="0jT-D4-3CK"/>
+                        <constraint firstItem="H5p-Fb-2TL" firstAttribute="leading" secondItem="LDA-bn-K99" secondAttribute="leading" id="5al-SQ-gWC"/>
+                        <constraint firstItem="H5p-Fb-2TL" firstAttribute="top" secondItem="LDA-bn-K99" secondAttribute="top" id="CeR-VF-tV4"/>
+                        <constraint firstAttribute="trailing" secondItem="H5p-Fb-2TL" secondAttribute="trailing" id="dcq-7S-j5B"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(Last 10 matches)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RQZ-L9-ekc">
+                    <rect key="frame" x="182" y="30" width="55.5" height="8"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="8" id="q2c-YD-O3i"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Gilroy-Regular" family="Gilroy" pointSize="7"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="LDA-bn-K99" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-1" id="1Km-5v-kIJ"/>
+                <constraint firstItem="LDA-bn-K99" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="exP-bY-fJX"/>
+                <constraint firstItem="RQZ-L9-ekc" firstAttribute="centerX" secondItem="LDA-bn-K99" secondAttribute="centerX" id="jAb-Gi-fBW"/>
+                <constraint firstItem="RQZ-L9-ekc" firstAttribute="top" secondItem="LDA-bn-K99" secondAttribute="bottom" constant="2" id="wpl-kk-76e"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="155.79710144927537" y="162.72321428571428"/>
+        </view>
+    </objects>
+</document>

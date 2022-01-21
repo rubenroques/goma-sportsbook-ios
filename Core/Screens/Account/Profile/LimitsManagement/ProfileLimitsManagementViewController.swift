@@ -111,14 +111,14 @@ class ProfileLimitsManagementViewController: UIViewController {
     func commonInit() {
 
         headerLabel.font = AppFont.with(type: .semibold, size: 17)
-        headerLabel.text = localized("string_limits_management")
+        headerLabel.text = localized("limits_management")
 
-        editButton.underlineButtonTitleLabel(title: localized("string_save"))
+        editButton.underlineButtonTitleLabel(title: localized("save"))
 
-        depositLabel.text = localized("string_deposit_limit")
+        depositLabel.text = localized("deposit_limit")
         depositLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        depositHeaderTextFieldView.setPlaceholderText(localized("string_deposit_limit"))
+        depositHeaderTextFieldView.setPlaceholderText(localized("deposit_limit"))
         depositHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
         depositHeaderTextFieldView.setKeyboardType(.numberPad)
         depositHeaderTextFieldView.isCurrency = true
@@ -126,12 +126,12 @@ class ProfileLimitsManagementViewController: UIViewController {
             self.showFieldInfo(view: self.depositHeaderTextFieldView.superview!)
         }
 
-        depositFrequencySelectTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
+        depositFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("monthly"), localized("anual")])
 
-        bettingLabel.text = localized("string_betting_limit")
+        bettingLabel.text = localized("betting_limit")
         bettingLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        bettingHeaderTextFieldView.setPlaceholderText(localized("string_betting_limit"))
+        bettingHeaderTextFieldView.setPlaceholderText(localized("betting_limit"))
         bettingHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
         bettingHeaderTextFieldView.setKeyboardType(.numberPad)
         bettingHeaderTextFieldView.isCurrency = true
@@ -139,12 +139,12 @@ class ProfileLimitsManagementViewController: UIViewController {
             self.showFieldInfo(view: self.bettingHeaderTextFieldView.superview!)
         }
 
-        bettingFrequencySelectTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
+        bettingFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("monthly"), localized("anual")])
 
-        lossLabel.text = localized("string_loss_limit")
+        lossLabel.text = localized("loss_limit")
         lossLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        lossHeaderTextFieldView.setPlaceholderText(localized("string_loss_limit"))
+        lossHeaderTextFieldView.setPlaceholderText(localized("loss_limit"))
         lossHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
         lossHeaderTextFieldView.setKeyboardType(.numberPad)
         lossHeaderTextFieldView.isCurrency = true
@@ -152,13 +152,16 @@ class ProfileLimitsManagementViewController: UIViewController {
             self.showFieldInfo(view: self.lossHeaderTextFieldView.superview!)
         }
 
-        lossFrequencySelectHeaderTextFieldView.setSelectionPicker(["Daily", "Monthly", "Anual"])
+        lossFrequencySelectHeaderTextFieldView.setSelectionPicker([localized("daily"), localized("monthly"), localized("anual")])
 
-        exclusionLabel.text = localized("string_auto_exclusion")
+        exclusionLabel.text = localized("auto_exclusion")
         exclusionLabel.font = AppFont.with(type: .semibold, size: 17)
 
         exclusionSelectTextFieldView.isIconArray = true
-        exclusionSelectTextFieldView.setSelectionPicker(["Active", "Limited", "Permanent"], iconArray: [UIImage(named: "icon_active")!, UIImage(named: "icon_limited")!, UIImage(named: "icon_excluded")!])
+        exclusionSelectTextFieldView.setSelectionPicker([localized("active"), localized("limited"), localized("permanent")],
+                                                        iconArray: [UIImage(named: "icon_active")!,
+                                                                    UIImage(named: "icon_limited")!,
+                                                                    UIImage(named: "icon_excluded")!])
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -212,8 +215,13 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     @objc func keyboardWillShow(notification: NSNotification) {
 
-        guard let userInfo = notification.userInfo else { return }
-        var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        guard
+            let userInfo = notification.userInfo,
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+        
         keyboardFrame = self.view.convert(keyboardFrame, from: nil)
 
         var contentInset: UIEdgeInsets = self.scrollView.contentInset

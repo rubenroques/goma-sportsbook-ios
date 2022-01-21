@@ -66,9 +66,10 @@ class BannerCellViewModel {
     }
 
     func requestMatchOdds() {
+        print("Banner requesting odds \(self.matchId ?? "-")")
         guard let matchId = self.matchId else {return}
         
-        let matchPublisher = TSManager.shared
+        let matchPublisher = Env.everyMatrixClient.manager
             .getModel(router: TSRouter.getMatchOdds(language: "en", matchId: matchId, bettingTypeId: "69"),
                       decodingType: EveryMatrix.MatchOdds.self)
             .eraseToAnyPublisher()
@@ -85,6 +86,7 @@ class BannerCellViewModel {
     }
 
     func requestMatchInfo(_ matchId: String) {
+        print("Banner requesting match info \(matchId)")
         let language = "en"
         Env.everyMatrixClient.getMatchDetails(language: language, matchId: matchId)
             .sink { _ in

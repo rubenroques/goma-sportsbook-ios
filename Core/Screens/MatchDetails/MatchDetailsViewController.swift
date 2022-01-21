@@ -14,6 +14,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailView: UIView!
     @IBOutlet private var headerDetailTopView: UIView!
     @IBOutlet private var backButton: UIButton!
+    @IBOutlet private var matchStatsButton: UIButton!
     @IBOutlet private var headerCompetitionDetailView: UIView!
     @IBOutlet private var headerCompetitionLabel: UILabel!
     @IBOutlet private var headerCompetitionImageView: UIImageView!
@@ -135,6 +136,11 @@ class MatchDetailsViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
 
+        self.matchStatsButton.isHidden = true
+        if self.match.sportType == "1" || self.match.sportType == "3" {
+            self.matchStatsButton.isHidden = false
+        }
+
         self.viewModel.marketGroupsTypesDataChanged = { [weak self] in
             self?.marketTypesCollectionView.reloadData()
         }
@@ -181,7 +187,7 @@ class MatchDetailsViewController: UIViewController {
 
     deinit {
         if let matchDetailsRegister = matchDetailsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
         }
     }
 
@@ -215,24 +221,24 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .center
 
-        self.headerDetailHomeLabel.text = localized("string_home_label_default")
+        self.headerDetailHomeLabel.text = localized("home_label_default")
         self.headerDetailHomeLabel.font = AppFont.with(type: .bold, size: 16)
         self.headerDetailHomeLabel.numberOfLines = 0
 
-        self.headerDetailAwayLabel.text = localized("string_away_label_default")
+        self.headerDetailAwayLabel.text = localized("away_label_default")
         self.headerDetailAwayLabel.font = AppFont.with(type: .bold, size: 16)
         self.headerDetailAwayLabel.numberOfLines = 0
 
-        self.headerDetailPreliveTopLabel.text = localized("string_match_label_default")
+        self.headerDetailPreliveTopLabel.text = localized("match_label_default")
         self.headerDetailPreliveTopLabel.font = AppFont.with(type: .semibold, size: 12)
 
-        self.headerDetailPreliveBottomLabel.text = localized("string_time_label_default")
+        self.headerDetailPreliveBottomLabel.text = localized("time_label_default")
         self.headerDetailPreliveBottomLabel.font = AppFont.with(type: .bold, size: 16)
 
-        self.headerDetailLiveTopLabel.text = localized("string_score_label_default")
+        self.headerDetailLiveTopLabel.text = localized("score_label_default")
         self.headerDetailLiveTopLabel.font = AppFont.with(type: .bold, size: 16)
 
-        self.headerDetailLiveBottomLabel.text = localized("string_match_start_label_default")
+        self.headerDetailLiveBottomLabel.text = localized("match_start_label_default")
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
 
@@ -341,7 +347,7 @@ class MatchDetailsViewController: UIViewController {
 
     func setupMatchDetailPublisher() {
         if let matchDetailsRegister = matchDetailsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
         }
 
         let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
@@ -350,7 +356,7 @@ class MatchDetailsViewController: UIViewController {
         self.matchDetailsAggregatorPublisher?.cancel()
         self.matchDetailsAggregatorPublisher = nil
 
-        self.matchDetailsAggregatorPublisher = TSManager.shared
+        self.matchDetailsAggregatorPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
@@ -487,6 +493,11 @@ class MatchDetailsViewController: UIViewController {
     
     @IBAction private func didTapBackAction() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction private func didTapMatchStatsButton() {
+        let matchFieldWebViewController = MatchFieldWebViewController(match: self.match)
+        self.navigationController?.pushViewController(matchFieldWebViewController, animated: true)
     }
 
 }

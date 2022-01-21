@@ -26,7 +26,14 @@ class PreLiveEventsViewController: UIViewController {
     
     @IBOutlet private weak var filtersCountView: UIView!
 
-    @IBOutlet weak var filtersCountLabel: UILabel!
+    @IBOutlet private weak var emptyBaseView: UIView!
+    @IBOutlet private weak var filtersCountLabel: UILabel!
+    @IBOutlet private weak var firstTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var secondTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var emptyStateImage: UIImageView!
+    @IBOutlet private weak var emptyStateButton: UIButton!
+
+    private let refreshControl = UIRefreshControl()
 
     var turnTimeRangeOn: Bool = false
 
@@ -84,23 +91,29 @@ class PreLiveEventsViewController: UIViewController {
     var viewModel: PreLiveEventsViewModel
 
     var filterSelectedOption: Int = 0
-    var selectedSportType: SportType {
+    var selectedSport: Sport {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)")
-            self.viewModel.selectedSportId = selectedSportType
+            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.id)") {
+                self.sportTypeIconImageView.image = sportIconImage
+            }
+            else {
+                self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
+            }
+
+            self.viewModel.selectedSport = selectedSport
             self.competitionsFiltersView?.resetSelection()
         }
     }
 
-    var didChangeSportType: ((SportType) -> Void)?
+    var didChangeSport: ((Sport) -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
     private var lastContentOffset: CGFloat = 0
     private var shouldDetectScrollMovement = false
 
-    init(selectedSportType: SportType = .football) {
-        self.selectedSportType = selectedSportType
-        self.viewModel = PreLiveEventsViewModel(selectedSportId: self.selectedSportType)
+    init(selectedSport: Sport) {
+        self.selectedSport = selectedSport
+        self.viewModel = PreLiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "PreLiveEventsViewController", bundle: nil)
     }
 
@@ -117,6 +130,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.connectPublishers()
         self.viewModel.fetchData()
+
         self.viewModel.didSelectActivationAlertAction = { alertType in
             if alertType == ActivationAlertType.email {
                 let emailVerificationViewController = EmailVerificationViewController()
@@ -142,6 +156,9 @@ class PreLiveEventsViewController: UIViewController {
 
         }
 
+        self.tableView.isHidden = false
+        self.emptyBaseView.isHidden = true
+    
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -236,14 +253,20 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
         tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
-        
+
         tableView.delegate = self
         tableView.dataSource = self
 
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
-        
+
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+        self.tableView.addSubview(self.refreshControl)
+
+        //
+        //
         let didTapSportsSelection = UITapGestureRecognizer(target: self, action: #selector(self.handleSportsSelectionTap(_:)))
         sportsSelectorButtonView.addGestureRecognizer(didTapSportsSelection)
 
@@ -302,20 +325,57 @@ class PreLiveEventsViewController: UIViewController {
 
         self.viewModel.isLoading
             .receive(on: DispatchQueue.main)
-            .sink { isLoading in
-                self.loadingBaseView.isHidden = !isLoading
+            .sink { [weak self] isLoading in
+                self?.loadingBaseView.isHidden = !isLoading
+                if !isLoading {
+                    self?.refreshControl.endRefreshing()
+                }
             }
             .store(in: &cancellables)
 
-        self.viewModel.dataDidChangedAction = { [unowned self] in
-            self.tableView.reloadData()
-            
-        }
-
+        self.viewModel.dataChangedPublisher
+            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+        
+        self.viewModel.screenStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] screenState in
+                
+                switch screenState {
+                case .noEmptyNoFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+                case .emptyNoFilter:
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions {
+                        self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                                    secondLabelText: localized("second_string_empty_list"),
+                                                    isUserLoggedIn: true)
+                    }
+                case .noEmptyAndFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+                case .emptyAndFilter:
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions {
+                        self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
+                                                    secondLabelText: localized("second_string_empty_list_with_filters"),
+                                                    isUserLoggedIn: true)
+                    }
+                }
+            })
+            .store(in: &cancellables)
+        
         self.viewModel.matchListTypePublisher
             .map {  $0 == .competitions }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] isCompetitionTab in
+            .sink { [weak self] isCompetitionTab in
+
+                guard let self = self else { return }
 
                 self.shouldDetectScrollMovement = isCompetitionTab
                 self.competitionsFiltersBaseView.isHidden = !isCompetitionTab
@@ -335,8 +395,8 @@ class PreLiveEventsViewController: UIViewController {
                 }
             }
             .receive(on: DispatchQueue.main)
-            .sink { [unowned self] competitions in
-                self.competitionsFiltersView?.competitions = competitions
+            .sink { [weak self] competitions in
+                self?.competitionsFiltersView?.competitions = competitions
             }
             .store(in: &cancellables)
 
@@ -350,9 +410,9 @@ class PreLiveEventsViewController: UIViewController {
         self.competitionsFiltersView?.selectedIds
             .compactMap({ $0.isEmpty })
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [unowned self] shouldShowOpen in
+            .sink(receiveValue: { [weak self] shouldShowOpen in
                 if shouldShowOpen {
-                    self.openCompetitionsFilters()
+                    self?.openCompetitionsFilters()
                 }
             })
             .store(in: &cancellables)
@@ -381,14 +441,18 @@ class PreLiveEventsViewController: UIViewController {
 
     }
 
+    @objc func refreshControllPulled() {
+        self.viewModel.fetchData()
+    }
+
     func reloadTableViewData() {
         self.tableView.reloadData()
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
-        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType)
-        sportSelectionVC.delegate = self
-        self.present(sportSelectionVC, animated: true, completion: nil)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport)
+        sportSelectionViewController.selectionDelegate = self
+        self.present(sportSelectionViewController, animated: true, completion: nil)
     }
 
     private func setupWithTheme() {
@@ -403,13 +467,18 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
         self.betslipButtonView.backgroundColor = UIColor.App2.highlightPrimary
+
+        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
+        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.emptyStateButton.backgroundColor = UIColor.App.primaryButtonNormal
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
         let homeFilterViewController = HomeFilterViewController(sportsModel: self.viewModel)
         homeFilterViewController.delegate = self
         self.present(homeFilterViewController, animated: true, completion: nil)
-        
+    
     }
 
     func applyCompetitionsFiltersWithIds(_ ids: [String]) {
@@ -422,9 +491,9 @@ class PreLiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSportToType(_ sportType: SportType) {
-        self.selectedSportType = sportType
-        self.didChangeSportType?(sportType)
+    func changedSport(_ sport: Sport) {
+        self.selectedSport = sport
+        self.didChangeSport?(sport)
     }
 
     func openCompetitionsFilters() {
@@ -488,6 +557,24 @@ class PreLiveEventsViewController: UIViewController {
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
+    
+    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool) {
+    
+        if isUserLoggedIn {
+            self.emptyStateImage.image = UIImage(named: "no_content_icon")
+            self.firstTextFieldEmptyStateLabel.text = firstLabelText
+            self.secondTextFieldEmptyStateLabel.text = secondLabelText
+            self.emptyStateButton.isHidden = isUserLoggedIn
+        }
+        else {
+            self.emptyStateImage.image = UIImage(named: "no_internet_icon")
+            self.firstTextFieldEmptyStateLabel.text = localized("empty_no_login")
+            self.secondTextFieldEmptyStateLabel.text = localized("second_string_empty_no_login")
+            self.emptyStateButton.isHidden = isUserLoggedIn
+            self.emptyStateButton.setTitle("Login", for: .normal)
+        }
+        
+    }
 
     func layoutBetslipButtonPosition() {
         var constant: CGFloat = -12
@@ -504,6 +591,11 @@ class PreLiveEventsViewController: UIViewController {
             constant = -24
         }
         self.betslipButtonViewBottomConstraint?.constant = constant
+    }
+    
+    @IBAction private func didTapLoginButton() {
+        let loginViewController = Router.navigationController(with: LoginViewController())
+        self.present(loginViewController, animated: true, completion: nil)
     }
 
 }
@@ -604,15 +696,15 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle(localized("string_popular"))
+            cell.setupWithTitle(localized("popular"))
         case 1:
-            cell.setupWithTitle(localized("string_upcoming"))
+            cell.setupWithTitle(localized("upcoming"))
         case 2:
-            cell.setupWithTitle(localized("string_competitions"))
+            cell.setupWithTitle(localized("competitions"))
         case 3:
-            cell.setupWithTitle(localized("string_my_games"))
+            cell.setupWithTitle(localized("my_games"))
         case 4:
-            cell.setupWithTitle(localized("string_my_competitions"))
+            cell.setupWithTitle(localized("my_competitions"))
         default:
             ()
         }
@@ -636,18 +728,33 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             AnalyticsClient.sendEvent(event: .myGamesScreen)
             self.viewModel.setMatchListType(.myGames)
             turnTimeRangeOn = false
+            self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                       secondLabelText: localized("second_string_empty_list"),
+                                       isUserLoggedIn: true)
         case 1:
             AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.today)
             turnTimeRangeOn = true
+            self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                       secondLabelText: localized("second_string_empty_list"),
+                                       isUserLoggedIn: true)
         case 2:
             AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
             turnTimeRangeOn = false
+            self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                       secondLabelText: localized("second_string_empty_list"),
+                                       isUserLoggedIn: true)
         case 3:
             self.viewModel.setMatchListType(.favoriteGames)
+            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
+                                       secondLabelText: localized("second_string_empty_my_games"),
+                                       isUserLoggedIn: UserSessionStore.isUserLogged())
         case 4:
             self.viewModel.setMatchListType(.favoriteCompetitions)
+            self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
+                                       secondLabelText: localized("second_string_empty_my_competitions"),
+                                       isUserLoggedIn: UserSessionStore.isUserLogged())
         default:
             ()
         }
@@ -659,13 +766,10 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
 }
 
-protocol SportTypeSelectionViewDelegate: AnyObject {
-    func setSportType(_ sportType: SportType)
-}
 
 extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
-    func setSportType(_ sportType: SportType) {
-        self.changedSportToType(sportType)
+    func selectedSport(_ sport: Sport) {
+        self.changedSport(sport)
     }
 }
 

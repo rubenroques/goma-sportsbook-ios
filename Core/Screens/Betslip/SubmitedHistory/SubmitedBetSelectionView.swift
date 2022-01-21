@@ -19,10 +19,10 @@ class SubmitedBetSelectionView: NibView {
     @IBOutlet private weak var marketNameLabel: UILabel!
     @IBOutlet private weak var eventNameLabel: UILabel!
 
-    @IBOutlet weak var oddBaseView: UIView!
-    @IBOutlet weak var oddValueLabel: UILabel!
-    @IBOutlet weak var upChangeOddValueImage: UIImageView!
-    @IBOutlet weak var downChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var oddBaseView: UIView!
+    @IBOutlet private weak var oddValueLabel: UILabel!
+    @IBOutlet private weak var upChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
     var oddSubscriber: AnyCancellable?
     var currentOddValue: Double?

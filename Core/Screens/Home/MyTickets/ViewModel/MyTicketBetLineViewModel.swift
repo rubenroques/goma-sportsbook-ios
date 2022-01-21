@@ -26,18 +26,27 @@ class MyTicketBetLineViewModel {
         }
     }
 
+    deinit {
+        self.goalsSubscription?.cancel()
+        self.goalsSubscription = nil
+
+        if let goalsRegister = goalsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+        }
+    }
+
     private func requestGoals(forMatchWithId id: String) {
 
         self.goalsSubscription?.cancel()
         self.goalsSubscription = nil
 
         if let goalsRegister = goalsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
         }
 
         let endpoint = TSRouter.eventPartScoresPublisher(operatorId: Env.appSession.operatorId, language: "en", matchId: id)
 
-        self.goalsSubscription = TSManager.shared
+        self.goalsSubscription = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -66,8 +75,9 @@ class MyTicketBetLineViewModel {
                 case .updatedContent(let aggregatorUpdates):
                     print("MyBets cashoutPublisher updatedContent")
                 case .disconnect:
-                    print("My Games cashoutPublisher disconnect")
+                    print("MyBets cashoutPublisher disconnect")
                 }
             })
     }
+
 }

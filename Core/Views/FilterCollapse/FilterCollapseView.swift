@@ -42,7 +42,6 @@ class FilterCollapseView: NibView {
                 stackViewHeightConstraint.isActive = false
                 viewHeightConstraint.isActive = false
                 UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
-                    print(self.stackView.alpha)
                     if self.stackView.alpha != self.enabledAlpha && self.stackView.alpha != 0 {
                         self.stackView.alpha = self.disabledAlpha
                     }
