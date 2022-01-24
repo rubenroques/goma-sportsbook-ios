@@ -176,20 +176,11 @@
                                                 <constraint firstAttribute="trailing" secondItem="9cZ-8S-ynC" secondAttribute="trailing" id="gIJ-Ss-ZxG"/>
                                             </constraints>
                                         </view>
-                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUd-4d-bYt">
-                                            <rect key="frame" x="160" y="0.0" width="46" height="64"/>
-                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="46" id="nwc-VJ-XYZ"/>
-                                            </constraints>
-                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                            <state key="normal" image="search_bar_icon"/>
-                                        </button>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="96Y-v9-tV8">
-                                            <rect key="frame" x="214" y="0.0" width="96" height="64"/>
+                                            <rect key="frame" x="160" y="0.0" width="96" height="64"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="paS-oq-fLH">
-                                                    <rect key="frame" x="0.0" y="17" width="80" height="30"/>
+                                                    <rect key="frame" x="16" y="17" width="80" height="30"/>
                                                     <color key="backgroundColor" name="primaryButtonNormalColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="80" id="EWH-Kw-lOP"/>
@@ -207,12 +198,24 @@
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="paS-oq-fLH" secondAttribute="trailing" constant="16" id="Abb-zd-YXb"/>
+                                                <constraint firstAttribute="trailing" secondItem="paS-oq-fLH" secondAttribute="trailing" id="Abb-zd-YXb"/>
                                                 <constraint firstAttribute="height" constant="64" id="IoW-8b-KGT"/>
                                                 <constraint firstAttribute="width" constant="96" id="M10-Jr-GpY"/>
                                                 <constraint firstItem="paS-oq-fLH" firstAttribute="centerY" secondItem="96Y-v9-tV8" secondAttribute="centerY" id="OML-3a-Fz4"/>
                                             </constraints>
                                         </view>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xUd-4d-bYt">
+                                            <rect key="frame" x="264" y="0.0" width="46" height="64"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="46" id="nwc-VJ-XYZ"/>
+                                            </constraints>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                            <state key="normal" image="search_bar_icon"/>
+                                            <connections>
+                                                <action selector="didTapSearchButton" destination="-1" eventType="touchUpInside" id="Ywn-XA-hry"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </stackView>

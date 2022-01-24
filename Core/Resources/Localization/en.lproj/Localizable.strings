@@ -300,3 +300,10 @@ Terms of use, Privacy Policy and EULA";
 "need_login_tickets" = "You need to be logged in to be able to see your tickets";
 "you_not_logged_in" = "You aren't logged in!";
 "cashout_prompt_message" = "Your return money will be “%s€”";
+
+"search_for_teams_competitions" = "Search for Teams or Competitions…";
+"no_recent_searches" = "No recent searches";
+"results_count" = "%s Results";
+"results_count_singular" = "%s Result";
+
+"sport_id_competition_name" = "Competitions";

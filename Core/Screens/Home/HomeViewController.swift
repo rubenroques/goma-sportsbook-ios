@@ -45,7 +45,7 @@ class HomeViewController: UIViewController {
 
     
     // Child view controllers
-    lazy var preLiveViewController = PreLiveEventsViewController(selectedSport: Sport.football)
+    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
 
     // Loaded view controllers
@@ -164,15 +164,6 @@ class HomeViewController: UIViewController {
 //            } receiveValue: { operatorInfo in
 //                print("getOperatorInfo \(operatorInfo)")
 //            }
-//            .store(in: &cancellables)
-
-//        Env.userSessionStore.userBalanceWallet
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] wallet in
-//                if let walletAmount = wallet?.amount {
-//                    self?.accountValueLabel.text = "\(walletAmount)"
-//                }
-//            })
 //            .store(in: &cancellables)
 
     }
@@ -312,7 +303,7 @@ class HomeViewController: UIViewController {
             self.loginBaseView.isHidden = false
             self.profileBaseView.isHidden = true
             self.accountValueBaseView.isHidden = true
-            self.searchButton.isHidden = true
+            self.searchButton.isHidden = false
 
         }
     }
@@ -354,9 +345,22 @@ class HomeViewController: UIViewController {
         }
     }
 
-    @IBAction func didTapLogin() {
+    @IBAction private func didTapLogin() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+
+    @IBAction private func didTapSearchButton() {
+        let searchViewController = SearchViewController()
+
+        searchViewController.didSelectCompetitionAction = { value in
+            searchViewController.dismiss(animated: true, completion: nil)
+            self.preLiveViewController.filterSelectedOption = 2
+            self.preLiveViewController.setSelectedCollectionViewItem = 2
+            self.preLiveViewController.applyCompetitionsFiltersWithIds([value])
+        }
+
+        self.present(searchViewController, animated: true, completion: nil)
     }
 
 }

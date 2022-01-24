@@ -111,8 +111,27 @@ class PreLiveEventsViewController: UIViewController {
     private var lastContentOffset: CGFloat = 0
     private var shouldDetectScrollMovement = false
 
-    init(selectedSport: Sport) {
-        self.selectedSport = selectedSport
+    var setSelectedCollectionViewItem: Int = 0 {
+        didSet {
+            let indexPath = IndexPath(item: setSelectedCollectionViewItem, section: 0)
+
+            self.filterSelectedOption = setSelectedCollectionViewItem
+
+            AnalyticsClient.sendEvent(event: .competitionsScreen)
+            self.viewModel.setMatchListType(.competitions)
+            turnTimeRangeOn = false
+            self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                       secondLabelText: localized("second_string_empty_list"),
+                                       isUserLoggedIn: true)
+            self.filtersCollectionView.reloadData()
+            self.filtersCollectionView.layoutIfNeeded()
+            self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+
+        }
+    }
+
+    init(selectedSportType: Sport = .football) {
+        self.selectedSport = selectedSportType
         self.viewModel = PreLiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "PreLiveEventsViewController", bundle: nil)
     }
