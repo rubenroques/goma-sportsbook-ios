@@ -308,7 +308,4 @@ Terms of use, Privacy Policy and EULA";
 "results_count" = "%s Results";
 "results_count_singular" = "%s Result";
 
-"sport_id_1_name" = "Football";
-"sport_id_2_name" = "Golf";
-"sport_id_3_name" = "Tennis";
-"sport_id_8_name" = "Basketball";
+"sport_id_competition_name" = "Competitions";

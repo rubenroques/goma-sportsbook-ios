@@ -111,6 +111,25 @@ class PreLiveEventsViewController: UIViewController {
     private var lastContentOffset: CGFloat = 0
     private var shouldDetectScrollMovement = false
 
+    var setSelectedCollectionViewItem: Int = 0 {
+        didSet {
+            let indexPath = IndexPath(item: setSelectedCollectionViewItem, section: 0)
+
+            self.filterSelectedOption = setSelectedCollectionViewItem
+
+            AnalyticsClient.sendEvent(event: .competitionsScreen)
+            self.viewModel.setMatchListType(.competitions)
+            turnTimeRangeOn = false
+            self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
+                                       secondLabelText: localized("second_string_empty_list"),
+                                       isUserLoggedIn: true)
+            self.filtersCollectionView.reloadData()
+            self.filtersCollectionView.layoutIfNeeded()
+            self.filtersCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+
+        }
+    }
+
     init(selectedSportType: SportType = .football) {
         self.selectedSportType = selectedSportType
         self.viewModel = PreLiveEventsViewModel(selectedSportId: self.selectedSportType)
@@ -259,7 +278,6 @@ class PreLiveEventsViewController: UIViewController {
         tableView.estimatedRowHeight = 155
         tableView.estimatedSectionHeaderHeight = 0
         tableView.estimatedSectionFooterHeight = 0
-
 
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)

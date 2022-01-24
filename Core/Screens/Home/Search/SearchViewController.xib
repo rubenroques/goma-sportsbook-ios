@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,6 +11,8 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
+                <outlet property="activityIndicatorBaseView" destination="Qbt-uE-yCR" id="YTp-pY-jTI"/>
+                <outlet property="activityIndicatorView" destination="7Er-lX-sNy" id="Nwg-pe-GVS"/>
                 <outlet property="cancelButton" destination="fe8-ok-HJs" id="ME7-py-ox2"/>
                 <outlet property="containerView" destination="jFx-km-kNQ" id="Wn8-nm-ErO"/>
                 <outlet property="emptySearchLabel" destination="hN8-rZ-Swy" id="qjV-dp-38G"/>
@@ -117,16 +119,30 @@
                                 </tableView>
                             </subviews>
                         </stackView>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Qbt-uE-yCR">
+                            <rect key="frame" x="0.0" y="60" width="414" height="758"/>
+                            <subviews>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" id="7Er-lX-sNy">
+                                    <rect key="frame" x="0.0" y="361" width="414" height="37"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                </activityIndicatorView>
+                            </subviews>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        </view>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
+                        <constraint firstAttribute="bottom" secondItem="Qbt-uE-yCR" secondAttribute="bottom" id="8wI-hm-ymS"/>
                         <constraint firstAttribute="trailing" secondItem="Jgh-9u-OGD" secondAttribute="trailing" id="Bug-Ll-f4A"/>
+                        <constraint firstAttribute="trailing" secondItem="Qbt-uE-yCR" secondAttribute="trailing" id="Civ-Qd-BUb"/>
+                        <constraint firstItem="Qbt-uE-yCR" firstAttribute="top" secondItem="3XU-fx-AUl" secondAttribute="bottom" id="PoW-qO-wW9"/>
                         <constraint firstItem="Jgh-9u-OGD" firstAttribute="top" secondItem="3XU-fx-AUl" secondAttribute="bottom" id="QH3-QF-rMi"/>
                         <constraint firstAttribute="trailing" secondItem="3XU-fx-AUl" secondAttribute="trailing" id="Vev-zr-OFb"/>
                         <constraint firstAttribute="bottom" secondItem="Jgh-9u-OGD" secondAttribute="bottom" id="aTq-Fz-D4G"/>
                         <constraint firstItem="3XU-fx-AUl" firstAttribute="top" secondItem="jFx-km-kNQ" secondAttribute="top" id="bFe-PV-qFk"/>
                         <constraint firstItem="Jgh-9u-OGD" firstAttribute="leading" secondItem="jFx-km-kNQ" secondAttribute="leading" id="irb-rc-QjI"/>
                         <constraint firstItem="3XU-fx-AUl" firstAttribute="leading" secondItem="jFx-km-kNQ" secondAttribute="leading" id="mCQ-O3-c0I"/>
+                        <constraint firstItem="Qbt-uE-yCR" firstAttribute="leading" secondItem="jFx-km-kNQ" secondAttribute="leading" id="w1j-Pt-x9k"/>
                     </constraints>
                 </view>
             </subviews>

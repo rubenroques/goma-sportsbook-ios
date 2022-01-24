@@ -300,7 +300,7 @@ class HomeViewController: UIViewController {
             self.loginBaseView.isHidden = false
             self.profileBaseView.isHidden = true
             self.accountValueBaseView.isHidden = true
-            self.searchButton.isHidden = true
+            self.searchButton.isHidden = false
 
         }
     }
@@ -340,14 +340,20 @@ class HomeViewController: UIViewController {
         }
     }
 
-    @IBAction func didTapLogin() {
+    @IBAction private func didTapLogin() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
 
-
-    @IBAction func didTapSearchButton() {
+    @IBAction private func didTapSearchButton() {
         let searchViewController = SearchViewController()
+
+        searchViewController.didSelectCompetitionAction = { value in
+            searchViewController.dismiss(animated: true, completion: nil)
+            self.preLiveViewController.filterSelectedOption = 2
+            self.preLiveViewController.setSelectedCollectionViewItem = 2
+            self.preLiveViewController.applyCompetitionsFiltersWithIds([value])
+        }
 
         self.present(searchViewController, animated: true, completion: nil)
     }
