@@ -3331,7 +3331,6 @@
 				45CD7B5B271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
 				A995C198279991A100151462 /* SearchViewController.xib in Resources */,
-				45936CC0270EF14300E8260E /* SportTypeCollectionViewCell.xib in Resources */,
 				A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */,
 				A92F5D842718388500884BDF /* FilterSliderCollapseView.xib in Resources */,
@@ -3668,7 +3667,6 @@
 				457816AF2706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457F495C2737C2280047169D /* UserBalance.swift in Sources */,
 				A948BF94279ED6B9006053C9 /* SearchEvent.swift in Sources */,
-				45936CBD270EF14300E8260E /* SportTypeCollectionViewCell.swift in Sources */,
 				A979CA53275E6C0B00230E93 /* MatchOddsContent.swift in Sources */,
 				45166CF326F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
@@ -3995,7 +3993,6 @@
 				457816B02706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457F495D2737C2280047169D /* UserBalance.swift in Sources */,
 				A948BF95279ED6B9006053C9 /* SearchEvent.swift in Sources */,
-				45936CBE270EF14300E8260E /* SportTypeCollectionViewCell.swift in Sources */,
 				A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */,
 				45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
@@ -4287,7 +4284,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00303;
+				CURRENT_PROJECT_VERSION = 00305;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4313,7 +4310,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00303;
+				CURRENT_PROJECT_VERSION = 00305;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
