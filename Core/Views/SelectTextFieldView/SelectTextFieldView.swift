@@ -13,7 +13,6 @@ import Combine
 class SelectTextFieldView: NibView {
 
     @IBOutlet private var containerView: UIView!
-    @IBOutlet private var selectLabel: UILabel!
     @IBOutlet private var selectImageView: UIImageView!
     @IBOutlet private var textField: UITextField!
     @IBOutlet private var iconLabelImageView: UIImageView!
@@ -54,34 +53,37 @@ class SelectTextFieldView: NibView {
 
     func setup() {
 
-        self.backgroundColor = UIColor.App.mainBackground
+        self.backgroundColor = UIColor.App2.backgroundPrimary
         self.layer.cornerRadius = CornerRadius.headerInput
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.App.headerTextField.withAlphaComponent(1).cgColor
+        self.layer.borderColor = UIColor.App2.inputTextTitle.withAlphaComponent(1).cgColor
 
-        containerView.backgroundColor = UIColor.App.mainBackground
-
-        selectLabel.text = "Lorem"
-        selectLabel.font = AppFont.with(type: .regular, size: 14.0)
-        selectLabel.textColor =  UIColor.App.headingMain
+        containerView.backgroundColor = UIColor.App2.backgroundPrimary
 
         selectImageView.image = UIImage(named: "arrow_down_icon")
 
         textField.autocorrectionType = .no
         textField.keyboardType = self.keyboardType
         textField.backgroundColor = .clear
-        textField.textColor = .clear
+        textField.textColor = UIColor.App2.inputText
         textField.delegate = self
 
         iconLabelImageView.isHidden = true
+        
+        let viewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapView))
+        containerView.addGestureRecognizer(viewTapGesture)
     }
 
+    @objc func didTapView(){
+        textField.becomeFirstResponder()
+    }
+    
     func setPickerIcon(_ image: UIImage) {
         selectImageView.image = image
     }
 
     func setLabelFont(font: AppFont.AppFontType, size: CGFloat) {
-        selectLabel.font = AppFont.with(type: font, size: size)
+       
         textField.font = AppFont.with(type: font, size: size)
     }
 
@@ -98,10 +100,6 @@ class SelectTextFieldView: NibView {
 
     func setSelectionPicker(_ array: [String], iconArray: [UIImage] = []) {
         if isIconArray {
-            labelLeadingConstraint.isActive = false
-            labelImageConstraint.isActive = true
-            textFieldLeadingConstraint.isActive = false
-            textFieldImageConstraint.isActive = true
             iconLabelImageView.isHidden = false
             iconLabelImageView.image = iconArray[0]
             selectionIconArray = iconArray
@@ -114,7 +112,6 @@ class SelectTextFieldView: NibView {
 
         textField.inputView = pickerView
         textField.text = selectionArray[0]
-        selectLabel.text = selectionArray[0]
 
         dismissPickerView()
     }
@@ -145,7 +142,6 @@ extension SelectTextFieldView: UITextFieldDelegate {
 
     func textFieldDidEndEditing(_ textField: UITextField) {
         textField.text = textField.text
-        selectLabel.text = textField.text
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -174,7 +170,6 @@ extension SelectTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let selectedItem = selectionArray[row]
-        selectLabel.text = selectedItem
         textField.text = selectedItem
         if self.isIconArray {
             iconLabelImageView.image = self.selectionIconArray[row]

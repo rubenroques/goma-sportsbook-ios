@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="dark"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Gilroy-Medium.ttf">
+            <string>Gilroy-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="HeadToHeadCardStatsView" customModule="ShowcaseBeta" customModuleProvider="target">
+            <connections>
+                <outlet property="captionLabel" destination="YAi-xS-klf" id="71E-hA-Qvu"/>
+                <outlet property="drawAwayProgressBar" destination="oXg-fY-wzW" id="LPI-6h-dUP"/>
+                <outlet property="drawAwayValueLabel" destination="Y1S-er-Oih" id="s7n-jy-AOX"/>
+                <outlet property="drawHomeProgressBar" destination="y2Y-YT-tjn" id="3Ag-jU-1Mq"/>
+                <outlet property="drawHomeValueLabel" destination="Kod-ym-v0q" id="6M6-DU-Oxd"/>
+                <outlet property="drawTitleLabel" destination="ZcN-Is-Ssd" id="ci6-Pl-Eeh"/>
+                <outlet property="lossAwayProgressBar" destination="MGR-1v-Gr7" id="gsb-y2-aqe"/>
+                <outlet property="lossAwayValueLabel" destination="f2u-3a-y02" id="wfF-jb-DMh"/>
+                <outlet property="lossHomeProgressBar" destination="HMQ-0f-DmS" id="W7B-um-bFk"/>
+                <outlet property="lossHomeValueLabel" destination="KzK-pa-AnU" id="Da9-dS-V3o"/>
+                <outlet property="lossTitleLabel" destination="5Re-PI-Drc" id="Hrd-Lm-oQE"/>
+                <outlet property="winAwayProgressBar" destination="uin-XI-tUG" id="RAp-uR-cDa"/>
+                <outlet property="winAwayValueLabel" destination="MPX-e0-8HC" id="lIt-4D-dtD"/>
+                <outlet property="winHomeProgressBar" destination="aOY-y3-sYD" id="XxE-oP-03X"/>
+                <outlet property="winHomeValueLabel" destination="3UC-pb-hYR" id="Z2S-j7-KtO"/>
+                <outlet property="winTitleLabel" destination="QgP-Tx-2ZP" id="gcM-CS-CGX"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="395" height="54"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" horizontalHuggingPriority="248" verticalHuggingPriority="248" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" translatesAutoresizingMaskIntoConstraints="NO" id="uVG-9d-G8k">
+                    <rect key="frame" x="83" y="3" width="229" height="36"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="y7D-Qe-ErD">
+                            <rect key="frame" x="0.0" y="0.0" width="229" height="36"/>
+                            <subviews>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="hDa-Uc-k00">
+                                    <rect key="frame" x="0.0" y="0.0" width="5.5" height="36"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3UC-pb-hYR">
+                                            <rect key="frame" x="0.0" y="0.0" width="5.5" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kod-ym-v0q">
+                                            <rect key="frame" x="0.0" y="12" width="5.5" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KzK-pa-AnU">
+                                            <rect key="frame" x="0.0" y="24" width="5.5" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="7Hf-jI-ybx">
+                                    <rect key="frame" x="10.5" y="0.0" width="84" height="36"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TG3-9R-yLE">
+                                            <rect key="frame" x="0.0" y="0.0" width="84" height="12"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.90000000000000002" translatesAutoresizingMaskIntoConstraints="NO" id="aOY-y3-sYD">
+                                                    <rect key="frame" x="2" y="4" width="80" height="4"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="CeF-ee-z4l"/>
+                                                    </constraints>
+                                                    <color key="progressTintColor" red="0.85098039215686272" green="0.62352941176470589" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="trackTintColor" name="tertiaryBackgroundColor"/>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="aOY-y3-sYD" firstAttribute="centerY" secondItem="TG3-9R-yLE" secondAttribute="centerY" id="XgY-eS-CyF"/>
+                                                <constraint firstItem="aOY-y3-sYD" firstAttribute="centerX" secondItem="TG3-9R-yLE" secondAttribute="centerX" id="cvu-p4-B7N"/>
+                                                <constraint firstItem="aOY-y3-sYD" firstAttribute="leading" secondItem="TG3-9R-yLE" secondAttribute="leading" constant="2" id="juW-9n-0N6"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lrD-Ce-fbQ">
+                                            <rect key="frame" x="0.0" y="12" width="84" height="12"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.10000000000000001" translatesAutoresizingMaskIntoConstraints="NO" id="y2Y-YT-tjn">
+                                                    <rect key="frame" x="2" y="4" width="80" height="4"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="STF-Pb-Uwx"/>
+                                                    </constraints>
+                                                    <color key="progressTintColor" red="0.85098039215686272" green="0.62352941176470589" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="trackTintColor" name="tertiaryBackgroundColor"/>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="y2Y-YT-tjn" firstAttribute="centerX" secondItem="lrD-Ce-fbQ" secondAttribute="centerX" id="BTB-5B-hJ2"/>
+                                                <constraint firstItem="y2Y-YT-tjn" firstAttribute="centerY" secondItem="lrD-Ce-fbQ" secondAttribute="centerY" id="KXw-A9-WtG"/>
+                                                <constraint firstItem="y2Y-YT-tjn" firstAttribute="leading" secondItem="lrD-Ce-fbQ" secondAttribute="leading" constant="2" id="k4I-1p-mlk"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kMU-O9-19p">
+                                            <rect key="frame" x="0.0" y="24" width="84" height="12"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="HMQ-0f-DmS">
+                                                    <rect key="frame" x="2" y="4" width="80" height="4"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="Wyq-mp-pVm"/>
+                                                    </constraints>
+                                                    <color key="progressTintColor" red="0.85098039215686272" green="0.62352941176470589" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="trackTintColor" name="tertiaryBackgroundColor"/>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="HMQ-0f-DmS" firstAttribute="leading" secondItem="kMU-O9-19p" secondAttribute="leading" constant="2" id="Dct-aW-aYl"/>
+                                                <constraint firstItem="HMQ-0f-DmS" firstAttribute="centerY" secondItem="kMU-O9-19p" secondAttribute="centerY" id="bkV-Z3-jJj"/>
+                                                <constraint firstItem="HMQ-0f-DmS" firstAttribute="centerX" secondItem="kMU-O9-19p" secondAttribute="centerX" id="cLK-6f-9cT"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="b4z-ty-C9m">
+                                    <rect key="frame" x="99.5" y="0.0" width="30" height="36"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Win" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QgP-Tx-2ZP">
+                                            <rect key="frame" x="0.0" y="0.0" width="30" height="12"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="12" id="s2g-dt-ah4"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Draw" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZcN-Is-Ssd">
+                                            <rect key="frame" x="0.0" y="12" width="30" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Losses" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Re-PI-Drc">
+                                            <rect key="frame" x="0.0" y="24" width="30" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="jG3-e3-gxJ">
+                                    <rect key="frame" x="134.5" y="0.0" width="84" height="36"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dx5-z2-eLf">
+                                            <rect key="frame" x="0.0" y="0.0" width="84" height="12"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.80000000000000004" translatesAutoresizingMaskIntoConstraints="NO" id="uin-XI-tUG">
+                                                    <rect key="frame" x="2" y="4" width="80" height="4"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="vYv-3g-VFZ"/>
+                                                    </constraints>
+                                                    <color key="progressTintColor" red="0.27450980392156865" green="0.75686274509803919" blue="0.65490196078431373" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="trackTintColor" name="tertiaryBackgroundColor"/>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="uin-XI-tUG" firstAttribute="centerX" secondItem="dx5-z2-eLf" secondAttribute="centerX" id="7YN-h3-9vW"/>
+                                                <constraint firstItem="uin-XI-tUG" firstAttribute="centerY" secondItem="dx5-z2-eLf" secondAttribute="centerY" id="IJF-yv-OtE"/>
+                                                <constraint firstItem="uin-XI-tUG" firstAttribute="leading" secondItem="dx5-z2-eLf" secondAttribute="leading" constant="2" id="cqz-BO-EMh"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dgX-Lr-i89">
+                                            <rect key="frame" x="0.0" y="12" width="84" height="12"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.29999999999999999" translatesAutoresizingMaskIntoConstraints="NO" id="oXg-fY-wzW">
+                                                    <rect key="frame" x="2" y="4" width="80" height="4"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="aVH-mK-MBs"/>
+                                                    </constraints>
+                                                    <color key="progressTintColor" red="0.27450980392156865" green="0.75686274509803919" blue="0.65490196078431373" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="trackTintColor" name="tertiaryBackgroundColor"/>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="oXg-fY-wzW" firstAttribute="centerY" secondItem="dgX-Lr-i89" secondAttribute="centerY" id="4jN-8c-QqH"/>
+                                                <constraint firstItem="oXg-fY-wzW" firstAttribute="leading" secondItem="dgX-Lr-i89" secondAttribute="leading" constant="2" id="AuW-t7-4aw"/>
+                                                <constraint firstItem="oXg-fY-wzW" firstAttribute="centerX" secondItem="dgX-Lr-i89" secondAttribute="centerX" id="uIb-oe-bYA"/>
+                                            </constraints>
+                                        </view>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Lp3-kH-ySO">
+                                            <rect key="frame" x="0.0" y="24" width="84" height="12"/>
+                                            <subviews>
+                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.59999999999999998" translatesAutoresizingMaskIntoConstraints="NO" id="MGR-1v-Gr7">
+                                                    <rect key="frame" x="2" y="4" width="80" height="4"/>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="80" id="31r-8u-e7B"/>
+                                                    </constraints>
+                                                    <color key="progressTintColor" red="0.27450980392156865" green="0.75686274509803919" blue="0.65490196078431373" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <color key="trackTintColor" name="tertiaryBackgroundColor"/>
+                                                </progressView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="MGR-1v-Gr7" firstAttribute="centerY" secondItem="Lp3-kH-ySO" secondAttribute="centerY" id="Qpl-34-3VI"/>
+                                                <constraint firstItem="MGR-1v-Gr7" firstAttribute="leading" secondItem="Lp3-kH-ySO" secondAttribute="leading" constant="2" id="iHV-h1-wLI"/>
+                                                <constraint firstItem="MGR-1v-Gr7" firstAttribute="centerX" secondItem="Lp3-kH-ySO" secondAttribute="centerX" id="lby-D6-gr6"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
+                                </stackView>
+                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="LJG-II-FTT">
+                                    <rect key="frame" x="223.5" y="0.0" width="5.5" height="36"/>
+                                    <subviews>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MPX-e0-8HC">
+                                            <rect key="frame" x="0.0" y="0.0" width="5.5" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y1S-er-Oih">
+                                            <rect key="frame" x="0.0" y="12" width="5.5" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="5" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f2u-3a-y02">
+                                            <rect key="frame" x="0.0" y="24" width="5.5" height="12"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="10"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </stackView>
+                            </subviews>
+                        </stackView>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="y7D-Qe-ErD" secondAttribute="trailing" id="I7U-hS-8OJ"/>
+                        <constraint firstItem="y7D-Qe-ErD" firstAttribute="leading" secondItem="uVG-9d-G8k" secondAttribute="leading" id="sAz-0C-dk0"/>
+                        <constraint firstItem="y7D-Qe-ErD" firstAttribute="top" secondItem="uVG-9d-G8k" secondAttribute="top" id="v5k-ga-u0O"/>
+                        <constraint firstAttribute="bottom" secondItem="y7D-Qe-ErD" secondAttribute="bottom" id="vlD-pc-zNS"/>
+                    </constraints>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Last 10 matches" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YAi-xS-klf">
+                    <rect key="frame" x="164.5" y="44" width="66.5" height="8"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="8" id="oDP-IN-WMI"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="9"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
+            <color key="backgroundColor" systemColor="systemGray2Color"/>
+            <constraints>
+                <constraint firstItem="uVG-9d-G8k" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="2l7-wJ-DSU"/>
+                <constraint firstItem="YAi-xS-klf" firstAttribute="top" secondItem="uVG-9d-G8k" secondAttribute="bottom" constant="5" id="Iay-oe-oss"/>
+                <constraint firstItem="uVG-9d-G8k" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" constant="-6" id="NBI-Ry-ydy"/>
+                <constraint firstItem="YAi-xS-klf" firstAttribute="centerX" secondItem="uVG-9d-G8k" secondAttribute="centerX" id="Opf-An-DRf"/>
+            </constraints>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="163.04347826086959" y="67.96875"/>
+        </view>
+    </objects>
+    <resources>
+        <namedColor name="tertiaryBackgroundColor">
+            <color red="0.81960784313725488" green="0.83529411764705885" blue="0.89411764705882357" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <systemColor name="systemGray2Color">
+            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

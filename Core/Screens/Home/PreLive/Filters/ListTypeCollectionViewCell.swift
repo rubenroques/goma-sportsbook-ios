@@ -50,13 +50,11 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.normalColor = UIColor.App.secondaryBackground
-        self.selectedColor = UIColor.App.mainTint
+        self.normalColor = UIColor.App2.backgroundPrimary
+        self.selectedColor = UIColor.App2.highlightPrimary
 
         self.setupWithSelection(self.selectedType)
-        
-        self.titleLabel.textColor =  UIColor.App.headingMain
-
+        self.titleLabel.textColor = UIColor.App2.textPrimary
     }
 
     func setupWithTitle(_ title: String) {

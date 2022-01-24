@@ -45,7 +45,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         }
     }
 
-    weak var delegate: CollapsibleTableViewHeaderDelegate?
+    var delegate: CollapsibleTableViewHeaderDelegate?
 
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)

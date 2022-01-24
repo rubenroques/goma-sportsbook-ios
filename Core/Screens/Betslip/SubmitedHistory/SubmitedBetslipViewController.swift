@@ -95,9 +95,9 @@ class SubmitedBetslipViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackground
-        self.tableView.backgroundColor = UIColor.App.mainBackground
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
         self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
         
         self.dontHaveAnyTicketsLabel.textColor = UIColor.App.headingMain

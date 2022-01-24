@@ -20,7 +20,8 @@ class BetslipViewController: UIViewController {
 
     @IBOutlet private weak var closeButton: UIButton!
     @IBOutlet private weak var tabsBaseView: UIView!
-
+    @IBOutlet private weak var betsLabel: UILabel!
+    
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource
 
@@ -116,18 +117,24 @@ class BetslipViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.mainBackground
-        self.navigationBarView.backgroundColor = UIColor.App.mainBackground
-        self.tabsBaseView.backgroundColor = UIColor.App.mainBackground
+        self.topSafeAreaView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.navigationBarView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.tabsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.accountInfoBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.accountValueBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.accountValuePlusView.backgroundColor = UIColor.App.mainTint
-        self.accountValueLabel.textColor = UIColor.App.headingMain
+        self.accountInfoBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.accountValueBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.accountValuePlusView.backgroundColor = UIColor.App2.highlightPrimary
+        self.accountValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.tabViewController.sliderBarColor = UIColor.App.mainTint
-        self.tabViewController.barColor = UIColor.App.mainBackground
-        self.tabViewController.textColor = .white
+        self.tabViewController.sliderBarColor = UIColor.App2.highlightPrimary
+        self.tabViewController.barColor = UIColor.App2.backgroundPrimary
+        self.tabViewController.textColor = UIColor.App2.textPrimary
+      
+        
+        self.closeButton.titleLabel?.textColor = UIColor.App2.textPrimary
+        
+        self.betsLabel.textColor = UIColor.App2.textPrimary
+
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {

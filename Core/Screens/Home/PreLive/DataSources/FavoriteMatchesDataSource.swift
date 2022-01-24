@@ -11,9 +11,8 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
 
     var userFavoriteMatches: [Match] = []
 
-    var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
-    var matchDataSourceWentLive: (() -> Void)?
+    var matchWentLiveAction: (() -> Void)?
 
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
@@ -61,7 +60,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
 
                     cell.matchWentLive = {
                         DispatchQueue.main.async {
-                            self.matchDataSourceWentLive?()
+                            self.matchWentLiveAction?()
                         }
                     }
 
@@ -116,10 +115,10 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                 return 600
             }
             else {
-                return 155
+                return UITableView.automaticDimension
             }
         default:
-            return 155
+            return UITableView.automaticDimension
         }
     }
 
@@ -129,7 +128,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
             // Loading cell
             return 70
         default:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         }
     }
 

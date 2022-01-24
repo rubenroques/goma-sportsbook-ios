@@ -64,8 +64,8 @@ class PreLiveEventsViewController: UIViewController {
     private lazy var betslipCountLabel: UILabel = {
         var betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
-        betslipCountLabel.textColor = .white
-        betslipCountLabel.backgroundColor = UIColor.App.alertError
+        betslipCountLabel.textColor = UIColor.App2.textPrimary
+        betslipCountLabel.backgroundColor = UIColor.App2.bubblesPrimary
         betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
         betslipCountLabel.textAlignment = .center
         betslipCountLabel.clipsToBounds = true
@@ -91,21 +91,21 @@ class PreLiveEventsViewController: UIViewController {
     var viewModel: PreLiveEventsViewModel
 
     var filterSelectedOption: Int = 0
-    var selectedSportType: SportType {
+    var selectedSport: Sport {
         didSet {
-            if let sportIconImage = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)") {
+            if let sportIconImage = UIImage(named: "sport_type_icon_\( selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
             }
             else {
                 self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_default")
             }
 
-            self.viewModel.selectedSportId = selectedSportType
+            self.viewModel.selectedSport = selectedSport
             self.competitionsFiltersView?.resetSelection()
         }
     }
 
-    var didChangeSportType: ((SportType) -> Void)?
+    var didChangeSport: ((Sport) -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
     private var lastContentOffset: CGFloat = 0
@@ -210,7 +210,7 @@ class PreLiveEventsViewController: UIViewController {
     private func commonInit() {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_1")
-        let color = UIColor.App.contentBackground
+        let color = UIColor.App2.backgroundPrimary
         
         leftGradientBaseView.backgroundColor = color
         let leftGradientMaskLayer = CAGradientLayer()
@@ -231,13 +231,13 @@ class PreLiveEventsViewController: UIViewController {
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
-        filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
-        filtersCollectionView.backgroundColor = .clear
+        filtersBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        filtersCollectionView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        sportsSelectorButtonView.backgroundColor = UIColor.App.mainTint
+        sportsSelectorButtonView.backgroundColor = UIColor.App2.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App.secondaryBackground
+        filtersButtonView.backgroundColor = UIColor.App2.backgroundSecondary
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -259,6 +259,7 @@ class PreLiveEventsViewController: UIViewController {
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
         filtersCountLabel.layer.masksToBounds = true
+        filtersCountLabel.backgroundColor = UIColor.App2.highlightSecondary
         
         tableView.backgroundColor = .clear
         tableView.backgroundView?.backgroundColor = .clear
@@ -351,10 +352,11 @@ class PreLiveEventsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.viewModel.dataDidChangedAction = { [weak self] in
-            self?.tableView.reloadData()
-            
-        }
+        self.viewModel.dataChangedPublisher
+            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
         
         self.viewModel.screenStatePublisher
             .receive(on: DispatchQueue.main)
@@ -467,23 +469,24 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
-        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType)
-        sportSelectionVC.delegate = self
-        self.present(sportSelectionVC, animated: true, completion: nil)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport)
+        sportSelectionViewController.selectionDelegate = self
+        self.present(sportSelectionViewController, animated: true, completion: nil)
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
-        self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.filtersBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.filtersSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
         self.filtersSeparatorLineView.alpha = 0.5
         
-        self.tableView.backgroundColor = UIColor.App.contentBackground
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
+        self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipButtonView.backgroundColor = UIColor.App.mainTint
+        self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
+        self.betslipButtonView.backgroundColor = UIColor.App2.highlightPrimary
+
         self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
@@ -507,9 +510,9 @@ class PreLiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSportToType(_ sportType: SportType) {
-        self.selectedSportType = sportType
-        self.didChangeSportType?(sportType)
+    func changedSport(_ sport: Sport) {
+        self.selectedSport = sport
+        self.didChangeSport?(sport)
     }
 
     func openCompetitionsFilters() {
@@ -782,13 +785,10 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
 
 }
 
-protocol SportTypeSelectionViewDelegate: AnyObject {
-    func setSportType(_ sportType: SportType)
-}
 
 extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
-    func setSportType(_ sportType: SportType) {
-        self.changedSportToType(sportType)
+    func selectedSport(_ sport: Sport) {
+        self.changedSport(sport)
     }
 }
 

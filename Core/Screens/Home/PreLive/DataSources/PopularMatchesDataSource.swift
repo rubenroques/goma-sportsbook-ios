@@ -24,6 +24,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
     var alertsArray: [ActivationAlert] = []
 
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+
+    var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
@@ -101,7 +104,12 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 2:
             return self.matches.count
         case 3:
-            return 1
+            if self.canRequestNextPageAction?() ?? true {
+                return 1
+            }
+            else {
+                return 0
+            }
         default:
             return 0
         }
@@ -135,6 +143,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
                 cell.setupWithMatch(match)
+
+                if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                    cell.matchStatsViewModel = matchStatsViewModel
+                }
 
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
@@ -202,24 +214,22 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 132
+            return 132 // Banner
         case 3:
-            // Loading cell
-            return 70
+            return 70 // Loading cell
         default:
-            return 155
+            return UITableView.automaticDimension
         }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 130
+            return 130 // Banner
         case 3:
-            // Loading cell
-            return 70
+            return 70 // Loading cell
         default:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         }
     }
 

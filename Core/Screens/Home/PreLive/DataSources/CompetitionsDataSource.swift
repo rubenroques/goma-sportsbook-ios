@@ -106,7 +106,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return 0
         }
-        return 155
+        return MatchWidgetCollectionViewCell.cellHeight + 20
     }
 
     func needReloadSection(_ section: Int, tableView: UITableView) {

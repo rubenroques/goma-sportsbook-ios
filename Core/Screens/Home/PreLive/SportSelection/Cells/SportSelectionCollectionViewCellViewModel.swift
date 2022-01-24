@@ -28,21 +28,18 @@ class SportSelectionCollectionViewCellViewModel: NSObject {
 
     func setValues() {
         self.sportName = sport.name
-        if let sportId = sport.id {
-            self.sportIconName =  "sport_type_icon_\(sportId)"
-        }
+        self.sportIconName =  "sport_type_icon_\(sport.id)"
     }
 
     func setSportPublisher(sportsRepository: SportsAggregatorRepository) {
-        if let sportId = self.sport.id, let sportPublisher = sportsRepository.sportsLivePublisher[sportId] {
-
+        if let sportPublisher = sportsRepository.sportsLivePublisher[self.sport.id] {
             self.sportPublisher = sportPublisher.receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] sport in
                     if let sportCount = sport.numberOfLiveEvents {
                         self?.numberOfLiveEvents = "\(sportCount)"
                         self?.updateLiveEvents?()
                     }
-
+                    
                 })
         }
     }

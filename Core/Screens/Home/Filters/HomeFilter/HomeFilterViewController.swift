@@ -33,16 +33,20 @@ class HomeFilterViewController: UIViewController {
     var highBoundTimeRange: CGFloat = 48.0
     var lowerBoundOddsRange: CGFloat = 1.0
     var highBoundOddsRange: CGFloat = 30.0
+    var countFilters: Int = 0
+
     var defaultMarket: MainMarketType = .homeDrawAway
     var marketViews: [FilterRowView] = []
     var filterValues: HomeFilterOptions?
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
+
     var sportsModel: PreLiveEventsViewModel
     var liveEventsViewModel: LiveEventsViewModel
-    weak var delegate: HomeFilterOptionsViewDelegate?
-    var countFilters: Int = 0
 
-    init(sportsModel: PreLiveEventsViewModel = PreLiveEventsViewModel(selectedSportId: .football), liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSportId: .football)) {
+    var delegate: HomeFilterOptionsViewDelegate?
+
+    init(sportsModel: PreLiveEventsViewModel = PreLiveEventsViewModel(selectedSport: Sport.football),
+         liveEventsViewModel: LiveEventsViewModel = LiveEventsViewModel(selectedSport: Sport.football)) {
         self.sportsModel = sportsModel
         self.liveEventsViewModel = liveEventsViewModel
         super.init(nibName: "HomeFilterViewController", bundle: nil)
@@ -108,29 +112,29 @@ class HomeFilterViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        topView.backgroundColor = UIColor.App.mainBackground
+        topView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        navigationView.backgroundColor = UIColor.App.mainBackground
+        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        navigationLabel.textColor = UIColor.App.headingMain
+        navigationLabel.textColor = UIColor.App2.textPrimary
 
-        navigationResetButton.setTitleColor(UIColor.App.mainTint, for: .normal)
+        navigationResetButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
 
-        navigationCancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
+        navigationCancelButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
 
-        scrollView.backgroundColor = UIColor.App.mainBackground
+        scrollView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        stackContainerView.backgroundColor = UIColor.App.mainBackground
+        stackContainerView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        stackView.backgroundColor = UIColor.App.mainBackground
+        stackView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        bottomButtonView.backgroundColor = UIColor.App.mainBackground
+        bottomButtonView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        applyButton.backgroundColor = UIColor.App.mainTint
-        applyButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-
+        applyButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        applyButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        
     }
 
     func setupTimeRangeSection() {
@@ -154,22 +158,22 @@ class HomeFilterViewController: UIViewController {
 
         let contentView = timeRangeCollapseView.getContentView()
         self.timeRangeMultiSlider = MultiSlider()
-        timeRangeMultiSlider?.backgroundColor = UIColor.App.secondaryBackground
+        timeRangeMultiSlider?.backgroundColor = UIColor.App2.backgroundSecondary
         timeRangeMultiSlider?.orientation = .horizontal
         timeRangeMultiSlider?.minimumTextualValue = localized("now")
         timeRangeMultiSlider?.minimumValue = minValue
         timeRangeMultiSlider?.maximumValue = maxValue
-        timeRangeMultiSlider?.outerTrackColor = UIColor.App.fadedGrayLine
+        timeRangeMultiSlider?.outerTrackColor = UIColor.App2.separatorLine
         timeRangeMultiSlider?.value = values
         timeRangeMultiSlider?.snapStepSize = 1
         timeRangeMultiSlider?.thumbImage = UIImage(named: "slider_thumb_icon")
-        timeRangeMultiSlider?.tintColor = UIColor.App.mainTint
+        timeRangeMultiSlider?.tintColor = UIColor.App2.highlightPrimary
         timeRangeMultiSlider?.trackWidth = 6
         timeRangeMultiSlider?.showsThumbImageShadow = false
         timeRangeMultiSlider?.keepsDistanceBetweenThumbs = false
         timeRangeMultiSlider?.addTarget(self, action: #selector(timeSliderChanged), for: .valueChanged)
         timeRangeMultiSlider?.valueLabelPosition = .bottom
-        timeRangeMultiSlider?.valueLabelColor = UIColor.App.headingMain
+        timeRangeMultiSlider?.valueLabelColor = UIColor.App2.textPrimary
         timeRangeMultiSlider?.valueLabelFont = AppFont.with(type: .bold, size: 14)
 
         if let timeRangeMultiSlider = timeRangeMultiSlider {
@@ -249,19 +253,21 @@ class HomeFilterViewController: UIViewController {
         highBoundOddsRange = filterValues!.highBoundOddsRange
         oddsCollapseView.setTitleWithBold(title: localized("odds_filter") + " " + String(defaultMarket.marketName), charToSplit: ":")
         oddsCollapseView.hasCheckbox = false
+        
+        //oddsCollapseView.backgroundColor = UIColor.App2.backgroundPrimary
         let contentView = oddsCollapseView.getContentView()
-  
+        
         self.oddRangeMultiSlider = MultiSlider()
  
-        oddRangeMultiSlider?.backgroundColor = UIColor.App.secondaryBackground
+        oddRangeMultiSlider?.backgroundColor = UIColor.App2.backgroundSecondary
         oddRangeMultiSlider?.orientation = .horizontal
         oddRangeMultiSlider?.minimumValue = minValue
         oddRangeMultiSlider?.maximumValue = maxValue
-        oddRangeMultiSlider?.outerTrackColor = UIColor.App.fadedGrayLine
+        oddRangeMultiSlider?.outerTrackColor = UIColor.App2.highlightPrimary
         oddRangeMultiSlider?.value = [lowerBoundOddsRange, highBoundOddsRange]
         oddRangeMultiSlider?.snapStepSize = 0.1
         oddRangeMultiSlider?.thumbImage = UIImage(named: "slider_thumb_icon")
-        oddRangeMultiSlider?.tintColor = UIColor.App.mainTint
+        oddRangeMultiSlider?.tintColor = UIColor.App2.highlightPrimary
         oddRangeMultiSlider?.trackWidth = 6
         oddRangeMultiSlider?.showsThumbImageShadow = false
         oddRangeMultiSlider?.keepsDistanceBetweenThumbs = false

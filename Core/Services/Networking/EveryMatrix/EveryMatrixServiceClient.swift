@@ -273,57 +273,6 @@ class EveryMatrixServiceClient: ObservableObject {
         }
     }
 
-    func subscribeSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
-        do {
-            let sportId = sportType.rawValue
-            let operatorId = Env.appSession.operatorId
-            let publisher = try self.manager.subscribeEndpoint( .sportsStatus(operatorId: operatorId,
-                                                                                  language: language,
-                                                                                  sportId: sportId),
-                                                                    decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
-
-                .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Discipline>>) -> EveryMatrixSocketResponse<EveryMatrix.Discipline>? in
-                    print("subscriptionContent \(subscriptionContent)")
-                    switch subscriptionContent {
-                    case let .updatedContent(oddsData):
-                        return oddsData
-                    default:
-                        return nil
-                    }
-                }
-                .compactMap({ $0 })
-
-            return publisher.eraseToAnyPublisher()
-        }
-        catch {
-            return Fail.init(outputType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self, failure: EveryMatrix.APIError.notConnected).eraseToAnyPublisher()
-        }
-    }
-
-    func registerOnSportsStatus(language: String, sportType: SportType) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
-
-        let sportId = sportType.rawValue
-        let operatorId = Env.appSession.operatorId
-        let publisher = self.manager.registerOnEndpoint(.sportsStatus(operatorId: operatorId,
-                                                                              language: language,
-                                                                              sportId: sportId),
-                                                            decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
-
-            .map { (subscriptionContent: TSSubscriptionContent<EveryMatrixSocketResponse<EveryMatrix.Discipline>>) -> EveryMatrixSocketResponse<EveryMatrix.Discipline>? in
-                print("subscriptionContent \(subscriptionContent)")
-                switch subscriptionContent {
-                case let .updatedContent(oddsData):
-                    return oddsData
-                default:
-                    return nil
-                }
-            }
-            .compactMap({ $0 })
-
-        return publisher.eraseToAnyPublisher()
-
-    }
-
     func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrix.APIError> {
         return self.manager.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
     }

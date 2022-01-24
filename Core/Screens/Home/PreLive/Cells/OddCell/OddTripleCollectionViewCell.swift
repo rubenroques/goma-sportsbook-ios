@@ -14,6 +14,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var participantsNameLabel: UILabel!
     @IBOutlet private weak var participantsCountryImageView: UIImageView!
+
+    @IBOutlet private weak var marketStatsStackView: UIStackView!
     @IBOutlet private weak var marketNameLabel: UILabel!
 
     @IBOutlet private weak var oddsStackView: UIStackView!
@@ -161,26 +163,26 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App.secondaryBackground
+        self.backgroundColor = UIColor.App2.backgroundCards
 
-        self.participantsNameLabel.textColor = UIColor.App.headingSecondary
-        self.marketNameLabel.textColor = UIColor.App.headingMain
+        self.participantsNameLabel.textColor = UIColor.App2.textPrimary
+        self.marketNameLabel.textColor = UIColor.App2.textPrimary
 
-        self.leftOddTitleLabel.textColor = UIColor.App.headingMain
-        self.leftOddValueLabel.textColor = UIColor.App.headingMain
+        self.leftOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.leftOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.middleOddTitleLabel.textColor = UIColor.App.headingMain
-        self.middleOddValueLabel.textColor = UIColor.App.headingMain
+        self.middleOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.middleOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.rightOddTitleLabel.textColor = UIColor.App.headingMain
-        self.rightOddValueLabel.textColor = UIColor.App.headingMain
+        self.rightOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.rightOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.leftBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.middleBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.rightBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.middleBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
 
-        self.suspendedBaseView.backgroundColor = UIColor.App.mainBackground
-        self.suspendedLabel.textColor = UIColor.App.headingDisabled
+        self.suspendedBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
+        self.suspendedLabel.textColor = UIColor.App2.textDisablePrimary
     }
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
@@ -308,7 +310,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -321,7 +323,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -345,10 +347,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     func selectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App.mainTint
+        self.leftBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
     @objc func didTapLeftOddButton() {
 
@@ -384,10 +386,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     func selectMiddleOddButton() {
-        self.middleBaseView.backgroundColor = UIColor.App.mainTint
+        self.middleBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectMiddleOddButton() {
-        self.middleBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.middleBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
     @objc func didTapMiddleOddButton() {
         guard
@@ -421,10 +423,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     func selectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App.mainTint
+        self.rightBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
     @objc func didTapRightOddButton() {
         guard

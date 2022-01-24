@@ -101,10 +101,12 @@ final class TSManager {
                                 1 - Session is expired. When all the sessions associated with the same login are idle
                                    for more than 20 minutes, they will be terminated.
                                 2 - Session is logged off. This occurs when the logout method is called.
-                                3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
-                                5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
-                                6 - Session is terminated because self exclusion is enabled.
-                                */
+
+                                 3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
+                                 5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
+                                 6 - Session is terminated because self exclusion is enabled.
+
+                                 */
                                 
                                 if code == 1 {
                                     Logger.log("EMSessionLoginFLow - Expired")
@@ -153,7 +155,7 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
     
-    func getModel<T: Decodable>(router: TSRouter, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
+    func getModel<T: Decodable>(router: TSRouter,initialDumpProcedure: String? = nil, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
         return Future<T, EveryMatrix.APIError> { [self] promise in
             tsQueue.async {
 
@@ -164,7 +166,12 @@ final class TSManager {
                     return
                 }
 
-                Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+                if let initialDumpProcedure = initialDumpProcedure {
+                    Logger.log("TSManager getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [] )")
+                }
+                else {
+                    Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+                }
 
                 if swampSession.isConnected() {
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
@@ -189,7 +196,7 @@ final class TSManager {
                             }
                         }
                         catch {
-                            // print("TSManager Decoding Error: \(error)")
+                            //print("TSManager Decoding Error: \(error)")
                             promise(.failure(.decodingError))
                         }
                     }, onError: { _, error, _, kwargs in
@@ -316,6 +323,21 @@ final class TSManager {
 
     }
 
+    func unsubscribeFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
+        guard
+            let swampSession = self.swampSession,
+            swampSession.isConnected()
+        else {
+            return
+        }
+
+        swampSession.unsubscribe(endpointPublisherIdentifiable.identificationCode) {
+            ()
+        } onError: { details, error in
+            // print("UnregisterFromEndpoint error \(details) \(error)")
+        }
+    }
+
     func unregisterFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
         guard
             let swampSession = self.swampSession,
@@ -352,12 +374,11 @@ final class TSManager {
             subject.send(TSSubscriptionContent.connect(publisherIdentifiable: registration))
 
             if let initialDumpEndpoint = endpoint.intiailDumpRequest {
-                self.getModel(router: initialDumpEndpoint, decodingType: decodingType)
+                self.getModel(router: initialDumpEndpoint, initialDumpProcedure: endpoint.procedure, decodingType: decodingType)
                     .sink { completion in
                         if case .failure(let error) = completion {
                             subject.send(TSSubscriptionContent.disconnect)
                             subject.send(completion: .failure(error))
-
                         }
                     } receiveValue: { decoded in
                         subject.send(.initialContent(decoded))

@@ -17,7 +17,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
-    var matchDataSourceWentLive: (() -> Void)?
+    var matchWentLiveAction: (() -> Void)?
 
     init(favoriteCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions
@@ -57,7 +57,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
                 self.didSelectMatchAction?(match)
             }
             cell.matchWentLive = {
-                self.matchDataSourceWentLive?()
+                self.matchWentLiveAction?()
             }
 
             return cell
@@ -141,9 +141,9 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
             return 0
         }
         if competitions.isEmpty {
-            return 70
+            return 600
         }
-        return 155
+        return MatchWidgetCollectionViewCell.cellHeight + 20
     }
 
     func needReloadSection(_ section: Int, tableView: UITableView) {

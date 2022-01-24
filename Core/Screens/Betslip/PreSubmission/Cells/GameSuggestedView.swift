@@ -76,7 +76,10 @@ class GameSuggestedView: NibView {
 
         self.gameTitleLabel.textColor = UIColor.App.headingMain
         // self.gameTitleLabel.font = AppFont.with(type: .bold, size: 13)
-       
+        if let gameView = self.gameView {
+            gameView.backgroundColor = UIColor.App.secondaryBackground
+        }
+        
     }
 
     func setMatchFlag(isoCode: String) {

@@ -1,16 +1,49 @@
 {
   "images" : [
     {
+      "filename" : "chevron-down-solid copy.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "chevron-down-solid.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "chevron-down-solid copy@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "chevron-down-solid@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "chevron-down-solid copy@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "chevron-down-solid@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
