@@ -60,12 +60,46 @@ class HeadToHeadCardStatsView: NibView {
         self.lossAwayValueLabel.text = "3"
         self.lossAwayProgressBar.progress = 0.3
 
+        self.captionLabel.text = "(Last Matches)"
+    }
+
+    func setupHomeValues(win: Int, draw: Int, loss: Int, total: Int) {
+        self.winHomeValueLabel.text = "\(win)"
+        self.drawHomeValueLabel.text = "\(draw)"
+        self.lossHomeValueLabel.text = "\(loss)"
+
+        if total != 0 {
+            self.winHomeProgressBar.progress = Float(win) / Float(total)
+            self.drawHomeProgressBar.progress = Float(draw) / Float(total)
+            self.lossHomeProgressBar.progress = Float(loss) / Float(total)
+        }
+        else {
+            self.winHomeProgressBar.progress = 0
+            self.drawHomeProgressBar.progress = 0
+            self.lossHomeProgressBar.progress = 0
+        }
+    }
+
+    func setupAwayValues(win: Int, draw: Int, loss: Int, total: Int) {
+        self.winAwayValueLabel.text = "\(win)"
+        self.drawAwayValueLabel.text = "\(draw)"
+        self.lossAwayValueLabel.text = "\(loss)"
+
+        if total != 0 {
+            self.winAwayProgressBar.progress = Float(win) / Float(total)
+            self.drawAwayProgressBar.progress = Float(draw) / Float(total)
+            self.lossAwayProgressBar.progress = Float(loss) / Float(total)
+        }
+        else {
+            self.winAwayProgressBar.progress = 0
+            self.drawAwayProgressBar.progress = 0
+            self.lossAwayProgressBar.progress = 0
+        }
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        // let transform = CGAffineTransform(a: 1, b: 0, c: 0, d: -1, tx: 0, ty: winHomeProgressBar.frame.size.height)
         let rotated = CGAffineTransform.identity.rotated(by: Double.pi)
 
         self.winHomeProgressBar.layer.anchorPoint = CGPoint(x: 0.5, y: 0.5)

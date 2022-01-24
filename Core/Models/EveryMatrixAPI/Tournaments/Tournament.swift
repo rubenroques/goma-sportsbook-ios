@@ -29,6 +29,7 @@ extension EveryMatrix {
         let venueId: String?
         let venueName: String?
         let shortVenueName: String?
+        let categoryId: String?
         let templateId: String?
         let templateName: String?
         let rootPartId: String?
@@ -54,6 +55,7 @@ extension EveryMatrix {
             case venueId = "venueId"
             case venueName = "venueName"
             case shortVenueName = "shortVenueName"
+            case categoryId = "categoryId"
             case templateId = "templateId"
             case templateName = "templateName"
             case rootPartId = "rootPartId"

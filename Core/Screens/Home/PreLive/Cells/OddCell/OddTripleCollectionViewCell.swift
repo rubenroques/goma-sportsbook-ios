@@ -42,12 +42,24 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var rightUpChangeOddValueImage: UIImageView!
     @IBOutlet private weak var rightDownChangeOddValueImage: UIImageView!
 
+    @IBOutlet private weak var statsBaseView: UIView!
+    @IBOutlet private weak var iconStatsImageView: UIImageView!
+    @IBOutlet private weak var homeCircleCaptionView: UIView!
+    @IBOutlet private weak var homeNameCaptionLabel: UILabel!
+    @IBOutlet private weak var awayCircleCaptionView: UIView!
+    @IBOutlet private weak var awayNameCaptionLabel: UILabel!
+
+    
+    var matchStatsViewModel: MatchStatsViewModel?
+
     var match: Match?
     var market: Market?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
+
+    private var matchStatsSubscriber: AnyCancellable?
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -83,6 +95,13 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.layer.cornerRadius = 9
 
+        self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
+
+        self.statsBaseView.isHidden = true
+
+        self.homeCircleCaptionView.layer.masksToBounds = true
+        self.awayCircleCaptionView.layer.masksToBounds = true
+        
         self.oddsStackView.backgroundColor = .clear
 
         self.suspendedBaseView.layer.cornerRadius = 4.5
@@ -103,6 +122,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightUpChangeOddValueImage.alpha = 0.0
         self.rightDownChangeOddValueImage.alpha = 0.0
 
+        self.homeNameCaptionLabel.text = ""
+        self.awayNameCaptionLabel.text = ""
+
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.leftBaseView.addGestureRecognizer(tapLeftOddButton)
 
@@ -121,6 +143,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.matchStatsViewModel = nil
         self.match = nil
         self.market = nil
 
@@ -135,6 +158,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
 
+        self.matchStatsSubscriber?.cancel()
+        self.matchStatsSubscriber = nil
+
         self.currentLeftOddValue = nil
         self.currentMiddleOddValue = nil
         self.currentRightOddValue = nil
@@ -143,6 +169,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.isMiddleOutcomeButtonSelected = false
         self.isRightOutcomeButtonSelected = false
 
+        self.statsBaseView.isHidden = true
+        self.homeNameCaptionLabel.text = ""
+        self.awayNameCaptionLabel.text = ""
+        
         self.marketNameLabel.text = ""
         self.participantsNameLabel.text = ""
         self.leftOddTitleLabel.text = ""
@@ -160,6 +190,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         super.layoutSubviews()
 
         self.participantsCountryImageView.layer.cornerRadius = self.participantsCountryImageView.frame.size.width / 2
+
+        self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
+        self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
     }
 
     func setupWithTheme() {
@@ -183,9 +216,32 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.suspendedBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
         self.suspendedLabel.textColor = UIColor.App2.textDisablePrimary
+
+        self.statsBaseView.backgroundColor = UIColor.App2.backgroundCards
+
+        self.homeNameCaptionLabel.textColor = UIColor.App2.textPrimary
+        self.awayNameCaptionLabel.textColor = UIColor.App2.textPrimary
+
+        self.homeCircleCaptionView.backgroundColor = UIColor(hex: 0xD99F00)
+        self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
     }
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
+
+        if let matchStatsViewModel = matchStatsViewModel,
+           market.eventPartId != nil,
+           market.bettingTypeId != nil {
+
+            self.homeNameCaptionLabel.text = match.homeParticipant.name
+            self.awayNameCaptionLabel.text = match.awayParticipant.name
+
+            self.matchStatsSubscriber = matchStatsViewModel.statsTypePublisher
+                .compactMap({ $0 })
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { json in
+                    self.setupStatsLine(withjson: json)
+                })
+        }
 
         self.match = match
         self.market = market
@@ -459,4 +515,80 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
     }
     
+}
+
+
+extension OddTripleCollectionViewCell {
+    private func setupStatsLine(withjson json: JSON) {
+
+        guard
+            let eventPartId = self.market?.eventPartId,
+            let bettingTypeId = self.market?.bettingTypeId
+        else {
+            return
+        }
+
+        var bettingType: JSON? = nil
+
+        if let eventPartsArray = json["event_parts"].array {
+            for partDict in eventPartsArray {
+                if let id = partDict["id"].int, String(id) == eventPartId {
+
+                    if let bettintTypesArray = partDict["betting_types"].array {
+                        for dict in bettintTypesArray {
+                            if let id = dict["id"].int, String(id) == bettingTypeId {
+                                bettingType = dict
+                                break
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        if let bettingTypeValue = bettingType,
+           let bettingTypeStats = bettingTypeValue["stats"]["data"].dictionary {
+
+            print("bettingTypeValue ", bettingTypeStats)
+
+            var homeWin: Int = 0
+            var homeDraw: Int = 0
+            var homeLoss: Int = 0
+            var homeTotal: Int = 10
+
+            var awayWin: Int = 0
+            var awayDraw: Int = 0
+            var awayLoss: Int = 0
+            var awayTotal: Int = 10
+
+            if let homeWinsValue = bettingTypeStats["home_participant"]?["Wins"].int,
+               let homeDrawValue = bettingTypeStats["home_participant"]?["Draws"].int,
+               let homeLossesValue = bettingTypeStats["home_participant"]?["Losses"].int,
+               let awayWinsValue = bettingTypeStats["away_participant"]?["Wins"].int,
+               let awayDrawValue = bettingTypeStats["away_participant"]?["Draws"].int,
+               let awayLossesValue = bettingTypeStats["away_participant"]?["Losses"].int {
+
+                homeWin = homeWinsValue
+                homeDraw = homeDrawValue
+                homeLoss = homeLossesValue
+                homeTotal = homeWin + homeDraw + homeLoss
+
+                awayWin = awayWinsValue
+                awayDraw = awayDrawValue
+                awayLoss = awayLossesValue
+                awayTotal = awayWin + awayDraw + awayLoss
+
+                self.marketNameLabel.font = AppFont.with(type: .bold, size: 12)
+
+                let headToHeadCardStatsView = HeadToHeadCardStatsView()
+                self.marketStatsStackView.addArrangedSubview(headToHeadCardStatsView)
+
+                headToHeadCardStatsView.setupHomeValues(win: homeWin, draw: homeDraw, loss: homeLoss, total: homeTotal)
+                headToHeadCardStatsView.setupAwayValues(win: awayWin, draw: awayDraw, loss: awayLoss, total: awayTotal)
+
+                self.statsBaseView.isHidden = false
+            }
+        }
+    }
 }

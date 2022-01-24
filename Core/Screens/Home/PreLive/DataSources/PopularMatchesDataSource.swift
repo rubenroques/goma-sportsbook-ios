@@ -142,11 +142,11 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
-                cell.setupWithMatch(match)
 
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
+                cell.setupWithMatch(match)
 
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)

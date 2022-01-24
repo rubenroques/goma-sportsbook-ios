@@ -338,11 +338,17 @@ class PreLiveEventsViewController: UIViewController {
                 self?.tableView.reloadData()
             })
             .store(in: &cancellables)
-        
-        self.viewModel.screenStatePublisher
+
+        Publishers.CombineLatest(self.viewModel.screenStatePublisher, self.viewModel.isLoading)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] screenState in
-                
+            .sink(receiveValue: { [weak self] screenState, isLoading in
+
+                if isLoading {
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+                    return
+                }
+
                 switch screenState {
                 case .noEmptyNoFilter:
                     self?.emptyBaseView.isHidden = true
@@ -350,9 +356,11 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyNoFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions {
+                    if self?.viewModel.matchListTypePublisher.value == .myGames ||
+                        self?.viewModel.matchListTypePublisher.value ==  .today ||
+                        self?.viewModel.matchListTypePublisher.value == .competitions {
                         self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
-                                                    secondLabelText: localized("second_string_empty_list"),
+                                                    secondLabelText: localized("second_empty_list"),
                                                     isUserLoggedIn: true)
                     }
                 case .noEmptyAndFilter:
@@ -361,9 +369,11 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyAndFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .myGames ?? .today ?? .competitions {
+                    if self?.viewModel.matchListTypePublisher.value == .myGames ||
+                        self?.viewModel.matchListTypePublisher.value ==  .today ||
+                        self?.viewModel.matchListTypePublisher.value == .competitions {
                         self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
-                                                    secondLabelText: localized("second_string_empty_list_with_filters"),
+                                                    secondLabelText: localized("second_empty_list_with_filters"),
                                                     isUserLoggedIn: true)
                     }
                 }
@@ -458,6 +468,10 @@ class PreLiveEventsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
+        self.leftGradientBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.rightGradientBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+
+        self.filtersButtonView.backgroundColor = UIColor.App2.backgroundPrimary
         self.filtersBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
         self.filtersSeparatorLineView.alpha = 0.5
@@ -484,7 +498,6 @@ class PreLiveEventsViewController: UIViewController {
     func applyCompetitionsFiltersWithIds(_ ids: [String]) {
         self.viewModel.fetchCompetitionsMatchesWithIds(ids)
         self.showBottomBarCompetitionsFilters()
-
     }
 
     func reloadData() {
@@ -569,7 +582,7 @@ class PreLiveEventsViewController: UIViewController {
         else {
             self.emptyStateImage.image = UIImage(named: "no_internet_icon")
             self.firstTextFieldEmptyStateLabel.text = localized("empty_no_login")
-            self.secondTextFieldEmptyStateLabel.text = localized("second_string_empty_no_login")
+            self.secondTextFieldEmptyStateLabel.text = localized("second_empty_no_login")
             self.emptyStateButton.isHidden = isUserLoggedIn
             self.emptyStateButton.setTitle("Login", for: .normal)
         }
@@ -729,31 +742,31 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             self.viewModel.setMatchListType(.myGames)
             turnTimeRangeOn = false
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
-                                       secondLabelText: localized("second_string_empty_list"),
+                                       secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
         case 1:
             AnalyticsClient.sendEvent(event: .todayScreen)
             self.viewModel.setMatchListType(.today)
             turnTimeRangeOn = true
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
-                                       secondLabelText: localized("second_string_empty_list"),
+                                       secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
         case 2:
             AnalyticsClient.sendEvent(event: .competitionsScreen)
             self.viewModel.setMatchListType(.competitions)
             turnTimeRangeOn = false
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
-                                       secondLabelText: localized("second_string_empty_list"),
+                                       secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
         case 3:
             self.viewModel.setMatchListType(.favoriteGames)
             self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
-                                       secondLabelText: localized("second_string_empty_my_games"),
+                                       secondLabelText: localized("second_empty_my_games"),
                                        isUserLoggedIn: UserSessionStore.isUserLogged())
         case 4:
             self.viewModel.setMatchListType(.favoriteCompetitions)
             self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
-                                       secondLabelText: localized("second_string_empty_my_competitions"),
+                                       secondLabelText: localized("second_empty_my_competitions"),
                                        isUserLoggedIn: UserSessionStore.isUserLogged())
         default:
             ()

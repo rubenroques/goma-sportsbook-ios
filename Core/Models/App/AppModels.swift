@@ -65,7 +65,25 @@ struct Market {
     var nameDigit1: Double?
     var nameDigit2: Double?
     var nameDigit3: Double?
+
+    var eventPartId: String?
+    var bettingTypeId: String?
+
     var outcomes: [Outcome]
+
+    init( id: String, typeId: String, name: String,
+          nameDigit1: Double?, nameDigit2: Double?, nameDigit3: Double?,
+          eventPartId: String?, bettingTypeId: String?, outcomes: [Outcome]) {
+        self.id = id
+        self.typeId = typeId
+        self.name = name
+        self.nameDigit1 = nameDigit1
+        self.nameDigit2 = nameDigit2
+        self.nameDigit3 = nameDigit3
+        self.eventPartId = eventPartId
+        self.bettingTypeId = bettingTypeId
+        self.outcomes = outcomes
+    }
 }
 
 struct Outcome {

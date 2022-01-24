@@ -67,10 +67,9 @@ enum TSRouter {
     case matchMarketOdds(operatorId: String, language: String, matchId: String, bettingType: String, eventPartId: String)
 
     case eventPartScoresPublisher(operatorId: String, language: String, matchId: String)
-
     case sportsListPublisher(operatorId: String, language: String)
-    
     case accountBalancePublisher
+    case eventCategoryBySport(operatorId: String, language: String, sportId: String)
 
     // Others
     case registrationDismissed
@@ -249,6 +248,8 @@ enum TSRouter {
 
         case .accountBalancePublisher:
             return "/account/balanceChanged"
+        case .eventCategoryBySport(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/event-category-by-sport/\(sportId)/BOTH"
 
         //
         //
@@ -679,6 +680,8 @@ enum TSRouter {
         case .eventPartScoresPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .sportsListPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .eventCategoryBySport:
             return .sportsInitialDump(topic: self.procedure)
         default:
             return nil

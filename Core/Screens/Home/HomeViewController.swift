@@ -260,6 +260,9 @@ class HomeViewController: UIViewController {
         preLiveBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         liveBaseView.backgroundColor = UIColor.App2.backgroundPrimary
 
+        liveTitleLabel.textColor = UIColor.App2.textPrimary
+        sportsTitleLabel.textColor = UIColor.App2.textPrimary
+
         topSafeAreaView.backgroundColor = UIColor.App2.backgroundPrimary
         topBarView.backgroundColor = UIColor.App2.backgroundPrimary
         contentView.backgroundColor = UIColor.App2.backgroundPrimary

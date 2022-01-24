@@ -10,7 +10,7 @@ import Foundation
 extension EveryMatrix {
 
     enum APIError: Error {
-        case decodingError
+        case decodingError(value: String)
         case httpError(Int)
         case unknown
         case missingTransportSessionID

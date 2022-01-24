@@ -19,6 +19,8 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
     var didSelectMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+
     init(favoriteCompetitions: [Competition]) {
         self.competitions = favoriteCompetitions
     }
@@ -45,6 +47,11 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
             else {
                 fatalError()
             }
+
+            if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                cell.matchStatsViewModel = matchStatsViewModel
+            }
+            
             if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
                 cell.setupWithMatch(match, liveMatch: true)
             }

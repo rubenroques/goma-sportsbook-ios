@@ -18,6 +18,8 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var didSelectMatchAction: ((Match) -> Void)?
 
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+
     init(competitions: [Competition]) {
         self.competitions = competitions
     }
@@ -40,6 +42,9 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             let match = competition.matches[safe: indexPath.row]
         else {
             fatalError()
+        }
+        if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+            cell.matchStatsViewModel = matchStatsViewModel
         }
         cell.setupWithMatch(match)
         cell.shouldShowCountryFlag(false)

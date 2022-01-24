@@ -14,6 +14,8 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
     var didSelectMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
 
@@ -44,20 +46,20 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                    let match = self.userFavoriteMatches[safe: indexPath.row] {
 
+                    if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                        cell.matchStatsViewModel = matchStatsViewModel
+                    }
                     if Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-
                         cell.setupWithMatch(match, liveMatch: true)
                     }
                     else {
                         cell.setupWithMatch(match)
-
                     }
-                    cell.setupFavoriteMatchInfoPublisher(match: match)
 
+                    cell.setupFavoriteMatchInfoPublisher(match: match)
                     cell.tappedMatchLineAction = {
                         self.didSelectMatchAction?(match)
                     }
-
                     cell.matchWentLive = {
                         DispatchQueue.main.async {
                             self.matchWentLiveAction?()
@@ -70,7 +72,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
             else {
                 if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
                     cell.setDescription(primaryText: localized("empty_my_games"),
-                                        secondaryText: localized("second_string_empty_my_games"),
+                                        secondaryText: localized("second_empty_my_games"),
                                         userIsLoggedIn: UserSessionStore.isUserLogged() )
                     return cell
                 }
