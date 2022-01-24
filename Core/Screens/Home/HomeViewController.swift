@@ -45,7 +45,7 @@ class HomeViewController: UIViewController {
 
     
     // Child view controllers
-    lazy var preLiveViewController = PreLiveEventsViewController(selectedSport: Sport.football)
+    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
 
     // Loaded view controllers

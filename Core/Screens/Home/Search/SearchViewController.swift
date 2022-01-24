@@ -380,7 +380,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
         switch cellInfo {
         case .match:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         case .competition:
             return 56
         }
@@ -392,7 +392,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
         switch cellInfo {
         case .match:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         case .competition:
             return 56
         }
