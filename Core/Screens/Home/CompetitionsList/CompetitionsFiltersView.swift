@@ -237,9 +237,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.applyButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
         self.applyButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
 
-        self.searchBarView.backgroundImage = UIColor.App2.mainBackground.image()
+        self.searchBarView.backgroundImage = UIColor.App2.backgroundPrimary.image()
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.secondaryBackground
+            textfield.backgroundColor = UIColor.App2.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),

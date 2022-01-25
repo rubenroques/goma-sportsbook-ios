@@ -498,7 +498,7 @@ class MatchDetailsViewController: UIViewController {
 
     @IBAction private func didTapMatchStatsButton() {
         let matchFieldWebViewController = MatchFieldWebViewController(match: self.match)
-        self.navigationController?.pushViewController(matchFieldWebViewController, animated: true)
+        self.present(matchFieldWebViewController, animated: true, completion: nil)
     }
 
 }

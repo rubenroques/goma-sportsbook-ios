@@ -95,7 +95,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.participantsNameLabel.text = ""
         self.marketNameLabel.text = ""
 
-        self.participantsCountryImageView.image = nil
         self.suspendedBaseView.isHidden = true
 
         self.leftUpChangeOddValueImage.alpha = 0.0
@@ -168,14 +167,10 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.currentLeftOddValue = nil
         self.currentRightOddValue = nil
 
-        self.participantsCountryImageView.isHidden = false
-        self.participantsCountryImageView.image = nil
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        self.participantsCountryImageView.layer.cornerRadius = self.participantsCountryImageView.frame.size.width / 2
 
         self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
         self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
@@ -232,7 +227,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.participantsNameLabel.text = teamsText
 
-        self.participantsCountryImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIso))
+        self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
@@ -344,10 +339,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         animation.duration = duration
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
-    }
-    
-    func shouldShowCountryFlag(_ show: Bool) {
-        self.participantsCountryImageView.isHidden = !show
     }
 
     func selectLeftOddButton() {
@@ -507,6 +498,15 @@ extension OddDoubleCollectionViewCell {
             }
 
             if let homeWinValue = homeWin, let awayWinValue = awayWin {
+
+                let stackSubviews = self.marketStatsStackView.arrangedSubviews
+                stackSubviews.forEach({
+                    if $0 != self.marketNameLabel {
+                        self.marketStatsStackView.removeArrangedSubview($0)
+                        $0.removeFromSuperview()
+                    }
+                })
+                
                 let homeAwayCardStatsView = HomeAwayCardStatsView()
 
                 homeAwayCardStatsView.setupHomeValues(win: homeWinValue, total: homeWinTotal)

@@ -271,7 +271,6 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
-                        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }
@@ -282,7 +281,6 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
-                        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }

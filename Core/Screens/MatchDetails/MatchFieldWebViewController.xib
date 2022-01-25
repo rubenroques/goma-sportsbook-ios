@@ -32,7 +32,7 @@
                             <constraints>
                                 <constraint firstAttribute="width" constant="46" id="BVd-Lj-Jsg"/>
                             </constraints>
-                            <state key="normal" image="arrow_back_icon"/>
+                            <state key="normal" image="arrow_close_icon"/>
                             <connections>
                                 <action selector="didTapBackButton" destination="-1" eventType="primaryActionTriggered" id="voV-XC-pRV"/>
                             </connections>
@@ -83,7 +83,7 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_back_icon" width="14" height="23"/>
+        <image name="arrow_close_icon" width="19" height="20"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

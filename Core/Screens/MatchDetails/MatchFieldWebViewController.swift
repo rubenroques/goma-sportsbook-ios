@@ -66,7 +66,8 @@ class MatchFieldWebViewController: UIViewController {
 
 
     @IBAction private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        //self.navigationController?.popViewController(animated: true)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }
 

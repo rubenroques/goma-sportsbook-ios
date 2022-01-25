@@ -376,8 +376,8 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
 
         if TargetVariables.environmentType == .dev {
-            self.usernameHeaderTextFieldView.setText("Ivotest30") //"ruben@gomadevelopment.pt")
-            self.passwordHeaderTextFieldView.setText("testesdoIvo1#") //ruben=GOMA=12345")
+            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt") // Ivotest30
+            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345") // testesdoIvo1
             self.loginButton.isEnabled = true
         }
     }
