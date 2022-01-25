@@ -106,9 +106,7 @@ class PhonePrefixSelectorViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func setupWithTheme() {
         self.tableView.backgroundColor = .clear

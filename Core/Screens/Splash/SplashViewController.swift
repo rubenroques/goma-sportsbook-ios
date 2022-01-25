@@ -38,9 +38,7 @@ class SplashViewController: UIViewController {
             }
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func splashLoadingCompleted() {
         self.isLoadingUserSessionSubscription = nil

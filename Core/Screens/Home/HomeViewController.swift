@@ -194,9 +194,7 @@ class HomeViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

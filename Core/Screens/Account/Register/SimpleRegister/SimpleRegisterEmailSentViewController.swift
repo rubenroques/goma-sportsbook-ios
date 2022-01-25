@@ -36,9 +36,7 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground

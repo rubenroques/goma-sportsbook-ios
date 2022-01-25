@@ -68,9 +68,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         self.setupPublishers()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func commonInit() {
 

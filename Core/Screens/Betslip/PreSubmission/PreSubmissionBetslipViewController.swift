@@ -771,9 +771,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
     
     private func commonInit() {
 

@@ -71,9 +71,7 @@ class LoginViewController: UIViewController {
         setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func commonInit() {
 
