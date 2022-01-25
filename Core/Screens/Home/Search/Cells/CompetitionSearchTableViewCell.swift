@@ -41,13 +41,13 @@ class CompetitionSearchTableViewCell: UITableViewCell {
 
     func setupWithTheme() {
 
-        self.backgroundColor = .clear
+        self.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.secondaryBackground
+        self.containerView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.titleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.textColor = UIColor.App2.textPrimary
     }
 
     func setTitle(title: String) {

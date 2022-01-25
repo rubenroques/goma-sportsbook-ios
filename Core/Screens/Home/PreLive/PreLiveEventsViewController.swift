@@ -301,7 +301,7 @@ class PreLiveEventsViewController: UIViewController {
         }
 
         self.competitionsFiltersDarkBackgroundView.alpha = 0.4
-        self.competitionsFiltersBaseView.backgroundColor = .clear
+        self.competitionsFiltersBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.competitionsFiltersBaseView.addSubview(self.competitionsFiltersView!)
 
         NSLayoutConstraint.activate([

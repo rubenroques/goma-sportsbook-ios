@@ -138,7 +138,7 @@ class SearchViewController: UIViewController {
         self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
 
         // TableView
-        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundColor = UIColor.App2.backgroundSecondary
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.tableView.separatorStyle = .none
