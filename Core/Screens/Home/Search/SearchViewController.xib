@@ -74,7 +74,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="252.5"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hN8-rZ-Swy">
-                                            <rect key="frame" x="15" y="30" width="384" height="20.5"/>
+                                            <rect key="frame" x="14" y="20" width="41.5" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
@@ -82,9 +82,8 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <constraints>
-                                        <constraint firstItem="hN8-rZ-Swy" firstAttribute="leading" secondItem="Cqu-nv-cd3" secondAttribute="leading" constant="15" id="LWw-xq-sGS"/>
-                                        <constraint firstAttribute="trailing" secondItem="hN8-rZ-Swy" secondAttribute="trailing" constant="15" id="ZfF-zV-AY2"/>
-                                        <constraint firstItem="hN8-rZ-Swy" firstAttribute="top" secondItem="Cqu-nv-cd3" secondAttribute="top" constant="30" id="fzb-3N-SrR"/>
+                                        <constraint firstItem="hN8-rZ-Swy" firstAttribute="leading" secondItem="Cqu-nv-cd3" secondAttribute="leading" constant="14" id="7ze-Ma-vug"/>
+                                        <constraint firstItem="hN8-rZ-Swy" firstAttribute="top" secondItem="Cqu-nv-cd3" secondAttribute="top" constant="20" id="FZb-Z5-p8o"/>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JjD-8h-NkQ">
@@ -127,7 +126,7 @@
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 </activityIndicatorView>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>

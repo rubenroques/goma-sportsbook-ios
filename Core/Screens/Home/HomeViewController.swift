@@ -43,7 +43,6 @@ class HomeViewController: UIViewController {
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
 
-    
     // Child view controllers
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
@@ -227,7 +226,6 @@ class HomeViewController: UIViewController {
         self.sportsTitleLabel.text = localized("sports")
 
         self.liveTitleLabel.text = localized("live")
-
 
         let sportsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsTabItem))
         sportsButtonBaseView.addGestureRecognizer(sportsTapGesture)
@@ -520,7 +518,6 @@ extension HomeViewController {
         self.selectedTabItem = .live
     }
 
-
     func selectSportsTabBarItem() {
         self.loadChildViewControllerIfNeeded(tab: .sports)
 
@@ -540,6 +537,5 @@ extension HomeViewController {
         sportsButtonBaseView.alpha = 0.2
         liveButtonBaseView.alpha = 1.0
     }
-
 
 }

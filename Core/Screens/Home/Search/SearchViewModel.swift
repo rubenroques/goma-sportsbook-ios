@@ -18,6 +18,7 @@ class SearchViewModel: NSObject {
     var cancellables = Set<AnyCancellable>()
 
     var hasDoneSearch: Bool = false
+    var isEmptySearch: Bool = true
 
     // Processed match info variables
     var matches: [EveryMatrix.Match] = []
@@ -36,7 +37,18 @@ class SearchViewModel: NSObject {
     var mainMarketsOrder: OrderedSet<String> = []
 
     override init() {
-       
+        super.init()
+
+        self.getRecentSearches()
+    }
+
+    func getRecentSearches() {
+        if UserDefaults.standard.object(forKey: "recentSearches") != nil {
+            var recentSearchesArray = (UserDefaults.standard.array(forKey: "recentSearches") ?? []) as [String]
+            self.recentSearchesPublisher.value = recentSearchesArray
+            self.recentSearchesPublisher.send(recentSearchesArray)
+        }
+
     }
 
     func clearData() {
@@ -63,8 +75,10 @@ class SearchViewModel: NSObject {
     func fetchSearchInfo(searchQuery: String) {
 
         self.clearData()
+        self.isEmptySearch = false
 
-        let searchRoute = TSRouter.searchV2(language: "en", limit: 5, query: searchQuery, eventInfoTypes: [1, 2], include: ["BETTING_OFFERS"])
+        let searchRoute = TSRouter.searchV2(language: "en", limit: 10, query: searchQuery, eventInfoTypes: [1, 2], include: ["BETTING_OFFERS", "EVENT_INFO"])
+
         Env.everyMatrixClient.manager.getModel(router: searchRoute, decodingType: SearchV2Response.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -309,9 +323,9 @@ class SearchViewModel: NSObject {
             }
         }
 
-        for (key, value) in searchMatchesPublisher.value {
+        for (key, event) in searchMatchesPublisher.value {
             if key != "competition" {
-                let sportMatch = SportMatches(sportType: key, matches: value)
+                let sportMatch = SportMatches(sportType: key, matches: event)
                 sportMatchesArrayPublisher.value.append(sportMatch)
             }
         }
@@ -337,8 +351,21 @@ class SearchViewModel: NSObject {
     }
 
     func addRecentSearch(search: String) {
-        recentSearchesPublisher.value.append(search)
-        recentSearchesPublisher.send(recentSearchesPublisher.value)
+        if UserDefaults.standard.object(forKey: "recentSearches") != nil {
+            var recentSearchesArray = (UserDefaults.standard.array(forKey: "recentSearches") ?? []) as [String]
+            recentSearchesArray.append(search)
+            UserDefaults.standard.removeObject(forKey: "recentSearches")
+            UserDefaults.standard.set(recentSearchesArray, forKey: "recentSearches")
+            self.recentSearchesPublisher.value = recentSearchesArray
+            recentSearchesPublisher.send(recentSearchesPublisher.value)
+
+        }
+        else {
+            self.recentSearchesPublisher.value.append(search)
+            UserDefaults.standard.set(self.recentSearchesPublisher.value, forKey: "recentSearches")
+            recentSearchesPublisher.send(recentSearchesPublisher.value)
+        }
+
     }
 
     func setHeaderSectionTitle(section: Int) -> String {

@@ -34,6 +34,7 @@ class CompetitionSearchTableViewCell: UITableViewCell {
 
         self.titleLabel.text = "Cell"
         self.titleLabel.font = AppFont.with(type: .bold, size: 16)
+        self.titleLabel.numberOfLines = 0
 
         let tapCell = UITapGestureRecognizer(target: self, action: #selector(self.handleCellTap(_:)))
         self.addGestureRecognizer(tapCell)
@@ -59,7 +60,7 @@ class CompetitionSearchTableViewCell: UITableViewCell {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.frame.width, height: 56)
+        return CGSize(width: self.frame.width, height: self.titleLabel.frame.height + 40)
     }
 
 }

@@ -22,7 +22,7 @@
                         <rect key="frame" x="8" y="8" width="304" height="28"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7V9-F2-x3f">
-                                <rect key="frame" x="14" y="3.5" width="42" height="21"/>
+                                <rect key="frame" x="14" y="12" width="276" height="4"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -30,8 +30,11 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="7V9-F2-x3f" firstAttribute="top" secondItem="z53-tI-YNH" secondAttribute="top" constant="12" id="VSr-W2-WAJ"/>
                             <constraint firstItem="7V9-F2-x3f" firstAttribute="leading" secondItem="z53-tI-YNH" secondAttribute="leading" constant="14" id="cTJ-it-EUD"/>
+                            <constraint firstAttribute="trailing" secondItem="7V9-F2-x3f" secondAttribute="trailing" constant="14" id="fFy-pt-au0"/>
                             <constraint firstItem="7V9-F2-x3f" firstAttribute="centerY" secondItem="z53-tI-YNH" secondAttribute="centerY" id="kAy-hd-ceo"/>
+                            <constraint firstAttribute="bottom" secondItem="7V9-F2-x3f" secondAttribute="bottom" constant="12" id="uB9-sj-rWz"/>
                         </constraints>
                     </view>
                 </subviews>
