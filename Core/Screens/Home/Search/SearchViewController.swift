@@ -205,17 +205,14 @@ class SearchViewController: UIViewController {
                     self?.configureNoResultsViewText()
                     self?.showNoResultsView = true
                 }
-                else {
-                    self?.showSearchResultsTableView = true
 
-                }
             })
             .store(in: &cancellables)
 
         self.didSelectMatchAction = { match in
 
-            if let matchInfo = self.viewModel.matchesInfoForMatch[match.id] {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live , match: match)
+            if self.viewModel.matchesInfoForMatch[match.id] != nil {
+                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
 
                 self.present(matchDetailsViewController, animated: true, completion: nil)
             }
@@ -253,7 +250,9 @@ class SearchViewController: UIViewController {
 
     func configureNoResultsViewText() {
         if let searchBarText = self.searchBarView.text {
-            self.noResultsLabel.text = "No results for '\(searchBarText)'"
+            let noResultsTextRaw = localized("no_results_for")
+            let noResultsText = noResultsTextRaw.replacingOccurrences(of: "%s", with: searchBarText)
+            self.noResultsLabel.text = noResultsText
 
         }
     }
@@ -292,8 +291,6 @@ extension SearchViewController: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let recentSearch = searchBar.text {
-            // self.searchMatches(searchQuery: recentSearch)
-            self.searchTextPublisher.send(recentSearch)
 
             if recentSearch != "" && recentSearch.count > 2 {
                 self.viewModel.addRecentSearch(search: recentSearch)
@@ -357,8 +354,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
             case .competition(let competition):
                 if let cell = tableView.dequeueCellType(CompetitionSearchTableViewCell.self) {
 
-                    if let cellCompetition = competition.name {
-                        cell.setTitle(title: "\(cellCompetition)")
+                    if let cellCompetition = competition.name, let cellVenueId = competition.venueId {
+                        //cell.setTitle(title: "\(cellCompetition)")
+                        let location = self.viewModel.location(forId: cellVenueId)
+                        cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "")
                         cell.tappedCompetitionCellAction = {
                             self.didSelectCompetitionAction?(competition.id)
                         }
@@ -378,6 +377,15 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                     self?.searchBarView.text = recentSearchTitle
                     self?.searchMatches(searchQuery: recentSearchTitle)
                 }
+
+                cell.didTapClearButtonAction = { [weak self] in
+                    self?.viewModel.clearRecentSearchByString(search: recentSearchTitle)
+                }
+
+                if indexPath.row == self.viewModel.recentSearchesPublisher.value.count - 1 {
+                    cell.hideSeparatorLineView()
+                }
+
                 return cell
             }
 
@@ -385,10 +393,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         return UITableViewCell()
 
     }
-
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        return self.viewModel.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
-//    }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
@@ -407,8 +411,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 if let matchSportName = match.sportName {
                     eventName = "\(matchSportName)"
                 }
-            case .competition:
-                eventName = localized("competitions")
+            case .competition(let competition):
+                if let competitionSportName = competition.sportName {
+                    eventName = "\(competitionSportName)"
+                }
             default:
                 ()
             }
@@ -424,6 +430,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RecentSearchUITableViewHeaderFooterView.identifier) as? RecentSearchUITableViewHeaderFooterView
             else {
                 fatalError()
+            }
+
+            headerView.clearAllAction = {
+                self.viewModel.clearRecentSearchData()
             }
 
             return headerView

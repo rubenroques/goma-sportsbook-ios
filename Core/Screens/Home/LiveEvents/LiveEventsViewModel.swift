@@ -557,7 +557,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
             // Loading cell
             return 70
         default:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         }
     }
 
@@ -567,7 +567,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
             // Loading cell
             return 70
         default:
-            return 155
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         }
     }
 

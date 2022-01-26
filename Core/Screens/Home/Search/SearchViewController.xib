@@ -43,7 +43,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                             <subviews>
                                 <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="NBz-vD-V4I">
-                                    <rect key="frame" x="8" y="4.5" width="340" height="51"/>
+                                    <rect key="frame" x="4" y="4.5" width="344" height="51"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </searchBar>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fe8-ok-HJs">
@@ -63,7 +63,7 @@
                                 <constraint firstAttribute="height" constant="60" id="Huz-ZX-4oX"/>
                                 <constraint firstAttribute="trailing" secondItem="fe8-ok-HJs" secondAttribute="trailing" constant="8" id="bxC-0v-QtH"/>
                                 <constraint firstItem="NBz-vD-V4I" firstAttribute="centerY" secondItem="3XU-fx-AUl" secondAttribute="centerY" id="l8I-4U-5Ce"/>
-                                <constraint firstItem="NBz-vD-V4I" firstAttribute="leading" secondItem="3XU-fx-AUl" secondAttribute="leading" constant="8" id="lmN-O0-fzU"/>
+                                <constraint firstItem="NBz-vD-V4I" firstAttribute="leading" secondItem="3XU-fx-AUl" secondAttribute="leading" constant="4" id="lmN-O0-fzU"/>
                                 <constraint firstItem="fe8-ok-HJs" firstAttribute="leading" secondItem="NBz-vD-V4I" secondAttribute="trailing" constant="8" id="wsC-gc-J5k"/>
                             </constraints>
                         </view>

@@ -311,3 +311,4 @@ Terms of use, Privacy Policy and EULA";
 
 "sport_id_competition_name" = "Competitions";
 "clear_all" = "Clear all";
+"no_results_for" = "No results for '%s'";

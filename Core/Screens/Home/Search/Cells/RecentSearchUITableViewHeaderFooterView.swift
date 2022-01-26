@@ -12,6 +12,9 @@ class RecentSearchUITableViewHeaderFooterView: UITableViewHeaderFooterView {
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var clearAllButton: UIButton!
 
+    // Variables
+    var clearAllAction: (() -> Void)?
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -40,6 +43,10 @@ class RecentSearchUITableViewHeaderFooterView: UITableViewHeaderFooterView {
 
         self.clearAllButton.backgroundColor = .clear
         self.clearAllButton.tintColor = UIColor.App.headingMain
+    }
+
+    @IBAction private func didTapClearAllButton() {
+        self.clearAllAction?()
     }
 
 }

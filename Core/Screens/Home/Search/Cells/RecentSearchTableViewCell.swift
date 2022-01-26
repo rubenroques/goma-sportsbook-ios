@@ -11,9 +11,11 @@ class RecentSearchTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var clearButton: UIButton!
+    @IBOutlet private weak var separatorLineView: UIView!
 
     // Variables
     var didTapCellAction: (() -> Void)?
+    var didTapClearButtonAction: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -22,16 +24,19 @@ class RecentSearchTableViewCell: UITableViewCell {
         self.setupWithTheme()
     }
 
-    // Variables
-    var row: Int = 0
-    var tappedClearButton: ((Int) -> Void)?
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        self.titleLabel.text = ""
+        self.separatorLineView.isHidden = false
+    }
 
     func commonInit() {
         self.titleLabel.text = "Title"
         self.titleLabel.font = AppFont.with(type: .semibold, size: 14)
 
         self.clearButton.setTitle("", for: .normal)
-        self.clearButton.setImage(UIImage(named: ""), for: .normal)
+        self.clearButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
 
         let tapCell = UITapGestureRecognizer(target: self, action: #selector(self.handleCellTap(_:)))
         self.addGestureRecognizer(tapCell)
@@ -39,10 +44,6 @@ class RecentSearchTableViewCell: UITableViewCell {
 
     func setTitle(title: String) {
         self.titleLabel.text = title
-    }
-
-    func setRow(row: Int) {
-        self.row = row
     }
 
     @objc func handleCellTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -55,11 +56,17 @@ class RecentSearchTableViewCell: UITableViewCell {
         self.titleLabel.textColor = UIColor.App.headingMain
 
         self.clearButton.backgroundColor = .clear
-        self.clearButton.tintColor = UIColor.App.headerTextField
+        self.clearButton.tintColor = UIColor.App.fadeOutHeading
+
+        self.separatorLineView.backgroundColor = UIColor.App.fadeOutHeading
+    }
+
+    func hideSeparatorLineView() {
+        self.separatorLineView.isHidden = true
     }
 
     @IBAction private func didTapClearButton() {
-        self.tappedClearButton?(self.row)
+        self.didTapClearButtonAction?()
     }
 
     override var intrinsicContentSize: CGSize {
