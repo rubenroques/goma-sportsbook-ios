@@ -52,13 +52,13 @@ class MyTicketCellViewModel {
         }
 
         if ticket.type == "SINGLE" {
-            self.title = "Single - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+            self.title = localized("single") + " - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
         }
         else if ticket.type == "MULTIPLE" {
-            self.title = "Multiple - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+            self.title = localized("multiple") + " - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
         }
         else if ticket.type == "SYSTEM" {
-            self.title = "System - \(ticket.systemBetType?.capitalized ?? "") - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
+            self.title = localized("system") + " - \(ticket.systemBetType?.capitalized ?? "") - \(self.betStatusText(forCode: ticket.status?.uppercased() ?? "-"))"
         }
 
     }
@@ -71,14 +71,14 @@ class MyTicketCellViewModel {
         self.cashoutAvailabilitySubscription = nil
 
         if let cashoutRegister = cashoutRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
 
         let endpoint = TSRouter.cashoutPublisher(operatorId: Env.appSession.operatorId,
                                                  language: "en",
                                                  betId: ticket.betId)
 
-        self.cashoutAvailabilitySubscription = TSManager.shared
+        self.cashoutAvailabilitySubscription = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -118,14 +118,14 @@ class MyTicketCellViewModel {
 
     private func betStatusText(forCode code: String) -> String {
         switch code {
-        case "OPEN": return "Open"
-        case "DRAW": return "Draw"
-        case "WON": return "Won"
-        case "HALF_WON": return "Half Won"
-        case "LOST": return "Lost"
-        case "HALF_LOST": return "Half Lost"
-        case "CANCELLED": return "Cancelled"
-        case "CASHED_OUT": return "Cashed Out"
+        case "OPEN": return localized("open")
+        case "DRAW": return localized("draw")
+        case "WON": return localized("won")
+        case "HALF_WON": return localized("half_won")
+        case "LOST": return localized("lost")
+        case "HALF_LOST": return localized("half_lost")
+        case "CANCELLED": return localized("cancelled")
+        case "CASHED_OUT": return localized("cashed_out")
         default: return ""
         }
     }
@@ -144,9 +144,9 @@ class MyTicketCellViewModel {
         self.isLoadingCellData.send(true)
 
         let route = TSRouter.cashoutBet(language: "en", betId: cashout.id)
-        self.cashoutSubscription = TSManager.shared
+        self.cashoutSubscription = Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: CashoutSubmission.self)
-            .delay(for: .seconds(5), scheduler: RunLoop.main)
+            .delay(for: .seconds(5), scheduler: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] _ in
                 self?.requestDataRefreshAction?()
                 self?.isLoadingCellData.send(false)
@@ -157,7 +157,7 @@ class MyTicketCellViewModel {
 
     func unregisterCashoutSubscription() {
         if let cashoutRegister = self.cashoutRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
 
         self.cashoutAvailabilitySubscription?.cancel()

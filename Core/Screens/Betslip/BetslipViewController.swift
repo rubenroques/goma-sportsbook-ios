@@ -20,7 +20,8 @@ class BetslipViewController: UIViewController {
 
     @IBOutlet private weak var closeButton: UIButton!
     @IBOutlet private weak var tabsBaseView: UIView!
-
+    @IBOutlet private weak var betsLabel: UILabel!
+    
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource
 
@@ -79,7 +80,7 @@ class BetslipViewController: UIViewController {
         let tapAccountValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapAccountValue(_:)))
         self.accountInfoBaseView.addGestureRecognizer(tapAccountValue)
 
-        self.accountValueLabel.text = "Loading"
+        self.accountValueLabel.text = localized("loading")
 
         preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
@@ -107,9 +108,7 @@ class BetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -120,18 +119,23 @@ class BetslipViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.mainBackground
-        self.navigationBarView.backgroundColor = UIColor.App.mainBackground
-        self.tabsBaseView.backgroundColor = UIColor.App.mainBackground
+        self.topSafeAreaView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.navigationBarView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.tabsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.accountInfoBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.accountValueBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.accountValuePlusView.backgroundColor = UIColor.App.mainTint
-        self.accountValueLabel.textColor = UIColor.App.headingMain
+        self.accountInfoBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.accountValueBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.accountValuePlusView.backgroundColor = UIColor.App2.highlightPrimary
+        self.accountValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.tabViewController.sliderBarColor = UIColor.App.mainTint
-        self.tabViewController.barColor = UIColor.App.mainBackground
-        self.tabViewController.textColor = .white
+        self.tabViewController.sliderBarColor = UIColor.App2.highlightPrimary
+        self.tabViewController.barColor = UIColor.App2.backgroundPrimary
+        self.tabViewController.textColor = UIColor.App2.textPrimary
+      
+        
+        self.closeButton.titleLabel?.textColor = UIColor.App2.textPrimary
+        
+        self.betsLabel.textColor = UIColor.App2.textPrimary
 
     }
 
@@ -143,10 +147,10 @@ class BetslipViewController: UIViewController {
             self.navigationController?.pushViewController(depositViewController, animated: true)
         }
         else {
-            let alert = UIAlertController(title: localized("Profile Incomplete"),
-                                          message: "Please complete your profile before you can make deposits.",
+            let alert = UIAlertController(title: localized("profile_incomplete"),
+                                          message: localized("profile_incomplete_2"),
                                           preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+            alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }
     }
@@ -172,7 +176,7 @@ class BetslipViewController: UIViewController {
         }
 
         if errorCode != nil {
-            let message = errorMessage != nil ? errorMessage! : "Error placing Bet."
+            let message = errorMessage != nil ? errorMessage! : localized("error_placing_bet")
 
             if let betPlaced = errorBetPlaced {
                 Env.betslipManager.addBetPlacedDetailsError(betPlacedDetails: [betPlaced])

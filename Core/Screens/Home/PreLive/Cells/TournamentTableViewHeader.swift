@@ -9,15 +9,15 @@ import UIKit
 
 class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
-    @IBOutlet weak var countryFlagImageView: UIImageView!
-    @IBOutlet weak var nameTitleLabel: UILabel!
+    @IBOutlet weak var countryFlagImageView: UIImageView! // swiftlint:disable:this private_outlet
+    @IBOutlet weak var nameTitleLabel: UILabel! // swiftlint:disable:this private_outlet
 
-    @IBOutlet weak var favoriteLeagueBaseView: UIView!
-    @IBOutlet weak var favoriteLeagueImageView: UIImageView!
+    @IBOutlet private weak var favoriteLeagueBaseView: UIView!
+    @IBOutlet private weak var favoriteLeagueImageView: UIImageView!
 
-    @IBOutlet weak var collapseLargeBaseView: UIView!
-    @IBOutlet weak var collapseBaseView: UIView!
-    @IBOutlet weak var collapseImageView: UIImageView!
+    @IBOutlet private weak var collapseLargeBaseView: UIView!
+    @IBOutlet private weak var collapseBaseView: UIView!
+    @IBOutlet weak var collapseImageView: UIImageView! // swiftlint:disable:this private_outlet
 
     var sectionIndex: Int?
     var competition: Competition? {
@@ -88,10 +88,10 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.favoriteLeagueBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.collapseBaseView.backgroundColor = UIColor.App.secondaryBackground
+        self.favoriteLeagueBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.collapseBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.nameTitleLabel.textColor = UIColor.App.headingMain
+        self.nameTitleLabel.textColor = UIColor.App2.textPrimary
     }
 
     func setupCompetition() {

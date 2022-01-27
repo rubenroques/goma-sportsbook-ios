@@ -36,9 +36,7 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground
@@ -72,16 +70,16 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         logoImageView.sizeToFit()
 
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)
-        titleLabel.text = localized("string_check_email")
+        titleLabel.text = localized("check_email")
 
         textLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 15)
-        textLabel.text = "\(localized("string_check_email_text1")) \(emailUser) \(localized("string_check_email_text2"))"
+        textLabel.text = "\(localized("check_email_text1")) \(emailUser) \(localized("check_email_text2"))"
         textLabel.numberOfLines = 0
 
-        openEmailButton.setTitle(localized("string_continue_"), for: .normal)
+        openEmailButton.setTitle(localized("continue_"), for: .normal)
         openEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
-        resendEmailButton.setTitle(localized("string_resend_email"), for: .normal)
+        resendEmailButton.setTitle(localized("resend_email"), for: .normal)
         resendEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 15)
 
     }

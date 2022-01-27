@@ -8,6 +8,10 @@
 import UIKit
 import Combine
 
+protocol SportTypeSelectionViewDelegate: AnyObject {
+    func selectedSport(_ sport: Sport)
+}
+
 class SportSelectionViewController: UIViewController {
 
     @IBOutlet private var topView: UIView!
@@ -19,19 +23,20 @@ class SportSelectionViewController: UIViewController {
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     // Variables
-    weak var delegate: SportTypeSelectionViewDelegate?
-    private var cancellable = Set<AnyCancellable>()
-
     var sportsData: [EveryMatrix.Discipline] = []
     var fullSportsData: [EveryMatrix.Discipline] = []
-    var defaultSport: SportType
+    var defaultSport: Sport
     var isLiveSport: Bool
     var sportsRepository: SportsAggregatorRepository
 
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
+
+    var selectionDelegate: SportTypeSelectionViewDelegate?
     
-    init(defaultSport: SportType, isLiveSport: Bool = false, sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()) {
+    private var cancellable = Set<AnyCancellable>()
+
+    init(defaultSport: Sport, isLiveSport: Bool = false, sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()) {
         self.defaultSport = defaultSport
         self.isLiveSport = isLiveSport
         self.sportsRepository = sportsRepository
@@ -56,6 +61,7 @@ class SportSelectionViewController: UIViewController {
     }
 
     func commonInit() {
+        
         self.activityIndicatorView.isHidden = true
         self.view.bringSubviewToFront(self.activityIndicatorView)
 
@@ -66,10 +72,10 @@ class SportSelectionViewController: UIViewController {
             getSports()
         }
 
-        navigationLabel.text = localized("string_choose_sport")
+        navigationLabel.text = localized("choose_sport")
         navigationLabel.font = AppFont.with(type: .bold, size: 16)
 
-        cancelButton.setTitle(localized("string_cancel"), for: .normal)
+        cancelButton.setTitle(localized("cancel"), for: .normal)
         cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
 
         collectionView.register(SportSelectionCollectionViewCell.nib,
@@ -82,32 +88,28 @@ class SportSelectionViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
 
-        topView.backgroundColor = UIColor.App.mainBackground
-
-        navigationView.backgroundColor = UIColor.App.mainBackground
-
-        navigationLabel.textColor = UIColor.App.headingMain
-
-        cancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
-
-        collectionView.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        topView.backgroundColor = UIColor.App2.backgroundPrimary
+        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
+        navigationLabel.textColor = UIColor.App2.textPrimary
+        cancelButton.setTitleColor(UIColor.App2.highlightPrimary, for: .normal)
+        collectionView.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.searchBar.searchBarStyle = UISearchBar.Style.prominent
         self.searchBar.sizeToFit()
         self.searchBar.isTranslucent = false
         self.searchBar.backgroundImage = UIImage()
-        self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
-        self.searchBar.placeholder = localized("string_search")
+        self.searchBar.backgroundImage = UIColor.App2.backgroundPrimary.image()
+        self.searchBar.placeholder = localized("search")
 
         self.searchBar.delegate = self
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.secondaryBackground
+            textfield.backgroundColor = UIColor.App2.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("string_search_field"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.fadeOutHeading])
 
@@ -123,9 +125,10 @@ class SportSelectionViewController: UIViewController {
 
         self.activityIndicatorView.isHidden = false
 
-        let sports = EveryMatrixServiceClient().getDisciplinesData(payload: ["lang": "en"])
+        let sports = Env.everyMatrixClient.getDisciplinesData(payload: ["lang": "en"])
 
-        sports.receive(on: RunLoop.main)
+        sports
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -147,7 +150,7 @@ class SportSelectionViewController: UIViewController {
         self.activityIndicatorView.isHidden = false
 
         self.sportsData = Array(self.sportsRepository.sportsLive.values)
-        let sortedArray = self.sportsData.sorted(by: {$0.id?.localizedStandardCompare($1.id ?? "1") == .orderedAscending})
+        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
         self.sportsData = sortedArray
 
         self.fullSportsData = self.sportsData
@@ -166,7 +169,7 @@ class SportSelectionViewController: UIViewController {
 
     func updateSportsLiveCollection() {
         self.sportsData = Array(self.sportsRepository.sportsLive.values)
-        let sortedArray = self.sportsData.sorted(by: {$0.id?.localizedStandardCompare($1.id ?? "1") == .orderedAscending})
+        let sortedArray = self.sportsData.sorted(by: {$0.id.localizedStandardCompare($1.id) == .orderedAscending})
         self.sportsData = sortedArray
 
         self.fullSportsData = self.sportsData
@@ -197,7 +200,7 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
 
         cell.configureCell(viewModel: viewModel)
 
-        if cell.viewModel?.sport.id == self.defaultSport.typeId {
+        if cell.viewModel?.sport.id == self.defaultSport.id {
             cell.isSelected = true
             collectionView.selectItem(at: indexPath, animated: true, scrollPosition: UICollectionView.ScrollPosition.centeredHorizontally)
         }
@@ -215,17 +218,20 @@ extension SportSelectionViewController: UICollectionViewDelegate, UICollectionVi
 
         guard
             let sportTypeAtIndex = sportsData[safe:indexPath.row],
-            let sportTypeIdAtIndex = sportTypeAtIndex.id,
-            let newSportType = SportType(id: sportTypeIdAtIndex)
+            let cell = collectionView.cellForItem(at: indexPath) as? SportSelectionCollectionViewCell
         else {
             collectionView.deselectItem(at: indexPath, animated: true)
             return
         }
 
-        let cell = collectionView.cellForItem(at: indexPath) as! SportSelectionCollectionViewCell
+        let selectedSport = Sport(id: sportTypeAtIndex.id,
+                          name: sportTypeAtIndex.name ?? "",
+                          showEventCategory: sportTypeAtIndex.showEventCategory ?? false)
+
         cell.isSelected = true
-        self.defaultSport = newSportType
-        delegate?.setSportType(self.defaultSport)
+        self.defaultSport = selectedSport
+
+        self.selectionDelegate?.selectedSport(selectedSport)
 
         self.dismiss(animated: true, completion: nil)
         AnalyticsClient.sendEvent(event: .selectedSport(sportId: self.defaultSport.id ))

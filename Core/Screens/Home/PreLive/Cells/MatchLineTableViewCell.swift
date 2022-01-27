@@ -26,6 +26,8 @@ class MatchLineTableViewCell: UITableViewCell {
 
     private var matchInfoPublisher: AnyCancellable?
 
+    var matchStatsViewModel: MatchStatsViewModel?
+
     var tappedMatchLineAction: (() -> Void)?
     var matchWentLive: (() -> Void)?
 
@@ -88,6 +90,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: false)
 
         self.match = nil
+        self.matchStatsViewModel = nil
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
         self.collectionView.reloadData()
@@ -107,9 +110,9 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionBaseView.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
-        self.collectionView.backgroundView?.backgroundColor = .clear
+        self.collectionView.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
 
-        self.backSliderView.backgroundColor = UIColor.App.tertiaryBackground
+        self.backSliderView.backgroundColor = UIColor.App2.backgroundTertiary
     }
 
     func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
@@ -121,17 +124,15 @@ class MatchLineTableViewCell: UITableViewCell {
     func setupFavoriteMatchInfoPublisher(match: Match) {
         if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
             self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
+                .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] value in
                     if value.contains(match.id) {
-                        // print("NEW MATCH INFO FOUND!")
                         self?.matchInfoPublisher?.cancel()
                         self?.matchInfoPublisher = nil
                         self?.matchWentLive?()
                     }
                 })
         }
-        // print("CELL MATCH INFO: \(match.id)")
-
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -208,7 +209,17 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 fatalError()
             }
             if let match = self.match {
-                cell.subtitleLabel.text = "\(match.numberTotalOfMarkets) Markets"
+                let marketsRawString = localized("number_of_markets")
+                let singularMarketRawString = localized("number_of_market_singular")
+                var marketString = ""
+                if match.numberTotalOfMarkets > 1 {
+                    marketString = marketsRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                }
+                else {
+                    marketString = singularMarketRawString.replacingOccurrences(of: "%s", with: "\(match.numberTotalOfMarkets)")
+                }
+
+                cell.configureWithSubtitleString(marketString)
             }
             cell.tappedAction = {
                 self.tappedMatchLineAction?()
@@ -258,8 +269,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
 
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
+                        cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
-                        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }
@@ -268,8 +279,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
+                        cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
-                        cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?()
                         }
@@ -280,25 +291,32 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
-        cell.backgroundView?.backgroundColor = UIColor.App.secondaryBackground
-        cell.backgroundColor = UIColor.App.secondaryBackground
+        cell.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
+        cell.backgroundColor = UIColor.App2.backgroundCards
         cell.layer.cornerRadius = 9
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
 
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
         return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
     }
 
@@ -307,7 +325,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: 133)
+            return CGSize(width: 99, height: MatchWidgetCollectionViewCell.cellHeight)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -317,7 +335,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 width = 390
             }
             
-            return CGSize(width: width, height: 133) // design width: 331
+            return CGSize(width: width, height: MatchWidgetCollectionViewCell.cellHeight) // design width: 331
         }
     }
 }

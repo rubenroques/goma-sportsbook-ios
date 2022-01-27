@@ -24,24 +24,13 @@ final class TSManager {
     private var globalCancellable = Set<AnyCancellable>()
     
     private let tsQueue = DispatchQueue(label: "com.goma.games.TSQueue")
-    
-    private static var sharedInstance: TSManager?
-    
-    class var shared: TSManager {
-        guard let sharedInstance = self.sharedInstance else {
-            let sharedInstance = TSManager()
-            self.sharedInstance = sharedInstance
-            return sharedInstance
-        }
-        return sharedInstance
-    }
-    
+
     var swampSession: SSWampSession?
     var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
     let origin = "https://clientsample-sports-stage.everymatrix.com/"
 
-    private init() {
+    init() {
 
         Logger.log("TSManager init")
 
@@ -74,9 +63,9 @@ final class TSManager {
 
 
 
-    class func destroySharedInstance() {
-        sharedInstance = nil
-    }
+//    class func destroySharedInstance() {
+//        sharedInstance = nil
+//    }
 
     func destroySwampSession() {
         self.disconnect()
@@ -100,6 +89,7 @@ final class TSManager {
                 if self.swampSession != nil {
                     if self.swampSession!.isConnected() {
                         self.swampSession?.subscribe(TSRouter.sessionStateChange.procedure, onSuccess: { subscription in
+                            Logger.log("EMSessionLoginFLow - sessionStateChanged subscribed")
                             promise(.success(true))
                         }, onError: { details, errorStr in
                             promise(.failure(.requestError(value: errorStr)))
@@ -111,38 +101,50 @@ final class TSManager {
                                 1 - Session is expired. When all the sessions associated with the same login are idle
                                    for more than 20 minutes, they will be terminated.
                                 2 - Session is logged off. This occurs when the logout method is called.
-                                3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
-                                5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
-                                6 - Session is terminated because self exclusion is enabled.
-                                */
+
+                                 3 - Session is terminated because another login occurred. When the same user is logging in a different place, all the previous logged-in sessions will be terminated.
+                                 5 - Session is terminated because of the preset limitation time has been reached. If the session time limitation is enabled in Self Exclusion mode, all the sessions will be terminated when this time is reached.
+                                 6 - Session is terminated because self exclusion is enabled.
+
+                                 */
                                 
                                 if code == 1 {
+                                    Logger.log("EMSessionLoginFLow - Expired")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 2 {
+                                    Logger.log("EMSessionLoginFLow - Logged off")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 3 {
+                                    Logger.log("EMSessionLoginFLow - Forced logout")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 5 {
+                                    Logger.log("EMSessionLoginFLow - Forced logout")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 6 {
+                                    Logger.log("EMSessionLoginFLow - Forced logout")
                                     DispatchQueue.main.async {
-                                        NotificationCenter.default.post(name: .sessionForcedLogoutDisconnected, object: nil)
+                                        NotificationCenter.default.post(name: .userSessionForcedLogoutDisconnected, object: nil)
                                     }
                                 }
                                 else if code == 0 {
                                     // TODO: sessionStateChange success handler to be added here - KVO mechanism as above can be used
+                                    Logger.log("EMSessionLoginFLow - Logged")
+
+                                    DispatchQueue.main.async {
+                                        NotificationCenter.default.post(name: .userSessionConnected, object: nil)
+                                    }
                                 }
                             }
                         }
@@ -153,7 +155,7 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
     
-    func getModel<T: Decodable>(router: TSRouter, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
+    func getModel<T: Decodable>(router: TSRouter,initialDumpProcedure: String? = nil, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
         return Future<T, EveryMatrix.APIError> { [self] promise in
             tsQueue.async {
 
@@ -164,7 +166,12 @@ final class TSManager {
                     return
                 }
 
-                Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+                if let initialDumpProcedure = initialDumpProcedure {
+                    Logger.log("TSManager getModel initial dump - proc:\(initialDumpProcedure) url:\(router.procedure), args:\(router.args ?? [] )")
+                }
+                else {
+                    Logger.log("TSManager getModel - url:\(router.procedure), args:\(router.args ?? [] )")
+                }
 
                 if swampSession.isConnected() {
                     swampSession.call(router.procedure, options: [:], args: router.args, kwargs: router.kwargs, onSuccess: { details, results, kwResults, arrResults in
@@ -189,8 +196,8 @@ final class TSManager {
                             }
                         }
                         catch {
-                            // print("TSManager Decoding Error: \(error)")
-                            promise(.failure(.decodingError))
+                            //print("TSManager Decoding Error: \(error)")
+                            promise(.failure( .decodingError(value: error.localizedDescription) ))
                         }
                     }, onError: { _, error, _, kwargs in
                         var desc = ""
@@ -249,16 +256,18 @@ final class TSManager {
         .eraseToAnyPublisher()
     }
 
-    func subscribeEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) throws -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
+    func subscribeEndpoint<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) -> AnyPublisher<TSSubscriptionContent<T>, EveryMatrix.APIError> {
+
+        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
 
         guard
             let swampSession = self.swampSession,
             swampSession.isConnected()
         else {
-            throw EveryMatrix.APIError.notConnected
+            subject.send(completion: .failure(.notConnected))
+            return subject.eraseToAnyPublisher()
         }
 
-        let subject = PassthroughSubject<TSSubscriptionContent<T>, EveryMatrix.APIError>()
 
         let args: [String: Any] = endpoint.kwargs ?? [:]
 
@@ -267,27 +276,66 @@ final class TSManager {
         swampSession.subscribe(endpoint.procedure, options: args,
         onSuccess: { (subscription: Subscription) in
             subject.send(TSSubscriptionContent.connect(publisherIdentifiable: subscription))
+
+            if let initialDumpEndpoint = endpoint.intiailDumpRequest {
+                self.getModel(router: initialDumpEndpoint, decodingType: decodingType)
+                    .sink { completion in
+                        if case .failure(let error) = completion {
+                            subject.send(TSSubscriptionContent.disconnect)
+                            subject.send(completion: .failure(error))
+
+                        }
+                    } receiveValue: { decoded in
+                        subject.send(.initialContent(decoded))
+                    }
+                    .store(in: &self.globalCancellable)
+            }
         },
         onError: { (details: [String: Any], errorStr: String) in
             subject.send(TSSubscriptionContent.disconnect)
             subject.send(completion: .failure(.requestError(value: errorStr)))
         },
         onEvent: { (details: [String: Any], results: [Any]?, kwResults: [String: Any]?) in
-//            if let code = kwResults?["code"] as? Int {
-//                if code == 3 {
-//                    DispatchQueue.main.async {
-//                        NotificationCenter.default.post(name: .wampSocketDisconnected, object: nil)
-//                    }
-//                    subject.send(TSSubscriptionContent.disconnect)
-//                    subject.send(completion: .failure(.notConnected))
-//                }
-//                else if code == 0 {
-//                    print("Subscribed!")
-//                }
-//            }
+            do {
+                if kwResults != nil {
+                    let decoder = DictionaryDecoder()
+                    decoder.dateDecodingStrategy = .iso8601
+                    let decoded = try decoder.decode(decodingType, from: kwResults!)
+                    subject.send(.updatedContent(decoded))
+                }
+                else {
+                    subject.send(completion: .failure(.noResultsReceived))
+                }
+            }
+            catch {
+                // print("TSManager Decoding Error: \(error)")
+                subject.send(completion: .failure(.decodingError(value: error.localizedDescription)))
+            }
         })
 
-        return subject.eraseToAnyPublisher()
+        return subject.handleEvents(receiveOutput: { content in
+
+        }, receiveCompletion: { completion in
+            print("completion \(completion)")
+        }, receiveCancel: {
+
+        }).eraseToAnyPublisher()
+
+    }
+
+    func unsubscribeFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
+        guard
+            let swampSession = self.swampSession,
+            swampSession.isConnected()
+        else {
+            return
+        }
+
+        swampSession.unsubscribe(endpointPublisherIdentifiable.identificationCode) {
+            ()
+        } onError: { details, error in
+            // print("UnregisterFromEndpoint error \(details) \(error)")
+        }
     }
 
     func unregisterFromEndpoint(endpointPublisherIdentifiable: EndpointPublisherIdentifiable) {
@@ -326,12 +374,11 @@ final class TSManager {
             subject.send(TSSubscriptionContent.connect(publisherIdentifiable: registration))
 
             if let initialDumpEndpoint = endpoint.intiailDumpRequest {
-                self.getModel(router: initialDumpEndpoint, decodingType: decodingType)
+                self.getModel(router: initialDumpEndpoint, initialDumpProcedure: endpoint.procedure, decodingType: decodingType)
                     .sink { completion in
                         if case .failure(let error) = completion {
                             subject.send(TSSubscriptionContent.disconnect)
                             subject.send(completion: .failure(error))
-
                         }
                     } receiveValue: { decoded in
                         subject.send(.initialContent(decoded))
@@ -356,8 +403,7 @@ final class TSManager {
                 }
             }
             catch {
-                // print("TSManager Decoding Error: \(error)")
-                subject.send(completion: .failure(.decodingError))
+                subject.send(completion: .failure( .decodingError(value: error.localizedDescription) ))
             }
         })
         return subject.handleEvents(receiveOutput: { content in
@@ -378,7 +424,7 @@ extension TSManager: SSWampSessionDelegate {
     
     func ssWampSessionConnected(_ session: SSWampSession, sessionId: Int) {
 
-        NotificationCenter.default.post(name: .sessionConnected, object: nil)
+        NotificationCenter.default.post(name: .socketConnected, object: nil)
 
         sessionStateChanged()
             .sink(receiveCompletion: { completion in
@@ -387,9 +433,11 @@ extension TSManager: SSWampSessionDelegate {
                 Logger.log("TSManager sessionStateChanged \(connected)")
             })
             .store(in: &globalCancellable)
+
     }
     
     func ssWampSessionEnded(_ reason: String) {
-        NotificationCenter.default.post(name: .sessionDisconnected, object: nil)
+        NotificationCenter.default.post(name: .userSessionDisconnected, object: nil)
+        NotificationCenter.default.post(name: .socketDisconnected, object: nil)
     }
 }

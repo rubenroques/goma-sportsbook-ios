@@ -40,19 +40,19 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
 
     func commonInit() {
 
-        self.navigationTitleLabel.text = localized("string_email_verification")
+        self.navigationTitleLabel.text = localized("email_verification")
 
-        self.navigationCloseButton.setTitle(localized("string_close"), for: .normal)
+        self.navigationCloseButton.setTitle(localized("close"), for: .normal)
 
         self.logoImageView.image = UIImage(named: "check_email_box_icon")
         self.logoImageView.contentMode = .center
 
-        self.titleLabel.text = localized("string_verify_email")
+        self.titleLabel.text = localized("verify_email")
 
-        self.descriptionLabel.text = localized("string_verify_email_description")
+        self.descriptionLabel.text = localized("verify_email_description")
         self.descriptionLabel.numberOfLines = 0
 
-        self.checkEmailButton.setTitle(localized("string_activate_account"), for: .normal)
+        self.checkEmailButton.setTitle(localized("activate_account"), for: .normal)
 
     }
 
@@ -104,9 +104,9 @@ protocol ChooseEmailActionSheetPresenter {
 
 extension ChooseEmailActionSheetPresenter {
 
-    func setupChooseEmailActionSheet(withTitle title: String? = localized("string_choose_email")) -> UIAlertController {
+    func setupChooseEmailActionSheet(withTitle title: String? = localized("choose_email")) -> UIAlertController {
         let emailActionSheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        emailActionSheet.addAction(UIAlertAction(title: localized("string_cancel"), style: .cancel, handler: nil))
+        emailActionSheet.addAction(UIAlertAction(title: localized("cancel"), style: .cancel, handler: nil))
         if let action = openAction(withURL: "mailto:", andTitleActionTitle: "Mail") {
             emailActionSheet.addAction(action)
         }

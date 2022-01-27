@@ -107,4 +107,10 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func requestMatchStats(deviceId: String, matchId: String) -> AnyPublisher<JSON, NetworkError> {
+        let endpoint = GomaGamingService.matchStats(matchId: matchId)
+        let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
 }

@@ -53,21 +53,21 @@ class DepositViewController: UIViewController {
 
     func commonInit() {
 
-        self.navigationLabel.text = localized("string_deposit")
+        self.navigationLabel.text = localized("deposit")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
         self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
         self.navigationButton.contentMode = .scaleAspectFit
 
-        self.titleLabel.text = localized("string_how_much_deposit")
+        self.titleLabel.text = localized("how_much_deposit")
         self.titleLabel.font = AppFont.with(type: .bold, size: 20)
         self.titleLabel.numberOfLines = 0
 
-        self.depositHeaderTextFieldView.setPlaceholderText(localized("string_deposit_value"))
+        self.depositHeaderTextFieldView.setPlaceholderText(localized("deposit_value"))
         self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
         self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.headingSecondary)
 
-        depositTipLabel.text = localized("string_minimum_deposit_value")
+        depositTipLabel.text = localized("minimum_deposit_value")
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
 
         self.setDepositAmountButtonDesign(button: self.amount10Button, title: "€10")
@@ -75,11 +75,11 @@ class DepositViewController: UIViewController {
         self.setDepositAmountButtonDesign(button: self.amount50Button, title: "€50")
         self.setDepositAmountButtonDesign(button: self.amount100Button, title: "€100")
 
-        self.nextButton.setTitle(localized("string_next"), for: .normal)
+        self.nextButton.setTitle(localized("next"), for: .normal)
         self.nextButton.isEnabled = false
         self.nextButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        self.paymentsLabel.text = localized("string_payments_available")
+        self.paymentsLabel.text = localized("payments_available")
         self.paymentsLabel.font = AppFont.with(type: .medium, size: 12)
 
         self.createPaymentsLogosImageViews()
@@ -133,7 +133,7 @@ class DepositViewController: UIViewController {
 
     func setupPublishers() {
         self.depositHeaderTextFieldView.textPublisher
-            .receive(on: RunLoop.main)
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.checkUserInputs()
             })
@@ -166,7 +166,7 @@ class DepositViewController: UIViewController {
 
     func setupResponsableGamingUnderlineClickableLabel() {
 
-        let fullString = localized("string_responsible_gaming")
+        let fullString = localized("responsible_gaming")
 
         responsibleGamingLabel.text = fullString
         responsibleGamingLabel.numberOfLines = 0
@@ -175,7 +175,7 @@ class DepositViewController: UIViewController {
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
-        let range1 = (fullString as NSString).range(of: localized("string_responsible_gaming_clickable"))
+        let range1 = (fullString as NSString).range(of: localized("responsible_gaming_clickable"))
 
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
 
@@ -196,9 +196,9 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func tapResponsabibleGamingUnderlineLabel(gesture: UITapGestureRecognizer) {
-        let text = localized("string_responsible_gaming")
+        let text = localized("responsible_gaming")
 
-        let stringRange1 = (text as NSString).range(of: localized("string_responsible_gaming_clickable"))
+        let stringRange1 = (text as NSString).range(of: localized("responsible_gaming_clickable"))
 
         if gesture.didTapAttributedTextInLabel(label: self.responsibleGamingLabel, inRange: stringRange1, alignment: .left) {
             // Action
@@ -208,7 +208,7 @@ class DepositViewController: UIViewController {
 
     func setupFaqUnderlineClickableLabel() {
 
-        let fullString = localized("string_faq")
+        let fullString = localized("faq")
 
         faqLabel.text = fullString
         faqLabel.numberOfLines = 0
@@ -217,8 +217,8 @@ class DepositViewController: UIViewController {
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
-        let range1 = (fullString as NSString).range(of: localized("string_faq_clickable"))
-        let range2 = (fullString as NSString).range(of: localized("string_contact_us"))
+        let range1 = (fullString as NSString).range(of: localized("faq_clickable"))
+        let range2 = (fullString as NSString).range(of: localized("contact_us"))
 
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
         underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
@@ -241,10 +241,10 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func tapFaqUnderlineLabel(gesture: UITapGestureRecognizer) {
-        let text = localized("string_faq")
+        let text = localized("faq")
 
-        let stringRange1 = (text as NSString).range(of: localized("string_faq_clickable"))
-        let stringRange2 = (text as NSString).range(of: localized("string_contact_us"))
+        let stringRange1 = (text as NSString).range(of: localized("faq_clickable"))
+        let stringRange2 = (text as NSString).range(of: localized("contact_us"))
 
         if gesture.didTapAttributedTextInLabel(label: self.faqLabel, inRange: stringRange1, alignment: .left) {
             // Action
@@ -427,10 +427,10 @@ class DepositViewController: UIViewController {
     }
 
     func showErrorAlert() {
-        let alert = UIAlertController(title: localized("Wallet Error"),
-                                      message: "There was an error trying to get your wallet settings. Try again later.",
+        let alert = UIAlertController(title: localized("wallet_error"),
+                                      message: localized("wallet_error_message"),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 

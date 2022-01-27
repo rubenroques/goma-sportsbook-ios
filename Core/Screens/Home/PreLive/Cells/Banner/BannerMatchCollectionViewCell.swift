@@ -191,25 +191,25 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.matchBaseView.backgroundColor = .clear
         self.imageBaseView.backgroundColor = .clear
 
-        self.baseView.backgroundColor = UIColor.App.secondaryBackground
+        self.baseView.backgroundColor = UIColor.App2.backgroundCards
 
-        self.homeParticipantNameLabel.textColor = UIColor.App.headingMain
-        self.awayParticipantNameLabel.textColor = UIColor.App.headingMain
-        self.dateLabel.textColor = UIColor.App.headingMain
-        self.timeLabel.textColor = UIColor.App.headingMain
+        self.homeParticipantNameLabel.textColor = UIColor.App2.textPrimary
+        self.awayParticipantNameLabel.textColor = UIColor.App2.textPrimary
+        self.dateLabel.textColor = UIColor.App2.textPrimary
+        self.timeLabel.textColor = UIColor.App2.textPrimary
 
-        self.homeOddTitleLabel.textColor = UIColor.App.headingMain
-        self.homeOddValueLabel.textColor = UIColor.App.headingMain
-        self.drawOddTitleLabel.textColor = UIColor.App.headingMain
-        self.drawOddValueLabel.textColor = UIColor.App.headingMain
-        self.awayOddTitleLabel.textColor = UIColor.App.headingMain
-        self.awayOddValueLabel.textColor = UIColor.App.headingMain
+        self.homeOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.homeOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.drawOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.awayOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.homeBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
 
-        self.matchOffuscationView.backgroundColor = UIColor.App.secondaryBackground
+        self.matchOffuscationView.backgroundColor = UIColor.App2.backgroundSecondary
         self.matchOffuscationView.alpha = 0.66
 
         self.setupGradient()
@@ -217,7 +217,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     func setupGradient() {
         self.matchGradientView.alpha = 1.0
-        self.matchGradientView.backgroundColor = UIColor.App.secondaryBackground
+        self.matchGradientView.backgroundColor = UIColor.App2.backgroundSecondary
 
         let rightGradientMaskLayer = CAGradientLayer()
         rightGradientMaskLayer.frame = matchGradientView.bounds
@@ -401,10 +401,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     func selectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App.mainTint
+        self.homeBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapLeftOddButton() {
@@ -440,10 +440,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     func selectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App.mainTint
+        self.drawBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapMiddleOddButton() {
@@ -478,10 +478,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     func selectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App.mainTint
+        self.awayBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapRightOddButton() {

@@ -86,13 +86,13 @@ class MatchDetailsAggregatorRepository: NSObject {
                                                                       matchId: self.matchId)
 
         if let matchMarketGroupsRegister = self.matchMarketGroupsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: matchMarketGroupsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchMarketGroupsRegister)
         }
 
         self.matchMarketGroupsPublisher?.cancel()
         self.matchMarketGroupsPublisher = nil
 
-        self.matchMarketGroupsPublisher = TSManager.shared
+        self.matchMarketGroupsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(mainMarketsEndpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -131,7 +131,7 @@ class MatchDetailsAggregatorRepository: NSObject {
         //
         // cancel old market groups observations
         self.marketGroupsDetailsCancellable.forEach({ $0.cancel() })
-        self.marketGroupsDetailsRegisters.forEach({ TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: $0) })
+        self.marketGroupsDetailsRegisters.forEach({ Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: $0) })
         self.isLoadingMarketGroupDetails.values.forEach({
             $0.send(true)
         })
@@ -153,7 +153,6 @@ class MatchDetailsAggregatorRepository: NSObject {
             }
 
             if (marketGroup.numberOfMarkets ?? 0) == 0 {
-                print("")
                 continue
             }
 
@@ -169,7 +168,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                 isLoadingMarketGroupDetails[marketGroupKey] = CurrentValueSubject.init(true)
             }
 
-            TSManager.shared
+            Env.everyMatrixClient.manager
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
                 .sink(receiveCompletion: { completion in
                     switch completion {
@@ -387,6 +386,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                                 nameDigit1: rawMarket.paramFloat1,
                                 nameDigit2: rawMarket.paramFloat2,
                                 nameDigit3: rawMarket.paramFloat3,
+                                eventPartId: rawMarket.eventPartId,
+                                bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
             allMarkets.append(market)
             similarMarketsOrdered.append(similarMarketKey)
@@ -511,6 +512,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                                 nameDigit1: rawMarket.paramFloat1,
                                 nameDigit2: rawMarket.paramFloat2,
                                 nameDigit3: rawMarket.paramFloat3,
+                                eventPartId: rawMarket.eventPartId,
+                                bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
 
             allMarkets[rawMarket.id] = market

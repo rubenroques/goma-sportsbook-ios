@@ -10,12 +10,12 @@ import UIKit
 
 class GameSuggestedView: NibView {
 
-    @IBOutlet var mainView: UIView!
+    @IBOutlet private var mainView: UIView!
     
-    @IBOutlet weak var gameView: UIView!
-    @IBOutlet weak var gameImageView: UIImageView!
-    @IBOutlet weak var gameTitleLabel: UILabel!
-    @IBOutlet weak var gameInfoLabel: UILabel!
+    @IBOutlet private var gameView: UIView!
+    @IBOutlet private var gameImageView: UIImageView!
+    @IBOutlet private var gameTitleLabel: UILabel!
+    @IBOutlet private var gameInfoLabel: UILabel!
     
     var gameTitle: String
     var gameInfo: String
@@ -76,7 +76,10 @@ class GameSuggestedView: NibView {
 
         self.gameTitleLabel.textColor = UIColor.App.headingMain
         // self.gameTitleLabel.font = AppFont.with(type: .bold, size: 13)
-       
+        if let gameView = self.gameView {
+            gameView.backgroundColor = UIColor.App.secondaryBackground
+        }
+        
     }
 
     func setMatchFlag(isoCode: String) {

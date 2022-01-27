@@ -21,10 +21,14 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     @IBOutlet private weak var safeAreaBottomView: UIView!
     
-    @IBOutlet private weak var possibleEarningsLabel: UILabel!
+    @IBOutlet private weak var possibleEarningsValueLabel: UILabel!
+    @IBOutlet private weak var totalOddsValueLabel: UILabel!
+    @IBOutlet private weak var betsMadeValueLabel: UILabel!
+    
     @IBOutlet private weak var totalOddsLabel: UILabel!
+    @IBOutlet private weak var possibleEarningsLabel: UILabel!
     @IBOutlet private weak var betsMadeLabel: UILabel!
-
+    
     var totalOddsValue: String
     var possibleEarningsValue: String
     var numberOfBets: Int
@@ -70,9 +74,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.possibleEarningsLabel.text = possibleEarningsValue
-        self.totalOddsLabel.text = totalOddsValue
-        self.betsMadeLabel.text = String(numberOfBets)
+        self.possibleEarningsValueLabel.text = possibleEarningsValue
+        self.totalOddsValueLabel.text = totalOddsValue
+        self.betsMadeValueLabel.text = String(numberOfBets)
 
         self.setupWithTheme()
     }
@@ -83,20 +87,23 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackground
-        self.topView.backgroundColor = UIColor.App.mainBackground
-        self.bottomView.backgroundColor = UIColor.App.mainBackground
-        self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
-        self.safeAreaBottomView.backgroundColor = UIColor.App.mainBackground
-        self.messageTitleLabel.textColor = UIColor.App.headingMain
-        self.messageSubtitleLabel.textColor = UIColor.App.headingMain
-
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.topView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.bottomView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.bottomSeparatorView.backgroundColor = UIColor.App2.separatorLine
+        self.safeAreaBottomView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.messageTitleLabel.textColor = UIColor.App2.textPrimary
+        self.messageSubtitleLabel.textColor = UIColor.App2.textPrimary
+        self.betsMadeLabel.textColor = UIColor.App2.textPrimary
+        self.totalOddsLabel.textColor = UIColor.App2.textPrimary
+        self.possibleEarningsLabel.textColor = UIColor.App2.textPrimary
+        self.betsMadeValueLabel.textColor = UIColor.App2.textPrimary
+        self.totalOddsValueLabel.textColor = UIColor.App2.textPrimary
+        self.possibleEarningsValueLabel.textColor = UIColor.App2.textPrimary
         StyleHelper.styleButton(button: self.continueButton)
     }
 

@@ -11,9 +11,10 @@ extension EveryMatrix {
     struct Discipline: Decodable {
 
         let type: String
-        let id: String?
+        let id: String
         let name: String?
         let numberOfLiveEvents: Int?
+        let showEventCategory: Bool?
 
         enum CodingKeys: String, CodingKey {
             case type = "_type"
@@ -30,7 +31,7 @@ extension EveryMatrix {
 //            case numberOfUpcomingMatches = "numberOfUpcomingMatches"
 //            case childrenIds = "childrenIds"
 //            case displayChildren = "displayChildren"
-//            case showEventCategory = "showEventCategory"
+            case showEventCategory = "showEventCategory"
         }
 
         func sportUpdated(numberOfLiveEvents: Int?) -> Discipline {
@@ -38,8 +39,8 @@ extension EveryMatrix {
                 type: self.type,
                 id: self.id,
                 name: self.name,
-                numberOfLiveEvents: numberOfLiveEvents ?? self.numberOfLiveEvents
-
+                numberOfLiveEvents: numberOfLiveEvents ?? self.numberOfLiveEvents,
+                showEventCategory: self.showEventCategory
             )
         }
     }

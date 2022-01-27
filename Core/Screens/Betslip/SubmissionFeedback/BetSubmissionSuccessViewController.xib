@@ -24,17 +24,20 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BetSubmissionSuccessViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="backButton" destination="0Xx-GG-CEj" id="L3w-HD-PQN"/>
-                <outlet property="betsMadeLabel" destination="nJt-ZS-h0O" id="i54-N4-S74"/>
+                <outlet property="betsMadeLabel" destination="l3E-iS-2Wd" id="6Fc-ek-peW"/>
+                <outlet property="betsMadeValueLabel" destination="nJt-ZS-h0O" id="BtC-r1-M0I"/>
                 <outlet property="bottomSeparatorView" destination="xgj-BM-nTL" id="g1u-vW-xtc"/>
                 <outlet property="bottomView" destination="iW1-Ih-khd" id="GYi-Sz-3VW"/>
                 <outlet property="checkmarkImageView" destination="c6J-nF-V0h" id="Kex-4U-dTH"/>
                 <outlet property="continueButton" destination="yGx-GM-yb6" id="BaN-ae-ufN"/>
                 <outlet property="messageSubtitleLabel" destination="AlW-md-Iz3" id="Xva-F8-MWP"/>
                 <outlet property="messageTitleLabel" destination="WAb-qF-NQJ" id="y9h-F1-R8m"/>
-                <outlet property="possibleEarningsLabel" destination="71V-bW-NTn" id="Doq-Lv-TA1"/>
+                <outlet property="possibleEarningsLabel" destination="8MJ-da-1dL" id="NzL-th-i03"/>
+                <outlet property="possibleEarningsValueLabel" destination="71V-bW-NTn" id="tKz-2D-znK"/>
                 <outlet property="safeAreaBottomView" destination="rwT-YU-CvN" id="tVx-lc-Z2z"/>
                 <outlet property="topView" destination="9bz-3m-KwI" id="oHi-CO-CJR"/>
-                <outlet property="totalOddsLabel" destination="pnR-Vk-bx0" id="Kjl-Et-vgR"/>
+                <outlet property="totalOddsLabel" destination="LGO-xa-Odt" id="dBp-bI-sSW"/>
+                <outlet property="totalOddsValueLabel" destination="pnR-Vk-bx0" id="ZJe-Ny-IfJ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -242,7 +245,7 @@
         <image name="arrow_back_icon" width="14" height="23"/>
         <image name="feedback_check_success_image" width="223" height="222"/>
         <namedColor name="mainTintColor">
-            <color red="0.016000000759959221" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.14901960784313725" green="0.41568627450980394" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

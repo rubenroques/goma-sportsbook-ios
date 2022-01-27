@@ -14,8 +14,8 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     @IBOutlet private var marketTypeLabel: UILabel!
     @IBOutlet private var marketOddLabel: UILabel!
 
-    @IBOutlet weak var upChangeOddValueImage: UIImageView!
-    @IBOutlet weak var downChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var upChangeOddValueImage: UIImageView!
+    @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
     var match: Match?
     var market: Market?
@@ -67,7 +67,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         self.oddUpdatesPublisher = nil
 
         if let oddUpdatesRegister = oddUpdatesRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: oddUpdatesRegister)
         }
 
         self.isOutcomeButtonSelected = false
@@ -108,7 +108,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
                                                       language: "en",
                                                       bettingOfferId: outcome.bettingOffer.id)
 
-        self.oddUpdatesPublisher = TSManager.shared.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+        self.oddUpdatesPublisher = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {

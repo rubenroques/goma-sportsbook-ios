@@ -13,12 +13,14 @@ class MyTicketsViewModel: NSObject {
 
     private var selectedMyTicketsTypeIndex: Int = 0
     var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
+    var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>
+
     enum MyTicketsType: Int {
         case opened = 0
         case resolved = 1
         case won = 2
     }
-
+    
     var reloadTableViewAction: (() -> Void)?
     var redrawTableViewAction: (() -> Void)?
 
@@ -56,26 +58,52 @@ class MyTicketsViewModel: NSObject {
             })
             .eraseToAnyPublisher()
 
+        self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
+
         super.init()
 
-        myTicketsTypePublisher.sink { [weak self] myTicketsType in
-            self?.selectedMyTicketsTypeIndex =  myTicketsType.rawValue
+        isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
+            .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
+                switch myTicketsType {
+                case .resolved:
+                    if isLoadingResolved { return false }
+                    return self?.resolvedMyTickets.value.isEmpty ?? false
+                case .opened:
+                    if isLoadingOpened { return false }
+                    return self?.openedMyTickets.value.isEmpty ?? false
+                case .won:
+                    if isLoadingWon { return false }
+                    return self?.wonMyTickets.value.isEmpty ?? false
+                }
+            }
+            .eraseToAnyPublisher()
 
-            self?.reloadTableView()
-        }
-        .store(in: &cancellables)
-
-        Env.userSessionStore
-            .userSessionPublisher
+        myTicketsTypePublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.refresh()
+            .sink { [weak self] myTicketsType in
+                self?.selectedMyTicketsTypeIndex =  myTicketsType.rawValue
+
+                self?.reloadTableView()
+            }
+            .store(in: &cancellables)
+
+
+        Env.everyMatrixClient.userSessionStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSessionStatus in
+                switch userSessionStatus {
+                case .logged:
+                    self?.refresh()
+                case .anonymous:
+                    self?.clearData()
+                }
             }
             .store(in: &cancellables)
 
         self.loadLocations()
         self.initialLoadMyTickets()
+
     }
 
     deinit {
@@ -96,11 +124,11 @@ class MyTicketsViewModel: NSObject {
     //
     func loadLocations() {
         let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        TSManager.shared.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
             .sink(receiveCompletion: { _ in
 
             },
-            receiveValue: { [weak self] response in
+                  receiveValue: { [weak self] response in
                 self?.locationsCodesDictionary = [:]
                 (response.records ?? []).forEach { location in
                     if let code = location.code {
@@ -113,11 +141,9 @@ class MyTicketsViewModel: NSObject {
     }
 
     func initialLoadMyTickets() {
-
         self.loadResolvedTickets(page: 0)
         self.loadOpenedTickets(page: 0)
         self.loadWonTickets(page: 0)
-
     }
 
     func clearData() {
@@ -132,7 +158,7 @@ class MyTicketsViewModel: NSObject {
         self.isLoadingResolved.send(true)
 
         let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
-        TSManager.shared.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -140,10 +166,11 @@ class MyTicketsViewModel: NSObject {
                     switch apiError {
                     case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
                         self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
                     default:
                         ()
                     }
-                    print("\(apiError)")
                 case .finished:
                     ()
                 }
@@ -151,7 +178,6 @@ class MyTicketsViewModel: NSObject {
             },
             receiveValue: { [weak self] betHistoryResponse in
                 self?.resolvedMyTickets.value = betHistoryResponse.betList ?? []
-
                 if case .resolved = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
@@ -164,7 +190,7 @@ class MyTicketsViewModel: NSObject {
         self.isLoadingOpened.send(true)
 
         let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
-        TSManager.shared.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -172,10 +198,11 @@ class MyTicketsViewModel: NSObject {
                     switch apiError {
                     case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
                         self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
                     default:
                         ()
                     }
-                    print("\(apiError)")
                 case .finished:
                     ()
                 }
@@ -183,7 +210,6 @@ class MyTicketsViewModel: NSObject {
             },
             receiveValue: { [weak self] betHistoryResponse in
                 self?.openedMyTickets.value = betHistoryResponse.betList ?? []
-
                 if case .opened = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
@@ -197,7 +223,7 @@ class MyTicketsViewModel: NSObject {
         self.isLoadingWon.send(true)
 
         let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
-        TSManager.shared.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
+        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -205,10 +231,11 @@ class MyTicketsViewModel: NSObject {
                     switch apiError {
                     case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
                         self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
                     default:
                         ()
                     }
-                    print("\(apiError)")
                 case .finished:
                     ()
                 }
@@ -216,7 +243,6 @@ class MyTicketsViewModel: NSObject {
             },
             receiveValue: { [weak self] betHistoryResponse in
                 self?.wonMyTickets.value = betHistoryResponse.betList ?? []
-
                 if case .won = self?.myTicketsTypePublisher.value {
                     self?.reloadTableView()
                 }
@@ -259,6 +285,18 @@ class MyTicketsViewModel: NSObject {
             return openedMyTickets.value.count
         case .won:
             return wonMyTickets.value.count
+        }
+    }
+
+
+    func isEmpty() -> Bool {
+        switch myTicketsTypePublisher.value {
+        case .resolved:
+            return resolvedMyTickets.value.isEmpty
+        case .opened:
+            return openedMyTickets.value.isEmpty
+        case .won:
+            return wonMyTickets.value.isEmpty
         }
     }
 
@@ -319,8 +357,6 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
         else {
             fatalError("tableView.dequeueCellType(MyTicketTableViewCell.self)")
         }
-
-        debugPrint("MyTicketCellViewModel \(viewModel)")
 
         let locationsCodes = (ticketValue.selections ?? [])
             .map({ event -> String in

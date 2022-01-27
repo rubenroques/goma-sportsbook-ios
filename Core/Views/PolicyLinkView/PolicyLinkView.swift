@@ -30,20 +30,20 @@ class PolicyLinkView: NibView {
 
         func setup() {
 
-            self.backgroundColor = UIColor.App.mainBackground
+            self.backgroundColor = UIColor.App2.backgroundPrimary
 
-            let termsText = localized("string_agree_terms_conditions")
+            let termsText = localized("agree_terms_conditions")
 
             termsLabel.text = termsText
             termsLabel.numberOfLines = 0
             termsLabel.font = AppFont.with(type: .semibold, size: 14.0)
-            self.termsLabel.textColor =  UIColor.App.headingMain
+            self.termsLabel.textColor =  UIColor.App2.textPrimary
 
             let underlineAttriString = NSMutableAttributedString(string: termsText)
 
-            let range1 = (termsText as NSString).range(of: localized("string_terms"))
-            let range2 = (termsText as NSString).range(of: localized("string_privacy_policy"))
-            let range3 = (termsText as NSString).range(of: localized("string_eula"))
+            let range1 = (termsText as NSString).range(of: localized("terms"))
+            let range2 = (termsText as NSString).range(of: localized("privacy_policy"))
+            let range3 = (termsText as NSString).range(of: localized("eula"))
 
             let paragraphStyle = NSMutableParagraphStyle()
 
@@ -53,9 +53,9 @@ class PolicyLinkView: NibView {
             underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range1)
             underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range2)
             underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 14), range: range3)
-            underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
-            underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
-            underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range3)
+            underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App2.highlightPrimary, range: range1)
+            underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App2.highlightPrimary, range: range2)
+            underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App2.highlightPrimary, range: range3)
             underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
             underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
             underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range3)
@@ -67,11 +67,11 @@ class PolicyLinkView: NibView {
         }
 
     @IBAction private func tapUnderlineLabel(gesture: UITapGestureRecognizer) {
-            let text = localized("string_agree_terms_conditions")
+            let text = localized("agree_terms_conditions")
 
-            let termsRange = (text as NSString).range(of: localized("string_terms"))
-            let privacyRange = (text as NSString).range(of: localized("string_privacy_policy"))
-            let eulaRange = (text as NSString).range(of: localized("string_eula"))
+            let termsRange = (text as NSString).range(of: localized("terms"))
+            let privacyRange = (text as NSString).range(of: localized("privacy_policy"))
+            let eulaRange = (text as NSString).range(of: localized("eula"))
 
             if gesture.didTapAttributedTextInLabel(label: termsLabel, inRange: termsRange) {
                 didTapTerms?()

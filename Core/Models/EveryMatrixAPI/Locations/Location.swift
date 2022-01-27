@@ -26,4 +26,20 @@ extension EveryMatrix {
             case code = "code"
         }
     }
+
+    struct EventCategory: Decodable {
+
+        let id: String
+        let type: String?
+        let name: String?
+        let shortName: String?
+
+        enum CodingKeys: String, CodingKey {
+            case type = "_type"
+            case id = "id"
+            case name = "name"
+            case shortName = "shortName"
+        }
+    }
+
 }

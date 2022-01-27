@@ -39,9 +39,7 @@ class PasswordUpdateViewController: UIViewController {
         setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -50,14 +48,14 @@ class PasswordUpdateViewController: UIViewController {
 
     func commonInit() {
         headerLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
-        headerLabel.text = localized("string_update_password")
+        headerLabel.text = localized("update_password")
 
-        editButton.setTitle(localized("string_save"), for: .normal)
+        editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        oldPasswordHeaderTextFieldView.setPlaceholderText(localized("string_old_password"))
-        newPasswordHeaderTextFieldView.setPlaceholderText(localized("string_new_password"))
-        confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("string_confirm_password"))
+        oldPasswordHeaderTextFieldView.setPlaceholderText(localized("old_password"))
+        newPasswordHeaderTextFieldView.setPlaceholderText(localized("new_password"))
+        confirmPasswordHeaderTextFieldView.setPlaceholderText(localized("confirm_password"))
 
         oldPasswordHeaderTextFieldView.setSecureField(true)
         oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
@@ -78,7 +76,7 @@ class PasswordUpdateViewController: UIViewController {
             } receiveValue: { [weak self] policy in
                 self?.passwordRegex = policy.regularExpression
                 self?.passwordRegexMessage = policy.message
-                self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.headerTextField)
+                self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App2.inputTextTitle)
             }
             .store(in: &cancellables)
 
@@ -89,11 +87,13 @@ class PasswordUpdateViewController: UIViewController {
                 if self.passwordRegex == "" {
                     return false
                 }
-                if oldPassword == "" || new?.range(of: self.passwordRegex, options: .regularExpression) == nil || confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+                if oldPassword == "" ||
+                    new?.range(of: self.passwordRegex, options: .regularExpression) == nil ||
+                    confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
                     return false
                 }
                 if (new ?? "") != (confirm ?? "") {
-                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("string_password_not_match"))
+                    self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
                     return false
                 }
 
@@ -107,29 +107,29 @@ class PasswordUpdateViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App2.backgroundPrimary
         
-        headerView.backgroundColor = UIColor.App.mainBackground
-        headerLabel.textColor = UIColor.App.headingMain
+        headerView.backgroundColor = UIColor.App2.backgroundPrimary
+        headerLabel.textColor = UIColor.App2.textPrimary
 
         editButton.backgroundColor = .clear
-        editButton.setTitleColor(UIColor.App.primaryButtonNormal, for: .normal)
-        editButton.setTitleColor(UIColor.App.primaryButtonPressed, for: .highlighted)
-        editButton.setTitleColor(UIColor.App.headerTextField, for: .disabled)
+        editButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        editButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
+        editButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .disabled)
 
-        oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        oldPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
+        oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        oldPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
 
-        newPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        newPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        newPasswordHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
+        newPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        newPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
 
-        confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
+        confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
     }
 
     func showAlert(type: EditAlertView.AlertState, text: String = "") {
@@ -192,7 +192,11 @@ class PasswordUpdateViewController: UIViewController {
         }
 
         if validFields {
-            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text, newPassword: newPasswordHeaderTextFieldView.text, captchaPublicKey: "", captchaChallenge: "", captchaResponse: "")
+            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
+                                                 newPassword: newPasswordHeaderTextFieldView.text,
+                                                 captchaPublicKey: "",
+                                                 captchaChallenge: "",
+                                                 captchaResponse: "")
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .sink( receiveCompletion: { completion in
@@ -221,7 +225,7 @@ class PasswordUpdateViewController: UIViewController {
 
                     }
                 }, receiveValue: { _ in
-                    self.showAlert(type: .success, text: localized("string_success_edit_password"))
+                    self.showAlert(type: .success, text: localized("success_edit_password"))
                     UserDefaults.standard.userSession?.password = self.newPasswordHeaderTextFieldView.text
                 }).store(in: &cancellables)
 

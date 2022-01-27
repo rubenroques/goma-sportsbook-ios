@@ -1,16 +1,49 @@
 {
   "images" : [
     {
+      "filename" : "CaretLeft Copy.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "caret-left.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "CaretLeft Copy@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "caret-left@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "CaretLeft Copy@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "caret-left@3x.png",
       "idiom" : "universal",
       "scale" : "3x"

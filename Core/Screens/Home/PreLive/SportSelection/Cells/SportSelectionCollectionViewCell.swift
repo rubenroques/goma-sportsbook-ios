@@ -20,10 +20,10 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
     override var isSelected: Bool {
         didSet {
             if self.isSelected {
-                containerView.layer.borderColor = UIColor.App.mainTint.cgColor
+                containerView.layer.borderColor = UIColor.App2.highlightPrimary.cgColor
             }
             else {
-                containerView.layer.borderColor = UIColor.App.headerTextField.cgColor
+                containerView.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
             }
         }
     }
@@ -49,25 +49,25 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
 
     func commonInit() {
 
-        self.backgroundColor = UIColor.App.mainBackground
+        //self.backgroundColor = UIColor.App2.backgroundSecondary
 
         containerView.layer.cornerRadius = containerView.frame.size.height/2
-        containerView.backgroundColor = UIColor.App.secondaryBackground
-        containerView.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+        containerView.backgroundColor = UIColor.App2.backgroundSecondary
+        containerView.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
         containerView.layer.borderWidth = 2
 
-        iconImageView.backgroundColor = UIColor.App.secondaryBackground
+        iconImageView.backgroundColor = UIColor.App2.backgroundSecondary
         iconImageView.image = UIImage(named: "sport_type_icon")
         iconImageView.contentMode = .scaleAspectFit
 
-        nameLabel.text = "Sport"
+        nameLabel.text = localized("sport")
         nameLabel.font = AppFont.with(type: .bold, size: 12)
-        nameLabel.textColor = UIColor.App.headingMain
+        nameLabel.textColor = UIColor.App2.textPrimary
         nameLabel.numberOfLines = 2
 
         eventCountView.isHidden = true
         eventCountView.layer.cornerRadius = eventCountView.frame.size.width/2
-        eventCountView.backgroundColor = UIColor.App.redIndicator
+        eventCountView.backgroundColor = UIColor.App2.alertError
 
         eventCountLabel.font = AppFont.with(type: .semibold, size: 9)
     }

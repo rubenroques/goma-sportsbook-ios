@@ -4,11 +4,11 @@ import Combine
 
 class HeaderTextFieldView: NibView {
 
-    @IBOutlet private var containerView: UIView!
+    @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
-    @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet weak var headerLabel: UILabel! // swiftlint:disable:this private_outlet
+    @IBOutlet weak var textField: UITextField! // swiftlint:disable:this private_outlet
 
     @IBOutlet private weak var bottomLineView: UIView!
     @IBOutlet private weak var tipLabel: UILabel!
@@ -23,7 +23,7 @@ class HeaderTextFieldView: NibView {
     @IBOutlet private weak var showPasswordLabel: UILabel!
 
     @IBOutlet private weak var usernameLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private var bottomStackView: UIStackView!
+    @IBOutlet private weak var bottomStackView: UIStackView!
 
     var textPublisher: AnyPublisher<String?, Never> {
         return self.textField.textPublisher
@@ -82,11 +82,11 @@ class HeaderTextFieldView: NibView {
         didSet {
             if self.shouldShowPassword {
                 self.textField.isSecureTextEntry = false
-                self.showPasswordLabel.text = localized("string_hide")
+                self.showPasswordLabel.text = localized("hide")
             }
             else {
                 self.textField.isSecureTextEntry = true
-                self.showPasswordLabel.text = localized("string_show")
+                self.showPasswordLabel.text = localized("show")
             }
         }
     }
@@ -117,7 +117,7 @@ class HeaderTextFieldView: NibView {
         }
     }
 
-    var highlightColor = UIColor.App.mainTint {
+    var highlightColor = UIColor.App2.highlightPrimary {
         didSet {
             if self.isActive {
             }
@@ -129,12 +129,12 @@ class HeaderTextFieldView: NibView {
     var isDisabled: Bool = false {
         didSet {
             if self.isDisabled {
-                self.textField.textColor = UIColor.App.headingMain.withAlphaComponent(0.3)
+                self.textField.textColor = UIColor.App2.textPrimary.withAlphaComponent(0.3)
                 self.textField.isUserInteractionEnabled = false
             }
             else {
                 self.headerLabel.isHidden = false
-                self.textField.textColor = UIColor.App.headingMain
+                self.textField.textColor = UIColor.App2.textPrimary
                 self.textField.isUserInteractionEnabled = true
             }
         }
@@ -158,11 +158,11 @@ class HeaderTextFieldView: NibView {
             self.slideUp()
         }        
 
-        containerView.backgroundColor = UIColor.App.secondaryBackground
+        containerView.backgroundColor = UIColor.App2.backgroundSecondary
         containerView.layer.cornerRadius = CornerRadius.headerInput
 
         containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.App.secondaryBackground.withAlphaComponent(0).cgColor
+        containerView.layer.borderColor = UIColor.App2.backgroundSecondary.withAlphaComponent(0).cgColor
         
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType
@@ -188,13 +188,13 @@ class HeaderTextFieldView: NibView {
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapShowPassword))
         self.showPassImageView.addGestureRecognizer(tapGestureRecognizer)
 
-        showPasswordLabel.text = localized("string_show")
+        showPasswordLabel.text = localized("show")
         showPasswordLabel.font = AppFont.with(type: .regular, size: 14.0)
-        showPasswordLabel.textColor =  UIColor.App.headingMain
+        showPasswordLabel.textColor =  UIColor.App2.textPrimary
 
-        let text = localized("string_show")
+        let text = localized("show")
         let underlineAttriString = NSMutableAttributedString(string: text)
-        let range = (text as NSString).range(of: localized("string_show"))
+        let range = (text as NSString).range(of: localized("show"))
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range)
         showPasswordLabel.attributedText = underlineAttriString
         showPasswordLabel.isHidden = true
@@ -351,7 +351,7 @@ class HeaderTextFieldView: NibView {
         }
         datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
 
-        let doneButton = UIBarButtonItem.init(title: localized("string_done"), style: .done, target: self, action: #selector(self.datePickerDone))
+        let doneButton = UIBarButtonItem.init(title: localized("done"), style: .done, target: self, action: #selector(self.datePickerDone))
 
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -415,7 +415,7 @@ class HeaderTextFieldView: NibView {
     func dismissPickerView() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: localized("string_done"), style: .plain, target: self, action: #selector(pickerAction))
+        let button = UIBarButtonItem(title: localized("done"), style: .plain, target: self, action: #selector(pickerAction))
 
         toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
         toolBar.isUserInteractionEnabled = true
@@ -511,7 +511,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
             self.showPasswordLabel.isHidden = false
         }
 
-        self.highlightColor = UIColor.App.headingMain
+        self.highlightColor = UIColor.App2.textPrimary
         self.containerView.layer.borderColor = self.highlightColor.cgColor
 
         self.slideUp()
@@ -554,7 +554,6 @@ extension HeaderTextFieldView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if self.isCurrency {
-            print(string)
             let decimals = CharacterSet(charactersIn: "0123456789.")
             if range.length>0  && range.location == 0 {
                 return false

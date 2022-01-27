@@ -42,13 +42,13 @@ class RadioButton: UIButton {
     override var isSelected: Bool {
         didSet {
             if isSelected {
-                self.layer.borderColor = UIColor.App.mainTint.cgColor
-                self.backgroundColor = UIColor.App.mainTint
+                self.layer.borderColor = UIColor.App2.highlightPrimary.cgColor
+                self.backgroundColor = UIColor.App2.highlightPrimary
                 self.setImage(UIImage(named: "white_dot_icon"), for: .normal)
             }
             else {
-                self.layer.borderColor = UIColor.App.fadedGrayLine.cgColor
-                self.backgroundColor = UIColor.App.secondaryBackground
+                self.layer.borderColor = UIColor.App2.separatorLine.cgColor
+                self.backgroundColor = UIColor.App2.backgroundSecondary
                 self.setImage(nil, for: .normal)
             }
         }

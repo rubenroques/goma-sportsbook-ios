@@ -71,9 +71,7 @@ class LoginViewController: UIViewController {
         setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func commonInit() {
 
@@ -99,21 +97,21 @@ class LoginViewController: UIViewController {
         }
 
         skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 18)
-        skipButton.setTitle(localized("string_skip"), for: .normal)
+        skipButton.setTitle(localized("skip"), for: .normal)
 
         logoImageView.image = UIImage(named: "logo_horizontal_large")
         logoImageView.sizeToFit()
 
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
-        loginLabel.text = localized("string_login")
+        loginLabel.text = localized("login")
 
-        self.usernameHeaderTextFieldView.setPlaceholderText("Email or Username")
-        self.passwordHeaderTextFieldView.setPlaceholderText("Password")
+        self.usernameHeaderTextFieldView.setPlaceholderText(localized("email_address_or_username"))
+        self.passwordHeaderTextFieldView.setPlaceholderText(localized("password"))
 
         self.usernameHeaderTextFieldView.highlightColor = .white
         self.passwordHeaderTextFieldView.highlightColor = .white
 
-        rememberLabel.text = localized("string_remember")
+        rememberLabel.text = localized("remember")
         rememberLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 12)
         rememberToggleView.layer.cornerRadius = CornerRadius.checkBox
         rememberImageView.backgroundColor = .clear
@@ -121,10 +119,10 @@ class LoginViewController: UIViewController {
 
         self.enableRememberUser()
 
-        forgotButton.setTitle(localized("string_forgot"), for: .normal)
+        forgotButton.setTitle(localized("forgot"), for: .normal)
         forgotButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 14)
 
-        loginButton.setTitle(localized("string_login"), for: .normal)
+        loginButton.setTitle(localized("login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
 
         self.passwordHeaderTextFieldView.setSecureField(true)
@@ -136,7 +134,7 @@ class LoginViewController: UIViewController {
         rememberView.isUserInteractionEnabled = true
         rememberView.addGestureRecognizer(tapImageGestureRecognizer)
 
-        registerLabel.highlightTextLabel(fullString: localized("string_new_create_account"), highlightString: localized("string_create_account"))
+        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
         registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
 
         checkPolicyLinks()
@@ -160,37 +158,37 @@ class LoginViewController: UIViewController {
 
     func setupWithTheme() {
         
-        self.view.backgroundColor = UIColor.App.mainBackground
-        skipView.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        skipView.backgroundColor = UIColor.App2.backgroundPrimary
 
         skipButton.setTitleColor(UIColor.white, for: .normal)
         skipButton.backgroundColor = .clear
 
-        loginLabel.textColor = .white
+        loginLabel.textColor = UIColor.App2.textHeadlinePrimary
 
-        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
-
-        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        passwordHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        usernameHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        usernameHeaderTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
+    
+        passwordHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        passwordHeaderTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
 
         rememberView.backgroundColor = .clear
-        rememberLabel.textColor = UIColor.App.headingMain
+        rememberLabel.textColor = UIColor.App2.textPrimary
         if self.shouldRememberUser {
-            rememberToggleView.backgroundColor =  UIColor.App.mainTint
+            rememberToggleView.backgroundColor =  UIColor.App2.buttonBackgroundPrimary
         }
         else {
-            rememberToggleView.backgroundColor =  UIColor.App.secondaryBackground
+            rememberToggleView.backgroundColor =  UIColor.App2.buttonBackgroundPrimary
         }
 
-        forgotButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        forgotButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
 
-        loginButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
         loginButton.backgroundColor = .clear
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.button
         loginButton.layer.masksToBounds = true
 
@@ -228,13 +226,13 @@ class LoginViewController: UIViewController {
 
     private func enableRememberUser() {
         rememberImageView.image = UIImage(named: "active_toggle_icon")
-        rememberToggleView.backgroundColor = UIColor.App.mainTint
+        rememberToggleView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         Env.userSessionStore.shouldRecordUserSession = true
     }
 
     private func disableRememberUser() {
         rememberImageView.image = nil
-        rememberToggleView.backgroundColor = UIColor.App.secondaryBackground
+        rememberToggleView.backgroundColor = UIColor.App2.buttonBackgroundSecondary
         Env.userSessionStore.shouldRecordUserSession = false
     }
 
@@ -350,18 +348,18 @@ class LoginViewController: UIViewController {
     }
 
     private func showWrongPasswordStatus() {
-        let alert = UIAlertController(title: localized("string_login_error_title"),
-                                      message: localized("string_login_error_message"),
+        let alert = UIAlertController(title: localized("login_error_title"),
+                                      message: localized("login_error_message"),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
     private func showServerErrorStatus() {
-        let alert = UIAlertController(title: localized("string_login_error_title"),
-                                      message: localized("string_server_error_message"),
+        let alert = UIAlertController(title: localized("login_error_title"),
+                                      message: localized("server_error_message"),
                                       preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: localized("string_ok"), style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 
@@ -374,11 +372,12 @@ class LoginViewController: UIViewController {
 extension LoginViewController {
 
     @objc func didTapDebugFormFill() {
-        #if DEBUG
-        self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
-        self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
-        self.loginButton.isEnabled = true
-        #endif
+
+        if TargetVariables.environmentType == .dev {
+            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt") // Ivotest30
+            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345") // testesdoIvo1
+            self.loginButton.isEnabled = true
+        }
     }
 
 }

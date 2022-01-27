@@ -70,32 +70,32 @@ class VersionUpdateViewController: UIViewController {
 
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 22)
         titleLabel.textColor = UIColor.white
-        titleLabel.text = localized("string_update_available_title")
+        titleLabel.text = localized("update_available_title")
 
         textLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 16)
         textLabel.textColor = UIColor.white
         textLabel.numberOfLines = 0
-        textLabel.text = localized("string_update_available_text")
+        textLabel.text = localized("update_available_text")
         textLabel.sizeToFit()
 
         updateButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
         updateButton.layer.cornerRadius = 5
         updateButton.layer.borderWidth = 1
-        updateButton.setTitle(localized("string_update_app"), for: .normal)
+        updateButton.setTitle(localized("update_app"), for: .normal)
 
         dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
-        dismissButton.setTitle(localized("string_dismiss_title"), for: .normal)
+        dismissButton.setTitle(localized("dismiss_title"), for: .normal)
 
         if required {
             logoImageView.image = UIImage(named: "update_required_icon")
-            titleLabel.text = localized("string_update_required_title")
-            textLabel.text = localized("string_update_required_text")
+            titleLabel.text = localized("update_required_title")
+            textLabel.text = localized("update_required_text")
             dismissButton.isHidden = true
         }
         else {
             logoImageView.image = UIImage(named: "update_available_icon")
-            titleLabel.text = localized("string_update_available_title")
-            textLabel.text = localized("string_update_available_text")
+            titleLabel.text = localized("update_available_title")
+            textLabel.text = localized("update_available_text")
         }
     }
 

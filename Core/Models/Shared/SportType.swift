@@ -5,10 +5,11 @@
 //  Created by Ruben Roques on 07/10/2021.
 //
 
+/*
+
 import Foundation
 
-typealias SportTypes = [SportType]
-enum SportType: String, Identifiable, Hashable, CaseIterable {
+enum SportType: String, Identifiable, Hashable {
 
     case football = "1"
     case golf = "2"
@@ -99,9 +100,9 @@ enum SportType: String, Identifiable, Hashable, CaseIterable {
     case skateboarding = "153"
     case sportClimbing = "154"
     case kabaddi = "155"
-    case unknown
+    case unknown = "-1"
 
-    init?(id: String) {
+    init(id: String) {
         switch id {
         case "1": self = .football
         case "2": self = .golf
@@ -207,18 +208,6 @@ enum SportType: String, Identifiable, Hashable, CaseIterable {
         Int(rawValue)!
     }
 
-    var iconName: String {
-        switch typeId {
-        case "0":
-            return "football_sport_icon"
-        case "1":
-            return "basketball_sport_icon"
-        case "2":
-            return "ice_hockey_sport_icon"
-        case "3":
-            return "tenis_sport_icon"
-        default:
-            return ""
-        }
-    }
 }
+
+*/

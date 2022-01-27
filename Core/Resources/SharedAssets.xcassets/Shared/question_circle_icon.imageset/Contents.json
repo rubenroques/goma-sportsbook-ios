@@ -1,16 +1,49 @@
 {
   "images" : [
     {
+      "filename" : "noun_Question_2593725 Copy.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "noun_Question_2593725.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "noun_Question_2593725 Copy@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "noun_Question_2593725@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "noun_Question_2593725 Copy@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
       "filename" : "noun_Question_2593725@3x.png",
       "idiom" : "universal",
       "scale" : "3x"

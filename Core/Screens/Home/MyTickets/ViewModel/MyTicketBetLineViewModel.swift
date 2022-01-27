@@ -31,7 +31,7 @@ class MyTicketBetLineViewModel {
         self.goalsSubscription = nil
 
         if let goalsRegister = goalsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
         }
     }
 
@@ -41,12 +41,12 @@ class MyTicketBetLineViewModel {
         self.goalsSubscription = nil
 
         if let goalsRegister = goalsRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
         }
 
         let endpoint = TSRouter.eventPartScoresPublisher(operatorId: Env.appSession.operatorId, language: "en", matchId: id)
 
-        self.goalsSubscription = TSManager.shared
+        self.goalsSubscription = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {

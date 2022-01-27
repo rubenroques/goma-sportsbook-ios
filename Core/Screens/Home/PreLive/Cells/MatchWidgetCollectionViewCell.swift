@@ -62,20 +62,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayParticipantNameLabel.text = "\(viewModelValue.awayTeamName)"
                 self.dateLabel.text = "\(viewModelValue.startDateString)"
                 self.timeLabel.text = "\(viewModelValue.startTimeString)"
-
-               // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
                 self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
-
-                if viewModelValue.isToday {
-                    self.dateLabel.isHidden = true
-                }
             }
         }
     }
 
-    private var leftOddButtonSubscriber: AnyCancellable?
-    private var middleOddButtonSubscriber: AnyCancellable?
-    private var rightOddButtonSubscriber: AnyCancellable?
+    static var cellHeight: CGFloat = 156
 
     var match: Match?
 
@@ -89,6 +81,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
     }
+
+    var tappedMatchWidgetAction: (() -> Void)?
+
+
+    private var leftOddButtonSubscriber: AnyCancellable?
+    private var middleOddButtonSubscriber: AnyCancellable?
+    private var rightOddButtonSubscriber: AnyCancellable?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -114,7 +113,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    var tappedMatchWidgetAction: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -230,27 +228,27 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.baseView.backgroundColor = UIColor.App.secondaryBackground
+        self.baseView.backgroundColor = UIColor.App2.backgroundCards
+        self.numberOfBetsLabels.textColor = UIColor.App2.textPrimary
+        self.eventNameLabel.textColor = UIColor.App2.textSecond
+        self.homeParticipantNameLabel.textColor = UIColor.App2.textPrimary
+        self.awayParticipantNameLabel.textColor = UIColor.App2.textPrimary
+        self.dateLabel.textColor = UIColor.App2.textPrimary
+        self.timeLabel.textColor = UIColor.App2.textPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.homeOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.drawOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.awayOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.numberOfBetsLabels.textColor = UIColor.App.headingMain
-        self.eventNameLabel.textColor = UIColor.App.headingSecondary
-        self.homeParticipantNameLabel.textColor = UIColor.App.headingMain
-        self.awayParticipantNameLabel.textColor = UIColor.App.headingMain
-        self.dateLabel.textColor = UIColor.App.headingSecondary
-        self.timeLabel.textColor = UIColor.App.headingMain
-        self.homeOddTitleLabel.textColor = UIColor.App.headingMain
-        self.homeOddValueLabel.textColor = UIColor.App.headingMain
-        self.drawOddTitleLabel.textColor = UIColor.App.headingMain
-        self.drawOddValueLabel.textColor = UIColor.App.headingMain
-        self.awayOddTitleLabel.textColor = UIColor.App.headingMain
-        self.awayOddValueLabel.textColor = UIColor.App.headingMain
+        self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
 
-        self.homeBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
-
-        self.suspendedBaseView.backgroundColor = UIColor.App.mainBackground
-        self.suspendedLabel.textColor = UIColor.App.headingDisabled
+        self.suspendedBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
+        self.suspendedLabel.textColor = UIColor.App2.textDisablePrimary
+        
     }
 
     func setupWithMatch(_ match: Match) {
@@ -266,10 +264,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-
-        if viewModel.isToday {
-            self.dateLabel.isHidden = true
-        }
 
         if let market = match.markets.first {
 
@@ -426,11 +420,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.tappedMatchWidgetAction?()
     }
 
+    // TODO: This func is called even if the cell is reused
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -443,7 +438,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -464,11 +459,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     func selectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App.mainTint
+        self.homeBaseView.backgroundColor = UIColor.App2.highlightPrimary
     }
 
     func deselectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapLeftOddButton() {
@@ -506,11 +501,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     func selectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App.mainTint
+        self.drawBaseView.backgroundColor = UIColor.App2.highlightPrimary
     }
 
     func deselectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapMiddleOddButton() {
@@ -546,11 +541,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     func selectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App.mainTint
+        self.awayBaseView.backgroundColor = UIColor.App2.highlightPrimary
     }
 
     func deselectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
 
     @objc func didTapRightOddButton() {

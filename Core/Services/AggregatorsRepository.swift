@@ -45,6 +45,7 @@ class AggregatorsRepository {
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
     var cashouts: OrderedDictionary<String, EveryMatrix.Cashout> = [:]
     var tournamentsForLocation: [String: [String] ] = [:]
+    var tournamentsForCategory: [String: [String] ] = [:]
 
     var tournaments: [String: EveryMatrix.Tournament] = [:]
     var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
@@ -167,6 +168,7 @@ class AggregatorsRepository {
     }
 
     func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
+
         guard
             let contentUpdates = aggregator.contentUpdates
         else {
@@ -206,7 +208,6 @@ class AggregatorsRepository {
                     }
                 }
             case .fullMatchInfoUpdate(let matchInfo):
-                // print("FULL MATCH INFO: \(matchInfo)")
                 matchesInfo[matchInfo.id] = matchInfo
 
                 if let matchId = matchInfo.matchId {
@@ -223,12 +224,12 @@ class AggregatorsRepository {
                     matchIdArray.append(matchId)
                     matchesInfoForMatchPublisher.send(matchIdArray)
                 }
-            case .unknown:
-                print("uknown")
             case .cashoutCreate:
                 ()
             case .cashoutDelete:
                 ()
+            case .unknown:
+                print("uknown")
             }
         }
     }
@@ -316,6 +317,8 @@ class AggregatorsRepository {
                                     nameDigit1: rawMarket.paramFloat1,
                                     nameDigit2: rawMarket.paramFloat2,
                                     nameDigit3: rawMarket.paramFloat3,
+                                    eventPartId: rawMarket.eventPartId,
+                                    bettingTypeId: rawMarket.bettingTypeId,
                                     outcomes: sortedOutcomes)
                 matchMarkets.append(market)
             }
@@ -356,12 +359,14 @@ class AggregatorsRepository {
     }
 
     func storeLocations(locations: [EveryMatrix.Location]) {
+        self.locations = [:]
         for location in locations {
             self.locations[location.id] = location
         }
     }
 
     func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.tournaments = [:]
         for tournament in tournaments {
             self.tournaments[tournament.id] = tournament
 
@@ -374,10 +379,21 @@ class AggregatorsRepository {
                     self.tournamentsForLocation[venueId] = [tournament.id]
                 }
             }
+
+            if let categoryId = tournament.categoryId {
+                if var tournamentsForCategoryWithId = self.tournamentsForCategory[categoryId] {
+                    tournamentsForCategoryWithId.append(tournament.id)
+                    self.tournamentsForCategory[categoryId] = tournamentsForCategoryWithId
+                }
+                else {
+                    self.tournamentsForCategory[categoryId] = [tournament.id]
+                }
+            }
         }
     }
 
     func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.popularTournaments = [:]
         for tournament in tournaments {
             self.popularTournaments[tournament.id] = tournament
         }

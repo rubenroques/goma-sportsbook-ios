@@ -52,7 +52,7 @@ class ForbiddenLocationViewController: UIViewController {
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 20)
         textLabel.textColor = UIColor.white
         textLabel.numberOfLines = 0
-        textLabel.text = localized("string_access_forbidden")
+        textLabel.text = localized("access_forbidden")
         textLabel.sizeToFit()
     }
 

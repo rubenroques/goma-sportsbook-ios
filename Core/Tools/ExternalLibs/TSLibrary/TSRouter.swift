@@ -49,6 +49,8 @@ enum TSRouter {
     case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
 
+    case searchV2(language: String, limit: Int, query: String, eventInfoTypes: [Int], include: [String])
+
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
@@ -67,8 +69,9 @@ enum TSRouter {
     case matchMarketOdds(operatorId: String, language: String, matchId: String, bettingType: String, eventPartId: String)
 
     case eventPartScoresPublisher(operatorId: String, language: String, matchId: String)
-
     case sportsListPublisher(operatorId: String, language: String)
+    case accountBalancePublisher
+    case eventCategoryBySport(operatorId: String, language: String, sportId: String)
 
     // Others
     case registrationDismissed
@@ -193,6 +196,9 @@ enum TSRouter {
         case .matchDetailsAggregatorPublisher(let operatorId, let language, let matchId):
             return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
 
+        case .searchV2:
+            return "/sports#searchV2"
+
         //
         // EM Subscription
         // Sports
@@ -244,6 +250,11 @@ enum TSRouter {
 
         case .sportsListPublisher(let operatorId, let language):
             return "/sports/\(operatorId)/\(language)/disciplines/LIVE/BOTH"
+
+        case .accountBalancePublisher:
+            return "/account/balanceChanged"
+        case .eventCategoryBySport(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/event-category-by-sport/\(sportId)/BOTH"
 
         //
         //
@@ -534,6 +545,13 @@ enum TSRouter {
                     "nrOfRecords": records,
                     "page": page]
 
+        case .searchV2(let language, let limit, let query, let eventInfoTypes, let include):
+            return ["lang": language,
+                    "limit": limit,
+                    "query": query,
+                    "eventInfoTypes": eventInfoTypes,
+                    "include": include]
+
         //
         //
         //
@@ -674,6 +692,8 @@ enum TSRouter {
         case .eventPartScoresPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .sportsListPublisher:
+            return .sportsInitialDump(topic: self.procedure)
+        case .eventCategoryBySport:
             return .sportsInitialDump(topic: self.procedure)
         default:
             return nil

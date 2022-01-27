@@ -25,6 +25,13 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersButtonView: UIView!
 
     @IBOutlet private weak var filtersCountLabel: UILabel!
+    
+    @IBOutlet private weak var emptyBaseView: UIView!
+    @IBOutlet private weak var firstTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var secondTextFieldEmptyStateLabel: UILabel!
+    @IBOutlet private weak var emptyStateImage: UIImageView!
+    @IBOutlet private weak var emptyStateButton: UIButton!
+    
     @IBOutlet private weak var liveEventsCountView: UIView!
     @IBOutlet private weak var liveEventsCountLabel: UILabel!
 
@@ -57,7 +64,7 @@ class LiveEventsViewController: UIViewController {
         var betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
         betslipCountLabel.textColor = .white
-        betslipCountLabel.backgroundColor = UIColor.App.alertError
+        betslipCountLabel.backgroundColor = UIColor.App2.alertError
         betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
         betslipCountLabel.textAlignment = .center
         betslipCountLabel.clipsToBounds = true
@@ -78,20 +85,19 @@ class LiveEventsViewController: UIViewController {
     var viewModel: LiveEventsViewModel
 
     var filterSelectedOption: Int = 0
-    var selectedSportType: SportType {
+    var selectedSport: Sport {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSportType.typeId)")
-            self.viewModel.selectedSportId = selectedSportType
-
+            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSport.id)")
+            self.viewModel.selectedSport = selectedSport
         }
     }
 
-    var didChangeSportType: ((SportType) -> Void)?
+    var didChangeSport: ((Sport) -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
 
-    init(selectedSportType: SportType = .football) {
-        self.selectedSportType = selectedSportType
-        self.viewModel = LiveEventsViewModel(selectedSportId: self.selectedSportType)
+    init(selectedSport: Sport = Sport.football) {
+        self.selectedSport = selectedSport
+        self.viewModel = LiveEventsViewModel(selectedSport: self.selectedSport)
         super.init(nibName: "LiveEventsViewController", bundle: nil)
     }
 
@@ -125,6 +131,9 @@ class LiveEventsViewController: UIViewController {
                 self.liveEventsCountView.isHidden = true
             }
         }
+        
+        self.tableView.isHidden = false
+        self.emptyBaseView.isHidden = true
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -151,7 +160,7 @@ class LiveEventsViewController: UIViewController {
     private func commonInit() {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_1")
-        let color = UIColor.App.contentBackground
+        let color = UIColor.App2.backgroundPrimary
 
         leftGradientBaseView.backgroundColor = color
         let leftGradientMaskLayer = CAGradientLayer()
@@ -172,13 +181,13 @@ class LiveEventsViewController: UIViewController {
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
-        filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
+        filtersBarBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         filtersCollectionView.backgroundColor = .clear
 
-        sportsSelectorButtonView.backgroundColor = UIColor.App.mainTint
+        sportsSelectorButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App.secondaryBackground
+        filtersButtonView.backgroundColor = UIColor.App2.backgroundSecondary
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -199,10 +208,11 @@ class LiveEventsViewController: UIViewController {
         
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+        filtersCountLabel.backgroundColor = UIColor.App2.highlightSecondary
 
         liveEventsCountView.isHidden = true
         liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
-        liveEventsCountView.backgroundColor = UIColor.App.redIndicator
+        liveEventsCountView.backgroundColor = UIColor.App2.highlightSecondary
 
         liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
         
@@ -279,21 +289,53 @@ class LiveEventsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+        
+        self.viewModel.screenStatePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] screenState in
+              
+            
+                switch screenState {
+                case .noEmptyNoFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+          
+                case .emptyNoFilter:
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+                    
+                case .noEmptyAndFilter:
+                    self?.emptyBaseView.isHidden = true
+                    self?.tableView.isHidden = false
+                case .emptyAndFilter:
+                    self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
+                    self?.emptyBaseView.isHidden = false
+                    self?.tableView.isHidden = true
+            
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.filtersBarBaseView.backgroundColor = UIColor.App.contentBackground
-        self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.filtersBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.filtersSeparatorLineView.backgroundColor = UIColor.App2.separatorLineHighlightPrimary
         self.filtersSeparatorLineView.alpha = 0.5
 
-        self.tableView.backgroundColor = UIColor.App.contentBackground
-        self.tableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
+        self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipButtonView.backgroundColor = UIColor.App.mainTint
+        self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
+        self.betslipButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+    
+        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
+        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
+        self.emptyStateButton.backgroundColor = UIColor.App.primaryButtonNormal
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
@@ -307,20 +349,40 @@ class LiveEventsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func changedSportToType(_ sportType: SportType) {
-        self.selectedSportType = sportType
-        self.didChangeSportType?(sportType)
+    func changedSport(_ sport: Sport) {
+        self.selectedSport = sport
+        self.didChangeSport?(sport)
     }
 
     @objc func handleSportsSelectionTap() {
-        let sportSelectionVC = SportSelectionViewController(defaultSport: self.selectedSportType, isLiveSport: true, sportsRepository: self.viewModel.sportsRepository)
-        sportSelectionVC.delegate = self
-        self.present(sportSelectionVC, animated: true, completion: nil)
+        let sportSelectionViewController = SportSelectionViewController(defaultSport: self.selectedSport,
+                                                            isLiveSport: true,
+                                                            sportsRepository: self.viewModel.sportsRepository)
+        sportSelectionViewController.selectionDelegate = self
+        self.present(sportSelectionViewController, animated: true, completion: nil)
     }
 
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
+    
+    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool){
+    
+        if isUserLoggedIn {
+            self.emptyStateImage.image = UIImage(named: "no_content_icon")
+            self.firstTextFieldEmptyStateLabel.text = firstLabelText
+            self.secondTextFieldEmptyStateLabel.text = secondLabelText
+            self.emptyStateButton.isHidden = isUserLoggedIn
+        }else{
+            self.emptyStateImage.image = UIImage(named: "no_internet_icon")
+            self.firstTextFieldEmptyStateLabel.text = localized("empty_no_login")
+            self.secondTextFieldEmptyStateLabel.text = localized("second_empty_no_login")
+            self.emptyStateButton.isHidden = isUserLoggedIn
+            self.emptyStateButton.setTitle(localized("login"), for: .normal)
+        }
+        
+    }
+
 
 }
 
@@ -391,7 +453,7 @@ extension LiveEventsViewController: UICollectionViewDelegate, UICollectionViewDa
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle(localized("string_all"))
+            cell.setupWithTitle(localized("all"))
         default:
             ()
         }
@@ -444,7 +506,9 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
 }
 
 extension LiveEventsViewController: SportTypeSelectionViewDelegate {
-    func setSportType(_ sportType: SportType) {
-        self.changedSportToType(sportType)
+
+    func selectedSport(_ sport: Sport) {
+        self.changedSport(sport)
     }
+
 }

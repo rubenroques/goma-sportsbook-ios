@@ -38,14 +38,14 @@ class SubmitedBetTableViewCellViewModel {
         self.cashoutAvailabilitySubscription = nil
 
         if let cashoutRegister = cashoutRegister {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
 
         let endpoint = TSRouter.cashoutPublisher(operatorId: Env.appSession.operatorId,
                                                  language: "en",
                                                  betId: ticket.betId)
 
-        self.cashoutAvailabilitySubscription = TSManager.shared
+        self.cashoutAvailabilitySubscription = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.CashoutAggregator.self)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -99,6 +99,7 @@ class SubmitedBetTableViewCellViewModel {
                             self?.cashout = cashout
                             self?.createdCashout.send()
                             self?.hasCashoutEnabled.send(true)
+                            
                         case .cashoutDelete(let cashoutId):
                             if let cashout = self?.cashout {
                                 self?.cashout = nil

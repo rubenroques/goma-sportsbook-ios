@@ -43,15 +43,16 @@ class HomeViewController: UIViewController {
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
 
+    
     // Child view controllers
-    lazy var preLiveViewController = PreLiveEventsViewController()
+    lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
     lazy var liveEventsViewController = LiveEventsViewController()
 
     // Loaded view controllers
     var preLiveViewControllerLoaded = false
     var liveEventsViewControllerLoaded = false
 
-    var currentSportType: SportType
+    var currentSport: Sport
 
     // Combine
     var cancellables = Set<AnyCancellable>()
@@ -90,7 +91,7 @@ class HomeViewController: UIViewController {
     //
     init(initialScreen: TabItem = .sports) {
         self.selectedTabItem = initialScreen
-        self.currentSportType = .football
+        self.currentSport = Sport.football
         super.init(nibName: "HomeViewController", bundle: nil)
     }
 
@@ -175,8 +176,8 @@ class HomeViewController: UIViewController {
             .map(\.amount)
             .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
-            .sink { value in
-                self.accountValueLabel.text = value
+            .sink { [weak self] value in
+                self?.accountValueLabel.text = value
             }
             .store(in: &cancellables)
 
@@ -193,9 +194,7 @@ class HomeViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -203,7 +202,8 @@ class HomeViewController: UIViewController {
         profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
         profilePictureImageView.layer.borderWidth = 1
-        profilePictureImageView.layer.borderColor = UIColor.App.mainBackground.cgColor
+        profilePictureImageView.layer.borderColor = UIColor.App2.highlightSecondary.cgColor
+        
         profilePictureImageView.layer.masksToBounds = true
 
         accountValueView.layer.cornerRadius = CornerRadius.view
@@ -219,12 +219,12 @@ class HomeViewController: UIViewController {
 
         liveButtonBaseView.alpha = 0.2
 
-        loginButton.setTitle(localized("string_login"), for: .normal)
+        loginButton.setTitle(localized("login"), for: .normal)
         loginButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 13)
 
-        self.sportsTitleLabel.text = localized("string_sports")
+        self.sportsTitleLabel.text = localized("sports")
 
-        self.liveTitleLabel.text = localized("string_live")
+        self.liveTitleLabel.text = localized("live")
 
 
         let sportsTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSportsTabItem))
@@ -236,7 +236,7 @@ class HomeViewController: UIViewController {
         let profileTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapProfileButton))
         profilePictureBaseView.addGestureRecognizer(profileTapGesture)
 
-        accountValueLabel.text = localized("string_loading")
+        accountValueLabel.text = localized("loading")
         accountValueLabel.font = AppFont.with(type: .bold, size: 12)
 
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
@@ -246,14 +246,17 @@ class HomeViewController: UIViewController {
 
     func setupWithTheme() {
 
-        preLiveBaseView.backgroundColor = UIColor.App.mainBackground
-        liveBaseView.backgroundColor = UIColor.App.mainBackground
+        preLiveBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        liveBaseView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        topSafeAreaView.backgroundColor = UIColor.App.mainBackground
-        topBarView.backgroundColor = UIColor.App.mainBackground
-        contentView.backgroundColor = UIColor.App.contentBackground
-        tabBarView.backgroundColor = UIColor.App.mainBackground
-        bottomSafeAreaView.backgroundColor = UIColor.App.mainBackground
+        liveTitleLabel.textColor = UIColor.App2.textPrimary
+        sportsTitleLabel.textColor = UIColor.App2.textPrimary
+
+        topSafeAreaView.backgroundColor = UIColor.App2.backgroundPrimary
+        topBarView.backgroundColor = UIColor.App2.backgroundPrimary
+        contentView.backgroundColor = UIColor.App2.backgroundPrimary
+        tabBarView.backgroundColor = UIColor.App2.backgroundPrimary
+        bottomSafeAreaView.backgroundColor = UIColor.App2.backgroundPrimary
 
         tabBarView.layer.shadowRadius = 20
         tabBarView.layer.shadowOffset = .zero
@@ -268,25 +271,24 @@ class HomeViewController: UIViewController {
         sportsButtonBaseView.backgroundColor = .clear
         liveButtonBaseView.backgroundColor = .clear
 
-        profilePictureBaseView.backgroundColor = UIColor.App.mainTint
+        profilePictureBaseView.backgroundColor = UIColor.App2.highlightSecondary
 
-        loginButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        loginButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        loginButton.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
+        loginButton.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
+        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.view
         loginButton.layer.masksToBounds = true
 
-        accountValueView.backgroundColor = UIColor.App.contentBackground
-
-        accountPlusView.backgroundColor = UIColor.App.mainTint
+        accountValueView.backgroundColor = UIColor.App2.backgroundSecondary
+        accountValueLabel.textColor = UIColor.App2.textPrimary
+        accountPlusView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
     }
 
     func setupWithState(_ state: ScreenState) {
         switch state {
         case let .logged(user):
-            //self.loginButton.isHidden = true
             self.loginBaseView.isHidden = true
             Logger.log("User session updated, user: \(user)")
             self.profileBaseView.isHidden = false
@@ -296,26 +298,26 @@ class HomeViewController: UIViewController {
             Env.userSessionStore.forceWalletUpdate()
 
         case .anonymous:
-            //self.loginButton.isHidden = false
             self.loginBaseView.isHidden = false
             self.profileBaseView.isHidden = true
             self.accountValueBaseView.isHidden = true
-            self.searchButton.isHidden = true
+            self.searchButton.isHidden = false
 
         }
     }
 
-    func didChangedPreLiveSportType(sportType: SportType) {
-        self.currentSportType = sportType
+    func didChangedPreLiveSport(_ sport: Sport) {
+        self.currentSport = sport
         if liveEventsViewControllerLoaded {
-            self.liveEventsViewController.selectedSportType = sportType
+            self.liveEventsViewController.selectedSport = sport
         }
     }
 
-    func didChangedLiveSportType(sportType: SportType) {
-        self.currentSportType = sportType
+    func didChangedLiveSport(_ sport: Sport) {
+        self.currentSport = sport
         if preLiveViewControllerLoaded {
-            self.preLiveViewController.selectedSportType = sportType
+            // self.preLiveViewController.selectedSport = sportType
+            // TODO: Sport Selection
         }
     }
 
@@ -329,6 +331,7 @@ class HomeViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: {
 
         })
+
     }
 
     func reloadChildViewControllersData() {
@@ -340,9 +343,22 @@ class HomeViewController: UIViewController {
         }
     }
 
-    @IBAction func didTapLogin() {
+    @IBAction private func didTapLogin() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
+    }
+
+    @IBAction private func didTapSearchButton() {
+        let searchViewController = SearchViewController()
+
+        searchViewController.didSelectCompetitionAction = { value in
+            searchViewController.dismiss(animated: true, completion: nil)
+            self.preLiveViewController.filterSelectedOption = 2
+            self.preLiveViewController.setSelectedCollectionViewItem = 2
+            self.preLiveViewController.applyCompetitionsFiltersWithIds([value])
+        }
+
+        self.present(searchViewController, animated: true, completion: nil)
     }
 
 }
@@ -351,9 +367,9 @@ extension HomeViewController {
     func loadChildViewControllerIfNeeded(tab: TabItem) {
         if case .sports = tab, !preLiveViewControllerLoaded {
             self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
-            self.preLiveViewController.selectedSportType = self.currentSportType
-            self.preLiveViewController.didChangeSportType = { [weak self] newSportType in
-                self?.didChangedPreLiveSportType(sportType: newSportType)
+            self.preLiveViewController.selectedSport = self.currentSport
+            self.preLiveViewController.didChangeSport = { [weak self] newSport in
+                self?.didChangedPreLiveSport(newSport)
             }
             self.preLiveViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
@@ -362,9 +378,9 @@ extension HomeViewController {
         }
         if case .live = tab, !liveEventsViewControllerLoaded {
             self.addChildViewController(self.liveEventsViewController, toView: self.liveBaseView)
-            self.liveEventsViewController.selectedSportType = self.currentSportType
-            self.liveEventsViewController.didChangeSportType = { [weak self] newSportType in
-                self?.didChangedLiveSportType(sportType: newSportType)
+            self.liveEventsViewController.selectedSport = self.currentSport
+            self.liveEventsViewController.didChangeSport = { [weak self] newSport in
+                self?.didChangedLiveSport(newSport)
             }
             self.liveEventsViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
@@ -379,12 +395,9 @@ extension HomeViewController {
 
     // ToDo: Not implemented on the flow
     @IBAction private func didTapLoginButton() {
-        print("LOGIN!")
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
-
-
 
     @objc private func didTapProfileButton() {
         self.pushProfileViewController()
@@ -392,12 +405,11 @@ extension HomeViewController {
 
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
-        //self.present(depositViewController, animated: true, completion: nil)
         self.navigationController?.pushViewController(depositViewController, animated: true)
     }
 
     private func pushProfileViewController() {
-        if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
+        if let loggedUser = UserSessionStore.loggedUserSession() {
             let profileViewController = ProfileViewController(userSession: loggedUser)
             let navigationViewController = Router.navigationController(with: profileViewController)
             self.present(navigationViewController, animated: true, completion: nil)

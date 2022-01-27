@@ -52,7 +52,7 @@ class MaintenanceViewController: UIViewController {
         titleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 22)
         titleLabel.textColor = UIColor.white
         titleLabel.numberOfLines = 0
-        titleLabel.text = localized("string_maintenance_mode")
+        titleLabel.text = localized("maintenance_mode")
 
         textLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         textLabel.textColor = UIColor.white

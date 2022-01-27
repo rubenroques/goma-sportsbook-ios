@@ -106,9 +106,7 @@ class PhonePrefixSelectorViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func setupWithTheme() {
         self.tableView.backgroundColor = .clear
@@ -119,7 +117,7 @@ class PhonePrefixSelectorViewController: UIViewController {
         self.containerTitleLabel.font = AppFont.with(type: .bold, size: 17)
 
         self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
-        self.cancelButton.setTitle(localized("string_cancel"), for: .normal)
+        self.cancelButton.setTitle(localized("cancel"), for: .normal)
         self.cancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
 
         self.searchBarBaseView.backgroundColor = .clear
@@ -131,7 +129,7 @@ class PhonePrefixSelectorViewController: UIViewController {
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
         self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
-        self.searchBar.placeholder = localized("string_search")
+        self.searchBar.placeholder = localized("search")
 
         self.searchBar.delegate = self
 
@@ -139,7 +137,7 @@ class PhonePrefixSelectorViewController: UIViewController {
             textfield.backgroundColor = UIColor.App.secondaryBackground
             textfield.textColor = .white
             textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("string_search_field"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.fadeOutHeading])
 
@@ -253,10 +251,10 @@ extension PhonePrefixSelectorViewController: UITableViewDelegate {
         ])
 
         if section == 0 {
-            titleLabel.text = localized("Suggested Country")
+            titleLabel.text = localized("suggested_country")
         }
         else {
-            titleLabel.text = localized("Available Countries")
+            titleLabel.text = localized("available_countries")
         }
 
         return view

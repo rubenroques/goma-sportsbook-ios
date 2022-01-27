@@ -14,6 +14,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     @IBOutlet private weak var participantsNameLabel: UILabel!
     @IBOutlet private weak var participantsCountryImageView: UIImageView!
+
+    @IBOutlet private weak var marketStatsStackView: UIStackView!
     @IBOutlet private weak var marketNameLabel: UILabel!
 
     @IBOutlet private weak var oddsStackView: UIStackView!
@@ -40,12 +42,24 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var rightUpChangeOddValueImage: UIImageView!
     @IBOutlet private weak var rightDownChangeOddValueImage: UIImageView!
 
+    @IBOutlet private weak var statsBaseView: UIView!
+    @IBOutlet private weak var iconStatsImageView: UIImageView!
+    @IBOutlet private weak var homeCircleCaptionView: UIView!
+    @IBOutlet private weak var homeNameCaptionLabel: UILabel!
+    @IBOutlet private weak var awayCircleCaptionView: UIView!
+    @IBOutlet private weak var awayNameCaptionLabel: UILabel!
+
+    
+    var matchStatsViewModel: MatchStatsViewModel?
+
     var match: Match?
     var market: Market?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
+
+    private var matchStatsSubscriber: AnyCancellable?
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -81,6 +95,13 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.layer.cornerRadius = 9
 
+        self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
+
+        self.statsBaseView.isHidden = true
+
+        self.homeCircleCaptionView.layer.masksToBounds = true
+        self.awayCircleCaptionView.layer.masksToBounds = true
+        
         self.oddsStackView.backgroundColor = .clear
 
         self.suspendedBaseView.layer.cornerRadius = 4.5
@@ -91,7 +112,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.participantsNameLabel.text = ""
         self.marketNameLabel.text = ""
-        self.participantsCountryImageView.image = nil
+
         self.suspendedBaseView.isHidden = true
 
         self.leftUpChangeOddValueImage.alpha = 0.0
@@ -100,6 +121,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.middleDownChangeOddValueImage.alpha = 0.0
         self.rightUpChangeOddValueImage.alpha = 0.0
         self.rightDownChangeOddValueImage.alpha = 0.0
+
+        self.homeNameCaptionLabel.text = ""
+        self.awayNameCaptionLabel.text = ""
 
         let tapLeftOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapLeftOddButton))
         self.leftBaseView.addGestureRecognizer(tapLeftOddButton)
@@ -119,6 +143,15 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        let stackSubviews = self.marketStatsStackView.arrangedSubviews
+        stackSubviews.forEach({
+            if $0 != self.marketNameLabel {
+                self.marketStatsStackView.removeArrangedSubview($0)
+                $0.removeFromSuperview()
+            }
+        })
+
+        self.matchStatsViewModel = nil
         self.match = nil
         self.market = nil
 
@@ -133,6 +166,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
 
+        self.matchStatsSubscriber?.cancel()
+        self.matchStatsSubscriber = nil
+
         self.currentLeftOddValue = nil
         self.currentMiddleOddValue = nil
         self.currentRightOddValue = nil
@@ -141,6 +177,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.isMiddleOutcomeButtonSelected = false
         self.isRightOutcomeButtonSelected = false
 
+        self.statsBaseView.isHidden = true
+        self.homeNameCaptionLabel.text = ""
+        self.awayNameCaptionLabel.text = ""
+        
         self.marketNameLabel.text = ""
         self.participantsNameLabel.text = ""
         self.leftOddTitleLabel.text = ""
@@ -150,40 +190,62 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightOddTitleLabel.text = ""
         self.rightOddValueLabel.text =  ""
 
-        self.participantsCountryImageView.isHidden = false
-        self.participantsCountryImageView.image = nil
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
-        self.participantsCountryImageView.layer.cornerRadius = self.participantsCountryImageView.frame.size.width / 2
+        self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
+        self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App.secondaryBackground
+        self.backgroundColor = UIColor.App2.backgroundCards
 
-        self.participantsNameLabel.textColor = UIColor.App.headingSecondary
-        self.marketNameLabel.textColor = UIColor.App.headingMain
+        self.participantsNameLabel.textColor = UIColor.App2.textPrimary
+        self.marketNameLabel.textColor = UIColor.App2.textPrimary
 
-        self.leftOddTitleLabel.textColor = UIColor.App.headingMain
-        self.leftOddValueLabel.textColor = UIColor.App.headingMain
+        self.leftOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.leftOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.middleOddTitleLabel.textColor = UIColor.App.headingMain
-        self.middleOddValueLabel.textColor = UIColor.App.headingMain
+        self.middleOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.middleOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.rightOddTitleLabel.textColor = UIColor.App.headingMain
-        self.rightOddValueLabel.textColor = UIColor.App.headingMain
+        self.rightOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.rightOddValueLabel.textColor = UIColor.App2.textPrimary
 
-        self.leftBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.middleBaseView.backgroundColor = UIColor.App.tertiaryBackground
-        self.rightBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.middleBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
 
-        self.suspendedBaseView.backgroundColor = UIColor.App.mainBackground
-        self.suspendedLabel.textColor = UIColor.App.headingDisabled
+        self.suspendedBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
+        self.suspendedLabel.textColor = UIColor.App2.textDisablePrimary
+
+        self.statsBaseView.backgroundColor = UIColor.App2.backgroundCards
+
+        self.homeNameCaptionLabel.textColor = UIColor.App2.textPrimary
+        self.awayNameCaptionLabel.textColor = UIColor.App2.textPrimary
+
+        self.homeCircleCaptionView.backgroundColor = UIColor(hex: 0xD99F00)
+        self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
     }
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
+
+        if let matchStatsViewModel = matchStatsViewModel,
+           market.eventPartId != nil,
+           market.bettingTypeId != nil {
+
+            self.homeNameCaptionLabel.text = match.homeParticipant.name
+            self.awayNameCaptionLabel.text = match.awayParticipant.name
+
+            self.matchStatsSubscriber = matchStatsViewModel.statsTypePublisher
+                .compactMap({ $0 })
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { json in
+                    self.setupStatsLine(withjson: json)
+                })
+        }
 
         self.match = match
         self.market = market
@@ -192,7 +254,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.participantsNameLabel.text = teamsText
 
-        self.participantsCountryImageView.image = UIImage(named: Assets.flagName(withCountryCode: countryIso))
+        self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
@@ -308,7 +370,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -321,7 +383,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -339,17 +401,15 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-    
-    func shouldShowCountryFlag(_ show: Bool) {
-        self.participantsCountryImageView.isHidden = !show
-    }
 
     func selectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App.mainTint
+        self.leftBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
+
     func deselectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
+
     @objc func didTapLeftOddButton() {
 
         guard
@@ -384,10 +444,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     func selectMiddleOddButton() {
-        self.middleBaseView.backgroundColor = UIColor.App.mainTint
+        self.middleBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectMiddleOddButton() {
-        self.middleBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.middleBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
     @objc func didTapMiddleOddButton() {
         guard
@@ -421,10 +481,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     func selectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App.mainTint
+        self.rightBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
     }
     @objc func didTapRightOddButton() {
         guard
@@ -457,4 +517,88 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         }
     }
     
+}
+
+
+extension OddTripleCollectionViewCell {
+    private func setupStatsLine(withjson json: JSON) {
+
+        guard
+            let eventPartId = self.market?.eventPartId,
+            let bettingTypeId = self.market?.bettingTypeId
+        else {
+            return
+        }
+
+        var bettingType: JSON? = nil
+
+        if let eventPartsArray = json["event_parts"].array {
+            for partDict in eventPartsArray {
+                if let id = partDict["id"].int, String(id) == eventPartId {
+
+                    if let bettintTypesArray = partDict["betting_types"].array {
+                        for dict in bettintTypesArray {
+                            if let id = dict["id"].int, String(id) == bettingTypeId {
+                                bettingType = dict
+                                break
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        if let bettingTypeValue = bettingType,
+           let bettingTypeStats = bettingTypeValue["stats"]["data"].dictionary {
+
+            print("bettingTypeValue ", bettingTypeStats)
+
+            var homeWin: Int = 0
+            var homeDraw: Int = 0
+            var homeLoss: Int = 0
+            var homeTotal: Int = 10
+
+            var awayWin: Int = 0
+            var awayDraw: Int = 0
+            var awayLoss: Int = 0
+            var awayTotal: Int = 10
+
+            if let homeWinsValue = bettingTypeStats["home_participant"]?["Wins"].int,
+               let homeDrawValue = bettingTypeStats["home_participant"]?["Draws"].int,
+               let homeLossesValue = bettingTypeStats["home_participant"]?["Losses"].int,
+               let awayWinsValue = bettingTypeStats["away_participant"]?["Wins"].int,
+               let awayDrawValue = bettingTypeStats["away_participant"]?["Draws"].int,
+               let awayLossesValue = bettingTypeStats["away_participant"]?["Losses"].int {
+
+                homeWin = homeWinsValue
+                homeDraw = homeDrawValue
+                homeLoss = homeLossesValue
+                homeTotal = homeWin + homeDraw + homeLoss
+
+                awayWin = awayWinsValue
+                awayDraw = awayDrawValue
+                awayLoss = awayLossesValue
+                awayTotal = awayWin + awayDraw + awayLoss
+
+                self.marketNameLabel.font = AppFont.with(type: .bold, size: 12)
+
+                let stackSubviews = self.marketStatsStackView.arrangedSubviews
+                stackSubviews.forEach({
+                    if $0 != self.marketNameLabel {
+                        self.marketStatsStackView.removeArrangedSubview($0)
+                        $0.removeFromSuperview()
+                    }
+                })
+                
+                let headToHeadCardStatsView = HeadToHeadCardStatsView()
+                self.marketStatsStackView.addArrangedSubview(headToHeadCardStatsView)
+
+                headToHeadCardStatsView.setupHomeValues(win: homeWin, draw: homeDraw, loss: homeLoss, total: homeTotal)
+                headToHeadCardStatsView.setupAwayValues(win: awayWin, draw: awayDraw, loss: awayLoss, total: awayTotal)
+
+                self.statsBaseView.isHidden = false
+            }
+        }
+    }
 }
