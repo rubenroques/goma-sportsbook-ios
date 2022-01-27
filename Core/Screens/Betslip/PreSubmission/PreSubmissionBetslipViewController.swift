@@ -594,7 +594,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.placeBetButton.isEnabled = false
 
-        TSManager.shared.swampSession?.printMemoryLogs()
+        Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
 
     }
 

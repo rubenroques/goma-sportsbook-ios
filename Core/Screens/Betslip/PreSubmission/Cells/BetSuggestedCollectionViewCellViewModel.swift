@@ -79,7 +79,7 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
     func unregisterSuggestedBets() {
 
         for suggestedBetRegister in self.suggestedBetsRegisters {
-            TSManager.shared.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
         }
     }
 
@@ -209,9 +209,13 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
         for (index, bet) in betArray.enumerated() {
 
-            let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId, language: "en", matchId: "\(bet.matchId)", bettingType: "\(bet.bettingType)", eventPartId: "\(bet.eventPartId)")
+            let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId,
+                                                    language: "en",
+                                                    matchId: "\(bet.matchId)",
+                                                    bettingType: "\(bet.bettingType)",
+                                                    eventPartId: "\(bet.eventPartId)")
 
-            TSManager.shared
+            Env.everyMatrixClient.manager
                 .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
                 .sink(receiveCompletion: { _ in
 
@@ -383,6 +387,8 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
                                 nameDigit1: rawMarket.paramFloat1,
                                 nameDigit2: rawMarket.paramFloat2,
                                 nameDigit3: rawMarket.paramFloat3,
+                                eventPartId: rawMarket.eventPartId,
+                                bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
             matchMarkets.append(market)
         }
