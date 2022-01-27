@@ -57,10 +57,15 @@ class CompetitionSearchTableViewCell: UITableViewCell {
         self.titleLabel.textColor = UIColor.App.headingMain
     }
 
-    func setCellValues(title: String, flagCode: String) {
+    func setCellValues(title: String, flagCode: String, flagId: String) {
         self.titleLabel.text = title
 
+        if flagCode != "" {
         self.flagImageView.image = UIImage(named: Assets.flagName(withCountryCode: flagCode))
+        }
+        else {
+            self.flagImageView.image = UIImage(named: Assets.flagName(withCountryCode: flagId))
+        }
     }
 
     @objc func handleCellTap(_ sender: UITapGestureRecognizer? = nil) {

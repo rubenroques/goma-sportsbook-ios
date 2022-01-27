@@ -357,7 +357,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                     if let cellCompetition = competition.name, let cellVenueId = competition.venueId {
                         //cell.setTitle(title: "\(cellCompetition)")
                         let location = self.viewModel.location(forId: cellVenueId)
-                        cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "")
+                        cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "", flagId: location?.id ?? "")
                         cell.tappedCompetitionCellAction = {
                             self.didSelectCompetitionAction?(competition.id)
                         }
