@@ -62,7 +62,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayParticipantNameLabel.text = "\(viewModelValue.awayTeamName)"
                 self.dateLabel.text = "\(viewModelValue.startDateString)"
                 self.timeLabel.text = "\(viewModelValue.startTimeString)"
-                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
+
+                if viewModelValue.countryISOCode != "" {
+                    self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
+                }
+                else {
+                    self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryId))
+                }
+
             }
         }
     }
@@ -83,7 +90,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
-
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -112,7 +118,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.isRightOutcomeButtonSelected ? self.selectRightOddButton() : self.deselectRightOddButton()
         }
     }
-
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -263,7 +268,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.timeLabel.text = "\(viewModel.startTimeString)"
 
        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        if viewModel.countryISOCode != "" {
+            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        }
+        else {
+            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+        }
 
         if let market = match.markets.first {
 
