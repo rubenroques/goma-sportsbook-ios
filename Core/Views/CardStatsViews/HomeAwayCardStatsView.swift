@@ -40,7 +40,7 @@ class HomeAwayCardStatsView: NibView {
         self.awayValueLabel.text = "3/10"
         self.awayProgressBar.progress = 0.3
 
-        self.captionLabel.text = "(Last 10 Matches)"
+        self.captionLabel.text = "(Last Matches)"
     }
 
     func setupWithTheme() {
@@ -57,7 +57,27 @@ class HomeAwayCardStatsView: NibView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: 52)
+        return CGSize(width: UIView.noIntrinsicMetric, height: 48)
+    }
+
+    func setupHomeValues(win: Int, total: Int) {
+        self.homeValueLabel.text = "\(win)/\(total)"
+        if total != 0 {
+            self.homeProgressBar.progress = Float(win) / Float(total)
+        }
+        else {
+            self.homeProgressBar.progress = 0
+        }
+    }
+
+    func setupAwayValues(win: Int, total: Int) {
+        self.awayValueLabel.text = "\(win)/\(total)"
+        if total != 0 {
+            self.awayProgressBar.progress = Float(win) / Float(total)
+        }
+        else {
+            self.awayProgressBar.progress = 0
+        }
     }
 
 }

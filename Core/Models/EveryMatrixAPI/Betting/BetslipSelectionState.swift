@@ -85,7 +85,7 @@ struct BetslipPlaceBetResponse: Decodable {
     var maxWinningNetto: Double?
     var totalStakeTax: Double?
     var basePossibleProfit: Double?
-    var amount: Int?
+    var amount: Double?
     var maxWinningTax: Double?
     var terminalType: String?
     var freeBetAmount: Double?

@@ -81,7 +81,6 @@ class MyTicketsViewController: UIViewController {
         self.viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
-                
                 if !isLoading {
                     self?.loadingIndicatorView.stopAnimating()
                     self?.refreshControl.endRefreshing()
@@ -90,50 +89,23 @@ class MyTicketsViewController: UIViewController {
                 else if self?.shouldShowCenterLoadingView ?? false {
                     self?.loadingIndicatorView.startAnimating()
                 }
-
             })
             .store(in: &cancellables)
-        
-        self.viewModel.isUserLoggedInPublisher
-            .sink(receiveValue: { [weak self] isUserLoggedIn in
-                if isUserLoggedIn {
-                   self?.emptyBaseView.isHidden = true
-                }
-                else {
+
+        Publishers.CombineLatest(Env.userSessionStore.userSessionPublisher, self.viewModel.isTicketsEmptyPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userSession, isTicketsEmpty in
+
+                if userSession == nil {
                     self?.emptyBaseView.isHidden = false
                     self?.firstTextFieldLabel.text = localized("empty_no_login")
-                    self?.secondTextFieldLabel.text = localized("second_string_empty_no_login")
+                    self?.secondTextFieldLabel.text = localized("second_empty_no_login")
                     self?.noBetsButton.setTitle(localized("login"), for: .normal)
                     self?.noBetsButton.isHidden = false
                     self?.noBetsImage.image = UIImage(named: "no_internet_icon")
                 }
-            })
-            .store(in: &cancellables)
-        
-        Publishers.CombineLatest(self.viewModel.isLoading, self.viewModel.isTicketsEmptyPublisher)
-            .map({ isLoading, isTicketsEmpty -> Bool in
-                if isLoading, !isTicketsEmpty {
-                    return true
-                }
-                else if isLoading, isTicketsEmpty {
-                    return true
-                }
-                else if !isLoading, isTicketsEmpty {
-                    return false
-                }
                 else {
-                    return true
-                }
-            })
-            .sink(receiveValue: { [weak self] showEmptyBaseView in
-                self?.emptyBaseView.isHidden = showEmptyBaseView
-                if let userIsLoggedIn = self?.viewModel.isUserLoggedInPublisher.value {
-                    if userIsLoggedIn {
-                        self?.noBetsButton.isHidden = true
-                    }
-                    else {
-                        self?.noBetsButton.isHidden = false
-                    }
+                    self?.emptyBaseView.isHidden = !isTicketsEmpty
                 }
             })
             .store(in: &cancellables)
@@ -157,9 +129,7 @@ class MyTicketsViewController: UIViewController {
         
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)

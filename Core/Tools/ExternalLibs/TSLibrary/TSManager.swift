@@ -197,7 +197,7 @@ final class TSManager {
                         }
                         catch {
                             //print("TSManager Decoding Error: \(error)")
-                            promise(.failure(.decodingError))
+                            promise(.failure( .decodingError(value: error.localizedDescription) ))
                         }
                     }, onError: { _, error, _, kwargs in
                         var desc = ""
@@ -309,7 +309,7 @@ final class TSManager {
             }
             catch {
                 // print("TSManager Decoding Error: \(error)")
-                subject.send(completion: .failure(.decodingError))
+                subject.send(completion: .failure(.decodingError(value: error.localizedDescription)))
             }
         })
 
@@ -403,8 +403,7 @@ final class TSManager {
                 }
             }
             catch {
-                // print("TSManager Decoding Error: \(error)")
-                subject.send(completion: .failure(.decodingError))
+                subject.send(completion: .failure( .decodingError(value: error.localizedDescription) ))
             }
         })
         return subject.handleEvents(receiveOutput: { content in

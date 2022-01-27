@@ -52,9 +52,7 @@ class MatchFieldWebViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.mainBackground
@@ -66,7 +64,8 @@ class MatchFieldWebViewController: UIViewController {
 
 
     @IBAction private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        //self.navigationController?.popViewController(animated: true)
+        self.presentingViewController?.dismiss(animated: true, completion: nil)
     }
 }
 

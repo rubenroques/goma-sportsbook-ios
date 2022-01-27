@@ -62,13 +62,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                 self.awayParticipantNameLabel.text = "\(viewModelValue.awayTeamName)"
                 self.dateLabel.text = "\(viewModelValue.startDateString)"
                 self.timeLabel.text = "\(viewModelValue.startTimeString)"
-
-               // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
                 self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
-
-                if viewModelValue.isToday {
-                    self.dateLabel.isHidden = true
-                }
             }
         }
     }
@@ -270,10 +264,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-
-        if viewModel.isToday {
-            self.dateLabel.isHidden = true
-        }
 
         if let market = match.markets.first {
 

@@ -45,6 +45,7 @@ class AggregatorsRepository {
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
     var cashouts: OrderedDictionary<String, EveryMatrix.Cashout> = [:]
     var tournamentsForLocation: [String: [String] ] = [:]
+    var tournamentsForCategory: [String: [String] ] = [:]
 
     var tournaments: [String: EveryMatrix.Tournament] = [:]
     var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
@@ -316,6 +317,8 @@ class AggregatorsRepository {
                                     nameDigit1: rawMarket.paramFloat1,
                                     nameDigit2: rawMarket.paramFloat2,
                                     nameDigit3: rawMarket.paramFloat3,
+                                    eventPartId: rawMarket.eventPartId,
+                                    bettingTypeId: rawMarket.bettingTypeId,
                                     outcomes: sortedOutcomes)
                 matchMarkets.append(market)
             }
@@ -374,6 +377,16 @@ class AggregatorsRepository {
                 }
                 else {
                     self.tournamentsForLocation[venueId] = [tournament.id]
+                }
+            }
+
+            if let categoryId = tournament.categoryId {
+                if var tournamentsForCategoryWithId = self.tournamentsForCategory[categoryId] {
+                    tournamentsForCategoryWithId.append(tournament.id)
+                    self.tournamentsForCategory[categoryId] = tournamentsForCategoryWithId
+                }
+                else {
+                    self.tournamentsForCategory[categoryId] = [tournament.id]
                 }
             }
         }

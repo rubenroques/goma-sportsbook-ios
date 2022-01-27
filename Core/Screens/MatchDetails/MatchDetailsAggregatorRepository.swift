@@ -386,6 +386,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                                 nameDigit1: rawMarket.paramFloat1,
                                 nameDigit2: rawMarket.paramFloat2,
                                 nameDigit3: rawMarket.paramFloat3,
+                                eventPartId: rawMarket.eventPartId,
+                                bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
             allMarkets.append(market)
             similarMarketsOrdered.append(similarMarketKey)
@@ -510,6 +512,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                                 nameDigit1: rawMarket.paramFloat1,
                                 nameDigit2: rawMarket.paramFloat2,
                                 nameDigit3: rawMarket.paramFloat3,
+                                eventPartId: rawMarket.eventPartId,
+                                bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
 
             allMarkets[rawMarket.id] = market

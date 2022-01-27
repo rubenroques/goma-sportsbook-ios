@@ -49,20 +49,20 @@
                                 </constraints>
                             </view>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="6" translatesAutoresizingMaskIntoConstraints="NO" id="kOL-6e-IWL">
-                                <rect key="frame" x="12" y="6" width="311" height="17"/>
+                                <rect key="frame" x="12" y="6" width="311" height="16"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J2A-Dd-6Kn">
-                                        <rect key="frame" x="0.0" y="0.0" width="17" height="17"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="J2A-Dd-6Kn">
+                                        <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="J2A-Dd-6Kn" secondAttribute="height" multiplier="1:1" id="f3h-23-z72"/>
-                                            <constraint firstAttribute="height" constant="17" id="lmd-Yz-3bB"/>
+                                            <constraint firstAttribute="height" constant="16" id="lmd-Yz-3bB"/>
                                         </constraints>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PBE-7c-alu">
-                                        <rect key="frame" x="23" y="0.0" width="288" height="17"/>
+                                        <rect key="frame" x="22" y="0.0" width="289" height="16"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="UEFA Champions League" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NNl-Nd-Klc">
-                                                <rect key="frame" x="0.0" y="4.5" width="287" height="10"/>
+                                                <rect key="frame" x="0.0" y="4" width="288" height="10"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="10"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -78,16 +78,16 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Xz-pk-fSp">
-                                <rect key="frame" x="12" y="6" width="311" height="17"/>
+                                <rect key="frame" x="12" y="6" width="311" height="16"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="2RM-L4-Ht3">
-                                        <rect key="frame" x="0.0" y="0.0" width="17" height="17"/>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="market_stats_icon" translatesAutoresizingMaskIntoConstraints="NO" id="2RM-L4-Ht3">
+                                        <rect key="frame" x="0.0" y="0.0" width="16" height="16"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="2RM-L4-Ht3" secondAttribute="height" multiplier="1:1" id="mOj-4V-hm4"/>
                                         </constraints>
                                     </imageView>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gtA-cU-i29">
-                                        <rect key="frame" x="25" y="5.5" width="6" height="6"/>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gtA-cU-i29">
+                                        <rect key="frame" x="20" y="5" width="6" height="6"/>
                                         <color key="backgroundColor" systemColor="systemRedColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="6" id="l0v-nO-dcv"/>
@@ -95,20 +95,20 @@
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pf9-lQ-cW7">
-                                        <rect key="frame" x="34" y="4" width="23" height="9"/>
+                                        <rect key="frame" x="29" y="3.5" width="23" height="9"/>
                                         <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="9"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T8d-hr-RT7">
-                                        <rect key="frame" x="63" y="5.5" width="6" height="6"/>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="T8d-hr-RT7">
+                                        <rect key="frame" x="58" y="5" width="6" height="6"/>
                                         <color key="backgroundColor" systemColor="systemRedColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="6" id="NDi-5h-MmS"/>
                                         </constraints>
                                     </view>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdf-qv-ncW">
-                                        <rect key="frame" x="72" y="4" width="23" height="9"/>
+                                        <rect key="frame" x="67" y="3.5" width="23" height="9"/>
                                         <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="9"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -121,12 +121,12 @@
                                     <constraint firstItem="T8d-hr-RT7" firstAttribute="width" secondItem="T8d-hr-RT7" secondAttribute="height" multiplier="1:1" id="1oB-kC-hF4"/>
                                     <constraint firstItem="T8d-hr-RT7" firstAttribute="leading" secondItem="Pf9-lQ-cW7" secondAttribute="trailing" constant="6" id="2Xp-ly-r3i"/>
                                     <constraint firstItem="Pf9-lQ-cW7" firstAttribute="centerY" secondItem="3Xz-pk-fSp" secondAttribute="centerY" id="3HW-nI-wKk"/>
-                                    <constraint firstAttribute="bottom" secondItem="2RM-L4-Ht3" secondAttribute="bottom" id="DdV-Yg-3Jq"/>
                                     <constraint firstItem="tdf-qv-ncW" firstAttribute="centerY" secondItem="3Xz-pk-fSp" secondAttribute="centerY" id="Dzr-Kp-EgU"/>
                                     <constraint firstItem="gtA-cU-i29" firstAttribute="centerY" secondItem="3Xz-pk-fSp" secondAttribute="centerY" id="Fa8-3z-1Hj"/>
                                     <constraint firstItem="tdf-qv-ncW" firstAttribute="leading" secondItem="T8d-hr-RT7" secondAttribute="trailing" constant="3" id="LoW-4Z-4gN"/>
+                                    <constraint firstItem="2RM-L4-Ht3" firstAttribute="centerY" secondItem="3Xz-pk-fSp" secondAttribute="centerY" id="QXq-x0-29Z"/>
                                     <constraint firstItem="2RM-L4-Ht3" firstAttribute="top" secondItem="3Xz-pk-fSp" secondAttribute="top" id="gOb-jl-OoN"/>
-                                    <constraint firstItem="gtA-cU-i29" firstAttribute="leading" secondItem="2RM-L4-Ht3" secondAttribute="trailing" constant="8" id="luc-A4-otK"/>
+                                    <constraint firstItem="gtA-cU-i29" firstAttribute="leading" secondItem="2RM-L4-Ht3" secondAttribute="trailing" constant="4" id="luc-A4-otK"/>
                                     <constraint firstItem="T8d-hr-RT7" firstAttribute="centerY" secondItem="3Xz-pk-fSp" secondAttribute="centerY" id="wOE-Ze-TIR"/>
                                 </constraints>
                             </view>
@@ -254,13 +254,13 @@
                                 </subviews>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0kA-Ih-MnC">
-                                <rect key="frame" x="12" y="29" width="307" height="84"/>
+                                <rect key="frame" x="12" y="28" width="307" height="85"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="YSt-rj-PaR">
-                                        <rect key="frame" x="0.0" y="0.0" width="307" height="84"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="307" height="85"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Young Boys" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rub-S6-2ew">
-                                                <rect key="frame" x="0.0" y="0.0" width="307" height="84"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="307" height="85"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="12"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -312,7 +312,12 @@
             </constraints>
             <size key="customSize" width="275" height="313"/>
             <connections>
+                <outlet property="awayCircleCaptionView" destination="T8d-hr-RT7" id="rEk-hh-Io8"/>
+                <outlet property="awayNameCaptionLabel" destination="tdf-qv-ncW" id="Vq8-eE-ciT"/>
                 <outlet property="baseView" destination="gRn-8b-XSa" id="uE0-lQ-nDJ"/>
+                <outlet property="homeCircleCaptionView" destination="gtA-cU-i29" id="gKm-xl-PkO"/>
+                <outlet property="homeNameCaptionLabel" destination="Pf9-lQ-cW7" id="voY-Fi-MkA"/>
+                <outlet property="iconStatsImageView" destination="2RM-L4-Ht3" id="er0-QI-cEp"/>
                 <outlet property="leftBaseView" destination="lYd-yK-R7W" id="pKX-8C-d98"/>
                 <outlet property="leftDownChangeOddValueImage" destination="k4d-2O-ahx" id="QYO-bZ-hnQ"/>
                 <outlet property="leftOddTitleLabel" destination="tfL-e0-mnA" id="aaZ-1c-bup"/>
@@ -336,6 +341,7 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="market_stats_icon" width="10" height="13"/>
         <image name="odd_down_icon" width="10" height="5"/>
         <image name="odd_up_icon" width="10" height="5"/>
         <systemColor name="systemBackgroundColor">

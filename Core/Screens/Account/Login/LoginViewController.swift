@@ -71,9 +71,7 @@ class LoginViewController: UIViewController {
         setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func commonInit() {
 
@@ -376,8 +374,8 @@ extension LoginViewController {
     @objc func didTapDebugFormFill() {
 
         if TargetVariables.environmentType == .dev {
-            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt")
-            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345")
+            self.usernameHeaderTextFieldView.setText("ruben@gomadevelopment.pt") // Ivotest30
+            self.passwordHeaderTextFieldView.setText("ruben=GOMA=12345") // testesdoIvo1
             self.loginButton.isEnabled = true
         }
     }

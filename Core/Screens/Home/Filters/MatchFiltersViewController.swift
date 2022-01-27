@@ -36,9 +36,7 @@ class MatchFiltersViewController: UIViewController {
         self.commonInit()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func commonInit() {
         navigationLabel.text = localized("choose_sport")

@@ -191,9 +191,7 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -498,7 +496,7 @@ class MatchDetailsViewController: UIViewController {
 
     @IBAction private func didTapMatchStatsButton() {
         let matchFieldWebViewController = MatchFieldWebViewController(match: self.match)
-        self.navigationController?.pushViewController(matchFieldWebViewController, animated: true)
+        self.present(matchFieldWebViewController, animated: true, completion: nil)
     }
 
 }

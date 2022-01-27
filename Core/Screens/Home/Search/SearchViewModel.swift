@@ -313,6 +313,8 @@ class SearchViewModel: NSObject {
                                     nameDigit1: rawMarket.paramFloat1,
                                     nameDigit2: rawMarket.paramFloat2,
                                     nameDigit3: rawMarket.paramFloat3,
+                                    eventPartId: rawMarket.eventPartId,
+                                    bettingTypeId: rawMarket.bettingTypeId,
                                     outcomes: sortedOutcomes)
                 matchMarkets.append(market)
             }

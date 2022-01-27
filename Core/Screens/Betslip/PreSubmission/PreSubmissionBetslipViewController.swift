@@ -771,9 +771,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
     
     private func commonInit() {
 
@@ -1606,6 +1604,8 @@ extension PreSubmissionBetslipViewController {
                                 nameDigit1: rawMarket.paramFloat1,
                                 nameDigit2: rawMarket.paramFloat2,
                                 nameDigit3: rawMarket.paramFloat3,
+                                eventPartId: rawMarket.eventPartId,
+                                bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
             matchMarkets.append(market)
         }

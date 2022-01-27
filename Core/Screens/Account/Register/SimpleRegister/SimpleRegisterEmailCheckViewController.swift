@@ -45,9 +45,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         super.viewWillAppear(animated)
     }
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    
 
     func commonInit() {
         skipButton.setTitle(localized("skip"), for: .normal)

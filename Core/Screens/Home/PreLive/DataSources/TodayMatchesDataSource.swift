@@ -11,6 +11,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var todayMatches: [Match] = []
 
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
@@ -45,6 +47,9 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         case 0:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.todayMatches[safe: indexPath.row] {
+                if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                    cell.matchStatsViewModel = matchStatsViewModel
+                }
                 cell.setupWithMatch(match)
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)

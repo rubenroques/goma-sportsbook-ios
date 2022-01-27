@@ -16,7 +16,7 @@ enum MatchStatsType {
 
 class MatchStatsViewModel {
 
-    var statsTypePublisher: CurrentValueSubject<MatchStatsType, Never> = .init(.noStats)
+    var statsTypePublisher: CurrentValueSubject<JSON?, Never> = .init(nil)
 
     private var match: Match
     private var requestMatchStatsCancellable: AnyCancellable?
@@ -32,9 +32,14 @@ class MatchStatsViewModel {
         let deviceId = Env.deviceId
         self.requestMatchStatsCancellable = Env.gomaNetworkClient.requestMatchStats(deviceId: deviceId, matchId: self.match.id)
             .sink { completion in
-
-            } receiveValue: { json in
-                print(json)
+                print("RequestMatchStats completion ", completion)
+            } receiveValue: { [weak self] json in
+                if !json.isEmpty {
+                    self?.statsTypePublisher.send(json)
+                }
+                else {
+                    print("RequestMatchStats empty stats")
+                }
             }
     }
 
