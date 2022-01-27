@@ -51,7 +51,7 @@ class SearchViewModel: NSObject {
         if UserDefaults.standard.object(forKey: "recentSearches") != nil {
 
             if let recentSearchesArray = (UserDefaults.standard.array(forKey: "recentSearches") ?? []) as? [String] {
-                //let reversedRecentSearchesArray = Array(recentSearchesArray.reversed())
+
                 self.recentSearchesPublisher.value = recentSearchesArray
                 self.recentSearchesPublisher.send(recentSearchesArray)
             }
@@ -391,12 +391,6 @@ class SearchViewModel: NSObject {
         }
         sportMatchesArrayPublisher.value = sportMatchesSorted
 
-        // Insert competitions last
-        if let competitionsSearched = searchMatchesPublisher.value["competition"] {
-            let competitions = SportMatches(sportType: "competition", matches: competitionsSearched)
-            sportMatchesArrayPublisher.value.append(competitions)
-        }
-
         self.searchMatchesPublisher.send(self.searchMatchesPublisher.value)
         self.hasDoneSearch = true
     }
@@ -417,7 +411,7 @@ class SearchViewModel: NSObject {
                 }
 
                 newRecentSearchesArray.append(search)
-                var reversedNewSearchesArray = Array(newRecentSearchesArray.reversed())
+                let reversedNewSearchesArray = Array(newRecentSearchesArray.reversed())
                 UserDefaults.standard.removeObject(forKey: "recentSearches")
                 UserDefaults.standard.set(reversedNewSearchesArray, forKey: "recentSearches")
                 self.recentSearchesPublisher.value = reversedNewSearchesArray
