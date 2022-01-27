@@ -340,12 +340,12 @@ class ProfileViewController: UIViewController {
         safeAreaTopView.backgroundColor = UIColor.App2.backgroundPrimary
         profileBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         profilePictureBaseView.backgroundColor = UIColor.App2.highlightPrimary
-        currentBalanceBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        currentBalanceBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         scrollBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         profilePictureImageView.backgroundColor = .clear
 
         usernameLabel.textColor = UIColor.App2.textPrimary
-        userIdLabel.textColor = UIColor.App.fadeOutHeading
+        userIdLabel.textColor = UIColor.App2.textSecond
         currentBalanceTitleLabel.textColor =  UIColor.App2.textPrimary
         currentBalanceLabel.textColor =  UIColor.App2.textPrimary
 

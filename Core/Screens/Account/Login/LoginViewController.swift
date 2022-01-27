@@ -161,7 +161,7 @@ class LoginViewController: UIViewController {
         self.view.backgroundColor = UIColor.App2.backgroundPrimary
         skipView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.white, for: .normal)
+        skipButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         skipButton.backgroundColor = .clear
 
         loginLabel.textColor = UIColor.App2.textHeadlinePrimary
@@ -181,11 +181,11 @@ class LoginViewController: UIViewController {
             rememberToggleView.backgroundColor =  UIColor.App2.buttonBackgroundPrimary
         }
 
-        forgotButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        forgotButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
 
         loginButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
-        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
         loginButton.backgroundColor = .clear
         loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
         loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)

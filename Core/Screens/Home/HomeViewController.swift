@@ -273,9 +273,9 @@ class HomeViewController: UIViewController {
 
         profilePictureBaseView.backgroundColor = UIColor.App2.highlightSecondary
 
-        loginButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
-        loginButton.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
+        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
         loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
         loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.view

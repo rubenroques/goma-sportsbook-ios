@@ -115,8 +115,8 @@ class PasswordUpdateViewController: UIViewController {
         headerLabel.textColor = UIColor.App2.textPrimary
 
         editButton.backgroundColor = .clear
-        editButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        editButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
+        editButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        editButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .highlighted)
         editButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .disabled)
 
         oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary

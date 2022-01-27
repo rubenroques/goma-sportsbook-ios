@@ -142,7 +142,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.barTintColor = .white
         self.searchBarView.backgroundImage = UIColor.App2.backgroundPrimary.image()
         // self.searchBarView.placeholder = localized("search")
-        self.searchBarView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.searchBarView.backgroundColor = UIColor.App2.inputBackground
         //self.searchBarView.delegate = self
 
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {

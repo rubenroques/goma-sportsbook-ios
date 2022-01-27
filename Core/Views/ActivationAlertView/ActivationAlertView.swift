@@ -58,17 +58,17 @@ class ActivationAlertView: NibView {
 
     func setupWithTheme() {
 
-        containerView.backgroundColor = UIColor.App.secondaryBackground
+        containerView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        titleLabel.textColor = UIColor.App.headingMain
+        titleLabel.textColor = UIColor.App2.textPrimary
         titleLabel.font = AppFont.with(type: .bold, size: 16)
 
-        closeButton.backgroundColor = UIColor.App.secondaryBackground
+        closeButton.backgroundColor = UIColor.App2.backgroundSecondary
 
-        infoLabel.textColor = UIColor.App.headingMain
+        infoLabel.textColor = UIColor.App2.textPrimary
         infoLabel.font = AppFont.with(type: .semibold, size: 14)
 
-        linkLabel.textColor = UIColor.App.mainTint
+        linkLabel.textColor = UIColor.App2.highlightPrimary
         linkLabel.font = AppFont.with(type: .semibold, size: 14)
     }
 

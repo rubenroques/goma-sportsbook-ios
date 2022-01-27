@@ -83,7 +83,7 @@ class SearchViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.contentBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.topView.backgroundColor = .clear
 

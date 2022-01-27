@@ -138,9 +138,9 @@ class PersonalInfoViewController: UIViewController {
         self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
         editButton.backgroundColor = .clear
-        editButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        editButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
-        editButton.setTitleColor(UIColor.App2.inputTextTitle, for: .disabled)
+        editButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        editButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .highlighted)
+        editButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .disabled)
 
         containerView.backgroundColor = UIColor.App2.backgroundPrimary
         headerView.backgroundColor = UIColor.App2.backgroundPrimary

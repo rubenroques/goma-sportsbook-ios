@@ -96,12 +96,12 @@ class SubmitedBetslipViewController: UIViewController {
         self.view.backgroundColor = UIColor.App2.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
-        self.emptyBetsBaseView.backgroundColor = UIColor.App.mainBackground
+        self.emptyBetsBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         
-        self.dontHaveAnyTicketsLabel.textColor = UIColor.App.headingMain
-        self.makeSomeBetsLabel.textColor = UIColor.App.headingMain
-        self.popularGamesButton.titleLabel?.textColor = UIColor.App.headingMain
-        self.popularGamesButton.backgroundColor = UIColor.App.primaryButtonNormal
+        self.dontHaveAnyTicketsLabel.textColor = UIColor.App2.textPrimary
+        self.makeSomeBetsLabel.textColor = UIColor.App2.textPrimary
+        self.popularGamesButton.titleLabel?.textColor = UIColor.App2.textPrimary
+        self.popularGamesButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
 
     private func requestHistory() {
