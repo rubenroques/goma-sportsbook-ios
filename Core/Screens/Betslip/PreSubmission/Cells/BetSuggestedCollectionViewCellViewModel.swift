@@ -117,8 +117,8 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
                                     let gameSuggestedView = GameSuggestedView(gameTitle: gameTitle, gameInfo: gameInfo)
 
-                                    if let countryIsoCode = match.venue?.isoCode {
-                                        gameSuggestedView.setMatchFlag(isoCode: countryIsoCode)
+                                    if let countryIsoCode = match.venue?.isoCode, let countryId = match.venue?.id {
+                                        gameSuggestedView.setMatchFlag(isoCode: countryIsoCode, countryId: countryId)
                                     }
 
                                     validMarkets += 1
@@ -162,8 +162,8 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
                                     let gameSuggestedView = GameSuggestedView(gameTitle: gameTitle, gameInfo: gameInfo)
 
-                                    if let countryIsoCode = match.venue?.isoCode {
-                                        gameSuggestedView.setMatchFlag(isoCode: countryIsoCode)
+                                    if let countryIsoCode = match.venue?.isoCode, let countryId = match.venue?.id {
+                                        gameSuggestedView.setMatchFlag(isoCode: countryIsoCode, countryId: countryId)
                                     }
 
                                     validMarkets += 1
