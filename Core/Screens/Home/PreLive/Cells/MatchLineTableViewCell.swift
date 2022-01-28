@@ -38,10 +38,10 @@ class MatchLineTableViewCell: UITableViewCell {
         self.selectionStyle = .none
 
         self.debugLabel.isHidden = true
-
-        #if DEBUG
-        self.debugLabel.isHidden = false
-        #endif
+//
+//        #if DEBUG
+//        self.debugLabel.isHidden = false
+//        #endif
 
         self.backSliderView.alpha = 0.0
 
@@ -130,7 +130,7 @@ class MatchLineTableViewCell: UITableViewCell {
             self.collectionView.reloadSections(IndexSet(integer: 0))
         }
 
-        self.debugLabel.text = "\(self.match?.markets.count ?? -1); \(self.debugLabel.text ?? "")"
+//        self.debugLabel.text = "\(self.match?.markets.count ?? -1); \(self.debugLabel.text ?? "")"
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
