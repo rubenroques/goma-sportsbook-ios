@@ -146,6 +146,8 @@ class SearchViewController: UIViewController {
         self.tableView.register(CompetitionSearchTableViewCell.nib, forCellReuseIdentifier: CompetitionSearchTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(SearchTitleSectionUITableViewHeaderFooterView.nib, forHeaderFooterViewReuseIdentifier: SearchTitleSectionUITableViewHeaderFooterView.identifier)
+        self.tableView.register(RecentSearchUITableViewHeaderFooterView.nib, forHeaderFooterViewReuseIdentifier: RecentSearchUITableViewHeaderFooterView.identifier)
+        self.tableView.register(RecentSearchTableViewCell.nib, forCellReuseIdentifier: RecentSearchTableViewCell.identifier)
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -178,10 +180,11 @@ class SearchViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] value in
                 if !value.isEmpty {
-//                    self?.emptySearchLabel.text = self?.viewModel.recentSearchesPublisher.value[0]
+                    self?.showSearchResultsTableView = true
+                    self?.tableView.reloadData()
                 }
                 else {
-                    // self?.showSearchResultsTableView = true
+                    self?.showSearchResultsTableView = false
                 }
             })
             .store(in: &cancellables)
@@ -202,17 +205,22 @@ class SearchViewController: UIViewController {
                     self?.configureNoResultsViewText()
                     self?.showNoResultsView = true
                 }
-                else {
-                    self?.showSearchResultsTableView = false
 
-                }
             })
             .store(in: &cancellables)
 
         self.didSelectMatchAction = { match in
-            let matchDetailsViewController = MatchDetailsViewController(match: match)
 
-            self.present(matchDetailsViewController, animated: true, completion: nil)
+            if self.viewModel.matchesInfoForMatch[match.id] != nil {
+                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+
+                self.present(matchDetailsViewController, animated: true, completion: nil)
+            }
+            else {
+                let matchDetailsViewController = MatchDetailsViewController(match: match)
+
+                self.present(matchDetailsViewController, animated: true, completion: nil)
+            }
         }
 
         self.searchTextPublisher
@@ -221,10 +229,19 @@ class SearchViewController: UIViewController {
                 if value.count > 2 {
                     self?.searchMatches(searchQuery: value)
                 }
-                else {
+                else if value.count < 1 {
                     self?.viewModel.clearData()
+                    self?.viewModel.isEmptySearch = true
                     self?.showNoResultsView = false
-                    self?.showSearchResultsTableView = false
+                    if let recentSearchEmpty = self?.viewModel.recentSearchesPublisher.value.isEmpty {
+                        if recentSearchEmpty {
+                            self?.showSearchResultsTableView = false
+                        }
+                        else {
+                            self?.showSearchResultsTableView = true
+                        }
+                        self?.tableView.reloadData()
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -233,7 +250,9 @@ class SearchViewController: UIViewController {
 
     func configureNoResultsViewText() {
         if let searchBarText = self.searchBarView.text {
-            self.noResultsLabel.text = "No results for '\(searchBarText)'"
+            let noResultsTextRaw = localized("no_results_for")
+            let noResultsText = noResultsTextRaw.replacingOccurrences(of: "%s", with: searchBarText)
+            self.noResultsLabel.text = noResultsText
 
         }
     }
@@ -264,16 +283,7 @@ extension SearchViewController: UISearchBarDelegate {
     }
 
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        if searchBar.text?.count ?? 0 < 3 {
-//            self.showNoResultsView = false
-//            self.showSearchResultsTableView = false
-//        }
-//        else {
-//            if let recentSearch = searchBar.text {
-//                // self.searchMatches(searchQuery: recentSearch)
-//                self.searchTextPublisher.send(recentSearch)
-//            }
-//        }
+
         if let recentSearch = searchBar.text {
             self.searchTextPublisher.send(recentSearch)
         }
@@ -281,10 +291,8 @@ extension SearchViewController: UISearchBarDelegate {
 
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if let recentSearch = searchBar.text {
-            // self.searchMatches(searchQuery: recentSearch)
-            self.searchTextPublisher.send(recentSearch)
 
-            if recentSearch != "" {
+            if recentSearch != "" && recentSearch.count > 2 {
                 self.viewModel.addRecentSearch(search: recentSearch)
             }
         }
@@ -300,101 +308,170 @@ extension SearchViewController: UISearchBarDelegate {
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
+        if !self.viewModel.isEmptySearch {
         return self.viewModel.sportMatchesArrayPublisher.value.count
+        }
+        else {
+            return 1
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.sportMatchesArrayPublisher.value[section].matches.count
+        if !self.viewModel.isEmptySearch {
+            return self.viewModel.sportMatchesArrayPublisher.value[section].matches.count
+        }
+        else {
+            return self.viewModel.recentSearchesPublisher.value.count
+        }
+
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
+        if !self.viewModel.isEmptySearch {
+            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
 
-        switch cellInfo {
+            switch cellInfo {
 
-        case .match(let match):
+            case .match(let match):
 
-            if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
+                if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
-                cell.setupWithMatch(match)
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
-                }
-
-                return cell
-            }
-
-        case .competition(let competition):
-            if let cell = tableView.dequeueCellType(CompetitionSearchTableViewCell.self) {
-
-                if let cellCompetition = competition.name {
-                    cell.setTitle(title: "\(cellCompetition)")
-                    cell.tappedCompetitionCellAction = {
-                        self.didSelectCompetitionAction?(competition.id)
+                    if self.viewModel.matchesInfoForMatchPublisher.value.contains(match.id) {
+                        cell.setupWithMatch(match, liveMatch: true)
                     }
+                    else {
+                        cell.setupWithMatch(match)
+                    }
+
+                    cell.tappedMatchLineAction = {
+                        self.didSelectMatchAction?(match)
+                    }
+
+                    return cell
                 }
-                return cell
+
+            case .competition(let competition):
+                if let cell = tableView.dequeueCellType(CompetitionSearchTableViewCell.self) {
+
+                    if let cellCompetition = competition.name, let cellVenueId = competition.venueId {
+                        //cell.setTitle(title: "\(cellCompetition)")
+                        let location = self.viewModel.location(forId: cellVenueId)
+                        cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "", flagId: location?.id ?? "")
+                        cell.tappedCompetitionCellAction = {
+                            self.didSelectCompetitionAction?(competition.id)
+                        }
+                    }
+                    return cell
+                }
             }
         }
+        else {
+            if let cell = tableView.dequeueCellType(RecentSearchTableViewCell.self) {
 
+                let recentSearchTitle = self.viewModel.recentSearchesPublisher.value[indexPath.row]
+
+                cell.setTitle(title: recentSearchTitle)
+
+                cell.didTapCellAction = { [weak self] in
+                    self?.searchBarView.text = recentSearchTitle
+                    self?.searchMatches(searchQuery: recentSearchTitle)
+                }
+
+                cell.didTapClearButtonAction = { [weak self] in
+                    self?.viewModel.clearRecentSearchByString(search: recentSearchTitle)
+                }
+
+                if indexPath.row == self.viewModel.recentSearchesPublisher.value.count - 1 {
+                    cell.hideSeparatorLineView()
+                }
+
+                return cell
+            }
+
+        }
         return UITableViewCell()
 
     }
 
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        return self.viewModel.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
-//    }
-
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchTitleSectionUITableViewHeaderFooterView.identifier) as? SearchTitleSectionUITableViewHeaderFooterView
-        else {
-            fatalError()
-        }
 
-        let searchEvent = self.viewModel.sportMatchesArrayPublisher.value[section].matches.first
-
-        var eventName = ""
-        switch searchEvent {
-        case .match(let match):
-            if let matchSportName = match.sportName {
-                eventName = "\(matchSportName)"
+        if !self.viewModel.isEmptySearch {
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchTitleSectionUITableViewHeaderFooterView.identifier) as? SearchTitleSectionUITableViewHeaderFooterView
+            else {
+                fatalError()
             }
-        case .competition:
-            eventName = localized("competitions")
-        default:
-            ()
+
+            let searchEvent = self.viewModel.sportMatchesArrayPublisher.value[section].matches.first
+
+            var eventName = ""
+            switch searchEvent {
+            case .match(let match):
+                if let matchSportName = match.sportName {
+                    eventName = "\(matchSportName)"
+                }
+            case .competition(let competition):
+                if let competitionSportName = competition.sportName {
+                    eventName = "\(competitionSportName)"
+                }
+            default:
+                ()
+            }
+
+            let resultsLabel = self.viewModel.setHeaderSectionTitle(section: section)
+
+            headerView.configureLabels(nameText: "\(eventName) - ", countText: resultsLabel)
+
+            return headerView
         }
+        else {
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RecentSearchUITableViewHeaderFooterView.identifier) as? RecentSearchUITableViewHeaderFooterView
+            else {
+                fatalError()
+            }
 
-        let resultsLabel = self.viewModel.setHeaderSectionTitle(section: section)
-        
-        headerView.configureLabels(nameText: "\(eventName) - ", countText: resultsLabel)
+            headerView.clearAllAction = {
+                self.viewModel.clearRecentSearchData()
+            }
 
-        return headerView
+            return headerView
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
+        if !self.viewModel.isEmptySearch {
+            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
 
-        switch cellInfo {
-        case .match:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
-        case .competition:
-            return 56
+            switch cellInfo {
+            case .match:
+                return MatchWidgetCollectionViewCell.cellHeight + 20
+            case .competition:
+                return UITableView.automaticDimension
+            }
+        }
+        else {
+            return 50
         }
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
 
-        switch cellInfo {
-        case .match:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
-        case .competition:
-            return 56
+        if !self.viewModel.isEmptySearch {
+            let cellInfo = self.viewModel.sportMatchesArrayPublisher.value[indexPath.section].matches[indexPath.row]
+
+            switch cellInfo {
+            case .match:
+                return MatchWidgetCollectionViewCell.cellHeight + 20
+            case .competition:
+                return 56
+            }
+        }
+        else {
+            return 50
         }
 
     }

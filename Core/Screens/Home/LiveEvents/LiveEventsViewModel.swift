@@ -529,7 +529,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
             // Loading cell
             return 70
         default:
-            return UITableView.automaticDimension
+            return MatchWidgetCollectionViewCell.cellHeight + 20
         }
     }
 
