@@ -577,7 +577,9 @@ class MatchDetailsAggregatorRepository: NSObject {
                     marketGroupOrganizers.append(columnListedMarketGroupOrganizer)
 
                 }
-                else if outcomesDictionary.keys.contains("exact") || outcomesDictionary.keys.contains("range") || outcomesDictionary.keys.contains("more_than") {
+                else if outcomesDictionary.keys.contains("exact") ||
+                            outcomesDictionary.keys.contains("range") ||
+                            outcomesDictionary.keys.contains("more_than") {
 
                     // Each market is a column
                     let columnListedMarketGroupOrganizer = MarketColumnsMarketGroupOrganizer(id: firstMarket.id,

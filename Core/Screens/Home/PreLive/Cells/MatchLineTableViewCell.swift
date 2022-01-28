@@ -12,6 +12,7 @@ class MatchLineTableViewCell: UITableViewCell {
 
     let cellWidth: CGFloat = 331
 
+    @IBOutlet private var debugLabel: UILabel!
     @IBOutlet private var backSliderView: UIView!
 
     @IBOutlet private var collectionBaseView: UIView!
@@ -35,6 +36,12 @@ class MatchLineTableViewCell: UITableViewCell {
         super.awakeFromNib()
 
         self.selectionStyle = .none
+
+        self.debugLabel.isHidden = true
+
+        #if DEBUG
+        self.debugLabel.isHidden = false
+        #endif
 
         self.backSliderView.alpha = 0.0
 
@@ -93,8 +100,8 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchStatsViewModel = nil
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
+
         self.collectionView.reloadData()
-        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -118,7 +125,12 @@ class MatchLineTableViewCell: UITableViewCell {
     func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
         self.match = match
         self.liveMatch = liveMatch
-        self.collectionView.reloadData()
+
+        UIView.performWithoutAnimation {
+            self.collectionView.reloadSections(IndexSet(integer: 0))
+        }
+
+        self.debugLabel.text = "\(self.match?.markets.count ?? -1); \(self.debugLabel.text ?? "")"
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
@@ -151,8 +163,8 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
         let screenWidth = UIScreen.main.bounds.size.width
         let width = screenWidth*0.6
 
-        if scrollView.contentSize.width > screenWidth {
-            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 110 {
+        if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
+            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
 
                 let generator = UIImpactFeedbackGenerator(style: .heavy)
                 generator.prepare()
@@ -190,13 +202,17 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
+        guard let match = self.match else { return 0 }
+
         if section == 1 {
             return 1
         }
 
-        if (self.match?.markets.count ?? 0) > 0 {
-            return (self.match?.markets.count ?? 0)
+        if match.markets.isNotEmpty {
+            return match.markets.count
         }
+
         return 1
     }
 
