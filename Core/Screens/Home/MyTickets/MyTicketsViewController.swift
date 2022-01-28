@@ -142,19 +142,19 @@ class MyTicketsViewController: UIViewController {
    }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.mainBackground
+        self.ticketTypesCollectionView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.ticketTypesSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.ticketTypesSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
         self.ticketTypesSeparatorLineView.alpha = 0.5
 
-        self.ticketsTableView.backgroundColor = UIColor.App.contentBackground
-        self.ticketsTableView.backgroundView?.backgroundColor = UIColor.App.contentBackground
+        self.ticketsTableView.backgroundColor = UIColor.App2.backgroundCards
+        self.ticketsTableView.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
 
-        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
-        self.firstTextFieldLabel.textColor = UIColor.App.headingMain
-        self.secondTextFieldLabel.textColor = UIColor.App.headingMain
+        self.emptyBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.firstTextFieldLabel.textColor = UIColor.App2.textPrimary
+        self.secondTextFieldLabel.textColor = UIColor.App2.textPrimary
 
     }
 

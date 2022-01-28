@@ -74,12 +74,12 @@ class MyTicketTableViewCell: UITableViewCell {
         self.baseView.layer.cornerRadius = 10
         self.baseView.layer.masksToBounds = true
 
-        self.cashoutButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.cashoutButton.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
-        self.cashoutButton.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.39), for: .disabled)
+        self.cashoutButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        self.cashoutButton.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.cashoutButton.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.39), for: .disabled)
 
-        self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.cashoutButton.setBackgroundColor(UIColor.App.tertiaryBackground.withAlphaComponent(0.7), for: .highlighted)
+        self.cashoutButton.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
+        self.cashoutButton.setBackgroundColor(UIColor.App2.backgroundTertiary.withAlphaComponent(0.7), for: .highlighted)
 
         self.cashoutButton.layer.cornerRadius = CornerRadius.button
         self.cashoutButton.layer.masksToBounds = true
@@ -137,35 +137,35 @@ class MyTicketTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
 
-        self.baseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.baseView.backgroundColor = UIColor.App2.backgroundTertiary
         self.topStatusView.backgroundColor = .clear
         self.headerBaseView.backgroundColor = .clear
         self.betCardsBaseView.backgroundColor = .clear
         self.betCardsStackView.backgroundColor = .clear
-        self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.bottomSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
         self.bottomBaseView.backgroundColor = .clear
         self.bottomStackView.backgroundColor = .clear
         self.cashoutBaseView.backgroundColor = .clear
 
-        self.cashoutButton.setBackgroundColor(UIColor.App.secondaryBackground, for: .normal)
+        self.cashoutButton.setBackgroundColor(UIColor.App2.backgroundSecondary, for: .normal)
 
-        self.titleLabel.textColor = UIColor.App.headingMain
-        self.subtitleLabel.textColor = UIColor.App.headingMain
-        self.totalOddTitleLabel.textColor = UIColor.App.headingMain
-        self.totalOddSubtitleLabel.textColor = UIColor.App.headingMain
-        self.betAmountTitleLabel.textColor = UIColor.App.headingMain
-        self.betAmountSubtitleLabel.textColor = UIColor.App.headingMain
-        self.winningsTitleLabel.textColor = UIColor.App.headingMain
-        self.winningsSubtitleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.textColor = UIColor.App2.textPrimary
+        self.subtitleLabel.textColor = UIColor.App2.textPrimary
+        self.totalOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.totalOddSubtitleLabel.textColor = UIColor.App2.textPrimary
+        self.betAmountTitleLabel.textColor = UIColor.App2.textPrimary
+        self.betAmountSubtitleLabel.textColor = UIColor.App2.textPrimary
+        self.winningsTitleLabel.textColor = UIColor.App2.textPrimary
+        self.winningsSubtitleLabel.textColor = UIColor.App2.textPrimary
 
         if let status = self.betHistoryEntry?.status?.uppercased() {
             switch status {
             case "WON", "HALF_WON":
-                self.highlightCard(withColor: UIColor.App.statusWon)
+                self.highlightCard(withColor: UIColor.App2.myTicketsWon)
             case "LOST", "HALF_LOST":
-                self.highlightCard(withColor: UIColor.App.statusLoss)
+                self.highlightCard(withColor: UIColor.App2.myTicketsLost)
             case "CASHED_OUT", "CANCELLED":
-                self.highlightCard(withColor: UIColor.App.statusDraw)
+                self.highlightCard(withColor: UIColor.App2.myTicketsOther)
             default:
                 self.resetHighlightedCard()
             }
@@ -260,7 +260,7 @@ class MyTicketTableViewCell: UITableViewCell {
         if let status = betHistoryEntry.status?.uppercased() {
             switch status {
             case "WON", "HALF_WON":
-                self.highlightCard(withColor: UIColor.App.statusWon)
+                self.highlightCard(withColor: UIColor.App2.myTicketsWon)
                 self.winningsTitleLabel.text = localized("return")  // Titulo
                 if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
@@ -268,7 +268,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 }
 
             case "LOST", "HALF_LOST":
-                self.highlightCard(withColor: UIColor.App.statusLoss)
+                self.highlightCard(withColor: UIColor.App2.myTicketsLost)
                 self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
                 if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
@@ -276,7 +276,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 }
 
             case "CASHED_OUT":
-                self.highlightCard(withColor: UIColor.App.statusDraw)
+                self.highlightCard(withColor: UIColor.App2.myTicketsOther)
                 self.winningsTitleLabel.text = localized("return") // Titulo
                 if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
@@ -284,7 +284,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 }
 
             case "DRAW":
-                self.highlightCard(withColor: UIColor.App.statusDraw)
+                self.highlightCard(withColor: UIColor.App2.myTicketsOther)
                 self.winningsTitleLabel.text = localized("return")  // Titulo
                 if let maxWinnings = betHistoryEntry.overallBetReturns, // Valor  - > overallBetReturns
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
@@ -292,7 +292,7 @@ class MyTicketTableViewCell: UITableViewCell {
                 }
 
             case "CANCELLED":
-                self.highlightCard(withColor: UIColor.App.statusDraw)
+                self.highlightCard(withColor: UIColor.App2.myTicketsOther)
                 self.winningsTitleLabel.text = localized("possible_winnings") // Titulo
                 if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
                    let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
@@ -339,7 +339,7 @@ class MyTicketTableViewCell: UITableViewCell {
         self.bottomBaseView.backgroundColor = .clear
         self.topStatusView.backgroundColor = .clear
 
-        self.bottomSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.bottomSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
     }
 
     private func highlightCard(withColor color: UIColor) {

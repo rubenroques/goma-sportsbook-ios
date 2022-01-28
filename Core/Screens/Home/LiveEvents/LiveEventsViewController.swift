@@ -332,10 +332,10 @@ class LiveEventsViewController: UIViewController {
         self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
         self.betslipButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     
-        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
-        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
-        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
-        self.emptyStateButton.backgroundColor = UIColor.App.primaryButtonNormal
+        self.emptyBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App2.textPrimary
+        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App2.textPrimary
+        self.emptyStateButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

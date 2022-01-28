@@ -65,7 +65,7 @@ class DepositViewController: UIViewController {
 
         self.depositHeaderTextFieldView.setPlaceholderText(localized("deposit_value"))
         self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
-        self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.headingSecondary)
+        self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App2.textSecond)
 
         depositTipLabel.text = localized("minimum_deposit_value")
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -96,37 +96,37 @@ class DepositViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.topView.backgroundColor = UIColor.App.mainBackground
+        self.topView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        self.containerView.backgroundColor = UIColor.App.mainBackground
+        self.containerView.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.navigationView.backgroundColor = .clear
 
-        self.navigationLabel.textColor = UIColor.App.headingMain
+        self.navigationLabel.textColor = UIColor.App2.textPrimary
 
         self.navigationButton.backgroundColor = .clear
-        self.navigationButton.tintColor = UIColor.App.headingMain
+        self.navigationButton.tintColor = UIColor.App2.textPrimary
 
-        self.titleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.textColor = UIColor.App2.textPrimary
 
         self.depositHeaderTextFieldView.backgroundColor = .clear
-        self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App.headingSecondary)
-        self.depositHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App2.textSecond)
+        self.depositHeaderTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
 
-        self.depositTipLabel.textColor = UIColor.App.headingSecondary
+        self.depositTipLabel.textColor = UIColor.App2.textSecond
 
         self.amountButtonStackView.backgroundColor = .clear
 
-        self.nextButton.setBackgroundColor(UIColor.App.mainTint, for: .normal)
+        self.nextButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
         self.nextButton.setBackgroundColor(UIColor.App.contentBackground, for: .disabled)
-        self.nextButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.nextButton.setTitleColor(UIColor.App.headingDisabled, for: .disabled)
+        self.nextButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        self.nextButton.setTitleColor(UIColor.App2.textDisablePrimary, for: .disabled)
         self.nextButton.layer.cornerRadius = CornerRadius.button
         self.nextButton.layer.masksToBounds = true
 
-        self.paymentsLabel.textColor = UIColor.App.headingSecondary
+        self.paymentsLabel.textColor = UIColor.App2.textSecond
 
         self.paymentsLogosStackView.backgroundColor = .clear
     }
@@ -171,7 +171,7 @@ class DepositViewController: UIViewController {
         responsibleGamingLabel.text = fullString
         responsibleGamingLabel.numberOfLines = 0
         responsibleGamingLabel.font = AppFont.with(type: .medium, size: 10)
-        responsibleGamingLabel.textColor =  UIColor.App.headingSecondary
+        responsibleGamingLabel.textColor =  UIColor.App2.textSecond
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
@@ -179,7 +179,7 @@ class DepositViewController: UIViewController {
 
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
 
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App2.buttonBackgroundPrimary, range: range1)
 
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
 
@@ -213,7 +213,7 @@ class DepositViewController: UIViewController {
         faqLabel.text = fullString
         faqLabel.numberOfLines = 0
         faqLabel.font = AppFont.with(type: .medium, size: 10)
-        faqLabel.textColor =  UIColor.App.headingSecondary
+        faqLabel.textColor =  UIColor.App2.textSecond
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
@@ -221,11 +221,11 @@ class DepositViewController: UIViewController {
         let range2 = (fullString as NSString).range(of: localized("contact_us"))
 
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range1)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range1)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App2.buttonBackgroundPrimary, range: range1)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
 
         underlineAttriString.addAttribute(.font, value: AppFont.with(type: .regular, size: 10), range: range2)
-        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App.mainTint, range: range2)
+        underlineAttriString.addAttribute(.foregroundColor, value: UIColor.App2.buttonBackgroundPrimary, range: range2)
         underlineAttriString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range2)
 
         let paragraphStyle = NSMutableParagraphStyle()
@@ -264,40 +264,40 @@ class DepositViewController: UIViewController {
             self.checkForHighlightedAmountButton()
 
             if depositHeaderTextFieldView.text == "10" {
-                self.amount10Button.backgroundColor = UIColor.App.mainTint
-                self.amount10Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                self.amount10Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+                self.amount10Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount10Button
             }
             else if depositHeaderTextFieldView.text == "20" {
-                self.amount20Button.backgroundColor = UIColor.App.mainTint
-                self.amount20Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                self.amount20Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+                self.amount20Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount20Button
 
             }
             else if depositHeaderTextFieldView.text == "50" {
-                self.amount50Button.backgroundColor = UIColor.App.mainTint
-                self.amount50Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                self.amount50Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+                self.amount50Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount50Button
 
             }
             else if depositHeaderTextFieldView.text == "100" {
-                self.amount100Button.backgroundColor = UIColor.App.mainTint
-                self.amount100Button.layer.borderColor = UIColor.App.mainTint.cgColor
+                self.amount100Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+                self.amount100Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
                 currentSelectedButton = self.amount100Button
 
             }
             else {
                 self.amount10Button.backgroundColor = .clear
-                self.amount10Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+                self.amount10Button.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
                 self.amount20Button.backgroundColor = .clear
-                self.amount20Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+                self.amount20Button.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
                 self.amount50Button.backgroundColor = .clear
-                self.amount50Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+                self.amount50Button.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
                 self.amount100Button.backgroundColor = .clear
-                self.amount100Button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+                self.amount100Button.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
             }
         }
@@ -311,10 +311,10 @@ class DepositViewController: UIViewController {
 
         StyleHelper.styleButton(button: button)
 
-        button.setTitleColor(UIColor.App.headingMain, for: .normal)
+        button.setTitleColor(UIColor.App2.textPrimary, for: .normal)
         button.setBackgroundColor(.clear, for: .normal)
         button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+        button.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
         button.setTitle(title, for: .normal)
         button.titleLabel?.font = AppFont.with(type: .bold, size: 16)
@@ -324,7 +324,7 @@ class DepositViewController: UIViewController {
     func checkForHighlightedAmountButton() {
         if currentSelectedButton != nil {
             currentSelectedButton?.backgroundColor = .clear
-            currentSelectedButton?.layer.borderColor = UIColor.App.secondaryBackground.cgColor
+            currentSelectedButton?.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
         }
     }
 
@@ -337,8 +337,8 @@ class DepositViewController: UIViewController {
     @IBAction private func didTap10Button() {
         self.checkForHighlightedAmountButton()
 
-        self.amount10Button.backgroundColor = UIColor.App.mainTint
-        self.amount10Button.layer.borderColor = UIColor.App.mainTint.cgColor
+        self.amount10Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.amount10Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
 
         self.currentSelectedButton = self.amount10Button
 
@@ -349,8 +349,8 @@ class DepositViewController: UIViewController {
     @IBAction private func didTap20Button() {
         self.checkForHighlightedAmountButton()
 
-        self.amount20Button.backgroundColor = UIColor.App.mainTint
-        self.amount20Button.layer.borderColor = UIColor.App.mainTint.cgColor
+        self.amount20Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.amount20Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
 
         self.currentSelectedButton = self.amount20Button
 
@@ -363,8 +363,8 @@ class DepositViewController: UIViewController {
     @IBAction private func didTap50Button() {
         self.checkForHighlightedAmountButton()
 
-        self.amount50Button.backgroundColor = UIColor.App.mainTint
-        self.amount50Button.layer.borderColor = UIColor.App.mainTint.cgColor
+        self.amount50Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.amount50Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
 
         self.currentSelectedButton = self.amount50Button
 
@@ -377,8 +377,8 @@ class DepositViewController: UIViewController {
     @IBAction private func didTap100Button() {
         self.checkForHighlightedAmountButton()
 
-        self.amount100Button.backgroundColor = UIColor.App.mainTint
-        self.amount100Button.layer.borderColor = UIColor.App.mainTint.cgColor
+        self.amount100Button.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.amount100Button.layer.borderColor = UIColor.App2.buttonBackgroundPrimary.cgColor
 
         self.currentSelectedButton = self.amount100Button
 
