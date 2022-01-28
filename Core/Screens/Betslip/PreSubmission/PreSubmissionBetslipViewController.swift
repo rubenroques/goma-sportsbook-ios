@@ -593,6 +593,20 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        Env.betslipManager.multipleBetslipSelectionState
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipState in
+                self?.maxStakeMultiple = betslipState?.maxStake
+            })
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBalanceWallet
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wallet in
+                self?.userBalance = wallet?.amount
+            })
+            .store(in: &cancellables)
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
