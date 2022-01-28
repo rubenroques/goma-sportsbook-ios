@@ -56,6 +56,10 @@ class AggregatorsRepository {
 
     func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
 
+        if !Thread.isMainThread {
+            print("Wrong thread")
+        }
+
         if shouldClear {
             self.matchesForType = [:]
         }
@@ -168,6 +172,13 @@ class AggregatorsRepository {
     }
 
     func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
+
+        if !Thread.isMainThread {
+            print("Thread.isMainThread \(Thread.isMainThread)")
+        }
+        else {
+            print("Thread.isMainThread \(Thread.isMainThread)")
+        }
 
         guard
             let contentUpdates = aggregator.contentUpdates
