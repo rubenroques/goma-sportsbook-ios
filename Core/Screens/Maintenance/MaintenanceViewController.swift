@@ -40,8 +40,8 @@ class MaintenanceViewController: UIViewController {
 
         containerView.backgroundColor = UIColor(patternImage: imageGradient)
         maintenanceView.backgroundColor = UIColor(patternImage: imageGradient)
-        titleLabel.textColor = UIColor.App.headingMain
-        textLabel.textColor = UIColor.App.headingMain
+        titleLabel.textColor = UIColor.App2.textPrimary
+        textLabel.textColor = UIColor.App2.textPrimary
     }
 
     func commonInit() {

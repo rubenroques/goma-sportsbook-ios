@@ -106,7 +106,7 @@ class WithdrawViewController: UIViewController {
 
         self.nextButton.setBackgroundColor(UIColor.App2.highlightPrimary, for: .normal)
         self.nextButton.setBackgroundColor(UIColor.App.contentBackground, for: .disabled)
-        self.nextButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        self.nextButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         self.nextButton.setTitleColor(UIColor.App2.textDisablePrimary, for: .disabled)
         self.nextButton.layer.cornerRadius = CornerRadius.button
         self.nextButton.layer.masksToBounds = true

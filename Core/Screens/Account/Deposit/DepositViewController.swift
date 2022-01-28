@@ -65,7 +65,7 @@ class DepositViewController: UIViewController {
 
         self.depositHeaderTextFieldView.setPlaceholderText(localized("deposit_value"))
         self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
-        self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App2.textSecond)
+        self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App2.inputBackground)
 
         depositTipLabel.text = localized("minimum_deposit_value")
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -120,9 +120,9 @@ class DepositViewController: UIViewController {
         self.amountButtonStackView.backgroundColor = .clear
 
         self.nextButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        self.nextButton.setBackgroundColor(UIColor.App.contentBackground, for: .disabled)
+        self.nextButton.setBackgroundColor(UIColor.App2.buttonDisablePrimary, for: .disabled)
         self.nextButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
-        self.nextButton.setTitleColor(UIColor.App2.textDisablePrimary, for: .disabled)
+        self.nextButton.setTitleColor(UIColor.App2.buttonTextDisablePrimary, for: .disabled)
         self.nextButton.layer.cornerRadius = CornerRadius.button
         self.nextButton.layer.masksToBounds = true
 
@@ -435,7 +435,15 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTapCloseButton() {
-        self.navigationController?.popViewController(animated: true)
+        if presentingViewController != nil {
+                  // foi presented porque tem um presentingViewController
+                self.navigationController?.dismiss(animated: true, completion: nil)
+              }
+              else {
+                  // foi pushed
+                  self.navigationController?.popViewController(animated: true)
+              }
+        
     }
 
     @objc func didTapBackground() {

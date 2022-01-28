@@ -127,7 +127,7 @@ class FullRegisterDocumentsViewController: UIViewController {
 
         submitButton.backgroundColor = UIColor.App2.backgroundPrimary
         submitButton.setTitleColor(UIColor.App2.buttonTextDisablePrimary, for: .disabled)
-        submitButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        submitButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         submitButton.cornerRadius = CornerRadius.button
 
     }

@@ -133,7 +133,7 @@ class HomeFilterViewController: UIViewController {
         bottomButtonView.backgroundColor = UIColor.App2.backgroundPrimary
 
         applyButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
-        applyButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        applyButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         
     }
 

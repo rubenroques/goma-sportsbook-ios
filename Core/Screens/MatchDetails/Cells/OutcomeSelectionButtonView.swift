@@ -14,6 +14,7 @@ class OutcomeSelectionButtonView: NibView {
     @IBOutlet private var marketTypeLabel: UILabel!
     @IBOutlet private var marketOddLabel: UILabel!
 
+    @IBOutlet private weak var stackView: UIStackView!
     @IBOutlet private weak var upChangeOddValueImage: UIImageView!
     @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
@@ -90,8 +91,13 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App2.backgroundTertiary
+        self.containerView.backgroundColor = UIColor.App2.backgroundOdds
         self.containerView.layer.cornerRadius = CornerRadius.button
+        
+        //self.stackView.backgroundColor = UIColor.App2.backgroundOdds
+        //self.stackView.layer.cornerRadius = CornerRadius.label
+       // self.containerView.backgroundColor = UIColor.App2.backgroundOdds
+       // self.containerView.layer.cornerRadius = CornerRadius.button
 
         self.marketTypeLabel.textColor = UIColor.App2.textPrimary
         self.marketTypeLabel.font = AppFont.with(type: .medium, size: 11)
@@ -221,7 +227,7 @@ class OutcomeSelectionButtonView: NibView {
         self.containerView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     func deselectButton() {
-        self.containerView.backgroundColor = UIColor.App2.backgroundTertiary
+        self.containerView.backgroundColor = UIColor.App2.backgroundOdds
     }
     @objc func didTapOddButton() {
 

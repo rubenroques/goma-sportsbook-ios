@@ -30,7 +30,7 @@ class FilterRowView: NibView {
                 buttonImageView.layer.borderColor = UIColor.App2.separatorLine.cgColor
                 buttonImageView.layer.cornerRadius = 4
 
-                buttonImageView.tintColor = UIColor.App2.textPrimary
+                buttonImageView.tintColor = UIColor.App2.buttonTextPrimary
 
                 buttonImageView.image = nil
 

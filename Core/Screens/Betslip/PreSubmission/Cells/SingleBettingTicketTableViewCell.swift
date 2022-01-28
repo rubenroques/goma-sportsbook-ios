@@ -150,53 +150,53 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
 
-        self.baseView.backgroundColor = UIColor.App.secondaryBackground
+        self.baseView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.topBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.separatorView.backgroundColor = UIColor.App.separatorLine
-        self.bottomBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.buttonsBaseView.backgroundColor = UIColor.App.secondaryBackground
+        self.topBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.separatorView.backgroundColor = UIColor.App2.separatorLine
+        self.bottomBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.buttonsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         
-        self.outcomeNameLabel.textColor = UIColor.App.headingMain
-        self.oddValueLabel.textColor = UIColor.App.headingMain
-        self.marketNameLabel.textColor = UIColor.App.headingMain
-        self.matchDetailLabel.textColor = UIColor.App.headingDisabled
-        self.returnsValueLabel.textColor = UIColor.App.headingDisabled
+        self.outcomeNameLabel.textColor = UIColor.App2.textPrimary
+        self.oddValueLabel.textColor = UIColor.App2.textPrimary
+        self.marketNameLabel.textColor = UIColor.App2.textPrimary
+        self.matchDetailLabel.textColor = UIColor.App2.textDisablePrimary
+        self.returnsValueLabel.textColor = UIColor.App2.textDisablePrimary
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
-        self.amountTextfield.textColor = UIColor.App.headingMain
+        self.amountTextfield.textColor = UIColor.App2.textPrimary
         self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
+            NSAttributedString.Key.foregroundColor: UIColor.App2.textDisablePrimary
         ])
 
-        self.amountBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.amountBaseView.backgroundColor = UIColor.App2.backgroundTertiary
         
-        self.plusOneButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.plusOneButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.plusOneButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        self.plusOneButtonView.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
+        self.plusOneButtonView.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        self.plusOneButtonView.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
-        self.plusFiveButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.plusFiveButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.plusFiveButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        self.plusFiveButtonView.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
+        self.plusFiveButtonView.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        self.plusFiveButtonView.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
-        self.maxValueButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.maxValueButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.maxValueButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        self.maxValueButtonView.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
+        self.maxValueButtonView.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        self.maxValueButtonView.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
         self.stackView.backgroundColor = .clear
 
-        self.errorView.backgroundColor = UIColor.App.contentBackground
+        self.errorView.backgroundColor = UIColor.App2.backgroundCards
 
-        self.errorLabel.textColor = UIColor.App.headingMain
+        self.errorLabel.textColor = UIColor.App2.textPrimary
         self.errorLabel.font = AppFont.with(type: .bold, size: 15)
         self.errorLabel.numberOfLines = 0
 
         self.errorLogoImageView.image = UIImage(named: "warning_alert_icon")
         self.errorLogoImageView.contentMode = .scaleAspectFit
 
-        self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
-        self.errorLateralBottomView.backgroundColor = UIColor.App.contentBackground
+        self.errorLateralTopView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.errorLateralBottomView.backgroundColor = UIColor.App2.backgroundCards
     }
 
     func addDoneAccessoryView() {
@@ -216,7 +216,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -229,7 +229,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -288,8 +288,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.errorLabel.text = errorBetting
             self.errorView.isHidden = false
 
-            self.errorLateralTopView.backgroundColor = UIColor.App.alertError
-            self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
+            self.errorLateralTopView.backgroundColor = UIColor.App2.alertError
+            self.errorLateralBottomView.backgroundColor = UIColor.App2.alertError
 
             // TODO: Code Review - se a errorView for nil a app crasha
             NSLayoutConstraint(item: self.errorView,
@@ -304,8 +304,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.errorLabel.text = ""
             self.errorView.isHidden = true
 
-            self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
-            self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
+            self.errorLateralTopView.backgroundColor = UIColor.App2.backgroundSecondary
+            self.errorLateralBottomView.backgroundColor = UIColor.App2.backgroundSecondary
         }
 
     }

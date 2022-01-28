@@ -85,8 +85,8 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.expandBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.containerView.backgroundColor = UIColor.App2.backgroundCards
+        self.expandBaseView.backgroundColor = UIColor.App2.backgroundCards
 
         self.expandLabel.textColor = UIColor.App2.textPrimary
         self.titleLabel.textColor = UIColor.App2.textPrimary

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,6 +14,7 @@
                 <outlet property="downChangeOddValueImage" destination="r2W-mn-IRX" id="M2w-rM-uCE"/>
                 <outlet property="marketOddLabel" destination="lia-Ch-bbe" id="aMn-st-8kw"/>
                 <outlet property="marketTypeLabel" destination="jVl-Vv-xZj" id="eqa-MY-2cw"/>
+                <outlet property="stackView" destination="hMw-bH-0pz" id="K3r-Jx-wh4"/>
                 <outlet property="upChangeOddValueImage" destination="qrU-cE-3lr" id="UW1-5s-4xt"/>
             </connections>
         </placeholder>

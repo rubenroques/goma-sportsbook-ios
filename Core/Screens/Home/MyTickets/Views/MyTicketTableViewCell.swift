@@ -72,6 +72,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 10
+        
         self.baseView.layer.masksToBounds = true
 
         self.cashoutButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
@@ -133,15 +134,19 @@ class MyTicketTableViewCell: UITableViewCell {
 
     func setupWithTheme() {
 
-        self.backgroundColor = UIColor.clear
+        self.backgroundColor = UIColor.App2.backgroundPrimary
+        
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
-
-        self.baseView.backgroundColor = UIColor.App2.backgroundTertiary
+        
+        self.baseView.layer.borderColor = UIColor.App2.backgroundBorder.cgColor
+        self.baseView.layer.borderWidth = 2
+        
         self.topStatusView.backgroundColor = .clear
         self.headerBaseView.backgroundColor = .clear
         self.betCardsBaseView.backgroundColor = .clear
         self.betCardsStackView.backgroundColor = .clear
+        
         self.bottomSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
         self.bottomBaseView.backgroundColor = .clear
         self.bottomStackView.backgroundColor = .clear
@@ -150,13 +155,13 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashoutButton.setBackgroundColor(UIColor.App2.backgroundSecondary, for: .normal)
 
         self.titleLabel.textColor = UIColor.App2.textPrimary
-        self.subtitleLabel.textColor = UIColor.App2.textPrimary
-        self.totalOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.totalOddSubtitleLabel.textColor = UIColor.App2.textPrimary
-        self.betAmountTitleLabel.textColor = UIColor.App2.textPrimary
-        self.betAmountSubtitleLabel.textColor = UIColor.App2.textPrimary
-        self.winningsTitleLabel.textColor = UIColor.App2.textPrimary
-        self.winningsSubtitleLabel.textColor = UIColor.App2.textPrimary
+        self.subtitleLabel.textColor = UIColor.App2.textSecond
+        self.totalOddTitleLabel.textColor = .white
+        self.totalOddSubtitleLabel.textColor = .white
+        self.betAmountTitleLabel.textColor = .white
+        self.betAmountSubtitleLabel.textColor = .white
+        self.winningsTitleLabel.textColor = .white
+        self.winningsSubtitleLabel.textColor = .white
 
         if let status = self.betHistoryEntry?.status?.uppercased() {
             switch status {

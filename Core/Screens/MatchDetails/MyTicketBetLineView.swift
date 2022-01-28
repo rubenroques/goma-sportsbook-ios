@@ -172,11 +172,15 @@ class MyTicketBetLineView: NibView {
                 self.dateLabel.isHidden = true
                 self.indicatorInternalBaseView.backgroundColor = UIColor.App2.myTicketsWon
                 self.indicatorLabel.text = "Won"
+                self.bottomBaseView.backgroundColor = UIColor.App2.myTicketsWonFaded
+                self.separatorView.isHidden = true
             case "LOST", "HALF_LOST":
                 self.indicatorBaseView.isHidden = false
                 self.dateLabel.isHidden = true
                 self.indicatorInternalBaseView.backgroundColor = UIColor.App2.myTicketsLost
+                self.bottomBaseView.backgroundColor = UIColor.App2.myTicketsLostFaded
                 self.indicatorLabel.text = "Lost"
+                self.separatorView.isHidden = true
             case "OPEN":
                 self.dateLabel.isHidden = false
                 self.indicatorLabel.text = ""
