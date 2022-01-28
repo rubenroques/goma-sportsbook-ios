@@ -94,30 +94,30 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        skipView.backgroundColor = UIColor.App.mainBackground
+        skipView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.white, for: .normal)
+        skipButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
         skipButton.layer.borderColor = .none
-        skipButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
+        skipButton.layer.backgroundColor = UIColor.App2.textPrimary.withAlphaComponent(0).cgColor
 
-        registerTitleLabel.textColor = .white
+        registerTitleLabel.textColor = UIColor.App2.textHeadlinePrimary
 
-        emailHeadertextFieldView.backgroundColor = UIColor.App.mainBackground
-        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        emailHeadertextFieldView.setTextFieldColor(.white)
+        emailHeadertextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
+        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        emailHeadertextFieldView.setTextFieldColor(UIColor.App2.inputText)
         emailHeadertextFieldView.setSecureField(false)
 
-        registerButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
-        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+        registerButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        registerButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        registerButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
 
         registerButton.backgroundColor = .clear
-        registerButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
-        registerButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        registerButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        registerButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
         registerButton.layer.cornerRadius = CornerRadius.button
         registerButton.layer.masksToBounds = true
 
@@ -222,11 +222,11 @@ extension SimpleRegisterEmailCheckViewController {
     }
 
     func showWrongEmailFormatError() {
-        self.emailHeadertextFieldView.showErrorOnField(text: localized("invalid_email"), color: UIColor.App.alertError)
+        self.emailHeadertextFieldView.showErrorOnField(text: localized("invalid_email"), color: UIColor.App2.alertError)
     }
 
     func showEmailUsedError() {
-        self.emailHeadertextFieldView.showErrorOnField(text: localized("email_already_registered"), color: UIColor.App.alertError)
+        self.emailHeadertextFieldView.showErrorOnField(text: localized("email_already_registered"), color: UIColor.App2.alertError)
     }
 
     func hideEmailError() {

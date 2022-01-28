@@ -52,11 +52,11 @@ class VersionUpdateViewController: UIViewController {
         self.view.backgroundColor = UIColor(patternImage: imageGradient)
         containerView.backgroundColor = UIColor(patternImage: imageGradient)
         updateView.backgroundColor = UIColor(patternImage: imageGradient)
-        titleLabel.textColor = UIColor.App.headingMain
-        textLabel.textColor = UIColor.App.headingMain
+        titleLabel.textColor = UIColor.App2.textPrimary
+        textLabel.textColor = UIColor.App2.textPrimary
         updateButton.setTitleColor(UIColor.white, for: .normal)
-        updateButton.layer.borderColor = UIColor.App.mainTint.cgColor
-        updateButton.layer.backgroundColor = UIColor.App.mainTint.cgColor
+        updateButton.layer.borderColor = UIColor.App2.highlightPrimary.cgColor
+        updateButton.layer.backgroundColor = UIColor.App2.highlightPrimary.cgColor
         dismissButton.setTitleColor(UIColor.white, for: .normal)
         dismissButton.layer.borderColor = .none
         dismissButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor

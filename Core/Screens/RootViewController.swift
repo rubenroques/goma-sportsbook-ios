@@ -38,7 +38,7 @@ class RootViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainTint
+        self.view.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
 
     @IBAction private func didTapAPITest() {

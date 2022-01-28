@@ -29,13 +29,13 @@ class CheckboxButton: UIButton {
     override func awakeFromNib() {
         self.addTarget(self, action: #selector(buttonClicked(sender:)), for: UIControl.Event.touchUpInside)
 
-        self.backgroundColor = UIColor.App2.backgroundSecondary
+        self.backgroundColor = UIColor.App2.buttonTextPrimary
 
         self.layer.borderWidth = 2
         self.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
         self.layer.cornerRadius = 4
 
-        self.tintColor = UIColor.App2.textPrimary
+        self.tintColor = UIColor.App2.buttonTextPrimary
 
     }
 

@@ -26,17 +26,17 @@ class EmptyCardTableViewCell: UITableViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.mainBackground
+        self.containerView.backgroundColor = UIColor.App2.backgroundPrimary
         self.containerView.layer.cornerRadius = CornerRadius.modal
         self.containerView.layer.masksToBounds = true
 
         self.iconImageView.backgroundColor = .clear
-        self.iconImageView.tintColor = UIColor.App.headingMain
+        self.iconImageView.tintColor = UIColor.App2.textPrimary
 
-        self.firstTextFieldLabel.textColor = UIColor.App.headingMain
+        self.firstTextFieldLabel.textColor = UIColor.App2.textPrimary
         self.firstTextFieldLabel.font = AppFont.with(type: .semibold, size: 20)
         
-        self.secondTextFieldLabel.textColor = UIColor.App.headingMain
+        self.secondTextFieldLabel.textColor = UIColor.App2.textPrimary
         self.secondTextFieldLabel.font = AppFont.with(type: .semibold, size: 14)
         self.firstTextFieldLabel.numberOfLines = 2
         

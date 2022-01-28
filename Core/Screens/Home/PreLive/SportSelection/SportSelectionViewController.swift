@@ -93,7 +93,7 @@ class SportSelectionViewController: UIViewController {
         topView.backgroundColor = UIColor.App2.backgroundPrimary
         navigationView.backgroundColor = UIColor.App2.backgroundPrimary
         navigationLabel.textColor = UIColor.App2.textPrimary
-        cancelButton.setTitleColor(UIColor.App2.highlightPrimary, for: .normal)
+        cancelButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         collectionView.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.searchBar.searchBarStyle = UISearchBar.Style.prominent
@@ -111,11 +111,13 @@ class SportSelectionViewController: UIViewController {
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App.fadeOutHeading])
+                                                                                
+                                                                                               UIColor.App2.inputTextTitle])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.fadeOutHeading
+                glassIconView.tintColor =
+                UIColor.App2.inputTextTitle
             }
         }
 

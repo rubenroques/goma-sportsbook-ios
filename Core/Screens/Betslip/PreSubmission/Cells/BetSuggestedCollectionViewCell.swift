@@ -47,11 +47,11 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
         self.betsStackView.removeAllArrangedSubviews()
-        self.betsStackView.backgroundColor = UIColor.App.secondaryBackground
-        self.informationBetView.backgroundColor = UIColor.App.secondaryBackground
-        self.totalOddValueLabel.textColor = UIColor.App.headingMain
-        self.numberOfSelectionsValueLabel.textColor = UIColor.App.headingMain
-        self.betNowButton.backgroundColor = UIColor.App.primaryButtonNormal
+        self.betsStackView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.informationBetView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.totalOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.numberOfSelectionsValueLabel.textColor = UIColor.App2.textPrimary
+        self.betNowButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
     
     func setupStackBetView(betValues: [Match], gomaValues: [GomaSuggestedBets]) {
@@ -99,7 +99,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                     }
 
                                     validMarkets += 1
-                                    gameSuggestedView.backgroundColor = UIColor.App.secondaryBackground
+                                    gameSuggestedView.backgroundColor = UIColor.App2.backgroundSecondary
                                     betsStackView.addArrangedSubview(gameSuggestedView)
 
                                     self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)

@@ -83,13 +83,13 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App.tertiaryBackground
-        self.containerView.layer.cornerRadius = CornerRadius.button
+      // self.containerView.backgroundColor = UIColor.App2.backgroundCards
+        //self.containerView.layer.cornerRadius = CornerRadius.button
 
-        self.marketTypeLabel.textColor = UIColor.App.headingMain
+        self.marketTypeLabel.textColor = UIColor.App2.textPrimary
         self.marketTypeLabel.font = AppFont.with(type: .medium, size: 11)
 
-        self.marketOddLabel.textColor = UIColor.App.headingMain
+        self.marketOddLabel.textColor = UIColor.App2.textPrimary
         self.marketOddLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
@@ -187,10 +187,14 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     }
 
     func selectButton() {
-        self.containerView.backgroundColor = UIColor.App.mainTint
+        self.containerView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.marketOddLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.marketTypeLabel.textColor = UIColor.App2.buttonTextPrimary
     }
     func deselectButton() {
-        self.containerView.backgroundColor = UIColor.App.tertiaryBackground
+        self.containerView.backgroundColor = UIColor.App2.backgroundOdds
+        self.marketOddLabel.textColor = UIColor.App2.textPrimary
+        self.marketTypeLabel.textColor = UIColor.App2.textPrimary
     }
     @objc func didTapOddButton() {
 
@@ -228,7 +232,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -241,7 +245,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {

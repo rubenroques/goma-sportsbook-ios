@@ -87,12 +87,13 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
-        self.containerView.backgroundColor = UIColor.App.secondaryBackground
 
-        self.expandBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.expandLabel.textColor = UIColor.App.headingMain
+        self.containerView.backgroundColor = UIColor.App2.backgroundCards
+        self.expandBaseView.backgroundColor = UIColor.App2.backgroundCards
 
-        self.titleLabel.textColor = UIColor.App.headingMain
+        self.expandLabel.textColor = UIColor.App2.textPrimary
+        self.titleLabel.textColor = UIColor.App2.textPrimary
+        
     }
 
     func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer, isExpanded: Bool) {

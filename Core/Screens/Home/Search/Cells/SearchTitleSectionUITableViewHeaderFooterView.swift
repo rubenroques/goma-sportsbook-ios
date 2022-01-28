@@ -33,12 +33,12 @@ class SearchTitleSectionUITableViewHeaderFooterView: UITableViewHeaderFooterView
     func setupWithTheme() {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
-        self.contentView.backgroundColor = UIColor.App.contentBackground
+        self.contentView.backgroundColor = UIColor.App2.backgroundCards
 
-        self.nameLabel.textColor = UIColor.App.headingMain
+        self.nameLabel.textColor = UIColor.App2.textPrimary
         self.nameLabel.font = AppFont.with(type: .bold, size: 16)
 
-        self.countLabel.textColor = UIColor.App.headerTextField
+        self.countLabel.textColor = UIColor.App2.inputText
         self.countLabel.font = AppFont.with(type: .bold, size: 16)
     }
 

@@ -340,25 +340,25 @@ class ProfileViewController: UIViewController {
         safeAreaTopView.backgroundColor = UIColor.App2.backgroundPrimary
         profileBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         profilePictureBaseView.backgroundColor = UIColor.App2.highlightPrimary
-        currentBalanceBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        currentBalanceBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         scrollBaseView.backgroundColor = UIColor.App2.backgroundPrimary
         profilePictureImageView.backgroundColor = .clear
 
         usernameLabel.textColor = UIColor.App2.textPrimary
-        userIdLabel.textColor = UIColor.App.fadeOutHeading
+        userIdLabel.textColor = UIColor.App2.textSecond
         currentBalanceTitleLabel.textColor =  UIColor.App2.textPrimary
         currentBalanceLabel.textColor =  UIColor.App2.textPrimary
 
         //
-        depositButton.setTitleColor( UIColor.App2.textPrimary, for: .normal)
-        depositButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        depositButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
+        depositButton.setTitleColor( UIColor.App2.buttonTextPrimary, for: .normal)
+        depositButton.setTitleColor( UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        depositButton.setTitleColor( UIColor.App2.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
         depositButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
         depositButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
 
-        withdrawButton.setTitleColor( UIColor.App2.textPrimary, for: .normal)
-        withdrawButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        withdrawButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
+        withdrawButton.setTitleColor( UIColor.App2.buttonTextPrimary, for: .normal)
+        withdrawButton.setTitleColor( UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        withdrawButton.setTitleColor( UIColor.App2.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
         withdrawButton.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
         logoutButton.setTitleColor( UIColor.App2.textPrimary, for: .normal)

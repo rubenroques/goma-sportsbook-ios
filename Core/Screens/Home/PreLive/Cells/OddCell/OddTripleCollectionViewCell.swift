@@ -205,8 +205,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.participantsNameLabel.textColor = UIColor.App2.textPrimary
         self.marketNameLabel.textColor = UIColor.App2.textPrimary
 
-        self.leftOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.leftOddValueLabel.textColor = UIColor.App2.textPrimary
+       
 
         self.middleOddTitleLabel.textColor = UIColor.App2.textPrimary
         self.middleOddValueLabel.textColor = UIColor.App2.textPrimary
@@ -403,10 +402,14 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     func selectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.leftOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.leftOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
     }
 
     func deselectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.leftOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.leftOddValueLabel.textColor = UIColor.App2.textPrimary
     }
 
     @objc func didTapLeftOddButton() {
@@ -444,9 +447,13 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     func selectMiddleOddButton() {
         self.middleBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.middleOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.middleOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
     }
     func deselectMiddleOddButton() {
         self.middleBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.middleOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.middleOddValueLabel.textColor = UIColor.App2.textPrimary
     }
     @objc func didTapMiddleOddButton() {
         guard
@@ -481,9 +488,13 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     func selectRightOddButton() {
         self.rightBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.rightOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.rightOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
     }
     func deselectRightOddButton() {
         self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.rightOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.rightOddValueLabel.textColor = UIColor.App2.textPrimary
     }
     @objc func didTapRightOddButton() {
         guard

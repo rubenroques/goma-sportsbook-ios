@@ -129,12 +129,12 @@ class HeaderTextFieldView: NibView {
     var isDisabled: Bool = false {
         didSet {
             if self.isDisabled {
-                self.textField.textColor = UIColor.App2.textPrimary.withAlphaComponent(0.3)
+                self.textField.textColor = UIColor.App2.inputText
                 self.textField.isUserInteractionEnabled = false
             }
             else {
                 self.headerLabel.isHidden = false
-                self.textField.textColor = UIColor.App2.textPrimary
+                self.textField.textColor = UIColor.App2.inputText
                 self.textField.isUserInteractionEnabled = true
             }
         }
@@ -162,7 +162,7 @@ class HeaderTextFieldView: NibView {
         containerView.layer.cornerRadius = CornerRadius.headerInput
 
         containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.App2.backgroundSecondary.withAlphaComponent(0).cgColor
+        containerView.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
         
         self.textField.autocorrectionType = .no
         self.textField.keyboardType = self.keyboardType

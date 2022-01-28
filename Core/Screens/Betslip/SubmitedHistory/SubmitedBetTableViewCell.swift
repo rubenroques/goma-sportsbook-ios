@@ -152,7 +152,7 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.cashoutValueLabel.textColor = UIColor.App2.textPrimary
         self.cashoutButton.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
         self.cashoutSeparatorView.backgroundColor = UIColor.App2.separatorLine
-
+        self.possibleWinningsTitleLabel.textColor = UIColor.App2.textSecond
     }
 
     func configureWithViewModel(viewModel: SubmitedBetTableViewCellViewModel) {

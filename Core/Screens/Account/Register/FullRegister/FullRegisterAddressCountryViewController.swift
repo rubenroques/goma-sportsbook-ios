@@ -81,37 +81,37 @@ class FullRegisterAddressCountryViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        topView.backgroundColor = UIColor.App.mainBackground
+        topView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        view.backgroundColor = UIColor.App.mainBackground
+        view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        navigationView.backgroundColor = UIColor.App.mainBackground
+        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        closeButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        closeButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
 
-        progressView.backgroundColor = UIColor.App.mainBackground
+        progressView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        progressLabel.textColor = UIColor.App.headingMain
+        progressLabel.textColor = UIColor.App2.textPrimary
 
-        titleLabel.textColor = UIColor.App.headingMain
+        titleLabel.textColor = UIColor.App2.textPrimary
 
-        securityQuestionTextFieldView.backgroundColor = UIColor.App.mainBackground
-        securityQuestionTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        securityQuestionTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        securityQuestionTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
+        securityQuestionTextFieldView.setHeaderLabelColor(UIColor.App2.inputText)
+        securityQuestionTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
         securityQuestionTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         securityQuestionTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        securityAnswerHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        securityAnswerHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        securityAnswerHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        securityAnswerHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
+        securityAnswerHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputText)
+        securityAnswerHeaderTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
         securityAnswerHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         securityAnswerHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        continueButton.backgroundColor = UIColor.App.mainBackground
-        continueButton.setTitleColor(UIColor.App.headerTextField, for: .disabled)
-        continueButton.setTitleColor(UIColor.App.headingMain, for: .normal)
+        continueButton.backgroundColor = UIColor.App2.backgroundPrimary
+        continueButton.setTitleColor(UIColor.App2.buttonTextDisablePrimary, for: .disabled)
+        continueButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
         continueButton.cornerRadius = CornerRadius.button
     }
 
@@ -137,12 +137,12 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
         if  securityQuestionText && securityAnswerText {
             self.continueButton.isEnabled = true
-            continueButton.backgroundColor = UIColor.App.mainTint
+            continueButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
             self.setupFullRegisterUserInfoForm()
         }
         else {
             self.continueButton.isEnabled = false
-            continueButton.backgroundColor = UIColor.App.mainBackground
+            continueButton.backgroundColor = UIColor.App2.backgroundPrimary
         }
     }
 

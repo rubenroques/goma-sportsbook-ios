@@ -300,8 +300,8 @@ class PreLiveEventsViewController: UIViewController {
             self.openCompetitionsFilters()
         }
 
-        self.competitionsFiltersDarkBackgroundView.alpha = 0.4
-        self.competitionsFiltersBaseView.backgroundColor = .clear
+        self.competitionsFiltersDarkBackgroundView.alpha = 0.2
+        self.competitionsFiltersBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.competitionsFiltersBaseView.addSubview(self.competitionsFiltersView!)
 
         NSLayoutConstraint.activate([
@@ -501,10 +501,10 @@ class PreLiveEventsViewController: UIViewController {
         self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
         self.betslipButtonView.backgroundColor = UIColor.App2.highlightPrimary
 
-        self.emptyBaseView.backgroundColor = UIColor.App.mainBackground
-        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
-        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.headingMain
-        self.emptyStateButton.backgroundColor = UIColor.App.primaryButtonNormal
+        self.emptyBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App2.textPrimary
+        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App2.textPrimary
+        self.emptyStateButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

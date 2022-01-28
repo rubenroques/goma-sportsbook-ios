@@ -458,11 +458,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     func selectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App2.highlightPrimary
+        self.homeBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.homeOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
     }
 
     func deselectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.homeOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.homeOddValueLabel.textColor = UIColor.App2.textPrimary
     }
 
     @objc func didTapLeftOddButton() {
@@ -486,7 +490,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
-
+        
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
             self.isLeftOutcomeButtonSelected = false
@@ -500,11 +504,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     func selectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App2.highlightPrimary
+        self.drawBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.drawOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
     }
 
     func deselectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.drawOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.drawOddValueLabel.textColor = UIColor.App2.textPrimary
     }
 
     @objc func didTapMiddleOddButton() {
@@ -540,11 +548,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     //
     func selectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App2.highlightPrimary
+        self.awayBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.awayOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
     }
 
     func deselectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.awayOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.awayOddValueLabel.textColor = UIColor.App2.textPrimary
     }
 
     @objc func didTapRightOddButton() {

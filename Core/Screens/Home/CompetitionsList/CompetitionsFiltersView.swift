@@ -133,7 +133,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.applyButton.layer.masksToBounds = true
 
         self.searchBarBaseView.backgroundColor = .clear
-
+        
         self.searchBarView.searchBarStyle = UISearchBar.Style.prominent
         self.searchBarView.sizeToFit()
         self.searchBarView.isTranslucent = false
@@ -142,23 +142,23 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.barTintColor = .white
         self.searchBarView.backgroundImage = UIColor.App2.backgroundPrimary.image()
         // self.searchBarView.placeholder = localized("search")
-
-        self.searchBarView.delegate = self
+        self.searchBarView.backgroundColor = UIColor.App2.inputBackground
+        //self.searchBarView.delegate = self
 
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App2.backgroundSecondary
+            textfield.backgroundColor = UIColor.App2.backgroundPrimary
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.font = AppFont.with(type: .semibold, size: 15)
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),
                                                             attributes: [
-                    .foregroundColor: UIColor.App.fadeOutHeading,
+                    .foregroundColor: UIColor.App2.textPrimary,
                     .font: AppFont.with(type: .semibold, size: 15)
                 ])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.fadeOutHeading
+                glassIconView.tintColor = UIColor.App2.backgroundPrimary
             }
         }
 
@@ -220,14 +220,14 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.buttonSeparatorBaseVIew.backgroundColor = UIColor.App2.separatorLine
         self.buttonSeparatorBaseVIew.alpha = 0.5
 
-        self.headerBaseView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.searchBarBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.headerBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.searchBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
         self.titleLabel.textColor = UIColor.App2.textPrimary
         self.smallTitleLabel.textColor = UIColor.App2.textPrimary
 
-        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
-        self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundSecondary
+        self.tableView.backgroundColor = UIColor.App2.backgroundSecondary
         self.buttonBaseVIew.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.applyButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
@@ -238,17 +238,18 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.applyButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
 
         self.searchBarView.backgroundImage = UIColor.App2.backgroundPrimary.image()
+        self.searchBarView.backgroundColor = UIColor.App2.backgroundSecondary
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App2.backgroundSecondary
-            textfield.textColor = .white
+            textfield.backgroundColor = UIColor.App2.backgroundPrimary
+            textfield.textColor = UIColor.App2.textSecond
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App.fadeOutHeading])
+                                                                                UIColor.App2.textSecond])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.fadeOutHeading
+                glassIconView.tintColor = UIColor.App2.backgroundSecondary
             }
         }
     }
