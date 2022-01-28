@@ -202,6 +202,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+    var maxStakeMultiple: Double?
+    var maxStakeSystem: Double?
+    var userBalance: Double?
+
     // Suggested Aggregator Variables
     var matches: [String: EveryMatrix.Match] = [:]
     var match: EveryMatrix.Match?
@@ -438,10 +442,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = false
                     self?.systemWinningsBaseView.isHidden = true
+                    self?.checkMaxAmountTransition()
                 case .system:
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = false
+                    self?.checkMaxAmountTransition()
                 }
             })
             .store(in: &cancellables)
@@ -611,6 +617,20 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.betslipManager.multipleBetslipSelectionState
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipState in
+                self?.maxStakeMultiple = betslipState?.maxStake
+            })
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBalanceWallet
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wallet in
+                self?.userBalance = wallet?.amount
+            })
+            .store(in: &cancellables)
+
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -771,8 +791,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    
-    
     private func commonInit() {
 
         betSuggestedCollectionView.showsVerticalScrollIndicator = false
@@ -989,7 +1007,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     func requestSystemBetInfo() {
 
         guard
-            self.realBetValue != 0,
+            // self.realBetValue != 0, NOTA: Tive de desactivar esta opção para conseguir ter o maxAmount da system bet e colocar 1 por default na chamada, como se faz na multipla
             let selectedSystemBet = self.selectedSystemBet
         else {
             return
@@ -1002,14 +1020,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemWinningsValueLabel.text = "-.--€"
 
         Env.betslipManager
-            .requestSystemBetslipSelectionState(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBet)
+            .requestSystemBetslipSelectionState(systemBetType: selectedSystemBet)
             .receive(on: DispatchQueue.main)
             .sink { _ in
 
             } receiveValue: { [weak self] betDetails in
                
                 self?.configureWithSystemBetInfo(systemBetInfo: betDetails)
-                
             }
             .store(in: &cancellables)
 
@@ -1040,6 +1057,26 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.systemWinningsValueLabel.text = "-.--€"
             self.secondarySystemWinningsValueLabel.text = "-.--€"
         }
+
+        self.maxStakeSystem = systemBetInfo.maxStake
+
+    }
+
+    func checkMaxAmountTransition() {
+        if let maxStakeMultiple = self.maxStakeMultiple, let maxStakeSystem = self.maxStakeSystem {
+            if self.listTypePublisher.value == .multiple {
+                if realBetValue > maxStakeMultiple {
+                    self.addAmountValue(maxStakeMultiple)
+                }
+            }
+            else if self.listTypePublisher.value == .system {
+                if realBetValue > maxStakeSystem {
+                    self.addAmountValue(maxStakeSystem)
+                }
+            }
+
+        }
+
     }
 
     @IBAction private func didTapDoneButton() {
@@ -1157,7 +1194,33 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @IBAction private func didTapPlusMaxButton() {
-        self.addAmountValue(100)
+        var maxAmountPossible = 0.0
+
+        if self.listTypePublisher.value == .multiple {
+            if let userBalance = self.userBalance,
+               let maxStake = self.maxStakeMultiple {
+                if userBalance < maxStake {
+                    maxAmountPossible = userBalance
+                }
+                else {
+                    maxAmountPossible = maxStake
+                }
+            }
+        }
+        else if self.listTypePublisher.value == .system {
+            if let userBalance = self.userBalance,
+               let maxStake = self.maxStakeSystem {
+                if userBalance < maxStake {
+                    maxAmountPossible = userBalance
+                }
+                else {
+                    maxAmountPossible = maxStake
+                }
+            }
+
+        }
+
+        self.addAmountValue(maxAmountPossible, isMax: true)
     }
 
 }
@@ -1169,8 +1232,37 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         return false
     }
 
-    func addAmountValue(_ value: Int) {
-        displayBetValue += (value * 100)
+    func addAmountValue(_ value: Double, isMax: Bool = false) {
+        if !isMax {
+            displayBetValue += Int(value * 100.0)
+        }
+        else {
+            displayBetValue = Int(value * 100.0)
+        }
+
+        if listTypePublisher.value == .multiple {
+            if let maxStake = self.maxStakeMultiple {
+                let maxStakeInt = Int(maxStake * 100.0)
+                if displayBetValue > maxStakeInt {
+                    displayBetValue = maxStakeInt
+                }
+            }
+        }
+        else if listTypePublisher.value == .system {
+            if let maxStake = self.maxStakeSystem {
+                let maxStakeInt = Int(maxStake * 100.0)
+                if displayBetValue > maxStakeInt {
+                    displayBetValue = maxStakeInt
+                }
+            }
+        }
+
+        if let maxUserBalance = self.userBalance {
+            let maxUserBalanceInt = Int(maxUserBalance * 100.0)
+            if displayBetValue > maxUserBalanceInt {
+                displayBetValue = maxUserBalanceInt
+            }
+        }
 
         let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
