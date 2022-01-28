@@ -62,9 +62,18 @@
                             <constraint firstItem="f0O-AL-UtS" firstAttribute="centerY" secondItem="YIC-ax-7bK" secondAttribute="centerY" id="Rc0-a1-Hg0"/>
                         </constraints>
                     </view>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="-" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EDO-2g-DLF">
+                        <rect key="frame" x="9" y="30" width="6.5" height="17"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="fOk-kh-uh7" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="07b-55-Jhi"/>
+                    <constraint firstItem="EDO-2g-DLF" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="9" id="RVv-wY-Qaa"/>
+                    <constraint firstItem="EDO-2g-DLF" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="30" id="UvO-cm-rQW"/>
                     <constraint firstItem="fOk-kh-uh7" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="fVk-7t-6OK"/>
                     <constraint firstAttribute="trailing" secondItem="fOk-kh-uh7" secondAttribute="trailing" id="gS3-zm-QRy"/>
                     <constraint firstItem="YIC-ax-7bK" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" constant="-6" id="jeh-7U-pT2"/>
@@ -77,12 +86,13 @@
                 <outlet property="backSliderView" destination="YIC-ax-7bK" id="3JZ-z3-DCe"/>
                 <outlet property="collectionBaseView" destination="fOk-kh-uh7" id="c1Q-5a-x7g"/>
                 <outlet property="collectionView" destination="xTg-0G-xs9" id="lP7-fe-d9F"/>
+                <outlet property="debugLabel" destination="EDO-2g-DLF" id="kBw-4a-azP"/>
             </connections>
             <point key="canvasLocation" x="36.956521739130437" y="146.65178571428569"/>
         </tableViewCell>
     </objects>
     <resources>
-        <image name="arrow_circle_left_icon" width="29" height="29"/>
+        <image name="arrow_circle_left_icon" width="24" height="24"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
