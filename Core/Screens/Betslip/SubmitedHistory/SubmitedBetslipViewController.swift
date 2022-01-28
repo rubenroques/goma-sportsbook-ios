@@ -206,6 +206,7 @@ class SubmitedBetslipViewController: UIViewController {
 
             Env.everyMatrixClient.manager
                 .getModel(router: route, decodingType: CashoutSubmission.self)
+                .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { _ in
 
                 }, receiveValue: { value in

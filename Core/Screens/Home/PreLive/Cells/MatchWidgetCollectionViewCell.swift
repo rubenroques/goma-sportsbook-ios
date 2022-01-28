@@ -269,8 +269,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 0] {
                 self.homeOddTitleLabel.text = outcome.typeName
-                self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
-                self.currentHomeOddValue = outcome.bettingOffer.value
+                self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                // self.currentHomeOddValue = outcome.bettingOffer.value
                 self.leftOutcome = outcome
 
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
@@ -304,8 +304,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 1] {
                 self.drawOddTitleLabel.text = outcome.typeName
-                self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
-                self.currentDrawOddValue = outcome.bettingOffer.value
+                self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                // self.currentDrawOddValue = outcome.bettingOffer.value
                 self.middleOutcome = outcome
 
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
@@ -338,9 +338,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 2] {
                 self.awayOddTitleLabel.text = outcome.typeName
-                self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
-                self.currentAwayOddValue = outcome.bettingOffer.value
-              
+                self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                // self.currentAwayOddValue = outcome.bettingOffer.value
                 self.rightOutcome = outcome
                 
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)

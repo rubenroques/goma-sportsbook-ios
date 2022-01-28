@@ -258,9 +258,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
-            self.leftOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
+            self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+            // self.currentLeftOddValue = outcome.bettingOffer.value
             self.leftOutcome = outcome
-            self.currentLeftOddValue = outcome.bettingOffer.value
 
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
@@ -292,9 +292,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         if let outcome = market.outcomes[safe: 1] {
             self.middleOddTitleLabel.text = outcome.typeName
-            self.middleOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
-
-            self.currentMiddleOddValue = outcome.bettingOffer.value
+            self.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+            // self.currentMiddleOddValue = outcome.bettingOffer.value
             self.middleOutcome = outcome
 
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
@@ -327,8 +326,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         if let outcome = market.outcomes[safe: 2] {
             self.rightOddTitleLabel.text = outcome.typeName
-            self.rightOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
-            self.currentRightOddValue = outcome.bettingOffer.value
+            self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+            // self.currentRightOddValue = outcome.bettingOffer.value
             self.rightOutcome = outcome
 
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
@@ -551,8 +550,6 @@ extension OddTripleCollectionViewCell {
 
         if let bettingTypeValue = bettingType,
            let bettingTypeStats = bettingTypeValue["stats"]["data"].dictionary {
-
-            print("bettingTypeValue ", bettingTypeStats)
 
             var homeWin: Int = 0
             var homeDraw: Int = 0
