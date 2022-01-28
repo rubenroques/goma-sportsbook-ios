@@ -516,6 +516,7 @@ class PreLiveEventsViewModel: NSObject {
         
         self.popularMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
@@ -575,6 +576,7 @@ class PreLiveEventsViewModel: NSObject {
 
         self.todayMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
@@ -709,6 +711,7 @@ class PreLiveEventsViewModel: NSObject {
         self.zip3Publisher = nil
 
         self.zip3Publisher = Publishers.Zip3(popularTournamentsPublisher, tournamentsPublisher, locationsPublisher)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:

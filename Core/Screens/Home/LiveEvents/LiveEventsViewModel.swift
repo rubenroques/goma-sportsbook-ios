@@ -11,10 +11,6 @@ import OrderedCollections
 
 class LiveEventsViewModel: NSObject {
 
-    private var banners: [EveryMatrix.BannerInfo] = []
-    private var bannersViewModel: BannerLineCellViewModel?
-    private var userMessages: [String] = []
-
     private var allMatches: [Match] = []
 
     var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.allMatches)
@@ -23,11 +19,11 @@ class LiveEventsViewModel: NSObject {
     }
 
     enum screenState {
-            case emptyAndFilter
-            case emptyNoFilter
-            case noEmptyNoFilter
-            case noEmptyAndFilter
-        }
+        case emptyAndFilter
+        case emptyNoFilter
+        case noEmptyNoFilter
+        case noEmptyAndFilter
+    }
     
     var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
     
@@ -79,8 +75,7 @@ class LiveEventsViewModel: NSObject {
     init(selectedSport: Sport) {
 
         self.selectedSport = selectedSport
-
-        isLoading = isLoadingAllEventsList.eraseToAnyPublisher()
+        self.isLoading = isLoadingAllEventsList.eraseToAnyPublisher()
 
         super.init()
 
@@ -93,7 +88,6 @@ class LiveEventsViewModel: NSObject {
         }
 
         self.getSportsLive()
-
     }
 
     func fetchData() {
@@ -102,7 +96,6 @@ class LiveEventsViewModel: NSObject {
         self.allMatchesPage = 1
         self.allMatchesHasMorePages = true
 
-        //self.fetchBanners()
         self.fetchAllMatches()
 
         if let sportPublisher = sportsRepository.sportsLivePublisher[self.selectedSport.id] {
@@ -123,13 +116,14 @@ class LiveEventsViewModel: NSObject {
         }
 
         let endpoint = TSRouter.sportsListPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en")
+                                                    language: "en")
 
         self.liveSportsPublisher?.cancel()
         self.liveSportsPublisher = nil
 
         self.liveSportsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.SportsAggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
@@ -234,20 +228,25 @@ class LiveEventsViewModel: NSObject {
             if numberOfFilters > 0 {
                 if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
                     self.screenStatePublisher.send(.emptyAndFilter)
-                }else{
+                }
+                else {
                     self.screenStatePublisher.send(.noEmptyAndFilter)
                 }
-            }else{
+            }
+            else {
                 if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
                     self.screenStatePublisher.send(.emptyNoFilter)
-                }else{
+                }
+                else {
                     self.screenStatePublisher.send(.noEmptyNoFilter)
                 }
             }
-        }else{
+        }
+        else {
             if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
                 self.screenStatePublisher.send(.emptyNoFilter)
-            }else{
+            }
+            else {
                 self.screenStatePublisher.send(.noEmptyNoFilter)
             }
         }
@@ -302,6 +301,7 @@ class LiveEventsViewModel: NSObject {
 
         self.allMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
@@ -327,43 +327,6 @@ class LiveEventsViewModel: NSObject {
             })
     }
 
-    func fetchBanners() {
-
-        if let bannersInfoRegister = bannersInfoRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
-        }
-
-        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
-
-        self.bannersInfoPublisher?.cancel()
-        self.bannersInfoPublisher = nil
-
-        self.bannersInfoPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.bannersInfoRegister = publisherIdentifiable
-                case .initialContent(let responde):
-                    print("LiveEventsViewModel bannersInfoPublisher initialContent")
-                    self?.banners = responde.records ?? []
-                case .updatedContent:
-                    print("LiveEventsViewModel bannersInfoPublisher updatedContent")
-                case .disconnect:
-                    print("LiveEventsViewModel bannersInfoPublisher disconnect")
-                }
-                self?.updateContentList()
-            })
-
-    }
-
 }
 
 extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
@@ -374,7 +337,6 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
             return self.allMatchesViewModelDataSource.numberOfSections(in: tableView)
         }
     }
-
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch self.matchListTypePublisher.value {
@@ -522,7 +484,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         else {
             fatalError()
         }
-        headerView.configureWithTitle(localized("all_live_events")) 
+        headerView.configureWithTitle(localized("all_live_events"))
         return headerView
     }
 
