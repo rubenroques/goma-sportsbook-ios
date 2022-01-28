@@ -125,7 +125,7 @@ class DepositViewController: UIViewController {
 
         self.nextButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
         self.nextButton.setBackgroundColor(UIColor.App2.buttonDisablePrimary, for: .disabled)
-        self.nextButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        self.nextButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         self.nextButton.setTitleColor(UIColor.App2.buttonTextDisablePrimary, for: .disabled)
         self.nextButton.layer.cornerRadius = CornerRadius.button
         self.nextButton.layer.masksToBounds = true
@@ -315,8 +315,8 @@ class DepositViewController: UIViewController {
 
         StyleHelper.styleButton(button: button)
 
-        button.setTitleColor(UIColor.App2.textPrimary, for: .normal)
-        button.setBackgroundColor(.clear, for: .normal)
+        button.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        button.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
         button.layer.borderWidth = 2
         button.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 

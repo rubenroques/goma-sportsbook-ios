@@ -839,6 +839,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
         
         self.placeBetButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+      
         self.plusOneButtonView.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App2.textPrimary, for: .normal)
         self.plusOneButtonView.setTitleColor(UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)

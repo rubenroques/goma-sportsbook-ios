@@ -507,9 +507,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.homeOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
     }
     func deselectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.homeOddTitleLabel.textColor = UIColor.App2.textPrimary
+        self.homeOddValueLabel.textColor = UIColor.App2.textPrimary
     }
     @objc func didTapLeftOddButton() {
 
@@ -546,9 +550,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     func selectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.drawOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
     }
     func deselectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.drawOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App2.textPrimary
     }
     @objc func didTapMiddleOddButton() {
         guard
@@ -583,9 +591,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     func selectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.awayOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
     }
     func deselectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.awayOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App2.textPrimary
     }
     @objc func didTapRightOddButton() {
         guard

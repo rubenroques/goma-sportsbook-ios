@@ -225,9 +225,13 @@ class OutcomeSelectionButtonView: NibView {
 
     func selectButton() {
         self.containerView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.marketOddLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.marketTypeLabel.textColor = UIColor.App2.buttonTextPrimary
     }
     func deselectButton() {
         self.containerView.backgroundColor = UIColor.App2.backgroundOdds
+        self.marketOddLabel.textColor = UIColor.App2.textPrimary
+        self.marketTypeLabel.textColor = UIColor.App2.textPrimary
     }
     @objc func didTapOddButton() {
 
