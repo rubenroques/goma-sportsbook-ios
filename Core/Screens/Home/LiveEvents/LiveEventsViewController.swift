@@ -499,7 +499,6 @@ extension LiveEventsViewController: HomeFilterOptionsViewDelegate {
         }
         else {
             filtersCountLabel.isHidden = true
-            
         }
     }
     
