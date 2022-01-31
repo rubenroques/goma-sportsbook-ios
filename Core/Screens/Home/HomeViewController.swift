@@ -471,7 +471,7 @@ extension HomeViewController {
         popUpPromotionView.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
 
         UIView.animate(withDuration: 0.5) {
-            popUpBackgroundView.alpha = 0.53
+            popUpBackgroundView.alpha = 0.58
         }
         UIView.animate(
             withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.55, initialSpringVelocity: 3,

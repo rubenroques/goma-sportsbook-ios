@@ -86,8 +86,8 @@ class PersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
-        firstNameHeaderTextFieldView.setPlaceholderText(localized("string_first_name"))
-        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("string_names_match_id"),
+        firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
+        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"),
                                                         color: UIColor.App2.inputTextTitle)
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))

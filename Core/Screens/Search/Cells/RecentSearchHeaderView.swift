@@ -1,5 +1,5 @@
 //
-//  RecentSearchUITableViewHeaderFooterView.swift
+//  RecentSearchHeaderView.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 25/01/2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class RecentSearchUITableViewHeaderFooterView: UITableViewHeaderFooterView {
+class RecentSearchHeaderView: UITableViewHeaderFooterView {
 
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var clearAllButton: UIButton!

@@ -175,7 +175,6 @@ extension BetslipManager {
 
                     // Add to simple selection array
                     self.simpleBetslipSelectionStateList.value[ticket.id] = betslipSelectionState
-
                     self.simpleBetslipSelectionStateList.send(self.simpleBetslipSelectionStateList.value)
                 }
                 .store(in: &cancellables)

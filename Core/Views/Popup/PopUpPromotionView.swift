@@ -151,7 +151,7 @@ class PopUpPromotionView: NibView {
 
         self.clipsToBounds = true
         self.baseView.layer.cornerRadius = 12
-        self.baseView.layer.borderWidth = 1
+        self.baseView.layer.borderWidth = 0
 
         self.baseView.clipsToBounds = true
 

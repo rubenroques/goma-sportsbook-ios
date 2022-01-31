@@ -145,8 +145,8 @@ class SearchViewController: UIViewController {
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(CompetitionSearchTableViewCell.nib, forCellReuseIdentifier: CompetitionSearchTableViewCell.identifier)
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
-        self.tableView.register(SearchTitleSectionUITableViewHeaderFooterView.nib, forHeaderFooterViewReuseIdentifier: SearchTitleSectionUITableViewHeaderFooterView.identifier)
-        self.tableView.register(RecentSearchUITableViewHeaderFooterView.nib, forHeaderFooterViewReuseIdentifier: RecentSearchUITableViewHeaderFooterView.identifier)
+        self.tableView.register(SearchTitleSectionHeaderView.nib, forHeaderFooterViewReuseIdentifier: SearchTitleSectionHeaderView.identifier)
+        self.tableView.register(RecentSearchHeaderView.nib, forHeaderFooterViewReuseIdentifier: RecentSearchHeaderView.identifier)
         self.tableView.register(RecentSearchTableViewCell.nib, forCellReuseIdentifier: RecentSearchTableViewCell.identifier)
 
         self.tableView.delegate = self
@@ -398,7 +398,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
         if !self.viewModel.isEmptySearch {
             guard
-                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchTitleSectionUITableViewHeaderFooterView.identifier) as? SearchTitleSectionUITableViewHeaderFooterView
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SearchTitleSectionHeaderView.identifier) as? SearchTitleSectionHeaderView
             else {
                 fatalError()
             }
@@ -427,7 +427,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         }
         else {
             guard
-                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RecentSearchUITableViewHeaderFooterView.identifier) as? RecentSearchUITableViewHeaderFooterView
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: RecentSearchHeaderView.identifier) as? RecentSearchHeaderView
             else {
                 fatalError()
             }
