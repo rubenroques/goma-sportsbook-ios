@@ -11,6 +11,7 @@ class CompetitionSearchTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
+    @IBOutlet private weak var flagImageView: UIImageView!
 
     // Variables
     var tappedCompetitionCellAction: (() -> Void)?
@@ -26,6 +27,7 @@ class CompetitionSearchTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.titleLabel.text = ""
+        self.flagImageView.image = nil
     }
 
     func setupCell() {
@@ -34,6 +36,11 @@ class CompetitionSearchTableViewCell: UITableViewCell {
 
         self.titleLabel.text = "Cell"
         self.titleLabel.font = AppFont.with(type: .bold, size: 16)
+        self.titleLabel.numberOfLines = 0
+
+        self.flagImageView.backgroundColor = .clear
+        self.flagImageView.contentMode = .scaleToFill
+        self.flagImageView.layer.cornerRadius = self.flagImageView.frame.width/2
 
         let tapCell = UITapGestureRecognizer(target: self, action: #selector(self.handleCellTap(_:)))
         self.addGestureRecognizer(tapCell)
@@ -50,8 +57,15 @@ class CompetitionSearchTableViewCell: UITableViewCell {
         self.titleLabel.textColor = UIColor.App2.textPrimary
     }
 
-    func setTitle(title: String) {
+    func setCellValues(title: String, flagCode: String, flagId: String) {
         self.titleLabel.text = title
+
+        if flagCode != "" {
+        self.flagImageView.image = UIImage(named: Assets.flagName(withCountryCode: flagCode))
+        }
+        else {
+            self.flagImageView.image = UIImage(named: Assets.flagName(withCountryCode: flagId))
+        }
     }
 
     @objc func handleCellTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -59,7 +73,7 @@ class CompetitionSearchTableViewCell: UITableViewCell {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.frame.width, height: 56)
+        return CGSize(width: self.frame.width, height: self.titleLabel.frame.height + 40)
     }
 
 }

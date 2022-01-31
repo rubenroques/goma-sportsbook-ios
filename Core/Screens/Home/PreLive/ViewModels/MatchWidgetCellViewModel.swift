@@ -16,6 +16,7 @@ struct MatchWidgetCellViewModel {
     var startTimeString: String
     var competitionName: String
     var isToday: Bool
+    var countryId: String
 
     init(match: Match) {
 
@@ -23,6 +24,7 @@ struct MatchWidgetCellViewModel {
         self.awayTeamName = match.awayParticipant.name
 
         self.countryISOCode = match.venue?.isoCode ?? ""
+        self.countryId = match.venue?.id ?? ""
         
         self.isToday = false
         self.startDateString = ""
@@ -59,10 +61,12 @@ struct MatchWidgetCellViewModel {
         self.awayTeamName = match.awayParticipantName ?? ""
 
         self.countryISOCode = ""
+        self.countryId = ""
         if let venueId = match.venueId,
            let location = Env.everyMatrixStorage.location(forId: venueId),
            let code = location.code {
             self.countryISOCode = code
+            self.countryId = location.id
         }
 
         self.isToday = false

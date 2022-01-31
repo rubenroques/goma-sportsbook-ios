@@ -18,6 +18,7 @@ class SearchViewModel: NSObject {
     var cancellables = Set<AnyCancellable>()
 
     var hasDoneSearch: Bool = false
+    var isEmptySearch: Bool = true
 
     // Processed match info variables
     var matches: [EveryMatrix.Match] = []
@@ -35,8 +36,54 @@ class SearchViewModel: NSObject {
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
     var mainMarketsOrder: OrderedSet<String> = []
 
+    var includeSettings: [String] = ["BETTING_OFFERS", "EVENT_INFO"]
+    var bettingTypeIdsSettings: [String] = ["69", "466", "112", "76", "9"]
+    var eventStatuses: [Int] = [1, 2]
+    var sortBy: [String] = ["START_TIME"]
+
     override init() {
-       
+        super.init()
+
+        self.getRecentSearches()
+    }
+
+    func getRecentSearches() {
+        if UserDefaults.standard.object(forKey: "recentSearches") != nil {
+
+            if let recentSearchesArray = (UserDefaults.standard.array(forKey: "recentSearches") ?? []) as? [String] {
+
+                self.recentSearchesPublisher.value = recentSearchesArray
+                self.recentSearchesPublisher.send(recentSearchesArray)
+            }
+
+        }
+
+    }
+
+    func clearRecentSearchData() {
+        if UserDefaults.standard.object(forKey: "recentSearches") != nil {
+
+            UserDefaults.standard.removeObject(forKey: "recentSearches")
+            self.recentSearchesPublisher.value = []
+            self.recentSearchesPublisher.send( self.recentSearchesPublisher.value)
+        }
+    }
+
+    func clearRecentSearchByString(search: String) {
+        if UserDefaults.standard.object(forKey: "recentSearches") != nil {
+
+            if let recentSearchesArray = (UserDefaults.standard.array(forKey: "recentSearches") ?? []) as? [String] {
+
+                let filteredRecentSearchesArray = recentSearchesArray.filter { $0 != search }
+
+                UserDefaults.standard.removeObject(forKey: "recentSearches")
+                UserDefaults.standard.set(filteredRecentSearchesArray, forKey: "recentSearches")
+
+                self.recentSearchesPublisher.send(filteredRecentSearchesArray)
+
+            }
+
+        }
     }
 
     func clearData() {
@@ -63,16 +110,24 @@ class SearchViewModel: NSObject {
     func fetchSearchInfo(searchQuery: String) {
 
         self.clearData()
+        self.isEmptySearch = false
 
-        let searchRoute = TSRouter.searchV2(language: "en", limit: 5, query: searchQuery, eventInfoTypes: [1, 2], include: ["BETTING_OFFERS"])
+        let searchRoute = TSRouter.searchV2(language: "en",
+                                            limit: 20,
+                                            query: searchQuery,
+                                            eventStatuses: eventStatuses,
+                                            include: includeSettings,
+                                            bettingTypeIds: bettingTypeIdsSettings,
+                                            sortBy: sortBy)
+
         Env.everyMatrixClient.manager.getModel(router: searchRoute, decodingType: SearchV2Response.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let apiError):
                     switch apiError {
-                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"): ()
-                        print("Search request error")
+                    case .requestError(let value):
+                        print("Search request error: \(value)")
                     case .notConnected:
                         ()
                     default:
@@ -118,19 +173,29 @@ class SearchViewModel: NSObject {
                 case .matchInfo(let matchInfo):
 
                     matchesInfo[matchInfo.id] = matchInfo
+                    // Set on storage aswell for live cards
+                    Env.everyMatrixStorage.matchesInfo[matchInfo.id] = matchInfo
 
                     if let matchId = matchInfo.matchId {
                         if var matchInfoForIterationMatch = matchesInfoForMatch[matchId] {
                             matchInfoForIterationMatch.insert(matchInfo.id)
                             matchesInfoForMatch[matchId] = matchInfoForIterationMatch
+                            // Set on storage aswell for live cards
+                            Env.everyMatrixStorage.matchesInfoForMatch[matchId] = matchInfoForIterationMatch
                         }
                         else {
                             var newSet = Set<String>.init()
                             newSet.insert(matchInfo.id)
+
                             matchesInfoForMatch[matchId] = newSet
+                            // Set on storage aswell for live cards
+                            Env.everyMatrixStorage.matchesInfoForMatch[matchId] = newSet
+
                             var matchIdArray = matchesInfoForMatchPublisher.value
                             matchIdArray.append(matchId)
                             matchesInfoForMatchPublisher.send(matchIdArray)
+                            // Set on storage aswell for live cards
+                            Env.everyMatrixStorage.matchesInfoForMatchPublisher.send(matchIdArray)
                         }
                     }
 
@@ -179,11 +244,10 @@ class SearchViewModel: NSObject {
                     }
                 case .marketGroup:
                     ()
-
                 case .event:
-                    () // print("Events aren't processed")
+                    ()
                 case .unknown:
-                    () // print("Unknown type ignored")
+                    ()
                 }
             }
         }
@@ -282,7 +346,7 @@ class SearchViewModel: NSObject {
                               sportName: rawMatch.sportName)
 
             // Set Match
-            if let searchMatch = self.searchMatchesPublisher.value[match.sportType] {
+            if self.searchMatchesPublisher.value[match.sportType] != nil {
                 let searchMatch = SearchEvent.match(match)
                 self.searchMatchesPublisher.value[match.sportType]?.append(searchMatch)
             }
@@ -301,21 +365,24 @@ class SearchViewModel: NSObject {
 
         // Set Competitions
         for competition in self.tournaments {
-            if let searchCompetition = self.searchMatchesPublisher.value["competition"] {
-                let searchCompetition = SearchEvent.competition(competition)
-                self.searchMatchesPublisher.value["competition"]?.append(searchCompetition)
+
+            if let sportId = competition.sportId {
+
+                if self.searchMatchesPublisher.value[sportId] != nil {
+                    let searchCompetition = SearchEvent.competition(competition)
+                    self.searchMatchesPublisher.value[sportId]?.append(searchCompetition)
+                }
+                else {
+                    let searchCompetition = SearchEvent.competition(competition)
+                    self.searchMatchesPublisher.value[sportId] = [searchCompetition]
+                }
             }
-            else {
-                let searchCompetition = SearchEvent.competition(competition)
-                self.searchMatchesPublisher.value["competition"] = [searchCompetition]
-            }
+
         }
 
-        for (key, value) in searchMatchesPublisher.value {
-            if key != "competition" {
-                let sportMatch = SportMatches(sportType: key, matches: value)
+        for (key, event) in searchMatchesPublisher.value {
+                let sportMatch = SportMatches(sportType: key, matches: event)
                 sportMatchesArrayPublisher.value.append(sportMatch)
-            }
         }
 
         // Sort by sportId
@@ -323,12 +390,6 @@ class SearchViewModel: NSObject {
             $0.sportType < $1.sportType
         }
         sportMatchesArrayPublisher.value = sportMatchesSorted
-
-        // Insert competitions last
-        if let competitionsSearched = searchMatchesPublisher.value["competition"] {
-            let competitions = SportMatches(sportType: "competition", matches: competitionsSearched)
-            sportMatchesArrayPublisher.value.append(competitions)
-        }
 
         self.searchMatchesPublisher.send(self.searchMatchesPublisher.value)
         self.hasDoneSearch = true
@@ -339,8 +400,32 @@ class SearchViewModel: NSObject {
     }
 
     func addRecentSearch(search: String) {
-        recentSearchesPublisher.value.append(search)
-        recentSearchesPublisher.send(recentSearchesPublisher.value)
+        if UserDefaults.standard.object(forKey: "recentSearches") != nil {
+            if let recentSearchesArray = (UserDefaults.standard.array(forKey: "recentSearches") ?? []) as? [String] {
+
+                var newRecentSearchesArray = Array(recentSearchesArray.reversed())
+
+                // Max 20 recent searches
+                if newRecentSearchesArray.count == 20 {
+                    newRecentSearchesArray.remove(at: 0)
+                }
+
+                newRecentSearchesArray.append(search)
+                let reversedNewSearchesArray = Array(newRecentSearchesArray.reversed())
+                UserDefaults.standard.removeObject(forKey: "recentSearches")
+                UserDefaults.standard.set(reversedNewSearchesArray, forKey: "recentSearches")
+                self.recentSearchesPublisher.value = reversedNewSearchesArray
+                recentSearchesPublisher.send(recentSearchesPublisher.value)
+
+            }
+
+        }
+        else {
+            self.recentSearchesPublisher.value.append(search)
+            UserDefaults.standard.set(self.recentSearchesPublisher.value, forKey: "recentSearches")
+            recentSearchesPublisher.send(recentSearchesPublisher.value)
+        }
+
     }
 
     func setHeaderSectionTitle(section: Int) -> String {
@@ -348,13 +433,15 @@ class SearchViewModel: NSObject {
         if self.sportMatchesArrayPublisher.value[section].matches.count > 1 {
 
             let resultsCountTextRaw = localized("results_count")
-            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "%s", with: "\(self.sportMatchesArrayPublisher.value[section].matches.count)")
+            let matchesCount = self.sportMatchesArrayPublisher.value[section].matches.count
+            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "%s", with: "\(matchesCount)")
 
             return resultsCountText
         }
         else {
             let resultsCountTextRaw = localized("results_count_singular")
-            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "%s", with: "\(self.sportMatchesArrayPublisher.value[section].matches.count)")
+            let matchesCount = self.sportMatchesArrayPublisher.value[section].matches.count
+            let resultsCountText = resultsCountTextRaw.replacingOccurrences(of: "%s", with: "\(matchesCount)")
 
             return resultsCountText
         }

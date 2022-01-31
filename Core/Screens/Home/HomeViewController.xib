@@ -130,13 +130,13 @@
                                             <rect key="frame" x="0.0" y="0.0" width="152" height="64"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9cZ-8S-ynC">
-                                                    <rect key="frame" x="0.0" y="18" width="152" height="28"/>
+                                                    <rect key="frame" x="0.0" y="20" width="152" height="24"/>
                                                     <subviews>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iYA-bp-KRe">
-                                                            <rect key="frame" x="0.0" y="0.0" width="28" height="28"/>
+                                                            <rect key="frame" x="4" y="4" width="16" height="16"/>
                                                             <subviews>
                                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plus_small_icon" translatesAutoresizingMaskIntoConstraints="NO" id="bh5-DA-q2V">
-                                                                    <rect key="frame" x="8" y="6.5" width="12" height="15"/>
+                                                                    <rect key="frame" x="2" y="0.5" width="12" height="15"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="width" constant="12" id="hxj-1h-o9j"/>
                                                                     </constraints>
@@ -150,7 +150,7 @@
                                                             </constraints>
                                                         </view>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pmm-Z8-DIa">
-                                                            <rect key="frame" x="32" y="7" width="116" height="14"/>
+                                                            <rect key="frame" x="24" y="5" width="124" height="14"/>
                                                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <nil key="highlightedColor"/>
@@ -158,13 +158,13 @@
                                                     </subviews>
                                                     <color key="backgroundColor" systemColor="systemGray4Color"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="bottom" secondItem="iYA-bp-KRe" secondAttribute="bottom" id="0qN-Bo-Dyz"/>
+                                                        <constraint firstAttribute="bottom" secondItem="iYA-bp-KRe" secondAttribute="bottom" constant="4" id="0qN-Bo-Dyz"/>
                                                         <constraint firstItem="pmm-Z8-DIa" firstAttribute="leading" secondItem="iYA-bp-KRe" secondAttribute="trailing" constant="4" id="16w-yo-85b"/>
                                                         <constraint firstItem="pmm-Z8-DIa" firstAttribute="centerY" secondItem="9cZ-8S-ynC" secondAttribute="centerY" id="Gce-ws-OTa"/>
-                                                        <constraint firstAttribute="height" constant="28" id="Iag-gI-1XS"/>
+                                                        <constraint firstAttribute="height" constant="24" id="Iag-gI-1XS"/>
                                                         <constraint firstAttribute="trailing" secondItem="pmm-Z8-DIa" secondAttribute="trailing" constant="4" id="Mn6-Ts-9Gv"/>
-                                                        <constraint firstItem="iYA-bp-KRe" firstAttribute="leading" secondItem="9cZ-8S-ynC" secondAttribute="leading" id="Yn7-Jn-1lI"/>
-                                                        <constraint firstItem="iYA-bp-KRe" firstAttribute="top" secondItem="9cZ-8S-ynC" secondAttribute="top" id="hTP-Jz-Ax1"/>
+                                                        <constraint firstItem="iYA-bp-KRe" firstAttribute="leading" secondItem="9cZ-8S-ynC" secondAttribute="leading" constant="4" id="Yn7-Jn-1lI"/>
+                                                        <constraint firstItem="iYA-bp-KRe" firstAttribute="top" secondItem="9cZ-8S-ynC" secondAttribute="top" constant="4" id="hTP-Jz-Ax1"/>
                                                     </constraints>
                                                 </view>
                                             </subviews>

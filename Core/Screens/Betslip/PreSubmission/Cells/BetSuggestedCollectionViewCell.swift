@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
@@ -20,26 +21,43 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var totalOddValueLabel: UILabel!
     @IBOutlet private weak var betNowButton: UIButton!
 
-    var betsArray: [Match] = []
-    var gomaArray: [GomaSuggestedBets] = []
     var betslipTickets: [BettingTicket] = []
 
     var betNowCallbackAction: (() -> Void)?
-    
+    var viewModel: BetSuggestedCollectionViewCellViewModel?
+    var cancellables = Set<AnyCancellable>()
+    var needsReload: PassthroughSubject<Void, Never> = .init()
+
     override func awakeFromNib() {
         super.awakeFromNib()
         setupWithTheme()
         betNowButton.layer.cornerRadius = 5.0
         layer.cornerRadius = 5.0
-        // Initialization code
     }
     override func prepareForReuse() {
         super.prepareForReuse()
-
-        self.betsArray = []
-        self.gomaArray = []
-        self.betslipTickets = []
         
+        self.viewModel = nil
+        
+    }
+
+    func setReloadedState(reloaded: Bool) {
+
+        if let viewModel = self.viewModel {
+            viewModel.reloadedState = reloaded
+        }
+    }
+
+    func setupWithViewModel(viewModel: BetSuggestedCollectionViewCellViewModel) {
+        self.viewModel = viewModel
+
+        self.viewModel?.isViewModelFinishedLoading
+            .sink(receiveValue: { [weak self] value in
+                if value {
+                    self?.setupStackBetView()
+                }
+            })
+            .store(in: &cancellables)
     }
     
     func setupWithTheme() {
@@ -53,115 +71,29 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.numberOfSelectionsValueLabel.textColor = UIColor.App2.textPrimary
         self.betNowButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
     }
-    
-    func setupStackBetView(betValues: [Match], gomaValues: [GomaSuggestedBets]) {
-     
+
+    func setupStackBetView() {
         betsStackView.removeAllArrangedSubviews()
 
-        var totalOdd = 0.0
-        var firstOdd = true
+        if let viewModel = self.viewModel {
 
-        self.betsArray = betValues
-        self.gomaArray = gomaValues
-
-        var validMarkets = 0
-
-        for gomaBet in gomaArray {
-
-            for match in betsArray {
-
-                if match.id == "\(gomaBet.matchId)" {
-
-                    // Regular market
-                    if gomaBet.paramFloat == nil {
-                        let gameTitle = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-
-                        for market in match.markets {
-
-                            for betOutcome in market.outcomes {
-
-                                if betOutcome.codeName == gomaBet.bettingOption && market.typeId == "\(gomaBet.bettingType)" {
-
-                                    if firstOdd {
-                                        totalOdd = betOutcome.bettingOffer.value
-                                        firstOdd = false
-                                    }
-                                    else {
-                                        totalOdd *= betOutcome.bettingOffer.value
-                                    }
-
-                                    let gameInfo = "\(market.name)"
-
-                                    let gameSuggestedView = GameSuggestedView(gameTitle: gameTitle, gameInfo: gameInfo)
-
-                                    if let countryIsoCode = match.venue?.isoCode {
-                                        gameSuggestedView.setMatchFlag(isoCode: countryIsoCode)
-                                    }
-
-                                    validMarkets += 1
-                                    gameSuggestedView.backgroundColor = UIColor.App2.backgroundSecondary
-                                    betsStackView.addArrangedSubview(gameSuggestedView)
-
-                                    self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
-                                }
-                            }
-
-                        }
-
-                    }
-                    // Over/Under Market
-                    else {
-                        let gameTitle = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-
-                        for market in match.markets {
-
-                            for betOutcome in market.outcomes {
-
-                                var nameOddString = ""
-
-                                if let nameOdd = betOutcome.nameDigit1 {
-                                    nameOddString = "\(nameOdd)"
-                                }
-
-                                let nameOddGoma = gomaBet.paramFloat
-
-                                if betOutcome.codeName == gomaBet.bettingOption && nameOddString == nameOddGoma {
-
-                                    if firstOdd {
-                                        totalOdd = betOutcome.bettingOffer.value
-                                        firstOdd = false
-                                    }
-                                    else {
-                                        totalOdd *= betOutcome.bettingOffer.value
-                                    }
-
-                                    let gameInfo = "\(market.name)"
-
-                                    let gameSuggestedView = GameSuggestedView(gameTitle: gameTitle, gameInfo: gameInfo)
-
-                                    if let countryIsoCode = match.venue?.isoCode {
-                                        gameSuggestedView.setMatchFlag(isoCode: countryIsoCode)
-                                    }
-
-                                    validMarkets += 1
-                                    gameSuggestedView.frame.size.height = 60
-                                    
-                                    betsStackView.addArrangedSubview(gameSuggestedView)
-
-                                    self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
-                                }
-                            }
-
-                        }
-                    }
-                }
-
+            for gameSuggestedView in viewModel.gameSuggestedViewsArray {
+                betsStackView.addArrangedSubview(gameSuggestedView)
             }
+
+            self.setupInfoBetValues(totalOdd: viewModel.totalOdd, numberOfSelection: viewModel.numberOfSelection)
+
+            self.betslipTickets = viewModel.betslipTickets
+
+            if !viewModel.reloadedState {
+                self.needsReload.send()
+            }
+
         }
 
-        self.setupInfoBetValues(totalOdd: totalOdd, numberOfSelection: validMarkets)
-        
-     }
+
+
+    }
     
     func setupInfoBetValues(totalOdd: Double, numberOfSelection: Int) {
         let formatedOdd = OddFormatter.formatOdd(withValue: totalOdd)

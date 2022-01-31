@@ -22,9 +22,10 @@ class BetslipManager: NSObject {
 
     private var bettingTicketsDictionaryPublisher: CurrentValueSubject<OrderedDictionary<String, BettingTicket>, Never>
 
-    private var simpleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
-    private var multipleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
-    private var systemBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
+    var simpleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
+    var multipleBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
+    var systemBetslipSelectionState: CurrentValueSubject<BetslipSelectionState?, Never>
+    var simpleBetslipSelectionStateList: CurrentValueSubject<[String: BetslipSelectionState], Never> = .init([:])
 
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
@@ -154,23 +155,32 @@ extension BetslipManager {
         let ticketSelections = self.updatedBettingTicketsOdds()
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
 
-        let route = TSRouter.getBetslipSelectionInfo(language: "en",
-                                                     stakeAmount: 1,
-                                                     betType: .single,
-                                                     tickets: ticketSelections)
+        for ticket in ticketSelections {
 
-        Env.everyMatrixClient.manager
-            .getModel(router: route, decodingType: BetslipSelectionState.self)
-            .handleEvents(receiveOutput: { betslipSelectionState in
-                self.simpleBetslipSelectionState.send(betslipSelectionState)
-            })
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                print("completed simple: \(completion)")
-            } receiveValue: { betslipSelectionState in
-                self.simpleBetslipSelectionState.send(betslipSelectionState)
-            }
-            .store(in: &cancellables)
+            let route = TSRouter.getBetslipSelectionInfo(language: "en",
+                                                         stakeAmount: 1,
+                                                         betType: .single,
+                                                         tickets: [ticket])
+
+            Env.everyMatrixClient.manager
+                .getModel(router: route, decodingType: BetslipSelectionState.self)
+                .handleEvents(receiveOutput: { betslipSelectionState in
+                    self.simpleBetslipSelectionState.send(betslipSelectionState)
+                })
+                .receive(on: DispatchQueue.main)
+                .sink { completion in
+                    print("completed simple: \(completion)")
+                } receiveValue: { betslipSelectionState in
+                    self.simpleBetslipSelectionState.send(betslipSelectionState)
+
+                    // Add to simple selection array
+                    self.simpleBetslipSelectionStateList.value[ticket.id] = betslipSelectionState
+                    self.simpleBetslipSelectionStateList.send(self.simpleBetslipSelectionStateList.value)
+                }
+                .store(in: &cancellables)
+
+        }
+
     }
 
     func requestMultipleBetslipSelectionState() {
@@ -195,7 +205,7 @@ extension BetslipManager {
 
     }
 
-    func requestSystemBetslipSelectionState(withSkateAmount amount: Double, systemBetType: SystemBetType)
+    func requestSystemBetslipSelectionState(withSkateAmount amount: Double = 1.0, systemBetType: SystemBetType)
     -> AnyPublisher<BetslipSelectionState, EveryMatrix.APIError> {
 
         let ticketSelections = self.updatedBettingTicketsOdds()
@@ -209,7 +219,8 @@ extension BetslipManager {
         return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .handleEvents(receiveOutput: { betslipSelectionState in
-                self.simpleBetslipSelectionState.send(betslipSelectionState)
+                //self.simpleBetslipSelectionState.send(betslipSelectionState)
+                self.systemBetslipSelectionState.send(betslipSelectionState)
             })
             .eraseToAnyPublisher()
 

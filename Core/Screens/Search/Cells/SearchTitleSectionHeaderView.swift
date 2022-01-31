@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchTitleSectionUITableViewHeaderFooterView: UITableViewHeaderFooterView {
+class SearchTitleSectionHeaderView: UITableViewHeaderFooterView {
 
     @IBOutlet private weak var nameLabel: UILabel!
     @IBOutlet private weak var countLabel: UILabel!

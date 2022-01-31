@@ -101,7 +101,7 @@ struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
     }
 
     var marketName: String {
-        return "\(name) [t0]"
+        return "\(name)"
     }
 
     var numberOfColumns: Int {
@@ -164,7 +164,7 @@ struct MarketLinesMarketGroupOrganizer: MarketGroupOrganizer {
     }
 
     var marketName: String {
-        return "\(name) [t1]"
+        return "\(name)"
     }
 
     var numberOfColumns: Int {
@@ -269,7 +269,7 @@ struct MarketColumnsMarketGroupOrganizer: MarketGroupOrganizer {
     }
 
     var marketName: String {
-        return "\(name) [t3]"
+        return "\(name)"
     }
 
     var numberOfColumns: Int {
@@ -320,7 +320,7 @@ struct SequentialMarketGroupOrganizer: MarketGroupOrganizer {
     }
 
     var marketName: String {
-        return "\(name) [t4]"
+        return "\(name)"
     }
 
     var numberOfColumns: Int {

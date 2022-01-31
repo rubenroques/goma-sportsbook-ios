@@ -186,13 +186,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
-    private var suggestedBetsPublisher: AnyCancellable?
-    private var suggestedBetsRetrievedPublisher: CurrentValueSubject<Int, Never> = .init(0)
-    private var suggestedBetsNotFound: Int = 0
-
     var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
-    var suggestedBetsArray: [Int: [Match]] = [:]
-    var totalGomaSuggestedBets: Int = 0
 
     var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
     var suggestedCancellables = Set<AnyCancellable>()
@@ -201,6 +195,12 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.suggestedBetsActivityIndicator.isHidden = !isSuggestedBetsLoading
         }
     }
+    var cachedBetSuggestedCollectionViewCellViewModels: [Int: BetSuggestedCollectionViewCellViewModel] = [:]
+    var suggestedCellLoadedPublisher: AnyCancellable?
+
+    var maxStakeMultiple: Double?
+    var maxStakeSystem: Double?
+    var userBalance: Double?
 
     // Suggested Aggregator Variables
     var matches: [String: EveryMatrix.Match] = [:]
@@ -230,9 +230,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     deinit {
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
-        }
+        cachedBetSuggestedCollectionViewCellViewModels = [:]
     }
 
     override func viewDidLoad() {
@@ -438,10 +436,12 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = false
                     self?.systemWinningsBaseView.isHidden = true
+                    self?.checkMaxAmountTransition()
                 case .system:
                     self?.simpleWinningsBaseView.isHidden = true
                     self?.multipleWinningsBaseView.isHidden = true
                     self?.systemWinningsBaseView.isHidden = false
+                    self?.checkMaxAmountTransition()
                 }
             })
             .store(in: &cancellables)
@@ -593,21 +593,17 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        self.suggestedBetsRetrievedPublisher
+        Env.betslipManager.multipleBetslipSelectionState
             .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipState in
+                self?.maxStakeMultiple = betslipState?.maxStake
+            })
+            .store(in: &cancellables)
 
-            .sink(receiveValue: { [weak self] value in
-                guard let self = self else { return }
-                let totalSuggestedBets = self.totalGomaSuggestedBets - self.suggestedBetsNotFound
-
-                if value == totalSuggestedBets && value != 0 {
-
-                    self.betSuggestedCollectionView.reloadData()
-                    self.isSuggestedBetsLoading = false
-                    self.suggestedBetsRetrievedPublisher.send(0)
-                    self.suggestedBetsNotFound = 0
-
-                }
+        Env.userSessionStore.userBalanceWallet
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] wallet in
+                self?.userBalance = wallet?.amount
             })
             .store(in: &cancellables)
 
@@ -618,7 +614,18 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.placeBetButton.isEnabled = false
 
+        Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
+
     }
+
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        for cachedBetSuggestedViewModel in self.cachedBetSuggestedCollectionViewCellViewModels.values {
+//
+//            cachedBetSuggestedViewModel.unregisterSuggestedBets()
+//        }
+//        cachedBetSuggestedCollectionViewCellViewModels = [:]
+//    }
 
     func getSuggestedBets() {
 
@@ -637,71 +644,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 self?.gomaSuggestedBetsResponse = betsArray
 
-                let totalGomaCount = self?.gomaSuggestedBetsResponse.flatMap({$0}).count
-                self?.totalGomaSuggestedBets = totalGomaCount ?? 0
-
-                for (index, betArray) in betsArray.enumerated() {
-                    self?.subscribeSuggestedBet(betArray: betArray, index: index)
+                DispatchQueue.main.async {
+                    self?.betSuggestedCollectionView.reloadData()
                 }
             })
             .store(in: &cancellables)
-
-    }
-
-    func subscribeSuggestedBet(betArray: [GomaSuggestedBets], index: Int) {
-
-        for bet in betArray {
-
-            let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId,
-                                                    language: "en", matchId: "\(bet.matchId)",
-                                                    bettingType: "\(bet.bettingType)",
-                                                    eventPartId: "\(bet.eventPartId)")
-
-            Env.everyMatrixClient.manager
-                .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-                .sink(receiveCompletion: { _ in
-
-                }, receiveValue: { [weak self] state in
-                    switch state {
-                    case .connect(let publisherIdentifiable):
-                        self?.suggestedBetsRegisters.append(publisherIdentifiable)
-                    case .initialContent(let aggregator):
-                        self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
-                    case .updatedContent:
-                        print("MyBets suggestedBets updatedContent")
-                    case .disconnect:
-                        ()
-                    }
-                })
-                .store(in: &suggestedCancellables)
-        }
-
-    }
-
-    private func setupSuggestedMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator, index: Int) {
-
-        self.processSuggestedMatchAggregator(aggregator)
-
-        let processedSuggestedMatch = self.processSuggestedMatch()
-
-        if let suggestedMatch =
-            processedSuggestedMatch {
-
-            if self.suggestedBetsArray[index] != nil {
-                self.suggestedBetsArray[index]?.append(suggestedMatch)
-            }
-            else {
-                self.suggestedBetsArray[index] = [suggestedMatch]
-            }
-
-            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
-            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount+1)
-        }
-        else {
-            self.suggestedBetsNotFound += 1
-            let currentSuggestedCount = self.suggestedBetsRetrievedPublisher.value
-            self.suggestedBetsRetrievedPublisher.send(currentSuggestedCount)
-        }
 
     }
 
@@ -756,23 +703,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         super.viewWillAppear(animated)
     }
 
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
-        }
-
-    }
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
         self.setupWithTheme()
     }
 
-    
-    
     private func commonInit() {
 
         betSuggestedCollectionView.showsVerticalScrollIndicator = false
@@ -786,6 +722,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func setupWithTheme() {
 
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
             NSAttributedString.Key.foregroundColor: UIColor.App2.textPrimary
@@ -802,19 +739,20 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.topSafeArea.backgroundColor = UIColor.App2.backgroundSecondary
         self.bottomSafeArea.backgroundColor = UIColor.App2.backgroundSecondary
 
-        //self.betSuggestedCollectionView.backgroundColor = UIColor.App2.backgroundSecondary
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.amountTextfield.textColor = UIColor.App2.textPrimary
-        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("string_amount"), attributes: [
+        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"),
+                                                                        attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App2.textDisablePrimary
         ])
         self.clearButton.titleLabel?.textColor = UIColor.App2.textPrimary
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App2.textPrimary
-        self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: "Amount", attributes: [
+        self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"),
+                                                                                 attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App2.textDisablePrimary
         ])
@@ -826,16 +764,15 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
         self.tableView.contentInset.bottom = 12
 
-        self.systemBetSeparatorView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
+        self.systemBetSeparatorView.backgroundColor = UIColor.App2.separatorLine
         self.systemBetBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.systemBetInteriorView.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
         self.placeBetBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.placeBetButtonsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
+        self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLine
         self.placeBetSendButtonBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         
-        // self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
         
         self.placeBetButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
@@ -921,11 +858,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.clearAllBettingTickets()
 
         self.gomaSuggestedBetsResponse = []
-        self.suggestedBetsArray = [:]
 
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
+        for cachedBetSuggestedViewModel in self.cachedBetSuggestedCollectionViewCellViewModels.values {
+
+            cachedBetSuggestedViewModel.unregisterSuggestedBets()
         }
+
+        self.cachedBetSuggestedCollectionViewCellViewModels = [:]
 
         self.betSuggestedCollectionView.reloadData()
     }
@@ -990,7 +929,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     func requestSystemBetInfo() {
 
         guard
-            self.realBetValue != 0,
+            // self.realBetValue != 0, NOTA: Tive de desactivar esta opção para conseguir ter o maxAmount da system bet e colocar 1 por default na chamada, como se faz na multipla
             let selectedSystemBet = self.selectedSystemBet
         else {
             return
@@ -1003,14 +942,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemWinningsValueLabel.text = "-.--€"
 
         Env.betslipManager
-            .requestSystemBetslipSelectionState(withSkateAmount: self.realBetValue, systemBetType: selectedSystemBet)
+            .requestSystemBetslipSelectionState(systemBetType: selectedSystemBet)
             .receive(on: DispatchQueue.main)
             .sink { _ in
 
             } receiveValue: { [weak self] betDetails in
                
                 self?.configureWithSystemBetInfo(systemBetInfo: betDetails)
-                
             }
             .store(in: &cancellables)
 
@@ -1041,6 +979,26 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.systemWinningsValueLabel.text = "-.--€"
             self.secondarySystemWinningsValueLabel.text = "-.--€"
         }
+
+        self.maxStakeSystem = systemBetInfo.maxStake
+
+    }
+
+    func checkMaxAmountTransition() {
+        if let maxStakeMultiple = self.maxStakeMultiple, let maxStakeSystem = self.maxStakeSystem {
+            if self.listTypePublisher.value == .multiple {
+                if realBetValue > maxStakeMultiple {
+                    self.addAmountValue(maxStakeMultiple)
+                }
+            }
+            else if self.listTypePublisher.value == .system {
+                if realBetValue > maxStakeSystem {
+                    self.addAmountValue(maxStakeSystem)
+                }
+            }
+
+        }
+
     }
 
     @IBAction private func didTapDoneButton() {
@@ -1158,7 +1116,33 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @IBAction private func didTapPlusMaxButton() {
-        self.addAmountValue(100)
+        var maxAmountPossible = 0.0
+
+        if self.listTypePublisher.value == .multiple {
+            if let userBalance = self.userBalance,
+               let maxStake = self.maxStakeMultiple {
+                if userBalance < maxStake {
+                    maxAmountPossible = userBalance
+                }
+                else {
+                    maxAmountPossible = maxStake
+                }
+            }
+        }
+        else if self.listTypePublisher.value == .system {
+            if let userBalance = self.userBalance,
+               let maxStake = self.maxStakeSystem {
+                if userBalance < maxStake {
+                    maxAmountPossible = userBalance
+                }
+                else {
+                    maxAmountPossible = maxStake
+                }
+            }
+
+        }
+
+        self.addAmountValue(maxAmountPossible, isMax: true)
     }
 
 }
@@ -1170,8 +1154,37 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         return false
     }
 
-    func addAmountValue(_ value: Int) {
-        displayBetValue += (value * 100)
+    func addAmountValue(_ value: Double, isMax: Bool = false) {
+        if !isMax {
+            displayBetValue += Int(value * 100.0)
+        }
+        else {
+            displayBetValue = Int(value * 100.0)
+        }
+
+        if listTypePublisher.value == .multiple {
+            if let maxStake = self.maxStakeMultiple {
+                let maxStakeInt = Int(maxStake * 100.0)
+                if displayBetValue > maxStakeInt {
+                    displayBetValue = maxStakeInt
+                }
+            }
+        }
+        else if listTypePublisher.value == .system {
+            if let maxStake = self.maxStakeSystem {
+                let maxStakeInt = Int(maxStake * 100.0)
+                if displayBetValue > maxStakeInt {
+                    displayBetValue = maxStakeInt
+                }
+            }
+        }
+
+        if let maxUserBalance = self.userBalance {
+            let maxUserBalanceInt = Int(maxUserBalance * 100.0)
+            if displayBetValue > maxUserBalanceInt {
+                displayBetValue = maxUserBalanceInt
+            }
+        }
 
         let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
@@ -1247,7 +1260,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.suggestedBetsArray.count
+        return self.gomaSuggestedBetsResponse.count
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
@@ -1265,13 +1278,35 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         else {
             fatalError()
         }
-       
-        if let suggestedBetCard = self.suggestedBetsArray[indexPath.row] {
-            cell.setupStackBetView(betValues: suggestedBetCard, gomaValues: self.gomaSuggestedBetsResponse[indexPath.row])
-            cell.betNowCallbackAction = {
-                self.isSuggestedMultiple = true
-            }
+
+        if let cachedViewModel = self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row].value {
+
+            cell.setupWithViewModel(viewModel: cachedViewModel)
+
         }
+        else {
+            let viewModel = BetSuggestedCollectionViewCellViewModel(gomaArray: gomaSuggestedBetsResponse[indexPath.row])
+
+            self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row] = viewModel
+
+            cell.setupWithViewModel(viewModel: viewModel)
+
+        }
+
+        cell.betNowCallbackAction = { [weak self] in
+            self?.isSuggestedMultiple = true
+        }
+
+        cell.needsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                print("NEED RELOAD")
+                self?.isSuggestedBetsLoading = false
+                cell.setReloadedState(reloaded: true)
+                collectionView.reloadData()
+            })
+            .store(in: &cancellables)
+
         return cell
     }
 
@@ -1279,7 +1314,7 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
 
         let bottomBarHeigth = 60.0
         var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
-        if let arrayValues = self.suggestedBetsArray[indexPath.row] {
+        if !self.gomaSuggestedBetsResponse[indexPath.row].isEmpty {
 //            if arrayValues.count == 3 {
 //                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 3 * 60)
 //            }else{
@@ -1468,181 +1503,4 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         return 99
     }
     
-}
-
-extension PreSubmissionBetslipViewController {
-
-    func processSuggestedMatchAggregator(_ aggregator: EveryMatrix.Aggregator) {
-
-        self.match = nil
-
-        for content in aggregator.content ?? [] {
-            switch content {
-            case .tournament(let tournamentContent):
-                tournaments[tournamentContent.id] = tournamentContent
-
-            case .match(let matchContent):
-
-                match = matchContent
-
-            case .matchInfo:
-                ()
-            case .market(let marketContent):
-
-                marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
-
-                if let matchId = marketContent.eventId {
-                    if var marketsForIterationMatch = marketsForMatch[matchId] {
-                        marketsForIterationMatch.insert(marketContent.id)
-                        marketsForMatch[matchId] = marketsForIterationMatch
-                    }
-                    else {
-                        var newSet = Set<String>.init()
-                        newSet.insert(marketContent.id)
-                        marketsForMatch[matchId] = newSet
-                    }
-                }
-            case .betOutcome(let betOutcomeContent):
-                betOutcomes[betOutcomeContent.id] = betOutcomeContent
-
-            case .bettingOffer(let bettingOfferContent):
-                if let outcomeIdValue = bettingOfferContent.outcomeId {
-                    bettingOffers[outcomeIdValue] = bettingOfferContent
-                }
-                bettingOfferPublishers[bettingOfferContent.id] = CurrentValueSubject<EveryMatrix.BettingOffer, Never>.init(bettingOfferContent)
-
-            case .mainMarket(let market):
-                mainMarkets[market.id] = market
-                mainMarketsOrder.append(market.bettingTypeId ?? "")
-
-            case .marketOutcomeRelation(let marketOutcomeRelationContent):
-                marketOutcomeRelations[marketOutcomeRelationContent.id] = marketOutcomeRelationContent
-
-                if let marketId = marketOutcomeRelationContent.marketId, let outcomeId = marketOutcomeRelationContent.outcomeId {
-                    if var outcomesForMatch = bettingOutcomesForMarket[marketId] {
-                        outcomesForMatch.insert(outcomeId)
-                        bettingOutcomesForMarket[marketId] = outcomesForMatch
-                    }
-                    else {
-                        var newSet = Set<String>.init()
-                        newSet.insert(outcomeId)
-                        bettingOutcomesForMarket[marketId] = newSet
-                    }
-                }
-            case .marketGroup:
-                ()
-
-            case .location:
-               ()
-            case .cashout:
-               ()
-            case .event:
-                ()
-            case .eventPartScore:
-                ()
-            case .unknown:
-                ()
-            }
-        }
-
-    }
-
-    func processSuggestedMatch() -> Match? {
-
-        guard let rawMatch = match else { return nil }
-
-        var processedMatch: Match?
-
-        var matchMarkets: [Market] = []
-
-        let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
-
-        let rawMarketsList = marketsIds.map { [weak self] id in
-            return self?.marketsPublishers[id]?.value
-        }
-        .compactMap({$0})
-
-        for rawMarket  in rawMarketsList {
-
-            let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
-
-            let rawOutcomesList = rawOutcomeIds.map { [weak self] id in
-                return self?.betOutcomes[id]
-            }
-            .compactMap({$0})
-
-            var outcomes: [Outcome] = []
-            for rawOutcome in rawOutcomesList {
-
-                if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
-                    let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                    value: rawBettingOffer.oddsValue ?? 0.0)
-
-                    let outcome = Outcome(id: rawOutcome.id,
-                                          codeName: rawOutcome.headerNameKey ?? "",
-                                          typeName: rawOutcome.headerName ?? "",
-                                          translatedName: rawOutcome.translatedName ?? "",
-                                          nameDigit1: rawOutcome.paramFloat1,
-                                          nameDigit2: rawOutcome.paramFloat2,
-                                          nameDigit3: rawOutcome.paramFloat3,
-                                          paramBoolean1: rawOutcome.paramBoolean1,
-                                          marketName: rawMarket.shortName ?? "",
-                                          marketId: rawMarket.id,
-                                          bettingOffer: bettingOffer)
-                    outcomes.append(outcome)
-                }
-            }
-
-            let sortedOutcomes = outcomes.sorted { out1, out2 in
-                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
-                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
-                return out1Value < out2Value
-            }
-
-            let market = Market(id: rawMarket.id,
-                                typeId: rawMarket.bettingTypeId ?? "",
-                                name: rawMarket.shortName ?? "",
-                                nameDigit1: rawMarket.paramFloat1,
-                                nameDigit2: rawMarket.paramFloat2,
-                                nameDigit3: rawMarket.paramFloat3,
-                                eventPartId: rawMarket.eventPartId,
-                                bettingTypeId: rawMarket.bettingTypeId,
-                                outcomes: sortedOutcomes)
-            matchMarkets.append(market)
-        }
-
-        let sortedMarkets = matchMarkets.sorted { market1, market2 in
-            let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 100
-            let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 100
-            return position1 < position2
-        }
-
-        var location: Location?
-        if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
-            location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
-        }
-
-        let match = Match(id: rawMatch.id,
-                          competitionId: rawMatch.parentId ?? "",
-                          competitionName: rawMatch.parentName ?? "",
-                          homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
-                                                       name: rawMatch.homeParticipantName ?? ""),
-                          awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
-                                                       name: rawMatch.awayParticipantName ?? ""),
-                          date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
-                          sportType: rawMatch.sportId ?? "",
-                          venue: location,
-                          numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
-                          markets: sortedMarkets,
-                          rootPartId: rawMatch.rootPartId ?? "")
-
-        processedMatch = match
-
-        return processedMatch
-
-    }
-
-    func location(forId id: String) -> EveryMatrix.Location? {
-        return Env.everyMatrixStorage.locations[id]
-    }
 }

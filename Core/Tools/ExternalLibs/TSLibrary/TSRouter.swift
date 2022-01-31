@@ -49,7 +49,7 @@ enum TSRouter {
     case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
 
-    case searchV2(language: String, limit: Int, query: String, eventInfoTypes: [Int], include: [String])
+    case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [String], sortBy: [String])
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -545,12 +545,14 @@ enum TSRouter {
                     "nrOfRecords": records,
                     "page": page]
 
-        case .searchV2(let language, let limit, let query, let eventInfoTypes, let include):
+        case .searchV2(let language, let limit, let query, let eventStatuses, let include, let bettingTypeIds, let sortBy):
             return ["lang": language,
                     "limit": limit,
                     "query": query,
-                    "eventInfoTypes": eventInfoTypes,
-                    "include": include]
+                    "eventStatuses": eventStatuses,
+                    "include": include,
+                    "bettingTypeIds": bettingTypeIds,
+                    "sortBy": sortBy]
 
         //
         //

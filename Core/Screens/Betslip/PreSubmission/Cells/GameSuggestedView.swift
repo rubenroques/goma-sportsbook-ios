@@ -82,14 +82,22 @@ class GameSuggestedView: NibView {
         
     }
 
-    func setMatchFlag(isoCode: String) {
-        let gameFlag = Assets.flagName(withCountryCode: isoCode)
+    func setMatchFlag(isoCode: String, countryId: String) {
 
-        if gameFlag != "country_flag_" {
-            self.gameImageView.image = UIImage(named: gameFlag)
+        if isoCode != "" {
+            let gameFlag = Assets.flagName(withCountryCode: isoCode)
+
+            if gameFlag != "country_flag_" {
+                self.gameImageView.image = UIImage(named: gameFlag)
+            }
+            else {
+                self.gameImageView.image = UIImage(named: "country_flag_240")
+            }
         }
         else {
-            self.gameImageView.image = UIImage(named: "sport_type_soccer_icon")
+            let gameFlag = Assets.flagName(withCountryCode: countryId)
+            self.gameImageView.image = UIImage(named: gameFlag)
+
         }
 
     }

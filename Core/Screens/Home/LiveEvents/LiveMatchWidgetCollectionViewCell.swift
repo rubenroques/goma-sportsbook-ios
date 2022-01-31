@@ -267,7 +267,12 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.matchTimeLabel.text = ""
 
        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        if viewModel.countryISOCode != "" {
+            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        }
+        else {
+            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+        }
 
         if let market = match.markets.first {
             if let outcome = market.outcomes[safe: 0] {

@@ -46,6 +46,10 @@ class BetslipViewController: UIViewController {
         super.init(nibName: "BetslipViewController", bundle: nil)
     }
 
+    deinit {
+        preSubmissionBetslipViewController.removeFromParent()
+    }
+
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
