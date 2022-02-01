@@ -37,7 +37,7 @@ extension UIButton {
 
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 16), range: range1)
 
-        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App2.highlightPrimary, range: range1)
+        underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.highlightPrimary, range: range1)
 
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
 
@@ -46,12 +46,12 @@ extension UIButton {
 
     func enableButton() {
         self.isEnabled = true
-        self.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.backgroundColor = UIColor.App.buttonBackgroundPrimary
     }
 
     func disableButton() {
         self.isEnabled = false
-        self.backgroundColor = UIColor.App2.buttonDisablePrimary
+        self.backgroundColor = UIColor.App.buttonDisablePrimary
     }
 
     func setInsets(

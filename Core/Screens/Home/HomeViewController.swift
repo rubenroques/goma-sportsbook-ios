@@ -202,7 +202,7 @@ class HomeViewController: UIViewController {
         profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
         profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
         profilePictureImageView.layer.borderWidth = 1
-        profilePictureImageView.layer.borderColor = UIColor.App2.highlightSecondary.cgColor
+        profilePictureImageView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
         
         profilePictureImageView.layer.masksToBounds = true
 
@@ -246,17 +246,17 @@ class HomeViewController: UIViewController {
 
     func setupWithTheme() {
 
-        preLiveBaseView.backgroundColor = UIColor.App2.backgroundPrimary
-        liveBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        liveTitleLabel.textColor = UIColor.App2.textPrimary
-        sportsTitleLabel.textColor = UIColor.App2.textPrimary
+        liveTitleLabel.textColor = UIColor.App.textPrimary
+        sportsTitleLabel.textColor = UIColor.App.textPrimary
 
-        topSafeAreaView.backgroundColor = UIColor.App2.backgroundPrimary
-        topBarView.backgroundColor = UIColor.App2.backgroundPrimary
-        contentView.backgroundColor = UIColor.App2.backgroundPrimary
-        tabBarView.backgroundColor = UIColor.App2.backgroundPrimary
-        bottomSafeAreaView.backgroundColor = UIColor.App2.backgroundPrimary
+        topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        topBarView.backgroundColor = UIColor.App.backgroundPrimary
+        contentView.backgroundColor = UIColor.App.backgroundPrimary
+        tabBarView.backgroundColor = UIColor.App.backgroundPrimary
+        bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
 
         tabBarView.layer.shadowRadius = 20
         tabBarView.layer.shadowOffset = .zero
@@ -271,19 +271,19 @@ class HomeViewController: UIViewController {
         sportsButtonBaseView.backgroundColor = .clear
         liveButtonBaseView.backgroundColor = .clear
 
-        profilePictureBaseView.backgroundColor = UIColor.App2.highlightSecondary
+        profilePictureBaseView.backgroundColor = UIColor.App.highlightSecondary
 
-        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
-        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
-        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
+        loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
         loginButton.layer.cornerRadius = CornerRadius.view
         loginButton.layer.masksToBounds = true
 
-        accountValueView.backgroundColor = UIColor.App2.backgroundSecondary
-        accountValueLabel.textColor = UIColor.App2.textPrimary
-        accountPlusView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
+        accountValueView.backgroundColor = UIColor.App.backgroundSecondary
+        accountValueLabel.textColor = UIColor.App.textPrimary
+        accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
     }
 
     func setupWithState(_ state: ScreenState) {

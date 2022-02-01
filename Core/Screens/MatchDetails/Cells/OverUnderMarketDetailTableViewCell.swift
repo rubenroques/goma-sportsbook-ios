@@ -85,11 +85,11 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App2.backgroundCards
-        self.expandBaseView.backgroundColor = UIColor.App2.backgroundCards
+        self.containerView.backgroundColor = UIColor.App.backgroundCards
+        self.expandBaseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.expandLabel.textColor = UIColor.App2.textPrimary
-        self.titleLabel.textColor = UIColor.App2.textPrimary
+        self.expandLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = UIColor.App.textPrimary
     }
 
     func configure(withMarketGroupOrganizer marketGroupOrganizer: MarketGroupOrganizer, isExpanded: Bool) {

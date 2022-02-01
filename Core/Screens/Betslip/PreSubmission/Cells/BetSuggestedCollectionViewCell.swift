@@ -47,18 +47,18 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
-        self.infoBetLabelsView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.infoBetLabelsView.backgroundColor = UIColor.App.backgroundSecondary
         
-        self.totalOddValueLabel.backgroundColor = UIColor.App2.backgroundSecondary
-        self.totalOddLabel.backgroundColor = UIColor.App2.backgroundSecondary
-        self.numberOfSelectionsLabel.backgroundColor = UIColor.App2.backgroundSecondary
-        self.numberOfSelectionsValueLabel.backgroundColor = UIColor.App2.backgroundSecondary
+        self.totalOddValueLabel.backgroundColor = UIColor.App.backgroundSecondary
+        self.totalOddLabel.backgroundColor = UIColor.App.backgroundSecondary
+        self.numberOfSelectionsLabel.backgroundColor = UIColor.App.backgroundSecondary
+        self.numberOfSelectionsValueLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.betsStackView.removeAllArrangedSubviews()
-        self.betsStackView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.informationBetView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.totalOddValueLabel.textColor = UIColor.App2.textPrimary
-        self.numberOfSelectionsValueLabel.textColor = UIColor.App2.textPrimary
-        self.betNowButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.betsStackView.backgroundColor = UIColor.App.backgroundSecondary
+        self.informationBetView.backgroundColor = UIColor.App.backgroundSecondary
+        self.totalOddValueLabel.textColor = UIColor.App.textPrimary
+        self.numberOfSelectionsValueLabel.textColor = UIColor.App.textPrimary
+        self.betNowButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
     }
     
     func setupStackBetView(betValues: [Match], gomaValues: [GomaSuggestedBets]) {
@@ -106,7 +106,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                                     }
 
                                     validMarkets += 1
-                                    gameSuggestedView.backgroundColor = UIColor.App2.backgroundSecondary
+                                    gameSuggestedView.backgroundColor = UIColor.App.backgroundSecondary
                                     betsStackView.addArrangedSubview(gameSuggestedView)
 
                                     self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)

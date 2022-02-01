@@ -133,11 +133,11 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
 
-        self.stackBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.stackView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.stackBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.stackView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.bottomSeparatorView.backgroundColor = UIColor.App2.separatorLine
-        self.baseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
 
         for view in stackView.arrangedSubviews {
             if let typedView = view as? SubmitedBetSelectionView {
@@ -145,14 +145,14 @@ class SubmitedBetTableViewCell: UITableViewCell {
             }
         }
 
-        self.cashoutStackView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.cashoutView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.cashoutStackView.backgroundColor = UIColor.App.backgroundSecondary
+        self.cashoutView.backgroundColor = UIColor.App.backgroundSecondary
         self.cashoutLogoImageView.backgroundColor = .clear
-        self.cashoutTitleLabel.textColor = UIColor.App2.textSecond
-        self.cashoutValueLabel.textColor = UIColor.App2.textPrimary
-        self.cashoutButton.setBackgroundColor(UIColor.App2.backgroundTertiary, for: .normal)
-        self.cashoutSeparatorView.backgroundColor = UIColor.App2.separatorLine
-        self.possibleWinningsTitleLabel.textColor = UIColor.App2.textSecond
+        self.cashoutTitleLabel.textColor = UIColor.App.textSecond
+        self.cashoutValueLabel.textColor = UIColor.App.textPrimary
+        self.cashoutButton.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
+        self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.possibleWinningsTitleLabel.textColor = UIColor.App.textSecond
     }
 
     func configureWithViewModel(viewModel: SubmitedBetTableViewCellViewModel) {

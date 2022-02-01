@@ -57,7 +57,7 @@ public class TabularBarView: UIView {
 
     private var baseScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.backgroundColor = UIColor.App2.backgroundSecondary
+        scrollView.backgroundColor = UIColor.App.backgroundSecondary
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
@@ -79,14 +79,14 @@ public class TabularBarView: UIView {
     private var selectedBarButtonBaseView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App2.backgroundSecondary
+        view.backgroundColor = UIColor.App.backgroundSecondary
         return view
     }()
 
     private var selectedBarButtonView: UIView = {
         let view = UIView()
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.backgroundColor = UIColor.App2.backgroundSecondary
+        view.backgroundColor = UIColor.App.backgroundSecondary
         return view
     }()
 

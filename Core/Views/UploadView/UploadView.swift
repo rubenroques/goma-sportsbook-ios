@@ -31,22 +31,22 @@ class UploadView: NibView {
 
     func setup() {
         //
-        self.backgroundColor = UIColor.App2.backgroundPrimary
+        self.backgroundColor = UIColor.App.backgroundPrimary
 
         closeButton.layer.cornerRadius = closeButton.frame.size.width/2
-        closeButton.backgroundColor = UIColor.App2.backgroundPrimary
-        closeButton.tintColor = UIColor.App2.textPrimary
+        closeButton.backgroundColor = UIColor.App.backgroundPrimary
+        closeButton.tintColor = UIColor.App.textPrimary
 
         fileLabel.text = "Lorem Ipsum"
         fileLabel.font = AppFont.with(type: .bold, size: 16)
-        fileLabel.textColor = UIColor.App2.textPrimary
+        fileLabel.textColor = UIColor.App.textPrimary
 
         progressLabel.text = "Lorem Ipsum dolor amet"
         progressLabel.font = AppFont.with(type: .bold, size: 11)
-        progressLabel.textColor = UIColor.App2.textPrimary
+        progressLabel.textColor = UIColor.App.textPrimary
 
-        progressView.progressTintColor = UIColor.App2.textHeadlinePrimary
-        progressView.trackTintColor = UIColor.App2.backgroundPrimary
+        progressView.progressTintColor = UIColor.App.textHeadlinePrimary
+        progressView.trackTintColor = UIColor.App.backgroundPrimary
     }
 
     func setTitle(_ title: String) {
@@ -60,7 +60,7 @@ class UploadView: NibView {
     func setProgressBar(_ progress: Float) {
         progressView.progress = progress
         if progressView.progress == 1 {
-            progressView.progressTintColor = UIColor.App2.alertSuccess
+            progressView.progressTintColor = UIColor.App.alertSuccess
             progressLabel.text = localized("upload_complete")
         }
     }

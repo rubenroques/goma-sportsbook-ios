@@ -54,57 +54,57 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        headerView.backgroundColor = UIColor.App2.backgroundPrimary
+        headerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        backButton.backgroundColor = UIColor.App2.backgroundPrimary
-        backButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        backButton.backgroundColor = UIColor.App.backgroundPrimary
+        backButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         backButton.setTitle("", for: .normal)
-        backButton.tintColor = UIColor.App2.textPrimary
+        backButton.tintColor = UIColor.App.textPrimary
 
-        headerLabel.textColor = UIColor.App2.textPrimary
+        headerLabel.textColor = UIColor.App.textPrimary
 
-        editButton.backgroundColor = UIColor.App2.backgroundPrimary
+        editButton.backgroundColor = UIColor.App.backgroundPrimary
 
-        depositView.backgroundColor = UIColor.App2.backgroundPrimary
+        depositView.backgroundColor = UIColor.App.backgroundPrimary
 
-        depositLabel.textColor = UIColor.App2.textPrimary
+        depositLabel.textColor = UIColor.App.textPrimary
 
-        depositHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        depositHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        depositHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        depositHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         depositHeaderTextFieldView.setSecureField(false)
 
-        depositLineView.backgroundColor = UIColor.App2.inputTextTitle.withAlphaComponent(0.2)
+        depositLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
-        bettingView.backgroundColor = UIColor.App2.backgroundPrimary
+        bettingView.backgroundColor = UIColor.App.backgroundPrimary
 
-        bettingLabel.textColor = UIColor.App2.textPrimary
+        bettingLabel.textColor = UIColor.App.textPrimary
 
-        bettingHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        bettingHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        bettingHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        bettingHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         bettingHeaderTextFieldView.setSecureField(false)
 
-        bettingLineView.backgroundColor = UIColor.App2.inputTextTitle.withAlphaComponent(0.2)
+        bettingLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
-        lossView.backgroundColor = UIColor.App2.backgroundPrimary
+        lossView.backgroundColor = UIColor.App.backgroundPrimary
 
-        lossLabel.textColor = UIColor.App2.textPrimary
+        lossLabel.textColor = UIColor.App.textPrimary
 
-        lossHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        lossHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        lossHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        lossHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         lossHeaderTextFieldView.setSecureField(false)
 
-        lossLineView.backgroundColor = UIColor.App2.inputTextTitle.withAlphaComponent(0.2)
+        lossLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
-        exclusionView.backgroundColor = UIColor.App2.backgroundPrimary
+        exclusionView.backgroundColor = UIColor.App.backgroundPrimary
 
-        exclusionLabel.textColor = UIColor.App2.textPrimary
+        exclusionLabel.textColor = UIColor.App.textPrimary
 
     }
 

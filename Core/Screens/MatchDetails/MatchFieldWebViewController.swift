@@ -55,11 +55,11 @@ class MatchFieldWebViewController: UIViewController {
     
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
-        self.topSafeAreaView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.navigationView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.webView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.webView.backgroundColor = UIColor.App.backgroundSecondary
     }
 
 

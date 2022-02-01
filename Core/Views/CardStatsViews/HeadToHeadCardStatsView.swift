@@ -114,31 +114,31 @@ class HeadToHeadCardStatsView: NibView {
 
     func setupWithTheme() {
 
-        self.winTitleLabel.textColor = UIColor.App2.textPrimary
-        self.winHomeValueLabel.textColor = UIColor.App2.textPrimary
-        self.winHomeProgressBar.trackTintColor = UIColor.App2.backgroundTertiary
+        self.winTitleLabel.textColor = UIColor.App.textPrimary
+        self.winHomeValueLabel.textColor = UIColor.App.textPrimary
+        self.winHomeProgressBar.trackTintColor = UIColor.App.backgroundTertiary
         self.winHomeProgressBar.progressTintColor = UIColor(hex: 0xD99F00)
-        self.winAwayValueLabel.textColor = UIColor.App2.textPrimary
-        self.winAwayProgressBar.trackTintColor = UIColor.App2.backgroundTertiary
+        self.winAwayValueLabel.textColor = UIColor.App.textPrimary
+        self.winAwayProgressBar.trackTintColor = UIColor.App.backgroundTertiary
         self.winAwayProgressBar.progressTintColor = UIColor(hex: 0x46C1A7)
 
-        self.drawTitleLabel.textColor = UIColor.App2.textPrimary
-        self.drawHomeValueLabel.textColor = UIColor.App2.textPrimary
-        self.drawHomeProgressBar.trackTintColor = UIColor.App2.backgroundTertiary
+        self.drawTitleLabel.textColor = UIColor.App.textPrimary
+        self.drawHomeValueLabel.textColor = UIColor.App.textPrimary
+        self.drawHomeProgressBar.trackTintColor = UIColor.App.backgroundTertiary
         self.drawHomeProgressBar.progressTintColor = UIColor(hex: 0xD99F00)
-        self.drawAwayValueLabel.textColor = UIColor.App2.textPrimary
-        self.drawAwayProgressBar.trackTintColor = UIColor.App2.backgroundTertiary
+        self.drawAwayValueLabel.textColor = UIColor.App.textPrimary
+        self.drawAwayProgressBar.trackTintColor = UIColor.App.backgroundTertiary
         self.drawAwayProgressBar.progressTintColor = UIColor(hex: 0x46C1A7)
 
-        self.lossTitleLabel.textColor = UIColor.App2.textPrimary
-        self.lossHomeValueLabel.textColor = UIColor.App2.textPrimary
-        self.lossHomeProgressBar.trackTintColor = UIColor.App2.backgroundTertiary
+        self.lossTitleLabel.textColor = UIColor.App.textPrimary
+        self.lossHomeValueLabel.textColor = UIColor.App.textPrimary
+        self.lossHomeProgressBar.trackTintColor = UIColor.App.backgroundTertiary
         self.lossHomeProgressBar.progressTintColor = UIColor(hex: 0xD99F00)
-        self.lossAwayValueLabel.textColor = UIColor.App2.textPrimary
-        self.lossAwayProgressBar.trackTintColor = UIColor.App2.backgroundTertiary
+        self.lossAwayValueLabel.textColor = UIColor.App.textPrimary
+        self.lossAwayProgressBar.trackTintColor = UIColor.App.backgroundTertiary
         self.lossAwayProgressBar.progressTintColor = UIColor(hex: 0x46C1A7)
 
-        self.captionLabel.textColor = UIColor.App2.textSecond
+        self.captionLabel.textColor = UIColor.App.textSecond
     }
 
     override var intrinsicContentSize: CGSize {

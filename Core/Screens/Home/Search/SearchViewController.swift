@@ -83,25 +83,25 @@ class SearchViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App2.backgroundTertiary
+        self.containerView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.searchView.backgroundColor = .clear
 
         self.cancelButton.backgroundColor = .clear
-        self.cancelButton.tintColor = UIColor.App2.textPrimary
+        self.cancelButton.tintColor = UIColor.App.textPrimary
 
-        self.emptySearchLabel.textColor = UIColor.App2.textSecond
+        self.emptySearchLabel.textColor = UIColor.App.textSecond
 
         self.noResultsView.backgroundColor = .clear
         self.noResultsImageView.backgroundColor = .clear
 
-        self.noResultsLabel.textColor = UIColor.App2.textPrimary
+        self.noResultsLabel.textColor = UIColor.App.textPrimary
 
-        self.activityIndicatorBaseView.backgroundColor = UIColor.App2.backgroundTertiary
+        self.activityIndicatorBaseView.backgroundColor = UIColor.App.backgroundTertiary
     }
 
     func commonInit() {
@@ -112,20 +112,20 @@ class SearchViewController: UIViewController {
         self.searchBarView.backgroundImage = UIImage()
         self.searchBarView.tintColor = .white
         self.searchBarView.barTintColor = .white
-        self.searchBarView.backgroundImage = UIColor.App2.backgroundTertiary.image()
+        self.searchBarView.backgroundImage = UIColor.App.backgroundTertiary.image()
 
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App2.backgroundSecondary
-            textfield.textColor = UIColor.App2.textPrimary
-            textfield.tintColor = UIColor.App2.textPrimary
+            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
             textfield.font = AppFont.with(type: .semibold, size: 14)
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_for_teams_competitions"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App2.inputTextTitle, NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
+                                                                                UIColor.App.inputTextTitle, NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App2.inputTextTitle
+                glassIconView.tintColor = UIColor.App.inputTextTitle
             }
         }
 
@@ -138,7 +138,7 @@ class SearchViewController: UIViewController {
         self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
 
         // TableView
-        self.tableView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.tableView.backgroundColor = UIColor.App.backgroundSecondary
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.tableView.separatorStyle = .none

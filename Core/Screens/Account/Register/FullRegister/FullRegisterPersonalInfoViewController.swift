@@ -85,10 +85,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
-        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App2.inputTextTitle)
+        firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
 
         lastNameHeaderTextFieldView.setPlaceholderText(localized("last_name"))
-        lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App2.inputTextTitle)
+        lastNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
 
         countryHeaderTextFieldView.setPlaceholderText(localized("country"))
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
@@ -120,61 +120,61 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     func setupWithTheme() {
 
-        topView.backgroundColor = UIColor.App2.backgroundPrimary
+        topView.backgroundColor = UIColor.App.backgroundPrimary
 
-        view.backgroundColor = UIColor.App2.backgroundPrimary
+        view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
+        navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
-        closeButton.setTitleColor(UIColor.App2.inputText, for: .normal)
+        closeButton.setTitleColor(UIColor.App.inputText, for: .normal)
 
-        progressView.backgroundColor = UIColor.App2.backgroundPrimary
+        progressView.backgroundColor = UIColor.App.backgroundPrimary
 
-        progressLabel.textColor = UIColor.App2.inputText
+        progressLabel.textColor = UIColor.App.inputText
 
-        titleLabel.textColor = UIColor.App2.inputText
+        titleLabel.textColor = UIColor.App.inputText
 
-        titleHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        titleHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
-        titleHeaderTextFieldView.setViewColor(UIColor.App2.backgroundPrimary)
-        titleHeaderTextFieldView.setViewBorderColor(UIColor.App2.inputTextTitle)
+        titleHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        titleHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        titleHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        titleHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
-        firstNameHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        lastNameHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        lastNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        lastNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        lastNameHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        countryHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        countryHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
-        countryHeaderTextFieldView.setViewColor(UIColor.App2.backgroundPrimary)
-        countryHeaderTextFieldView.setViewBorderColor(UIColor.App2.inputTextTitle)
+        countryHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        countryHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        countryHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
-        address1HeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        address1HeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        address1HeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        address1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        address1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        address1HeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        address2HeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        address2HeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        address2HeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        address2HeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        address2HeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        address2HeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        cityStackView.backgroundColor = UIColor.App2.backgroundPrimary
+        cityStackView.backgroundColor = UIColor.App.backgroundPrimary
 
-        cityHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        cityHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        cityHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        cityHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        cityHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        postalCodeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        continueButton.backgroundColor = UIColor.App2.backgroundPrimary
-        continueButton.setTitleColor(UIColor.App2.inputTextTitle, for: .disabled)
-        continueButton.setTitleColor(UIColor.App2.inputText, for: .normal)
+        continueButton.backgroundColor = UIColor.App.backgroundPrimary
+        continueButton.setTitleColor(UIColor.App.inputTextTitle, for: .disabled)
+        continueButton.setTitleColor(UIColor.App.inputText, for: .normal)
         continueButton.cornerRadius = CornerRadius.button
 
     }
@@ -190,12 +190,12 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         if  titleText && firstNameText && lastNameText && address1Text && cityText && postalCodeText {
             self.continueButton.isEnabled = true
-            continueButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+            continueButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
             self.setupFullRegisterUserInfoForm()
         }
         else {
             self.continueButton.isEnabled = false
-            continueButton.backgroundColor = UIColor.App2.backgroundPrimary
+            continueButton.backgroundColor = UIColor.App.backgroundPrimary
         }
     }
 

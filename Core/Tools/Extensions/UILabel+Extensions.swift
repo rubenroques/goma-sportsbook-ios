@@ -50,12 +50,12 @@ extension UILabel {
             self.text = accountText
             self.font = AppFont.with(type: .semibold, size: 14.0)
 
-        self.textColor =  UIColor.App2.textPrimary
+        self.textColor =  UIColor.App.textPrimary
 
             let highlightAttriString = NSMutableAttributedString(string: accountText)
             let range1 = (accountText as NSString).range(of: highlightString)
             highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .semibold, size: 14), range: range1)
-            highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App2.highlightPrimary, range: range1)
+            highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.highlightPrimary, range: range1)
 
             self.attributedText = highlightAttriString
             self.isUserInteractionEnabled = true

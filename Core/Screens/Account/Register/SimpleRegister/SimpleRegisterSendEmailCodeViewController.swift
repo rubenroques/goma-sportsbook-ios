@@ -36,27 +36,27 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        backView.backgroundColor = UIColor.App2.backgroundPrimary
+        backView.backgroundColor = UIColor.App.backgroundPrimary
 
-        titleLabel.textColor = UIColor.App2.inputTextTitle
+        titleLabel.textColor = UIColor.App.inputTextTitle
 
-        textLabel.textColor = UIColor.App2.inputText
+        textLabel.textColor = UIColor.App.inputText
 
-        codeHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        codeHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
+        codeHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        codeHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         codeHeaderTextFieldView.setSecureField(false)
 
-        doneButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
-        doneButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        doneButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        doneButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
         doneButton.cornerRadius = CornerRadius.button
 
-        pasteClipboardButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
-        pasteClipboardButton.backgroundColor = UIColor.App2.backgroundPrimary
+        pasteClipboardButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        pasteClipboardButton.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     func commonInit() {

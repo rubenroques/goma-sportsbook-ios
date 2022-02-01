@@ -112,28 +112,28 @@ class HomeFilterViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        topView.backgroundColor = UIColor.App2.backgroundPrimary
+        topView.backgroundColor = UIColor.App.backgroundPrimary
 
-        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
+        navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
-        navigationLabel.textColor = UIColor.App2.textPrimary
+        navigationLabel.textColor = UIColor.App.textPrimary
 
-        navigationResetButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        navigationResetButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
 
-        navigationCancelButton.setTitleColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
+        navigationCancelButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
 
-        scrollView.backgroundColor = UIColor.App2.backgroundPrimary
+        scrollView.backgroundColor = UIColor.App.backgroundPrimary
 
-        stackContainerView.backgroundColor = UIColor.App2.backgroundPrimary
+        stackContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        stackView.backgroundColor = UIColor.App2.backgroundPrimary
+        stackView.backgroundColor = UIColor.App.backgroundPrimary
 
-        bottomButtonView.backgroundColor = UIColor.App2.backgroundPrimary
+        bottomButtonView.backgroundColor = UIColor.App.backgroundPrimary
 
-        applyButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
-        applyButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        applyButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        applyButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         
     }
 
@@ -158,22 +158,22 @@ class HomeFilterViewController: UIViewController {
 
         let contentView = timeRangeCollapseView.getContentView()
         self.timeRangeMultiSlider = MultiSlider()
-        timeRangeMultiSlider?.backgroundColor = UIColor.App2.backgroundSecondary
+        timeRangeMultiSlider?.backgroundColor = UIColor.App.backgroundSecondary
         timeRangeMultiSlider?.orientation = .horizontal
         timeRangeMultiSlider?.minimumTextualValue = localized("now")
         timeRangeMultiSlider?.minimumValue = minValue
         timeRangeMultiSlider?.maximumValue = maxValue
-        timeRangeMultiSlider?.outerTrackColor = UIColor.App2.separatorLine
+        timeRangeMultiSlider?.outerTrackColor = UIColor.App.separatorLine
         timeRangeMultiSlider?.value = values
         timeRangeMultiSlider?.snapStepSize = 1
         timeRangeMultiSlider?.thumbImage = UIImage(named: "slider_thumb_icon")
-        timeRangeMultiSlider?.tintColor = UIColor.App2.highlightPrimary
+        timeRangeMultiSlider?.tintColor = UIColor.App.highlightPrimary
         timeRangeMultiSlider?.trackWidth = 6
         timeRangeMultiSlider?.showsThumbImageShadow = false
         timeRangeMultiSlider?.keepsDistanceBetweenThumbs = false
         timeRangeMultiSlider?.addTarget(self, action: #selector(timeSliderChanged), for: .valueChanged)
         timeRangeMultiSlider?.valueLabelPosition = .bottom
-        timeRangeMultiSlider?.valueLabelColor = UIColor.App2.textPrimary
+        timeRangeMultiSlider?.valueLabelColor = UIColor.App.textPrimary
         timeRangeMultiSlider?.valueLabelFont = AppFont.with(type: .bold, size: 14)
 
         if let timeRangeMultiSlider = timeRangeMultiSlider {
@@ -259,15 +259,15 @@ class HomeFilterViewController: UIViewController {
         
         self.oddRangeMultiSlider = MultiSlider()
  
-        oddRangeMultiSlider?.backgroundColor = UIColor.App2.backgroundSecondary
+        oddRangeMultiSlider?.backgroundColor = UIColor.App.backgroundSecondary
         oddRangeMultiSlider?.orientation = .horizontal
         oddRangeMultiSlider?.minimumValue = minValue
         oddRangeMultiSlider?.maximumValue = maxValue
-        oddRangeMultiSlider?.outerTrackColor = UIColor.App2.highlightPrimary
+        oddRangeMultiSlider?.outerTrackColor = UIColor.App.highlightPrimary
         oddRangeMultiSlider?.value = [lowerBoundOddsRange, highBoundOddsRange]
         oddRangeMultiSlider?.snapStepSize = 0.1
         oddRangeMultiSlider?.thumbImage = UIImage(named: "slider_thumb_icon")
-        oddRangeMultiSlider?.tintColor = UIColor.App2.highlightPrimary
+        oddRangeMultiSlider?.tintColor = UIColor.App.highlightPrimary
         oddRangeMultiSlider?.trackWidth = 6
         oddRangeMultiSlider?.showsThumbImageShadow = false
         oddRangeMultiSlider?.keepsDistanceBetweenThumbs = false

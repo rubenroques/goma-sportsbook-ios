@@ -57,32 +57,32 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topSafeView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.topSafeView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.navigationView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.navigationTitleLabel.textColor = UIColor.App2.textPrimary
+        self.navigationTitleLabel.textColor = UIColor.App.textPrimary
         self.navigationTitleLabel.font = AppFont.with(type: .bold, size: 17)
 
-        self.navigationCloseButton.tintColor = UIColor.App2.highlightPrimary
-        self.navigationCloseButton.backgroundColor = UIColor.App2.backgroundPrimary
+        self.navigationCloseButton.tintColor = UIColor.App.highlightPrimary
+        self.navigationCloseButton.backgroundColor = UIColor.App.backgroundPrimary
         self.navigationCloseButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
-        self.containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.logoImageView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.logoImageView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.titleLabel.textColor = UIColor.App2.textPrimary
+        self.titleLabel.textColor = UIColor.App.textPrimary
         self.titleLabel.font = AppFont.with(type: .bold, size: 22)
 
-        self.descriptionLabel.textColor = UIColor.App2.textPrimary
+        self.descriptionLabel.textColor = UIColor.App.textPrimary
         self.descriptionLabel.font = AppFont.with(type: .semibold, size: 16)
 
-        self.checkEmailButton.backgroundColor = UIColor.App2.highlightPrimary
+        self.checkEmailButton.backgroundColor = UIColor.App.highlightPrimary
         self.checkEmailButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
-        self.checkEmailButton.tintColor = UIColor.App2.buttonTextPrimary
+        self.checkEmailButton.tintColor = UIColor.App.buttonTextPrimary
     }
 
     @IBAction private func closeAction() {

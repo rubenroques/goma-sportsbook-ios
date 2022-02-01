@@ -117,9 +117,9 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionBaseView.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
-        self.collectionView.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
+        self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
-        self.backSliderView.backgroundColor = UIColor.App2.backgroundTertiary
+        self.backSliderView.backgroundColor = UIColor.App.backgroundTertiary
     }
 
     func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
@@ -307,8 +307,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
-        cell.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
-        cell.backgroundColor = UIColor.App2.backgroundCards
+        cell.backgroundView?.backgroundColor = UIColor.App.backgroundCards
+        cell.backgroundColor = UIColor.App.backgroundCards
         cell.layer.cornerRadius = 9
         return cell
     }

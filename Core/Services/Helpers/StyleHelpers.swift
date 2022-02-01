@@ -10,12 +10,12 @@ import UIKit
 struct StyleHelper {
 
     static func styleButton(button: UIButton) {
-        button.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
-        button.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        button.setTitleColor(UIColor.App2.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
+        button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        button.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        button.setTitleColor(UIColor.App.buttonTextDisablePrimary.withAlphaComponent(0.39), for: .disabled)
 
-        button.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        button.setBackgroundColor(UIColor.App2.buttonBackgroundSecondary, for: .highlighted)
+        button.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        button.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .highlighted)
 
         button.layer.cornerRadius = CornerRadius.button
         button.layer.masksToBounds = true
