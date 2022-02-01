@@ -121,7 +121,7 @@ class PreLiveEventsViewController: UIViewController {
             self.viewModel.setMatchListType(.competitions)
             turnTimeRangeOn = false
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
-                                       secondLabelText: localized("second_string_empty_list"),
+                                       secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
             self.filtersCollectionView.reloadData()
             self.filtersCollectionView.layoutIfNeeded()

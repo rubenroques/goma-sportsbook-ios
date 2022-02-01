@@ -323,7 +323,7 @@ class LiveEventsViewController: UIViewController {
         self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
         self.filtersBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.filtersSeparatorLineView.backgroundColor = UIColor.App2.separatorLineHighlightPrimary
+        self.filtersSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
         self.filtersSeparatorLineView.alpha = 0.5
 
         self.tableView.backgroundColor = UIColor.App2.backgroundPrimary

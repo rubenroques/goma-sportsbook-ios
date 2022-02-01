@@ -36,27 +36,27 @@ class SimpleRegisterSendEmailCodeViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App2.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        backView.backgroundColor = UIColor.App.mainBackground
+        backView.backgroundColor = UIColor.App2.backgroundPrimary
 
-        titleLabel.textColor = UIColor.App.headingMain
+        titleLabel.textColor = UIColor.App2.inputTextTitle
 
-        textLabel.textColor = UIColor.App.headingMain
+        textLabel.textColor = UIColor.App2.inputText
 
-        codeHeaderTextFieldView.backgroundColor = UIColor.App.mainBackground
-        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        codeHeaderTextFieldView.setTextFieldColor(UIColor.App.headingMain)
+        codeHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
+        codeHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
+        codeHeaderTextFieldView.setTextFieldColor(UIColor.App2.inputText)
         codeHeaderTextFieldView.setSecureField(false)
 
-        doneButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        doneButton.backgroundColor = UIColor.App.primaryButtonNormal
+        doneButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        doneButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         doneButton.cornerRadius = CornerRadius.button
 
-        pasteClipboardButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        pasteClipboardButton.backgroundColor = UIColor.App.mainBackground
+        pasteClipboardButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        pasteClipboardButton.backgroundColor = UIColor.App2.backgroundPrimary
     }
 
     func commonInit() {

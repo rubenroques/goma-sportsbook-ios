@@ -786,18 +786,22 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     func setupWithTheme() {
 
+        self.clearBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App2.textPrimary
+            NSAttributedString.Key.foregroundColor: UIColor.App2.buttonTextPrimary
         ], for: .selected)
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App2.textPrimary
+            NSAttributedString.Key.foregroundColor: UIColor.App2.buttonTextPrimary
         ], for: .normal)
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App2.textPrimary.withAlphaComponent(0.5)
+            NSAttributedString.Key.foregroundColor: UIColor.App2.buttonTextPrimary.withAlphaComponent(0.5)
         ], for: .disabled)
+        
+        self.betTypeSegmentControl.selectedSegmentTintColor = UIColor.App2.highlightPrimary
 
         self.topSafeArea.backgroundColor = UIColor.App2.backgroundSecondary
         self.bottomSafeArea.backgroundColor = UIColor.App2.backgroundSecondary
@@ -807,7 +811,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.amountTextfield.textColor = UIColor.App2.textPrimary
-        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("string_amount"), attributes: [
+        self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App2.textDisablePrimary
         ])
@@ -826,17 +830,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
         self.tableView.contentInset.bottom = 12
 
-        self.systemBetSeparatorView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
+        self.systemBetSeparatorView.backgroundColor = UIColor.App2.separatorLine
         self.systemBetBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.systemBetInteriorView.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
 
         self.placeBetBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         self.placeBetButtonsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
+        self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLine
         self.placeBetSendButtonBaseView.backgroundColor = UIColor.App2.backgroundSecondary
         
         // self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLineHighlightSecondary
+        self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App2.separatorLine
         
         self.placeBetButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
       

@@ -87,21 +87,21 @@ class SearchViewController: UIViewController {
 
         self.topView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.contentBackground
+        self.containerView.backgroundColor = UIColor.App2.backgroundTertiary
 
         self.searchView.backgroundColor = .clear
 
         self.cancelButton.backgroundColor = .clear
         self.cancelButton.tintColor = UIColor.App2.textPrimary
 
-        self.emptySearchLabel.textColor = UIColor.App.fadeOutHeading
+        self.emptySearchLabel.textColor = UIColor.App2.textSecond
 
         self.noResultsView.backgroundColor = .clear
         self.noResultsImageView.backgroundColor = .clear
 
         self.noResultsLabel.textColor = UIColor.App2.textPrimary
 
-        self.activityIndicatorBaseView.backgroundColor = UIColor.App.contentBackground
+        self.activityIndicatorBaseView.backgroundColor = UIColor.App2.backgroundTertiary
     }
 
     func commonInit() {
@@ -112,7 +112,7 @@ class SearchViewController: UIViewController {
         self.searchBarView.backgroundImage = UIImage()
         self.searchBarView.tintColor = .white
         self.searchBarView.barTintColor = .white
-        self.searchBarView.backgroundImage = UIColor.App.contentBackground.image()
+        self.searchBarView.backgroundImage = UIColor.App2.backgroundTertiary.image()
 
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App2.backgroundSecondary

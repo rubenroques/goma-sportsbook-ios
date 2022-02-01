@@ -12,6 +12,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var betsStackView: UIStackView!
     @IBOutlet private weak var competitionTitleLabel: UILabel!
 
+    @IBOutlet private weak var infoBetLabelsView: UIView!
     @IBOutlet private weak var informationBetView: UIView!
     
     @IBOutlet private weak var numberOfSelectionsLabel: UILabel!
@@ -46,6 +47,12 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
+        self.infoBetLabelsView.backgroundColor = UIColor.App2.backgroundSecondary
+        
+        self.totalOddValueLabel.backgroundColor = UIColor.App2.backgroundSecondary
+        self.totalOddLabel.backgroundColor = UIColor.App2.backgroundSecondary
+        self.numberOfSelectionsLabel.backgroundColor = UIColor.App2.backgroundSecondary
+        self.numberOfSelectionsValueLabel.backgroundColor = UIColor.App2.backgroundSecondary
         self.betsStackView.removeAllArrangedSubviews()
         self.betsStackView.backgroundColor = UIColor.App2.backgroundSecondary
         self.informationBetView.backgroundColor = UIColor.App2.backgroundSecondary

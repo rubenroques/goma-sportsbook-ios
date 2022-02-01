@@ -105,7 +105,7 @@ class WithdrawViewController: UIViewController {
         self.tipLabel.textColor = UIColor.App2.textSecond
 
         self.nextButton.setBackgroundColor(UIColor.App2.highlightPrimary, for: .normal)
-        self.nextButton.setBackgroundColor(UIColor.App.contentBackground, for: .disabled)
+        self.nextButton.setBackgroundColor(UIColor.App2.buttonDisablePrimary, for: .disabled)
         self.nextButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
         self.nextButton.setTitleColor(UIColor.App2.textDisablePrimary, for: .disabled)
         self.nextButton.layer.cornerRadius = CornerRadius.button
