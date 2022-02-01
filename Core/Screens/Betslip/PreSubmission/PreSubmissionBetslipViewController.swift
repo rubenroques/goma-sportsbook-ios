@@ -596,7 +596,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.multipleBetslipSelectionState
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipState in
+                // print("MULTIPLE BET STATE: \(betslipState)")
                 self?.maxStakeMultiple = betslipState?.maxStake
+                if let multipleBetslipState = betslipState {
+                    self?.checkForbiddenCombinationErrors(multipleBetslipState: multipleBetslipState)
+
+                }
             })
             .store(in: &cancellables)
 
@@ -626,6 +631,14 @@ class PreSubmissionBetslipViewController: UIViewController {
 //        }
 //        cachedBetSuggestedCollectionViewCellViewModels = [:]
 //    }
+
+    func checkForbiddenCombinationErrors(multipleBetslipState: BetslipSelectionState) {
+
+        if !multipleBetslipState.forbiddenCombinations.isEmpty {
+            self.showErrorView(errorMessage: localized("selections_not_combinable"))
+        }
+        self.tableView.reloadData()
+    }
 
     func getSuggestedBets() {
 
@@ -738,7 +751,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.topSafeArea.backgroundColor = UIColor.App2.backgroundSecondary
         self.bottomSafeArea.backgroundColor = UIColor.App2.backgroundSecondary
 
-        //self.betSuggestedCollectionView.backgroundColor = UIColor.App.secondaryBackground
+        // self.betSuggestedCollectionView.backgroundColor = UIColor.App.secondaryBackground
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.mainBackground
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
@@ -1298,7 +1311,6 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         cell.needsReload
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
-                print("NEED RELOAD")
                 self?.isSuggestedBetsLoading = false
                 cell.setReloadedState(reloaded: true)
                 collectionView.reloadData()
@@ -1355,29 +1367,12 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
         let storedValue = self.bettingValueForId?(bettingTicket.id)
 
-        if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
-            let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
-            var hasFoundCorrespondingId = false
-            var errorMessage = localized("error")
-            for bettingError in bettingTicketErrors {
-                if let bettingSelections = bettingError.selections {
-                    for selection in bettingSelections {
-                        if selection.id == bettingTicket.bettingId {
-                            hasFoundCorrespondingId = true
-                            errorMessage = bettingError.errorMessage ?? localized("error")
-                        }
-                    }
-                }
-            }
+        let cellBetError = Env.betslipManager.getErrorsForSingleBetBettingTicket(bettingTicket: bettingTicket)
 
-            if hasFoundCorrespondingId {
-                cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: errorMessage)
-            }
-            else {
-                cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
-            }
-        }
-        else {
+        switch cellBetError.errorType {
+        case .placedBetError:
+            cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: cellBetError.errorMessage)
+        default:
             cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
         }
 
@@ -1413,48 +1408,15 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
         else {
             fatalError()
         }
-        if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
-            let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
-            var hasFoundCorrespondingId = false
-            var errorMessage = ""
-            for bettingError in bettingTicketErrors {
-                if let bettingErrorCode = bettingError.errorCode {
-                    // Error code with corresponding id
-                    if bettingErrorCode == "107" {
-                        if let bettingErrorMessage = bettingError.errorMessage {
-                            if bettingErrorMessage.contains(bettingTicket.bettingId) {
-                                hasFoundCorrespondingId = true
-                                errorMessage = bettingError.errorMessage ?? localized("error")
-                                break
-                            }
 
-                        }
-                    }
-                    else {
-                        if let bettingSelections = bettingError.selections {
-                            for selection in bettingSelections {
+        let cellBetError = Env.betslipManager.getErrorsForBettingTicket(bettingTicket: bettingTicket)
 
-                                if selection.id == bettingTicket.bettingId {
-                                    hasFoundCorrespondingId = true
-                                    errorMessage = bettingError.errorMessage ?? localized("error")
-                                    break
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            if hasFoundCorrespondingId {
-                cell.configureWithBettingTicket(bettingTicket, errorBetting: errorMessage)
-            }
-            else {
-                cell.configureWithBettingTicket(bettingTicket)
-            }
-
-        }
-        else {
+        switch cellBetError.errorType {
+        case .placedBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        case .forbiddenBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        default:
             cell.configureWithBettingTicket(bettingTicket)
         }
 
@@ -1489,7 +1451,17 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         else {
             fatalError()
         }
-        cell.configureWithBettingTicket(bettingTicket)
+        let cellBetError = Env.betslipManager.getErrorsForBettingTicket(bettingTicket: bettingTicket)
+
+        switch cellBetError.errorType {
+        case .placedBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        case .forbiddenBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        default:
+            cell.configureWithBettingTicket(bettingTicket)
+        }
+
         return cell
     }
 

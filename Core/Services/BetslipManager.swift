@@ -220,7 +220,7 @@ extension BetslipManager {
         return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
             .handleEvents(receiveOutput: { betslipSelectionState in
-                //self.simpleBetslipSelectionState.send(betslipSelectionState)
+                // self.simpleBetslipSelectionState.send(betslipSelectionState)
                 self.systemBetslipSelectionState.send(betslipSelectionState)
             })
             .eraseToAnyPublisher()
@@ -357,4 +357,119 @@ extension BetslipManager {
             .eraseToAnyPublisher()
     }
 
+    func getErrorsForBettingTicket(bettingTicket: BettingTicket) -> BetslipError {
+
+        if !betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
+            let bettingTicketErrors = betslipPlaceBetResponseErrorsPublisher.value
+
+            var hasFoundCorrespondingId = false
+            var errorMessage = ""
+
+            for bettingError in bettingTicketErrors {
+                if let bettingErrorCode = bettingError.errorCode {
+                    // Error code with corresponding id
+                    if bettingErrorCode == "107" {
+                        if let bettingErrorMessage = bettingError.errorMessage {
+                            if bettingErrorMessage.contains(bettingTicket.bettingId) {
+                                hasFoundCorrespondingId = true
+                                errorMessage = bettingError.errorMessage ?? localized("error")
+                                break
+                            }
+
+                        }
+                    }
+                    else {
+                        if let bettingSelections = bettingError.selections {
+                            for selection in bettingSelections where selection.id == bettingTicket.bettingId {
+                                hasFoundCorrespondingId = true
+                                errorMessage = bettingError.errorMessage ?? localized("error")
+                                break
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            if hasFoundCorrespondingId {
+                let betslipError = BetslipError(errorMessage: errorMessage, errorType: .placedBetError)
+                return betslipError
+            }
+            else {
+                return BetslipError()
+            }
+
+        }
+        else if let forbiddenBetCombinations = Env.betslipManager.multipleBetslipSelectionState.value?.forbiddenCombinations,
+                    !forbiddenBetCombinations.isEmpty {
+
+            var hasFoundCorrespondingId = false
+
+            for forbiddenBetCombination in forbiddenBetCombinations {
+                for selection in forbiddenBetCombination.selections where selection.bettingOfferId == bettingTicket.bettingId {
+                        hasFoundCorrespondingId = true
+                        break
+
+                }
+            }
+
+            if hasFoundCorrespondingId {
+                let betslipError = BetslipError(errorMessage: localized("selections_not_combinable"), errorType: .forbiddenBetError)
+                return betslipError
+            }
+            else {
+                return BetslipError()
+            }
+        }
+        else {
+            return BetslipError()
+        }
+    }
+
+    func getErrorsForSingleBetBettingTicket(bettingTicket: BettingTicket) -> BetslipError {
+
+        if betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
+            let bettingTicketErrors = betslipPlaceBetResponseErrorsPublisher.value
+            var hasFoundCorrespondingId = false
+            var errorMessage = localized("error")
+            for bettingError in bettingTicketErrors {
+                if let bettingSelections = bettingError.selections {
+                    for selection in bettingSelections where selection.id == bettingTicket.bettingId {
+                        hasFoundCorrespondingId = true
+                        errorMessage = bettingError.errorMessage ?? localized("error")
+                    }
+
+                }
+            }
+
+            if hasFoundCorrespondingId {
+                let betslipError = BetslipError(errorMessage: errorMessage, errorType: .placedBetError)
+                return betslipError
+            }
+            else {
+                return BetslipError()
+
+            }
+        }
+        else {
+            return BetslipError()
+        }
+    }
+
+}
+
+struct BetslipError {
+    var errorMessage: String
+    var errorType: BetslipErrorType
+
+    init(errorMessage: String = "", errorType: BetslipErrorType = .none) {
+        self.errorMessage = errorMessage
+        self.errorType = errorType
+    }
+
+    enum BetslipErrorType {
+        case placedBetError
+        case forbiddenBetError
+        case none
+    }
 }

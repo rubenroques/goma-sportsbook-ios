@@ -119,6 +119,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
+    private var leftOutcomeDisabled: Bool = false
+    private var middleOutcomeDisabled: Bool = false
+    private var rightOutcomeDisabled: Bool = false
+
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -230,6 +234,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = false
 
+        self.leftOutcomeDisabled = false
+        self.middleOutcomeDisabled = false
+        self.rightOutcomeDisabled = false
     }
 
     func setupWithTheme() {
@@ -279,11 +286,19 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 0] {
                 self.homeOddTitleLabel.text = outcome.typeName
-                self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                //self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 // self.currentHomeOddValue = outcome.bettingOffer.value
                 self.leftOutcome = outcome
 
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                if outcome.bettingOffer.value < 1.0 {
+                    self.setOddViewDisabled(disabled: true, oddViewPosition: .left)
+                    self.homeOddValueLabel.text = "-"
+                }
+                else {
+                    self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                }
 
                 self.leftOddButtonSubscriber = Env.everyMatrixStorage
                     .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
@@ -308,17 +323,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         }
                         weakSelf.currentHomeOddValue = newOddValue
                         weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .left)
                     })
                 
             }
 
             if let outcome = market.outcomes[safe: 1] {
                 self.drawOddTitleLabel.text = outcome.typeName
-                self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                // self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 // self.currentDrawOddValue = outcome.bettingOffer.value
                 self.middleOutcome = outcome
 
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                if outcome.bettingOffer.value < 1.0 {
+                    self.setOddViewDisabled(disabled: true, oddViewPosition: .middle)
+                    self.drawOddValueLabel.text = "-"
+                }
+                else {
+                    self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                }
 
                 self.middleOddButtonSubscriber = Env.everyMatrixStorage
                     .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
@@ -343,16 +367,26 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         }
                         weakSelf.currentDrawOddValue = newOddValue
                         weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .middle)
                     })
             }
 
             if let outcome = market.outcomes[safe: 2] {
                 self.awayOddTitleLabel.text = outcome.typeName
-                self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                //self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 // self.currentAwayOddValue = outcome.bettingOffer.value
                 self.rightOutcome = outcome
                 
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+
+                if outcome.bettingOffer.value < 1.0 {
+                    self.setOddViewDisabled(disabled: true, oddViewPosition: .right)
+                    self.awayOddValueLabel.text = "-"
+                    self.awayBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
+                }
+                else {
+                    self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+                }
 
                 self.rightOddButtonSubscriber = Env.everyMatrixStorage
                     .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
@@ -378,6 +412,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
                         weakSelf.currentAwayOddValue = newOddValue
                         weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .right)
                     })
 
             }
@@ -403,6 +438,50 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
         }
 
+    }
+
+    func setOddViewDisabled(disabled: Bool, oddViewPosition: OddViewPosition) {
+        if disabled {
+            switch oddViewPosition {
+            case .left:
+                self.homeBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
+                self.homeOddValueLabel.textColor = UIColor.App2.textDisablePrimary
+                self.homeOddTitleLabel.textColor = UIColor.App2.textDisablePrimary
+                self.leftOutcomeDisabled = disabled
+            case .middle:
+                self.drawBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
+                self.drawOddValueLabel.textColor = UIColor.App2.textDisablePrimary
+                self.drawOddTitleLabel.textColor = UIColor.App2.textDisablePrimary
+                self.middleOutcomeDisabled = disabled
+            case .right:
+                self.awayBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
+                self.awayOddValueLabel.textColor = UIColor.App2.textDisablePrimary
+                self.awayOddTitleLabel.textColor = UIColor.App2.textDisablePrimary
+                self.rightOutcomeDisabled = disabled
+            }
+
+        }
+        else {
+            switch oddViewPosition {
+            case .left:
+                self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
+                self.homeOddValueLabel.textColor = UIColor.App2.textPrimary
+                self.homeOddTitleLabel.textColor = UIColor.App2.textPrimary
+                self.leftOutcomeDisabled = disabled
+
+            case .middle:
+                self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
+                self.drawOddValueLabel.textColor = UIColor.App2.textPrimary
+                self.drawOddTitleLabel.textColor = UIColor.App2.textPrimary
+                self.middleOutcomeDisabled = disabled
+
+            case .right:
+                self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
+                self.awayOddValueLabel.textColor = UIColor.App2.textPrimary
+                self.awayOddValueLabel.textColor = UIColor.App2.textPrimary
+                self.rightOutcomeDisabled = disabled
+            }
+        }
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
