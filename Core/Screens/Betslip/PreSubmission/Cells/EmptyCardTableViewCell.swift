@@ -35,13 +35,15 @@ class EmptyCardTableViewCell: UITableViewCell {
 
         self.firstTextFieldLabel.textColor = UIColor.App.textPrimary
         self.firstTextFieldLabel.font = AppFont.with(type: .semibold, size: 20)
+        self.firstTextFieldLabel.numberOfLines = 2
         
         self.secondTextFieldLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldLabel.font = AppFont.with(type: .semibold, size: 14)
-        self.firstTextFieldLabel.numberOfLines = 2
         
         self.iconImageView.image = UIImage(named: "no_content_icon")
         
+        self.loginButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         self.loginButton.isHidden = true
     }
     

@@ -145,7 +145,6 @@ class MyTicketsViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.ticketTypesCollectionView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.ticketTypesSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.ticketTypesSeparatorLineView.alpha = 0.5
 
@@ -153,8 +152,11 @@ class MyTicketsViewController: UIViewController {
         self.ticketsTableView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        
         self.firstTextFieldLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldLabel.textColor = UIColor.App.textPrimary
+        
+        self.noBetsButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
 
     }
 

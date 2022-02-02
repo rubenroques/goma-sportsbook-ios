@@ -132,6 +132,9 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.backgroundColor = UIColor.clear
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
+        
+        self.topView.backgroundColor = UIColor.App.backgroundSecondary
+        self.bottomView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.stackBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.stackView.backgroundColor = UIColor.App.backgroundSecondary

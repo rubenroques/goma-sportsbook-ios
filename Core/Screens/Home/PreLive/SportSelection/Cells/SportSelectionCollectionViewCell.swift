@@ -70,6 +70,8 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         eventCountView.backgroundColor = UIColor.App.alertError
 
         eventCountLabel.font = AppFont.with(type: .semibold, size: 9)
+        eventCountLabel.textColor = UIColor.App.buttonTextPrimary
+        
     }
 
     func configureCell(viewModel: SportSelectionCollectionViewCellViewModel) {

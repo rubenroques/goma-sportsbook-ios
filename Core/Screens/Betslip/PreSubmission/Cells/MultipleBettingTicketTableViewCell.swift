@@ -96,12 +96,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.bottomBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.outcomeNameLabel.textColor = UIColor.App.textPrimary
-        self.oddValueLabel.textColor = UIColor.App.textPrimary
         self.marketNameLabel.textColor = UIColor.App.textPrimary
         self.matchDetailLabel.textColor = UIColor.App.textPrimary
 
         self.stackView.backgroundColor = UIColor.App.backgroundSecondary
-
         self.errorView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.errorLabel.textColor = UIColor.App.textPrimary
@@ -109,6 +107,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
         self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        self.oddBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddValueLabel.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddValueLabel.textColor = UIColor.App.textPrimary
 
     }
 

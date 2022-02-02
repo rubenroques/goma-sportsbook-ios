@@ -14,6 +14,7 @@ class MyTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var topStatusView: UIView!
 
+    
     @IBOutlet private weak var headerBaseView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subtitleLabel: UILabel!
@@ -135,7 +136,7 @@ class MyTicketTableViewCell: UITableViewCell {
     func setupWithTheme() {
 
         self.backgroundColor = UIColor.App.backgroundPrimary
-        
+
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
         
@@ -144,6 +145,7 @@ class MyTicketTableViewCell: UITableViewCell {
         
         self.topStatusView.backgroundColor = .clear
         self.headerBaseView.backgroundColor = .clear
+        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
         self.betCardsBaseView.backgroundColor = .clear
         self.betCardsStackView.backgroundColor = .clear
         

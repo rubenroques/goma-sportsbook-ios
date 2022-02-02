@@ -128,11 +128,9 @@ class BetslipViewController: UIViewController {
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
         self.tabViewController.textColor = UIColor.App.textPrimary
       
-        
         self.closeButton.titleLabel?.textColor = UIColor.App.textPrimary
-        
         self.betsLabel.textColor = UIColor.App.textPrimary
-
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {

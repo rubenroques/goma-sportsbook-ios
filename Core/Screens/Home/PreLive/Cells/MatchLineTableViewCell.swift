@@ -119,7 +119,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = .clear
         self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
-        self.backSliderView.backgroundColor = UIColor.App.backgroundTertiary
+        self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
     func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
