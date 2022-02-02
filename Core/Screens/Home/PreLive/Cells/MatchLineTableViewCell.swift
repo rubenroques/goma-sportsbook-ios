@@ -29,7 +29,7 @@ class MatchLineTableViewCell: UITableViewCell {
 
     var matchStatsViewModel: MatchStatsViewModel?
 
-    var tappedMatchLineAction: (() -> Void)?
+    var tappedMatchLineAction: ((UIImage?) -> Void)?
     var matchWentLive: (() -> Void)?
 
     override func awakeFromNib() {
@@ -170,7 +170,7 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
                 generator.prepare()
                 generator.impactOccurred()
 
-                self.tappedMatchLineAction?()
+                self.tappedMatchLineAction?(nil)
 
                 return
             }
@@ -238,7 +238,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 cell.configureWithSubtitleString(marketString)
             }
             cell.tappedAction = {
-                self.tappedMatchLineAction?()
+                self.tappedMatchLineAction?(nil)
             }
             return cell
         }
@@ -253,8 +253,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
                 if let match = self.match {
                     cell.setupWithMatch(match)
+
                     cell.tappedMatchWidgetAction = {
-                        self.tappedMatchLineAction?()
+                        self.tappedMatchLineAction?(cell.snapshot)
                     }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
@@ -267,13 +268,16 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     fatalError()
                 }
+
                 if let match = self.match {
                     cell.setupWithMatch(match)
+
                     cell.tappedMatchWidgetAction = {
-                        self.tappedMatchLineAction?()
+                        self.tappedMatchLineAction?(cell.snapshot)
                     }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
                 return cell
             }
         }
@@ -288,7 +292,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?()
+                            self.tappedMatchLineAction?(nil)
                         }
                         return cell
                     }
@@ -298,7 +302,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?()
+                            self.tappedMatchLineAction?(nil)
                         }
                         return cell
                     }

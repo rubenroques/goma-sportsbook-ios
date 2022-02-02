@@ -20,9 +20,13 @@ class MyTicketsViewModel: NSObject {
         case resolved = 1
         case won = 2
     }
+
+    var clickedCellSnapshot: UIImage?
+    var clickedBetId: String?
     
     var reloadTableViewAction: (() -> Void)?
     var redrawTableViewAction: (() -> Void)?
+    var requestShareActivityView: ((UIImage, String) -> Void)?
 
     private var matchDetailsDictionary: [String: Match] = [:]
 
@@ -87,7 +91,6 @@ class MyTicketsViewModel: NSObject {
                 self?.reloadTableView()
             }
             .store(in: &cancellables)
-
 
         Env.everyMatrixClient.userSessionStatusPublisher
             .receive(on: DispatchQueue.main)
@@ -288,7 +291,6 @@ class MyTicketsViewModel: NSObject {
         }
     }
 
-
     func isEmpty() -> Bool {
         switch myTicketsTypePublisher.value {
         case .resolved:
@@ -368,6 +370,12 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             self?.redrawTableViewAction?()
         }
         cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+
+        cell.tappedShareAction = { [weak self] in
+            if let cellSnapshot = cell.snapshot {
+                self?.requestShareActivityView?(cellSnapshot, ticketValue.betId)
+            }
+        }
 
         return cell
     }

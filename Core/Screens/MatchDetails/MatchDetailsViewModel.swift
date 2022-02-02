@@ -30,6 +30,7 @@ class MatchDetailsViewModel: NSObject {
     }
 
     private var cancellables = Set<AnyCancellable>()
+    var gameSnapshot: UIImage?
 
     init(match: Match) {
         self.match = match

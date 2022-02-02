@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import LinkPresentation
 
 class MatchDetailsViewController: UIViewController {
 
@@ -15,6 +16,8 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailTopView: UIView!
     @IBOutlet private var backButton: UIButton!
     @IBOutlet private var matchStatsButton: UIButton!
+    @IBOutlet private var shareButton: UIButton!
+
     @IBOutlet private var headerCompetitionDetailView: UIView!
     @IBOutlet private var headerCompetitionLabel: UILabel!
     @IBOutlet private var headerCompetitionImageView: UIImageView!
@@ -191,8 +194,6 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -211,6 +212,9 @@ class MatchDetailsViewController: UIViewController {
         self.loadingView.stopAnimating()
 
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+
+        self.shareButton.setTitle("", for: .normal)
+        self.shareButton.setImage(UIImage(named: "send_bet_icon"), for: .normal)
 
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
@@ -499,4 +503,38 @@ class MatchDetailsViewController: UIViewController {
         self.present(matchFieldWebViewController, animated: true, completion: nil)
     }
 
+    @IBAction private func didTapShareButton() {
+        // print("SNAPSHOT: \(self.viewModel.gameSnapshot)")
+
+        let share = UIActivityViewController(activityItems: [self], applicationActivities: nil)
+        present(share, animated: true, completion: nil)
+
+    }
+
+}
+
+extension MatchDetailsViewController: UIActivityItemSource {
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        return ""
+    }
+
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        return nil
+    }
+
+    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+        let metadata = LPLinkMetadata()
+
+        if let gameSnapshot = self.viewModel.gameSnapshot, let matchUrl = URL(string: "https://sportsbook.gomagaming.com/mobile/gamedetail/\(match.id)") {
+
+            let imageProvider = NSItemProvider(object: gameSnapshot)
+            metadata.imageProvider = imageProvider
+            metadata.url = matchUrl
+            metadata.originalURL = metadata.url
+            metadata.title = localized("check_this_game")
+        }
+
+        return metadata
+
+    }
 }

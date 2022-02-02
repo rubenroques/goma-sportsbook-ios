@@ -77,6 +77,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     static var cellHeight: CGFloat = 156
 
     var match: Match?
+    var snapshot: UIImage?
 
     var isFavorite: Bool = false {
         didSet {
@@ -193,6 +194,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = nil
         self.match = nil
+        self.snapshot = nil
 
         self.leftOutcome = nil
         self.middleOutcome = nil
@@ -504,7 +506,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @IBAction func didTapMatchView(_ sender: Any) {
+    @IBAction private func didTapMatchView(_ sender: Any) {
+        let renderer = UIGraphicsImageRenderer(size: self.contentView.bounds.size)
+        let image = renderer.image { _ in
+            self.contentView.drawHierarchy(in: self.contentView.bounds, afterScreenUpdates: true)
+        }
+        self.snapshot = image
+        
         self.tappedMatchWidgetAction?()
     }
 

@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import LinkPresentation
 
 class MyTicketsViewController: UIViewController {
 
@@ -119,6 +120,12 @@ class MyTicketsViewController: UIViewController {
             self?.ticketsTableView.endUpdates()
         }
 
+        self.viewModel.requestShareActivityView = { [weak self] image, betId in
+            self?.viewModel.clickedCellSnapshot = image
+            self?.viewModel.clickedBetId = betId
+            self?.shareBet()
+        }
+
         Env.betslipManager.newBetsPlacedPublisher
             .sink { [weak self] in
                 self?.viewModel.refresh()
@@ -128,8 +135,6 @@ class MyTicketsViewController: UIViewController {
         self.setupWithTheme()
         
     }
-
-    
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -161,6 +166,11 @@ class MyTicketsViewController: UIViewController {
     @objc func refresh() {
         self.shouldShowCenterLoadingView = false
         self.viewModel.refresh()
+    }
+
+    private func shareBet() {
+        let share = UIActivityViewController(activityItems: [self], applicationActivities: nil)
+        present(share, animated: true, completion: nil)
     }
 
 }
@@ -228,4 +238,32 @@ extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDat
         self.ticketTypesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 
+}
+
+extension MyTicketsViewController: UIActivityItemSource {
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        return ""
+    }
+
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        return nil
+    }
+
+    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+        let metadata = LPLinkMetadata()
+
+        if let gameSnapshot = self.viewModel.clickedCellSnapshot,
+            let betId = self.viewModel.clickedBetId,
+            let matchUrl = URL(string: "https://sportsbook.gomagaming.com/mobile/bet/\(betId)") {
+
+            let imageProvider = NSItemProvider(object: gameSnapshot)
+            metadata.imageProvider = imageProvider
+            metadata.url = matchUrl
+            metadata.originalURL = metadata.url
+            metadata.title = localized("look_bet_made")
+        }
+
+        return metadata
+
+    }
 }

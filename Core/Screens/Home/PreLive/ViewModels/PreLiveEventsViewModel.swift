@@ -65,7 +65,6 @@ class PreLiveEventsViewModel: NSObject {
     private var isLoadingPopularList: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingTodayList: CurrentValueSubject<Bool, Never> = .init(true)
 
-
     private var lastCompetitionsMatchesRequested: [String] = []
     private var isLoadingCompetitionMatches: CurrentValueSubject<Bool, Never> = .init(false)
     var isLoadingCompetitionGroups: CurrentValueSubject<Bool, Never> = .init(true)
@@ -100,7 +99,7 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
-    var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -204,20 +203,20 @@ class PreLiveEventsViewModel: NSObject {
 
         // Did Select a Match
         //
-        self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
+        self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
+            self?.didSelectMatchAction?(match, image)
         }
-        self.todayMatchesDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
+        self.todayMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
+            self?.didSelectMatchAction?(match, image)
         }
-        self.competitionsDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
+        self.competitionsDataSource.didSelectMatchAction = { [weak self] match, image in
+            self?.didSelectMatchAction?(match, image)
         }
-        self.favoriteMatchesDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
+        self.favoriteMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
+            self?.didSelectMatchAction?(match, image)
         }
-        self.favoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
+        self.favoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match, image in
+            self?.didSelectMatchAction?(match, image)
         }
 
         // Did Select a Match
@@ -286,7 +285,6 @@ class PreLiveEventsViewModel: NSObject {
             if self.lastCompetitionsMatchesRequested.isNotEmpty {
                 self.fetchCompetitionsMatchesWithIds(lastCompetitionsMatchesRequested)
             }
-
 
     }
 
