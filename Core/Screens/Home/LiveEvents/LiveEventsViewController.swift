@@ -87,7 +87,7 @@ class LiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSport.id)")
+            self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_\(selectedSport.id)")
             self.viewModel.selectedSport = selectedSport
         }
     }
@@ -159,7 +159,7 @@ class LiveEventsViewController: UIViewController {
 
     private func commonInit() {
 
-        self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_1")
+        self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
         let color = UIColor.App.backgroundPrimary
 
         leftGradientBaseView.backgroundColor = color
