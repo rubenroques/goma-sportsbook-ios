@@ -15,7 +15,6 @@ class SimpleRegisterEmailSentViewController: UIViewController {
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
     @IBOutlet private var openEmailButton: RoundButton!
-    @IBOutlet private var resendEmailButton: UIButton!
 
     //
     var emailUser: String = ""
@@ -36,8 +35,6 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         setupWithTheme()
     }
 
-    
-
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App2.backgroundPrimary
         containerView.backgroundColor = UIColor.App2.backgroundPrimary
@@ -49,8 +46,6 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         openEmailButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         openEmailButton.cornerRadius = CornerRadius.button
 
-        resendEmailButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
-        resendEmailButton.backgroundColor = UIColor.App2.backgroundPrimary
 
         openEmailButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
         openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
@@ -78,10 +73,6 @@ class SimpleRegisterEmailSentViewController: UIViewController {
 
         openEmailButton.setTitle(localized("continue_"), for: .normal)
         openEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
-
-        resendEmailButton.setTitle(localized("resend_email"), for: .normal)
-        resendEmailButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 15)
-
     }
 
     @IBAction private func openEmailAppAction() {

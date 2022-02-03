@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -16,7 +16,6 @@
                 <outlet property="containerView" destination="xWO-QJ-OKq" id="zDr-f7-LcR"/>
                 <outlet property="logoImageView" destination="4N7-Kr-AUD" id="Ing-3E-c6s"/>
                 <outlet property="openEmailButton" destination="0tJ-FU-5Vx" id="jj8-zl-hOY"/>
-                <outlet property="resendEmailButton" destination="DMD-rt-YH6" id="Y89-lh-oNa"/>
                 <outlet property="textLabel" destination="JUi-eN-QWb" id="8Hm-VC-Csn"/>
                 <outlet property="titleLabel" destination="BOi-NY-HUI" id="nfs-E8-6EQ"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -56,20 +55,8 @@
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DMD-rt-YH6">
-                            <rect key="frame" x="30" y="748" width="354" height="50"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="50" id="73A-Lw-8qd"/>
-                            </constraints>
-                            <state key="normal" title="Button">
-                                <color key="titleColor" name="mainTintColor"/>
-                            </state>
-                            <connections>
-                                <action selector="resendEmailAction" destination="-1" eventType="touchUpInside" id="dAv-8h-rtX"/>
-                            </connections>
-                        </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tJ-FU-5Vx" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
-                            <rect key="frame" x="30" y="678" width="354" height="50"/>
+                            <rect key="frame" x="30" y="748" width="354" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="g1K-uC-Anq"/>
                             </constraints>
@@ -85,20 +72,17 @@
                     <constraints>
                         <constraint firstItem="pFn-Si-HDt" firstAttribute="top" secondItem="xWO-QJ-OKq" secondAttribute="top" id="J3g-lT-2Ys"/>
                         <constraint firstItem="4N7-Kr-AUD" firstAttribute="top" secondItem="pFn-Si-HDt" secondAttribute="bottom" constant="70" id="M0y-36-BPE"/>
-                        <constraint firstItem="DMD-rt-YH6" firstAttribute="top" secondItem="0tJ-FU-5Vx" secondAttribute="bottom" constant="20" id="OW7-0H-2KI"/>
-                        <constraint firstItem="DMD-rt-YH6" firstAttribute="leading" secondItem="xWO-QJ-OKq" secondAttribute="leading" constant="30" id="OgQ-vC-l2V"/>
+                        <constraint firstAttribute="bottom" secondItem="0tJ-FU-5Vx" secondAttribute="bottom" constant="20" id="MfK-Mh-fsO"/>
                         <constraint firstItem="0tJ-FU-5Vx" firstAttribute="leading" secondItem="xWO-QJ-OKq" secondAttribute="leading" constant="30" id="Rc4-Ux-2GD"/>
                         <constraint firstItem="JUi-eN-QWb" firstAttribute="top" secondItem="BOi-NY-HUI" secondAttribute="bottom" constant="20" id="V1B-Ya-ZI6"/>
                         <constraint firstAttribute="trailing" secondItem="BOi-NY-HUI" secondAttribute="trailing" constant="16" id="YON-l4-HyD"/>
                         <constraint firstItem="pFn-Si-HDt" firstAttribute="leading" secondItem="xWO-QJ-OKq" secondAttribute="leading" id="ZFj-4r-do1"/>
-                        <constraint firstAttribute="bottom" secondItem="DMD-rt-YH6" secondAttribute="bottom" constant="20" id="cN7-RL-MXv"/>
                         <constraint firstAttribute="trailing" secondItem="0tJ-FU-5Vx" secondAttribute="trailing" constant="30" id="cZV-yB-LhM"/>
                         <constraint firstAttribute="trailing" secondItem="JUi-eN-QWb" secondAttribute="trailing" constant="30" id="hwJ-Pt-9Hx"/>
                         <constraint firstItem="BOi-NY-HUI" firstAttribute="leading" secondItem="xWO-QJ-OKq" secondAttribute="leading" constant="16" id="i4M-ir-68G"/>
                         <constraint firstItem="4N7-Kr-AUD" firstAttribute="centerX" secondItem="xWO-QJ-OKq" secondAttribute="centerX" id="qzp-FF-2dI"/>
                         <constraint firstItem="BOi-NY-HUI" firstAttribute="top" secondItem="4N7-Kr-AUD" secondAttribute="bottom" constant="40" id="sUG-Yi-Mkz"/>
                         <constraint firstAttribute="trailing" secondItem="pFn-Si-HDt" secondAttribute="trailing" id="tYE-Lv-Y9k"/>
-                        <constraint firstAttribute="trailing" secondItem="DMD-rt-YH6" secondAttribute="trailing" constant="30" id="v6f-Eg-Yeo"/>
                         <constraint firstItem="JUi-eN-QWb" firstAttribute="leading" secondItem="xWO-QJ-OKq" secondAttribute="leading" constant="30" id="yhq-35-CYR"/>
                     </constraints>
                 </view>
@@ -116,7 +100,7 @@
     </objects>
     <resources>
         <namedColor name="mainTintColor">
-            <color red="0.016000000759959221" green="0.49000000953674316" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.14901960784313725" green="0.41568627450980394" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
