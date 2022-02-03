@@ -160,11 +160,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    var simpleOddsValues: [Double] = [0.0]
-
     // Simple Bets values
     private var simpleBetsBettingValues: CurrentValueSubject<[String: Double], Never> = .init([:])
-    private var simpleBetPlacedDetails: [String: LoadableContent<BetPlacedDetails>] = [:]
 
     private var maxBetValue: Double = Double.greatestFiniteMagnitude
 
@@ -333,8 +330,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.multipleBettingTicketDataSource.bettingTickets = tickets
                 self?.systemBettingTicketDataSource.bettingTickets = tickets
 
-                self?.simpleBetPlacedDetails = [:]
-
                 self?.systemBetOptions = []
                 self?.selectedSystemBet = nil
 
@@ -499,15 +494,13 @@ class PreSubmissionBetslipViewController: UIViewController {
             .filter { betslipType, _, _ in
                 betslipType == .simple
             }
-            .map({ [weak self] _, simpleBetsBettingValues, tickets -> String in
+            .map({ _, simpleBetsBettingValues, tickets -> String in
                 var expectedReturn = 0.0
                 
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
-                        self?.simpleOddsValues.append(ticket.value)
                         let expectedTicketReturn = ticket.value * betValue
                           expectedReturn += expectedTicketReturn
-                        
                     }
                 }
                 if expectedReturn == 0 {
@@ -1318,9 +1311,8 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
 //            if arrayValues.count == 3 {
 //                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 3 * 60)
 //            }else{
-                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 4 * 60)
+            size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 4 * 60)
            // }
-            
         }
         return size
     }
@@ -1358,9 +1350,11 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         let storedValue = self.bettingValueForId?(bettingTicket.id)
 
         if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
+
             let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
             var hasFoundCorrespondingId = false
             var errorMessage = localized("error")
+
             for bettingError in bettingTicketErrors {
                 if let bettingSelections = bettingError.selections {
                     for selection in bettingSelections {

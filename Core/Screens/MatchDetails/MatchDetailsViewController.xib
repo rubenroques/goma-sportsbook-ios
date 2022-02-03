@@ -298,7 +298,6 @@
                 <constraint firstItem="bBf-el-85E" firstAttribute="top" secondItem="fdu-WM-VjI" secondAttribute="bottom" id="nN9-Kq-9Kb"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="5CV-zZ-7va" secondAttribute="trailing" id="rDx-ib-Xbu"/>
                 <constraint firstItem="jEG-kW-DaM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="tgb-6V-df0"/>
-                <constraint firstItem="fdu-WM-VjI" firstAttribute="bottom" secondItem="jEG-kW-DaM" secondAttribute="bottom" constant="-722" id="yde-P4-wGC"/>
             </constraints>
             <point key="canvasLocation" x="33" y="39"/>
         </view>

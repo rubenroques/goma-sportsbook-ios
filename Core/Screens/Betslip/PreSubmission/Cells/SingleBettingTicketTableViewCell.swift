@@ -65,7 +65,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         didSet {
             if let bettingTicket = bettingTicket {
                 self.didUpdateBettingValueAction?(bettingTicket.id, self.realBetValue)
-
             }
         }
     }
@@ -386,19 +385,19 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
             currentValue = Int(value * 100.0)
         }
 
-        if let maxStake = self.maxStake {
-            let maxStakeInt = Int(maxStake * 100.0)
-            if currentValue > maxStakeInt {
-                currentValue = maxStakeInt
-            }
-        }
-
-        if let maxUserBalance = self.userBalance {
-            let maxUserBalanceInt = Int(maxUserBalance * 100.0)
-            if currentValue > maxUserBalanceInt {
-                currentValue = maxUserBalanceInt
-            }
-        }
+//        if let maxStake = self.maxStake {
+//            let maxStakeInt = Int(maxStake * 100.0)
+//            if currentValue > maxStakeInt {
+//                currentValue = maxStakeInt
+//            }
+//        }
+//
+//        if let maxUserBalance = self.userBalance {
+//            let maxUserBalanceInt = Int(maxUserBalance * 100.0)
+//            if currentValue > maxUserBalanceInt {
+//                currentValue = maxUserBalanceInt
+//            }
+//        }
 
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))

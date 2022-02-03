@@ -95,6 +95,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
+    private var marketSubscriber: AnyCancellable?
+
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
     private var rightOutcome: Outcome?
@@ -201,6 +203,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
 
+        self.marketSubscriber?.cancel()
+        self.marketSubscriber = nil
+        
         self.currentHomeOddValue = nil
         self.currentDrawOddValue = nil
         self.currentAwayOddValue = nil
@@ -221,6 +226,14 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawOddValueLabel.text = ""
         self.awayOddValueLabel.text = ""
 
+        self.homeBaseView.isUserInteractionEnabled = true
+        self.drawBaseView.isUserInteractionEnabled = true
+        self.awayBaseView.isUserInteractionEnabled = true
+
+        self.homeBaseView.alpha = 1.0
+        self.drawBaseView.alpha = 1.0
+        self.awayBaseView.alpha = 1.0
+
         self.locationFlagImageView.isHidden = false
         self.locationFlagImageView.image = nil
 
@@ -230,6 +243,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.isFavorite = false
 
+        self.suspendedBaseView.isHidden = true
     }
 
     func setupWithTheme() {
@@ -276,6 +290,24 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         if let market = match.markets.first {
+
+            if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+                self.marketSubscriber = marketPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink { [weak self] marketUpdate in
+                        if marketUpdate.isAvailable ?? true {
+                            self?.showMarketButtons()
+                        }
+                        else {
+                            if marketUpdate.isClosed ?? false {
+                                self?.showClosedView()
+                            }
+                            else {
+                                self?.showSuspendedView()
+                            }
+                        }
+                    }
+            }
 
             if let outcome = market.outcomes[safe: 0] {
                 self.homeOddTitleLabel.text = outcome.typeName
@@ -405,10 +437,24 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
-    func shouldShowCountryFlag(_ show: Bool) {
-        self.locationFlagImageView.isHidden = !show
+    //
+    //
+    private func showMarketButtons() {
+        self.suspendedBaseView.isHidden = true
     }
 
+    private func showSuspendedView() {
+        self.suspendedLabel.text = localized("suspended_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    private func showClosedView() {
+        self.suspendedLabel.text = localized("closed_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    //
+    //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
         if UserDefaults.standard.userSession != nil {
 
@@ -598,6 +644,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isRightOutcomeButtonSelected = true
         }
+    }
+
+    func shouldShowCountryFlag(_ show: Bool) {
+        self.locationFlagImageView.isHidden = !show
     }
 
 }

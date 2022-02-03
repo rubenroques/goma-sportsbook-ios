@@ -528,16 +528,13 @@ class PreLiveEventsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("PreLiveEventsViewModel popularMatchesPublisher connect")
                     self?.popularMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("PreLiveEventsViewModel popularMatchesPublisher initialContent")
                     self?.setupPopularAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
-                    print("PreLiveEventsViewModel popularMatchesPublisher updatedContent")
                     self?.updatePopularAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
-                    print("PreLiveEventsViewModel popularMatchesPublisher disconnect")
+                    ()
                 }
             })
         
@@ -665,7 +662,6 @@ class PreLiveEventsViewModel: NSObject {
                                                              shortName: eventCategory.shortName,
                                                              code: nil)
                         }
-
                         return migratedLocation
                     }
                     return nil

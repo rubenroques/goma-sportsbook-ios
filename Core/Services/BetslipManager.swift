@@ -30,6 +30,10 @@ class BetslipManager: NSObject {
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
 
+
+    private var bettingTicketRegisters: [String: EndpointPublisherIdentifiable] = [:]
+    private var bettingTicketSubscribers: [String: AnyCancellable] = [:]
+
     private var cancellables: Set<AnyCancellable> = []
 
     override init() {
@@ -53,9 +57,11 @@ class BetslipManager: NSObject {
             }
             .store(in: &cancellables)
 
-        bettingTicketsDictionaryPublisher.filter(\.isEmpty).sink { _ in
-            self.simpleBetslipSelectionState.send(nil)
-            self.multipleBetslipSelectionState.send(nil)
+        bettingTicketsDictionaryPublisher
+            .filter(\.isEmpty)
+            .sink { [weak self] _ in
+            self?.simpleBetslipSelectionState.send(nil)
+            self?.multipleBetslipSelectionState.send(nil)
         }
         .store(in: &cancellables)
 
@@ -77,14 +83,17 @@ class BetslipManager: NSObject {
 
     func addBettingTicket(_ bettingTicket: BettingTicket) {
         bettingTicketsDictionaryPublisher.value[bettingTicket.id] = bettingTicket
+        self.subscribeBettingTicketPublisher(bettingTicket: bettingTicket)
     }
 
     func removeBettingTicket(_ bettingTicket: BettingTicket) {
         bettingTicketsDictionaryPublisher.value[bettingTicket.id] = nil
+        self.unsubscribeBettingTicketPublisher(withId: bettingTicket.id)
     }
 
     func removeBettingTicket(withId id: String) {
         bettingTicketsDictionaryPublisher.value[id] = nil
+        self.unsubscribeBettingTicketPublisher(withId: id)
     }
 
     func hasBettingTicket(_ bettingTicket: BettingTicket) -> Bool {
@@ -96,7 +105,93 @@ class BetslipManager: NSObject {
     }
 
     func clearAllBettingTickets() {
-        self.bettingTicketsDictionaryPublisher.send([:])
+        for bettingTicket in self.bettingTicketsDictionaryPublisher.value.values {
+            self.unsubscribeBettingTicketPublisher(withId: bettingTicket.id)
+        }
+        bettingTicketsDictionaryPublisher.send([:])
+    }
+
+    private func unsubscribeBettingTicketPublisher(withId id: String) {
+        if let register = self.bettingTicketRegisters[id] {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: register)
+            self.bettingTicketRegisters.removeValue(forKey: id)
+        }
+        if let subscriber = self.bettingTicketSubscribers[id] {
+            subscriber.cancel()
+            self.bettingTicketSubscribers.removeValue(forKey: id)
+        }
+    }
+
+    private func subscribeBettingTicketPublisher(bettingTicket: BettingTicket) {
+        let endpoint = TSRouter.bettingOfferPublisher(operatorId: Env.appSession.operatorId,
+                                                      language: "en",
+                                                      bettingOfferId: bettingTicket.id)
+
+        let bettingTicketSubscriber = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let oddUpdatesRegister):
+                    self?.bettingTicketRegisters[bettingTicket.id] = oddUpdatesRegister
+
+                case .initialContent(let aggregator):
+
+                    if let content = aggregator.content {
+                        for contentType in content {
+                            if case let .bettingOffer(bettingOffer) = contentType {
+                                self?.updateBettingTicket(withId: bettingOffer.id, bettingOffer: bettingOffer)
+                            }
+                        }
+                    }
+
+                case .updatedContent(let aggregatorUpdates):
+                    if let content = aggregatorUpdates.contentUpdates {
+                        for contentType in content {
+                            if case let .bettingOfferUpdate(id, odd, _, _) = contentType, let newOdd = odd {
+                                self?.updateBettingTicketOdd(withId: id, newOdd: newOdd)
+                            }
+                        }
+                    }
+
+                case .disconnect:
+                    print("MarketDetailCell odd update - disconnect")
+                }
+            })
+
+        self.bettingTicketSubscribers[bettingTicket.id] = bettingTicketSubscriber
+    }
+
+    private func updateBettingTicket(withId id: String, bettingOffer: EveryMatrix.BettingOffer) {
+        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id], let value = bettingOffer.oddsValue {
+            let newBettingTicket = BettingTicket(id: bettingTicket.id,
+                                          outcomeId: bettingTicket.outcomeId,
+                                          matchId: bettingTicket.matchId,
+                                          value: value,
+                                          matchDescription: bettingTicket.matchDescription,
+                                          marketDescription: bettingTicket.marketDescription,
+                                          outcomeDescription: bettingTicket.outcomeDescription)
+            self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
+        }
+    }
+
+    private func updateBettingTicketOdd(withId id: String, newOdd: Double) {
+        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id] {
+            let newBettingTicket = BettingTicket(id: bettingTicket.id,
+                                          outcomeId: bettingTicket.outcomeId,
+                                          matchId: bettingTicket.matchId,
+                                          value: newOdd,
+                                          matchDescription: bettingTicket.matchDescription,
+                                          marketDescription: bettingTicket.marketDescription,
+                                          outcomeDescription: bettingTicket.outcomeDescription)
+            self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
+        }
     }
 
     func updatedBettingTicketsOdds() -> [BettingTicket] {

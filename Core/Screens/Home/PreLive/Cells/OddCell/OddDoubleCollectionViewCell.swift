@@ -56,6 +56,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     private var leftOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
+    private var marketSubscriber: AnyCancellable?
+
+
     private var currentLeftOddValue: Double?
     private var currentRightOddValue: Double?
 
@@ -77,6 +80,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
+
+        self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
         self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
         self.statsBaseView.isHidden = true
@@ -148,6 +153,12 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.rightOddTitleLabel.text = ""
         self.rightOddValueLabel.text = ""
 
+        self.leftBaseView.isUserInteractionEnabled = true
+        self.rightBaseView.isUserInteractionEnabled = true
+
+        self.leftBaseView.alpha = 1.0
+        self.rightBaseView.alpha = 1.0
+
         self.leftUpChangeOddValueImage.alpha = 0.0
         self.leftDownChangeOddValueImage.alpha = 0.0
         self.rightUpChangeOddValueImage.alpha = 0.0
@@ -163,10 +174,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.matchStatsSubscriber?.cancel()
         self.matchStatsSubscriber = nil
-        
+
+        self.marketSubscriber?.cancel()
+        self.marketSubscriber = nil
+
         self.currentLeftOddValue = nil
         self.currentRightOddValue = nil
 
+        self.suspendedBaseView.isHidden = true
     }
 
     override func layoutSubviews() {
@@ -177,11 +192,11 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
+        self.backgroundColor = UIColor.App2.backgroundCards
         self.baseView.backgroundColor = UIColor.App2.backgroundCards
 
         self.participantsNameLabel.textColor = UIColor.App2.textPrimary
         self.marketNameLabel.textColor = UIColor.App2.textPrimary
-
 
         self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
         self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
@@ -223,6 +238,25 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.participantsNameLabel.text = teamsText
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
+
+        if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+            self.marketSubscriber = marketPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] marketUpdate in
+                    if marketUpdate.isAvailable ?? true {
+                        self?.showMarketButtons()
+                    }
+                    else {
+                        if marketUpdate.isClosed ?? false {
+                            self?.showClosedView()
+                        }
+                        else {
+                            self?.showSuspendedView()
+                        }
+                    }
+                }
+        }
+
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
@@ -335,6 +369,24 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         view.layer.borderColor = color.cgColor
     }
 
+    //
+    //
+    private func showMarketButtons() {
+        self.suspendedBaseView.isHidden = true
+    }
+
+    private func showSuspendedView() {
+        self.suspendedLabel.text = localized("suspended_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    private func showClosedView() {
+        self.suspendedLabel.text = localized("closed_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    //
+    //
     func selectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         self.leftOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary

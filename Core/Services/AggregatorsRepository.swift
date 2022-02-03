@@ -56,12 +56,10 @@ class AggregatorsRepository {
 
     func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
 
-        if !Thread.isMainThread {
-            print("Wrong thread")
-        }
-
         if shouldClear {
             self.matchesForType = [:]
+            self.mainMarkets = [:]
+            self.mainMarketsOrder = []
         }
 
         for content in aggregator.content ?? [] {
@@ -82,13 +80,6 @@ class AggregatorsRepository {
                 }
 
             case .matchInfo(let matchInfo):
-//                if let currentValue = matchesInfo[matchInfo.id] {
-//                    currentValue.send(matchInfo)
-//                }
-//                else {
-//                    matchesInfo[matchInfo.id] = CurrentValueSubject(matchInfo)
-//                }
-//
                 matchesInfo[matchInfo.id] = matchInfo
 
                 if let matchId = matchInfo.matchId {
@@ -107,8 +98,6 @@ class AggregatorsRepository {
                 }
 
             case .market(let marketContent):
-
-                // markets[marketContent.id] = marketContent
                 marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
 
                 if let matchId = marketContent.eventId {
@@ -155,10 +144,8 @@ class AggregatorsRepository {
             case .location(let location):
                 self.locations[location.id] = location
 
-            case .cashout(let cashout):
-                self.cashouts[cashout.id] = cashout
-                cashoutsPublisher[cashout.id] = CurrentValueSubject<EveryMatrix.Cashout, Never>.init(cashout)
-                
+            case .cashout:
+                ()
             case .event:
                 () // print("Events aren't processed")
             case .eventPartScore:
@@ -172,13 +159,6 @@ class AggregatorsRepository {
     }
 
     func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
-
-        if !Thread.isMainThread {
-            print("Thread.isMainThread \(Thread.isMainThread)")
-        }
-        else {
-            print("Thread.isMainThread \(Thread.isMainThread)")
-        }
 
         guard
             let contentUpdates = aggregator.contentUpdates
@@ -201,12 +181,6 @@ class AggregatorsRepository {
                     let market = marketPublisher.value
                     let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
                     marketPublisher.send(updatedMarket)
-                }
-            case .cashoutUpdate(let id, let value, let stake):
-                if let cashoutsPublisher = cashoutsPublisher[id] {
-                    let cashout = cashoutsPublisher.value
-                    let updatedCashout = cashout.cashoutUpdated(value: value, stake: stake)
-                    cashoutsPublisher.send(updatedCashout)
                 }
             case .matchInfo(let id, let paramFloat1, let paramFloat2, let paramEventPartName1):
                 for matchInfoForMatch in matchesInfoForMatch {
@@ -235,6 +209,8 @@ class AggregatorsRepository {
                     matchIdArray.append(matchId)
                     matchesInfoForMatchPublisher.send(matchIdArray)
                 }
+            case .cashoutUpdate:
+                ()
             case .cashoutCreate:
                 ()
             case .cashoutDelete:
@@ -335,8 +311,8 @@ class AggregatorsRepository {
             }
 
             let sortedMarkets = matchMarkets.sorted { market1, market2 in
-                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 100
-                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 100
+                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 10000
+                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 10000
                 return position1 < position2
             }
 

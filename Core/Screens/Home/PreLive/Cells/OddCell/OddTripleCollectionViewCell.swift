@@ -10,7 +10,7 @@ import Combine
 
 class OddTripleCollectionViewCell: UICollectionViewCell {
 
-    // @IBOutlet weak var cardBaseView: UIView!
+    @IBOutlet private weak var baseView: UIView!
 
     @IBOutlet private weak var participantsNameLabel: UILabel!
     @IBOutlet private weak var participantsCountryImageView: UIImageView!
@@ -65,6 +65,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
+    private var marketSubscriber: AnyCancellable?
+
     private var currentLeftOddValue: Double?
     private var currentMiddleOddValue: Double?
     private var currentRightOddValue: Double?
@@ -94,6 +96,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = .clear
 
         self.layer.cornerRadius = 9
+
+        self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
         self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
 
@@ -166,6 +170,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightOddButtonSubscriber?.cancel()
         self.rightOddButtonSubscriber = nil
 
+        self.marketSubscriber?.cancel()
+        self.marketSubscriber = nil
+
         self.matchStatsSubscriber?.cancel()
         self.matchStatsSubscriber = nil
 
@@ -190,6 +197,15 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.rightOddTitleLabel.text = ""
         self.rightOddValueLabel.text =  ""
 
+        self.leftBaseView.isUserInteractionEnabled = true
+        self.middleBaseView.isUserInteractionEnabled = true
+        self.rightBaseView.isUserInteractionEnabled = true
+
+        self.leftBaseView.alpha = 1.0
+        self.middleBaseView.alpha = 1.0
+        self.rightBaseView.alpha = 1.0
+
+        self.suspendedBaseView.isHidden = true
     }
 
     override func layoutSubviews() {
@@ -200,12 +216,12 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
+
         self.backgroundColor = UIColor.App2.backgroundCards
+        self.baseView.backgroundColor = UIColor.App2.backgroundCards
 
         self.participantsNameLabel.textColor = UIColor.App2.textPrimary
         self.marketNameLabel.textColor = UIColor.App2.textPrimary
-
-       
 
         self.middleOddTitleLabel.textColor = UIColor.App2.textPrimary
         self.middleOddValueLabel.textColor = UIColor.App2.textPrimary
@@ -255,6 +271,26 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
+        //
+        if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+            self.marketSubscriber = marketPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] marketUpdate in
+                    if marketUpdate.isAvailable ?? true {
+                        self?.showMarketButtons()
+                    }
+                    else {
+                        if marketUpdate.isClosed ?? false {
+                            self?.showClosedView()
+                        }
+                        else {
+                            self?.showSuspendedView()
+                        }
+                    }
+                }
+        }
+
+        //
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
             self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
@@ -265,12 +301,29 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.leftOddButtonSubscriber = Env.everyMatrixStorage
                 .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                .map(\.oddsValue)
+                //.map(\.oddsValue)
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] newOddValue in
+                .sink(receiveValue: { [weak self] bettingOffer in
 
-                    guard let weakSelf = self else { return }
+                    guard
+                        let weakSelf = self
+                    else { return }
+
+                    if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
+                        weakSelf.leftBaseView.isUserInteractionEnabled = false
+                        weakSelf.leftBaseView.alpha = 0.5
+                    }
+                    else {
+                        weakSelf.leftBaseView.isUserInteractionEnabled = true
+                        weakSelf.leftBaseView.alpha = 1.0
+                    }
+
+                    guard
+                        let newOddValue = bettingOffer.oddsValue
+                    else {
+                        return
+                    }
 
                     if let currentOddValue = weakSelf.currentLeftOddValue {
                         if newOddValue > currentOddValue {
@@ -400,6 +453,24 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         view.layer.borderColor = color.cgColor
     }
 
+    //
+    //
+    private func showMarketButtons() {
+        self.suspendedBaseView.isHidden = true
+    }
+
+    private func showSuspendedView() {
+        self.suspendedLabel.text = localized("suspended_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    private func showClosedView() {
+        self.suspendedLabel.text = localized("closed_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    //
+    //
     func selectLeftOddButton() {
         self.leftBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
         self.leftOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary

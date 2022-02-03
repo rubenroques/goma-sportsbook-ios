@@ -371,6 +371,7 @@
             <connections>
                 <outlet property="awayCircleCaptionView" destination="PPA-AP-vQO" id="jTY-7e-ZGc"/>
                 <outlet property="awayNameCaptionLabel" destination="h5l-Go-Vme" id="az8-Bz-s3x"/>
+                <outlet property="baseView" destination="gRn-8b-XSa" id="hiG-mF-K20"/>
                 <outlet property="homeCircleCaptionView" destination="uFu-Y2-2sE" id="7UV-ge-wIB"/>
                 <outlet property="homeNameCaptionLabel" destination="kbw-u3-Ehl" id="gFM-X7-c9V"/>
                 <outlet property="iconStatsImageView" destination="Xwx-gt-50I" id="Yfa-eY-9fc"/>
