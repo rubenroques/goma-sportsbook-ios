@@ -274,6 +274,7 @@ class HeaderTextFieldView: NibView {
         self.textField.placeholder = ""
         self.headerLabel.text = placeholder
     }
+  
 
     func setPlaceholderColor(_ color: UIColor) {
         self.headerLabel.textColor = color

@@ -157,7 +157,9 @@ class PreLiveEventsViewController: UIViewController {
             }
             else if alertType == ActivationAlertType.profile {
                 let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
-                self.present(fullRegisterViewController, animated: true, completion: nil)
+                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
+                
+                //self.present(fullRegisterViewController, animated: true, completion: nil)
             }
 
         }

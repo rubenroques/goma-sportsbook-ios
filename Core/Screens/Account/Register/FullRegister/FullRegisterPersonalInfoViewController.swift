@@ -58,8 +58,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -79,8 +77,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        titleHeaderTextFieldView.setPlaceholderText(localized("title"))
+        
         titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+        titleHeaderTextFieldView.setPlaceholderText(localized("title"))
+
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
@@ -303,12 +303,17 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
+        
+        //self.navigationController?.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
+        
         self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
-        // self.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true, completion: nil)
     }
 
     @IBAction private func closeAction() {
-        self.dismiss(animated: true, completion: nil)
+          // foi presented porque tem um presentingViewController
+       // self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popToRootViewController(animated: true)
+    
     }
 
     @objc func didTapBackground() {

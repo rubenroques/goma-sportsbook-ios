@@ -232,7 +232,9 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     @IBAction private func closeAction() {
-        self.dismiss(animated: true, completion: nil)
+       // self.dismiss(animated: true, completion: nil)
+        
+         self.navigationController?.popToRootViewController(animated: true)
     }
 
     @IBAction func submitAction() {
@@ -254,6 +256,9 @@ class FullRegisterDocumentsViewController: UIViewController {
                                            phonePrefix: profile!.phonePrefix, personalID: registerForm.personalID, securityQuestion: registerForm.securityQuestion,
                                            securityAnswer: registerForm.securityAnswer)
         self.fullRegisterProfile(form: form)
+      
+  
+
     }
 
     private func fullRegisterProfile(form: EveryMatrix.ProfileForm) {
@@ -274,6 +279,7 @@ class FullRegisterDocumentsViewController: UIViewController {
                 }
             } receiveValue: { _ in
                 self.showAlert(type: .success, text: localized("profile_updated_success"))
+                self.navigationController?.popToRootViewController(animated: true)
             }
             .store(in: &cancellables)
     }
