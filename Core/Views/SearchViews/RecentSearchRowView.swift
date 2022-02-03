@@ -49,10 +49,10 @@ class RecentSearchRowView: NibView {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.clearButton.backgroundColor = .clear
-        self.clearButton.tintColor = UIColor.App.headerTextField
+        self.clearButton.tintColor = UIColor.App.inputText
     }
 
     @IBAction private func didTapClearButton() {

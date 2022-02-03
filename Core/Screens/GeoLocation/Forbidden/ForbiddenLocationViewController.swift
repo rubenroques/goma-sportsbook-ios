@@ -38,10 +38,10 @@ class ForbiddenLocationViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
-        forbiddenView.backgroundColor = UIColor.App2.backgroundPrimary
-        textLabel.textColor = UIColor.App2.textPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        forbiddenView.backgroundColor = UIColor.App.backgroundPrimary
+        textLabel.textColor = UIColor.App.textPrimary
     }
 
     func commonInit() {

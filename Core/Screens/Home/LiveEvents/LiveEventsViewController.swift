@@ -64,7 +64,7 @@ class LiveEventsViewController: UIViewController {
         var betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
         betslipCountLabel.textColor = .white
-        betslipCountLabel.backgroundColor = UIColor.App2.alertError
+        betslipCountLabel.backgroundColor = UIColor.App.alertError
         betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
         betslipCountLabel.textAlignment = .center
         betslipCountLabel.clipsToBounds = true
@@ -87,7 +87,7 @@ class LiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
-            self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_\(selectedSport.id)")
+            self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_\(selectedSport.id)")
             self.viewModel.selectedSport = selectedSport
         }
     }
@@ -159,8 +159,8 @@ class LiveEventsViewController: UIViewController {
 
     private func commonInit() {
 
-        self.sportTypeIconImageView.image = UIImage(named: "sport_type_icon_1")
-        let color = UIColor.App2.backgroundPrimary
+        self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
+        let color = UIColor.App.backgroundPrimary
 
         leftGradientBaseView.backgroundColor = color
         let leftGradientMaskLayer = CAGradientLayer()
@@ -181,13 +181,13 @@ class LiveEventsViewController: UIViewController {
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
 
-        filtersBarBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        filtersBarBaseView.backgroundColor = UIColor.App.backgroundPrimary
         filtersCollectionView.backgroundColor = .clear
 
-        sportsSelectorButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App2.backgroundSecondary
+        filtersButtonView.backgroundColor = UIColor.App.backgroundSecondary
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -208,11 +208,11 @@ class LiveEventsViewController: UIViewController {
         
         filtersCountLabel.isHidden = true
         filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
-        filtersCountLabel.backgroundColor = UIColor.App2.highlightSecondary
+        filtersCountLabel.backgroundColor = UIColor.App.highlightSecondary
 
         liveEventsCountView.isHidden = true
         liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
-        liveEventsCountView.backgroundColor = UIColor.App2.highlightSecondary
+        liveEventsCountView.backgroundColor = UIColor.App.highlightSecondary
 
         liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
         
@@ -320,22 +320,22 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.filtersBarBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.filtersSeparatorLineView.backgroundColor = UIColor.App2.separatorLineHighlightPrimary
+        self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.filtersSeparatorLineView.alpha = 0.5
 
-        self.tableView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.tableView.backgroundView?.backgroundColor = UIColor.App2.backgroundPrimary
+        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.betslipCountLabel.backgroundColor = UIColor.App2.alertError
-        self.betslipButtonView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
+        self.betslipButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
     
-        self.emptyBaseView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App2.textPrimary
-        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App2.textPrimary
-        self.emptyStateButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
+        self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
+        self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

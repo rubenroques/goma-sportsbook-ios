@@ -32,7 +32,7 @@ class EmailVerificationTableViewCell: UITableViewCell {
     }
 
     func setupWithTheme() {
-        self.contentView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
 
     }
 

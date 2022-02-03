@@ -29,17 +29,17 @@ class DocumentPickerView: NibView {
     }
 
     func setup() {
-        self.backgroundColor = UIColor.App2.backgroundPrimary
+        self.backgroundColor = UIColor.App.backgroundPrimary
         self.layer.cornerRadius = CornerRadius.headerInput
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.App2.inputBorderActive.withAlphaComponent(1).cgColor
+        self.layer.borderColor = UIColor.App.inputBorderActive.withAlphaComponent(1).cgColor
 
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         addFileButton.setTitle(localized("add_file"), for: .normal)
         addFileButton.titleLabel?.font = AppFont.with(type: .bold, size: 16.0)
-        addFileButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
-        addFileButton.backgroundColor = UIColor.App2.backgroundPrimary
+        addFileButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        addFileButton.backgroundColor = UIColor.App.backgroundPrimary
         addFileButton.setInsets(forContentPadding: UIEdgeInsets(top: 10, left: 0, bottom: 10, right: 10), imageTitlePadding: CGFloat(0))
         addFileButton.imageView?.contentMode = .scaleAspectFit
     }

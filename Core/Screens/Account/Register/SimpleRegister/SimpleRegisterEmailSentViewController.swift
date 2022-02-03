@@ -36,24 +36,24 @@ class SimpleRegisterEmailSentViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
-        backView.backgroundColor = UIColor.App2.backgroundPrimary
-        titleLabel.textColor = UIColor.App2.textPrimary
-        textLabel.textColor = UIColor.App2.textPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        backView.backgroundColor = UIColor.App.backgroundPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
+        textLabel.textColor = UIColor.App.textPrimary
 
-        openEmailButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
-        openEmailButton.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        openEmailButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        openEmailButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
         openEmailButton.cornerRadius = CornerRadius.button
 
 
-        openEmailButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        openEmailButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
         openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
 
         openEmailButton.backgroundColor = .clear
-        openEmailButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        openEmailButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
+        openEmailButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        openEmailButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
         openEmailButton.layer.cornerRadius = CornerRadius.button
         openEmailButton.layer.masksToBounds = true
 

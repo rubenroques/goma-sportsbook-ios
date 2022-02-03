@@ -33,7 +33,7 @@ class TitleTableViewHeader: UITableViewHeaderFooterView {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
 
-        self.sectionTitleLabel.textColor = UIColor.App2.textPrimary
+        self.sectionTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     func configureWithTitle(_ title: String) {

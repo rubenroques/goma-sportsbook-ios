@@ -53,12 +53,12 @@ class RecentSearchTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.titleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.clearButton.backgroundColor = .clear
-        self.clearButton.tintColor = UIColor.App.fadeOutHeading
+        self.clearButton.tintColor = UIColor.App.textDisablePrimary
 
-        self.separatorLineView.backgroundColor = UIColor.App.fadeOutHeading
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
     func hideSeparatorLineView() {

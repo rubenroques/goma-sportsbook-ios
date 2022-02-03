@@ -55,16 +55,16 @@ class DepositWebViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.topView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.topView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.navigationView.backgroundColor = .clear
 
-        self.navigationLabel.textColor = UIColor.App2.textPrimary
+        self.navigationLabel.textColor = UIColor.App.textPrimary
 
         self.navigationButton.backgroundColor = .clear
-        self.navigationButton.tintColor = UIColor.App2.textPrimary
+        self.navigationButton.tintColor = UIColor.App.textPrimary
     }
 
     func setupWebView() {

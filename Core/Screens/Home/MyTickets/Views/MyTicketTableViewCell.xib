@@ -264,7 +264,6 @@
                         </constraints>
                     </view>
                 </subviews>
-                <color key="backgroundColor" name="tertiaryBackgroundColor"/>
                 <constraints>
                     <constraint firstItem="Tt6-nr-mqM" firstAttribute="left" secondItem="H2p-sc-9uM" secondAttribute="left" constant="12" id="HaX-n6-OUA"/>
                     <constraint firstItem="Tt6-nr-mqM" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="T9p-Rb-3jg"/>
@@ -272,6 +271,7 @@
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Tt6-nr-mqM" secondAttribute="bottom" constant="10" id="n47-2m-jTN"/>
                 </constraints>
             </tableViewCellContentView>
+            <color key="backgroundColor" name="AccentColor"/>
             <connections>
                 <outlet property="baseView" destination="Tt6-nr-mqM" id="sgJ-vZ-W5i"/>
                 <outlet property="betAmountSubtitleLabel" destination="OvZ-3E-5T1" id="o3l-8r-1jc"/>
@@ -283,6 +283,7 @@
                 <outlet property="bottomStackView" destination="od3-Q5-lI2" id="IEE-Mp-gXO"/>
                 <outlet property="cashoutBaseView" destination="BLE-kd-Pbd" id="Xex-a1-L5G"/>
                 <outlet property="cashoutButton" destination="a2o-OR-1K7" id="5v6-9G-LDX"/>
+                <outlet property="contentView" destination="H2p-sc-9uM" id="0te-xh-T3X"/>
                 <outlet property="headerBaseView" destination="FTm-sF-tcl" id="4tV-PT-DAQ"/>
                 <outlet property="loadingActivityIndicator" destination="q1c-HF-zYC" id="pBr-eT-MIT"/>
                 <outlet property="loadingView" destination="3sD-Ev-YhE" id="K10-lx-s4c"/>
@@ -300,11 +301,11 @@
     </objects>
     <resources>
         <image name="send_bet_icon" width="20" height="20"/>
-        <namedColor name="contentBackgroundColor">
-            <color red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="AccentColor">
+            <color red="0.0" green="0.46000000000000002" blue="0.89000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
-        <namedColor name="tertiaryBackgroundColor">
-            <color red="0.81960784313725488" green="0.83529411764705885" blue="0.89411764705882357" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <namedColor name="contentBackgroundColor">
+            <color red="0.87999999523162842" green="0.14000000059604645" blue="0.23000000417232513" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

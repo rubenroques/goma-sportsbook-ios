@@ -39,10 +39,10 @@ class RecentSearchHeaderView: UITableViewHeaderFooterView {
 
     func setupWithTheme() {
 
-        self.titleLabel.textColor = UIColor.App.headingMain
+        self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.clearAllButton.backgroundColor = .clear
-        self.clearAllButton.tintColor = UIColor.App.headingMain
+        self.clearAllButton.tintColor = UIColor.App.textPrimary
     }
 
     @IBAction private func didTapClearAllButton() {

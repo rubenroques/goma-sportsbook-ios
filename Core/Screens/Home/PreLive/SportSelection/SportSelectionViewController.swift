@@ -89,35 +89,35 @@ class SportSelectionViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
-        topView.backgroundColor = UIColor.App2.backgroundPrimary
-        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
-        navigationLabel.textColor = UIColor.App2.textPrimary
-        cancelButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
-        collectionView.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        topView.backgroundColor = UIColor.App.backgroundPrimary
+        navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        navigationLabel.textColor = UIColor.App.textPrimary
+        cancelButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        collectionView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.searchBar.searchBarStyle = UISearchBar.Style.prominent
         self.searchBar.sizeToFit()
         self.searchBar.isTranslucent = false
         self.searchBar.backgroundImage = UIImage()
-        self.searchBar.backgroundImage = UIColor.App2.backgroundPrimary.image()
+        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
         self.searchBar.placeholder = localized("search")
 
         self.searchBar.delegate = self
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App2.backgroundSecondary
+            textfield.backgroundColor = UIColor.App.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 
-                                                                                               UIColor.App2.inputTextTitle])
+                                                                                               UIColor.App.inputTextTitle])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
                 glassIconView.tintColor =
-                UIColor.App2.inputTextTitle
+                UIColor.App.inputTextTitle
             }
         }
 

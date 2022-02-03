@@ -43,9 +43,9 @@ class CountrySelectorTableViewCell: UITableViewCell {
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.nameLabel.textColor = UIColor.App2.textPrimary
-        self.prefixLabel.textColor = UIColor.App2.textPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.nameLabel.textColor = UIColor.App.textPrimary
+        self.prefixLabel.textColor = UIColor.App.textPrimary
     }
 
     func setupWithCountry(country: EveryMatrix.Country, showPrefix: Bool) {

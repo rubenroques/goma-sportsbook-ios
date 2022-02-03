@@ -112,59 +112,59 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
-        backView.backgroundColor = UIColor.App2.backgroundPrimary
-        registerTitleLabel.textColor = UIColor.App2.textPrimary
-        topSignUpView.backgroundColor = UIColor.App2.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        backView.backgroundColor = UIColor.App.backgroundPrimary
+        registerTitleLabel.textColor = UIColor.App.textPrimary
+        topSignUpView.backgroundColor = UIColor.App.backgroundPrimary
 
-        usernameHeaderTextView.backgroundColor = UIColor.App2.backgroundPrimary
-        usernameHeaderTextView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        usernameHeaderTextView.setTextFieldColor(UIColor.App2.inputText)
+        usernameHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        usernameHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         usernameHeaderTextView.setSecureField(false)
 
-        dateHeaderTextView.backgroundColor = UIColor.App2.backgroundPrimary
-        dateHeaderTextView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        dateHeaderTextView.setTextFieldColor(UIColor.App2.inputText)
+        dateHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        dateHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        dateHeaderTextView.setTextFieldColor(UIColor.App.inputText)
 
-        phoneView.backgroundColor = UIColor.App2.backgroundPrimary
+        phoneView.backgroundColor = UIColor.App.backgroundPrimary
 
-        indicativeHeaderTextView.backgroundColor = UIColor.App2.backgroundPrimary
-        indicativeHeaderTextView.setTextFieldColor(UIColor.App2.inputText)
-        indicativeHeaderTextView.setViewColor(UIColor.App2.backgroundPrimary)
+        indicativeHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        indicativeHeaderTextView.setTextFieldColor(UIColor.App.inputText)
+        indicativeHeaderTextView.setViewColor(UIColor.App.backgroundPrimary)
         indicativeHeaderTextView.setSecureField(false)
 
-        phoneHeaderTextView.backgroundColor = UIColor.App2.backgroundPrimary
-        phoneHeaderTextView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        phoneHeaderTextView.setTextFieldColor(UIColor.App2.inputText)
+        phoneHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        phoneHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         phoneHeaderTextView.setSecureField(false)
 
-        lineView.backgroundColor = UIColor.App2.inputTextTitle.withAlphaComponent(0.2)
+        lineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
-        emailHeaderTextView.backgroundColor = UIColor.App2.backgroundPrimary
-        emailHeaderTextView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        emailHeaderTextView.setTextFieldColor(UIColor.App2.inputText)
+        emailHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        emailHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        emailHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         
-        passwordHeaderTextView.backgroundColor = UIColor.App2.backgroundPrimary
-        passwordHeaderTextView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        passwordHeaderTextView.setTextFieldColor(UIColor.App2.inputText)
+        passwordHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        passwordHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         passwordHeaderTextView.setSecureField(true)
 
         checkPolicyLinks()
 
-        confirmPasswordHeaderTextView.backgroundColor = UIColor.App2.backgroundPrimary
-        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        confirmPasswordHeaderTextView.setTextFieldColor(UIColor.App2.inputText)
+        confirmPasswordHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        confirmPasswordHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         confirmPasswordHeaderTextView.setSecureField(true)
 
-        signUpButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
-        signUpButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        signUpButton.setTitleColor(UIColor.App2.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        signUpButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        signUpButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        signUpButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
 
         signUpButton.backgroundColor = .clear
-        signUpButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        signUpButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
+        signUpButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        signUpButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
         signUpButton.layer.cornerRadius = CornerRadius.button
         signUpButton.layer.masksToBounds = true
     }
@@ -253,7 +253,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         let emailVerificationURL = EveryMatrixInfo.emailVerificationURL(withUserEmail: email)
 
         if password != confirmPassword {
-            passwordHeaderTextView.showErrorOnField(text: localized("password_not_match"), color: UIColor.App2.alertError)
+            passwordHeaderTextView.showErrorOnField(text: localized("password_not_match"), color: UIColor.App.alertError)
             validFields = false
         }
         else if password.count < 8 {
@@ -262,7 +262,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         }
 
 //        if dateHeaderTextView.text.isEmpty {
-//            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App2.alertError)
+//            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
 //            validFields = false
 //        }
         validFields = checkDateBirth()
@@ -286,14 +286,14 @@ class SimpleRegisterDetailsViewController: UIViewController {
     private func checkDateBirth() -> Bool {
 
         if dateHeaderTextView.text.isEmpty {
-            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App2.alertError)
+            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             return false
         }
         else {
 
             let textDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
             if textDate > dateHeaderTextView.datePicker.date {
-                dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App2.alertError)
+                dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
                 return false
             }
         }
@@ -364,19 +364,19 @@ extension SimpleRegisterDetailsViewController {
 
     func showUsernameTakenErrorStatus() {
         self.usernameHeaderTextView
-            .showErrorOnField(text: localized("username_already_registered"), color: UIColor.App2.alertError)
+            .showErrorOnField(text: localized("username_already_registered"), color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
 
     func showEmailTakenErrorStatus() {
         self.usernameHeaderTextView
-            .showErrorOnField(text: localized("email_already_registered"), color: UIColor.App2.alertError)
+            .showErrorOnField(text: localized("email_already_registered"), color: UIColor.App.alertError)
         self.disableSignUpButton()
     }
 
     func showPasswordTooWeakErrorStatus() {
         self.disableSignUpButton()
-        self.passwordHeaderTextView.showErrorOnField(text: localized("password_too_weak"), color: UIColor.App2.alertError)
+        self.passwordHeaderTextView.showErrorOnField(text: localized("password_too_weak"), color: UIColor.App.alertError)
     }
 
     func showServerErrorStatus() {
@@ -493,7 +493,7 @@ extension SimpleRegisterDetailsViewController {
         // let fieldDate = dateHeaderTextView.datePicker.date
         let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
         if fieldDate > maxDate {
-            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App2.alertError)
+            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             dateHeaderTextView.datePicker.maximumDate = maxDate
         }
     }
