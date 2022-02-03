@@ -388,7 +388,7 @@ class HeaderTextFieldView: NibView {
         selectionArray = array
 
         pickerView.delegate = self
-        pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
+        //pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
 
         if !headerVisible {
             headerLabel.isHidden = true
@@ -399,6 +399,7 @@ class HeaderTextFieldView: NibView {
 
         textField.inputView = pickerView
         textField.text = selectionArray[defaultValue]
+        
 
         // Set arrow image
         let arrowDropdownImageView = UIImageView()
