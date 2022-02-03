@@ -16,7 +16,7 @@ class MatchDetailsViewModel: NSObject {
 
     var isLoadingData: CurrentValueSubject<Bool, Never> = .init(true)
 
-    private var match: Match
+    var match: Match?
     var store: MatchDetailsAggregatorRepository
 
     private var marketTypeSelectedOptionIndex: Int?
@@ -34,7 +34,16 @@ class MatchDetailsViewModel: NSObject {
 
     init(match: Match) {
         self.match = match
-        self.store = MatchDetailsAggregatorRepository(matchId: self.match.id)
+        self.store = MatchDetailsAggregatorRepository(matchId: match.id)
+
+        super.init()
+
+        self.connectPublisher()
+    }
+
+    init(matchId: String) {
+        //self.match = self.getMatch(matchId: matchId)
+        self.store = MatchDetailsAggregatorRepository(matchId: matchId)
 
         super.init()
 
@@ -91,6 +100,7 @@ class MatchDetailsViewModel: NSObject {
 
         self.marketGroupDataChanged?()
     }
+
 }
 
 extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate {

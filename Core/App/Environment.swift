@@ -35,6 +35,9 @@ class Environment {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
+    let urlSchema: String = "sb.gg"
+    let urlSchemaManager = UrlSchemaManager()
+
     func getUserSettings() -> [GomaClientSettings]? {
         let settingsData = UserDefaults.standard.data(forKey: "user_settings")
         let settingsArray = try? JSONDecoder().decode([GomaClientSettings].self, from: settingsData!)
