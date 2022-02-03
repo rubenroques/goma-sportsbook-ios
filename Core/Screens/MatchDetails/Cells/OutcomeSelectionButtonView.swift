@@ -19,6 +19,7 @@ class OutcomeSelectionButtonView: NibView {
     @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
     var match: Match?
+    var marketId: String?
     var outcome: Outcome?
     var bettingOffer: BettingOffer?
 
@@ -93,11 +94,6 @@ class OutcomeSelectionButtonView: NibView {
     func setupWithTheme() {
         self.containerView.backgroundColor = UIColor.App2.backgroundOdds
         self.containerView.layer.cornerRadius = CornerRadius.button
-        
-        //self.stackView.backgroundColor = UIColor.App2.backgroundOdds
-        //self.stackView.layer.cornerRadius = CornerRadius.label
-       // self.containerView.backgroundColor = UIColor.App2.backgroundOdds
-       // self.containerView.layer.cornerRadius = CornerRadius.button
 
         self.marketTypeLabel.textColor = UIColor.App2.textPrimary
         self.marketTypeLabel.font = AppFont.with(type: .medium, size: 11)
@@ -111,29 +107,6 @@ class OutcomeSelectionButtonView: NibView {
         self.outcome = outcome
         self.bettingOffer = outcome.bettingOffer
         self.marketTypeLabel.text = outcome.translatedName
-
-        //        if outcome.nameDigit1 != nil || outcome.nameDigit2 != nil || outcome.nameDigit3  != nil || outcome.paramBoolean1 != nil {
-        //            self.marketTypeLabel.text = "\(outcome.translatedName)"
-        //        }
-
-        //        if let nameDigit1 = outcome.nameDigit1, let nameDigit2 = outcome.nameDigit2 {
-        //
-        //            var digit1String = "\(nameDigit1)"
-        //            digit1String = digit1String.replacingOccurrences(of: ".00", with: "")
-        //            digit1String = digit1String.replacingOccurrences(of: ".0", with: "")
-        //
-        //            var digit2String = "\(nameDigit2)"
-        //            digit2String = digit2String.replacingOccurrences(of: ".00", with: "")
-        //            digit2String = digit2String.replacingOccurrences(of: ".0", with: "")
-        //
-        //            self.marketTypeLabel.text = "\(outcome.translatedName)" // \(digit1String)-\(digit2String)"
-        //        }
-        //        else if let nameDigit1 = outcome.nameDigit1 {
-        //            var digitString = "\(nameDigit1)"
-        //            digitString = digitString.replacingOccurrences(of: ".00", with: "")
-        //            digitString = digitString.replacingOccurrences(of: ".0", with: "")
-        //            self.marketTypeLabel.text = "\(outcome.translatedName)" //" \(digitString)"
-        //        }
 
         self.updateBettingOffer(value: outcome.bettingOffer.value, isAvailableForBetting: true)
 
@@ -237,6 +210,7 @@ class OutcomeSelectionButtonView: NibView {
 
         guard
             let match = self.match,
+            let marketId = self.outcome?.marketId,
             let outcome = self.outcome
         else {
             return
@@ -248,8 +222,10 @@ class OutcomeSelectionButtonView: NibView {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: marketId,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)

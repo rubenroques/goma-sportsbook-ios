@@ -426,8 +426,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: firstMarket.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -469,8 +471,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: firstMarket.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -511,8 +515,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: firstMarket.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)

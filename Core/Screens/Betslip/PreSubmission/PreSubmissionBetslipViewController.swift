@@ -524,13 +524,14 @@ class PreSubmissionBetslipViewController: UIViewController {
             .map({ _, simpleBetsBettingValues, tickets -> Bool in
                 var hasValidAmounts = true
                 
-                for ticket in tickets {
-                    if simpleBetsBettingValues[ticket.id] == nil {
-                        hasValidAmounts = false
-                        break
-                    }
+                for ticket in tickets where simpleBetsBettingValues[ticket.id] == nil {
+                    hasValidAmounts = false
+                    break
                 }
-                return hasValidAmounts
+                
+                let allTicketsAvailable = tickets.map(\.isAvailable).allSatisfy({ $0 == true })
+                    
+                return hasValidAmounts && allTicketsAvailable
             })
             .sink(receiveValue: { [weak self] hasValidBettingValue in
                 self?.placeBetButton.isEnabled = hasValidBettingValue

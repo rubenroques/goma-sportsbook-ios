@@ -25,7 +25,7 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var expandArrowImageView: UIImageView!
 
     var match: Match?
-    var market: Market?
+    var marketId: String?
     var marketGroupOrganizer: MarketGroupOrganizer?
 
     private let lineHeight: CGFloat = 56
@@ -65,7 +65,7 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.match = nil
-        self.market = nil
+        self.marketId = nil
         self.marketGroupOrganizer = nil
 
         self.expandBaseView.isHidden = false
@@ -125,6 +125,7 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
                     if let outcomeValue = outcome {
                         let outcomeSelectionButtonView = OutcomeSelectionButtonView()
                         outcomeSelectionButtonView.match = self.match
+                        outcomeSelectionButtonView.marketId = self.marketId
                         outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
                         stackView.addArrangedSubview(outcomeSelectionButtonView)
                     }

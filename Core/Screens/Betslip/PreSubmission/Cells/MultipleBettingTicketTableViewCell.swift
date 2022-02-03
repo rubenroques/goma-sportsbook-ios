@@ -30,6 +30,9 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var stackView: UIStackView!
 
+    @IBOutlet private weak var suspendedBettingOfferView: UIView!
+    @IBOutlet private weak var suspendedBettingOfferLabel: UILabel!
+
     @IBOutlet private weak var errorView: UIView!
     @IBOutlet private weak var errorLabel: UILabel!
 
@@ -40,11 +43,14 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     var bettingTicket: BettingTicket?
 
     var oddSubscriber: AnyCancellable?
+    var oddAvailabilitySubscriber: AnyCancellable?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
 
+        self.suspendedBettingOfferView.isHidden = true
+        
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
@@ -75,6 +81,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.oddSubscriber?.cancel()
+        self.oddSubscriber = nil
+        
+        self.oddAvailabilitySubscriber?.cancel()
+        self.oddAvailabilitySubscriber = nil
+        
+        self.suspendedBettingOfferView.isHidden = true
         self.bettingTicket = nil
 
         self.outcomeNameLabel.text = ""
@@ -147,6 +160,20 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.currentOddValue = bettingTicket.value
 
+        if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),
+           let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
+            
+            self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
+                .receive(on: DispatchQueue.main)
+                .eraseToAnyPublisher()
+                .map({ bettingOffer, market in
+                    return (bettingOffer.isAvailable ?? true, market.isAvailable ?? true)
+                })
+                .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
+                    self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable
+                })
+        }
+        
         self.oddSubscriber = Env.everyMatrixStorage
             .oddPublisherForBettingOfferId(bettingTicket.id)?
             .map(\.oddsValue)

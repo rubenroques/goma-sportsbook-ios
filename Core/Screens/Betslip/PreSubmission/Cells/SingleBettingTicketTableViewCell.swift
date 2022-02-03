@@ -56,6 +56,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     var oddSubscriber: AnyCancellable?
     var oddAvailabilitySubscriber: AnyCancellable?
+    var marketPublisherSubscriber: AnyCancellable?
     var cancellables = Set<AnyCancellable>()
 
     var maxStake: Double?
@@ -133,6 +134,9 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.oddAvailabilitySubscriber?.cancel()
         self.oddAvailabilitySubscriber = nil
 
+        self.marketPublisherSubscriber?.cancel()
+        self.marketPublisherSubscriber = nil
+        
         self.didUpdateBettingValueAction = nil
         
         self.currentValue = 0
@@ -282,16 +286,21 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 self?.currentOddValue = newOddValue
                 self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
             })
-
-        self.oddAvailabilitySubscriber = Env.everyMatrixStorage
-            .oddPublisherForBettingOfferId(bettingTicket.id)?
-            .map(\.isAvailable)
-            .compactMap({ $0 })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isAvailable in
-                self?.suspendedBettingOfferView.isHidden = isAvailable
-            })
-
+        
+        if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),
+           let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
+            
+            self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
+                .receive(on: DispatchQueue.main)
+                .eraseToAnyPublisher()
+                .map({ bettingOffer, market in
+                    return (bettingOffer.isAvailable ?? true, market.isAvailable ?? true)
+                })
+                .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
+                    self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable
+                })
+        }
+        
         if let errorBetting = errorBetting {
             self.errorLabel.text = errorBetting
             self.errorView.isHidden = false

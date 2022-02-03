@@ -499,8 +499,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -541,8 +542,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -582,8 +584,9 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
