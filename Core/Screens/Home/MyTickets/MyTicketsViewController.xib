@@ -4,9 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -52,7 +50,7 @@
                 </view>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="9c3-B6-Qac">
                     <rect key="frame" x="0.0" y="0.0" width="423" height="70"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="70" id="gQ8-j1-H62"/>
                     </constraints>
@@ -65,14 +63,13 @@
                 </collectionView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NX1-kb-QJi">
                     <rect key="frame" x="0.0" y="69" width="423" height="1"/>
-                    <color key="backgroundColor" systemColor="systemRedColor"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="9KQ-tK-nf5"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="AZQ-85-hF6">
                     <rect key="frame" x="0.0" y="70" width="423" height="494"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="BiE-rg-Q5X">
                     <rect key="frame" x="193" y="263.5" width="37" height="37"/>
@@ -98,7 +95,6 @@
                         </imageView>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9QP-4d-L0p">
                             <rect key="frame" x="30" y="325" width="363" height="50"/>
-                            <color key="backgroundColor" name="mainTintColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="Ub4-4b-swD"/>
                             </constraints>
@@ -109,7 +105,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="wJu-lK-SDR" firstAttribute="top" secondItem="NSD-he-oH5" secondAttribute="bottom" constant="12" id="1mg-Nh-sDC"/>
                         <constraint firstItem="Zr1-IX-MMC" firstAttribute="top" secondItem="GIT-G2-MgX" secondAttribute="top" constant="50" id="E2e-VN-G0z"/>
@@ -124,7 +120,6 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="AZQ-85-hF6" firstAttribute="top" secondItem="9c3-B6-Qac" secondAttribute="bottom" id="26A-Oq-mtz"/>
                 <constraint firstItem="P3q-Kh-mfv" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="2wp-24-wGt"/>
@@ -153,14 +148,5 @@
     </objects>
     <resources>
         <image name="no_content_icon" width="161" height="161"/>
-        <namedColor name="mainTintColor">
-            <color red="0.14901960784313725" green="0.41568627450980394" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
     </resources>
 </document>

@@ -36,13 +36,13 @@ class SelectTextFieldView: NibView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.setup()
+        self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        self.setup()
+        self.setupWithTheme()
     }
 
     var keyboardType: UIKeyboardType = .default {
@@ -51,7 +51,7 @@ class SelectTextFieldView: NibView {
         }
     }
 
-    func setup() {
+    func setupWithTheme() {
 
         self.backgroundColor = UIColor.App.backgroundPrimary
         self.layer.cornerRadius = CornerRadius.headerInput

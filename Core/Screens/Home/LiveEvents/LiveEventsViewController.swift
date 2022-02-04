@@ -160,35 +160,9 @@ class LiveEventsViewController: UIViewController {
     private func commonInit() {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
-        let color = UIColor.App.backgroundPrimary
+       
 
-        leftGradientBaseView.backgroundColor = color
-        let leftGradientMaskLayer = CAGradientLayer()
-        leftGradientMaskLayer.frame = leftGradientBaseView.bounds
-        leftGradientMaskLayer.colors = [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
-        leftGradientMaskLayer.locations = [0, 0.55, 1]
-        leftGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        leftGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        leftGradientBaseView.layer.mask = leftGradientMaskLayer
-
-        //
-        rightGradientBaseView.backgroundColor = color
-        let rightGradientMaskLayer = CAGradientLayer()
-        rightGradientMaskLayer.frame = rightGradientBaseView.bounds
-        rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
-        rightGradientMaskLayer.locations = [0, 0.45, 1]
-        rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        rightGradientBaseView.layer.mask = rightGradientMaskLayer
-
-        filtersBarBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        filtersCollectionView.backgroundColor = .clear
-
-        sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
-
-        filtersButtonView.backgroundColor = UIColor.App.backgroundSecondary
-        filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+      
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
@@ -207,17 +181,8 @@ class LiveEventsViewController: UIViewController {
         filtersCollectionView.dataSource = self
         
         filtersCountLabel.isHidden = true
-        filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
-        filtersCountLabel.backgroundColor = UIColor.App.highlightSecondary
-
         liveEventsCountView.isHidden = true
-        liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
-        liveEventsCountView.backgroundColor = UIColor.App.highlightSecondary
-
-        liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
-        
-        tableView.backgroundColor = .clear
-        tableView.backgroundView?.backgroundColor = .clear
+       
 
         tableView.separatorStyle = .none
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
@@ -320,6 +285,47 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
+        
+        let color = UIColor.App.backgroundPrimary
+
+        self.leftGradientBaseView.backgroundColor = color
+        let leftGradientMaskLayer = CAGradientLayer()
+        leftGradientMaskLayer.frame = self.leftGradientBaseView.bounds
+        leftGradientMaskLayer.colors = [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
+        leftGradientMaskLayer.locations = [0, 0.55, 1]
+        leftGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        leftGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        self.leftGradientBaseView.layer.mask = leftGradientMaskLayer
+
+        //
+        self.rightGradientBaseView.backgroundColor = color
+        let rightGradientMaskLayer = CAGradientLayer()
+        rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
+        rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
+        rightGradientMaskLayer.locations = [0, 0.45, 1]
+        rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+        rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+        self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
+        
+        self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.filtersCollectionView.backgroundColor = .clear
+
+        self.sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
+
+        self.filtersButtonView.backgroundColor = UIColor.App.backgroundSecondary
+        self.filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
+        
+        self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
+        self.liveEventsCountView.backgroundColor = UIColor.App.highlightSecondary
+        self.filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+        self.filtersCountLabel.backgroundColor = UIColor.App.highlightSecondary
+
+        self.liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
+        
+        self.tableView.backgroundColor = .clear
+        self.tableView.backgroundView?.backgroundColor = .clear
+        
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
@@ -327,6 +333,8 @@ class LiveEventsViewController: UIViewController {
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
+        
+        self.filtersCollectionView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary

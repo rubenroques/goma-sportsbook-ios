@@ -156,6 +156,15 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.cashoutButton.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.possibleWinningsTitleLabel.textColor = UIColor.App.textSecond
+        
+        self.oddValueLabel.textColor = UIColor.App.textPrimary
+        
+        self.possibleWinningsTitleLabel.textColor = UIColor.App.textPrimary
+        self.possibleWinningsValueLabel.textColor = UIColor.App.textPrimary
+        
+        self.betAmountTitleLabel.textColor = UIColor.App.textPrimary
+        self.betAmountValueLabel.textColor = UIColor.App.textPrimary
+        
     }
 
     func configureWithViewModel(viewModel: SubmitedBetTableViewCellViewModel) {

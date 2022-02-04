@@ -93,7 +93,7 @@ class SportSelectionViewController: UIViewController {
         topView.backgroundColor = UIColor.App.backgroundPrimary
         navigationView.backgroundColor = UIColor.App.backgroundPrimary
         navigationLabel.textColor = UIColor.App.textPrimary
-        cancelButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        cancelButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         collectionView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.searchBar.searchBarStyle = UISearchBar.Style.prominent

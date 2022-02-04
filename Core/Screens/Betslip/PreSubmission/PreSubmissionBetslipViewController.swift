@@ -720,6 +720,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.secondaryPlaceBetButtonsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        
         self.systemBetTypePickerView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.clearBaseView.backgroundColor = UIColor.App.backgroundPrimary
@@ -852,6 +854,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemOddsTitleLabel.textColor = UIColor.App.textDisablePrimary
         self.secondarySystemOddsValueLabel.textColor = UIColor.App.textPrimary
 
+        self.selectSystemBetTypeButton.backgroundColor = UIColor.App.highlightPrimary
+        
+        self.betTypeSegmentControl.backgroundColor = UIColor.App.backgroundTertiary
+        
+        
+        
         StyleHelper.styleButton(button: self.selectSystemBetTypeButton)
         StyleHelper.styleButton(button: self.placeBetButton)
         StyleHelper.styleButton(button: self.secondaryPlaceBetButton)

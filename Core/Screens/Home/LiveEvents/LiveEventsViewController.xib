@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -59,12 +57,11 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xDr-rR-c5B">
                             <rect key="frame" x="12" y="235" width="322" height="0.0"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                            <color key="textColor" name="headingMainColor"/>
+                            <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kUU-B5-fgT">
                             <rect key="frame" x="30" y="285" width="286" height="50"/>
-                            <color key="backgroundColor" name="mainBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="37t-Wf-CUI"/>
                             </constraints>
@@ -72,7 +69,6 @@
                             <state key="normal" title="Go to popular games"/>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="xDr-rR-c5B" secondAttribute="trailing" constant="12" id="1HJ-5U-RfL"/>
                         <constraint firstItem="xDr-rR-c5B" firstAttribute="leading" secondItem="jqE-LG-SYC" secondAttribute="leading" constant="12" id="1O9-aj-t98"/>
@@ -107,7 +103,6 @@
                     <subviews>
                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="7Te-67-lXU">
                             <rect key="frame" x="0.0" y="0.0" width="346" height="69"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="hDR-cM-GTl">
                                 <size key="itemSize" width="128" height="128"/>
                                 <size key="headerReferenceSize" width="0.0" height="0.0"/>
@@ -117,14 +112,12 @@
                         </collectionView>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lTR-Hc-701">
                             <rect key="frame" x="291" y="0.0" width="55" height="70"/>
-                            <color key="backgroundColor" systemColor="systemTealColor"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="55" id="hiO-ay-duD"/>
                             </constraints>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="av1-cX-BKP">
                             <rect key="frame" x="0.0" y="0.0" width="73.5" height="70"/>
-                            <color key="backgroundColor" systemColor="systemOrangeColor"/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="av1-cX-BKP" secondAttribute="height" multiplier="20:19" id="LbN-s2-7gj"/>
                             </constraints>
@@ -152,7 +145,6 @@
                                     </constraints>
                                 </imageView>
                             </subviews>
-                            <color key="backgroundColor" name="secundaryBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="trailing" secondItem="9gt-bD-PLF" secondAttribute="trailing" constant="6" id="0WY-Y1-NNu"/>
                                 <constraint firstItem="Jgw-2R-Qzy" firstAttribute="centerY" secondItem="ah2-Y0-zPN" secondAttribute="centerY" id="MBQ-nw-tKJ"/>
@@ -185,11 +177,10 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8FA-nH-Muj">
                                             <rect key="frame" x="3.5" y="0.5" width="8" height="14.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <color key="textColor" name="headingMainColor"/>
+                                            <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" name="alertErrorColor"/>
                                     <constraints>
                                         <constraint firstItem="8FA-nH-Muj" firstAttribute="centerX" secondItem="ULw-jS-y6v" secondAttribute="centerX" id="LP8-fV-7zy"/>
                                         <constraint firstAttribute="width" constant="15" id="f2h-ND-PUI"/>
@@ -198,7 +189,6 @@
                                     </constraints>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" name="secundaryBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="4K7-2i-ld7" firstAttribute="leading" secondItem="E3s-l3-XNu" secondAttribute="leading" constant="9" id="XaU-t9-eac"/>
                                 <constraint firstItem="Da0-Ux-YuR" firstAttribute="centerY" secondItem="E3s-l3-XNu" secondAttribute="centerY" constant="1" id="ZUE-aj-fHA"/>
@@ -212,13 +202,11 @@
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="X95-AQ-boc">
                             <rect key="frame" x="0.0" y="69" width="346" height="1"/>
-                            <color key="backgroundColor" systemColor="systemRedColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="1" id="l6w-30-aKc"/>
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="7Te-67-lXU" secondAttribute="trailing" id="18c-Vg-Y59"/>
                         <constraint firstAttribute="bottom" secondItem="av1-cX-BKP" secondAttribute="bottom" id="6kG-f0-635"/>
@@ -242,11 +230,10 @@
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="grouped" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="l7X-fl-RkH">
                     <rect key="frame" x="0.0" y="70" width="346" height="723"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </tableView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="ivl-fB-BeX"/>
-            <color key="backgroundColor" white="0.66666666669999997" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstItem="l7X-fl-RkH" firstAttribute="leading" secondItem="ivl-fB-BeX" secondAttribute="leading" id="06H-lx-06b"/>
                 <constraint firstItem="ivl-fB-BeX" firstAttribute="bottom" secondItem="MFb-Vr-zVA" secondAttribute="bottom" id="168-z3-PGW"/>
@@ -269,33 +256,9 @@
         </view>
     </objects>
     <resources>
-        <image name="expand_top_down_arrows_icon" width="9" height="14"/>
-        <image name="match_filters_icons" width="19" height="20"/>
+        <image name="expand_top_down_arrows_icon" width="10" height="13"/>
+        <image name="match_filters_icons" width="21" height="22"/>
         <image name="no_content_icon" width="161" height="161"/>
         <image name="sport_type_soccer_icon" width="23" height="23"/>
-        <namedColor name="alertErrorColor">
-            <color red="0.8784313725490196" green="0.14117647058823529" blue="0.23137254901960785" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-         <namedColor name="headingMainColor">
-            <color red="0.090196078431372548" green="0.10196078431372549" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="mainBackgroundColor">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="secundaryBackgroundColor">
-            <color red="0.32899999618530273" green="0.32400000095367432" blue="0.4779999852180481" alpha="0.33000001311302185" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemTealColor">
-            <color red="0.35294117647058826" green="0.78431372549019607" blue="0.98039215686274506" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
     </resources>
 </document>

@@ -163,6 +163,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.contentView.backgroundColor = UIColor.clear
 
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        self.suspendedBettingOfferLabel.textColor =  UIColor.App.textPrimary
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.separatorView.backgroundColor = UIColor.App.separatorLine
