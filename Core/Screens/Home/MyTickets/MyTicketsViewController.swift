@@ -252,11 +252,11 @@ extension MyTicketsViewController: UIActivityItemSource {
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
 
         let metadata = LPLinkMetadata()
-        let urlSchema = Env.urlSchema
+        let urlMobile = Env.urlMobileShares
 
         if let gameSnapshot = self.viewModel.clickedCellSnapshot,
             let betId = self.viewModel.clickedBetId,
-            let matchUrl = URL(string: "\(urlSchema)://sportsbook.gomagaming.com/mobile/bet/\(betId)") {
+            let matchUrl = URL(string: "\(urlMobile)/bet/\(betId)") {
 
             let imageProvider = NSItemProvider(object: gameSnapshot)
             metadata.imageProvider = imageProvider

@@ -640,6 +640,34 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.reloadData()
     }
 
+    func getSharedBetOutcomes(betId: String) {
+
+        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: 1, page: 1)
+        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+//                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+//                        ()
+                    case .requestError(let value):
+                        print("BET ERROR: \(value)")
+                    case .notConnected:
+                        ()
+                    default:
+                        ()
+                    }
+                case .finished:
+                    ()
+                }
+            },
+            receiveValue: { [weak self] betHistoryResponse in
+                print("SHARED BET: \(betHistoryResponse)")
+            })
+            .store(in: &cancellables)
+    }
+
     func getSuggestedBets() {
 
         self.isSuggestedBetsLoading = true

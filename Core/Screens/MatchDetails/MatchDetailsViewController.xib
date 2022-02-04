@@ -69,13 +69,13 @@
                                     <rect key="frame" x="50" y="5" width="270" height="30"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GpS-CD-bRs">
-                                            <rect key="frame" x="114.5" y="5" width="41.5" height="20.5"/>
+                                            <rect key="frame" x="35" y="5" width="200" height="20.5"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="country_flag_pt" translatesAutoresizingMaskIntoConstraints="NO" id="G4e-PL-QMg">
-                                            <rect key="frame" x="89.5" y="5" width="20" height="20"/>
+                                            <rect key="frame" x="10" y="5" width="20" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="20" id="GqQ-8M-UTr"/>
                                                 <constraint firstAttribute="width" constant="20" id="WlI-Jq-glF"/>
@@ -85,6 +85,7 @@
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
                                         <constraint firstItem="GpS-CD-bRs" firstAttribute="leading" secondItem="G4e-PL-QMg" secondAttribute="trailing" constant="5" id="ET6-sV-qZz"/>
+                                        <constraint firstItem="G4e-PL-QMg" firstAttribute="leading" secondItem="T39-hK-1ff" secondAttribute="leading" constant="10" id="OCC-Ij-h0U"/>
                                         <constraint firstAttribute="height" constant="30" id="bda-ww-0Bh"/>
                                         <constraint firstItem="GpS-CD-bRs" firstAttribute="centerX" secondItem="T39-hK-1ff" secondAttribute="centerX" id="lFT-8A-hHp"/>
                                         <constraint firstItem="GpS-CD-bRs" firstAttribute="centerY" secondItem="T39-hK-1ff" secondAttribute="centerY" id="q2q-mq-1qW"/>

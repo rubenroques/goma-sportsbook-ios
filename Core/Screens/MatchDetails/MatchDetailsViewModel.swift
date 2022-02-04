@@ -42,7 +42,6 @@ class MatchDetailsViewModel: NSObject {
     }
 
     init(matchId: String) {
-        //self.match = self.getMatch(matchId: matchId)
         self.store = MatchDetailsAggregatorRepository(matchId: matchId)
 
         super.init()

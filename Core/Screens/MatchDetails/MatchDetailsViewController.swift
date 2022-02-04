@@ -131,6 +131,7 @@ class MatchDetailsViewController: UIViewController {
 
     init(matchMode: MatchMode = .preLive, matchId: String) {
         self.matchMode = matchMode
+        self.matchId = matchId
         self.viewModel = MatchDetailsViewModel(matchId: matchId)
         self.match = self.viewModel.match
         super.init(nibName: "MatchDetailsViewController", bundle: nil)
@@ -410,6 +411,10 @@ class MatchDetailsViewController: UIViewController {
             self.match = self.viewModel.match
         }
 
+        if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
+            self.matchMode = .live
+        }
+
         setupHeaderDetails()
     }
 
@@ -550,9 +555,9 @@ extension MatchDetailsViewController: UIActivityItemSource {
     func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
 
         let metadata = LPLinkMetadata()
-        let urlSchema = Env.urlSchema
+        let urlMobile = Env.urlMobileShares
 
-        if let gameSnapshot = self.viewModel.gameSnapshot, let matchId = self.match?.id, let matchUrl = URL(string: "\(urlSchema)://sportsbook.gomagaming.com/mobile/gamedetail/\(matchId)") {
+        if let gameSnapshot = self.viewModel.gameSnapshot, let matchId = self.match?.id, let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
 
             let imageProvider = NSItemProvider(object: gameSnapshot)
             metadata.imageProvider = imageProvider

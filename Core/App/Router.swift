@@ -48,6 +48,7 @@ class Router {
     func showPostLoadingFlow() {
 
         self.subscribeToUserActionBlockers()
+        self.subscribeToUserActionRedirects()
 
         var bootRootViewController: UIViewController
         if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
@@ -117,6 +118,31 @@ class Router {
                 }
             }
             .store(in: &cancellables)
+    }
+
+    func subscribeToUserActionRedirects() {
+        Publishers.CombineLatest(Env.urlSchemaManager.redirectPublisher, Env.everyMatrixClient.serviceStatusPublisher)
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] urlSubject, serviceStatus in
+
+                        if serviceStatus == .connected {
+
+                            if Env.everyMatrixClient.manager.isConnected {
+                                if let urlSubject = urlSubject["gamedetail"] {
+                                    print("SUBJECT FOUND: \(urlSubject)")
+
+                                    self?.showMatchDetailScreen(matchId: urlSubject)
+
+                                }
+                                else if let urlSubject = urlSubject["bet"] {
+                                    print("SUBJECT FOUND: \(urlSubject)")
+
+                                    self?.showBetslip(betId: urlSubject)
+                                }
+                            }
+                        }
+                    })
+                    .store(in: &cancellables)
     }
 
     // MaintenanceScreen
@@ -204,6 +230,25 @@ class Router {
         let refusedAccessViewController = RefusedAccessViewController()
         refusedAccessViewController.isModalInPresentation = true
         self.rootViewController?.present(refusedAccessViewController, animated: true, completion: nil)
+    }
+
+    func showMatchDetailScreen(matchId: String) {
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+        let matchDetailViewController = MatchDetailsViewController(matchId: matchId)
+        matchDetailViewController.isModalInPresentation = true
+        self.rootViewController?.present(matchDetailViewController, animated: true, completion: nil)
+    }
+
+    func showBetslip(betId: String) {
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+        let betslipViewController = BetslipViewController()
+        betslipViewController.isModalInPresentation = true
+        betslipViewController.setSharedBet(betId: betId)
+        self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
     }
 
 }

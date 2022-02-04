@@ -65,6 +65,25 @@ class MatchDetailsAggregatorRepository: NSObject {
     func connectPublishers() {
         self.connectMarketGroupsPublisher()
         // market groups details are called after the groups are processed (matchMarketGroupsPublisher initial dump)
+        self.getLocations()
+    }
+
+    func getLocations() {
+
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { _ in
+
+            },
+                  receiveValue: { [weak self] response in
+
+                (response.records ?? []).forEach { location in
+
+                    self?.locations[location.id] = location
+                }
+
+            })
+            .store(in: &cancellable)
     }
 
     func connectMarketGroupsPublisher() {
@@ -705,7 +724,6 @@ class MatchDetailsAggregatorRepository: NSObject {
                 () // print("Unknown type ignored")
             }
         }
-
 
         self.getMatch(matchId: self.matchId)
 

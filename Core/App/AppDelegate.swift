@@ -91,50 +91,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         Env.everyMatrixClient.reconnectSocket()
     }
 
-    // URL Scheme
-    func application(_ app: UIApplication, open url: URL,
-                     options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        if let scheme = url.scheme,
-            scheme.localizedCaseInsensitiveCompare("sb.gg") == .orderedSame,
-            let view = url.host {
-
-            // URL query items
-            var parameters: [String: String] = [:]
-            URLComponents(url: url, resolvingAgainstBaseURL: false)?.queryItems?.forEach {
-                parameters[$0.name] = $0.value
-            }
-
-            let urlSections = url.pathComponents
-
-            if urlSections.contains("gamedetail") {
-                if let gameDetailId = urlSections.last {
-                    print("GAME DETAIL ID: \(gameDetailId)")
-                    Env.urlSchemaManager.setRedirect(subject: ["gamedetail": gameDetailId])
-                }
-            }
-            else if urlSections.contains("bet") {
-                if let betId = urlSections.last {
-                    print("BET ID: \(betId)")
-                }
-            }
-            //redirect(to: view, with: parameters)
-        }
-        return true
-    }
-
     // Universal Links
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
-            if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
                 guard let url = userActivity.webpageURL else {
                     return false
                 }
 
-                //Ferching query parameters
-                print("TAPPED APP URL: \(url)")
-//                let queryParams = url.queryParams()
-//                if let accessToken = queryParams["access_token"] as? String {
-//                    //Do your actions here
-//                }
+                let urlSections = url.pathComponents
+
+                if urlSections.contains("gamedetail") {
+                    if let gameDetailId = urlSections.last {
+                        Env.urlSchemaManager.setRedirect(subject: ["gamedetail": gameDetailId])
+                    }
+                }
+                else if urlSections.contains("bet") {
+                    if let betId = urlSections.last {
+                        print("BET ID: \(betId)")
+                        Env.urlSchemaManager.setRedirect(subject: ["bet": betId])
+                    }
+                }
 
             }
             return true

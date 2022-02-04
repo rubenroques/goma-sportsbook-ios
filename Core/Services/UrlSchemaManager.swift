@@ -18,6 +18,5 @@ class UrlSchemaManager {
 
     func setRedirect(subject: [String: String]) {
         self.redirectPublisher.value = subject
-        //self.redirectPublisher.send(subject)
     }
 }

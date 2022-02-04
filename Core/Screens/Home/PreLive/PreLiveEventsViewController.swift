@@ -176,67 +176,11 @@ class PreLiveEventsViewController: UIViewController {
 
         }
 
-//        NotificationCenter.default.publisher(for: .userSessionConnected)
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] _ in
-//
-//            }
-//            .store(in: &cancellables)
 
-//        if let urlSubject = Env.urlSchemaManager.redirectPublisher.value["gamedetail"] {
-//            if let rawMatch = Env.everyMatrixStorage.matches[urlSubject] {
-//                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-//                    self.redirectToMatchDetail(rawMatch: rawMatch)
-//                }
-//            }
-//
-//        }
-
-        Publishers.CombineLatest(Env.urlSchemaManager.redirectPublisher, Env.everyMatrixClient.serviceStatusPublisher)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] urlSubject, serviceStatus in
-
-                if serviceStatus == .connected {
-                    if let urlSubject = urlSubject["gamedetail"] {
-                        print("SUBJECT FOUND: \(urlSubject)")
-//                        if let rawMatch = Env.everyMatrixStorage.matches[urlSubject] {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                self?.redirectToMatchDetail(matchId: urlSubject)
-
-                            }
-
-                    }
-                }
-            })
-            .store(in: &cancellables)
-
-//        Env.urlSchemaManager.redirectPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] subject in
-//
-//                if let subject = subject["gamedetail"] {
-//                    print("SUBJECT FOUND: \(subject)")
-//                    if let rawMatch = Env.everyMatrixStorage.matches[subject] {
-//
-//                        self?.redirectToMatchDetail(rawMatch: rawMatch)
-//                    }
-//
-//                }
-//            })
-//            .store(in: &cancellables)
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
     
-    }
-
-    func redirectToMatchDetail(matchId: String) {
-
-        //Env.urlSchemaManager.redirectPublisher.value = [:]
-
-        let matchDetailsViewController = MatchDetailsViewController(matchId: matchId)
-
-        self.present(matchDetailsViewController, animated: true, completion: nil)
     }
 
     override func viewDidAppear(_ animated: Bool) {

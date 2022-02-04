@@ -35,7 +35,7 @@ class Environment {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
 
-    let urlSchema: String = "sb.gg"
+    let urlMobileShares: String = "https://sportsbook.gomagaming.com/mobile"
     let urlSchemaManager = UrlSchemaManager()
 
     func getUserSettings() -> [GomaClientSettings]? {
