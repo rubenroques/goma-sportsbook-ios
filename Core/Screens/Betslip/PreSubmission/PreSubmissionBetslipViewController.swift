@@ -751,11 +751,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
-        self.amountTextfield.textColor = UIColor.App.textPrimary
+        self.amountTextfield.textColor = UIColor.App.inputTextTitle
         self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
         ])
+        self.amountBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.clearButton.titleLabel?.textColor = UIColor.App.textPrimary
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
@@ -767,7 +768,10 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.dontHaveSelectionsBetslipInfoLabel.textColor = UIColor.App.textPrimary
         self.hereAreYourSuggestedBetLabel.textColor = UIColor.App.textPrimary
-        self.amountBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        self.amountBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
@@ -830,7 +834,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multipleWinningsValueLabel.textColor = UIColor.App.textPrimary
 
         self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundSecondary
+       // self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundSecondary
         // self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
         self.secondaryMultipleWinningsTitleLabel.textColor = UIColor.App.textSecond
