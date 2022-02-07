@@ -108,7 +108,6 @@ class BetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -135,11 +134,6 @@ class BetslipViewController: UIViewController {
         
         self.betsLabel.textColor = UIColor.App2.textPrimary
 
-    }
-
-    func setSharedBet(betId: String) {
-
-        self.preSubmissionBetslipViewController.getSharedBetOutcomes(betId: betId)
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {

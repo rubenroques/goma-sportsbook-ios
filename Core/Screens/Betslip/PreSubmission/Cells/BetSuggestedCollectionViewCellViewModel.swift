@@ -64,7 +64,6 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { bet1, bet2, bet3, bet4 in
                 if bet1 && bet2 && bet3 && bet4 {
-                    print("ALL SUGGESTED RETRIEVED")
                     self.setupBets()
                 }
             })

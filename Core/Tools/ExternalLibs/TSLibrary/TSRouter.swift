@@ -51,6 +51,9 @@ enum TSRouter {
 
     case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [String], sortBy: [String])
 
+    case getSharedBetTokens(betId: String)
+    case getSharedBetData(betToken: String)
+
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
@@ -198,6 +201,12 @@ enum TSRouter {
 
         case .searchV2:
             return "/sports#searchV2"
+
+        case .getSharedBetTokens:
+            return "/sports#sharedBetTokens"
+
+        case .getSharedBetData:
+            return "/sports#sharedBetData"
 
         //
         // EM Subscription
@@ -553,6 +562,12 @@ enum TSRouter {
                     "include": include,
                     "bettingTypeIds": bettingTypeIds,
                     "sortBy": sortBy]
+
+        case .getSharedBetTokens(let betId):
+            return ["betId": betId]
+
+        case .getSharedBetData(let betToken):
+            return ["betToken": betToken]
 
         //
         //

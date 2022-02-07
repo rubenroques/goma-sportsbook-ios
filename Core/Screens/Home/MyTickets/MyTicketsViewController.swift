@@ -120,16 +120,26 @@ class MyTicketsViewController: UIViewController {
             self?.ticketsTableView.endUpdates()
         }
 
-        self.viewModel.requestShareActivityView = { [weak self] image, betId in
+        self.viewModel.requestShareActivityView = { [weak self] image, betId, betStatus in
             self?.viewModel.clickedCellSnapshot = image
             self?.viewModel.clickedBetId = betId
-            self?.shareBet()
+            self?.viewModel.clickedBetStatus = betStatus
+            self?.viewModel.getSharedBetTokens()
         }
 
         Env.betslipManager.newBetsPlacedPublisher
             .sink { [weak self] in
                 self?.viewModel.refresh()
             }
+            .store(in: &cancellables)
+
+        self.viewModel.clickedBetTokenPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] token in
+                if token != "" {
+                    self?.shareBet()
+                }
+            })
             .store(in: &cancellables)
 
         self.setupWithTheme()
@@ -254,14 +264,18 @@ extension MyTicketsViewController: UIActivityItemSource {
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
 
-        if let gameSnapshot = self.viewModel.clickedCellSnapshot,
-            let betId = self.viewModel.clickedBetId,
-            let matchUrl = URL(string: "\(urlMobile)/bet/\(betId)") {
+        if let gameSnapshot = self.viewModel.clickedCellSnapshot, let betStatus = self.viewModel.clickedBetStatus {
+
+            if betStatus == "OPEN" {
+                let betToken = self.viewModel.clickedBetTokenPublisher.value
+                let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+                metadata.url = matchUrl
+                metadata.originalURL = metadata.url
+            }
 
             let imageProvider = NSItemProvider(object: gameSnapshot)
             metadata.imageProvider = imageProvider
-            metadata.url = matchUrl
-            metadata.originalURL = metadata.url
+
             metadata.title = localized("look_bet_made")
         }
 
