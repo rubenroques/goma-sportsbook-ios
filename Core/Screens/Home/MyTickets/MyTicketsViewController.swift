@@ -144,7 +144,7 @@ class MyTicketsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.backgroundPrimary
+        self.ticketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
         self.ticketTypesSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         self.ticketTypesSeparatorLineView.alpha = 0.5
 
