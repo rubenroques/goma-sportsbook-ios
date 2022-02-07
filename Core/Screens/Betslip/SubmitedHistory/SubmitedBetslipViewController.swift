@@ -10,7 +10,12 @@ import Combine
 import OrderedCollections
 
 class SubmitedBetslipViewController: UIViewController {
-
+    
+    
+    
+    @IBOutlet private weak var betTypeSegmentControlBaseView: UIView!
+    @IBOutlet private weak var betTypeSegmentControl: UISegmentedControl!
+    
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var activityIndicatorBaseView: UIView!
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
@@ -102,6 +107,24 @@ class SubmitedBetslipViewController: UIViewController {
         self.makeSomeBetsLabel.textColor = UIColor.App.textPrimary
         self.popularGamesButton.titleLabel?.textColor = UIColor.App.textPrimary
         self.popularGamesButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        
+        self.betTypeSegmentControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
+            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
+        ], for: .selected)
+        self.betTypeSegmentControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
+            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
+        ], for: .normal)
+        self.betTypeSegmentControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
+            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary.withAlphaComponent(0.5)
+        ], for: .disabled)
+
+        self.betTypeSegmentControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
+
+
+        self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     private func requestHistory() {

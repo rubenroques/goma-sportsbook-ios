@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -20,11 +21,11 @@
                 <outlet property="loadingBaseView" destination="P3q-Kh-mfv" id="Anb-Ki-H9J"/>
                 <outlet property="loadingIndicatorView" destination="BiE-rg-Q5X" id="wWk-3B-3dM"/>
                 <outlet property="loadingView" destination="yS4-Nl-68V" id="JIF-sc-qCm"/>
+                <outlet property="myBetsSegmentedControl" destination="PHf-tL-Vf1" id="RRS-Tn-3Aa"/>
+                <outlet property="myBetsSegmentedControlBaseView" destination="PcV-aB-xj9" id="vuu-bq-MO4"/>
                 <outlet property="noBetsButton" destination="9QP-4d-L0p" id="3OZ-Od-c0K"/>
                 <outlet property="noBetsImage" destination="Zr1-IX-MMC" id="WCq-0w-PGf"/>
                 <outlet property="secondTextFieldLabel" destination="wJu-lK-SDR" id="aWn-7L-zVP"/>
-                <outlet property="ticketTypesCollectionView" destination="9c3-B6-Qac" id="Lcs-P3-ie6"/>
-                <outlet property="ticketTypesSeparatorLineView" destination="NX1-kb-QJi" id="sf5-qS-eas"/>
                 <outlet property="ticketsTableView" destination="AZQ-85-hF6" id="Cqz-sF-rjl"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -34,6 +35,30 @@
             <rect key="frame" x="0.0" y="0.0" width="423" height="564"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PcV-aB-xj9">
+                    <rect key="frame" x="0.0" y="0.0" width="423" height="50"/>
+                    <subviews>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PHf-tL-Vf1">
+                            <rect key="frame" x="50" y="10.5" width="323" height="32"/>
+                            <segments>
+                                <segment title="Resolved"/>
+                                <segment title="Open"/>
+                                <segment title="Won"/>
+                            </segments>
+                            <connections>
+                                <action selector="didChangeSegmentValue:" destination="-1" eventType="valueChanged" id="yGg-Hg-UDL"/>
+                            </connections>
+                        </segmentedControl>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="PHf-tL-Vf1" firstAttribute="leading" secondItem="PcV-aB-xj9" secondAttribute="leading" constant="50" id="4Ee-ow-sCP"/>
+                        <constraint firstAttribute="height" constant="50" id="BF8-yg-O0k"/>
+                        <constraint firstItem="PHf-tL-Vf1" firstAttribute="centerX" secondItem="PcV-aB-xj9" secondAttribute="centerX" id="Wdc-rr-xLY"/>
+                        <constraint firstItem="PHf-tL-Vf1" firstAttribute="centerY" secondItem="PcV-aB-xj9" secondAttribute="centerY" constant="1" id="c6K-Z4-ERx"/>
+                        <constraint firstAttribute="trailing" secondItem="PHf-tL-Vf1" secondAttribute="trailing" constant="50" id="y9t-79-w7M"/>
+                    </constraints>
+                </view>
                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="P3q-Kh-mfv">
                     <rect key="frame" x="0.0" y="0.0" width="423" height="564"/>
                     <subviews>
@@ -48,27 +73,8 @@
                         <constraint firstItem="yS4-Nl-68V" firstAttribute="centerX" secondItem="P3q-Kh-mfv" secondAttribute="centerX" id="uEd-IO-IdO"/>
                     </constraints>
                 </view>
-                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="9c3-B6-Qac">
-                    <rect key="frame" x="0.0" y="0.0" width="423" height="70"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="70" id="gQ8-j1-H62"/>
-                    </constraints>
-                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ub3-YU-fx1">
-                        <size key="itemSize" width="128" height="128"/>
-                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                    </collectionViewFlowLayout>
-                </collectionView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NX1-kb-QJi">
-                    <rect key="frame" x="0.0" y="69" width="423" height="1"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="1" id="9KQ-tK-nf5"/>
-                    </constraints>
-                </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="AZQ-85-hF6">
-                    <rect key="frame" x="0.0" y="70" width="423" height="494"/>
+                    <rect key="frame" x="0.0" y="50" width="423" height="514"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </tableView>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="BiE-rg-Q5X">
@@ -76,7 +82,7 @@
                     <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </activityIndicatorView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GIT-G2-MgX">
-                    <rect key="frame" x="0.0" y="70" width="423" height="460"/>
+                    <rect key="frame" x="0.0" y="50" width="423" height="480"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="You haven't made a bet yet, it's time to bet on your favourites." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wJu-lK-SDR">
                             <rect key="frame" x="10.5" y="261" width="402" height="14"/>
@@ -121,24 +127,24 @@
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <constraints>
-                <constraint firstItem="AZQ-85-hF6" firstAttribute="top" secondItem="9c3-B6-Qac" secondAttribute="bottom" id="26A-Oq-mtz"/>
                 <constraint firstItem="P3q-Kh-mfv" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="2wp-24-wGt"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="AZQ-85-hF6" secondAttribute="trailing" id="3cH-kT-fvZ"/>
                 <constraint firstItem="AZQ-85-hF6" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="4qx-qm-1A1"/>
-                <constraint firstItem="9c3-B6-Qac" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="AUb-7O-rbo"/>
-                <constraint firstItem="NX1-kb-QJi" firstAttribute="bottom" secondItem="9c3-B6-Qac" secondAttribute="bottom" id="POa-cV-VEz"/>
+                <constraint firstItem="PcV-aB-xj9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Bqv-4t-DnW"/>
                 <constraint firstItem="BiE-rg-Q5X" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="QFl-rN-Uh5"/>
                 <constraint firstAttribute="bottom" secondItem="P3q-Kh-mfv" secondAttribute="bottom" id="Rn6-Wt-WqU"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="9c3-B6-Qac" secondAttribute="trailing" id="W1g-jU-ANG"/>
-                <constraint firstItem="NX1-kb-QJi" firstAttribute="trailing" secondItem="9c3-B6-Qac" secondAttribute="trailing" id="cM3-DH-dXh"/>
+                <constraint firstAttribute="bottom" secondItem="AZQ-85-hF6" secondAttribute="bottom" id="Sz4-mP-HqE"/>
+                <constraint firstItem="PcV-aB-xj9" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bTL-cQ-oR4"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="P3q-Kh-mfv" secondAttribute="trailing" id="ekN-oP-kXi"/>
-                <constraint firstItem="9c3-B6-Qac" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="gsL-gw-aw4"/>
                 <constraint firstItem="P3q-Kh-mfv" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="gvj-iW-9GD"/>
-                <constraint firstItem="NX1-kb-QJi" firstAttribute="leading" secondItem="9c3-B6-Qac" secondAttribute="leading" id="iX8-Pa-TIx"/>
-                <constraint firstItem="GIT-G2-MgX" firstAttribute="top" secondItem="9c3-B6-Qac" secondAttribute="bottom" id="jvV-05-voI"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="PcV-aB-xj9" secondAttribute="trailing" id="hju-0o-zA4"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="GIT-G2-MgX" secondAttribute="bottom" id="kxH-o0-Zbm"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="GIT-G2-MgX" secondAttribute="trailing" id="qcB-sw-kCR"/>
+                <constraint firstItem="PcV-aB-xj9" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="ryC-qJ-A3W"/>
+                <constraint firstItem="GIT-G2-MgX" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="uXv-yN-oJM"/>
                 <constraint firstItem="BiE-rg-Q5X" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="utu-F1-qEt"/>
+                <constraint firstItem="AZQ-85-hF6" firstAttribute="top" secondItem="PcV-aB-xj9" secondAttribute="bottom" id="yFA-yj-YPG"/>
+                <constraint firstItem="GIT-G2-MgX" firstAttribute="top" secondItem="PcV-aB-xj9" secondAttribute="bottom" id="yXx-ts-RjY"/>
                 <constraint firstAttribute="bottom" secondItem="AZQ-85-hF6" secondAttribute="bottom" id="ynO-Q2-PP4"/>
                 <constraint firstItem="GIT-G2-MgX" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="zPp-qS-VVY"/>
             </constraints>
@@ -148,5 +154,8 @@
     </objects>
     <resources>
         <image name="no_content_icon" width="161" height="161"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
     </resources>
 </document>
