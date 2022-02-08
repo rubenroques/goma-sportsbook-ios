@@ -50,6 +50,7 @@ class UserSessionStore {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 self?.subscribeAccountBalanceWatcher()
+                self?.setUserSettings()
             }
             .store(in: &cancellables)
         
@@ -217,6 +218,32 @@ extension UserSessionStore {
                 }
                 self.userBalanceWallet.send(realWallet)
             }
+            .store(in: &cancellables)
+    }
+
+    func setUserSettings() {
+        if !UserDefaults.standard.isKeyPresentInUserDefaults(key: "user_betslip_settings") {
+            let defaultUserSetting = Env.userBetslipSettingsSelectorList[0]
+            UserDefaults.standard.set(defaultUserSetting.key, forKey: "user_betslip_settings")
+        }
+        else {
+            self.requestUserSettings()
+        }
+    }
+
+    func requestUserSettings() {
+        Env.gomaNetworkClient.requestUserSettings(deviceId: Env.deviceId)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("GOMA ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            },
+                  receiveValue: { [weak self] userSettings in
+                print("User Settings: \(userSettings)")
+            })
             .store(in: &cancellables)
     }
 

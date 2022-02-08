@@ -290,11 +290,11 @@ extension BetslipManager {
         let ticketSelections = updatedTicketSelections.filter({ bettingTicket in
             bettingTicket.id == betTicketId
         }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
-
+        let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
         let route = TSRouter.placeBet(language: "en",
                                       amount: amount,
                                       betType: .single,
-                                      tickets: ticketSelections)
+                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY")
 
         Logger.log("BetslipManager - Submitting single bet: \(route)")
 
@@ -312,11 +312,11 @@ extension BetslipManager {
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
-
+        let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
         let route = TSRouter.placeBet(language: "en",
                                       amount: amount,
                                       betType: .multiple,
-                                      tickets: ticketSelections)
+                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY")
 
         Logger.log("BetslipManager - Submitting multiple bet: \(route)")
 
@@ -337,11 +337,12 @@ extension BetslipManager {
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+        let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
 
         let route = TSRouter.placeSystemBet(language: "en",
                                             amount: amount,
                                             systemBetType: systemBetType,
-                                            tickets: ticketSelections)
+                                            tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY")
 
         Logger.log("BetslipManager - Submitting system bet: \(route)")
         

@@ -738,6 +738,10 @@
 		A98E6C5427B132C700453CF9 /* SharedBetToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5227B132C700453CF9 /* SharedBetToken.swift */; };
 		A98E6C5627B142C200453CF9 /* SharedBetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5527B142C200453CF9 /* SharedBetData.swift */; };
 		A98E6C5727B142C200453CF9 /* SharedBetData.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5527B142C200453CF9 /* SharedBetData.swift */; };
+		A98E6C5927B2B09800453CF9 /* UserSettingsGoma.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5827B2B09800453CF9 /* UserSettingsGoma.swift */; };
+		A98E6C5A27B2B09800453CF9 /* UserSettingsGoma.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5827B2B09800453CF9 /* UserSettingsGoma.swift */; };
+		A98E6C5C27B2C33900453CF9 /* BetslipSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5B27B2C33900453CF9 /* BetslipSelection.swift */; };
+		A98E6C5D27B2C33900453CF9 /* BetslipSelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98E6C5B27B2C33900453CF9 /* BetslipSelection.swift */; };
 		A98F3A562795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift */; };
 		A98F3A572795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98F3A552795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift */; };
 		A995C195279991A100151462 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C193279991A100151462 /* SearchViewController.swift */; };
@@ -1312,6 +1316,8 @@
 		A98D3B3027148921003BAE6F /* SportSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SportSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
 		A98E6C5227B132C700453CF9 /* SharedBetToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedBetToken.swift; sourceTree = "<group>"; };
 		A98E6C5527B142C200453CF9 /* SharedBetData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedBetData.swift; sourceTree = "<group>"; };
+		A98E6C5827B2B09800453CF9 /* UserSettingsGoma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSettingsGoma.swift; sourceTree = "<group>"; };
+		A98E6C5B27B2C33900453CF9 /* BetslipSelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipSelection.swift; sourceTree = "<group>"; };
 		A98F3A552795C20F0029C3DB /* BetSuggestedCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		A995C193279991A100151462 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		A995C194279991A100151462 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
@@ -2406,6 +2412,8 @@
 				A979CA552762247900230E93 /* GomaSuggestedBets.swift */,
 				A90D8B0327737FF800DF88EB /* FavoriteGoma.swift */,
 				A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */,
+				A98E6C5827B2B09800453CF9 /* UserSettingsGoma.swift */,
+				A98E6C5B27B2C33900453CF9 /* BetslipSelection.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -3702,6 +3710,7 @@
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A98757A1276CDB990099990D /* DepositResponse.swift in Sources */,
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
+				A98E6C5927B2B09800453CF9 /* UserSettingsGoma.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CE926F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
 				45A0B2FF274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */,
@@ -3763,6 +3772,7 @@
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E38275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
+				A98E6C5C27B2C33900453CF9 /* BetslipSelection.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
@@ -4036,6 +4046,7 @@
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A98757A2276CDB990099990D /* DepositResponse.swift in Sources */,
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
+				A98E6C5A27B2B09800453CF9 /* UserSettingsGoma.swift in Sources */,
 				455A0CE326BD9D9000EC572D /* Localization.swift in Sources */,
 				45166CEA26F3548D00E69D65 /* ChallengeSSWampMessage.swift in Sources */,
 				45A0B300274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */,
@@ -4097,6 +4108,7 @@
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
 				A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E39275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
+				A98E6C5D27B2C33900453CF9 /* BetslipSelection.swift in Sources */,
 				455A0CF526BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0E26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
 				455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */,

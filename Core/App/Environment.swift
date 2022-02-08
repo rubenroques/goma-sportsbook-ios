@@ -38,6 +38,9 @@ class Environment {
     let urlMobileShares: String = "https://sportsbook.gomagaming.com/mobile"
     let urlSchemaManager = UrlSchemaManager()
 
+    var userBetslipSettingsSelectorList: [BetslipSelection] = [BetslipSelection(key: "ACCEPT_ANY", description: localized("accept_any")),
+                                                               BetslipSelection(key: "ACCEPT_HIGHER", description: localized("accept_higher"))]
+
     func getUserSettings() -> [GomaClientSettings]? {
         let settingsData = UserDefaults.standard.data(forKey: "user_settings")
         let settingsArray = try? JSONDecoder().decode([GomaClientSettings].self, from: settingsData!)

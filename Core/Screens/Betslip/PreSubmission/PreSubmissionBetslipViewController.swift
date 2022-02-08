@@ -19,6 +19,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var clearBaseView: UIView!
     @IBOutlet private weak var clearButton: UIButton!
+    @IBOutlet private weak var settingsButton: UIButton!
 
     @IBOutlet private weak var tableView: UITableView!
 
@@ -34,6 +35,11 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var systemBetTypeSelectorContainerView: UIView!
     @IBOutlet private weak var systemBetTypePickerView: UIPickerView!
     @IBOutlet private weak var selectSystemBetTypeButton: UIButton!
+
+    @IBOutlet private weak var settingsPickerBaseView: UIView!
+    @IBOutlet private weak var settingsPickerContainerView: UIView!
+    @IBOutlet private weak var settingsPickerView: UIPickerView!
+    @IBOutlet private weak var settingsPickerButton: UIButton!
 
     @IBOutlet private weak var simpleWinningsBaseView: UIView!
     @IBOutlet private weak var simpleWinningsSeparatorView: UIView!
@@ -145,6 +151,19 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+    var showingSettingsSelector: Bool = false {
+        didSet {
+            if showingSettingsSelector {
+                self.settingsPickerBaseView.alpha = 1.0
+            }
+            else {
+                self.settingsPickerBaseView.alpha = 0.0
+            }
+        }
+    }
+
+    var selectedBetslipSetting: String?
+
     // Multiple Bets values
      var displayBetValue: Int = 0 {
         didSet {
@@ -239,12 +258,14 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
+        self.settingsPickerBaseView.alpha = 0.0
 
         self.suggestedBetsActivityIndicator.isHidden = true
 
         self.view.bringSubviewToFront(systemBetTypeSelectorBaseView)
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
+        self.view.bringSubviewToFront(settingsPickerBaseView)
 
         self.betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
@@ -255,6 +276,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
+
+        self.settingsPickerView.delegate = self
+        self.settingsPickerView.delegate = self
 
         self.placeBetButtonsBaseView.isHidden = true
         self.placeBetButtonsSeparatorView.alpha = 0.5
@@ -619,8 +643,27 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.placeBetButton.isEnabled = false
 
+        self.getUserSettings()
+
         Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
 
+    }
+
+    func getUserSettings() {
+
+        if let userSetting = UserDefaults.standard.string(forKey: "user_betslip_settings"),
+           let userSettingIndex = Env.userBetslipSettingsSelectorList.firstIndex(where: {$0.key == userSetting}) {
+
+            self.settingsPickerView.selectRow(userSettingIndex, inComponent: 0, animated: true)
+            self.selectedBetslipSetting = userSetting
+        }
+
+        print("CURRENT USER BETSLIP SETTING: \(self.selectedBetslipSetting)")
+
+    }
+
+    func setUserSettings() {
+        UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
     }
 
 //    override func viewDidDisappear(_ animated: Bool) {
@@ -760,7 +803,13 @@ class PreSubmissionBetslipViewController: UIViewController {
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
         ])
+
         self.clearButton.titleLabel?.textColor = UIColor.App2.textPrimary
+        self.clearButton.tintColor = UIColor.App2.backgroundOdds
+
+        self.settingsButton.titleLabel?.textColor = UIColor.App2.textPrimary
+        self.settingsButton.tintColor = UIColor.App2.backgroundOdds
+
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App2.textPrimary
         self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: "Amount", attributes: [
@@ -858,11 +907,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         StyleHelper.styleButton(button: self.selectSystemBetTypeButton)
         StyleHelper.styleButton(button: self.placeBetButton)
         StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
+
+        StyleHelper.styleButton(button: self.settingsPickerButton)
     }
 
     @objc func dismissKeyboard() {
         self.amountTextfield.resignFirstResponder()
         self.secondaryAmountTextfield.resignFirstResponder()
+    }
+
+    @IBAction private func didTapSettingsButton() {
+        self.showingSettingsSelector = true
     }
 
     @IBAction private func didTapClearButton() {
@@ -910,6 +965,10 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapSystemBetTypeSelectButton() {
         self.showingSystemBetOptionsSelector = false
         self.requestSystemBetInfo()
+    }
+
+    @IBAction private func didTapSettingsSelectButton() {
+        self.showingSettingsSelector = false
     }
 
     func requestSystemBetsTypes() {
@@ -1225,16 +1284,33 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
     }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.systemBetOptions.count
+        if pickerView.tag == 1 {
+            return self.systemBetOptions.count
+        }
+        else {
+            return Env.userBetslipSettingsSelectorList.count
+        }
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
+        if pickerView.tag == 1 {
         return NSAttributedString(string: self.systemBetOptions[row].name ?? "--",
                                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.App2.textPrimary])
+        }
+        else {
+            return NSAttributedString(string: Env.userBetslipSettingsSelectorList[row].description ?? "--",
+                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.App2.textPrimary])
+        }
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.selectedSystemBet = self.systemBetOptions[safe: row]
+        if pickerView.tag == 1 {
+            self.selectedSystemBet = self.systemBetOptions[safe: row]
+        }
+        else {
+            self.selectedBetslipSetting = Env.userBetslipSettingsSelectorList[safe:row]?.key
+            self.setUserSettings()
+        }
     }
 
 }
