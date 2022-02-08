@@ -173,10 +173,10 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         
         self.outcomeNameLabel.textColor = UIColor.App.textPrimary
         self.marketNameLabel.textColor = UIColor.App.textPrimary
-        self.matchDetailLabel.textColor = UIColor.App.textDisablePrimary
+        self.matchDetailLabel.textColor = UIColor.App.textSecond
         self.returnsValueLabel.textColor = UIColor.App.textDisablePrimary
         
-        self.oddBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddBaseView.backgroundColor = UIColor.App.inputBackground
         self.oddValueLabel.backgroundColor = UIColor.App.backgroundTertiary
         self.oddValueLabel.textColor = UIColor.App.textPrimary
 
