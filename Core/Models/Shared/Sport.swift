@@ -28,3 +28,11 @@ struct Sport {
     }
     
 }
+
+extension Sport {
+    init(discipline: EveryMatrix.Discipline) {
+        Self(id: discipline.id,
+             name: discipline.name ?? "",
+             showEventCategory: discipline.showEventCategory ?? false)
+    }
+}

@@ -285,6 +285,7 @@ class SearchViewModel: NSObject {
                     if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
                         let bettingOffer = BettingOffer(id: rawBettingOffer.id,
                                                         value: rawBettingOffer.oddsValue ?? 0.0,
+                                                        statusId: rawBettingOffer.statusId ?? "1",
                                                         isLive: rawBettingOffer.isLive ?? false,
                                                         isAvailable: rawBettingOffer.isAvailable ?? true)
 

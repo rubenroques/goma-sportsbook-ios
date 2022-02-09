@@ -1,5 +1,5 @@
 //
-//  RootViewController.swift
+//  TestsViewController.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 20/07/2021.
@@ -9,7 +9,7 @@ import UIKit
 import Combine
 import SwiftUI
 
-class RootViewController: UIViewController {
+class TestsViewController: UIViewController {
 
     @IBOutlet private weak var openProfileButton: UIButton!
 
@@ -18,7 +18,7 @@ class RootViewController: UIViewController {
     var savedRegistration: Registration?
 
     init() {
-        super.init(nibName: "RootViewController", bundle: nil)
+        super.init(nibName: "TestsViewController", bundle: nil)
     }
 
     @available(iOS, unavailable)

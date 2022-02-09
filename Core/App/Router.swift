@@ -215,11 +215,11 @@ extension Router {
     }
 
     static func mainScreenViewController() -> UIViewController {
-        return HomeViewController()
+        return RootViewController()
     }
 
     static func mainScreenViewControllerFlow() -> UIViewController {
-        return Router.navigationController(with: HomeViewController() )
+        return Router.navigationController(with: RootViewController() )
     }
 
 }
@@ -236,7 +236,7 @@ extension Router {
     }
 
     static func createRootViewControllerNavigation() -> UIViewController {
-        return Router.navigationController(with: RootViewController())
+        return Router.navigationController(with: TestsViewController())
     }
 
     static func navigationController(with viewController: UIViewController) -> UINavigationController {

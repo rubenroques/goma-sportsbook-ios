@@ -95,8 +95,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
 
-        self.layer.cornerRadius = 9
-
         self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
         self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
@@ -211,13 +209,15 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        self.baseView.layer.cornerRadius = 9
+
         self.homeCircleCaptionView.layer.cornerRadius = self.homeCircleCaptionView.frame.size.width / 2
         self.awayCircleCaptionView.layer.cornerRadius = self.awayCircleCaptionView.frame.size.width / 2
     }
 
     func setupWithTheme() {
 
-        self.backgroundColor = UIColor.App.backgroundCards
+        self.backgroundColor = .clear
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
         self.participantsNameLabel.textColor = UIColor.App.textPrimary
@@ -293,7 +293,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         //
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
-            self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+            // self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
             // self.currentLeftOddValue = outcome.bettingOffer.value
             self.leftOutcome = outcome
 
@@ -301,50 +301,44 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.leftOddButtonSubscriber = Env.everyMatrixStorage
                 .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                //.map(\.oddsValue)
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] bettingOffer in
 
-                    guard
-                        let weakSelf = self
-                    else { return }
+                    guard let weakSelf = self else { return }
 
-                    if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
+                    if !bettingOffer.isOpen {
                         weakSelf.leftBaseView.isUserInteractionEnabled = false
                         weakSelf.leftBaseView.alpha = 0.5
+                        weakSelf.leftOddValueLabel.text = "-"
                     }
                     else {
                         weakSelf.leftBaseView.isUserInteractionEnabled = true
                         weakSelf.leftBaseView.alpha = 1.0
-                    }
 
-                    guard
-                        let newOddValue = bettingOffer.oddsValue
-                    else {
-                        return
-                    }
+                        guard let newOddValue = bettingOffer.oddsValue else { return }
 
-                    if let currentOddValue = weakSelf.currentLeftOddValue {
-                        if newOddValue > currentOddValue {
-                            weakSelf.highlightOddChangeUp(animated: true,
-                                                       upChangeOddValueImage: weakSelf.leftUpChangeOddValueImage,
-                                                       baseView: weakSelf.leftBaseView)
+                        if let currentOddValue = weakSelf.currentLeftOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.leftUpChangeOddValueImage,
+                                                              baseView: weakSelf.leftBaseView)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.leftDownChangeOddValueImage,
+                                                                baseView: weakSelf.leftBaseView)
+                            }
                         }
-                        else if newOddValue < currentOddValue {
-                            weakSelf.highlightOddChangeDown(animated: true,
-                                                       downChangeOddValueImage: weakSelf.leftDownChangeOddValueImage,
-                                                       baseView: weakSelf.leftBaseView)
-                        }
+                        weakSelf.currentLeftOddValue = newOddValue
+                        weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                     }
-                    weakSelf.currentLeftOddValue = newOddValue
-                    weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                 })
         }
 
         if let outcome = market.outcomes[safe: 1] {
             self.middleOddTitleLabel.text = outcome.typeName
-            self.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+            // self.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
             // self.currentMiddleOddValue = outcome.bettingOffer.value
             self.middleOutcome = outcome
 
@@ -352,33 +346,44 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.middleOddButtonSubscriber = Env.everyMatrixStorage
                 .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                .map(\.oddsValue)
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] newOddValue in
+                .sink(receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
 
-                    if let currentOddValue = weakSelf.currentMiddleOddValue {
-                        if newOddValue > currentOddValue {
-                            weakSelf.highlightOddChangeUp(animated: true,
-                                                       upChangeOddValueImage: weakSelf.middleUpChangeOddValueImage,
-                                                       baseView: weakSelf.middleBaseView)
-                        }
-                        else if newOddValue < currentOddValue {
-                            weakSelf.highlightOddChangeDown(animated: true,
-                                                       downChangeOddValueImage: weakSelf.middleDownChangeOddValueImage,
-                                                       baseView: weakSelf.middleBaseView)
-                        }
+                    if !bettingOffer.isOpen {
+                        weakSelf.middleBaseView.isUserInteractionEnabled = false
+                        weakSelf.middleBaseView.alpha = 0.5
+                        weakSelf.middleOddValueLabel.text = "-"
                     }
-                    weakSelf.currentMiddleOddValue = newOddValue
-                    weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                    else {
+                        weakSelf.middleBaseView.isUserInteractionEnabled = true
+                        weakSelf.middleBaseView.alpha = 1.0
+
+                        guard let newOddValue = bettingOffer.oddsValue else { return }
+
+                        if let currentOddValue = weakSelf.currentMiddleOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.middleUpChangeOddValueImage,
+                                                              baseView: weakSelf.middleBaseView)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.middleDownChangeOddValueImage,
+                                                                baseView: weakSelf.middleBaseView)
+                            }
+                        }
+                        weakSelf.currentMiddleOddValue = newOddValue
+                        weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                    }
                 })
         }
 
         if let outcome = market.outcomes[safe: 2] {
             self.rightOddTitleLabel.text = outcome.typeName
-            self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
+            // self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
             // self.currentRightOddValue = outcome.bettingOffer.value
             self.rightOutcome = outcome
 
@@ -386,34 +391,44 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.rightOddButtonSubscriber = Env.everyMatrixStorage
                 .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                .map(\.oddsValue)
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] newOddValue in
+                .sink(receiveValue: { [weak self] bettingOffer in
 
                     guard let weakSelf = self else { return }
 
-                    if let currentOddValue = weakSelf.currentRightOddValue {
-                        if newOddValue > currentOddValue {
-                            weakSelf.highlightOddChangeUp(animated: true,
-                                                       upChangeOddValueImage: weakSelf.rightUpChangeOddValueImage,
-                                                       baseView: weakSelf.rightBaseView)
-                        }
-                        else if newOddValue < currentOddValue {
-                            weakSelf.highlightOddChangeDown(animated: true,
-                                                       downChangeOddValueImage: weakSelf.rightDownChangeOddValueImage,
-                                                       baseView: weakSelf.rightBaseView)
-                        }
+                    if !bettingOffer.isOpen {
+                        weakSelf.rightBaseView.isUserInteractionEnabled = false
+                        weakSelf.rightBaseView.alpha = 0.5
+                        weakSelf.rightOddValueLabel.text = "-"
                     }
+                    else {
+                        weakSelf.rightBaseView.isUserInteractionEnabled = true
+                        weakSelf.rightBaseView.alpha = 1.0
 
-                    weakSelf.currentRightOddValue = newOddValue
-                    weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        guard let newOddValue = bettingOffer.oddsValue else { return }
+
+                        if let currentOddValue = weakSelf.currentRightOddValue {
+                            if newOddValue > currentOddValue {
+                                weakSelf.highlightOddChangeUp(animated: true,
+                                                              upChangeOddValueImage: weakSelf.rightUpChangeOddValueImage,
+                                                              baseView: weakSelf.rightBaseView)
+                            }
+                            else if newOddValue < currentOddValue {
+                                weakSelf.highlightOddChangeDown(animated: true,
+                                                                downChangeOddValueImage: weakSelf.rightDownChangeOddValueImage,
+                                                                baseView: weakSelf.rightBaseView)
+                            }
+                        }
+
+                        weakSelf.currentRightOddValue = newOddValue
+                        weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                    }
                 })
         }
-
     }
 
-    @IBAction func didTapMatchView(_ sender: Any) {
+    @IBAction private func didTapMatchView(_ sender: Any) {
         self.tappedMatchWidgetAction?()
     }
 

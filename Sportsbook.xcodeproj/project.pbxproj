@@ -201,10 +201,10 @@
 		455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB526BD9B6000EC572D /* EnvironmentType.swift */; };
 		455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB526BD9B6000EC572D /* EnvironmentType.swift */; };
 		455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CA526BD973400EC572D /* Showcase-Assets.xcassets */; };
-		455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB926BD9D4F00EC572D /* RootViewController.swift */; };
-		455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB926BD9D4F00EC572D /* RootViewController.swift */; };
-		455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CBA26BD9D4F00EC572D /* RootViewController.xib */; };
-		455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CBA26BD9D4F00EC572D /* RootViewController.xib */; };
+		455A0CBB26BD9D4F00EC572D /* TestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB926BD9D4F00EC572D /* TestsViewController.swift */; };
+		455A0CBC26BD9D4F00EC572D /* TestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB926BD9D4F00EC572D /* TestsViewController.swift */; };
+		455A0CBD26BD9D4F00EC572D /* TestsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */; };
+		455A0CBE26BD9D4F00EC572D /* TestsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */; };
 		455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC026BD9D9000EC572D /* RunningPlatform.swift */; };
 		455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC026BD9D9000EC572D /* RunningPlatform.swift */; };
 		455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC126BD9D9000EC572D /* Throttler.swift */; };
@@ -281,10 +281,10 @@
 		455C962226FDD66400456F30 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C961F26FDD66300456F30 /* ProfileViewController.swift */; };
 		455C962326FDD66400456F30 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962026FDD66300456F30 /* ProfileViewController.xib */; };
 		455C962426FDD66400456F30 /* ProfileViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962026FDD66300456F30 /* ProfileViewController.xib */; };
-		455C962826FE11CA00456F30 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C962626FE11CA00456F30 /* HomeViewController.swift */; };
-		455C962926FE11CA00456F30 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C962626FE11CA00456F30 /* HomeViewController.swift */; };
-		455C962A26FE11CA00456F30 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962726FE11CA00456F30 /* HomeViewController.xib */; };
-		455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962726FE11CA00456F30 /* HomeViewController.xib */; };
+		455C962826FE11CA00456F30 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C962626FE11CA00456F30 /* RootViewController.swift */; };
+		455C962926FE11CA00456F30 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C962626FE11CA00456F30 /* RootViewController.swift */; };
+		455C962A26FE11CA00456F30 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962726FE11CA00456F30 /* RootViewController.xib */; };
+		455C962B26FE11CA00456F30 /* RootViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C962726FE11CA00456F30 /* RootViewController.xib */; };
 		455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455F765026F0EFCE00B9B85D /* LoginAccount.swift */; };
 		455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455F765026F0EFCE00B9B85D /* LoginAccount.swift */; };
 		45626E34275530990069B89B /* OddFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45626E33275530990069B89B /* OddFormatter.swift */; };
@@ -526,6 +526,12 @@
 		45C3D2B82773B1B500B3EF44 /* EventPartScore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */; };
 		45C3D2BA2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */; };
 		45C3D2BB2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */; };
+		45C3E8CA27B190A1007A1A0F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3E8C827B190A1007A1A0F /* HomeViewController.swift */; };
+		45C3E8CB27B190A1007A1A0F /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3E8C827B190A1007A1A0F /* HomeViewController.swift */; };
+		45C3E8CF27B40559007A1A0F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */; };
+		45C3E8D027B40559007A1A0F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */; };
+		45C3E8D227B406D8007A1A0F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
+		45C3E8D327B406D8007A1A0F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
 		45CD7B4F2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
 		45CD7B502716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45CD7B4B2716F5CB003044C5 /* OddDoubleCollectionViewCell.swift */; };
@@ -1039,8 +1045,8 @@
 		455A0CB226BD985800EC572D /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		455A0CB326BD985800EC572D /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		455A0CB526BD9B6000EC572D /* EnvironmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentType.swift; sourceTree = "<group>"; };
-		455A0CB926BD9D4F00EC572D /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
-		455A0CBA26BD9D4F00EC572D /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
+		455A0CB926BD9D4F00EC572D /* TestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestsViewController.swift; sourceTree = "<group>"; };
+		455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestsViewController.xib; sourceTree = "<group>"; };
 		455A0CC026BD9D9000EC572D /* RunningPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunningPlatform.swift; sourceTree = "<group>"; };
 		455A0CC126BD9D9000EC572D /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
 		455A0CC226BD9D9000EC572D /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
@@ -1082,8 +1088,8 @@
 		455C961126FD03C900456F30 /* ShowcaseBeta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ShowcaseBeta.entitlements; sourceTree = "<group>"; };
 		455C961F26FDD66300456F30 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		455C962026FDD66300456F30 /* ProfileViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileViewController.xib; sourceTree = "<group>"; };
-		455C962626FE11CA00456F30 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		455C962726FE11CA00456F30 /* HomeViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
+		455C962626FE11CA00456F30 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		455C962726FE11CA00456F30 /* RootViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RootViewController.xib; sourceTree = "<group>"; };
 		455F765026F0EFCE00B9B85D /* LoginAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginAccount.swift; sourceTree = "<group>"; };
 		45626E33275530990069B89B /* OddFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddFormatter.swift; sourceTree = "<group>"; };
 		45626E36275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeAwayMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -1202,6 +1208,9 @@
 		45C3D2B32773AFAD00B3EF44 /* MyTicketCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketCellViewModel.swift; sourceTree = "<group>"; };
 		45C3D2B62773B1B500B3EF44 /* EventPartScore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventPartScore.swift; sourceTree = "<group>"; };
 		45C3D2B92773C56F00B3EF44 /* MyTicketBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketBetLineViewModel.swift; sourceTree = "<group>"; };
+		45C3E8C827B190A1007A1A0F /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		45C3E8D127B406D8007A1A0F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OddDoubleCollectionViewCell.xib; sourceTree = "<group>"; };
 		45CD7B4B2716F5CB003044C5 /* OddDoubleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddDoubleCollectionViewCell.swift; sourceTree = "<group>"; };
 		45CD7B4C2716F5CB003044C5 /* OddTripleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddTripleCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1680,6 +1689,7 @@
 		454A7A6126DA2FD600E6E74E /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				45C3E8D127B406D8007A1A0F /* README.md */,
 				4520365A26EF9B7F000BCFA6 /* .gitignore */,
 				454A7A6226DA300900E6E74E /* .swiftlint.yml */,
 			);
@@ -1971,8 +1981,10 @@
 		455C962526FE11B300456F30 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				455C962626FE11CA00456F30 /* HomeViewController.swift */,
-				455C962726FE11CA00456F30 /* HomeViewController.xib */,
+				455C962626FE11CA00456F30 /* RootViewController.swift */,
+				455C962726FE11CA00456F30 /* RootViewController.xib */,
+				45C3E8C827B190A1007A1A0F /* HomeViewController.swift */,
+				45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */,
 				45D712EC27031C4F00AC0364 /* PreLive */,
 				45D712FC27033BF400AC0364 /* LiveEvents */,
 				45EF5430270C5FD600D1E13E /* Filters */,
@@ -2157,8 +2169,8 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				455A0CB926BD9D4F00EC572D /* RootViewController.swift */,
-				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
+				455A0CB926BD9D4F00EC572D /* TestsViewController.swift */,
+				455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Home */,
 				A995C1922799917100151462 /* Search */,
@@ -3250,6 +3262,7 @@
 				45DDBAB026F2146100A73E45 /* Gilroy-Black.ttf in Resources */,
 				45D712F427031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				A92F5DAC272C44CD00884BDF /* FullRegisterDocumentsViewController.xib in Resources */,
+				45C3E8D227B406D8007A1A0F /* README.md in Resources */,
 				45D728D327158DA400EFE04D /* BannerMatchCollectionViewCell.xib in Resources */,
 				A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */,
 				45DDBA9626F2146100A73E45 /* Gilroy-Light.ttf in Resources */,
@@ -3281,7 +3294,7 @@
 				455C960E26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45BEA48326F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				A9627A0127440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
-				455A0CBD26BD9D4F00EC572D /* RootViewController.xib in Resources */,
+				455A0CBD26BD9D4F00EC572D /* TestsViewController.xib in Resources */,
 				A9875797276CA50F0099990D /* DepositViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */,
@@ -3333,7 +3346,7 @@
 				F48CB9A227628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */,
 				F47BF2662763986300648440 /* GameSuggestedView.xib in Resources */,
 				45626E462755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */,
-				455C962A26FE11CA00456F30 /* HomeViewController.xib in Resources */,
+				455C962A26FE11CA00456F30 /* RootViewController.xib in Resources */,
 				458BAC832770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */,
 				45CD7B542716F5CB003044C5 /* OddTripleCollectionViewCell.xib in Resources */,
 			);
@@ -3373,6 +3386,7 @@
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
 				A995C198279991A100151462 /* SearchViewController.xib in Resources */,
 				A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
+				45C3E8D327B406D8007A1A0F /* README.md in Resources */,
 				A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */,
 				A92F5D842718388500884BDF /* FilterSliderCollapseView.xib in Resources */,
 				455C960926FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */,
@@ -3411,7 +3425,7 @@
 				A9627A18274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45DDBAA326F2146100A73E45 /* Gilroy-SemiBold.ttf in Resources */,
 				45A642D827985AAB008EFD5B /* HeadToHeadCardStatsView.xib in Resources */,
-				455A0CBE26BD9D4F00EC572D /* RootViewController.xib in Resources */,
+				455A0CBE26BD9D4F00EC572D /* TestsViewController.xib in Resources */,
 				45CD7B4F2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
 				A92F5D97272C410400884BDF /* DocumentPickerView.xib in Resources */,
 				455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
@@ -3471,7 +3485,7 @@
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
 				A995C1AF279B10B600151462 /* SearchTitleSectionHeaderView.xib in Resources */,
 				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
-				455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */,
+				455C962B26FE11CA00456F30 /* RootViewController.xib in Resources */,
 				458BAC842770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */,
 				A92F5D8B2719D63300884BDF /* FilterSliderInfoView.xib in Resources */,
 			);
@@ -3661,7 +3675,7 @@
 				45166CF526F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
-				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
+				455A0CBB26BD9D4F00EC572D /* TestsViewController.swift in Sources */,
 				457EDABB2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
@@ -3701,6 +3715,7 @@
 				45C3D2B72773B1B500B3EF44 /* EventPartScore.swift in Sources */,
 				45D712F227031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40126BF017A005DF543 /* LoginViewController.swift in Sources */,
+				45C3E8CF27B40559007A1A0F /* HomeViewModel.swift in Sources */,
 				45166D0F26F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0C26BD9D9000EC572D /* CountryName.swift in Sources */,
 				455C962126FDD66400456F30 /* ProfileViewController.swift in Sources */,
@@ -3732,6 +3747,7 @@
 				45626E34275530990069B89B /* OddFormatter.swift in Sources */,
 				45C26DCB27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */,
 				458BAC812770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
+				45C3E8CA27B190A1007A1A0F /* HomeViewController.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
@@ -3787,7 +3803,7 @@
 				F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896726C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
-				455C962826FE11CA00456F30 /* HomeViewController.swift in Sources */,
+				455C962826FE11CA00456F30 /* RootViewController.swift in Sources */,
 				45166D1126F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				45936CB6270EF04500E8260E /* SportType.swift in Sources */,
 				A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
@@ -3991,7 +4007,7 @@
 				45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
-				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
+				455A0CBC26BD9D4F00EC572D /* TestsViewController.swift in Sources */,
 				457EDABC2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
@@ -4031,6 +4047,7 @@
 				45C3D2B82773B1B500B3EF44 /* EventPartScore.swift in Sources */,
 				45D712F327031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				4589F40226BF017A005DF543 /* LoginViewController.swift in Sources */,
+				45C3E8D027B40559007A1A0F /* HomeViewModel.swift in Sources */,
 				45166D1026F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0D26BD9D9000EC572D /* CountryName.swift in Sources */,
 				455C962226FDD66400456F30 /* ProfileViewController.swift in Sources */,
@@ -4062,6 +4079,7 @@
 				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
 				45C26DCC27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */,
 				458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
+				45C3E8CB27B190A1007A1A0F /* HomeViewController.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
@@ -4117,7 +4135,7 @@
 				F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE826F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896826C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
-				455C962926FE11CA00456F30 /* HomeViewController.swift in Sources */,
+				455C962926FE11CA00456F30 /* RootViewController.swift in Sources */,
 				45166D1226F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
 				45936CB7270EF04500E8260E /* SportType.swift in Sources */,
 				A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
@@ -4334,7 +4352,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00308;
+				CURRENT_PROJECT_VERSION = 00310;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4360,7 +4378,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00308;
+				CURRENT_PROJECT_VERSION = 00310;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

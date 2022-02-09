@@ -67,13 +67,6 @@ extension UIView {
             removeConstraint(constraints[constrainIndex])
         }
     }
-
-    func addShadow() {
-        layer.shadowColor = UIColor.gray.cgColor
-        layer.shadowOpacity = 0.25
-        layer.shadowOffset = CGSize(width: 0, height: 4)
-        layer.shadowRadius = 0.5
-    }
 }
 
 extension Array where Element: UIView {

@@ -127,7 +127,7 @@ class SportSelectionViewController: UIViewController {
 
         self.activityIndicatorView.isHidden = false
 
-        let sports = Env.everyMatrixClient.getDisciplinesData(payload: ["lang": "en"])
+        let sports = Env.everyMatrixClient.getDisciplines(language: "en")
 
         sports
             .receive(on: DispatchQueue.main)

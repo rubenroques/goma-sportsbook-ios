@@ -281,7 +281,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.resultLabel.text = ""
         self.matchTimeLabel.text = ""
 
-       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         if viewModel.countryISOCode != "" {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         }
@@ -316,27 +315,23 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.homeOddTitleLabel.text = "\(outcome.typeName) \(marketValue)"
                 }
 
-                self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentHomeOddValue = outcome.bettingOffer.value
+                // self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 self.leftOutcome = outcome
 
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 
                 self.leftOddButtonSubscriber = Env.everyMatrixStorage
                     .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                    //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
 
                         guard let weakSelf = self else { return }
 
-                        if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
+                        if !bettingOffer.isOpen {
                             weakSelf.homeBaseView.isUserInteractionEnabled = false
                             weakSelf.homeBaseView.alpha = 0.5
-                            weakSelf.homeOddValueLabel.text = "---"
-
-                            print("Suspended : closing betting offer \(weakSelf.match?.homeParticipant.name ?? "" )-\(market.name)-\(bettingOffer.oddsValue ?? 0.0) ")
+                            weakSelf.homeOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.homeBaseView.isUserInteractionEnabled = true
@@ -373,27 +368,23 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.drawOddTitleLabel.text = "\(outcome.typeName) \(marketValue)"
                 }
 
-                self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentDrawOddValue = outcome.bettingOffer.value
+                // self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 self.middleOutcome = outcome
 
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 
                 self.middleOddButtonSubscriber = Env.everyMatrixStorage
                     .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                    //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
 
                         guard let weakSelf = self else { return }
 
-                        if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
+                        if !bettingOffer.isOpen {
                             weakSelf.drawBaseView.isUserInteractionEnabled = false
                             weakSelf.drawBaseView.alpha = 0.5
-                            weakSelf.drawOddValueLabel.text = "---"
-
-                            print("Suspended : closing betting offer \(weakSelf.match?.homeParticipant.name ?? "" )-\(market.name)-\(bettingOffer.oddsValue ?? 0.0) ")
+                            weakSelf.drawOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.drawBaseView.isUserInteractionEnabled = true
@@ -429,27 +420,23 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.awayOddTitleLabel.text = "\(outcome.typeName) \(marketValue)"
                 }
 
-                self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentAwayOddValue = outcome.bettingOffer.value
+                // self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 self.rightOutcome = outcome
 
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
                 self.rightOddButtonSubscriber = Env.everyMatrixStorage
                     .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                    //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
 
                         guard let weakSelf = self else { return }
 
-                        if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
+                        if !bettingOffer.isOpen {
                             weakSelf.awayBaseView.isUserInteractionEnabled = false
                             weakSelf.awayBaseView.alpha = 0.5
-                            weakSelf.awayOddValueLabel.text = "---"
-
-                            print("Suspended : closing betting offer \(weakSelf.match?.homeParticipant.name ?? "" )-\(market.name)-\(bettingOffer.oddsValue ?? 0.0) ")
+                            weakSelf.awayOddValueLabel.text = "-"
                         }
                         else {
                             weakSelf.awayBaseView.isUserInteractionEnabled = true
@@ -487,9 +474,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
 
-            self.homeOddValueLabel.text = "---"
-            self.drawOddValueLabel.text = "---"
-            self.awayOddValueLabel.text = "---"
+            self.homeOddValueLabel.text = "-"
+            self.drawOddValueLabel.text = "-"
+            self.awayOddValueLabel.text = "-"
         }
 
         var homeGoals = ""

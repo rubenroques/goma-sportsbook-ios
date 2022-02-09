@@ -154,8 +154,8 @@ class BetslipManager: NSObject {
                 case .updatedContent(let aggregatorUpdates):
                     if let content = aggregatorUpdates.contentUpdates {
                         for contentType in content {
-                            if case let .bettingOfferUpdate(id, odd, _, isAvailable) = contentType {
-                                self?.updateBettingTicketOdd(withId: id, newOdd: odd, isAvailable: isAvailable)
+                            if case let .bettingOfferUpdate(id, statusId, odd, _, isAvailable) = contentType {
+                                self?.updateBettingTicketOdd(withId: id, statusId: statusId, newOdd: odd, isAvailable: isAvailable)
                             }
                         }
                     }
@@ -183,7 +183,7 @@ class BetslipManager: NSObject {
         }
     }
 
-    private func updateBettingTicketOdd(withId id: String, newOdd: Double?, isAvailable: Bool?) {
+    private func updateBettingTicketOdd(withId id: String, statusId: String?, newOdd: Double?, isAvailable: Bool?) {
         if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id] {
             let newBettingTicket = BettingTicket(id: bettingTicket.id,
                                                  outcomeId: bettingTicket.outcomeId,

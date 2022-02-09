@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import GameController
 
 struct CompetitionGroup {
     var id: String
@@ -121,6 +122,7 @@ extension Outcome {
 struct BettingOffer {
     var id: String
     var value: Double
+    var statusId: String
     var isLive: Bool
     var isAvailable: Bool
 }

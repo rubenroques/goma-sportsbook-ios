@@ -41,7 +41,12 @@ extension EveryMatrix {
             case isAvailable = "isAvailable"
         }
 
+        var isOpen: Bool {
+            return (self.isAvailable ?? false) && ((statusId ?? "") == "1" )
+        }
+
         func bettingOfferUpdated(withOdd odd: Double?,
+                                 statusId: String?,
                                  isLive: Bool?,
                                  isAvailable: Bool?) -> BettingOffer {
             return BettingOffer(
@@ -60,6 +65,7 @@ extension EveryMatrix {
                 isAvailable: isAvailable ?? self.isAvailable
             )
         }
+
     }
 
 }

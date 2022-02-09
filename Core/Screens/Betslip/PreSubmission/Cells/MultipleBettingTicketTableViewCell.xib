@@ -135,27 +135,27 @@
                                             <constraint firstAttribute="height" constant="48" id="mdM-CF-DLS"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WXI-Oe-yNB">
+                                        <rect key="frame" x="0.0" y="0.0" width="5" height="94"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="5" id="VJl-SG-kfg"/>
+                                        </constraints>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yjW-Os-uV0">
                                         <rect key="frame" x="0.0" y="46" width="275" height="48"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SUSPENDED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvg-pe-WHh">
                                                 <rect key="frame" x="82" y="14" width="111.5" height="20"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
-                                                <color key="textColor" name="headingMainColor"/>
+                                                <color key="textColor" name="textSecond"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.58751135610000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.79866124640058533" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="hvg-pe-WHh" firstAttribute="centerY" secondItem="yjW-Os-uV0" secondAttribute="centerY" id="ELB-Bq-c8R"/>
                                             <constraint firstItem="hvg-pe-WHh" firstAttribute="centerX" secondItem="yjW-Os-uV0" secondAttribute="centerX" id="st1-RN-wWb"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WXI-Oe-yNB">
-                                        <rect key="frame" x="0.0" y="0.0" width="5" height="94"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="5" id="VJl-SG-kfg"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -261,6 +261,9 @@
         </namedColor>
         <namedColor name="tertiaryBackgroundColor">
             <color red="0.81960784313725488" green="0.83529411764705885" blue="0.89411764705882357" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
+        <namedColor name="textSecond">
+            <color red="0.41176470588235292" green="0.43137254901960786" blue="0.51372549019607838" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

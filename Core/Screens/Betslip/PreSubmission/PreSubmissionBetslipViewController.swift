@@ -337,6 +337,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 self?.systemBetTypePickerView.reloadAllComponents()
 
+                let oldSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex ?? 0
+
                 if tickets.count < 3 {
                     if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
                         self?.betTypeSegmentControl.selectedSegmentIndex = 1
@@ -363,7 +365,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.selectedSegmentIndex = 1
                 }
 
-                if let segmentControl = self?.betTypeSegmentControl {
+                if let segmentControl = self?.betTypeSegmentControl,
+                   let newSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex,
+                   newSegmentIndex != oldSegmentIndex {
                     self?.didChangeSegmentValue(segmentControl)
                 }
 
@@ -1274,34 +1278,32 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         return self.gomaSuggestedBetsResponse.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(BetSuggestedCollectionViewCell.self, indexPath: indexPath)
-                
         else {
             fatalError()
         }
 
         if let cachedViewModel = self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row].value {
-
             cell.setupWithViewModel(viewModel: cachedViewModel)
-
         }
         else {
             let viewModel = BetSuggestedCollectionViewCellViewModel(gomaArray: gomaSuggestedBetsResponse[indexPath.row])
-
             self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row] = viewModel
-
             cell.setupWithViewModel(viewModel: viewModel)
-
         }
 
         cell.betNowCallbackAction = { [weak self] in
@@ -1321,16 +1323,14 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let bottomBarHeigth = 60.0
         var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
         if !self.gomaSuggestedBetsResponse[indexPath.row].isEmpty {
-//            if arrayValues.count == 3 {
-//                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 3 * 60)
-//            }else{
             size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 4 * 60)
-           // }
         }
         return size
     }
@@ -1447,7 +1447,6 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                     else {
                         if let bettingSelections = bettingError.selections {
                             for selection in bettingSelections {
-
                                 if selection.id == bettingTicket.bettingId {
                                     hasFoundCorrespondingId = true
                                     errorMessage = bettingError.errorMessage ?? localized("error")

@@ -393,9 +393,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             Logger.log("No markets found")
             oddsStackView.alpha = 0.2
 
-            self.homeOddValueLabel.text = "---"
-            self.drawOddValueLabel.text = "---"
-            self.awayOddValueLabel.text = "---"
+            self.homeOddValueLabel.text = "-"
+            self.drawOddValueLabel.text = "-"
+            self.awayOddValueLabel.text = "-"
         }
 
     }
