@@ -493,14 +493,16 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
         if UserDefaults.standard.userSession != nil {
 
-            if let matchId = self.match?.id {
-                Env.favoritesManager.checkFavorites(eventId: matchId, favoriteType: "event")
-            }
-
             if self.isFavorite {
+                if let matchId = self.match?.id {
+                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: "event")
+                }
                 self.isFavorite = false
             }
             else {
+                if let matchId = self.match?.id {
+                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: "event")
+                }
                 self.isFavorite = true
             }
         }

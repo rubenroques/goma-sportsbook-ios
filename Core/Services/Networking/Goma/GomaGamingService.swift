@@ -16,7 +16,8 @@ enum GomaGamingService {
     case modalPopUpDetails
     case login(username: String, password: String, deviceToken: String)
     case suggestedBets
-    case favorites(favorites: String)
+    case addFavorites(favorites: String)
+    case removeFavorite(favorite: String)
     case matchStats(matchId: String)
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
     case userSettings
@@ -49,12 +50,14 @@ extension GomaGamingService: Endpoint {
             return "/api/auth/\(apiVersion)/login"
         case .suggestedBets:
             return "/api/betting/\(apiVersion)/betslip/suggestions"
-        case .favorites:
+        case .addFavorites:
             return "/api/favorites/\(apiVersion)"
         case .matchStats(let matchId):
             return "/api/betting/\(apiVersion)/events/\(matchId)/stats"
         case .userSettings:
             return "/api/settings/\(apiVersion)/user"
+        case .removeFavorite:
+            return "/api/favorites/\(apiVersion)"
         }
     }
 
@@ -66,8 +69,10 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
         case .settings, .simpleRegister, .modalPopUpDetails, .login,
-                .suggestedBets, .favorites, .matchStats, .userSettings:
+                .suggestedBets, .addFavorites, .matchStats, .userSettings:
             return nil
+        case .removeFavorite(let favorite):
+            return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         }
     }
 
@@ -95,8 +100,10 @@ extension GomaGamingService: Endpoint {
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
                 .matchStats, .userSettings:
             return .get
-        case .log, .simpleRegister, .login, .favorites:
+        case .log, .simpleRegister, .login, .addFavorites:
             return .post
+        case .removeFavorite:
+            return .delete
         }
     }
 
@@ -130,7 +137,7 @@ extension GomaGamingService: Endpoint {
                        """
             let data = body.data(using: String.Encoding.utf8)!
             return data
-        case .favorites(let favorites):
+        case .addFavorites(let favorites):
             let body = """
                     {"favorites":
                     [

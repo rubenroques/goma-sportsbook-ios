@@ -44,6 +44,7 @@ struct HTTP {
     enum Method {
         case get
         case post
+        case delete
 
         func value() -> String {
             switch self {
@@ -51,6 +52,8 @@ struct HTTP {
                 return "GET"
             case .post:
                 return "POST"
+            case .delete:
+                return "DELETE"
             }
         }
     }

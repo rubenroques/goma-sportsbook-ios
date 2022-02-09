@@ -111,14 +111,16 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     @objc func didTapFavoriteImageView() {
         if UserDefaults.standard.userSession != nil {
 
-            if let competitionId = self.competition?.id {
-                Env.favoritesManager.checkFavorites(eventId: competitionId, favoriteType: "competition")
-            }
-
             if self.isFavorite {
+                if let competitionId = self.competition?.id {
+                    Env.favoritesManager.removeFavorite(eventId: competitionId, favoriteType: "competition")
+                }
                 self.isFavorite = false
             }
             else {
+                if let competitionId = self.competition?.id {
+                    Env.favoritesManager.addFavorite(eventId: competitionId, favoriteType: "competition")
+                }
                 self.isFavorite = true
 
             }

@@ -101,8 +101,14 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func sendFavorites(deviceId: String, favorites: String) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
-        let endpoint = GomaGamingService.favorites(favorites: favorites)
+    func addFavorites(deviceId: String, favorites: String) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
+        let endpoint = GomaGamingService.addFavorites(favorites: favorites)
+        let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func removeFavorite(deviceId: String, favorite: String) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
+        let endpoint = GomaGamingService.removeFavorite(favorite: favorite)
         let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
@@ -113,9 +119,9 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func requestUserSettings(deviceId: String) -> AnyPublisher<UserSettingsGoma, NetworkError> {
+    func requestUserSettings(deviceId: String) -> AnyPublisher<UserSettingsGomaResponse, NetworkError> {
         let endpoint = GomaGamingService.userSettings
-        let requestPublisher: AnyPublisher<UserSettingsGoma, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<UserSettingsGomaResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 
