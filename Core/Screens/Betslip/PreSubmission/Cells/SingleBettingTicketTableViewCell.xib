@@ -44,16 +44,16 @@
                                         <rect key="frame" x="0.0" y="0.0" width="397" height="45"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uxt-tt-rUj">
-                                                <rect key="frame" x="12" y="14" width="37" height="17.5"/>
+                                                <rect key="frame" x="12" y="15" width="38.5" height="15"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNx-OA-6Xp">
-                                                <rect key="frame" x="312.5" y="10" width="50.5" height="25"/>
+                                                <rect key="frame" x="311" y="10" width="52" height="25"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DUb-Mw-uFF">
-                                                        <rect key="frame" x="8" y="5.5" width="34.5" height="16.5"/>
+                                                        <rect key="frame" x="8" y="6.5" width="36" height="14"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="14"/>
                                                         <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
@@ -67,14 +67,14 @@
                                                 </constraints>
                                             </view>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="odd_up_icon" translatesAutoresizingMaskIntoConstraints="NO" id="lKa-Xq-fYv">
-                                                <rect key="frame" x="296.5" y="17.5" width="11" height="9"/>
+                                                <rect key="frame" x="295" y="17.5" width="11" height="9"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="11" id="j7S-Vz-hgC"/>
                                                     <constraint firstAttribute="height" constant="9" id="kdx-NK-Jj5"/>
                                                 </constraints>
                                             </imageView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="odd_down_icon" translatesAutoresizingMaskIntoConstraints="NO" id="4mZ-5D-Iql">
-                                                <rect key="frame" x="296.5" y="20.5" width="11" height="9"/>
+                                                <rect key="frame" x="295" y="20.5" width="11" height="9"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="9" id="HOi-lG-n9f"/>
                                                     <constraint firstAttribute="width" constant="11" id="Raw-Cd-9B5"/>
@@ -87,7 +87,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="sDc-Y5-m5m"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="arrow_close_icon"/>
+                                                <state key="normal" image="thin_close_cross_icon"/>
                                                 <connections>
                                                     <action selector="didTapDeleteButton" destination="KGk-i7-Jjw" eventType="primaryActionTriggered" id="ocj-3h-0w1"/>
                                                 </connections>
@@ -116,19 +116,19 @@
                                         <rect key="frame" x="0.0" y="46" width="397" height="54"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CS0-Ub-bbm">
-                                                <rect key="frame" x="12" y="9" width="34.5" height="16.5"/>
+                                                <rect key="frame" x="12" y="9" width="36" height="14"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZcZ-Bq-usf">
-                                                <rect key="frame" x="12" y="28.5" width="29.5" height="14"/>
+                                                <rect key="frame" x="12" y="26" width="31" height="12"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5lh-bi-eep">
-                                                <rect key="frame" x="12" y="45.5" width="29.5" height="14"/>
+                                                <rect key="frame" x="12" y="41" width="31" height="12"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -150,7 +150,7 @@
                                                 <rect key="frame" x="8" y="5" width="96" height="38"/>
                                                 <subviews>
                                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Amount.." textAlignment="right" minimumFontSize="14" translatesAutoresizingMaskIntoConstraints="NO" id="s7F-Sx-011">
-                                                        <rect key="frame" x="8" y="10" width="80" height="18"/>
+                                                        <rect key="frame" x="8" y="11.5" width="80" height="15.5"/>
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="80" id="FS8-lr-ybz"/>
                                                         </constraints>
@@ -213,7 +213,7 @@
                                         <rect key="frame" x="0.0" y="46" width="397" height="106"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SUSPENDED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jsy-es-IZM">
-                                                <rect key="frame" x="138.5" y="41.5" width="120.5" height="23.5"/>
+                                                <rect key="frame" x="143" y="43" width="111.5" height="20"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -331,9 +331,9 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="arrow_close_icon" width="19" height="20"/>
         <image name="odd_down_icon" width="10" height="5"/>
         <image name="odd_up_icon" width="10" height="5"/>
+        <image name="thin_close_cross_icon" width="13" height="13"/>
         <image name="warning_alert_icon" width="33" height="33"/>
     </resources>
 </document>

@@ -81,7 +81,7 @@
                                                     <constraint firstAttribute="height" constant="30" id="exc-rY-DyS"/>
                                                 </constraints>
                                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                                <state key="normal" image="arrow_close_icon"/>
+                                                <state key="normal" image="thin_close_cross_icon"/>
                                                 <connections>
                                                     <action selector="didTapDeleteButton" destination="KGk-i7-Jjw" eventType="primaryActionTriggered" id="KLY-l3-YAG"/>
                                                 </connections>
@@ -237,8 +237,8 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="arrow_close_icon" width="19" height="20"/>
         <image name="odd_down_icon" width="10" height="5"/>
         <image name="odd_up_icon" width="10" height="5"/>
+        <image name="thin_close_cross_icon" width="13" height="13"/>
     </resources>
 </document>

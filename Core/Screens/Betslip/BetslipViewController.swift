@@ -124,8 +124,8 @@ class BetslipViewController: UIViewController {
         self.tabsBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.accountInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.accountValueBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.accountValuePlusView.backgroundColor = UIColor.App.highlightPrimary
+        self.accountValueBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.accountValuePlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
 
         self.tabViewController.sliderBarColor = UIColor.App.highlightPrimary

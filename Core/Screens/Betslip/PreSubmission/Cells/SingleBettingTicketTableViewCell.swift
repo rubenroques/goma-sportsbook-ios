@@ -176,8 +176,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.matchDetailLabel.textColor = UIColor.App.textSecond
         self.returnsValueLabel.textColor = UIColor.App.textDisablePrimary
         
-        self.oddBaseView.backgroundColor = UIColor.App.inputBackground
-        self.oddValueLabel.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.oddValueLabel.backgroundColor = UIColor.App.backgroundPrimary
         self.oddValueLabel.textColor = UIColor.App.textPrimary
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
