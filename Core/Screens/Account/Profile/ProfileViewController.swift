@@ -187,7 +187,7 @@ class ProfileViewController: UIViewController {
         depositButton.layer.masksToBounds = true
         depositButton.setTitle(localized("deposit"), for: .normal)
 
-        withdrawButton.backgroundColor = UIColor.App2.buttonBackgroundSecondary
+        withdrawButton.backgroundColor = UIColor.App.buttonBackgroundSecondary
         withdrawButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.masksToBounds = true
         withdrawButton.layer.borderWidth = 2
@@ -201,7 +201,7 @@ class ProfileViewController: UIViewController {
 
         personalInfoBaseView.layer.cornerRadius = CornerRadius.view
         personalInfoIconBaseView.layer.cornerRadius = CornerRadius.view
-        personalInfoIconImageView.backgroundColor = UIColor.App2.backgroundTertiary
+        personalInfoIconImageView.backgroundColor = UIColor.App.backgroundTertiary
         let personalInfoTapGesture = UITapGestureRecognizer(target: self, action: #selector(personalInfoViewTapped))
         personalInfoBaseView.addGestureRecognizer(personalInfoTapGesture)
 
@@ -210,7 +210,7 @@ class ProfileViewController: UIViewController {
         passwordUpdateIconImageView.backgroundColor = .clear
         let passwordUpdateTapGesture = UITapGestureRecognizer(target: self, action: #selector(passwordUpdateViewTapped))
         passwordUpdateBaseView.addGestureRecognizer(passwordUpdateTapGesture)
-        passwordUpdateBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        passwordUpdateBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         walletBaseView.layer.cornerRadius = CornerRadius.view
         walletIconBaseView.layer.cornerRadius = CornerRadius.view
@@ -331,86 +331,86 @@ class ProfileViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        closeButton.setTitleColor( UIColor.App2.textPrimary, for: .normal)
-        closeButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        closeButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
+        closeButton.setTitleColor( UIColor.App.textPrimary, for: .normal)
+        closeButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
+        closeButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.4), for: .disabled)
 
-        safeAreaTopView.backgroundColor = UIColor.App2.backgroundPrimary
-        profileBaseView.backgroundColor = UIColor.App2.backgroundPrimary
-        profilePictureBaseView.backgroundColor = UIColor.App2.highlightPrimary
-        currentBalanceBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        scrollBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        safeAreaTopView.backgroundColor = UIColor.App.backgroundPrimary
+        profileBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
+        currentBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        scrollBaseView.backgroundColor = UIColor.App.backgroundPrimary
         profilePictureImageView.backgroundColor = .clear
 
-        usernameLabel.textColor = UIColor.App2.textPrimary
-        userIdLabel.textColor = UIColor.App.fadeOutHeading
-        currentBalanceTitleLabel.textColor =  UIColor.App2.textPrimary
-        currentBalanceLabel.textColor =  UIColor.App2.textPrimary
+        usernameLabel.textColor = UIColor.App.textPrimary
+        userIdLabel.textColor = UIColor.App.textSecond
+        currentBalanceTitleLabel.textColor =  UIColor.App.textPrimary
+        currentBalanceLabel.textColor =  UIColor.App.textPrimary
 
         //
-        depositButton.setTitleColor( UIColor.App2.textPrimary, for: .normal)
-        depositButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        depositButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
-        depositButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .normal)
-        depositButton.setBackgroundColor(UIColor.App2.buttonBackgroundPrimary, for: .highlighted)
+        depositButton.setTitleColor( UIColor.App.buttonTextPrimary, for: .normal)
+        depositButton.setTitleColor( UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        depositButton.setTitleColor( UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        depositButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        depositButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
 
-        withdrawButton.setTitleColor( UIColor.App2.textPrimary, for: .normal)
-        withdrawButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        withdrawButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
-        withdrawButton.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
+        withdrawButton.setTitleColor( UIColor.App.buttonTextPrimary, for: .normal)
+        withdrawButton.setTitleColor( UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        withdrawButton.setTitleColor( UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        withdrawButton.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
 
-        logoutButton.setTitleColor( UIColor.App2.textPrimary, for: .normal)
-        logoutButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        logoutButton.setTitleColor( UIColor.App2.textPrimary.withAlphaComponent(0.4), for: .disabled)
-        logoutButton.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
+        logoutButton.setTitleColor( UIColor.App.textPrimary, for: .normal)
+        logoutButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
+        logoutButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.4), for: .disabled)
+        logoutButton.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
 
         //
-        personalInfoBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        personalInfoIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        personalInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        personalInfoIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         personalInfoIconImageView.backgroundColor = .clear
-        personalInfoLabel.textColor =  UIColor.App2.textPrimary
+        personalInfoLabel.textColor =  UIColor.App.textPrimary
         
-        passwordUpdateBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        passwordUpdateIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        passwordUpdateBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        passwordUpdateIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         passwordUpdateIconImageView.backgroundColor = .clear
-        passwordUpdateLabel.textColor =  UIColor.App2.textPrimary
+        passwordUpdateLabel.textColor =  UIColor.App.textPrimary
 
-        walletBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        walletIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        walletBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        walletIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         walletIconImageView.backgroundColor = .clear
-        walletLabel.textColor =  UIColor.App2.textPrimary
+        walletLabel.textColor =  UIColor.App.textPrimary
 
-        documentsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        documentsIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        documentsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        documentsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         documentsIconImageView.backgroundColor = .clear
-        documentsLabel.textColor =  UIColor.App2.textPrimary
+        documentsLabel.textColor =  UIColor.App.textPrimary
 
-        bonusBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        bonusIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        bonusBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        bonusIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         bonusIconImageView.backgroundColor = .clear
-        bonusLabel.textColor =  UIColor.App2.textPrimary
+        bonusLabel.textColor =  UIColor.App.textPrimary
 
-        historyBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        historyIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        historyBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        historyIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         historyIconImageView.backgroundColor = .clear
-        historyLabel.textColor =  UIColor.App2.textPrimary
+        historyLabel.textColor =  UIColor.App.textPrimary
 
-        limitsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        limitsIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        limitsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        limitsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         limitsIconImageView.backgroundColor = .clear
-        limitsLabel.textColor =  UIColor.App2.textPrimary
+        limitsLabel.textColor =  UIColor.App.textPrimary
 
-        appSettingsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        appSettingsIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        appSettingsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        appSettingsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         appSettingsIconImageView.backgroundColor = .clear
-        appSettingsLabel.textColor =  UIColor.App2.textPrimary
+        appSettingsLabel.textColor =  UIColor.App.textPrimary
 
-        supportBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        supportIconBaseView.backgroundColor = UIColor.App2.backgroundPrimary
+        supportBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        supportIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
         supportIconImageView.backgroundColor = .clear
-        supportLabel.textColor =  UIColor.App2.textPrimary
+        supportLabel.textColor =  UIColor.App.textPrimary
 
         logoutBaseView.backgroundColor = .clear
         infoBaseView.backgroundColor = .clear

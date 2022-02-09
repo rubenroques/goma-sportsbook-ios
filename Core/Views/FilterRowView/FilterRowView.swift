@@ -24,13 +24,13 @@ class FilterRowView: NibView {
             switch buttonType {
             case .checkbox:
 
-                buttonImageView.backgroundColor = UIColor.App2.backgroundSecondary
+                buttonImageView.backgroundColor = UIColor.App.backgroundSecondary
 
                 buttonImageView.layer.borderWidth = 2
-                buttonImageView.layer.borderColor = UIColor.App2.separatorLine.cgColor
+                buttonImageView.layer.borderColor = UIColor.App.separatorLine.cgColor
                 buttonImageView.layer.cornerRadius = 4
 
-                buttonImageView.tintColor = UIColor.App2.textPrimary
+                buttonImageView.tintColor = UIColor.App.buttonTextPrimary
 
                 buttonImageView.image = nil
 
@@ -39,8 +39,8 @@ class FilterRowView: NibView {
                 buttonImageView.layer.cornerRadius = buttonImageView.frame.width/2
                 buttonImageView.layer.borderWidth = 2.0
 
-                buttonImageView.layer.borderColor = UIColor.App2.separatorLine.cgColor
-                buttonImageView.backgroundColor = UIColor.App2.backgroundSecondary
+                buttonImageView.layer.borderColor = UIColor.App.separatorLine.cgColor
+                buttonImageView.backgroundColor = UIColor.App.backgroundSecondary
                 
                 buttonImageView.image = nil
                 buttonImageView.contentMode = .center
@@ -53,25 +53,25 @@ class FilterRowView: NibView {
             if isChecked {
                 if buttonType == ButtonType.checkbox {
                 buttonImageView.image = UIImage(named: "active_toggle_icon")
-                buttonImageView.backgroundColor = UIColor.App2.highlightPrimary
-                    buttonImageView.layer.borderColor = UIColor.App2.highlightPrimary.cgColor
+                buttonImageView.backgroundColor = UIColor.App.highlightPrimary
+                    buttonImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
 
                 }
                 else if buttonType == ButtonType.radio {
-                    buttonImageView.layer.borderColor = UIColor.App2.highlightPrimary.cgColor
-                    buttonImageView.backgroundColor = UIColor.App2.highlightPrimary
+                    buttonImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                    buttonImageView.backgroundColor = UIColor.App.highlightPrimary
                     buttonImageView.image = (UIImage(named: "white_dot_icon"))
                 }
             }
             else {
                 if buttonType == ButtonType.checkbox {
                 buttonImageView.image = nil
-                buttonImageView.backgroundColor = UIColor.App2.backgroundSecondary
-                    buttonImageView.layer.borderColor = UIColor.App2.separatorLine.cgColor
+                buttonImageView.backgroundColor = UIColor.App.backgroundSecondary
+                    buttonImageView.layer.borderColor = UIColor.App.separatorLine.cgColor
                 }
                 else if buttonType == ButtonType.radio {
-                    buttonImageView.layer.borderColor = UIColor.App2.separatorLine.cgColor
-                    buttonImageView.backgroundColor = UIColor.App2.backgroundSecondary
+                    buttonImageView.layer.borderColor = UIColor.App.separatorLine.cgColor
+                    buttonImageView.backgroundColor = UIColor.App.backgroundSecondary
                     buttonImageView.image = nil
                 }
             }
@@ -106,17 +106,17 @@ class FilterRowView: NibView {
 
     func setup() {
 
-        self.backgroundColor = UIColor.App2.backgroundSecondary
+        self.backgroundColor = UIColor.App.backgroundSecondary
         
-        containerView.backgroundColor = UIColor.App2.backgroundSecondary
+        containerView.backgroundColor = UIColor.App.backgroundSecondary
 
         titleLabel.text = "Title Label"
         titleLabel.font = AppFont.with(type: .bold, size: 14)
-        titleLabel.textColor = UIColor.App2.textPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
 
         buttonImageView.contentMode = .scaleAspectFit
 
-        lineView.backgroundColor = UIColor.App2.separatorLine
+        lineView.backgroundColor = UIColor.App.separatorLine
 
         self.buttonType = .checkbox
 

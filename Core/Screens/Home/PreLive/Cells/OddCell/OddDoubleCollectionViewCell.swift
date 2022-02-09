@@ -56,6 +56,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     private var leftOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
 
+    private var marketSubscriber: AnyCancellable?
+
+
     private var currentLeftOddValue: Double?
     private var currentRightOddValue: Double?
 
@@ -77,6 +80,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
+
+        self.baseView.bringSubviewToFront(self.suspendedBaseView)
 
         self.marketNameLabel.font = AppFont.with(type: .bold, size: 14)
         self.statsBaseView.isHidden = true
@@ -148,6 +153,12 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.rightOddTitleLabel.text = ""
         self.rightOddValueLabel.text = ""
 
+        self.leftBaseView.isUserInteractionEnabled = true
+        self.rightBaseView.isUserInteractionEnabled = true
+
+        self.leftBaseView.alpha = 1.0
+        self.rightBaseView.alpha = 1.0
+
         self.leftUpChangeOddValueImage.alpha = 0.0
         self.leftDownChangeOddValueImage.alpha = 0.0
         self.rightUpChangeOddValueImage.alpha = 0.0
@@ -163,10 +174,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.matchStatsSubscriber?.cancel()
         self.matchStatsSubscriber = nil
-        
+
+        self.marketSubscriber?.cancel()
+        self.marketSubscriber = nil
+
         self.currentLeftOddValue = nil
         self.currentRightOddValue = nil
 
+        self.suspendedBaseView.isHidden = true
     }
 
     override func layoutSubviews() {
@@ -177,27 +192,22 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.baseView.backgroundColor = UIColor.App2.backgroundCards
+        self.backgroundColor = UIColor.App.backgroundCards
+        self.baseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.participantsNameLabel.textColor = UIColor.App2.textPrimary
-        self.marketNameLabel.textColor = UIColor.App2.textPrimary
+        self.participantsNameLabel.textColor = UIColor.App.textPrimary
+        self.marketNameLabel.textColor = UIColor.App.textPrimary
 
-        self.leftOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.leftOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.leftBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
 
-        self.rightOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.rightOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
 
-        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
-        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.statsBaseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.suspendedBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
-        self.suspendedLabel.textColor = UIColor.App2.textDisablePrimary
-
-        self.statsBaseView.backgroundColor = UIColor.App2.backgroundCards
-
-        self.homeNameCaptionLabel.textColor = UIColor.App2.textPrimary
-        self.awayNameCaptionLabel.textColor = UIColor.App2.textPrimary
+        self.homeNameCaptionLabel.textColor = UIColor.App.textPrimary
+        self.awayNameCaptionLabel.textColor = UIColor.App.textPrimary
 
         self.homeCircleCaptionView.backgroundColor = UIColor(hex: 0xD99F00)
         self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
@@ -228,6 +238,25 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.participantsNameLabel.text = teamsText
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
+
+        if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+            self.marketSubscriber = marketPublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] marketUpdate in
+                    if marketUpdate.isAvailable ?? true {
+                        self?.showMarketButtons()
+                    }
+                    else {
+                        if marketUpdate.isClosed ?? false {
+                            self?.showClosedView()
+                        }
+                        else {
+                            self?.showSuspendedView()
+                        }
+                    }
+                }
+        }
+
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
@@ -308,7 +337,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -321,7 +350,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -340,11 +369,33 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         view.layer.borderColor = color.cgColor
     }
 
+    //
+    //
+    private func showMarketButtons() {
+        self.suspendedBaseView.isHidden = true
+    }
+
+    private func showSuspendedView() {
+        self.suspendedLabel.text = localized("suspended_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    private func showClosedView() {
+        self.suspendedLabel.text = localized("closed_market")
+        self.suspendedBaseView.isHidden = false
+    }
+
+    //
+    //
     func selectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.leftBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.leftOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.leftOddValueLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.leftBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.leftOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.leftOddValueLabel.textColor = UIColor.App.textPrimary
     }
     @objc func didTapLeftOddButton() {
 
@@ -362,8 +413,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -379,10 +431,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     func selectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.rightBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.rightOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.rightOddValueLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.rightOddValueLabel.textColor = UIColor.App.textPrimary
     }
     @objc func didTapRightOddButton() {
 
@@ -400,8 +456,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)

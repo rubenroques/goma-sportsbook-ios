@@ -55,16 +55,16 @@ class DepositWebViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.topView.backgroundColor = UIColor.App.mainBackground
+        self.topView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.containerView.backgroundColor = UIColor.App.mainBackground
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.navigationView.backgroundColor = .clear
 
-        self.navigationLabel.textColor = UIColor.App.headingMain
+        self.navigationLabel.textColor = UIColor.App.textPrimary
 
         self.navigationButton.backgroundColor = .clear
-        self.navigationButton.tintColor = UIColor.App.headingMain
+        self.navigationButton.tintColor = UIColor.App.textPrimary
     }
 
     func setupWebView() {
@@ -77,7 +77,15 @@ class DepositWebViewController: UIViewController {
     }
 
     @IBAction private func didTapCloseButton() {
-        self.dismiss(animated: true, completion: nil)
+        if presentingViewController != nil {
+                  // foi presented porque tem um presentingViewController
+                self.navigationController?.dismiss(animated: true, completion: nil)
+              }
+              else {
+                  // foi pushed
+                  self.navigationController?.popViewController(animated: true)
+              }
+        
 
     }
 

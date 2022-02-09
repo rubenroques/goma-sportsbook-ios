@@ -12,6 +12,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "mishaps-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -27,11 +28,12 @@
           "value" : "dark"
         }
       ],
+      "filename" : "mishaps@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "mishaps@3x.png",
+      "filename" : "mishaps@2x-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -42,6 +44,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "mishaps@2x-3.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

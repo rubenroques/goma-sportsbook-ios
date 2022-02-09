@@ -134,16 +134,13 @@ class LiveEventsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("SportsSelectorViewController liveSportsPublisher connect")
                     self?.liveSportsRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("SportsSelectorViewController liveSportsPublisher initialContent")
                     self?.setupSportsAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
-                    print("SportsSelectorViewController liveSportsPublisher updatedContent")
                     self?.updateSportsAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
-                    print("SportsSelectorViewController liveSportsPublisher disconnect")
+                    ()
                 }
 
             })
@@ -166,7 +163,6 @@ class LiveEventsViewModel: NSObject {
     func updateSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {
         sportsRepository.processContentUpdateSportsAggregator(aggregator)
 
-        
     }
 
     func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
@@ -251,11 +247,7 @@ class LiveEventsViewModel: NSObject {
             }
         }
         
-        //Todo - Code Review
-        DispatchQueue.main.async {
-            self.dataDidChangedAction?()
-        }
-        
+        // TODO: - Code Review
         DispatchQueue.main.async {
             self.dataDidChangedAction?()
         }
@@ -313,16 +305,13 @@ class LiveEventsViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("LiveEventsViewModel popularMatchesPublisher connect")
                     self?.allMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("LiveEventsViewModel popularMatchesPublisher initialContent")
                     self?.setupAllMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
                     self?.updateAllMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-                    print("LiveEventsViewModel popularMatchesPublisher updatedContent")
                 case .disconnect:
-                    print("LiveEventsViewModel popularMatchesPublisher disconnect")
+                    ()
                 }
             })
     }

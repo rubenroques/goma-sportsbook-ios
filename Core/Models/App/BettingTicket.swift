@@ -15,8 +15,11 @@ struct BettingTicket: Hashable {
         return id
     }
     var outcomeId: String
+    var marketId: String
     var matchId: String
     var value: Double
+    
+    var isAvailable: Bool
 
     var matchDescription: String
     var marketDescription: String

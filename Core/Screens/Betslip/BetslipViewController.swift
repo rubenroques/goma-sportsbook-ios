@@ -117,23 +117,22 @@ class BetslipViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.topSafeAreaView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.navigationBarView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.tabsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundSecondary
+        self.navigationBarView.backgroundColor = UIColor.App.backgroundSecondary
+        self.tabsBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.accountInfoBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.accountValueBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.accountValuePlusView.backgroundColor = UIColor.App2.highlightPrimary
-        self.accountValueLabel.textColor = UIColor.App2.textPrimary
+        self.accountInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValueBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValuePlusView.backgroundColor = UIColor.App.highlightPrimary
+        self.accountValueLabel.textColor = UIColor.App.textPrimary
 
-        self.tabViewController.sliderBarColor = UIColor.App2.highlightPrimary
-        self.tabViewController.barColor = UIColor.App2.backgroundPrimary
-        self.tabViewController.textColor = UIColor.App2.textPrimary
-
-        self.closeButton.titleLabel?.textColor = UIColor.App2.textPrimary
-        
-        self.betsLabel.textColor = UIColor.App2.textPrimary
-
+        self.tabViewController.sliderBarColor = UIColor.App.highlightPrimary
+        self.tabViewController.barColor = UIColor.App.backgroundPrimary
+        self.tabViewController.textColor = UIColor.App.textPrimary
+      
+        self.closeButton.titleLabel?.textColor = UIColor.App.textPrimary
+        self.betsLabel.textColor = UIColor.App.textPrimary
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
 
     @objc func didTapAccountValue(_ sender: UITapGestureRecognizer) {

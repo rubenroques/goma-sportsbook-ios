@@ -83,13 +83,13 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App.tertiaryBackground
-        self.containerView.layer.cornerRadius = CornerRadius.button
+      // self.containerView.backgroundColor = UIColor.App.backgroundCards
+        //self.containerView.layer.cornerRadius = CornerRadius.button
 
-        self.marketTypeLabel.textColor = UIColor.App.headingMain
+        self.marketTypeLabel.textColor = UIColor.App.textPrimary
         self.marketTypeLabel.font = AppFont.with(type: .medium, size: 11)
 
-        self.marketOddLabel.textColor = UIColor.App.headingMain
+        self.marketOddLabel.textColor = UIColor.App.textPrimary
         self.marketOddLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
@@ -187,10 +187,14 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
     }
 
     func selectButton() {
-        self.containerView.backgroundColor = UIColor.App.mainTint
+        self.containerView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.marketOddLabel.textColor = UIColor.App.buttonTextPrimary
+        self.marketTypeLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectButton() {
-        self.containerView.backgroundColor = UIColor.App.tertiaryBackground
+        self.containerView.backgroundColor = UIColor.App.backgroundOdds
+        self.marketOddLabel.textColor = UIColor.App.textPrimary
+        self.marketTypeLabel.textColor = UIColor.App.textPrimary
     }
     @objc func didTapOddButton() {
 
@@ -208,8 +212,10 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)

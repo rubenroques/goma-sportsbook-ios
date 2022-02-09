@@ -347,6 +347,7 @@ class Router {
         var bettingOffers: [EveryMatrix.BettingOffer] = []
 
         var betSelectionBettingOfferId: String?
+        var marketId: String?
 
         for content in aggregator.content ?? [] {
             switch content {
@@ -397,8 +398,8 @@ class Router {
             let marketDescription = "\(betSelection.marketName), \(betSelection.bettingTypeEventPartName)"
             let bettingTicket = BettingTicket(id: bettingOfferId,
                                               outcomeId: betSelection.outcomeId,
-                                              matchId: betSelection.eventId,
-                                              value: betSelection.priceValue,
+                                              marketId: markets.first?.id ?? "1", matchId: betSelection.eventId,
+                                              value: betSelection.priceValue, isAvailable: markets.first?.isAvailable ?? true,
                                               matchDescription: betSelection.eventName,
                                               marketDescription: marketDescription,
                                               outcomeDescription: betSelection.betName)

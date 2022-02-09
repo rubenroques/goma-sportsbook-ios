@@ -90,20 +90,20 @@ class FilterCollapseView: NibView {
     }
 
     func setup() {
-        self.backgroundColor = UIColor.App2.backgroundPrimary
+        self.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App2.backgroundSecondary
+        containerView.backgroundColor = UIColor.App.backgroundSecondary
 
         containerView.layer.cornerRadius = CornerRadius.modal
 
-        topView.backgroundColor = UIColor.App2.backgroundSecondary
+        topView.backgroundColor = UIColor.App.backgroundSecondary
         topView.layer.cornerRadius = CornerRadius.modal
 
         titleLabel.text = "Test"
         titleLabel.font = AppFont.with(type: .bold, size: 16)
-        titleLabel.textColor = UIColor.App2.textPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
 
-        toggleButton.backgroundColor = UIColor.App2.backgroundSecondary
+        toggleButton.backgroundColor = UIColor.App.backgroundSecondary
 
         checkboxButton.isHidden = true
 
@@ -124,7 +124,7 @@ class FilterCollapseView: NibView {
             }
         }
 
-        stackView.backgroundColor = UIColor.App2.backgroundSecondary
+        stackView.backgroundColor = UIColor.App.backgroundSecondary
         stackView.alpha = enabledAlpha
 
     }

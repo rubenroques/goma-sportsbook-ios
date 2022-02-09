@@ -6,12 +6,45 @@
       "scale" : "1x"
     },
     {
-      "filename" : "smt went wrong@2x.png",
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "smt went wrong-1.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "filename" : "smt went wrong-2.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "smt went wrong-3.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
       "filename" : "smt went wrong@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "smt went wrong@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

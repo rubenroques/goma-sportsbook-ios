@@ -112,60 +112,59 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.mainBackground
-        backView.backgroundColor = UIColor.App.mainBackground
-        registerTitleLabel.textColor = UIColor.App.headingMain
-        topSignUpView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
+        backView.backgroundColor = UIColor.App.backgroundPrimary
+        registerTitleLabel.textColor = UIColor.App.textPrimary
+        topSignUpView.backgroundColor = UIColor.App.backgroundPrimary
 
-        usernameHeaderTextView.backgroundColor = UIColor.App.mainBackground
-        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
-        usernameHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        usernameHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        usernameHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        usernameHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         usernameHeaderTextView.setSecureField(false)
 
-        dateHeaderTextView.backgroundColor = UIColor.App.mainBackground
-        dateHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
-        dateHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        dateHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        dateHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        dateHeaderTextView.setTextFieldColor(UIColor.App.inputText)
 
-        phoneView.backgroundColor = UIColor.App.mainBackground
+        phoneView.backgroundColor = UIColor.App.backgroundPrimary
 
-        indicativeHeaderTextView.backgroundColor = UIColor.App.mainBackground
-        indicativeHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
-        indicativeHeaderTextView.setViewColor(UIColor.App.mainBackground)
-        indicativeHeaderTextView.setViewBorderColor(UIColor.App.headerTextField)
+        indicativeHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        indicativeHeaderTextView.setTextFieldColor(UIColor.App.inputText)
+        indicativeHeaderTextView.setViewColor(UIColor.App.backgroundPrimary)
         indicativeHeaderTextView.setSecureField(false)
 
-        phoneHeaderTextView.backgroundColor = UIColor.App.mainBackground
-        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
-        phoneHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        phoneHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        phoneHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        phoneHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         phoneHeaderTextView.setSecureField(false)
 
-        lineView.backgroundColor = UIColor.App.headerTextField.withAlphaComponent(0.2)
+        lineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
-        emailHeaderTextView.backgroundColor = UIColor.App.mainBackground
-        emailHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
-        emailHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
-
-        passwordHeaderTextView.backgroundColor = UIColor.App.mainBackground
-        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
-        passwordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        emailHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        emailHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        emailHeaderTextView.setTextFieldColor(UIColor.App.inputText)
+        
+        passwordHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        passwordHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        passwordHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         passwordHeaderTextView.setSecureField(true)
 
         checkPolicyLinks()
 
-        confirmPasswordHeaderTextView.backgroundColor = UIColor.App.mainBackground
-        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.headerTextField)
-        confirmPasswordHeaderTextView.setTextFieldColor(UIColor.App.headingMain)
+        confirmPasswordHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
+        confirmPasswordHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        confirmPasswordHeaderTextView.setTextFieldColor(UIColor.App.inputText)
         confirmPasswordHeaderTextView.setSecureField(true)
 
-        signUpButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        signUpButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
-        signUpButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+        signUpButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        signUpButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        signUpButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
 
         signUpButton.backgroundColor = .clear
-        signUpButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
-        signUpButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        signUpButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        signUpButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
         signUpButton.layer.cornerRadius = CornerRadius.button
         signUpButton.layer.masksToBounds = true
     }

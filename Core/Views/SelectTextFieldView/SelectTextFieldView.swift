@@ -53,19 +53,19 @@ class SelectTextFieldView: NibView {
 
     func setup() {
 
-        self.backgroundColor = UIColor.App2.backgroundPrimary
+        self.backgroundColor = UIColor.App.backgroundPrimary
         self.layer.cornerRadius = CornerRadius.headerInput
         self.layer.borderWidth = 1
-        self.layer.borderColor = UIColor.App2.inputTextTitle.withAlphaComponent(1).cgColor
+        self.layer.borderColor = UIColor.App.inputTextTitle.withAlphaComponent(1).cgColor
 
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         selectImageView.image = UIImage(named: "arrow_down_icon")
 
         textField.autocorrectionType = .no
         textField.keyboardType = self.keyboardType
         textField.backgroundColor = .clear
-        textField.textColor = UIColor.App2.inputText
+        textField.textColor = UIColor.App.inputText
         textField.delegate = self
 
         iconLabelImageView.isHidden = true

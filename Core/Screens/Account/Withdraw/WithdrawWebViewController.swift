@@ -56,16 +56,16 @@ class WithdrawWebViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.topView.backgroundColor = UIColor.App.mainBackground
+        self.topView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.containerView.backgroundColor = UIColor.App.mainBackground
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.navigationView.backgroundColor = .clear
 
-        self.navigationLabel.textColor = UIColor.App.headingMain
+        self.navigationLabel.textColor = UIColor.App.textPrimary
 
         self.navigationButton.backgroundColor = .clear
-        self.navigationButton.tintColor = UIColor.App.headingMain
+        self.navigationButton.tintColor = UIColor.App.textPrimary
     }
 
     func setupWebView() {

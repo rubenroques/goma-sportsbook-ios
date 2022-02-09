@@ -191,25 +191,25 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.matchBaseView.backgroundColor = .clear
         self.imageBaseView.backgroundColor = .clear
 
-        self.baseView.backgroundColor = UIColor.App2.backgroundCards
+        self.baseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.homeParticipantNameLabel.textColor = UIColor.App2.textPrimary
-        self.awayParticipantNameLabel.textColor = UIColor.App2.textPrimary
-        self.dateLabel.textColor = UIColor.App2.textPrimary
-        self.timeLabel.textColor = UIColor.App2.textPrimary
+        self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
+        self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
+        self.dateLabel.textColor = UIColor.App.textPrimary
+        self.timeLabel.textColor = UIColor.App.textPrimary
 
-        self.homeOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.homeOddValueLabel.textColor = UIColor.App2.textPrimary
-        self.drawOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.drawOddValueLabel.textColor = UIColor.App2.textPrimary
-        self.awayOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.awayOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.drawOddValueLabel.textColor = UIColor.App.textPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.awayOddValueLabel.textColor = UIColor.App.textPrimary
 
-        self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
-        self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
-        self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
 
-        self.matchOffuscationView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.matchOffuscationView.backgroundColor = UIColor.App.backgroundSecondary
         self.matchOffuscationView.alpha = 0.66
 
         self.setupGradient()
@@ -217,7 +217,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     func setupGradient() {
         self.matchGradientView.alpha = 1.0
-        self.matchGradientView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.matchGradientView.backgroundColor = UIColor.App.backgroundSecondary
 
         let rightGradientMaskLayer = CAGradientLayer()
         rightGradientMaskLayer.frame = matchGradientView.bounds
@@ -401,10 +401,14 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     func selectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapLeftOddButton() {
@@ -422,8 +426,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: firstMarket.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -440,10 +446,14 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     func selectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.drawOddValueLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapMiddleOddButton() {
@@ -461,8 +471,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: firstMarket.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -478,10 +490,14 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     func selectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
+        self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.awayOddValueLabel.textColor = UIColor.App.textPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapRightOddButton() {
@@ -499,8 +515,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: firstMarket.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)

@@ -56,6 +56,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     var oddSubscriber: AnyCancellable?
     var oddAvailabilitySubscriber: AnyCancellable?
+    var marketPublisherSubscriber: AnyCancellable?
     var cancellables = Set<AnyCancellable>()
 
     var maxStake: Double?
@@ -65,7 +66,6 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         didSet {
             if let bettingTicket = bettingTicket {
                 self.didUpdateBettingValueAction?(bettingTicket.id, self.realBetValue)
-
             }
         }
     }
@@ -134,6 +134,9 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.oddAvailabilitySubscriber?.cancel()
         self.oddAvailabilitySubscriber = nil
 
+        self.marketPublisherSubscriber?.cancel()
+        self.marketPublisherSubscriber = nil
+        
         self.didUpdateBettingValueAction = nil
         
         self.currentValue = 0
@@ -159,53 +162,56 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
 
-        self.baseView.backgroundColor = UIColor.App.secondaryBackground
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.topBaseView.backgroundColor = UIColor.App.secondaryBackground
+        self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.separatorView.backgroundColor = UIColor.App.separatorLine
-        self.bottomBaseView.backgroundColor = UIColor.App.secondaryBackground
-        self.buttonsBaseView.backgroundColor = UIColor.App.secondaryBackground
+        self.bottomBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.buttonsBaseView.backgroundColor = UIColor.App.backgroundSecondary
         
-        self.outcomeNameLabel.textColor = UIColor.App.headingMain
-        self.oddValueLabel.textColor = UIColor.App.headingMain
-        self.marketNameLabel.textColor = UIColor.App.headingMain
-        self.matchDetailLabel.textColor = UIColor.App.headingDisabled
-        self.returnsValueLabel.textColor = UIColor.App.headingDisabled
+        self.outcomeNameLabel.textColor = UIColor.App.textPrimary
+        self.marketNameLabel.textColor = UIColor.App.textPrimary
+        self.matchDetailLabel.textColor = UIColor.App.textDisablePrimary
+        self.returnsValueLabel.textColor = UIColor.App.textDisablePrimary
+        
+        self.oddBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddValueLabel.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddValueLabel.textColor = UIColor.App.textPrimary
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
-        self.amountTextfield.textColor = UIColor.App.headingMain
+        self.amountTextfield.textColor = UIColor.App.textPrimary
         self.amountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
-            NSAttributedString.Key.foregroundColor: UIColor.App.headingDisabled
+            NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
         ])
 
-        self.amountBaseView.backgroundColor = UIColor.App.tertiaryBackground
+        self.amountBaseView.backgroundColor = UIColor.App.backgroundTertiary
         
-        self.plusOneButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.plusOneButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.plusOneButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        self.plusOneButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
+        self.plusOneButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.plusOneButtonView.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
-        self.plusFiveButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.plusFiveButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.plusFiveButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        self.plusFiveButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
+        self.plusFiveButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.plusFiveButtonView.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
-        self.maxValueButtonView.setBackgroundColor(UIColor.App.tertiaryBackground, for: .normal)
-        self.maxValueButtonView.setTitleColor(UIColor.App.headingMain, for: .normal)
-        self.maxValueButtonView.setTitleColor(UIColor.App.headingMain.withAlphaComponent(0.7), for: .highlighted)
+        self.maxValueButtonView.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
+        self.maxValueButtonView.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.maxValueButtonView.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
 
         self.stackView.backgroundColor = .clear
 
-        self.errorView.backgroundColor = UIColor.App.contentBackground
+        self.errorView.backgroundColor = UIColor.App.backgroundCards
 
-        self.errorLabel.textColor = UIColor.App.headingMain
+        self.errorLabel.textColor = UIColor.App.textPrimary
         self.errorLabel.font = AppFont.with(type: .bold, size: 15)
         self.errorLabel.numberOfLines = 0
 
         self.errorLogoImageView.image = UIImage(named: "warning_alert_icon")
         self.errorLogoImageView.contentMode = .scaleAspectFit
 
-        self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
-        self.errorLateralBottomView.backgroundColor = UIColor.App.contentBackground
+        self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
+        self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundCards
     }
 
     func addDoneAccessoryView() {
@@ -283,16 +289,21 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 self?.currentOddValue = newOddValue
                 self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
             })
-
-        self.oddAvailabilitySubscriber = Env.everyMatrixStorage
-            .oddPublisherForBettingOfferId(bettingTicket.id)?
-            .map(\.isAvailable)
-            .compactMap({ $0 })
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isAvailable in
-                self?.suspendedBettingOfferView.isHidden = isAvailable
-            })
-
+        
+        if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),
+           let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
+            
+            self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
+                .receive(on: DispatchQueue.main)
+                .eraseToAnyPublisher()
+                .map({ bettingOffer, market in
+                    return (bettingOffer.isAvailable ?? true, market.isAvailable ?? true)
+                })
+                .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
+                    self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable
+                })
+        }
+        
         if let errorBetting = errorBetting {
             self.errorLabel.text = errorBetting
             self.errorView.isHidden = false
@@ -313,8 +324,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.errorLabel.text = ""
             self.errorView.isHidden = true
 
-            self.errorLateralTopView.backgroundColor = UIColor.App.secondaryBackground
-            self.errorLateralBottomView.backgroundColor = UIColor.App.secondaryBackground
+            self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
+            self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
 
         Env.betslipManager.simpleBetslipSelectionStateList
@@ -386,19 +397,19 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
             currentValue = Int(value * 100.0)
         }
 
-        if let maxStake = self.maxStake {
-            let maxStakeInt = Int(maxStake * 100.0)
-            if currentValue > maxStakeInt {
-                currentValue = maxStakeInt
-            }
-        }
-
-        if let maxUserBalance = self.userBalance {
-            let maxUserBalanceInt = Int(maxUserBalance * 100.0)
-            if currentValue > maxUserBalanceInt {
-                currentValue = maxUserBalanceInt
-            }
-        }
+//        if let maxStake = self.maxStake {
+//            let maxStakeInt = Int(maxStake * 100.0)
+//            if currentValue > maxStakeInt {
+//                currentValue = maxStakeInt
+//            }
+//        }
+//
+//        if let maxUserBalance = self.userBalance {
+//            let maxUserBalanceInt = Int(maxUserBalance * 100.0)
+//            if currentValue > maxUserBalanceInt {
+//                currentValue = maxUserBalanceInt
+//            }
+//        }
 
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))

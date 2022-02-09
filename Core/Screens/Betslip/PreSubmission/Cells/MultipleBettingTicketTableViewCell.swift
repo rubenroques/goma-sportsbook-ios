@@ -30,6 +30,9 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var stackView: UIStackView!
 
+    @IBOutlet private weak var suspendedBettingOfferView: UIView!
+    @IBOutlet private weak var suspendedBettingOfferLabel: UILabel!
+
     @IBOutlet private weak var errorView: UIView!
     @IBOutlet private weak var errorLabel: UILabel!
 
@@ -40,11 +43,14 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     var bettingTicket: BettingTicket?
 
     var oddSubscriber: AnyCancellable?
+    var oddAvailabilitySubscriber: AnyCancellable?
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
 
+        self.suspendedBettingOfferView.isHidden = true
+        
         self.upChangeOddValueImage.alpha = 0.0
         self.downChangeOddValueImage.alpha = 0.0
 
@@ -75,6 +81,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.oddSubscriber?.cancel()
+        self.oddSubscriber = nil
+        
+        self.oddAvailabilitySubscriber?.cancel()
+        self.oddAvailabilitySubscriber = nil
+        
+        self.suspendedBettingOfferView.isHidden = true
         self.bettingTicket = nil
 
         self.outcomeNameLabel.text = ""
@@ -89,26 +102,28 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
 
-        self.baseView.backgroundColor = UIColor.App2.backgroundCards
+        self.baseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.topBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.separatorView.backgroundColor = UIColor.App2.separatorLine
-        self.bottomBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.separatorView.backgroundColor = UIColor.App.separatorLine
+        self.bottomBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.outcomeNameLabel.textColor = UIColor.App2.textPrimary
-        self.oddValueLabel.textColor = UIColor.App2.textPrimary
-        self.marketNameLabel.textColor = UIColor.App2.textPrimary
-        self.matchDetailLabel.textColor = UIColor.App2.textPrimary
+        self.outcomeNameLabel.textColor = UIColor.App.textPrimary
+        self.marketNameLabel.textColor = UIColor.App.textPrimary
+        self.matchDetailLabel.textColor = UIColor.App.textPrimary
 
-        self.stackView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.stackView.backgroundColor = UIColor.App.backgroundSecondary
+        self.errorView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.errorView.backgroundColor = UIColor.App2.backgroundSecondary
-
-        self.errorLabel.textColor = UIColor.App2.textPrimary
+        self.errorLabel.textColor = UIColor.App.textPrimary
         self.errorLabel.font = AppFont.with(type: .bold, size: 15)
 
-        self.errorLateralTopView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.errorLateralBottomView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
+        self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        self.oddBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddValueLabel.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddValueLabel.textColor = UIColor.App.textPrimary
 
     }
 
@@ -116,7 +131,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -129,7 +144,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -147,6 +162,20 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.currentOddValue = bettingTicket.value
 
+        if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),
+           let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
+            
+            self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
+                .receive(on: DispatchQueue.main)
+                .eraseToAnyPublisher()
+                .map({ bettingOffer, market in
+                    return (bettingOffer.isAvailable ?? true, market.isAvailable ?? true)
+                })
+                .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
+                    self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable
+                })
+        }
+        
         self.oddSubscriber = Env.everyMatrixStorage
             .oddPublisherForBettingOfferId(bettingTicket.id)?
             .map(\.oddsValue)
@@ -168,12 +197,12 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             })
 
         if errorBetting != nil {
-            self.errorLateralTopView.backgroundColor = UIColor.App2.alertError
-            self.errorLateralBottomView.backgroundColor = UIColor.App2.alertError
+            self.errorLateralTopView.backgroundColor = UIColor.App.alertError
+            self.errorLateralBottomView.backgroundColor = UIColor.App.alertError
         }
         else {
-            self.errorLateralTopView.backgroundColor = UIColor.App2.backgroundSecondary
-            self.errorLateralBottomView.backgroundColor = UIColor.App2.backgroundSecondary
+            self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
+            self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundSecondary
         }
     }
 

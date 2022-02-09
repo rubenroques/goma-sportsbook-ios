@@ -31,6 +31,7 @@
                 <outlet property="headerDetailTopView" destination="BWt-ze-64e" id="Dcp-Uc-8PQ"/>
                 <outlet property="headerDetailView" destination="fdu-WM-VjI" id="tmd-Zp-bDj"/>
                 <outlet property="loadingView" destination="FrV-dt-cge" id="xeh-Fu-ANj"/>
+                <outlet property="marketTypeSeparator" destination="5CV-zZ-7va" id="r7b-32-Wah"/>
                 <outlet property="marketTypesCollectionView" destination="bBf-el-85E" id="ECQ-NU-tsR"/>
                 <outlet property="matchStatsButton" destination="ENi-SA-Q1E" id="XS6-X7-5dq"/>
                 <outlet property="shareButton" destination="LCn-mO-oLD" id="5b2-Y8-m78"/>
@@ -44,6 +45,15 @@
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5CV-zZ-7va">
+                    <rect key="frame" x="0.0" y="244" width="414" height="2"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="2" id="oTF-ek-oDl"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9vu-0T-T83">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -274,11 +284,11 @@
                     </collectionViewFlowLayout>
                 </collectionView>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jEG-kW-DaM">
-                    <rect key="frame" x="0.0" y="244" width="414" height="652"/>
+                    <rect key="frame" x="0.0" y="246" width="414" height="650"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="FrV-dt-cge">
-                    <rect key="frame" x="188.5" y="551.5" width="37" height="37"/>
+                    <rect key="frame" x="188.5" y="552.5" width="37" height="37"/>
                     <color key="color" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 </activityIndicatorView>
             </subviews>
@@ -286,20 +296,23 @@
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="jEG-kW-DaM" secondAttribute="trailing" id="4WK-xj-35q"/>
+                <constraint firstItem="5CV-zZ-7va" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="4fL-Pc-FEZ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="9vu-0T-T83" secondAttribute="trailing" id="6OB-So-iGD"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="bBf-el-85E" secondAttribute="trailing" id="7LD-oJ-Dcu"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="top" secondItem="9vu-0T-T83" secondAttribute="bottom" id="8JS-RN-RXu"/>
                 <constraint firstItem="bBf-el-85E" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="JRH-E4-Lkx"/>
                 <constraint firstItem="FrV-dt-cge" firstAttribute="centerX" secondItem="jEG-kW-DaM" secondAttribute="centerX" id="M7X-75-uuq"/>
+                <constraint firstItem="jEG-kW-DaM" firstAttribute="top" secondItem="5CV-zZ-7va" secondAttribute="bottom" id="RoJ-9i-DRT"/>
                 <constraint firstItem="9vu-0T-T83" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="W27-0D-9Hm"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="fdu-WM-VjI" secondAttribute="trailing" id="WlH-Wy-eeF"/>
                 <constraint firstItem="9vu-0T-T83" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="bGN-ax-JhY"/>
                 <constraint firstItem="fdu-WM-VjI" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="bUd-G2-N7C"/>
                 <constraint firstItem="FrV-dt-cge" firstAttribute="centerY" secondItem="jEG-kW-DaM" secondAttribute="centerY" id="bvx-4R-ukC"/>
                 <constraint firstAttribute="bottom" secondItem="jEG-kW-DaM" secondAttribute="bottom" id="c6C-7a-V88"/>
+                <constraint firstItem="5CV-zZ-7va" firstAttribute="top" secondItem="bBf-el-85E" secondAttribute="bottom" id="dBL-Cv-xcy"/>
                 <constraint firstItem="fdu-WM-VjI" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="kws-oS-H2A"/>
-                <constraint firstItem="jEG-kW-DaM" firstAttribute="top" secondItem="bBf-el-85E" secondAttribute="bottom" id="nGm-a3-nwM"/>
                 <constraint firstItem="bBf-el-85E" firstAttribute="top" secondItem="fdu-WM-VjI" secondAttribute="bottom" id="nN9-Kq-9Kb"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="5CV-zZ-7va" secondAttribute="trailing" id="rDx-ib-Xbu"/>
                 <constraint firstItem="jEG-kW-DaM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="tgb-6V-df0"/>
             </constraints>
             <point key="canvasLocation" x="31.884057971014496" y="38.839285714285715"/>

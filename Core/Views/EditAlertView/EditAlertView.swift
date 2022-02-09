@@ -38,7 +38,7 @@ class EditAlertView: NibView {
                 alertTextLabel.text = localized("error_edit")
             case .info:
                 alertImageView.image = UIImage(named: "question_circle_icon")
-                alertLabel.textColor = UIColor.App.headingMain
+                alertLabel.textColor = UIColor.App.textPrimary
                 alertLabel.text = localized("info")
                 alertTextLabel.text = localized("info_text")
             }
@@ -74,14 +74,14 @@ class EditAlertView: NibView {
     func setupWithTheme() {
         self.alpha = 0
 
-        containerView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        alertImageView.backgroundColor = UIColor.App.mainBackground
-        alertLabel.textColor = UIColor.App.headingMain
-        alertTextLabel.textColor = UIColor.App.headingMain
+        alertImageView.backgroundColor = UIColor.App.backgroundPrimary
+        alertLabel.textColor = UIColor.App.inputTextTitle
+        alertTextLabel.textColor = UIColor.App.inputText
 
-        closeButton.backgroundColor = UIColor.App.mainBackground
-        closeButton.tintColor = UIColor.App.headerTextField
+        closeButton.backgroundColor = UIColor.App.backgroundPrimary
+        closeButton.tintColor = UIColor.App.textPrimary
 
     }
 

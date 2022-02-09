@@ -44,9 +44,9 @@ class BetslipErrorView: NibView {
         self.containerView.layer.borderColor = UIColor.App.alertError.cgColor
 
         self.logoImageView.backgroundColor = .clear
-        self.logoImageView.tintColor = UIColor.App.headingMain
+        self.logoImageView.tintColor = UIColor.App.textPrimary
 
-        self.descriptionLabel.textColor = UIColor.App.headingMain
+        self.descriptionLabel.textColor = UIColor.App.textPrimary
     }
 
     func setDescription(description: String) {

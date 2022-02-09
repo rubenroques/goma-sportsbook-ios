@@ -113,12 +113,12 @@ class PhonePrefixSelectorViewController: UIViewController {
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.buttonsBarView.backgroundColor = .clear
-        self.containerTitleLabel.textColor = UIColor.App.headingMain
+        self.containerTitleLabel.textColor = UIColor.App.textPrimary
         self.containerTitleLabel.font = AppFont.with(type: .bold, size: 17)
 
         self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
         self.cancelButton.setTitle(localized("cancel"), for: .normal)
-        self.cancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
+        self.cancelButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.searchBarBaseView.backgroundColor = .clear
 
@@ -128,25 +128,25 @@ class PhonePrefixSelectorViewController: UIViewController {
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.mainBackground.image()
+        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
         self.searchBar.placeholder = localized("search")
 
         self.searchBar.delegate = self
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.secondaryBackground
+            textfield.backgroundColor = UIColor.App.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App.fadeOutHeading])
+                                                                                UIColor.App.inputTextTitle])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.fadeOutHeading
+                glassIconView.tintColor = UIColor.App.inputTextTitle
             }
         }
-        self.containerView.backgroundColor = UIColor.App.mainBackground
+        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     func animatePresentContainer() {
@@ -235,11 +235,11 @@ extension PhonePrefixSelectorViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
-        view.backgroundColor = UIColor.App.mainBackground
+        view.backgroundColor = UIColor.App.backgroundPrimary
 
         let titleLabel = UILabel()
         titleLabel.backgroundColor = .clear
-        titleLabel.textColor = UIColor.App.fadeOutHeading
+        titleLabel.textColor = UIColor.App.inputTextTitle
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = AppFont.with(type: .bold, size: 12)
         view.addSubview(titleLabel)

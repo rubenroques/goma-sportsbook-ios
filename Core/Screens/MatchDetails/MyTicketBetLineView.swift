@@ -141,23 +141,23 @@ class MyTicketBetLineView: NibView {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.baseView.backgroundColor = UIColor.App.secondaryBackground
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
         self.indicatorBaseView.backgroundColor = UIColor.clear
 
         self.separatorView.backgroundColor = UIColor.App.separatorLine
 
-        self.tournamentNameLabel.textColor = UIColor.App.headingMain
-        self.homeTeamNameLabel.textColor = UIColor.App.headingMain
-        self.homeTeamScoreLabel.textColor = UIColor.App.headingMain
-        self.awayTeamNameLabel.textColor = UIColor.App.headingMain
-        self.awayTeamScoreLabel.textColor = UIColor.App.headingMain
-        self.marketLabel.textColor = UIColor.App.headingMain
-        self.outcomeLabel.textColor = UIColor.App.headingMain
-        self.oddTitleLabel.textColor = UIColor.App.headingMain
-        self.oddValueLabel.textColor = UIColor.App.headingMain
-        self.dateLabel.textColor = UIColor.App.headingMain
+        self.tournamentNameLabel.textColor = UIColor.App.textPrimary
+        self.homeTeamNameLabel.textColor = UIColor.App.textPrimary
+        self.homeTeamScoreLabel.textColor = UIColor.App.textPrimary
+        self.awayTeamNameLabel.textColor = UIColor.App.textPrimary
+        self.awayTeamScoreLabel.textColor = UIColor.App.textPrimary
+        self.marketLabel.textColor = UIColor.App.textPrimary
+        self.outcomeLabel.textColor = UIColor.App.textPrimary
+        self.oddTitleLabel.textColor = UIColor.App.textPrimary
+        self.oddValueLabel.textColor = UIColor.App.textPrimary
+        self.dateLabel.textColor = UIColor.App.textPrimary
 
-        self.indicatorLabel.textColor = UIColor.App.headingMain
+        self.indicatorLabel.textColor = UIColor.App.textPrimary
 
         self.bottomBaseView.backgroundColor = .clear
         
@@ -170,13 +170,17 @@ class MyTicketBetLineView: NibView {
             case "WON", "HALF_WON":
                 self.indicatorBaseView.isHidden = false
                 self.dateLabel.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusWon
+                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
                 self.indicatorLabel.text = "Won"
+                self.bottomBaseView.backgroundColor = UIColor.App.myTicketsWonFaded
+                self.separatorView.isHidden = true
             case "LOST", "HALF_LOST":
                 self.indicatorBaseView.isHidden = false
                 self.dateLabel.isHidden = true
-                self.indicatorInternalBaseView.backgroundColor = UIColor.App.statusLoss
+                self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
+                self.bottomBaseView.backgroundColor = UIColor.App.myTicketsLostFaded
                 self.indicatorLabel.text = "Lost"
+                self.separatorView.isHidden = true
             case "OPEN":
                 self.dateLabel.isHidden = false
                 self.indicatorLabel.text = ""

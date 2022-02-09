@@ -149,8 +149,8 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        baseView.backgroundColor = UIColor.App.secondaryBackground
-        titleLabel.textColor = UIColor.App.headingMain
+        baseView.backgroundColor = UIColor.App.backgroundPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
         separatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 

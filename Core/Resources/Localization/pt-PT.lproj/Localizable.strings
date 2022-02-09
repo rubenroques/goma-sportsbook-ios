@@ -319,3 +319,5 @@ Terms of use, Privacy Policy and EULA";
 
 "accept_any" = "Accept Any";
 "accept_higher" = "Accept Higher";
+"suspended_market" = "Suspended";
+"closed_market" = "Closed";

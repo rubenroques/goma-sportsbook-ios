@@ -30,6 +30,10 @@ class BetslipManager: NSObject {
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
 
+
+    private var bettingTicketRegisters: [String: EndpointPublisherIdentifiable] = [:]
+    private var bettingTicketSubscribers: [String: AnyCancellable] = [:]
+
     private var cancellables: Set<AnyCancellable> = []
 
     override init() {
@@ -53,9 +57,11 @@ class BetslipManager: NSObject {
             }
             .store(in: &cancellables)
 
-        bettingTicketsDictionaryPublisher.filter(\.isEmpty).sink { _ in
-            self.simpleBetslipSelectionState.send(nil)
-            self.multipleBetslipSelectionState.send(nil)
+        bettingTicketsDictionaryPublisher
+            .filter(\.isEmpty)
+            .sink { [weak self] _ in
+            self?.simpleBetslipSelectionState.send(nil)
+            self?.multipleBetslipSelectionState.send(nil)
         }
         .store(in: &cancellables)
 
@@ -77,14 +83,17 @@ class BetslipManager: NSObject {
 
     func addBettingTicket(_ bettingTicket: BettingTicket) {
         bettingTicketsDictionaryPublisher.value[bettingTicket.id] = bettingTicket
+        self.subscribeBettingTicketPublisher(bettingTicket: bettingTicket)
     }
 
     func removeBettingTicket(_ bettingTicket: BettingTicket) {
         bettingTicketsDictionaryPublisher.value[bettingTicket.id] = nil
+        self.unsubscribeBettingTicketPublisher(withId: bettingTicket.id)
     }
 
     func removeBettingTicket(withId id: String) {
         bettingTicketsDictionaryPublisher.value[id] = nil
+        self.unsubscribeBettingTicketPublisher(withId: id)
     }
 
     func hasBettingTicket(_ bettingTicket: BettingTicket) -> Bool {
@@ -96,7 +105,97 @@ class BetslipManager: NSObject {
     }
 
     func clearAllBettingTickets() {
-        self.bettingTicketsDictionaryPublisher.send([:])
+        for bettingTicket in self.bettingTicketsDictionaryPublisher.value.values {
+            self.unsubscribeBettingTicketPublisher(withId: bettingTicket.id)
+        }
+        bettingTicketsDictionaryPublisher.send([:])
+    }
+
+    private func unsubscribeBettingTicketPublisher(withId id: String) {
+        if let register = self.bettingTicketRegisters[id] {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: register)
+            self.bettingTicketRegisters.removeValue(forKey: id)
+        }
+        if let subscriber = self.bettingTicketSubscribers[id] {
+            subscriber.cancel()
+            self.bettingTicketSubscribers.removeValue(forKey: id)
+        }
+    }
+
+    private func subscribeBettingTicketPublisher(bettingTicket: BettingTicket) {
+        let endpoint = TSRouter.bettingOfferPublisher(operatorId: Env.appSession.operatorId,
+                                                      language: "en",
+                                                      bettingOfferId: bettingTicket.id)
+
+        let bettingTicketSubscriber = Env.everyMatrixClient.manager.registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let oddUpdatesRegister):
+                    self?.bettingTicketRegisters[bettingTicket.id] = oddUpdatesRegister
+
+                case .initialContent(let aggregator):
+
+                    if let content = aggregator.content {
+                        for contentType in content {
+                            if case let .bettingOffer(bettingOffer) = contentType {
+                                self?.updateBettingTicket(withId: bettingOffer.id, bettingOffer: bettingOffer)
+                            }
+                        }
+                    }
+
+                case .updatedContent(let aggregatorUpdates):
+                    if let content = aggregatorUpdates.contentUpdates {
+                        for contentType in content {
+                            if case let .bettingOfferUpdate(id, odd, _, isAvailable) = contentType {
+                                self?.updateBettingTicketOdd(withId: id, newOdd: odd, isAvailable: isAvailable)
+                            }
+                        }
+                    }
+
+                case .disconnect:
+                    print("MarketDetailCell odd update - disconnect")
+                }
+            })
+
+        self.bettingTicketSubscribers[bettingTicket.id] = bettingTicketSubscriber
+    }
+    
+    private func updateBettingTicket(withId id: String, bettingOffer: EveryMatrix.BettingOffer) {
+        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id], let value = bettingOffer.oddsValue {
+            let newBettingTicket = BettingTicket(id: bettingTicket.id,
+                                                 outcomeId: bettingTicket.outcomeId,
+                                                 marketId: bettingTicket.marketId,
+                                                 matchId: bettingTicket.matchId,
+                                                 value: value,
+                                                 isAvailable: bettingTicket.isAvailable,
+                                                 matchDescription: bettingTicket.matchDescription,
+                                                 marketDescription: bettingTicket.marketDescription,
+                                                 outcomeDescription: bettingTicket.outcomeDescription)
+            self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
+        }
+    }
+
+    private func updateBettingTicketOdd(withId id: String, newOdd: Double?, isAvailable: Bool?) {
+        if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id] {
+            let newBettingTicket = BettingTicket(id: bettingTicket.id,
+                                                 outcomeId: bettingTicket.outcomeId,
+                                                 marketId: bettingTicket.marketId,
+                                                 matchId: bettingTicket.matchId,
+                                                 value: newOdd ?? bettingTicket.value,
+                                                 isAvailable: isAvailable ?? bettingTicket.isAvailable,
+                                                 matchDescription: bettingTicket.matchDescription,
+                                                 marketDescription: bettingTicket.marketDescription,
+                                                 outcomeDescription: bettingTicket.outcomeDescription)
+            self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
+        }
     }
 
     func updatedBettingTicketsOdds() -> [BettingTicket] {
@@ -106,8 +205,10 @@ class BetslipManager: NSObject {
             if let ticketOdd = Env.everyMatrixStorage.bettingOfferPublishers[ticket.id], let oddsValue = ticketOdd.value.oddsValue {
                 let newTicket = BettingTicket(id: ticket.id,
                                               outcomeId: ticket.outcomeId,
+                                              marketId: ticket.marketId,
                                               matchId: ticket.matchId,
                                               value: oddsValue,
+                                              isAvailable: ticket.isAvailable,
                                               matchDescription: ticket.matchDescription,
                                               marketDescription: ticket.marketDescription,
                                               outcomeDescription: ticket.outcomeDescription)
@@ -117,8 +218,10 @@ class BetslipManager: NSObject {
                 // TODO: The ticket value is not updated
                 let newTicket = BettingTicket(id: ticket.id,
                                               outcomeId: ticket.outcomeId,
+                                              marketId: ticket.marketId,
                                               matchId: ticket.matchId,
                                               value: ticket.value,
+                                              isAvailable: ticket.isAvailable,
                                               matchDescription: ticket.matchDescription,
                                               marketDescription: ticket.marketDescription,
                                               outcomeDescription: ticket.outcomeDescription)
@@ -175,7 +278,6 @@ extension BetslipManager {
 
                     // Add to simple selection array
                     self.simpleBetslipSelectionStateList.value[ticket.id] = betslipSelectionState
-
                     self.simpleBetslipSelectionStateList.send(self.simpleBetslipSelectionStateList.value)
                 }
                 .store(in: &cancellables)

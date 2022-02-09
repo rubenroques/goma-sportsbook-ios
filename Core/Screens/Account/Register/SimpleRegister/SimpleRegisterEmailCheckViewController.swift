@@ -94,30 +94,30 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App.mainBackground
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipView.backgroundColor = UIColor.App.mainBackground
+        skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.white, for: .normal)
+        skipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         skipButton.layer.borderColor = .none
-        skipButton.layer.backgroundColor = UIColor.white.withAlphaComponent(0).cgColor
+        skipButton.layer.backgroundColor = UIColor.App.textPrimary.withAlphaComponent(0).cgColor
 
-        registerTitleLabel.textColor = .white
+        registerTitleLabel.textColor = UIColor.App.textHeadlinePrimary
 
-        emailHeadertextFieldView.backgroundColor = UIColor.App.mainBackground
-        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.headerTextField)
-        emailHeadertextFieldView.setTextFieldColor(.white)
+        emailHeadertextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        emailHeadertextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        emailHeadertextFieldView.setTextFieldColor(UIColor.App.inputText)
         emailHeadertextFieldView.setSecureField(false)
 
-        registerButton.setTitleColor(UIColor.App.headingMain, for: .normal)
-        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
-        registerButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+        registerButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        registerButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        registerButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
 
         registerButton.backgroundColor = .clear
-        registerButton.setBackgroundColor(UIColor.App.primaryButtonNormal, for: .normal)
-        registerButton.setBackgroundColor(UIColor.App.primaryButtonPressed, for: .highlighted)
+        registerButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        registerButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
         registerButton.layer.cornerRadius = CornerRadius.button
         registerButton.layer.masksToBounds = true
 

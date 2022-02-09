@@ -71,13 +71,13 @@ class GameSuggestedView: NibView {
 
     func setupWithTheme() {
     
-        self.gameInfoLabel.textColor = UIColor.App.headingMain
+        self.gameInfoLabel.textColor = UIColor.App.textPrimary
        // self.gameInfoLabel.font = AppFont.with(type: .medium, size: 11)
 
-        self.gameTitleLabel.textColor = UIColor.App.headingMain
+        self.gameTitleLabel.textColor = UIColor.App.textPrimary
         // self.gameTitleLabel.font = AppFont.with(type: .bold, size: 13)
         if let gameView = self.gameView {
-            gameView.backgroundColor = UIColor.App.secondaryBackground
+            gameView.backgroundColor = UIColor.App.backgroundCards
         }
         
     }

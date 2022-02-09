@@ -47,11 +47,11 @@ class MatchFiltersViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        self.view.backgroundColor = UIColor.App.mainBackground
-        topView.backgroundColor = UIColor.App.mainBackground
-        navigationView.backgroundColor = UIColor.App.mainBackground
-        navigationLabel.textColor = UIColor.App.headingMain
-        cancelButton.setTitleColor(UIColor.App.mainTint, for: .normal)
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        topView.backgroundColor = UIColor.App.backgroundPrimary
+        navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        navigationLabel.textColor = UIColor.App.textPrimary
+        cancelButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
     }
     
 }

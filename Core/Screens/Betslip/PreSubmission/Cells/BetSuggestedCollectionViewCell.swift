@@ -13,6 +13,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var betsStackView: UIStackView!
     @IBOutlet private weak var competitionTitleLabel: UILabel!
 
+    @IBOutlet private weak var infoBetLabelsView: UIView!
     @IBOutlet private weak var informationBetView: UIView!
     
     @IBOutlet private weak var numberOfSelectionsLabel: UILabel!
@@ -64,12 +65,22 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
+        self.infoBetLabelsView.backgroundColor = UIColor.App.backgroundSecondary
+        self.informationBetView.backgroundColor = UIColor.App.backgroundSecondary
+        self.betNowButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        
+        self.totalOddValueLabel.backgroundColor = UIColor.App.backgroundSecondary
+        self.totalOddLabel.backgroundColor = UIColor.App.backgroundSecondary
+        self.totalOddValueLabel.textColor = UIColor.App.textPrimary
+        self.totalOddLabel.textColor = UIColor.App.textSecond
+        
+        self.numberOfSelectionsLabel.backgroundColor = UIColor.App.backgroundSecondary
+        self.numberOfSelectionsValueLabel.backgroundColor = UIColor.App.backgroundSecondary
+        self.numberOfSelectionsValueLabel.textColor = UIColor.App.textPrimary
+        self.numberOfSelectionsLabel.textColor = UIColor.App.textSecond
+        
         self.betsStackView.removeAllArrangedSubviews()
-        self.betsStackView.backgroundColor = UIColor.App.secondaryBackground
-        self.informationBetView.backgroundColor = UIColor.App.secondaryBackground
-        self.totalOddValueLabel.textColor = UIColor.App.headingMain
-        self.numberOfSelectionsValueLabel.textColor = UIColor.App.headingMain
-        self.betNowButton.backgroundColor = UIColor.App.primaryButtonNormal
+        self.betsStackView.backgroundColor = UIColor.App.backgroundSecondary
     }
 
     func setupStackBetView() {
@@ -109,8 +120,10 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)

@@ -697,10 +697,10 @@
 		A96B618527A03C20005DC376 /* RecentSearchRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618327A03C20005DC376 /* RecentSearchRowView.swift */; };
 		A96B618727A03C5E005DC376 /* RecentSearchRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B618627A03C5E005DC376 /* RecentSearchRowView.xib */; };
 		A96B618827A03C5E005DC376 /* RecentSearchRowView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B618627A03C5E005DC376 /* RecentSearchRowView.xib */; };
-		A96B619127A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618F27A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift */; };
-		A96B619227A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618F27A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift */; };
-		A96B619327A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib */; };
-		A96B619427A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib */; };
+		A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618F27A0496C005DC376 /* RecentSearchHeaderView.swift */; };
+		A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B618F27A0496C005DC376 /* RecentSearchHeaderView.swift */; };
+		A96B619327A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
+		A96B619427A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */; };
 		A96B619727A0508E005DC376 /* RecentSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619527A0508E005DC376 /* RecentSearchTableViewCell.swift */; };
 		A96B619827A0508E005DC376 /* RecentSearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619527A0508E005DC376 /* RecentSearchTableViewCell.swift */; };
 		A96B619927A0508E005DC376 /* RecentSearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619627A0508E005DC376 /* RecentSearchTableViewCell.xib */; };
@@ -752,10 +752,10 @@
 		A995C19B2799AF1100151462 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1992799AF1100151462 /* SearchViewModel.swift */; };
 		A995C19E279AD52300151462 /* SearchV2Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C19D279AD52300151462 /* SearchV2Response.swift */; };
 		A995C19F279AD52300151462 /* SearchV2Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C19D279AD52300151462 /* SearchV2Response.swift */; };
-		A995C1AC279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */; };
-		A995C1AD279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */; };
-		A995C1AE279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */; };
-		A995C1AF279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */; };
+		A995C1AC279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1AA279B10B600151462 /* SearchTitleSectionHeaderView.swift */; };
+		A995C1AD279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A995C1AA279B10B600151462 /* SearchTitleSectionHeaderView.swift */; };
+		A995C1AE279B10B600151462 /* SearchTitleSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C1AB279B10B600151462 /* SearchTitleSectionHeaderView.xib */; };
+		A995C1AF279B10B600151462 /* SearchTitleSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A995C1AB279B10B600151462 /* SearchTitleSectionHeaderView.xib */; };
 		A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996229F2788563F00ABDF97 /* SportsAggregator.swift */; };
 		A99622A32788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */; };
@@ -1296,8 +1296,8 @@
 		A96B617D279EE6D2005DC376 /* CompetitionSearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CompetitionSearchTableViewCell.xib; sourceTree = "<group>"; };
 		A96B618327A03C20005DC376 /* RecentSearchRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchRowView.swift; sourceTree = "<group>"; };
 		A96B618627A03C5E005DC376 /* RecentSearchRowView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchRowView.xib; sourceTree = "<group>"; };
-		A96B618F27A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchUITableViewHeaderFooterView.swift; sourceTree = "<group>"; };
-		A96B619027A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchUITableViewHeaderFooterView.xib; sourceTree = "<group>"; };
+		A96B618F27A0496C005DC376 /* RecentSearchHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchHeaderView.swift; sourceTree = "<group>"; };
+		A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchHeaderView.xib; sourceTree = "<group>"; };
 		A96B619527A0508E005DC376 /* RecentSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchTableViewCell.swift; sourceTree = "<group>"; };
 		A96B619627A0508E005DC376 /* RecentSearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchTableViewCell.xib; sourceTree = "<group>"; };
 		A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddViewPosition.swift; sourceTree = "<group>"; };
@@ -1323,8 +1323,8 @@
 		A995C194279991A100151462 /* SearchViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchViewController.xib; sourceTree = "<group>"; };
 		A995C1992799AF1100151462 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		A995C19D279AD52300151462 /* SearchV2Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchV2Response.swift; sourceTree = "<group>"; };
-		A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTitleSectionUITableViewHeaderFooterView.swift; sourceTree = "<group>"; };
-		A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchTitleSectionUITableViewHeaderFooterView.xib; sourceTree = "<group>"; };
+		A995C1AA279B10B600151462 /* SearchTitleSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTitleSectionHeaderView.swift; sourceTree = "<group>"; };
+		A995C1AB279B10B600151462 /* SearchTitleSectionHeaderView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SearchTitleSectionHeaderView.xib; sourceTree = "<group>"; };
 		A996229F2788563F00ABDF97 /* SportsAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregator.swift; sourceTree = "<group>"; };
 		A99622A22788565D00ABDF97 /* SportsAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsAggregatorRepository.swift; sourceTree = "<group>"; };
 		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
@@ -1990,7 +1990,6 @@
 		455C962526FE11B300456F30 /* Home */ = {
 			isa = PBXGroup;
 			children = (
-				A995C1922799917100151462 /* Search */,
 				455C962626FE11CA00456F30 /* HomeViewController.swift */,
 				455C962726FE11CA00456F30 /* HomeViewController.xib */,
 				45D712EC27031C4F00AC0364 /* PreLive */,
@@ -2183,6 +2182,7 @@
 				455A0CBA26BD9D4F00EC572D /* RootViewController.xib */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Home */,
+				A995C1922799917100151462 /* Search */,
 				A9BCF438274FB558006DD528 /* MatchDetails */,
 				A9B8409426DE44BF00269B05 /* GeoLocation */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
@@ -2734,9 +2734,9 @@
 		A995C1922799917100151462 /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				A995C1A0279B0BC500151462 /* Cells */,
 				A995C193279991A100151462 /* SearchViewController.swift */,
 				A995C194279991A100151462 /* SearchViewController.xib */,
+				A995C1A0279B0BC500151462 /* Cells */,
 				A995C1992799AF1100151462 /* SearchViewModel.swift */,
 			);
 			path = Search;
@@ -2754,12 +2754,12 @@
 		A995C1A0279B0BC500151462 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
-				A995C1AA279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift */,
-				A995C1AB279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib */,
+				A995C1AA279B10B600151462 /* SearchTitleSectionHeaderView.swift */,
+				A995C1AB279B10B600151462 /* SearchTitleSectionHeaderView.xib */,
 				A96B617C279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift */,
 				A96B617D279EE6D2005DC376 /* CompetitionSearchTableViewCell.xib */,
-				A96B618F27A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift */,
-				A96B619027A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib */,
+				A96B618F27A0496C005DC376 /* RecentSearchHeaderView.swift */,
+				A96B619027A0496C005DC376 /* RecentSearchHeaderView.xib */,
 				A96B619527A0508E005DC376 /* RecentSearchTableViewCell.swift */,
 				A96B619627A0508E005DC376 /* RecentSearchTableViewCell.xib */,
 			);
@@ -3290,7 +3290,7 @@
 				455A0CAE26BD982000EC572D /* Localizable.strings in Resources */,
 				45726333272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
 				457816AB2706679400F66878 /* MatchLineTableViewCell.xib in Resources */,
-				A96B619327A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib in Resources */,
+				A96B619327A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */,
 				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
 				A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */,
 				F4B32D9E2791BBA5001E31A5 /* NewThemeColors.xcassets in Resources */,
@@ -3315,7 +3315,7 @@
 				A96279F52743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
 				454E0ACE2734386A00794E0C /* MultipleBettingTicketTableViewCell.xib in Resources */,
 				45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
-				A995C1AE279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */,
+				A995C1AE279B10B600151462 /* SearchTitleSectionHeaderView.xib in Resources */,
 				A9BCF445274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
 				A995C197279991A100151462 /* SearchViewController.xib in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
@@ -3422,7 +3422,7 @@
 				A96279F62743D3AA0001E1D5 /* EmailVerificationViewController.xib in Resources */,
 				454E0A9F2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib in Resources */,
 				45626E3B275541790069B89B /* ThreeAwayMarketDetailTableViewCell.xib in Resources */,
-				A96B619427A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.xib in Resources */,
+				A96B619427A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */,
 				A98D3B3427148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
 				457F49702737F9330047169D /* SubmitedBetTableViewCell.xib in Resources */,
 				458BAC782770ACAE006C4BC7 /* MyTicketTableViewCell.xib in Resources */,
@@ -3493,7 +3493,7 @@
 				45726334272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
 				4589F41126BF0203005DF543 /* TitleTextFieldView.xib in Resources */,
 				456B343D26C2819E009D7D27 /* Inconsolata-Regular.ttf in Resources */,
-				A995C1AF279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.xib in Resources */,
+				A995C1AF279B10B600151462 /* SearchTitleSectionHeaderView.xib in Resources */,
 				452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */,
 				455C962B26FE11CA00456F30 /* HomeViewController.xib in Resources */,
 				458BAC842770EF53006C4BC7 /* MyTicketBetLineView.xib in Resources */,
@@ -3813,7 +3813,7 @@
 				45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF626BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342726C18257009D7D27 /* Logger.swift in Sources */,
-				A995C1AC279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */,
+				A995C1AC279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */,
 				F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896726C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
@@ -3854,7 +3854,7 @@
 				45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
-				A96B619127A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift in Sources */,
+				A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -4149,7 +4149,7 @@
 				45166CE626F3548D00E69D65 /* SSWampMessage.swift in Sources */,
 				455A0CF726BD9D9000EC572D /* NSObject+Extension.swift in Sources */,
 				456B342826C18257009D7D27 /* Logger.swift in Sources */,
-				A995C1AD279B10B600151462 /* SearchTitleSectionUITableViewHeaderFooterView.swift in Sources */,
+				A995C1AD279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */,
 				F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE826F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896826C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
@@ -4190,7 +4190,7 @@
 				45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
-				A96B619227A0496C005DC376 /* RecentSearchUITableViewHeaderFooterView.swift in Sources */,
+				A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
@@ -4370,7 +4370,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00307;
+				CURRENT_PROJECT_VERSION = 00308;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4396,7 +4396,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00307;
+				CURRENT_PROJECT_VERSION = 00308;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

@@ -39,6 +39,8 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailLiveTopLabel: UILabel!
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
 
+    @IBOutlet private var marketTypeSeparator: UILabel!
+    
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
 
@@ -313,47 +315,49 @@ class MatchDetailsViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App.mainBackground
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.marketTypeSeparator.backgroundColor = UIColor.App.separatorLine
+        
+        self.topView.backgroundColor = UIColor.App.backgroundPrimary
+        self.headerDetailView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topView.backgroundColor = UIColor.App.secondaryBackground
-        self.headerDetailView.backgroundColor = UIColor.App.secondaryBackground
+        self.headerDetailTopView.backgroundColor = .clear
 
-        self.headerDetailTopView.backgroundColor = UIColor.App.secondaryBackground
+        self.backButton.tintColor = UIColor.App.textPrimary
 
-        self.backButton.tintColor = UIColor.App.headingMain
+        self.headerCompetitionDetailView.backgroundColor = .clear
 
-        self.headerCompetitionDetailView.backgroundColor = UIColor.App.secondaryBackground
+        self.headerCompetitionLabel.textColor = UIColor.App.textPrimary
 
-        self.headerCompetitionLabel.textColor = UIColor.App.headingMain
+        self.headerDetailStackView.backgroundColor = .clear
 
-        self.headerDetailStackView.backgroundColor = UIColor.App.secondaryBackground
+        self.headerDetailHomeView.backgroundColor = .clear
+        self.headerDetailHomeLabel.textColor = UIColor.App.textPrimary
 
-        self.headerDetailHomeView.backgroundColor = UIColor.App.secondaryBackground
-        self.headerDetailHomeLabel.textColor = UIColor.App.headingMain
+        self.headerDetailAwayView.backgroundColor = .clear
+        self.headerDetailAwayLabel.textColor = UIColor.App.textPrimary
 
-        self.headerDetailAwayView.backgroundColor = UIColor.App.secondaryBackground
-        self.headerDetailAwayLabel.textColor = UIColor.App.headingMain
+        self.headerDetailMiddleView.backgroundColor = .clear
 
-        self.headerDetailMiddleView.backgroundColor = UIColor.App.secondaryBackground
+        self.headerDetailMiddleStackView.backgroundColor = .clear
 
-        self.headerDetailMiddleStackView.backgroundColor = UIColor.App.secondaryBackground
+        self.headerDetailPreliveView.backgroundColor = .clear
+        self.headerDetailPreliveTopLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
+        self.headerDetailPreliveBottomLabel.textColor = UIColor.App.textPrimary
 
-        self.headerDetailPreliveView.backgroundColor = UIColor.App.secondaryBackground
-        self.headerDetailPreliveTopLabel.textColor = UIColor.App.headingMain.withAlphaComponent(0.5)
-        self.headerDetailPreliveBottomLabel.textColor = UIColor.App.headingMain
-
-        self.headerDetailLiveView.backgroundColor = UIColor.App.secondaryBackground
-        self.headerDetailLiveTopLabel.textColor = UIColor.App.headingMain
-        self.headerDetailLiveBottomLabel.textColor = UIColor.App.headingMain.withAlphaComponent(0.5)
+        self.headerDetailLiveView.backgroundColor = .clear
+        
+        self.headerDetailLiveTopLabel.textColor = UIColor.App.textPrimary
+        self.headerDetailLiveBottomLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
 
         // Market List CollectionView
-        self.marketTypesCollectionView.backgroundColor = .clear
+        self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         // TableView
         self.tableView.backgroundColor = .clear
 
-        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipButtonView.backgroundColor = UIColor.App.mainTint
+        self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
+        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
     }
 
     func setupMatchDetailPublisher() {

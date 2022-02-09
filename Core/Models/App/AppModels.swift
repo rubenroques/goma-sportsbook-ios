@@ -115,13 +115,14 @@ extension Outcome {
         }
 
         return self.codeName
-
     }
 }
 
 struct BettingOffer {
     var id: String
     var value: Double
+    var isLive: Bool
+    var isAvailable: Bool
 }
 
 enum MarketType {

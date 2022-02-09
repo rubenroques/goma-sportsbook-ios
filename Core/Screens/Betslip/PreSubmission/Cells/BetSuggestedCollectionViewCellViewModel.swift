@@ -194,8 +194,10 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -357,7 +359,9 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
                 if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
                     let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                    value: rawBettingOffer.oddsValue ?? 0.0)
+                                                    value: rawBettingOffer.oddsValue ?? 0.0,
+                                                    isLive: rawBettingOffer.isLive ?? false,
+                                                    isAvailable: rawBettingOffer.isAvailable ?? true)
 
                     let outcome = Outcome(id: rawOutcome.id,
                                           codeName: rawOutcome.headerNameKey ?? "",

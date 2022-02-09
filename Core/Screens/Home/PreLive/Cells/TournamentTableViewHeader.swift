@@ -88,10 +88,10 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.favoriteLeagueBaseView.backgroundColor = UIColor.App2.backgroundSecondary
-        self.collapseBaseView.backgroundColor = UIColor.App2.backgroundSecondary
+        self.favoriteLeagueBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.collapseBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.nameTitleLabel.textColor = UIColor.App2.textPrimary
+        self.nameTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     func setupCompetition() {
