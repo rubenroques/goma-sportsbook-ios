@@ -10,42 +10,8 @@ import UIKit
 extension UIColor {
 
     // Colors file is localed on each Client "ThemeColors.xcassets" file
-    struct App {
-        
-        static let mainTint: UIColor = UIColor(named: "mainTintColor")!
-        
-        static let mainBackground = UIColor(named: "mainBackgroundColor")!
-        static let secondaryBackground = UIColor(named: "secondaryBackgroundColor")!
-        static let tertiaryBackground = UIColor(named: "tertiaryBackgroundColor")!
-
-        static let contentBackground = UIColor(named: "contentBackgroundColor")!
-        
-        static let separatorLine = UIColor(named: "separatorLineColor")!
-        static let fadeOutHeading = UIColor(named: "fadeOutHeadingColor")!
-        static let fadedGrayLine = UIColor(named: "fadedGrayLineColor")!
-
-        static let headingMain = UIColor(named: "headingMainColor")!
-        static let headingSecondary = UIColor(named: "headingSecondaryColor")!
-        static let headingDisabled = UIColor(named: "headingDisabledColor")!
-
-        static let headerTextField = UIColor(named: "headerTextFieldGrayColor")!
-        
-        static let primaryButtonNormal = UIColor(named: "primaryButtonNormalColor")!
-        static let primaryButtonPressed = UIColor(named: "primaryButtonPressedColor")!
-        static let contentAlphaBackground = UIColor(named: "contentAlphaBackgroundColor")!
-        static let clearButtonAction = UIColor(named: "clearButtonActionColor")!
-        
-        static let alertError = UIColor(named: "alertErrorColor")!
-        static let alertSuccess = UIColor(named: "alertSuccessColor")!
-
-        static let statusWon = UIColor(named: "statusWon")!
-        static let statusDraw = UIColor(named: "statusDraw")!
-        static let statusLoss = UIColor(named: "statusLoss")!
-
-        static let redIndicator = UIColor(named: "redIndicatorColor")
-    }
     
-    struct App2 {
+    struct App {
         
         static let backgroundPrimary: UIColor = UIColor(named: "backgroundPrimary")!
         static let backgroundSecondary = UIColor(named: "backgroundSecondary")!

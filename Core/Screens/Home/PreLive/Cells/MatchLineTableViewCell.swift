@@ -38,7 +38,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.selectionStyle = .none
 
         self.debugLabel.isHidden = true
-//
+
 //        #if DEBUG
 //        self.debugLabel.isHidden = false
 //        #endif
@@ -117,20 +117,20 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionBaseView.backgroundColor = .clear
         self.collectionView.backgroundColor = .clear
-        self.collectionView.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
+        self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
-        self.backSliderView.backgroundColor = UIColor.App2.backgroundTertiary
+        self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
     func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
+        
         self.match = match
         self.liveMatch = liveMatch
 
         UIView.performWithoutAnimation {
             self.collectionView.reloadSections(IndexSet(integer: 0))
         }
-
-//        self.debugLabel.text = "\(self.match?.markets.count ?? -1); \(self.debugLabel.text ?? "")"
+        
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
@@ -307,8 +307,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         }
 
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UICollectionViewCell", for: indexPath)
-        cell.backgroundView?.backgroundColor = UIColor.App2.backgroundCards
-        cell.backgroundColor = UIColor.App2.backgroundCards
+        cell.backgroundView?.backgroundColor = UIColor.App.backgroundCards
+        cell.backgroundColor = UIColor.App.backgroundCards
         cell.layer.cornerRadius = 9
         return cell
     }

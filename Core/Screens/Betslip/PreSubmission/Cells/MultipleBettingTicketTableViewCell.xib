@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
@@ -135,6 +135,22 @@
                                             <constraint firstAttribute="height" constant="48" id="mdM-CF-DLS"/>
                                         </constraints>
                                     </view>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yjW-Os-uV0">
+                                        <rect key="frame" x="0.0" y="46" width="275" height="48"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SUSPENDED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hvg-pe-WHh">
+                                                <rect key="frame" x="82" y="14" width="111.5" height="20"/>
+                                                <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
+                                                <color key="textColor" name="headingMainColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.58751135610000005" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="hvg-pe-WHh" firstAttribute="centerY" secondItem="yjW-Os-uV0" secondAttribute="centerY" id="ELB-Bq-c8R"/>
+                                            <constraint firstItem="hvg-pe-WHh" firstAttribute="centerX" secondItem="yjW-Os-uV0" secondAttribute="centerX" id="st1-RN-wWb"/>
+                                        </constraints>
+                                    </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WXI-Oe-yNB">
                                         <rect key="frame" x="0.0" y="0.0" width="5" height="94"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -146,11 +162,15 @@
                                 <color key="backgroundColor" systemColor="systemGrayColor"/>
                                 <constraints>
                                     <constraint firstItem="VKz-IS-Fl5" firstAttribute="top" secondItem="juf-r2-kpu" secondAttribute="top" id="1wb-om-CRU"/>
+                                    <constraint firstItem="yjW-Os-uV0" firstAttribute="bottom" secondItem="Mnm-r7-RbS" secondAttribute="bottom" id="9n1-OC-QRb"/>
                                     <constraint firstAttribute="bottom" secondItem="WXI-Oe-yNB" secondAttribute="bottom" id="I5L-4u-k4U"/>
                                     <constraint firstAttribute="bottom" secondItem="Mnm-r7-RbS" secondAttribute="bottom" id="LAl-yy-nEt"/>
+                                    <constraint firstItem="yjW-Os-uV0" firstAttribute="top" secondItem="Mnm-r7-RbS" secondAttribute="top" id="Mqk-ZO-fbU"/>
+                                    <constraint firstItem="yjW-Os-uV0" firstAttribute="leading" secondItem="Mnm-r7-RbS" secondAttribute="leading" id="NBw-Sf-VuI"/>
                                     <constraint firstAttribute="trailing" secondItem="VKz-IS-Fl5" secondAttribute="trailing" id="ZEW-TV-SSx"/>
                                     <constraint firstItem="Mnm-r7-RbS" firstAttribute="leading" secondItem="juf-r2-kpu" secondAttribute="leading" id="ZXE-3Q-eJi"/>
                                     <constraint firstAttribute="trailing" secondItem="lgw-o3-Bnc" secondAttribute="trailing" constant="12" id="a9t-GV-bib"/>
+                                    <constraint firstItem="yjW-Os-uV0" firstAttribute="trailing" secondItem="Mnm-r7-RbS" secondAttribute="trailing" id="bY3-w6-zaT"/>
                                     <constraint firstAttribute="trailing" secondItem="Mnm-r7-RbS" secondAttribute="trailing" id="eQU-b9-lYf"/>
                                     <constraint firstItem="WXI-Oe-yNB" firstAttribute="top" secondItem="juf-r2-kpu" secondAttribute="top" id="iRN-sA-vtk"/>
                                     <constraint firstItem="u2k-HB-uF2" firstAttribute="leading" secondItem="lgw-o3-Bnc" secondAttribute="leading" id="nYS-3s-m36"/>
@@ -218,6 +238,8 @@
                 <outlet property="outcomeNameLabel" destination="u2k-HB-uF2" id="XBm-Am-xg8"/>
                 <outlet property="separatorView" destination="lgw-o3-Bnc" id="7vQ-cH-Lnq"/>
                 <outlet property="stackView" destination="Pcv-Ij-7gY" id="Ef0-y3-BdB"/>
+                <outlet property="suspendedBettingOfferLabel" destination="hvg-pe-WHh" id="2v7-Ds-Do2"/>
+                <outlet property="suspendedBettingOfferView" destination="yjW-Os-uV0" id="PnZ-pT-cZ3"/>
                 <outlet property="topBaseView" destination="VKz-IS-Fl5" id="Uug-kQ-uug"/>
                 <outlet property="upChangeOddValueImage" destination="f0h-GL-09q" id="R97-TS-quP"/>
             </connections>

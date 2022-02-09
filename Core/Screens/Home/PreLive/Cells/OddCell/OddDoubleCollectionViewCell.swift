@@ -192,22 +192,22 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App2.backgroundCards
-        self.baseView.backgroundColor = UIColor.App2.backgroundCards
+        self.backgroundColor = UIColor.App.backgroundCards
+        self.baseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.participantsNameLabel.textColor = UIColor.App2.textPrimary
-        self.marketNameLabel.textColor = UIColor.App2.textPrimary
+        self.participantsNameLabel.textColor = UIColor.App.textPrimary
+        self.marketNameLabel.textColor = UIColor.App.textPrimary
 
-        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
-        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
+        self.leftBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
 
-        self.suspendedBaseView.backgroundColor = UIColor.App2.backgroundDisabledOdds
-        self.suspendedLabel.textColor = UIColor.App2.textDisablePrimary
+        self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
+        self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
 
-        self.statsBaseView.backgroundColor = UIColor.App2.backgroundCards
+        self.statsBaseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.homeNameCaptionLabel.textColor = UIColor.App2.textPrimary
-        self.awayNameCaptionLabel.textColor = UIColor.App2.textPrimary
+        self.homeNameCaptionLabel.textColor = UIColor.App.textPrimary
+        self.awayNameCaptionLabel.textColor = UIColor.App.textPrimary
 
         self.homeCircleCaptionView.backgroundColor = UIColor(hex: 0xD99F00)
         self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
@@ -337,7 +337,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -350,7 +350,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -388,14 +388,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     //
     //
     func selectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
-        self.leftOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
-        self.leftOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.leftBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.leftOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.leftOddValueLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectLeftOddButton() {
-        self.leftBaseView.backgroundColor = UIColor.App2.backgroundOdds
-        self.leftOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.leftOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.leftBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.leftOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.leftOddValueLabel.textColor = UIColor.App.textPrimary
     }
     @objc func didTapLeftOddButton() {
 
@@ -413,8 +413,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -430,14 +431,14 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     }
 
     func selectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
-        self.rightOddTitleLabel.textColor = UIColor.App2.buttonTextPrimary
-        self.rightOddValueLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.rightBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.rightOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+        self.rightOddValueLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectRightOddButton() {
-        self.rightBaseView.backgroundColor = UIColor.App2.backgroundOdds
-        self.rightOddTitleLabel.textColor = UIColor.App2.textPrimary
-        self.rightOddValueLabel.textColor = UIColor.App2.textPrimary
+        self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.rightOddValueLabel.textColor = UIColor.App.textPrimary
     }
     @objc func didTapRightOddButton() {
 
@@ -455,8 +456,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: market.id,
                                           matchId: match.id,
-                                          value: outcome.bettingOffer.value,
+                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)

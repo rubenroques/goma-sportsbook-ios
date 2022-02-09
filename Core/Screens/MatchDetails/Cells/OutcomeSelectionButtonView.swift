@@ -19,6 +19,7 @@ class OutcomeSelectionButtonView: NibView {
     @IBOutlet private weak var downChangeOddValueImage: UIImageView!
 
     var match: Match?
+    var marketId: String?
     var outcome: Outcome?
     var bettingOffer: BettingOffer?
 
@@ -91,18 +92,13 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     func setupWithTheme() {
-        self.containerView.backgroundColor = UIColor.App2.backgroundOdds
+        self.containerView.backgroundColor = UIColor.App.backgroundOdds
         self.containerView.layer.cornerRadius = CornerRadius.button
-        
-        //self.stackView.backgroundColor = UIColor.App2.backgroundOdds
-        //self.stackView.layer.cornerRadius = CornerRadius.label
-       // self.containerView.backgroundColor = UIColor.App2.backgroundOdds
-       // self.containerView.layer.cornerRadius = CornerRadius.button
 
-        self.marketTypeLabel.textColor = UIColor.App2.textPrimary
+        self.marketTypeLabel.textColor = UIColor.App.textPrimary
         self.marketTypeLabel.font = AppFont.with(type: .medium, size: 11)
 
-        self.marketOddLabel.textColor = UIColor.App2.textPrimary
+        self.marketOddLabel.textColor = UIColor.App.textPrimary
         self.marketOddLabel.font = AppFont.with(type: .bold, size: 13)
     }
 
@@ -111,29 +107,6 @@ class OutcomeSelectionButtonView: NibView {
         self.outcome = outcome
         self.bettingOffer = outcome.bettingOffer
         self.marketTypeLabel.text = outcome.translatedName
-
-        //        if outcome.nameDigit1 != nil || outcome.nameDigit2 != nil || outcome.nameDigit3  != nil || outcome.paramBoolean1 != nil {
-        //            self.marketTypeLabel.text = "\(outcome.translatedName)"
-        //        }
-
-        //        if let nameDigit1 = outcome.nameDigit1, let nameDigit2 = outcome.nameDigit2 {
-        //
-        //            var digit1String = "\(nameDigit1)"
-        //            digit1String = digit1String.replacingOccurrences(of: ".00", with: "")
-        //            digit1String = digit1String.replacingOccurrences(of: ".0", with: "")
-        //
-        //            var digit2String = "\(nameDigit2)"
-        //            digit2String = digit2String.replacingOccurrences(of: ".00", with: "")
-        //            digit2String = digit2String.replacingOccurrences(of: ".0", with: "")
-        //
-        //            self.marketTypeLabel.text = "\(outcome.translatedName)" // \(digit1String)-\(digit2String)"
-        //        }
-        //        else if let nameDigit1 = outcome.nameDigit1 {
-        //            var digitString = "\(nameDigit1)"
-        //            digitString = digitString.replacingOccurrences(of: ".00", with: "")
-        //            digitString = digitString.replacingOccurrences(of: ".0", with: "")
-        //            self.marketTypeLabel.text = "\(outcome.translatedName)" //" \(digitString)"
-        //        }
 
         self.updateBettingOffer(value: outcome.bettingOffer.value, isAvailableForBetting: true)
 
@@ -224,19 +197,20 @@ class OutcomeSelectionButtonView: NibView {
     }
 
     func selectButton() {
-        self.containerView.backgroundColor = UIColor.App2.buttonBackgroundPrimary
-        self.marketOddLabel.textColor = UIColor.App2.buttonTextPrimary
-        self.marketTypeLabel.textColor = UIColor.App2.buttonTextPrimary
+        self.containerView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        self.marketOddLabel.textColor = UIColor.App.buttonTextPrimary
+        self.marketTypeLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectButton() {
-        self.containerView.backgroundColor = UIColor.App2.backgroundOdds
-        self.marketOddLabel.textColor = UIColor.App2.textPrimary
-        self.marketTypeLabel.textColor = UIColor.App2.textPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundOdds
+        self.marketOddLabel.textColor = UIColor.App.textPrimary
+        self.marketTypeLabel.textColor = UIColor.App.textPrimary
     }
     @objc func didTapOddButton() {
 
         guard
             let match = self.match,
+            let marketId = self.outcome?.marketId,
             let outcome = self.outcome
         else {
             return
@@ -248,8 +222,10 @@ class OutcomeSelectionButtonView: NibView {
 
         let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
                                           outcomeId: outcome.id,
+                                          marketId: marketId,
                                           matchId: match.id,
                                           value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
                                           matchDescription: matchDescription,
                                           marketDescription: marketDescription,
                                           outcomeDescription: outcomeDescription)
@@ -268,7 +244,7 @@ class OutcomeSelectionButtonView: NibView {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -281,7 +257,7 @@ class OutcomeSelectionButtonView: NibView {
         baseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: baseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: baseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {

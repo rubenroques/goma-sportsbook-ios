@@ -41,12 +41,12 @@ class BetslipErrorView: NibView {
         self.containerView.backgroundColor = .black
         self.containerView.layer.cornerRadius = CornerRadius.view
         self.containerView.layer.borderWidth = 1
-        self.containerView.layer.borderColor = UIColor.App2.alertError.cgColor
+        self.containerView.layer.borderColor = UIColor.App.alertError.cgColor
 
         self.logoImageView.backgroundColor = .clear
-        self.logoImageView.tintColor = UIColor.App2.textPrimary
+        self.logoImageView.tintColor = UIColor.App.textPrimary
 
-        self.descriptionLabel.textColor = UIColor.App2.textPrimary
+        self.descriptionLabel.textColor = UIColor.App.textPrimary
     }
 
     func setDescription(description: String) {

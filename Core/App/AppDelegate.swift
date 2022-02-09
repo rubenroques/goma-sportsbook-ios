@@ -12,6 +12,7 @@ import SwiftyBeaver
 
 let swiftyBeaverLog = SwiftyBeaver.self
 
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
 

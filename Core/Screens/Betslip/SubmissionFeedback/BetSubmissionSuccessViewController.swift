@@ -91,19 +91,19 @@ class BetSubmissionSuccessViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.view.backgroundColor = UIColor.App2.backgroundPrimary
-        self.topView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.bottomView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.bottomSeparatorView.backgroundColor = UIColor.App2.separatorLine
-        self.safeAreaBottomView.backgroundColor = UIColor.App2.backgroundPrimary
-        self.messageTitleLabel.textColor = UIColor.App2.textPrimary
-        self.messageSubtitleLabel.textColor = UIColor.App2.textPrimary
-        self.betsMadeLabel.textColor = UIColor.App2.textPrimary
-        self.totalOddsLabel.textColor = UIColor.App2.textPrimary
-        self.possibleEarningsLabel.textColor = UIColor.App2.textPrimary
-        self.betsMadeValueLabel.textColor = UIColor.App2.textPrimary
-        self.totalOddsValueLabel.textColor = UIColor.App2.textPrimary
-        self.possibleEarningsValueLabel.textColor = UIColor.App2.textPrimary
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+        self.topView.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomView.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
+        self.messageTitleLabel.textColor = UIColor.App.textPrimary
+        self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
+        self.betsMadeLabel.textColor = UIColor.App.textPrimary
+        self.totalOddsLabel.textColor = UIColor.App.textPrimary
+        self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
+        self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
+        self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
+        self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
         StyleHelper.styleButton(button: self.continueButton)
     }
 

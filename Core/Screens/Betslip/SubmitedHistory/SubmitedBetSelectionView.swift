@@ -122,22 +122,22 @@ class SubmitedBetSelectionView: NibView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = UIColor.App2.backgroundSecondary
+        self.backgroundColor = UIColor.App.backgroundSecondary
 
-        topSeparatorLineView.backgroundColor = UIColor.App2.separatorLine
+        topSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         
-        betNameLabel.textColor = UIColor.App2.textPrimary
-        eventTimeLabel.textColor = UIColor.App2.textSecond
-        marketNameLabel.textColor = UIColor.App2.textPrimary
-        eventNameLabel.textColor = UIColor.App2.textSecond
-        oddValueLabel.textColor = UIColor.App2.textPrimary
+        betNameLabel.textColor = UIColor.App.textPrimary
+        eventTimeLabel.textColor = UIColor.App.textSecond
+        marketNameLabel.textColor = UIColor.App.textPrimary
+        eventNameLabel.textColor = UIColor.App.textSecond
+        oddValueLabel.textColor = UIColor.App.textPrimary
     }
 
     func highlightOddChangeUp(animated: Bool = true) {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.upChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertSuccess, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
@@ -150,7 +150,7 @@ class SubmitedBetSelectionView: NibView {
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.downChangeOddValueImage.alpha = 1.0
-            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App2.alertError, duration: animated ? 0.4 : 0.0)
+            self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {

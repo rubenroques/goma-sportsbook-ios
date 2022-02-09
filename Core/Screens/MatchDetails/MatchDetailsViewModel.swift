@@ -116,6 +116,7 @@ extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate {
             else {
                 return UITableViewCell()
             }
+            cell.marketId = marketGroupOrganizer.marketId
             cell.match = self.match
             cell.didExpandCellAction = { marketGroupOrganizerId in
                 self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -134,6 +135,7 @@ extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate {
             else {
                 return UITableViewCell()
             }
+            cell.marketId = marketGroupOrganizer.marketId
             cell.match = self.match
             cell.didExpandCellAction = { marketGroupOrganizerId in
                 self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -152,6 +154,7 @@ extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate {
             else {
                 return UITableViewCell()
             }
+            cell.marketId = marketGroupOrganizer.marketId
             cell.match = self.match
             cell.didExpandCellAction = { marketGroupOrganizerId in
                 self.expandedMarketGroupIds.insert(marketGroupOrganizerId)

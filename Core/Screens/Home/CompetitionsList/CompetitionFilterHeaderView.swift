@@ -147,8 +147,8 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        baseView.backgroundColor = UIColor.App2.backgroundPrimary
-        titleLabel.textColor = UIColor.App2.textPrimary
+        baseView.backgroundColor = UIColor.App.backgroundPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
         arrowImageView.backgroundColor = .clear
     }
 

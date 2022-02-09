@@ -103,31 +103,31 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     func setupWithTheme() {
-        topView.backgroundColor = UIColor.App2.backgroundPrimary
+        topView.backgroundColor = UIColor.App.backgroundPrimary
 
-        view.backgroundColor = UIColor.App2.backgroundPrimary
+        view.backgroundColor = UIColor.App.backgroundPrimary
 
-        containerView.backgroundColor = UIColor.App2.backgroundPrimary
+        containerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        navigationView.backgroundColor = UIColor.App2.backgroundPrimary
+        navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
-        closeButton.setTitleColor(UIColor.App2.textPrimary, for: .normal)
+        closeButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
-        progressView.backgroundColor = UIColor.App2.backgroundPrimary
+        progressView.backgroundColor = UIColor.App.backgroundPrimary
 
-        progressLabel.textColor = UIColor.App2.textPrimary
+        progressLabel.textColor = UIColor.App.textPrimary
 
-        titleLabel.textColor = UIColor.App2.textPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
 
-        idHeaderTextFieldView.backgroundColor = UIColor.App2.backgroundPrimary
-        idHeaderTextFieldView.setHeaderLabelColor(UIColor.App2.inputTextTitle)
-        idHeaderTextFieldView.setTextFieldColor(UIColor.App2.textPrimary)
+        idHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        idHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        idHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
         idHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         idHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        submitButton.backgroundColor = UIColor.App2.backgroundPrimary
-        submitButton.setTitleColor(UIColor.App2.buttonTextDisablePrimary, for: .disabled)
-        submitButton.setTitleColor(UIColor.App2.buttonTextPrimary, for: .normal)
+        submitButton.backgroundColor = UIColor.App.backgroundPrimary
+        submitButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+        submitButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         submitButton.cornerRadius = CornerRadius.button
 
     }
@@ -176,12 +176,12 @@ class FullRegisterDocumentsViewController: UIViewController {
 
         if idText {
             self.submitButton.isEnabled = true
-            self.submitButton.backgroundColor = UIColor.App2.highlightPrimary
+            self.submitButton.backgroundColor = UIColor.App.highlightPrimary
             self.setupFullRegisterUserInfoForm()
         }
         else {
             self.submitButton.isEnabled = false
-            self.submitButton.backgroundColor = UIColor.App2.backgroundPrimary
+            self.submitButton.backgroundColor = UIColor.App.backgroundPrimary
         }
 
     }

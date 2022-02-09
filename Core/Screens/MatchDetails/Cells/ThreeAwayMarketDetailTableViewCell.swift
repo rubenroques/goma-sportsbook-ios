@@ -27,7 +27,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
     @IBOutlet private var expandArrowImageView: UIImageView!
 
     var match: Match?
-    var market: Market?
+    var marketId: String?
     var marketGroupOrganizer: MarketGroupOrganizer?
 
     private let lineHeight: CGFloat = 56
@@ -67,7 +67,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.match = nil
-        self.market = nil
+        self.marketId = nil
         self.marketGroupOrganizer = nil
 
         self.expandBaseView.isHidden = false
@@ -88,11 +88,11 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App2.backgroundCards
-        self.expandBaseView.backgroundColor = UIColor.App2.backgroundCards
+        self.containerView.backgroundColor = UIColor.App.backgroundCards
+        self.expandBaseView.backgroundColor = UIColor.App.backgroundCards
 
-        self.expandLabel.textColor = UIColor.App2.textPrimary
-        self.titleLabel.textColor = UIColor.App2.textPrimary
+        self.expandLabel.textColor = UIColor.App.textPrimary
+        self.titleLabel.textColor = UIColor.App.textPrimary
         
     }
 
@@ -132,6 +132,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
                     if let outcomeValue = outcome {
                         let outcomeSelectionButtonView = OutcomeSelectionButtonView()
                         outcomeSelectionButtonView.match = self.match
+                        outcomeSelectionButtonView.marketId = self.marketId
                         outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
                         stackView.addArrangedSubview(outcomeSelectionButtonView)
                     }

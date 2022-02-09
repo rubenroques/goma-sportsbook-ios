@@ -57,15 +57,15 @@ class ActivationAlertCollectionViewCell: UICollectionViewCell {
 
     func setupWithTheme() {
 
-        containerView.backgroundColor = UIColor.App2.backgroundSecondary
+        containerView.backgroundColor = UIColor.App.backgroundSecondary
 
-        titleLabel.textColor = UIColor.App2.textPrimary
+        titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .bold, size: 16)
 
-        descriptionLabel.textColor = UIColor.App2.textPrimary
+        descriptionLabel.textColor = UIColor.App.textPrimary
         descriptionLabel.font = AppFont.with(type: .semibold, size: 14)
 
-        linkLabel.textColor = UIColor.App2.highlightPrimary
+        linkLabel.textColor = UIColor.App.highlightPrimary
         linkLabel.font = AppFont.with(type: .semibold, size: 14)
     }
 

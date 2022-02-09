@@ -154,8 +154,8 @@ class BetslipManager: NSObject {
                 case .updatedContent(let aggregatorUpdates):
                     if let content = aggregatorUpdates.contentUpdates {
                         for contentType in content {
-                            if case let .bettingOfferUpdate(id, odd, _, _) = contentType, let newOdd = odd {
-                                self?.updateBettingTicketOdd(withId: id, newOdd: newOdd)
+                            if case let .bettingOfferUpdate(id, odd, _, isAvailable) = contentType {
+                                self?.updateBettingTicketOdd(withId: id, newOdd: odd, isAvailable: isAvailable)
                             }
                         }
                     }
@@ -167,29 +167,33 @@ class BetslipManager: NSObject {
 
         self.bettingTicketSubscribers[bettingTicket.id] = bettingTicketSubscriber
     }
-
+    
     private func updateBettingTicket(withId id: String, bettingOffer: EveryMatrix.BettingOffer) {
         if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id], let value = bettingOffer.oddsValue {
             let newBettingTicket = BettingTicket(id: bettingTicket.id,
-                                          outcomeId: bettingTicket.outcomeId,
-                                          matchId: bettingTicket.matchId,
-                                          value: value,
-                                          matchDescription: bettingTicket.matchDescription,
-                                          marketDescription: bettingTicket.marketDescription,
-                                          outcomeDescription: bettingTicket.outcomeDescription)
+                                                 outcomeId: bettingTicket.outcomeId,
+                                                 marketId: bettingTicket.marketId,
+                                                 matchId: bettingTicket.matchId,
+                                                 value: value,
+                                                 isAvailable: bettingTicket.isAvailable,
+                                                 matchDescription: bettingTicket.matchDescription,
+                                                 marketDescription: bettingTicket.marketDescription,
+                                                 outcomeDescription: bettingTicket.outcomeDescription)
             self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
         }
     }
 
-    private func updateBettingTicketOdd(withId id: String, newOdd: Double) {
+    private func updateBettingTicketOdd(withId id: String, newOdd: Double?, isAvailable: Bool?) {
         if let bettingTicket = self.bettingTicketsDictionaryPublisher.value[id] {
             let newBettingTicket = BettingTicket(id: bettingTicket.id,
-                                          outcomeId: bettingTicket.outcomeId,
-                                          matchId: bettingTicket.matchId,
-                                          value: newOdd,
-                                          matchDescription: bettingTicket.matchDescription,
-                                          marketDescription: bettingTicket.marketDescription,
-                                          outcomeDescription: bettingTicket.outcomeDescription)
+                                                 outcomeId: bettingTicket.outcomeId,
+                                                 marketId: bettingTicket.marketId,
+                                                 matchId: bettingTicket.matchId,
+                                                 value: newOdd ?? bettingTicket.value,
+                                                 isAvailable: isAvailable ?? bettingTicket.isAvailable,
+                                                 matchDescription: bettingTicket.matchDescription,
+                                                 marketDescription: bettingTicket.marketDescription,
+                                                 outcomeDescription: bettingTicket.outcomeDescription)
             self.bettingTicketsDictionaryPublisher.value[id] = newBettingTicket
         }
     }
@@ -201,8 +205,10 @@ class BetslipManager: NSObject {
             if let ticketOdd = Env.everyMatrixStorage.bettingOfferPublishers[ticket.id], let oddsValue = ticketOdd.value.oddsValue {
                 let newTicket = BettingTicket(id: ticket.id,
                                               outcomeId: ticket.outcomeId,
+                                              marketId: ticket.marketId,
                                               matchId: ticket.matchId,
                                               value: oddsValue,
+                                              isAvailable: ticket.isAvailable,
                                               matchDescription: ticket.matchDescription,
                                               marketDescription: ticket.marketDescription,
                                               outcomeDescription: ticket.outcomeDescription)
@@ -212,8 +218,10 @@ class BetslipManager: NSObject {
                 // TODO: The ticket value is not updated
                 let newTicket = BettingTicket(id: ticket.id,
                                               outcomeId: ticket.outcomeId,
+                                              marketId: ticket.marketId,
                                               matchId: ticket.matchId,
                                               value: ticket.value,
+                                              isAvailable: ticket.isAvailable,
                                               matchDescription: ticket.matchDescription,
                                               marketDescription: ticket.marketDescription,
                                               outcomeDescription: ticket.outcomeDescription)
