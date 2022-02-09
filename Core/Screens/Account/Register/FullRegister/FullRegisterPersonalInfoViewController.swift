@@ -14,7 +14,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var titleHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var titleHeaderTextFieldView: DropDownSelectionView!
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var countryHeaderTextFieldView: HeaderTextFieldView!
@@ -182,7 +182,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func checkUserInputs() {
 
-        let titleText = titleHeaderTextFieldView.text == "" ? false : true
+        let titleText = titleHeaderTextFieldView.textField.text == "" ? false : true
         let firstNameText = firstNameHeaderTextFieldView.text == "" ? false : true
         let lastNameText = lastNameHeaderTextFieldView.text == "" ? false : true
         let address1Text = address1HeaderTextFieldView.text == "" ? false : true
@@ -213,13 +213,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             }
         .store(in: &cancellables)
 
-        self.titleHeaderTextFieldView.textPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.checkUserInputs()
-            })
-            .store(in: &cancellables)
-
+  
         self.firstNameHeaderTextFieldView.textPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -271,7 +265,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     func setupFullRegisterUserInfoForm() {
-        let titleText = titleHeaderTextFieldView.text
+        let titleText = titleHeaderTextFieldView.textField.text
         let firstNameText = firstNameHeaderTextFieldView.text
         let lastNameText = lastNameHeaderTextFieldView.text
         var countryText = ""
@@ -286,7 +280,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let address2Text = address2HeaderTextFieldView.text
         let cityText = cityHeaderTextFieldView.text
         let postalCodeText = postalCodeHeaderTextFieldView.text
-        fullRegisterUserInfo = FullRegisterUserInfo(title: titleText,
+        fullRegisterUserInfo = FullRegisterUserInfo(title: "titleText",
             firstName: firstNameText,
             lastName: lastNameText,
             country: countryText,

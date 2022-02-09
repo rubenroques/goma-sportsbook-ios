@@ -14,11 +14,11 @@ class DropDownSelectionView: NibView {
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
-    @IBOutlet private weak var headerLabel: UILabel! // swiftlint:disable:this private_outlet
+    @IBOutlet weak var headerLabel: UILabel! // swiftlint:disable:this private_outlet
 
-    @IBOutlet private weak var textLabel: UILabel!
+    @IBOutlet weak var textLabel: UILabel!
     
-    @IBOutlet private weak var textField: UITextField!
+    @IBOutlet weak var textField: UITextField!
     
     @IBOutlet private weak var bottomLineView: UIView!
     @IBOutlet private weak var tipLabel: UILabel!
@@ -180,14 +180,6 @@ class DropDownSelectionView: NibView {
         self.headerLabel.textColor = color
     }
 
-    func setSecureField(_ isSecure: Bool) {
-        self.isSecureField = isSecure
-    }
-
-    func showPasswordLabelVisible(visible: Bool) {
-        self.showPasswordLabel.isHidden = !visible
-    }
-
     func setRightLabelCustom(title: String, font: UIFont, color: UIColor) {
         self.hasCustomRightLabel = true
         self.showPasswordLabel.attributedText = nil
@@ -328,21 +320,6 @@ class DropDownSelectionView: NibView {
         self.endEditing(true)
     }
 
-    func showErrorOnField(text: String, color: UIColor = .systemRed) {
-
-        self.tipLabel.text = text
-        self.tipLabel.textColor = color
-
-        self.fieldState = .error
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        self.containerView.layer.borderColor = color.cgColor
-
-        self.showingTipLabel = true
-    }
 
     func showTip(text: String, color: UIColor = .systemRed) {
 
@@ -370,106 +347,12 @@ class DropDownSelectionView: NibView {
         self.showingTipLabel = true
     }
 
-    func hideTipAndError() {
 
-        if !self.showingTipLabel {
-            return
-        }
-
-        showingTipLabel = false
-
-        tipLabel.text = ""
-        tipLabel.textColor = .black
-        containerView.layer.borderColor = highlightColor.cgColor
-        fieldState = .hidden
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 0.0
-        }
-    }
-
-    @objc func didTapShowPassword() {
-        self.shouldShowPassword.toggle()
-    }
 
 }
 
-extension HeaderTextFieldView: UITextFieldDelegate {
 
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        let shouldBeginEditing = self.shouldBeginEditing?() ?? true
-        self.isActive = shouldBeginEditing
-        return shouldBeginEditing
-    }
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-
-        self.isActive = true
-
-        if !isTipPermanent {
-            self.hideTipAndError()
-        }
-
-        if hasCustomRightLabel {
-            self.showPasswordLabel.isHidden = false
-        }
-
-        self.highlightColor = UIColor.App2.textPrimary
-        self.containerView.layer.borderColor = self.highlightColor.cgColor
-
-        self.slideUp()
-
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if self.shouldSlideDown() {
-            self.slideDown()
-        }
-
-        if self.textField.text == "" {
-            self.containerView.layer.borderColor = self.highlightColor.withAlphaComponent(0).cgColor
-
-            if hasCustomRightLabel {
-                self.showPasswordLabel.isHidden = true
-            }
-        }
-
-        self.isActive = false
-
-        if isCurrency {
-            textField.text = textField.text?.currencyFormatting()
-        }
-
-        if self.textField.text != "" {
-            hasText?(true)
-        }
-        else {
-            hasText?(false)
-        }
-
-    }
-
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.didTapReturn?()
-                return true
-    }
-
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        if self.isCurrency {
-            let decimals = CharacterSet(charactersIn: "0123456789.")
-            if range.length>0  && range.location == 0 {
-                return false
-
-            }
-            else if string.rangeOfCharacter(from: decimals) == nil && string != "" {
-                    return false
-            }
-        }
-        return true
-    }
-}
-
-extension HeaderTextFieldView: UIPickerViewDelegate, UIPickerViewDataSource {
+extension DropDownSelectionView: UIPickerViewDelegate, UIPickerViewDataSource {
     // PickerView override methods
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
