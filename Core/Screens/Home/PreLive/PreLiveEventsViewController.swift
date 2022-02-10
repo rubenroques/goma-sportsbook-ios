@@ -177,7 +177,6 @@ class PreLiveEventsViewController: UIViewController {
         }
 
 
-
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
     

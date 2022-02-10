@@ -335,7 +335,8 @@ class AggregatorsRepository {
                               venue: location,
                               numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
                               markets: sortedMarkets,
-                              rootPartId: rawMatch.rootPartId ?? "")
+                              rootPartId: rawMatch.rootPartId ?? "",
+                              sportName: rawMatch.sportName ?? "")
 
             matchesList.append(match)
         }

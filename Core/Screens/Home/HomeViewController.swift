@@ -165,6 +165,19 @@ class HomeViewController: UIViewController {
 //            }
 //            .store(in: &cancellables)
 
+        self.testNewFavorites()
+
+    }
+
+    func testNewFavorites() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+        self.topBarView.addGestureRecognizer(tap)
+    }
+
+    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
+        print("TAP")
+        let favoritesVC = MyFavoritesViewController()
+        self.present(favoritesVC, animated: true, completion: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
