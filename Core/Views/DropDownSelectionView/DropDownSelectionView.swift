@@ -19,23 +19,6 @@ class DropDownSelectionView: NibView {
     @IBOutlet weak var textLabel: UILabel!
     
     @IBOutlet weak var textField: UITextField!
-    
-    @IBOutlet private weak var bottomLineView: UIView!
-    @IBOutlet private weak var tipLabel: UILabel!
-
-    @IBOutlet private weak var showPassImageView: UIImageView!
-    @IBOutlet private weak var showStateImageView: UIImageView!
-    @IBOutlet private weak var imageWidthConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var centerBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
-
-    @IBOutlet private weak var tipImageView: UIImageView!
-    @IBOutlet private weak var showPasswordLabel: UILabel!
-
-    @IBOutlet private weak var usernameLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet private weak var bottomStackView: UIStackView!
-
-
 
     var didTapReturn: (() -> Void)?
     var didTapIcon: (() -> Void)?
@@ -44,7 +27,7 @@ class DropDownSelectionView: NibView {
     var shouldBeginEditing: (() -> Bool)?
 
     // Variables
-    let datePicker = UIDatePicker()
+    
     let pickerView = UIPickerView()
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
@@ -55,9 +38,6 @@ class DropDownSelectionView: NibView {
     var showingTipLabel: Bool = false
 
     var hasCustomRightLabel: Bool = false
-
-
-
 
 
     override init(frame: CGRect) {
@@ -78,28 +58,16 @@ class DropDownSelectionView: NibView {
             self.slideUp()
         }
 
-        containerView.backgroundColor = UIColor.App2.backgroundSecondary
+        containerView.backgroundColor = UIColor.App.backgroundSecondary
         containerView.layer.cornerRadius = CornerRadius.headerInput
 
         containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.App2.backgroundSecondary.cgColor
+        containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
         
         self.textField.autocorrectionType = .no
         
 
-        self.showPassImageView.isUserInteractionEnabled = true
-        self.showStateImageView.isUserInteractionEnabled = true
-
-        self.showStateImageView.isHidden = true
-        self.showPassImageView.isHidden = true
-
-
-
-        tipImageView.isHidden = true
-
         self.headerPlaceholderLabel.alpha = 0.0
-
-        self.bottomLineView.isHidden = true
 
         let text = localized("show")
 
@@ -118,8 +86,7 @@ class DropDownSelectionView: NibView {
             return
         }
 
-        self.centerBottomConstraint.isActive = false
-        self.centerTopConstraint.isActive = true
+ 
 
         UIView.animate(withDuration: animated ? 0.2 : 0, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
@@ -140,8 +107,6 @@ class DropDownSelectionView: NibView {
             return
         }
 
-        self.centerBottomConstraint.isActive = true
-        self.centerTopConstraint.isActive = false
 
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
@@ -180,13 +145,7 @@ class DropDownSelectionView: NibView {
         self.headerLabel.textColor = color
     }
 
-    func setRightLabelCustom(title: String, font: UIFont, color: UIColor) {
-        self.hasCustomRightLabel = true
-        self.showPasswordLabel.attributedText = nil
-        self.showPasswordLabel.text = title
-        self.showPasswordLabel.font = font
-        self.showPasswordLabel.textColor = color
-    }
+   
 
     func setHeaderLabelColor(_ color: UIColor) {
         self.headerLabel.textColor = color
@@ -202,17 +161,6 @@ class DropDownSelectionView: NibView {
 
     func setViewBorderColor(_ color: UIColor) {
         self.containerView.layer.borderColor = color.cgColor
-    }
-
-    func setImageTextField(_ image: UIImage, size: CGFloat = 30) {
-        self.showStateImageView.image = image
-        self.showStateImageView.isHidden = false
-        self.imageWidthConstraint.constant = size
-
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapIconImageVIew(_:)))
-
-        self.showStateImageView.isUserInteractionEnabled = true
-        self.showStateImageView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     @objc func didTapIconImageVIew(_ sender: AnyObject) {
@@ -237,33 +185,6 @@ class DropDownSelectionView: NibView {
         self.textField.keyboardType = keyboard
     }
 
-    func setDatePickerMode() {
-        datePicker.datePickerMode = .date
-        if #available(iOS 13.4, *) {
-            datePicker.preferredDatePickerStyle = .wheels
-        }
-        datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
-
-        let doneButton = UIBarButtonItem.init(title: localized("done"), style: .done, target: self, action: #selector(self.datePickerDone))
-
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
-
-        textField.inputAccessoryView = toolBar
-        textField.inputView = datePicker
-    }
-
-    @objc func datePickerDone() {
-        textField.resignFirstResponder()
-    }
-
-    @objc func dateChanged() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let selectedDate = dateFormatter.string(from: datePicker.date)
-        textField.text = "\(selectedDate)"
-    }
 
     func setPickerArray(_ array: [String]) {
         selectionArray = array
@@ -319,35 +240,6 @@ class DropDownSelectionView: NibView {
     @objc func pickerAction() {
         self.endEditing(true)
     }
-
-
-    func showTip(text: String, color: UIColor = .systemRed) {
-
-        tipLabel.text = text
-        tipLabel.textColor = color
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        self.showingTipLabel = true
-    }
-
-    func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
-
-        tipLabel.text = text
-        tipLabel.textColor = color
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        tipImageView.isHidden = true
-
-        self.showingTipLabel = true
-    }
-
-
 
 }
 
