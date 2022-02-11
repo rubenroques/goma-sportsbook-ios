@@ -14,49 +14,42 @@ class DropDownSelectionView: NibView {
     @IBOutlet private weak var containerView: UIView!
     @IBOutlet private weak var headerPlaceholderLabel: UILabel!
 
-    @IBOutlet weak var headerLabel: UILabel! // swiftlint:disable:this private_outlet
+    @IBOutlet private weak var headerLabel: UILabel! // swiftlint:disable:this private_outlet
 
-    @IBOutlet weak var textLabel: UILabel!
+   
     
-    @IBOutlet weak var textField: UITextField!
+    @IBOutlet  weak var textField: UITextField!
 
-    var didTapReturn: (() -> Void)?
     var didTapIcon: (() -> Void)?
-    var hasText: ((Bool) -> Void)?
     var didSelectPickerIndex: ((Int) -> Void)?
-    var shouldBeginEditing: (() -> Bool)?
 
     // Variables
     
     let pickerView = UIPickerView()
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
-    var isSelect: Bool = false
-    var isCurrency: Bool = false
-    var isTipPermanent: Bool = false
-
-    var showingTipLabel: Bool = false
-
-    var hasCustomRightLabel: Bool = false
-
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.setup()
+        self.commonInit()
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        self.setup()
+        self.setupWithTheme()
     }
 
-    func setup() {
+    
+    func setupWithTheme() {
 
         if textField.text != "" {
             self.slideUp()
         }
+        headerLabel.isHidden = false
+        headerLabel.text = "teste"
 
         containerView.backgroundColor = UIColor.App.backgroundSecondary
         containerView.layer.cornerRadius = CornerRadius.headerInput
@@ -212,7 +205,8 @@ class DropDownSelectionView: NibView {
 
         textField.inputView = pickerView
         textField.text = selectionArray[defaultValue]
-        
+        headerLabel.text = textField.text
+        headerLabel.isHidden = false
 
         // Set arrow image
         let arrowDropdownImageView = UIImageView()

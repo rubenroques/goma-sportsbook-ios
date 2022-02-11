@@ -28,7 +28,7 @@
                 <outlet property="progressLabel" destination="CDv-Bj-7E2" id="4pz-5m-4zT"/>
                 <outlet property="progressView" destination="wYz-X8-am6" id="Efo-cW-QiC"/>
                 <outlet property="scrollView" destination="PGo-ph-rLE" id="pcn-tZ-JlM"/>
-                <outlet property="titleHeaderTextFieldView" destination="2DY-eS-ZDP" id="Y6d-eo-xyz"/>
+                <outlet property="titleHeaderTextFieldView" destination="2DY-eS-ZDP" id="kYt-eP-mRa"/>
                 <outlet property="titleLabel" destination="SCA-Fr-P9U" id="jQt-vk-Lr0"/>
                 <outlet property="topView" destination="vDO-br-lFd" id="cpU-Zh-Uhl"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

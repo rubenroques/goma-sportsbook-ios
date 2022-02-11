@@ -14,7 +14,9 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var titleHeaderTextFieldView: DropDownSelectionView!
+    
+    @IBOutlet weak var titleHeaderTextFieldView: DropDownSelectionView!
+ 
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var countryHeaderTextFieldView: HeaderTextFieldView!
@@ -78,7 +80,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
         
-       // titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
     
 
