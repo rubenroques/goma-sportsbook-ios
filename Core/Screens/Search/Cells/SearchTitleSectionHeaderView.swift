@@ -38,7 +38,7 @@ class SearchTitleSectionHeaderView: UITableViewHeaderFooterView {
         self.nameLabel.textColor = UIColor.App.textPrimary
         self.nameLabel.font = AppFont.with(type: .bold, size: 16)
 
-        self.countLabel.textColor = UIColor.App.textSecond
+        self.countLabel.textColor = UIColor.App.textSecondary
         self.countLabel.font = AppFont.with(type: .bold, size: 16)
     }
 

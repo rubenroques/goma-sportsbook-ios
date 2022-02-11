@@ -138,7 +138,7 @@ class HeadToHeadCardStatsView: NibView {
         self.lossAwayProgressBar.trackTintColor = UIColor.App.buttonBackgroundSecondary
         self.lossAwayProgressBar.progressTintColor = UIColor(hex: 0x46C1A7)
 
-        self.captionLabel.textColor = UIColor.App.textSecond
+        self.captionLabel.textColor = UIColor.App.textSecondary
     }
 
     override var intrinsicContentSize: CGSize {

@@ -108,8 +108,6 @@ class BetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -131,9 +129,8 @@ class BetslipViewController: UIViewController {
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
         self.tabViewController.textColor = UIColor.App.textPrimary
-        
-    
-      
+        self.tabViewController.separatorBarColor = UIColor.App.separatorLine
+
         self.closeButton.titleLabel?.textColor = UIColor.App.textPrimary
         self.betsLabel.textColor = UIColor.App.textPrimary
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)

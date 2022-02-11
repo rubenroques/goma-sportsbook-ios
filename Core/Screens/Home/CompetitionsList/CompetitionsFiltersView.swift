@@ -241,11 +241,11 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.searchBarView.backgroundColor = UIColor.App.backgroundSecondary
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundPrimary
-            textfield.textColor = UIColor.App.textSecond
+            textfield.textColor = UIColor.App.textSecondary
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App.textSecond])
+                                                                                UIColor.App.textSecondary])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)

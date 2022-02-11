@@ -72,12 +72,12 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.totalOddValueLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.totalOddLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary
-        self.totalOddLabel.textColor = UIColor.App.textSecond
+        self.totalOddLabel.textColor = UIColor.App.textSecondary
         
         self.numberOfSelectionsLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.numberOfSelectionsValueLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.numberOfSelectionsValueLabel.textColor = UIColor.App.textPrimary
-        self.numberOfSelectionsLabel.textColor = UIColor.App.textSecond
+        self.numberOfSelectionsLabel.textColor = UIColor.App.textSecondary
         
         self.betsStackView.removeAllArrangedSubviews()
         self.betsStackView.backgroundColor = UIColor.App.backgroundSecondary

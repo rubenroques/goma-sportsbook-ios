@@ -727,7 +727,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.clearBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.systemBetTypeLabel.textColor = UIColor.App.textPrimary
-        self.systemBetTypeTitleLabel.textColor = UIColor.App.textSecond
+        self.systemBetTypeTitleLabel.textColor = UIColor.App.textSecondary
         self.systemBetTypeSelectorBaseView.backgroundColor = .clear
 
         self.betTypeSegmentControl.setTitleTextAttributes([
@@ -832,32 +832,32 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondarySystemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.simpleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.simpleWinningsTitleLabel.textColor = UIColor.App.textSecond
+        self.simpleWinningsTitleLabel.textColor = UIColor.App.textSecondary
         self.simpleWinningsValueLabel.textColor = UIColor.App.textPrimary
-        self.simpleOddsTitleLabel.textColor = UIColor.App.textSecond
+        self.simpleOddsTitleLabel.textColor = UIColor.App.textSecondary
         self.simpleOddsValueLabel.textColor = UIColor.App.textPrimary
 
         self.multipleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.multipleWinningsTitleLabel.textColor = UIColor.App.textSecond
+        self.multipleWinningsTitleLabel.textColor = UIColor.App.textSecondary
         self.multipleWinningsValueLabel.textColor = UIColor.App.textPrimary
 
         self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
        // self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundSecondary
         // self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
-        self.secondaryMultipleWinningsTitleLabel.textColor = UIColor.App.textSecond
+        self.secondaryMultipleWinningsTitleLabel.textColor = UIColor.App.textSecondary
         self.secondaryMultipleWinningsValueLabel.textColor = UIColor.App.textPrimary
 
         self.secondaryMultipleOddsTitleLabel.textColor = UIColor.App.textDisablePrimary
         self.secondaryMultipleOddsValueLabel.textColor = UIColor.App.textPrimary
 
-        self.multipleOddsTitleLabel.textColor = UIColor.App.textSecond
+        self.multipleOddsTitleLabel.textColor = UIColor.App.textSecondary
         self.multipleOddsValueLabel.textColor = UIColor.App.textPrimary
 
         self.systemWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.systemWinningsTitleLabel.textColor = UIColor.App.textSecond
+        self.systemWinningsTitleLabel.textColor = UIColor.App.textSecondary
         self.systemWinningsValueLabel.textColor = UIColor.App.textPrimary
-        self.systemOddsTitleLabel.textColor = UIColor.App.textSecond
+        self.systemOddsTitleLabel.textColor = UIColor.App.textSecondary
         self.systemOddsValueLabel.textColor = UIColor.App.textPrimary
 
         self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary

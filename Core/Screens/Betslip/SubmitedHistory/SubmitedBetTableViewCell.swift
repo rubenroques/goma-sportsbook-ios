@@ -151,11 +151,11 @@ class SubmitedBetTableViewCell: UITableViewCell {
         self.cashoutStackView.backgroundColor = UIColor.App.backgroundSecondary
         self.cashoutView.backgroundColor = UIColor.App.backgroundSecondary
         self.cashoutLogoImageView.backgroundColor = .clear
-        self.cashoutTitleLabel.textColor = UIColor.App.textSecond
+        self.cashoutTitleLabel.textColor = UIColor.App.textSecondary
         self.cashoutValueLabel.textColor = UIColor.App.textPrimary
         self.cashoutButton.setBackgroundColor(UIColor.App.backgroundTertiary, for: .normal)
         self.cashoutSeparatorView.backgroundColor = UIColor.App.separatorLine
-        self.possibleWinningsTitleLabel.textColor = UIColor.App.textSecond
+        self.possibleWinningsTitleLabel.textColor = UIColor.App.textSecondary
         
         self.oddValueLabel.textColor = UIColor.App.textPrimary
         

@@ -30,6 +30,12 @@ public class TabularViewController: UIViewController {
         }
     }
 
+    public var separatorBarColor: UIColor = .lightGray {
+        didSet {
+            barView.separatorBarColor = separatorBarColor
+        }
+    }
+
     // ===========
     private var barView: TabularBarView = {
         let view = TabularBarView()

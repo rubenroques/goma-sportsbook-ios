@@ -249,7 +249,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
         self.numberOfBetsLabels.textColor = UIColor.App.textPrimary
-        self.eventNameLabel.textColor = UIColor.App.textSecond
+        self.eventNameLabel.textColor = UIColor.App.textSecondary
         self.homeParticipantNameLabel.textColor = UIColor.App.textPrimary
         self.awayParticipantNameLabel.textColor = UIColor.App.textPrimary
         self.matchTimeLabel.textColor = UIColor.App.textPrimary
