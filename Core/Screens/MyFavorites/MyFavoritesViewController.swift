@@ -50,10 +50,37 @@ class MyFavoritesViewController: UIViewController {
         return tableView
     }()
 
+    private lazy var loadingScreenBaseView: UIView = {
+        var view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var activityIndicatorView: UIActivityIndicatorView = {
+        var activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }()
+
     // Variables
     var viewModel: MyFavoritesViewModel
     var filterSelectedOption: Int = 0
     private var cancellables = Set<AnyCancellable>()
+
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingScreenBaseView.isHidden = false
+                self.tableView.isHidden = true
+            }
+            else {
+                self.loadingScreenBaseView.isHidden = true
+                self.tableView.isHidden = false
+            }
+        }
+    }
 
     // MARK: Lifetime and Cycle
     init() {
@@ -72,6 +99,8 @@ class MyFavoritesViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
         self.bind(toViewModel: self.viewModel)
+
+        self.isLoading = true
     }
 
     // MARK: Layout and Theme
@@ -91,6 +120,8 @@ class MyFavoritesViewController: UIViewController {
         self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     // MARK: Action
@@ -98,14 +129,32 @@ class MyFavoritesViewController: UIViewController {
         self.dismiss(animated: true, completion: nil)
     }
 
-    //MARK: Binding
+    // MARK: Binding
     private func bind(toViewModel viewModel: MyFavoritesViewModel) {
 
         viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
                 self?.tableView.reloadData()
+                self?.isLoading = false
             })
             .store(in: &cancellables)
+
+        viewModel.didSelectMatchAction = { match, image in
+            if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+                matchDetailsViewController.viewModel.gameSnapshot = image
+                // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+                self.present(matchDetailsViewController, animated: true, completion: nil)
+            }
+            else {
+                let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
+                matchDetailsViewController.viewModel.gameSnapshot = image
+                // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+                self.present(matchDetailsViewController, animated: true, completion: nil)
+
+            }
+
+        }
     }
 
 }
@@ -123,6 +172,9 @@ extension MyFavoritesViewController {
         self.topView.bringSubviewToFront(self.backButton)
 
         self.view.addSubview(self.tableView)
+        self.view.addSubview(self.loadingScreenBaseView)
+        self.loadingScreenBaseView.addSubview(self.activityIndicatorView)
+        self.loadingScreenBaseView.bringSubviewToFront(self.activityIndicatorView)
 
         // Setup subviews
         self.backButton.setTitle("", for: .normal)
@@ -178,6 +230,17 @@ extension MyFavoritesViewController {
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingScreenBaseView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.loadingScreenBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingScreenBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingScreenBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingScreenBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingScreenBaseView.centerYAnchor)
+        ])
     }
 
 }
@@ -227,13 +290,13 @@ extension MyFavoritesViewController: UICollectionViewDelegate, UICollectionViewD
         switch indexPath.row {
         case 0:
             ()
-            //self.viewModel.setMatchListType(.favoriteGames)
+            self.viewModel.setFavoriteListType(.favoriteGames)
             /*self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
                                        secondLabelText: localized("second_empty_my_games"),
                                        isUserLoggedIn: UserSessionStore.isUserLogged())*/
         case 1:
             ()
-            //self.viewModel.setMatchListType(.favoriteCompetitions)
+            self.viewModel.setFavoriteListType(.favoriteCompetitions)
             /*self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
                                        secondLabelText: localized("second_empty_my_competitions"),
                                        isUserLoggedIn: UserSessionStore.isUserLogged())*/

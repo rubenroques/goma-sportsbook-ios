@@ -21,6 +21,8 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
+    var collapsedSportSections: Set<Int> = []
+
     init(userFavoriteMatches: [Match]) {
         self.userFavoriteMatches = userFavoriteMatches
 
@@ -28,6 +30,9 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
     }
 
     func setupMatchesBySport(favoriteMatches: [Match]) {
+
+        self.matchesBySportList = [:]
+        self.userFavoritesBySportsArray = []
 
         for match in favoriteMatches {
             if self.matchesBySportList[match.sportType] != nil {
@@ -40,8 +45,25 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
         for (key, matches) in matchesBySportList {
                 let favoriteSportMatch = FavoriteSportMatches(sportType: key, matches: matches)
-            userFavoritesBySportsArray.append(favoriteSportMatch)
+            self.userFavoritesBySportsArray.append(favoriteSportMatch)
         }
+
+        // Sort by sportId
+        self.userFavoritesBySportsArray.sort {
+            $0.sportType < $1.sportType
+        }
+
+    }
+
+    func needReloadSection(_ section: Int, tableView: UITableView) {
+
+        guard let sportsSection = self.userFavoritesBySportsArray[safe: section] else { return }
+
+        let rows = (0 ..< sportsSection.matches.count).map({ IndexPath(row: $0, section: section) }) // all section rows
+
+        tableView.beginUpdates()
+        tableView.reloadRows(at: rows, with: .automatic)
+        tableView.endUpdates()
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -55,10 +77,16 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        if self.userFavoritesBySportsArray.isEmpty {
+//        if self.userFavoritesBySportsArray.isEmpty {
+//            return 1
+//        }
+//        return self.userFavoritesBySportsArray[section].matches.count
+        if let userFavorites = self.userFavoritesBySportsArray[safe: section] {
+            return userFavorites.matches.count
+        }
+        else {
             return 1
         }
-        return self.userFavoritesBySportsArray[section].matches.count
 
     }
 
@@ -124,6 +152,38 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                 let sportTypeId = favoriteMatch.sportType
 
                 headerView.configureHeader(title: sportName, sportTypeId: sportTypeId)
+
+                headerView.sectionIndex = section
+
+                headerView.didToggleHeaderViewAction = { [weak self, weak tableView] section in
+                    guard
+                        let weakSelf = self,
+                        let weakTableView = tableView
+                    else { return }
+
+                    if weakSelf.collapsedSportSections.contains(section) {
+                        weakSelf.collapsedSportSections.remove(section)
+                    }
+                    else {
+                        weakSelf.collapsedSportSections.insert(section)
+                    }
+                    weakSelf.needReloadSection(section, tableView: weakTableView)
+
+                    if weakSelf.collapsedSportSections.contains(section) {
+                        headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
+                    }
+                    else {
+                        headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
+                    }
+
+                }
+                if self.collapsedSportSections.contains(section) {
+                    headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
+                }
+                else {
+                    headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
+                }
+
             }
 
             return headerView
@@ -149,7 +209,9 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-
+        if self.collapsedSportSections.contains(indexPath.section) {
+            return 0
+        }
         if self.userFavoritesBySportsArray.isEmpty {
             return 600
         }
@@ -160,7 +222,9 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-
+        if self.collapsedSportSections.contains(indexPath.section) {
+            return 0
+        }
         if self.userFavoritesBySportsArray.isEmpty {
             return 600
         }

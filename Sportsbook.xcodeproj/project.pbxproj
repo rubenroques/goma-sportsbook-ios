@@ -908,6 +908,12 @@
 		A9E7C69527B5638500F784C9 /* MyFavoriteMatchesDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69327B5638500F784C9 /* MyFavoriteMatchesDataSource.swift */; };
 		A9E7C69827B582DC00F784C9 /* SportSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69727B582DC00F784C9 /* SportSectionHeaderView.swift */; };
 		A9E7C69927B582DC00F784C9 /* SportSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69727B582DC00F784C9 /* SportSectionHeaderView.swift */; };
+		A9E7C69B27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */; };
+		A9E7C69C27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */; };
+		A9E7C69F27B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */; };
+		A9E7C6A027B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */; };
+		A9E7C6A227B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */; };
+		A9E7C6A327B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */; };
 		F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
 		F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
 		F47BF2662763986300648440 /* GameSuggestedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47BF2652763986300648440 /* GameSuggestedView.xib */; };
@@ -1407,6 +1413,9 @@
 		A9E7C68F27B5405B00F784C9 /* MyFavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoritesViewModel.swift; sourceTree = "<group>"; };
 		A9E7C69327B5638500F784C9 /* MyFavoriteMatchesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteMatchesDataSource.swift; sourceTree = "<group>"; };
 		A9E7C69727B582DC00F784C9 /* SportSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSectionHeaderView.swift; sourceTree = "<group>"; };
+		A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteCompetitionsDataSource.swift; sourceTree = "<group>"; };
+		A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregator.swift; sourceTree = "<group>"; };
+		A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregatorRepository.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
 		F47BF2652763986300648440 /* GameSuggestedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameSuggestedView.xib; sourceTree = "<group>"; };
 		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -3088,6 +3097,7 @@
 		A9E7C68A27B526C500F784C9 /* MyFavorites */ = {
 			isa = PBXGroup;
 			children = (
+				A9E7C69D27B6AF5C00F784C9 /* Aggregators */,
 				A9E7C69627B581BD00F784C9 /* Cells */,
 				A9E7C69227B5636800F784C9 /* DataSources */,
 				A9E7C68E27B5404400F784C9 /* ViewModels */,
@@ -3108,6 +3118,7 @@
 			isa = PBXGroup;
 			children = (
 				A9E7C69327B5638500F784C9 /* MyFavoriteMatchesDataSource.swift */,
+				A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */,
 			);
 			path = DataSources;
 			sourceTree = "<group>";
@@ -3118,6 +3129,15 @@
 				A9E7C69727B582DC00F784C9 /* SportSectionHeaderView.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		A9E7C69D27B6AF5C00F784C9 /* Aggregators */ = {
+			isa = PBXGroup;
+			children = (
+				A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */,
+				A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */,
+			);
+			path = Aggregators;
 			sourceTree = "<group>";
 		};
 		F4E3B74F2742BE5200855C58 /* MultiSlider */ = {
@@ -3740,6 +3760,7 @@
 				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				457EDABB2791ADEE00DDCD83 /* Sport.swift in Sources */,
+				A9E7C69F27B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
@@ -3812,9 +3833,11 @@
 				458BAC812770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
+				A9E7C6A227B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
+				A9E7C69B27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
@@ -4080,6 +4103,7 @@
 				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				457EDABC2791ADEE00DDCD83 /* Sport.swift in Sources */,
+				A9E7C6A027B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
@@ -4152,9 +4176,11 @@
 				458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
+				A9E7C6A327B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
+				A9E7C69C27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
 				F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
