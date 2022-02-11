@@ -537,7 +537,6 @@ class PreLiveEventsViewModel: NSObject {
                     ()
                 }
             })
-        
     }
 
     private func fetchTodayMatchesNextPage() {

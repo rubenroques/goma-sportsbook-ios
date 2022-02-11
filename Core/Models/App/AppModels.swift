@@ -138,7 +138,7 @@ enum MarketType {
 struct BannerInfo {
     let type: String
     let id: String
-    let matchID: String?
+    let matchId: String?
     let imageURL: String?
     let priorityOrder: Int?
 }

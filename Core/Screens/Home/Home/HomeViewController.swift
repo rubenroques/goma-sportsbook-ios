@@ -31,7 +31,7 @@ class HomeViewController: UIViewController {
     }()
 
     private lazy var tableView: UITableView = {
-        var tableView = UITableView()
+        var tableView = UITableView.init(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         return tableView
@@ -81,7 +81,7 @@ class HomeViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        self.topSliderBaseView.backgroundColor = UIColor.red
+        self.topSliderBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.tintColor = UIColor.gray
 
@@ -96,6 +96,14 @@ class HomeViewController: UIViewController {
                 // Do something with the new title
             })
             .store(in: &self.cancellables)
+
+        viewModel.dataChangedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &self.cancellables)
+
     }
 
 }
@@ -118,14 +126,50 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 //
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.viewModel.numberOfSections()
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 0
+        return self.viewModel.numberOfRows(forSectionIndex: section)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        fatalError()
+
+        guard
+            let contentType = self.viewModel.contentType(forSection: indexPath.section)
+        else {
+            fatalError()
+        }
+
+        switch contentType {
+        case .userMessage:
+            return UITableViewCell()
+        case .bannerLine:
+            return UITableViewCell()
+        case .userFavorites:
+            return UITableViewCell()
+        case .sport:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: SportLineTableViewCell.identifier)
+            else {
+                fatalError()
+            }
+            return cell
+        }
     }
 
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 356
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.viewModel.title(forSection: section)
+    }
 }
 
 // MARK: - Subviews Initialization and Setup
@@ -145,6 +189,8 @@ extension HomeViewController {
         // Configure post-loading and self-dependent properties
         self.tableView.delegate = self
         self.tableView.dataSource = self
+
+        self.tableView.register(SportLineTableViewCell.self, forCellReuseIdentifier: SportLineTableViewCell.identifier)
 
         self.loadingBaseView.isHidden = true
 

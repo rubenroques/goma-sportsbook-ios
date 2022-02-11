@@ -68,9 +68,8 @@
                             <rect key="frame" x="0.0" y="0.0" width="610" height="990"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
-                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xew-dh-4hf">
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xew-dh-4hf">
                             <rect key="frame" x="0.0" y="0.0" width="610" height="990"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         </view>
                     </subviews>
@@ -81,8 +80,12 @@
                         <constraint firstAttribute="trailing" secondItem="kSr-MY-svK" secondAttribute="trailing" id="E0G-Og-73N"/>
                         <constraint firstAttribute="trailing" secondItem="Fxl-nZ-JeH" secondAttribute="trailing" id="JYS-oM-HNz"/>
                         <constraint firstItem="kSr-MY-svK" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="KYy-WJ-WRc"/>
+                        <constraint firstAttribute="trailing" secondItem="xew-dh-4hf" secondAttribute="trailing" id="OhJ-38-ea9"/>
                         <constraint firstItem="kSr-MY-svK" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="P6z-Hk-G5C"/>
                         <constraint firstAttribute="bottom" secondItem="kSr-MY-svK" secondAttribute="bottom" id="Tg8-qk-S6L"/>
+                        <constraint firstItem="xew-dh-4hf" firstAttribute="top" secondItem="Su0-qa-MeF" secondAttribute="top" id="dao-AU-Jt9"/>
+                        <constraint firstAttribute="bottom" secondItem="xew-dh-4hf" secondAttribute="bottom" id="lSF-YZ-d89"/>
+                        <constraint firstItem="xew-dh-4hf" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="oMR-GQ-j2W"/>
                         <constraint firstItem="Fxl-nZ-JeH" firstAttribute="leading" secondItem="Su0-qa-MeF" secondAttribute="leading" id="qfO-fX-D6I"/>
                     </constraints>
                 </view>
