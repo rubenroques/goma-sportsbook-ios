@@ -720,9 +720,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.secondaryPlaceBetButtonsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.secondaryPlaceBetButtonsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         
-        self.systemBetTypePickerView.backgroundColor = UIColor.App.backgroundSecondary
+        self.systemBetTypePickerView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.clearBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -732,21 +732,21 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
+            NSAttributedString.Key.foregroundColor: UIColor.white
         ], for: .selected)
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
+            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
         ], for: .normal)
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary.withAlphaComponent(0.5)
+            NSAttributedString.Key.foregroundColor:  UIColor.App.textPrimary.withAlphaComponent(0.5)
         ], for: .disabled)
 
         self.betTypeSegmentControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
 
-        self.topSafeArea.backgroundColor = UIColor.App.backgroundSecondary
-        self.bottomSafeArea.backgroundColor = UIColor.App.backgroundSecondary
+        self.topSafeArea.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomSafeArea.backgroundColor = UIColor.App.backgroundPrimary
 
         self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -778,14 +778,16 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.contentInset.bottom = 12
 
         self.systemBetSeparatorView.backgroundColor = UIColor.App.separatorLine
-        self.systemBetBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.systemBetInteriorView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
-        self.systemBetInteriorView.backgroundColor = UIColor.App.backgroundTertiary
+        self.systemBetBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.systemBetInteriorView.layer.borderColor = UIColor.App.backgroundPrimary.cgColor
+        self.systemBetInteriorView.backgroundColor = UIColor.App.backgroundDrop
+        self.systemBetInteriorView.layer.borderColor = UIColor.App.borderDrop.cgColor
+        self.systemBetInteriorView.layer.borderWidth = 2
 
-        self.placeBetBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.placeBetButtonsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.placeBetBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.placeBetButtonsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.placeBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
-        self.placeBetSendButtonBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.placeBetSendButtonBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.secondaryPlaceBetButtonsSeparatorView.backgroundColor = UIColor.App.separatorLine
 
@@ -829,17 +831,17 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.secondarySystemWinningsSeparatorView.backgroundColor = UIColor.App.separatorLine
 
-        self.simpleWinningsBaseView.backgroundColor = UIColor.App.backgroundCards
+        self.simpleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.simpleWinningsTitleLabel.textColor = UIColor.App.textSecond
         self.simpleWinningsValueLabel.textColor = UIColor.App.textPrimary
         self.simpleOddsTitleLabel.textColor = UIColor.App.textSecond
         self.simpleOddsValueLabel.textColor = UIColor.App.textPrimary
 
-        self.multipleWinningsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.multipleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.multipleWinningsTitleLabel.textColor = UIColor.App.textSecond
         self.multipleWinningsValueLabel.textColor = UIColor.App.textPrimary
 
-        self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
        // self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundSecondary
         // self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App2.backgroundSecondary
 
@@ -852,13 +854,13 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multipleOddsTitleLabel.textColor = UIColor.App.textSecond
         self.multipleOddsValueLabel.textColor = UIColor.App.textPrimary
 
-        self.systemWinningsBaseView.backgroundColor = UIColor.App.backgroundCards
+        self.systemWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.systemWinningsTitleLabel.textColor = UIColor.App.textSecond
         self.systemWinningsValueLabel.textColor = UIColor.App.textPrimary
         self.systemOddsTitleLabel.textColor = UIColor.App.textSecond
         self.systemOddsValueLabel.textColor = UIColor.App.textPrimary
 
-        self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App.backgroundCards
+        self.secondarySystemWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.secondarySystemWinningsTitleLabel.textColor = UIColor.App.textDisablePrimary
         self.secondarySystemWinningsValueLabel.textColor = UIColor.App.textPrimary
         self.secondarySystemOddsTitleLabel.textColor = UIColor.App.textDisablePrimary

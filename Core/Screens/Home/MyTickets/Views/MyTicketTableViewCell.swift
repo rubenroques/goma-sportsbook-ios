@@ -140,12 +140,9 @@ class MyTicketTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.clear
         self.contentView.backgroundColor = UIColor.clear
         
-        self.baseView.layer.borderColor = UIColor.App.backgroundBorder.cgColor
-        self.baseView.layer.borderWidth = 2
-        
         self.topStatusView.backgroundColor = .clear
         self.headerBaseView.backgroundColor = .clear
-        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
         self.betCardsBaseView.backgroundColor = .clear
         self.betCardsStackView.backgroundColor = .clear
         
@@ -158,12 +155,12 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
         self.subtitleLabel.textColor = UIColor.App.textSecond
-        self.totalOddTitleLabel.textColor = .white
-        self.totalOddSubtitleLabel.textColor = .white
-        self.betAmountTitleLabel.textColor = .white
-        self.betAmountSubtitleLabel.textColor = .white
-        self.winningsTitleLabel.textColor = .white
-        self.winningsSubtitleLabel.textColor = .white
+        self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.totalOddSubtitleLabel.textColor = UIColor.App.textPrimary
+        self.betAmountTitleLabel.textColor = UIColor.App.textPrimary
+        self.betAmountSubtitleLabel.textColor = UIColor.App.textPrimary
+        self.winningsTitleLabel.textColor = UIColor.App.textPrimary
+        self.winningsSubtitleLabel.textColor = UIColor.App.textPrimary
 
         if let status = self.betHistoryEntry?.status?.uppercased() {
             switch status {

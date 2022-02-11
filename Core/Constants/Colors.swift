@@ -32,6 +32,7 @@ extension UIColor {
         static let backgroundDisabledOdds = UIColor(named: "backgroundDisabledOdds")!
         
         static let separatorLine = UIColor(named: "separatorLine")!
+        static let separatorLineSecond = UIColor(named: "separatorLineSecond")!
         static let separatorLineHighlightSecondary = UIColor(named: "separatorLineHighlightSecondary")!
         static let separatorLineHighlightPrimary = UIColor(named: "separatorLineHighlightPrimary")!
         
