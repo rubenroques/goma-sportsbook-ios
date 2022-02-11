@@ -756,7 +756,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
         ])
-        self.amountBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.amountBaseView.backgroundColor = UIColor.App.inputBackground
 
         self.clearButton.titleLabel?.textColor = UIColor.App.textPrimary
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
@@ -769,7 +769,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.dontHaveSelectionsBetslipInfoLabel.textColor = UIColor.App.textPrimary
         self.hereAreYourSuggestedBetLabel.textColor = UIColor.App.textPrimary
         
-        self.amountBaseView.backgroundColor = UIColor.App.backgroundTertiary
+   
         self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundTertiary
         
 
