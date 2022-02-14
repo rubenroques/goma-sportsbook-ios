@@ -11,63 +11,17 @@ import Combine
 class MyFavoritesViewController: UIViewController {
 
     // MARK: Private Properties
+    private lazy var topView: UIView = Self.createTopView()
+    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var topSliderCollectionView: UICollectionView = Self.createTopSliderCollectionView()
+    private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var loadingScreenBaseView: UIView = Self.createLoadingScreenBaseView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+    private var cancellables = Set<AnyCancellable>()
 
-    private lazy var topView: UIView = {
-        var view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var backButton: UIButton = {
-        var button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-
-    private lazy var topSliderCollectionView: UICollectionView = {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        flowLayout.scrollDirection = .horizontal
-
-        var collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35)
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.alwaysBounceHorizontal = true
-
-        // collectionView.collectionViewLayout = flowLayout
-
-        return collectionView
-    }()
-
-    private lazy var tableView: UITableView = {
-        var tableView = UITableView()
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.separatorStyle = .none
-        tableView.contentInsetAdjustmentBehavior = .never
-
-        return tableView
-    }()
-
-    private lazy var loadingScreenBaseView: UIView = {
-        var view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }()
-
-    private lazy var activityIndicatorView: UIActivityIndicatorView = {
-        var activityIndicatorView = UIActivityIndicatorView.init(style: .large)
-        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicatorView.hidesWhenStopped = true
-        activityIndicatorView.startAnimating()
-        return activityIndicatorView
-    }()
-
-    // Variables
+    // MARK: Public Properties
     var viewModel: MyFavoritesViewModel
     var filterSelectedOption: Int = 0
-    private var cancellables = Set<AnyCancellable>()
 
     var isLoading: Bool = false {
         didSet {
@@ -101,6 +55,8 @@ class MyFavoritesViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
 
         self.isLoading = true
+
+        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
 
     // MARK: Layout and Theme
@@ -124,11 +80,6 @@ class MyFavoritesViewController: UIViewController {
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
-    // MARK: Action
-    @objc private func didTapBackButton() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
     // MARK: Binding
     private func bind(toViewModel viewModel: MyFavoritesViewModel) {
 
@@ -140,7 +91,7 @@ class MyFavoritesViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.didSelectMatchAction = { match, image in
-            if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+            if let matchInfo = Env.favoritesStorage.matchesInfoForMatch[match.id] {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
                 matchDetailsViewController.viewModel.gameSnapshot = image
                 // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
@@ -155,92 +106,6 @@ class MyFavoritesViewController: UIViewController {
             }
 
         }
-    }
-
-}
-
-//
-// MARK: Subviews initialization and setup
-
-extension MyFavoritesViewController {
-
-    private func setupSubviews() {
-        self.view.addSubview(self.topView)
-
-        self.topView.addSubview(self.backButton)
-        self.topView.addSubview(self.topSliderCollectionView)
-        self.topView.bringSubviewToFront(self.backButton)
-
-        self.view.addSubview(self.tableView)
-        self.view.addSubview(self.loadingScreenBaseView)
-        self.loadingScreenBaseView.addSubview(self.activityIndicatorView)
-        self.loadingScreenBaseView.bringSubviewToFront(self.activityIndicatorView)
-
-        // Setup subviews
-        self.backButton.setTitle("", for: .normal)
-        self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
-        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-
-        self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib,
-                                       forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        self.topSliderCollectionView.delegate = self
-        self.topSliderCollectionView.dataSource = self
-
-        tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
-        tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
-        tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
-        tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
-        tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
-        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
-        tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
-
-        tableView.register(SportSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SportSectionHeaderView.identifier)
-        
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-
-        self.initConstraints()
-    }
-
-    private func initConstraints() {
-
-        // Top bar
-        NSLayoutConstraint.activate([
-            self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topView.heightAnchor.constraint(equalToConstant: 70),
-
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 10),
-            self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.backButton.heightAnchor.constraint(equalToConstant: 20),
-            self.backButton.widthAnchor.constraint(equalToConstant: 15),
-
-            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor),
-            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor),
-            self.topSliderCollectionView.topAnchor.constraint(equalTo: self.topView.topAnchor),
-            self.topSliderCollectionView.bottomAnchor.constraint(equalTo: self.topView.bottomAnchor)
-
-        ])
-
-        // TableView
-        NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
-
-        // Loading Screen
-        NSLayoutConstraint.activate([
-            self.loadingScreenBaseView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
-            self.loadingScreenBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.loadingScreenBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.loadingScreenBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-
-            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingScreenBaseView.centerXAnchor),
-            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingScreenBaseView.centerYAnchor)
-        ])
     }
 
 }
@@ -291,15 +156,11 @@ extension MyFavoritesViewController: UICollectionViewDelegate, UICollectionViewD
         case 0:
             ()
             self.viewModel.setFavoriteListType(.favoriteGames)
-            /*self.setEmptyStateBaseView(firstLabelText: localized("empty_my_games"),
-                                       secondLabelText: localized("second_empty_my_games"),
-                                       isUserLoggedIn: UserSessionStore.isUserLogged())*/
+
         case 1:
             ()
             self.viewModel.setFavoriteListType(.favoriteCompetitions)
-            /*self.setEmptyStateBaseView(firstLabelText: localized("empty_my_competitions"),
-                                       secondLabelText: localized("second_empty_my_competitions"),
-                                       isUserLoggedIn: UserSessionStore.isUserLogged())*/
+
         default:
             ()
         }
@@ -317,17 +178,14 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.viewModel.numberOfSections(in: tableView)
-        //return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.viewModel.tableView(tableView, numberOfRowsInSection: section)
-        //return 2
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
-        //return UITableViewCell()
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -336,27 +194,22 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
-        //return UIView()
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
-        //return 100
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
-        //return 100
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
-        //return 70
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
         return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
-        //return 70
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -365,6 +218,149 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return 0.01
+    }
+
+}
+
+//
+// MARK: - Actions
+//
+extension MyFavoritesViewController {
+    @objc private func didTapBackButton() {
+        self.viewModel.unregisterEndpoints()
+        self.dismiss(animated: true, completion: nil)
+    }
+}
+
+//
+// MARK: Subviews initialization and setup
+//
+extension MyFavoritesViewController {
+
+    private static func createTopView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBackButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+        return button
+    }
+
+    private static func createTopSliderCollectionView() -> UICollectionView {
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        flowLayout.scrollDirection = .horizontal
+
+        let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35)
+        collectionView.showsVerticalScrollIndicator = false
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.alwaysBounceHorizontal = true
+
+        return collectionView
+    }
+
+    private static func createTableView() -> UITableView {
+        let tableView = UITableView()
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
+        tableView.contentInsetAdjustmentBehavior = .never
+
+        return tableView
+    }
+
+    private static func createLoadingScreenBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
+    private func setupSubviews() {
+        self.view.addSubview(self.topView)
+
+        self.topView.addSubview(self.backButton)
+        self.topView.addSubview(self.topSliderCollectionView)
+        self.topView.bringSubviewToFront(self.backButton)
+
+        self.view.addSubview(self.tableView)
+        self.view.addSubview(self.loadingScreenBaseView)
+        self.loadingScreenBaseView.addSubview(self.activityIndicatorView)
+        self.loadingScreenBaseView.bringSubviewToFront(self.activityIndicatorView)
+
+        self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib,
+                                       forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
+        self.topSliderCollectionView.delegate = self
+        self.topSliderCollectionView.dataSource = self
+
+        tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
+        tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
+        tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
+        tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
+        tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
+
+        tableView.register(SportSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SportSectionHeaderView.identifier)
+
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+
+        self.initConstraints()
+    }
+
+    private func initConstraints() {
+
+        // Top bar
+        NSLayoutConstraint.activate([
+            self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topView.heightAnchor.constraint(equalToConstant: 70),
+
+            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 10),
+            self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
+            self.backButton.heightAnchor.constraint(equalToConstant: 20),
+            self.backButton.widthAnchor.constraint(equalToConstant: 15),
+
+            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor),
+            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor),
+            self.topSliderCollectionView.topAnchor.constraint(equalTo: self.topView.topAnchor),
+            self.topSliderCollectionView.bottomAnchor.constraint(equalTo: self.topView.bottomAnchor)
+
+        ])
+
+        // TableView
+        NSLayoutConstraint.activate([
+            self.tableView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingScreenBaseView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.loadingScreenBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingScreenBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingScreenBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingScreenBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingScreenBaseView.centerYAnchor)
+        ])
     }
 
 }

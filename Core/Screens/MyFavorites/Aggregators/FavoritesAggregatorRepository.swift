@@ -18,7 +18,6 @@ enum FavoritesAggregatorListType {
 class FavoritesAggregatorsRepository {
 
     var matchesForType: [FavoritesAggregatorListType: [String] ] = [:]
-
     var matches: [String: EveryMatrix.Match] = [:]
     var marketsForMatch: [String: Set<String>] = [:]
     var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]
@@ -26,7 +25,6 @@ class FavoritesAggregatorsRepository {
 
     var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
     var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
-
     var bettingOutcomesForMarket: [String: Set<String>] = [:]
 
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
@@ -37,12 +35,31 @@ class FavoritesAggregatorsRepository {
 
     var tournamentsForLocation: [String: [String] ] = [:]
     var tournamentsForCategory: [String: [String] ] = [:]
-
     var tournaments: [String: EveryMatrix.Tournament] = [:]
 
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     var matchesInfoForMatch: [String: Set<String> ] = [:]
     var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
+
+    private var cancellables: Set<AnyCancellable> = []
+
+    func getLocations() {
+
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { _ in
+
+            },
+                  receiveValue: { [weak self] response in
+
+                (response.records ?? []).forEach { location in
+
+                    self?.locations[location.id] = location
+                }
+
+            })
+            .store(in: &cancellables)
+    }
 
     func processAggregator(_ aggregator: EveryMatrix.FavoritesAggregator, withListType type: FavoritesAggregatorListType, shouldClear: Bool = false) {
 
@@ -322,40 +339,6 @@ class FavoritesAggregatorsRepository {
 
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
-    }
-
-    func storeLocations(locations: [EveryMatrix.Location]) {
-        self.locations = [:]
-        for location in locations {
-            self.locations[location.id] = location
-        }
-    }
-
-    func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
-        self.tournaments = [:]
-        for tournament in tournaments {
-            self.tournaments[tournament.id] = tournament
-
-            if let venueId = tournament.venueId {
-                if var tournamentsForLocationWithId = self.tournamentsForLocation[venueId] {
-                    tournamentsForLocationWithId.append(tournament.id)
-                    self.tournamentsForLocation[venueId] = tournamentsForLocationWithId
-                }
-                else {
-                    self.tournamentsForLocation[venueId] = [tournament.id]
-                }
-            }
-
-            if let categoryId = tournament.categoryId {
-                if var tournamentsForCategoryWithId = self.tournamentsForCategory[categoryId] {
-                    tournamentsForCategoryWithId.append(tournament.id)
-                    self.tournamentsForCategory[categoryId] = tournamentsForCategoryWithId
-                }
-                else {
-                    self.tournamentsForCategory[categoryId] = [tournament.id]
-                }
-            }
-        }
     }
 
 }

@@ -53,7 +53,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
                 cell.matchStatsViewModel = matchStatsViewModel
             }
 
-            if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+            if let matchInfo = Env.favoritesStorage.matchesInfoForMatch[match.id] {
                 cell.setupWithMatch(match, liveMatch: true)
             }
             else {

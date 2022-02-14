@@ -38,11 +38,10 @@ class MyFavoritesViewModel: NSObject {
     private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [])
     private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [])
 
-    // Favorites Repository
-    private var favoritesRepository: FavoritesAggregatorsRepository = FavoritesAggregatorsRepository()
-
     override init() {
         super.init()
+
+        Env.favoritesStorage.getLocations()
 
         self.myFavoriteMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
@@ -61,8 +60,6 @@ class MyFavoritesViewModel: NSObject {
         }
 
         // Match went live
-        // Did Select a Match
-        //
         self.myFavoriteMatchesDataSource.matchWentLiveAction = { [weak self] in
             self?.dataChangedPublisher.send()
         }
@@ -72,6 +69,22 @@ class MyFavoritesViewModel: NSObject {
 
         self.setupPublishers()
 
+    }
+    
+    func unregisterEndpoints() {
+        if let favoriteMatchesRegister = self.favoriteMatchesRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
+        }
+
+        self.favoriteMatchesPublisher?.cancel()
+        self.favoriteMatchesPublisher = nil
+
+        if let favoriteCompetitionsMatchesRegister = self.favoriteCompetitionsMatchesRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteCompetitionsMatchesRegister)
+        }
+
+        self.favoriteCompetitionsMatchesPublisher?.cancel()
+        self.favoriteCompetitionsMatchesPublisher = nil
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
@@ -129,28 +142,34 @@ class MyFavoritesViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher connect")
+                    print("MyFavoritesViewModel favoriteMatchesPublisher connect")
                     self?.favoriteMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
+                    print("MyFavoritesViewModel favoriteMatchesPublisher initialContent")
                     self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
-                    //self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
+                    print("MyFavoritesViewModel favoriteMatchesPublisher updatedContent")
+                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
                 case .disconnect:
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
+                    print("MyFavoritesViewModel favoriteMatchesPublisher disconnect")
                 }
 
             })
     }
 
     private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
-        // Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
-        self.favoritesRepository.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
 
-        self.favoriteMatches = self.favoritesRepository.matchesForListType(.favoriteMatchEvents)
+        Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
+
+        self.favoriteMatches = Env.favoritesStorage.matchesForListType(.favoriteMatchEvents)
 
         self.updateContentList()
+    }
+
+    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
+
+        Env.favoritesStorage.processContentUpdateAggregator(aggregator)
+
     }
 
     func fetchFavoriteCompetitionsMatchesWithIds(_ ids: [String]) {
@@ -179,26 +198,30 @@ class MyFavoritesViewModel: NSObject {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher connect")
+                    print("MyFavoritesViewModel favoriteCompetitionsMatchesPublisher connect")
                     self?.favoriteCompetitionsMatchesRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
-                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher initialContent")
+                    print("MyFavoritesViewModel favoriteCompetitionsMatchesPublisher initialContent")
                     self?.setupFavoriteCompetitionsAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent(let aggregatorUpdates):
-                    //self?.updateFavoriteCompetitionsAggregatorProcessor(aggregator: aggregatorUpdates)
-                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher updatedContent")
+                    self?.updateFavoriteCompetitionsAggregatorProcessor(aggregator: aggregatorUpdates)
+                    print("MyFavoritesViewModel favoriteCompetitionsMatchesPublisher updatedContent")
                 case .disconnect:
-                    print("PreLiveEventsViewModel favoriteCompetitionsMatchesPublisher disconnect")
+                    print("MyFavoritesViewModel favoriteCompetitionsMatchesPublisher disconnect")
                 }
             })
     }
 
     private func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
-        //Env.everyMatrixStorage.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
 
-        self.favoritesRepository.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
+        Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
 
-        let appMatches = self.favoritesRepository.matchesForListType(.favoriteCompetitionEvents)
+        var appMatches = Env.favoritesStorage.matchesForListType(.favoriteCompetitionEvents)
+
+        // Sort competitions by sport type
+        appMatches.sort {
+            $0.sportType < $1.sportType
+        }
 
         var competitionsMatches = OrderedDictionary<String, [Match]>()
         for match in appMatches {
@@ -214,10 +237,10 @@ class MyFavoritesViewModel: NSObject {
 
         var processedCompetitions: [Competition] = []
         for competitionId in competitionsMatches.keys {
-            if let tournament = self.favoritesRepository.tournaments[competitionId] {
+            if let tournament = Env.favoritesStorage.tournaments[competitionId] {
 
                 var location: Location?
-                if let rawLocation = self.favoritesRepository.location(forId: tournament.venueId ?? "") {
+                if let rawLocation = Env.favoritesStorage.location(forId: tournament.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                         name: rawLocation.name ?? "",
                                         isoCode: rawLocation.code ?? "")
@@ -237,10 +260,16 @@ class MyFavoritesViewModel: NSObject {
         self.updateContentList()
     }
 
+    private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
+
+        Env.favoritesStorage.processContentUpdateAggregator(aggregator)
+
+    }
+
     private func updateContentList() {
 
-        //self.myFavoriteMatchesDataSource.userFavoriteMatches = self.favoriteMatches
         self.myFavoriteMatchesDataSource.setupMatchesBySport(favoriteMatches: self.favoriteMatches)
+
         self.myFavoriteCompetitionsDataSource.competitions = self.favoriteCompetitions
 
         self.dataChangedPublisher.send()

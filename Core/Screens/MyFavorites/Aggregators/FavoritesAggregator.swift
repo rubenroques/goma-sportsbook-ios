@@ -232,7 +232,6 @@ extension EveryMatrix {
                     self = contentTypeKey
                 }
                 else {
-                    // print("Aggregator ContentTypeKey unknown [\(type)]")
                     self = .unknown
                 }
             }
@@ -285,4 +284,3 @@ extension EveryMatrix {
         }
     }
 }
-

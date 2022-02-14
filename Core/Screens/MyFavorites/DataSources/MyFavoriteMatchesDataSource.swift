@@ -77,10 +77,6 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-//        if self.userFavoritesBySportsArray.isEmpty {
-//            return 1
-//        }
-//        return self.userFavoritesBySportsArray[section].matches.count
         if let userFavorites = self.userFavoritesBySportsArray[safe: section] {
             return userFavorites.matches.count
         }
@@ -99,20 +95,21 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
-                if Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-                    cell.setupWithMatch(match, liveMatch: true)
+                
+                if Env.favoritesStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
+                    cell.setupWithMatch(match, liveMatch: true, repositoryType: .favoriteRepository)
                 }
                 else {
-                    cell.setupWithMatch(match)
+                    cell.setupWithMatch(match, repositoryType: .favoriteRepository)
                 }
 
                 cell.setupFavoriteMatchInfoPublisher(match: match)
-                cell.tappedMatchLineAction = { image in
-                    self.didSelectMatchAction?(match, image)
+                cell.tappedMatchLineAction = {[weak self] image in
+                    self?.didSelectMatchAction?(match, image)
                 }
                 cell.matchWentLive = {
-                    DispatchQueue.main.async {
-                        self.matchWentLiveAction?()
+                    DispatchQueue.main.async { [weak self] in
+                        self?.matchWentLiveAction?()
                     }
                 }
 
@@ -133,12 +130,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
-//            as? TitleTableViewHeader {
-//            headerView.configureWithTitle(localized("my_games"))
-//            return headerView
-//        }
-//        return nil
+
         if !self.userFavoritesBySportsArray.isEmpty {
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: SportSectionHeaderView.identifier) as? SportSectionHeaderView
@@ -170,18 +162,18 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                     weakSelf.needReloadSection(section, tableView: weakTableView)
 
                     if weakSelf.collapsedSportSections.contains(section) {
-                        headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
+                        headerView.setCollapseImage(isCollapsed: true)
                     }
                     else {
-                        headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
+                        headerView.setCollapseImage(isCollapsed: false)
                     }
 
                 }
                 if self.collapsedSportSections.contains(section) {
-                    headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
+                    headerView.setCollapseImage(isCollapsed: true)
                 }
                 else {
-                    headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
+                    headerView.setCollapseImage(isCollapsed: false)
                 }
 
             }
