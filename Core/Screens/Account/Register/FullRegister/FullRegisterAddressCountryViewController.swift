@@ -109,9 +109,10 @@ class FullRegisterAddressCountryViewController: UIViewController {
         securityAnswerHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         securityAnswerHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        continueButton.backgroundColor = UIColor.App.backgroundPrimary
+        continueButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        continueButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         continueButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
-        continueButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        continueButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         continueButton.cornerRadius = CornerRadius.button
     }
 

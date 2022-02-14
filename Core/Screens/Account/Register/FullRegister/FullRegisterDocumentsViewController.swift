@@ -125,7 +125,8 @@ class FullRegisterDocumentsViewController: UIViewController {
         idHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         idHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        submitButton.backgroundColor = UIColor.App.backgroundPrimary
+        submitButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        submitButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         submitButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
         submitButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         submitButton.cornerRadius = CornerRadius.button

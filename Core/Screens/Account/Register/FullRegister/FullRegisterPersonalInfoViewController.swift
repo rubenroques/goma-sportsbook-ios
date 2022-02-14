@@ -175,9 +175,11 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-        continueButton.backgroundColor = UIColor.App.backgroundPrimary
-        continueButton.setTitleColor(UIColor.App.inputTextTitle, for: .disabled)
-        continueButton.setTitleColor(UIColor.App.inputText, for: .normal)
+     
+        continueButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        continueButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
+        continueButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+        continueButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         continueButton.cornerRadius = CornerRadius.button
 
     }
