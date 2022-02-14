@@ -314,17 +314,17 @@ extension HomeViewModel {
         }
     }
 
-    func title(forSection section: Int) -> String? {
+    func title(forSection section: Int) -> (String?, String?) {
         switch section {
-        case 0, 1: return nil
-        case 2: return "My Games"
-        case 3: return "Suggested Bets"
+        case 0, 1: return (nil, nil)
+        case 2: return ("My Games", nil)
+        case 3: return ("Suggested Bets", nil)
         default:
             if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
-                return sportForIndex.name
+                return (sportForIndex.name, sportForIndex.id)
             }
             else {
-                return nil
+                return (nil, nil)
             }
         }
     }

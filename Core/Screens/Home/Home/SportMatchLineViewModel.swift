@@ -51,11 +51,11 @@ class SportMatchLineViewModel {
 
         switch matchesType {
         case .popular:
-            self.titlePublisher = .init( localized("Popular") )
+            self.titlePublisher = .init( localized("Popular").uppercased() )
         case .live:
-            self.titlePublisher = .init( localized("Live") )
+            self.titlePublisher = .init( localized("Live").uppercased() )
         case .topCompetition:
-            self.titlePublisher = .init( localized("Popular Competition") )
+            self.titlePublisher = .init( localized("Popular Competition").uppercased() )
         }
 
         Env.everyMatrixClient.serviceStatusPublisher

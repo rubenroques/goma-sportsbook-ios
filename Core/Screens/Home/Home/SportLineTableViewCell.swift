@@ -15,7 +15,7 @@ class SportLineTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = {
         var titleLabel = UILabel()
         titleLabel.numberOfLines = 1
-        titleLabel.text = "Upcoming"
+        titleLabel.text = ""
         titleLabel.font = AppFont.with(type: .semibold, size: 13)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         return titleLabel
@@ -59,7 +59,7 @@ class SportLineTableViewCell: UITableViewCell {
     private lazy var seeAllView: UIView = {
         var seeAllView = UIView()
         seeAllView.layer.borderColor = UIColor.gray.cgColor
-        seeAllView.layer.borderWidth = 2
+        seeAllView.layer.borderWidth = 0
         seeAllView.layer.cornerRadius = 6
         seeAllView.translatesAutoresizingMaskIntoConstraints = false
         return seeAllView
@@ -111,16 +111,17 @@ class SportLineTableViewCell: UITableViewCell {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.linesStackView.backgroundColor = .lightGray
+        self.linesStackView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topCollectionView.backgroundView?.backgroundColor = .clear
-        self.topCollectionView.backgroundColor = .clear
+        self.topCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
+        self.topCollectionView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.bottomCollectionView.backgroundView?.backgroundColor = .clear
-        self.bottomCollectionView.backgroundColor = .clear
+        self.bottomCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomCollectionView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.seeAllView.backgroundColor = UIColor.App.backgroundOdds
         self.seeAllView.layer.borderColor = UIColor.App.separatorLine.cgColor
-
+        self.seeAllLabel.textColor = UIColor.App.textPrimary
     }
 
     func configure(withViewModel viewModel: SportMatchLineViewModel) {

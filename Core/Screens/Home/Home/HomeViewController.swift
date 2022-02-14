@@ -132,7 +132,7 @@ class HomeViewController: UIViewController {
 //
 // MARK: - CollectionView Protocols
 //
-extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.viewModel.numberOfSections()
@@ -156,6 +156,13 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         collectionView.deselectItem(at: indexPath, animated: true)
         self.viewModel.didSelectShortcut(atSection: indexPath.section)
     }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
+    }
+
 }
 
 //
@@ -192,7 +199,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.configure(withViewModel: sportMatchLineViewModel)
             return cell
         case .userFavorites:
-
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
                 let match = self.viewModel.favoriteMatch(forIndex: indexPath.row)
@@ -264,8 +270,52 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.viewModel.title(forSection: section)
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        let titleView = UIView()
+        titleView.backgroundColor = UIColor.App.backgroundSecondary
+
+        let titleStackView = UIStackView()
+        titleStackView.translatesAutoresizingMaskIntoConstraints = false
+        titleStackView.axis = .horizontal
+        titleStackView.distribution = .fill
+        titleStackView.alignment = .fill
+        titleStackView.spacing = 8
+
+        let sportImageView = UIImageView()
+        sportImageView.translatesAutoresizingMaskIntoConstraints = false
+        sportImageView.contentMode = .scaleAspectFit
+
+        let titleLabel = UILabel()
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.font = AppFont.with(type: .bold, size: 16)
+
+        titleView.addSubview(titleStackView)
+        titleStackView.addArrangedSubview(sportImageView)
+        titleStackView.addArrangedSubview(titleLabel)
+
+        NSLayoutConstraint.activate([
+            sportImageView.widthAnchor.constraint(equalTo: sportImageView.heightAnchor, multiplier: 1),
+            sportImageView.widthAnchor.constraint(equalToConstant: 16),
+
+            titleStackView.leadingAnchor.constraint(equalTo: titleView.leadingAnchor, constant: 18),
+            titleStackView.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: 18),
+
+            titleStackView.topAnchor.constraint(equalTo: titleView.topAnchor),
+            titleStackView.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
+        ])
+
+        if let title = self.viewModel.title(forSection: section).0 {
+            titleLabel.text = title
+        }
+        if let imageName = self.viewModel.title(forSection: section).1 {
+            sportImageView.image = UIImage(named: "sport_type_icon_\(imageName)")
+        }
+        else {
+            sportImageView.isHidden = true
+        }
+
+        return titleView
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -347,7 +397,7 @@ extension HomeViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceHorizontal = true
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
 
         return collectionView
     }
