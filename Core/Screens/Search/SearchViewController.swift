@@ -94,7 +94,7 @@ class SearchViewController: UIViewController {
         self.cancelButton.backgroundColor = .clear
         self.cancelButton.tintColor = UIColor.App.textPrimary
 
-        self.emptySearchLabel.textColor = UIColor.App.textSecond
+        self.emptySearchLabel.textColor = UIColor.App.textSecondary
 
         self.noResultsView.backgroundColor = .clear
         self.noResultsImageView.backgroundColor = .clear
@@ -138,7 +138,7 @@ class SearchViewController: UIViewController {
         self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
 
         // TableView
-        self.tableView.backgroundColor = UIColor.App.backgroundSecondary
+        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = .clear
 
         self.tableView.separatorStyle = .none

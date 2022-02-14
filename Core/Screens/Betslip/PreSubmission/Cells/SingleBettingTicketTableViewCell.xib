@@ -4,9 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -38,7 +36,6 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NuM-Bq-crm">
                                         <rect key="frame" x="0.0" y="0.0" width="5" height="152"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="5" id="5p0-DR-ybm"/>
                                         </constraints>
@@ -49,7 +46,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uxt-tt-rUj">
                                                 <rect key="frame" x="12" y="15" width="38.5" height="15"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="15"/>
-                                                <color key="textColor" name="headingMainColor"/>
+                                                <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNx-OA-6Xp">
@@ -58,11 +55,10 @@
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DUb-Mw-uFF">
                                                         <rect key="frame" x="8" y="6.5" width="36" height="14"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="14"/>
-                                                        <color key="textColor" name="headingMainColor"/>
+                                                        <nil key="textColor"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                 </subviews>
-                                                <color key="backgroundColor" name="tertiaryBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="trailing" secondItem="DUb-Mw-uFF" secondAttribute="trailing" constant="8" id="HMr-6v-8iU"/>
                                                     <constraint firstItem="DUb-Mw-uFF" firstAttribute="centerY" secondItem="gNx-OA-6Xp" secondAttribute="centerY" constant="1" id="XQJ-Ut-xTL"/>
@@ -97,7 +93,6 @@
                                                 </connections>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" name="secondaryBackgroundColor"/>
                                         <constraints>
                                             <constraint firstItem="Uxt-tt-rUj" firstAttribute="centerY" secondItem="8Yy-Nx-FGg" secondAttribute="centerY" id="3uf-8Q-uTV"/>
                                             <constraint firstItem="4mZ-5D-Iql" firstAttribute="top" secondItem="gNx-OA-6Xp" secondAttribute="centerY" constant="-2" id="5d0-K5-XOW"/>
@@ -113,7 +108,6 @@
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dfa-yT-hf6">
                                         <rect key="frame" x="12" y="45" width="373" height="1"/>
-                                        <color key="backgroundColor" systemColor="systemRedColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="fRQ-Eg-TPg"/>
                                         </constraints>
@@ -124,23 +118,22 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CS0-Ub-bbm">
                                                 <rect key="frame" x="12" y="9" width="36" height="14"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
-                                                <color key="textColor" name="headingMainColor"/>
+                                                <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZcZ-Bq-usf">
                                                 <rect key="frame" x="12" y="26" width="31" height="12"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
-                                                <color key="textColor" name="headingDisabledColor"/>
+                                                <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5lh-bi-eep">
                                                 <rect key="frame" x="12" y="41" width="31" height="12"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
-                                                <color key="textColor" name="headingDisabledColor"/>
+                                                <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" name="secondaryBackgroundColor"/>
                                         <constraints>
                                             <constraint firstItem="5lh-bi-eep" firstAttribute="leading" secondItem="CS0-Ub-bbm" secondAttribute="leading" id="0lh-m0-apg"/>
                                             <constraint firstAttribute="height" constant="54" id="8dA-Ad-G4I"/>
@@ -161,11 +154,11 @@
                                                         <constraints>
                                                             <constraint firstAttribute="width" constant="80" id="FS8-lr-ybz"/>
                                                         </constraints>
+                                                        <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits" keyboardType="numberPad" keyboardAppearance="alert" returnKeyType="done"/>
                                                     </textField>
                                                 </subviews>
-                                                <color key="backgroundColor" name="contentBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="38" id="Jev-bc-VSF"/>
                                                     <constraint firstItem="s7F-Sx-011" firstAttribute="centerX" secondItem="gRm-py-H47" secondAttribute="centerX" id="Qln-gG-Qfa"/>
@@ -178,7 +171,6 @@
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="M5L-bv-nfL">
                                                         <rect key="frame" x="0.0" y="0.0" width="87" height="38"/>
-                                                        <color key="backgroundColor" name="mainBackgroundColor"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="16"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" title="+1"/>
@@ -188,7 +180,6 @@
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kWq-DN-1RN">
                                                         <rect key="frame" x="95" y="0.0" width="87" height="38"/>
-                                                        <color key="backgroundColor" name="mainBackgroundColor"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="16"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" title="+5"/>
@@ -198,7 +189,6 @@
                                                     </button>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cqd-rd-M5u">
                                                         <rect key="frame" x="190" y="0.0" width="87" height="38"/>
-                                                        <color key="backgroundColor" name="mainBackgroundColor"/>
                                                         <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="16"/>
                                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                         <state key="normal" title="Max"/>
@@ -209,7 +199,6 @@
                                                 </subviews>
                                             </stackView>
                                         </subviews>
-                                        <color key="backgroundColor" name="secondaryBackgroundColor"/>
                                         <constraints>
                                             <constraint firstItem="3gR-RV-Uk3" firstAttribute="leading" secondItem="gRm-py-H47" secondAttribute="trailing" constant="8" id="5Pi-xb-oKQ"/>
                                             <constraint firstItem="gRm-py-H47" firstAttribute="centerY" secondItem="8k0-1o-MdT" secondAttribute="centerY" constant="-2" id="APt-2T-Sqe"/>
@@ -226,18 +215,17 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SUSPENDED" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jsy-es-IZM">
                                                 <rect key="frame" x="143" y="43" width="111.5" height="20"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
-                                                <color key="textColor" name="textSecond"/>
+                                                <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.79678532535908475" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.58751135606032157" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="Jsy-es-IZM" firstAttribute="centerY" secondItem="8TC-9c-bnS" secondAttribute="centerY" id="HZL-Tk-ws9"/>
                                             <constraint firstItem="Jsy-es-IZM" firstAttribute="centerX" secondItem="8TC-9c-bnS" secondAttribute="centerX" id="XRB-uA-443"/>
                                         </constraints>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" systemColor="systemGrayColor"/>
                                 <constraints>
                                     <constraint firstItem="8k0-1o-MdT" firstAttribute="top" secondItem="fZi-WD-3Ny" secondAttribute="bottom" id="0CX-8I-IPM"/>
                                     <constraint firstAttribute="trailing" secondItem="8k0-1o-MdT" secondAttribute="trailing" id="0Ir-PQ-b03"/>
@@ -269,12 +257,11 @@
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vZk-Wn-EaC">
                                         <rect key="frame" x="45" y="10" width="336" height="141"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" name="headingMainColor"/>
+                                        <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nQj-lH-8JZ">
                                         <rect key="frame" x="0.0" y="0.0" width="5" height="161"/>
-                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="5" id="WOT-1d-vae"/>
                                         </constraints>
@@ -287,7 +274,6 @@
                                         </constraints>
                                     </imageView>
                                 </subviews>
-                                <color key="backgroundColor" name="contentBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="vZk-Wn-EaC" secondAttribute="trailing" constant="16" id="9Bx-wp-pqv"/>
                                     <constraint firstItem="vZk-Wn-EaC" firstAttribute="leading" secondItem="Gwl-iz-1LH" secondAttribute="trailing" constant="8" id="KgT-Np-Zfd"/>
@@ -349,35 +335,5 @@
         <image name="odd_up_icon" width="10" height="5"/>
         <image name="thin_close_cross_icon" width="13" height="13"/>
         <image name="warning_alert_icon" width="33" height="33"/>
-        <namedColor name="contentBackgroundColor">
-            <color red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="headingDisabledColor">
-            <color red="0.5607843137254902" green="0.57647058823529407" blue="0.65098039215686276" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="headingMainColor">
-            <color red="0.090196078431372548" green="0.10196078431372549" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="mainBackgroundColor">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="secondaryBackgroundColor">
-            <color red="0.92549019607843142" green="0.93333333333333335" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="tertiaryBackgroundColor">
-            <color red="0.81960784313725488" green="0.83529411764705885" blue="0.89411764705882357" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="textSecond">
-            <color red="0.41176470588235292" green="0.43137254901960786" blue="0.51372549019607838" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
     </resources>
 </document>

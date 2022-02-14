@@ -23,15 +23,16 @@ extension UIColor {
         static let textPrimary = UIColor(named: "textPrimary")!
         static let textHeadlinePrimary = UIColor(named: "textHeadlinePrimary")!
         static let textDisablePrimary = UIColor(named: "textDisablePrimary")!
-        static let textSecond = UIColor(named: "textSecond")!
+        static let textSecondary = UIColor(named: "textSecondary")!
         
         static let iconPrimary = UIColor(named: "iconPrimary")!
-        static let iconSecond = UIColor(named: "iconSecond")!
+        static let iconSecondary = UIColor(named: "iconSecondary")!
 
         static let backgroundOdds = UIColor(named: "backgroundOdds")!
         static let backgroundDisabledOdds = UIColor(named: "backgroundDisabledOdds")!
         
         static let separatorLine = UIColor(named: "separatorLine")!
+        static let separatorLineSecondary = UIColor(named: "separatorLineSecondary")!
         static let separatorLineHighlightSecondary = UIColor(named: "separatorLineHighlightSecondary")!
         static let separatorLineHighlightPrimary = UIColor(named: "separatorLineHighlightPrimary")!
         

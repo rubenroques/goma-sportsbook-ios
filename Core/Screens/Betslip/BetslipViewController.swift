@@ -108,8 +108,6 @@ class BetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -119,19 +117,20 @@ class BetslipViewController: UIViewController {
 
     func setupWithTheme() {
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundSecondary
-        self.navigationBarView.backgroundColor = UIColor.App.backgroundSecondary
-        self.tabsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationBarView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tabsBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.accountInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.accountValueBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.accountValuePlusView.backgroundColor = UIColor.App.highlightPrimary
+        self.accountInfoBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.accountValueBaseView.backgroundColor = UIColor.App.inputBackground
+        self.accountValuePlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
 
-        self.tabViewController.sliderBarColor = UIColor.App.highlightPrimary
+        self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
         self.tabViewController.textColor = UIColor.App.textPrimary
-      
+        self.tabViewController.separatorBarColor = UIColor.App.separatorLine
+
         self.closeButton.titleLabel?.textColor = UIColor.App.textPrimary
         self.betsLabel.textColor = UIColor.App.textPrimary
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)

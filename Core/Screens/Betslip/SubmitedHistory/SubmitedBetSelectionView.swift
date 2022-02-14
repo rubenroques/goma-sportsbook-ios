@@ -127,9 +127,9 @@ class SubmitedBetSelectionView: NibView {
         topSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         
         betNameLabel.textColor = UIColor.App.textPrimary
-        eventTimeLabel.textColor = UIColor.App.textSecond
+        eventTimeLabel.textColor = UIColor.App.textSecondary
         marketNameLabel.textColor = UIColor.App.textPrimary
-        eventNameLabel.textColor = UIColor.App.textSecond
+        eventNameLabel.textColor = UIColor.App.textSecondary
         oddValueLabel.textColor = UIColor.App.textPrimary
     }
 

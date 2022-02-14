@@ -20,7 +20,7 @@ class CountrySelectorTableViewCell: UITableViewCell {
         self.nameLabel.text = ""
         self.prefixLabel.text = ""
 
-        self.setupTheme()
+        self.setupWithTheme()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -35,10 +35,10 @@ class CountrySelectorTableViewCell: UITableViewCell {
         self.prefixLabel.isHidden = true
         self.prefixLabel.text = ""
 
-        self.setupTheme()
+        self.setupWithTheme()
     }
 
-    func setupTheme() {
+    func setupWithTheme() {
 
         self.backgroundColor = .clear
         self.backgroundView?.backgroundColor = .clear

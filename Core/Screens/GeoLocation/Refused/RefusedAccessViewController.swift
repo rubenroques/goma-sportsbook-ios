@@ -36,7 +36,7 @@ class RefusedAccessViewController: UIViewController {
         containerView.backgroundColor = UIColor.App.backgroundPrimary
         refusedView.backgroundColor = UIColor.App.backgroundPrimary
         refusedTitleLabel.textColor = UIColor.App.textPrimary
-        refusedSubtitleLabel.textColor = UIColor.App.textSecond
+        refusedSubtitleLabel.textColor = UIColor.App.textSecondary
 
         locationButton.setTitleColor(UIColor.white, for: .normal)
         locationButton.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor

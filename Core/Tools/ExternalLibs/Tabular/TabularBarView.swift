@@ -55,9 +55,15 @@ public class TabularBarView: UIView {
         }
     }
 
+    public var separatorBarColor: UIColor = .lightGray {
+        didSet {
+            self.separatorBottomView.backgroundColor = separatorBarColor
+        }
+    }
+
     private var baseScrollView: UIScrollView = {
         let scrollView = UIScrollView()
-        scrollView.backgroundColor = UIColor.App.backgroundSecondary
+        scrollView.backgroundColor = .clear
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         scrollView.showsVerticalScrollIndicator = false
         scrollView.showsHorizontalScrollIndicator = false
@@ -79,14 +85,21 @@ public class TabularBarView: UIView {
     private var selectedBarButtonBaseView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.backgroundSecondary
+        view.backgroundColor = .clear
         return view
     }()
 
     private var selectedBarButtonView: UIView = {
         let view = UIView()
         view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.backgroundColor = UIColor.App.backgroundSecondary
+        view.backgroundColor = .clear
+        return view
+    }()
+
+    private var separatorBottomView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .red
         return view
     }()
 
@@ -114,7 +127,9 @@ public class TabularBarView: UIView {
         self.addSubview(baseScrollView)
         baseScrollView.addSubview(stackView)
 
-        self.selectedBarButtonBaseView.addSubview(selectedBarButtonView)
+        selectedBarButtonBaseView.addSubview(separatorBottomView)
+        selectedBarButtonBaseView.addSubview(selectedBarButtonView)
+
         baseScrollView.addSubview(selectedBarButtonBaseView)
 
         stackViewWithConstraint = NSLayoutConstraint(item: self.stackView, attribute: .width, relatedBy: .greaterThanOrEqual, toItem: self.baseScrollView, attribute: .width, multiplier: 1, constant: 0)
@@ -137,8 +152,12 @@ public class TabularBarView: UIView {
             selectedBarButtonBaseView.leadingAnchor.constraint(equalTo: baseScrollView.contentLayoutGuide.leadingAnchor),
             selectedBarButtonBaseView.heightAnchor.constraint(equalToConstant: 4),
             selectedBarButtonBaseView.trailingAnchor.constraint(equalTo: baseScrollView.contentLayoutGuide.trailingAnchor),
-            selectedBarButtonBaseView.bottomAnchor.constraint(equalTo: baseScrollView.contentLayoutGuide.bottomAnchor)
+            selectedBarButtonBaseView.bottomAnchor.constraint(equalTo: baseScrollView.contentLayoutGuide.bottomAnchor),
 
+            separatorBottomView.leadingAnchor.constraint(equalTo: selectedBarButtonBaseView.leadingAnchor),
+            separatorBottomView.trailingAnchor.constraint(equalTo: selectedBarButtonBaseView.trailingAnchor),
+            separatorBottomView.bottomAnchor.constraint(equalTo: selectedBarButtonBaseView.bottomAnchor),
+            separatorBottomView.heightAnchor.constraint(equalToConstant: 1)
         ])
     }
 

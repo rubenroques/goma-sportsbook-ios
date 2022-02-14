@@ -80,16 +80,16 @@ class FilterCollapseView: NibView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.setup()
+        self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        self.setup()
+        self.setupWithTheme()
     }
 
-    func setup() {
+    func setupWithTheme() {
         self.backgroundColor = UIColor.App.backgroundPrimary
 
         containerView.backgroundColor = UIColor.App.backgroundSecondary

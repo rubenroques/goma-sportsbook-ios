@@ -18,6 +18,8 @@
             <connections>
                 <outlet property="activityIndicatorBaseView" destination="EnH-Tc-qS9" id="oP1-Lz-CkF"/>
                 <outlet property="activityIndicatorView" destination="zwu-Pf-n99" id="gk5-3e-q85"/>
+                <outlet property="betTypeSegmentControl" destination="4rt-3F-zS4" id="F0F-Ja-xVV"/>
+                <outlet property="betTypeSegmentControlBaseView" destination="pI6-Ke-zRH" id="baQ-qE-Fjr"/>
                 <outlet property="dontHaveAnyTicketsLabel" destination="bYn-kn-OKJ" id="Qic-Ux-qiF"/>
                 <outlet property="emptyBetsBaseView" destination="o4Z-hY-7xI" id="q5D-Tm-JHG"/>
                 <outlet property="firstTextNoBetsLabel" destination="bYn-kn-OKJ" id="spS-C0-kQc"/>
@@ -38,6 +40,28 @@
                     <rect key="frame" x="0.0" y="0.0" width="605" height="942"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pI6-Ke-zRH">
+                    <rect key="frame" x="50" y="64" width="505" height="50"/>
+                    <subviews>
+                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="4rt-3F-zS4">
+                            <rect key="frame" x="112.5" y="9.5" width="280" height="32"/>
+                            <constraints>
+                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="280" id="Oin-tJ-rp0"/>
+                            </constraints>
+                            <segments>
+                                <segment title="Single"/>
+                                <segment title="Multiple"/>
+                                <segment title="System"/>
+                            </segments>
+                        </segmentedControl>
+                    </subviews>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstItem="4rt-3F-zS4" firstAttribute="centerX" secondItem="pI6-Ke-zRH" secondAttribute="centerX" id="6A3-Sv-DLQ"/>
+                        <constraint firstAttribute="height" constant="50" id="Urf-1E-Z5W"/>
+                        <constraint firstItem="4rt-3F-zS4" firstAttribute="centerY" secondItem="pI6-Ke-zRH" secondAttribute="centerY" id="nak-Zt-hZy"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EnH-Tc-qS9">
                     <rect key="frame" x="0.0" y="44" width="605" height="864"/>
                     <subviews>
@@ -78,7 +102,7 @@
                             <state key="normal" title="Go to popular games"/>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemGrayColor"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
                         <constraint firstItem="L5V-tX-BZx" firstAttribute="centerX" secondItem="o4Z-hY-7xI" secondAttribute="centerX" id="3Ft-Vt-UA1"/>
                         <constraint firstItem="tfF-rg-elM" firstAttribute="leading" secondItem="o4Z-hY-7xI" secondAttribute="leading" constant="30" id="5XM-tj-5hv"/>
@@ -96,8 +120,10 @@
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="o4Z-hY-7xI" secondAttribute="trailing" id="8y6-8e-Cr8"/>
+                <constraint firstItem="pI6-Ke-zRH" firstAttribute="leading" secondItem="fH2-Vz-eya" secondAttribute="leading" constant="50" id="B97-je-pZT"/>
                 <constraint firstAttribute="bottom" secondItem="2p6-BP-q63" secondAttribute="bottom" id="Bga-y6-li6"/>
                 <constraint firstAttribute="bottom" secondItem="o4Z-hY-7xI" secondAttribute="bottom" id="Coo-xK-qLX"/>
+                <constraint firstItem="pI6-Ke-zRH" firstAttribute="top" secondItem="fH2-Vz-eya" secondAttribute="top" constant="20" id="XBs-8R-WIH"/>
                 <constraint firstItem="EnH-Tc-qS9" firstAttribute="leading" secondItem="fH2-Vz-eya" secondAttribute="leading" id="aY1-am-Gli"/>
                 <constraint firstItem="EnH-Tc-qS9" firstAttribute="top" secondItem="fH2-Vz-eya" secondAttribute="top" id="bsL-qD-0aD"/>
                 <constraint firstItem="o4Z-hY-7xI" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="10" id="en3-ap-zsL"/>
@@ -105,6 +131,8 @@
                 <constraint firstItem="2p6-BP-q63" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="gJf-4R-4SI"/>
                 <constraint firstItem="2p6-BP-q63" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="gjb-24-9Wi"/>
                 <constraint firstItem="fH2-Vz-eya" firstAttribute="trailing" secondItem="EnH-Tc-qS9" secondAttribute="trailing" id="hDE-6k-Ked"/>
+                <constraint firstItem="fH2-Vz-eya" firstAttribute="trailing" secondItem="pI6-Ke-zRH" secondAttribute="trailing" constant="50" id="iPs-Rv-us9"/>
+                <constraint firstItem="pI6-Ke-zRH" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="mLw-Gd-paQ"/>
                 <constraint firstItem="o4Z-hY-7xI" firstAttribute="leading" secondItem="fH2-Vz-eya" secondAttribute="leading" id="rKV-O6-JrR"/>
                 <constraint firstAttribute="trailing" secondItem="2p6-BP-q63" secondAttribute="trailing" id="uDN-Gh-fd1"/>
             </constraints>
@@ -116,9 +144,6 @@
         <image name="no_content_icon" width="161" height="161"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

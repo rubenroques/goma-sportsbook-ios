@@ -39,19 +39,19 @@ class MatchFiltersViewController: UIViewController {
     
 
     func commonInit() {
-        navigationLabel.text = localized("choose_sport")
-        navigationLabel.font = AppFont.with(type: .bold, size: 16)
+        self.navigationLabel.text = localized("choose_sport")
+        self.navigationLabel.font = AppFont.with(type: .bold, size: 16)
 
-        cancelButton.setTitle(localized("cancel"), for: .normal)
-        cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
+        self.cancelButton.setTitle(localized("cancel"), for: .normal)
+        self.cancelButton.titleLabel?.font = AppFont.with(type: .semibold, size: 16)
     }
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        topView.backgroundColor = UIColor.App.backgroundPrimary
-        navigationView.backgroundColor = UIColor.App.backgroundPrimary
-        navigationLabel.textColor = UIColor.App.textPrimary
-        cancelButton.setTitleColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.topView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        self.navigationLabel.textColor = UIColor.App.textPrimary
+        self.cancelButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
     
 }

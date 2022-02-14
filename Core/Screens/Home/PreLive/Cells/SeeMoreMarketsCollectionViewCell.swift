@@ -50,7 +50,7 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
         self.titleLabel.textColor = UIColor.App.textPrimary
-        self.subtitleLabel.textColor = UIColor.App.textSecond
+        self.subtitleLabel.textColor = UIColor.App.textSecondary
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {

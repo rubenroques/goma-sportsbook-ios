@@ -116,10 +116,10 @@ class DepositViewController: UIViewController {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.depositHeaderTextFieldView.backgroundColor = .clear
-        self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App.textSecond)
+        self.depositHeaderTextFieldView.setPlaceholderColor(UIColor.App.textSecondary)
         self.depositHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
 
-        self.depositTipLabel.textColor = UIColor.App.textSecond
+        self.depositTipLabel.textColor = UIColor.App.textSecondary
 
         self.amountButtonStackView.backgroundColor = .clear
 
@@ -130,7 +130,7 @@ class DepositViewController: UIViewController {
         self.nextButton.layer.cornerRadius = CornerRadius.button
         self.nextButton.layer.masksToBounds = true
 
-        self.paymentsLabel.textColor = UIColor.App.textSecond
+        self.paymentsLabel.textColor = UIColor.App.textSecondary
 
         self.paymentsLogosStackView.backgroundColor = .clear
     }
@@ -175,7 +175,7 @@ class DepositViewController: UIViewController {
         responsibleGamingLabel.text = fullString
         responsibleGamingLabel.numberOfLines = 0
         responsibleGamingLabel.font = AppFont.with(type: .medium, size: 10)
-        responsibleGamingLabel.textColor =  UIColor.App.textSecond
+        responsibleGamingLabel.textColor =  UIColor.App.textSecondary
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
@@ -217,7 +217,7 @@ class DepositViewController: UIViewController {
         faqLabel.text = fullString
         faqLabel.numberOfLines = 0
         faqLabel.font = AppFont.with(type: .medium, size: 10)
-        faqLabel.textColor =  UIColor.App.textSecond
+        faqLabel.textColor =  UIColor.App.textSecondary
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 

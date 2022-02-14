@@ -4,9 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -233,7 +231,6 @@
                             </constraints>
                         </view>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="dDo-fO-dxP" secondAttribute="trailing" constant="12" id="0Oe-wh-7IF"/>
                         <constraint firstAttribute="trailing" secondItem="YBe-bD-GYV" secondAttribute="trailing" id="4w7-fI-HTr"/>
@@ -258,7 +255,7 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-4y-bft">
                             <rect key="frame" x="0.0" y="0.0" width="72" height="19"/>
-                            <color key="backgroundColor" systemColor="systemOrangeColor"/>
+                            <color key="backgroundColor" white="0.074962797619999993" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfI-T8-xC9">
                             <rect key="frame" x="12" y="4" width="28" height="11"/>
@@ -267,7 +264,6 @@
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemRedColor"/>
                     <constraints>
                         <constraint firstItem="kfI-T8-xC9" firstAttribute="centerY" secondItem="Ovs-WL-i4P" secondAttribute="centerY" id="9l2-SL-UG5"/>
                         <constraint firstAttribute="trailing" secondItem="yXI-4y-bft" secondAttribute="trailing" constant="-20" id="JlI-AY-u4K"/>
@@ -281,7 +277,6 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" name="secondaryBackgroundColor"/>
             <constraints>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="YPg-OO-9uf" secondAttribute="trailing" constant="8" id="61E-s9-PU5"/>
                 <constraint firstItem="Ovs-WL-i4P" firstAttribute="centerY" secondItem="Vqq-sH-Fcn" secondAttribute="centerY" id="CvF-0H-mUc"/>
@@ -294,18 +289,4 @@
             <point key="canvasLocation" x="33.333333333333336" y="207.92410714285714"/>
         </view>
     </objects>
-    <resources>
-        <namedColor name="secondaryBackgroundColor">
-            <color red="0.92549019607843142" green="0.93333333333333335" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemOrangeColor">
-            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-    </resources>
 </document>

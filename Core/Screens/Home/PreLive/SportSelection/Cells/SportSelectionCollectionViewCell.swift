@@ -23,7 +23,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
                 containerView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
             }
             else {
-                containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+                containerView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
             }
         }
     }
@@ -36,6 +36,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
 
         self.commonInit()
+        self.setupWithTheme()
     }
 
     override func prepareForReuse() {
@@ -47,30 +48,37 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         self.currentLiveSportsPublisher?.cancel()
     }
 
+    func setupWithTheme(){
+        containerView.backgroundColor = UIColor.App.backgroundSecondary
+        containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+        
+        iconImageView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        nameLabel.font = AppFont.with(type: .bold, size: 12)
+        nameLabel.textColor = UIColor.App.textPrimary
+        
+        eventCountView.backgroundColor = UIColor.App.alertError
+        
+        eventCountLabel.textColor = UIColor.App.buttonTextPrimary
+    }
+    
     func commonInit() {
 
         //self.backgroundColor = UIColor.App.backgroundSecondary
 
         containerView.layer.cornerRadius = containerView.frame.size.height/2
-        containerView.backgroundColor = UIColor.App.backgroundSecondary
-        containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
         containerView.layer.borderWidth = 2
 
-        iconImageView.backgroundColor = UIColor.App.backgroundSecondary
         iconImageView.image = UIImage(named: "sport_type_icon")
         iconImageView.contentMode = .scaleAspectFit
 
         nameLabel.text = localized("sport")
-        nameLabel.font = AppFont.with(type: .bold, size: 12)
-        nameLabel.textColor = UIColor.App.textPrimary
         nameLabel.numberOfLines = 2
 
         eventCountView.isHidden = true
         eventCountView.layer.cornerRadius = eventCountView.frame.size.width/2
-        eventCountView.backgroundColor = UIColor.App.alertError
-
+        
         eventCountLabel.font = AppFont.with(type: .semibold, size: 9)
-        eventCountLabel.textColor = UIColor.App.buttonTextPrimary
         
     }
 

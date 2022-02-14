@@ -4,9 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -44,9 +42,7 @@
                             <rect key="frame" x="360" y="14" width="42" height="28"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                            <state key="normal" title="Close">
-                                <color key="titleColor" name="headingMainColor"/>
-                            </state>
+                            <state key="normal" title="Close"/>
                             <connections>
                                 <action selector="didTapCancelButton" destination="-1" eventType="primaryActionTriggered" id="Y6x-bu-K6U"/>
                             </connections>
@@ -65,7 +61,7 @@
                                             </constraints>
                                         </imageView>
                                     </subviews>
-                                    <color key="backgroundColor" systemColor="systemBlueColor"/>
+                                    <color key="backgroundColor" red="0.0" green="0.45882352939999999" blue="0.89019607840000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="width" secondItem="UEW-bO-H0x" secondAttribute="height" id="Cv1-PU-On6"/>
                                         <constraint firstItem="Gh6-K1-3a6" firstAttribute="centerY" secondItem="UEW-bO-H0x" secondAttribute="centerY" id="L7a-i0-Z6m"/>
@@ -82,7 +78,6 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
-                                    <color key="backgroundColor" systemColor="systemIndigoColor"/>
                                     <constraints>
                                         <constraint firstItem="fGx-aT-4yN" firstAttribute="centerY" secondItem="rhA-jS-cOO" secondAttribute="centerY" id="7vN-fh-2pk"/>
                                         <constraint firstAttribute="trailing" secondItem="fGx-aT-4yN" secondAttribute="trailing" constant="8" id="W11-mJ-99C"/>
@@ -90,7 +85,6 @@
                                     </constraints>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemGray4Color"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="28" id="8Tx-yP-Ovx"/>
                                 <constraint firstItem="rhA-jS-cOO" firstAttribute="leading" secondItem="UEW-bO-H0x" secondAttribute="trailing" id="A1E-Ik-Oii"/>
@@ -109,7 +103,6 @@
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemTealColor"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="dRc-be-G9Z" secondAttribute="trailing" constant="12" id="3cY-KS-RiF"/>
                         <constraint firstItem="r4b-AX-Hcc" firstAttribute="leading" secondItem="oZk-KS-kFZ" secondAttribute="leading" constant="12" id="FTj-yw-e0V"/>
@@ -124,7 +117,6 @@
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="azj-7D-Zem">
                     <rect key="frame" x="0.0" y="100" width="414" height="796"/>
-                    <color key="backgroundColor" name="mainBackgroundColor"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xG2-CJ-KOu">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
@@ -132,7 +124,6 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="oZk-KS-kFZ" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="0Lk-IH-v6C"/>
                 <constraint firstAttribute="trailing" secondItem="xG2-CJ-KOu" secondAttribute="trailing" id="36p-hT-fUK"/>
@@ -151,26 +142,5 @@
     </objects>
     <resources>
         <image name="plus_small_icon" width="16" height="16"/>
-        <namedColor name="headingMainColor">
-            <color red="0.090196078431372548" green="0.10196078431372549" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="mainBackgroundColor">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemIndigoColor">
-            <color red="0.34509803921568627" green="0.33725490196078434" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
     </resources>
 </document>

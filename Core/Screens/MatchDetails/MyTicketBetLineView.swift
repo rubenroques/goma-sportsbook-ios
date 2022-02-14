@@ -139,12 +139,12 @@ class MyTicketBetLineView: NibView {
     }
 
     func setupWithTheme() {
-        self.backgroundColor = .clear
+        self.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.baseView.backgroundColor = UIColor.App.backgroundTertiary
         self.indicatorBaseView.backgroundColor = UIColor.clear
 
-        self.separatorView.backgroundColor = UIColor.App.separatorLine
+        self.separatorView.backgroundColor = UIColor.App.separatorLineSecondary
 
         self.tournamentNameLabel.textColor = UIColor.App.textPrimary
         self.homeTeamNameLabel.textColor = UIColor.App.textPrimary
@@ -172,15 +172,15 @@ class MyTicketBetLineView: NibView {
                 self.dateLabel.isHidden = true
                 self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsWon
                 self.indicatorLabel.text = "Won"
-                self.bottomBaseView.backgroundColor = UIColor.App.myTicketsWonFaded
-                self.separatorView.isHidden = true
+                self.bottomBaseView.backgroundColor = .clear
+                self.separatorView.isHidden = false
             case "LOST", "HALF_LOST":
                 self.indicatorBaseView.isHidden = false
                 self.dateLabel.isHidden = true
                 self.indicatorInternalBaseView.backgroundColor = UIColor.App.myTicketsLost
-                self.bottomBaseView.backgroundColor = UIColor.App.myTicketsLostFaded
+                self.bottomBaseView.backgroundColor = .clear
                 self.indicatorLabel.text = "Lost"
-                self.separatorView.isHidden = true
+                self.separatorView.isHidden = false
             case "OPEN":
                 self.dateLabel.isHidden = false
                 self.indicatorLabel.text = ""
@@ -188,7 +188,7 @@ class MyTicketBetLineView: NibView {
             default:
                 self.dateLabel.isHidden = true
                 self.indicatorLabel.text = ""
-                self.indicatorBaseView.isHidden = true
+                self.indicatorBaseView.isHidden = false
 
             }
         }

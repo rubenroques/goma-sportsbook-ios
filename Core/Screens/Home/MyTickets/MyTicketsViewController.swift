@@ -10,8 +10,9 @@ import Combine
 
 class MyTicketsViewController: UIViewController {
 
-    @IBOutlet private var ticketTypesCollectionView: UICollectionView!
-    @IBOutlet private var ticketTypesSeparatorLineView: UIView!
+    @IBOutlet private weak var myBetsSegmentedControlBaseView: UIView!
+    @IBOutlet private weak var myBetsSegmentedControl: UISegmentedControl!
+    
     @IBOutlet private var ticketsTableView: UITableView!
 
     @IBOutlet private weak var emptyBaseView: UIView!
@@ -46,24 +47,20 @@ class MyTicketsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.myBetsSegmentedControlBaseView.isHidden = false
+        self.myBetsSegmentedControlBaseView.backgroundColor = .systemPink
         self.loadingBaseView.isHidden = true
         self.emptyBaseView.isHidden = true
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
-        self.ticketTypesCollectionView.collectionViewLayout = flowLayout
-        self.ticketTypesCollectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        self.ticketTypesCollectionView.showsVerticalScrollIndicator = false
-        self.ticketTypesCollectionView.showsHorizontalScrollIndicator = false
-        self.ticketTypesCollectionView.alwaysBounceHorizontal = true
-        self.ticketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
-                                       forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        self.ticketTypesCollectionView.delegate = self
-        self.ticketTypesCollectionView.dataSource = self
-
-        //
-        //
+      
+       
+        self.myBetsSegmentedControl.selectedSegmentIndex = 0
+        self.viewModel.setMyTicketsType(.resolved)
+            //self.didChangeSegmentValue(self.myBetsSegmentedControl)
+        
+        
         self.ticketsTableView.delegate = self.viewModel
         self.ticketsTableView.dataSource = self.viewModel
         self.ticketsTableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)
@@ -144,10 +141,6 @@ class MyTicketsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.backgroundPrimary
-        self.ticketTypesSeparatorLineView.backgroundColor = UIColor.App.separatorLine
-        self.ticketTypesSeparatorLineView.alpha = 0.5
-
         self.ticketsTableView.backgroundColor = UIColor.App.backgroundPrimary
         self.ticketsTableView.backgroundView?.backgroundColor = UIColor.App.backgroundCards
 
@@ -157,12 +150,48 @@ class MyTicketsViewController: UIViewController {
         self.secondTextFieldLabel.textColor = UIColor.App.textPrimary
         
         self.noBetsButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+        
+        self.myBetsSegmentedControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
+            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
+        ], for: .selected)
+        self.myBetsSegmentedControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
+            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
+        ], for: .normal)
+        self.myBetsSegmentedControl.setTitleTextAttributes([
+            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
+            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
+        ], for: .disabled)
+
+        self.myBetsSegmentedControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
+
+      
+
+        self.myBetsSegmentedControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.myBetsSegmentedControl.backgroundColor = UIColor.App.backgroundTertiary
 
     }
 
     @objc func refresh() {
         self.shouldShowCenterLoadingView = false
         self.viewModel.refresh()
+    }
+    
+    @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
+
+        switch segmentControl.selectedSegmentIndex {
+        case 0:
+            self.viewModel.setMyTicketsType(.resolved)
+ 
+        case 1:
+            self.viewModel.setMyTicketsType(.opened)
+        case 2:
+            self.viewModel.setMyTicketsType(.won)
+        default:
+            ()
+        }
+
     }
 
 }
@@ -172,62 +201,4 @@ extension MyTicketsViewController {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
     }
-}
-
-extension MyTicketsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
-    }
-
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
-        else {
-            fatalError()
-        }
-
-        switch indexPath.row {
-        case MyTicketsViewModel.MyTicketsType.opened.rawValue :
-            cell.setupWithTitle(localized("opened"))
-        case MyTicketsViewModel.MyTicketsType.resolved.rawValue:
-            cell.setupWithTitle(localized("resolved"))
-        case MyTicketsViewModel.MyTicketsType.won.rawValue:
-            cell.setupWithTitle(localized("won"))
-        default:
-            ()
-        }
-
-        if self.viewModel.isTicketsTypeSelected(forIndex: indexPath.row) {
-            cell.setSelectedType(true)
-        }
-        else {
-            cell.setSelectedType(false)
-        }
-
-        return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        switch indexPath.row {
-        case MyTicketsViewModel.MyTicketsType.opened.rawValue:
-            self.viewModel.setMyTicketsType(.opened)
-        case MyTicketsViewModel.MyTicketsType.resolved.rawValue:
-            self.viewModel.setMyTicketsType(.resolved)
-        case MyTicketsViewModel.MyTicketsType.won.rawValue:
-            self.viewModel.setMyTicketsType(.won)
-        default:
-            ()
-        }
-
-        self.ticketTypesCollectionView.reloadData()
-        
-        self.ticketTypesCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-    }
-
 }
