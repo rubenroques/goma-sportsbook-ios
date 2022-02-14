@@ -914,8 +914,6 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
-		F47BB79F27B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
-		F47BB7A027B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
 		A9E7C68C27B526EA00F784C9 /* MyFavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C68B27B526EA00F784C9 /* MyFavoritesViewController.swift */; };
 		A9E7C68D27B526EA00F784C9 /* MyFavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C68B27B526EA00F784C9 /* MyFavoritesViewController.swift */; };
 		A9E7C69027B5405B00F784C9 /* MyFavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C68F27B5405B00F784C9 /* MyFavoritesViewModel.swift */; };
@@ -932,6 +930,8 @@
 		A9E7C6A327B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */; };
 		A9E7C6A527BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */; };
 		A9E7C6A627BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */; };
+		F47BB79F27B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
+		F47BB7A027B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
 		F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
 		F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
 		F47BF2662763986300648440 /* GameSuggestedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47BF2652763986300648440 /* GameSuggestedView.xib */; };
@@ -1434,7 +1434,6 @@
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
 		A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpPromotionView.swift; sourceTree = "<group>"; };
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
-		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		A9E7C68B27B526EA00F784C9 /* MyFavoritesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoritesViewController.swift; sourceTree = "<group>"; };
 		A9E7C68F27B5405B00F784C9 /* MyFavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoritesViewModel.swift; sourceTree = "<group>"; };
 		A9E7C69327B5638500F784C9 /* MyFavoriteMatchesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteMatchesDataSource.swift; sourceTree = "<group>"; };
@@ -1443,6 +1442,7 @@
 		A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregator.swift; sourceTree = "<group>"; };
 		A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregatorRepository.swift; sourceTree = "<group>"; };
 		A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorRepositoryType.swift; sourceTree = "<group>"; };
+		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
 		F47BF2652763986300648440 /* GameSuggestedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameSuggestedView.xib; sourceTree = "<group>"; };
 		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2039,7 +2039,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		455C962526FE11B300456F30 /* Home */ = {
+		455C962526FE11B300456F30 /* Root */ = {
 			isa = PBXGroup;
 			children = (
 				455C962626FE11CA00456F30 /* RootViewController.swift */,
@@ -2051,7 +2051,7 @@
 				45B0BD2F271EED24009C41FA /* CompetitionsList */,
 				458BAC66276B652F006C4BC7 /* MyTickets */,
 			);
-			path = Home;
+			path = Root;
 			sourceTree = "<group>";
 		};
 		455F764F26F0EFAD00B9B85D /* Account */ = {
@@ -2231,16 +2231,16 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				452047BE27036D4600B277B5 /* Splash */,
-				455C962526FE11B300456F30 /* Home */,
+				455C962526FE11B300456F30 /* Root */,
 				A995C1922799917100151462 /* Search */,
 				A9BCF438274FB558006DD528 /* MatchDetails */,
-				A9B8409426DE44BF00269B05 /* GeoLocation */,
-				A9B8407926CA788000269B05 /* VersionUpdate */,
-				A9A836AF26C6AC5D00508923 /* Maintenance */,
+				454E0A932732BF4600794E0C /* Betslip */,
 				4589F3EA26BF017A005DF543 /* Account */,
 				A9E7C68A27B526C500F784C9 /* MyFavorites */,
-				454E0A932732BF4600794E0C /* Betslip */,
+				452047BE27036D4600B277B5 /* Splash */,
+				A9A836AF26C6AC5D00508923 /* Maintenance */,
+				A9B8407926CA788000269B05 /* VersionUpdate */,
+				A9B8409426DE44BF00269B05 /* GeoLocation */,
 				455A0D2226BDE7B900EC572D /* DebugHelper */,
 				A92F5D8F2729730100884BDF /* Spinner */,
 			);
