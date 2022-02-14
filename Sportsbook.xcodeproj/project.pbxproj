@@ -898,8 +898,6 @@
 		F48CB9A127628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */; };
 		F48CB9A227628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */; };
 		F48CB9A327628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */; };
-		F49834A427AC51840091BEA1 /* DropDownSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F49834A327AC51840091BEA1 /* DropDownSelectionView.xib */; };
-		F49834A527AC51840091BEA1 /* DropDownSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F49834A327AC51840091BEA1 /* DropDownSelectionView.xib */; };
 		F4A438E5274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4A438E6274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */; };
@@ -1386,7 +1384,6 @@
 		F47BF2652763986300648440 /* GameSuggestedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameSuggestedView.xib; sourceTree = "<group>"; };
 		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
 		F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetSuggestedCollectionViewCell.xib; sourceTree = "<group>"; };
-		F49834A327AC51840091BEA1 /* DropDownSelectionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DropDownSelectionView.xib; sourceTree = "<group>"; };
 		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
 		F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCardTableViewCell.swift; sourceTree = "<group>"; };
 		F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCardTableViewCell.xib; sourceTree = "<group>"; };
@@ -3058,7 +3055,6 @@
 		F498349F27AC513A0091BEA1 /* DropDownSelectionView */ = {
 			isa = PBXGroup;
 			children = (
-				F49834A327AC51840091BEA1 /* DropDownSelectionView.xib */,
 				F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */,
 			);
 			path = DropDownSelectionView;
@@ -3309,7 +3305,6 @@
 				45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
 				A995C1AE279B10B600151462 /* SearchTitleSectionHeaderView.xib in Resources */,
 				A9BCF445274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
-				F49834A427AC51840091BEA1 /* DropDownSelectionView.xib in Resources */,
 				A995C197279991A100151462 /* SearchViewController.xib in Resources */,
 				A9B8408826D3E84000269B05 /* ForbiddenLocationViewController.xib in Resources */,
 				A9BCF436274D1A77006DD528 /* MatchDetailsViewController.xib in Resources */,
@@ -3472,7 +3467,6 @@
 				A9C82FBF26F4E55000059DCD /* EditAlertView.xib in Resources */,
 				454990CD2716333F00D57CE2 /* SportsTypes.xcassets in Resources */,
 				A9BCF446274FC3FF006DD528 /* MarketDetailCollectionViewCell.xib in Resources */,
-				F49834A527AC51840091BEA1 /* DropDownSelectionView.xib in Resources */,
 				A90D8AF8277200C400DF88EB /* WithdrawViewController.xib in Resources */,
 				455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */,
 				A9627A09274529BD0001E1D5 /* ActivationAlertScrollableView.xib in Resources */,

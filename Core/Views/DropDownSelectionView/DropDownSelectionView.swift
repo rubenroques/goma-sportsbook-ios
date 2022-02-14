@@ -9,253 +9,173 @@ import UIKit
 import CombineCocoa
 import Combine
 
-class DropDownSelectionView: NibView {
-
-    @IBOutlet private weak var containerView: UIView!
-    @IBOutlet private weak var headerPlaceholderLabel: UILabel!
-
-    @IBOutlet private weak var headerLabel: UILabel! // swiftlint:disable:this private_outlet
-
-   
+class DropDownSelectionView: UIView {
     
-    @IBOutlet  weak var textField: UITextField!
-
-    var didTapIcon: (() -> Void)?
-    var didSelectPickerIndex: ((Int) -> Void)?
-
-    // Variables
+    // MARK: - Private Properties
+    // Sub Views
+    private lazy var containerView: UIView = Self.createView()
     
-    let pickerView = UIPickerView()
-    var selectionArray: [String] = []
-    var shouldScalePlaceholder = true
+    private lazy var baseView: UIView = Self.createView()
+    
+    private lazy var placeholder: UILabel = Self.createPlaceholder()
+    
+    private lazy var textField: UITextField = Self.createTextField()
+    
+  
+    
+    
+    // MARK: - Lifetime and Cycle
+
+    @available(iOS, unavailable)
+    convenience init() {
+        self.init(frame: .zero)
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.commonInit()
-        
+        commonInit()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        self.setupWithTheme()
+        commonInit()
     }
 
-    
-    func setupWithTheme() {
-
-        if textField.text != "" {
-            self.slideUp()
-        }
-        headerLabel.isHidden = false
-        headerLabel.text = "teste"
-
-        containerView.backgroundColor = UIColor.App.backgroundSecondary
-        containerView.layer.cornerRadius = CornerRadius.headerInput
-
-        containerView.layer.borderWidth = 1
-        containerView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
+    func commonInit() {
+      // cenas que os inits precisam chamar    super.viewDidLoad()
         
-        self.textField.autocorrectionType = .no
-        
-
-        self.headerPlaceholderLabel.alpha = 0.0
-
-        let text = localized("show")
-
-    }
-
-    func shouldSlideDown() -> Bool {
-        if let text = textField.text, !text.isEmpty {
-            return false
-        }
-        return true
-    }
-
-    func slideUp(animated: Bool = true) {
-
-        if headerLabel.text?.isEmpty ?? true {
-            return
-        }
-
+        self.setupSubviews()
  
-
-        UIView.animate(withDuration: animated ? 0.2 : 0, delay: 0.0, options: .curveEaseOut) {
-            self.layoutIfNeeded()
-
-            if self.shouldScalePlaceholder {
-                let movingWidthDiff = (self.headerLabel.frame.size.width - (self.headerLabel.frame.size.width * 0.8)) / 2
-                self.headerLabel.transform = CGAffineTransform(scaleX: 0.8, y: 0.8).concatenating(CGAffineTransform(translationX: -movingWidthDiff, y: 0))
-            }
-            self.shouldScalePlaceholder = false
-        } completion: { _ in
-
-        }
+    
     }
 
-    func slideDown() {
-
-        if headerLabel.text?.isEmpty ?? true {
-            return
-        }
-
-
-        UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
-            self.layoutIfNeeded()
-            self.headerLabel.transform = CGAffineTransform.identity
-            self.shouldScalePlaceholder = true
-        } completion: { _ in
-
-        }
+    override func layoutSubviews() {
+        super.layoutSubviews()
     }
+}
 
-    override var canBecomeFirstResponder: Bool {
-        return true
+
+//
+// MARK: - Subviews Initialization and Setup
+//
+extension DropDownSelectionView {
+
+    private static func createView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
-
-    @discardableResult
-    override func resignFirstResponder() -> Bool {
-        super.resignFirstResponder()
-        self.textField.resignFirstResponder()
-        return true
+    
+    private static func createPlaceholder() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        label.text = "TITLE"
+        return label
     }
-
-    func setText(_ text: String, slideUp: Bool = true) {
-        self.textField.text = text
-        if slideUp {
-            self.slideUp(animated: false)
-        }
+    
+    private static func createTextField() -> UITextField {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.text = "text field"
+        return textField
     }
-
-    func setPlaceholderText(_ placeholder: String) {
-        self.textField.placeholder = ""
-        self.headerLabel.text = placeholder
-    }
-  
-
-    func setPlaceholderColor(_ color: UIColor) {
-        self.headerLabel.textColor = color
-    }
-
-   
-
-    func setHeaderLabelColor(_ color: UIColor) {
-        self.headerLabel.textColor = color
-    }
-
+    
     func setTextFieldColor(_ color: UIColor) {
         self.textField.textColor = color
     }
-
-    func setViewColor(_ color: UIColor) {
-        self.containerView.backgroundColor = color
+    
+    func setPlaceholderText(_ placeholder: String) {
+        self.textField.placeholder = ""
+        self.placeholder.text = placeholder
     }
-
+  
+    func setPlaceholderLabelColor(_ color: UIColor) {
+        self.placeholder.backgroundColor = color
+    }
+    
+    func setPlaceholderTextColor(_ color: UIColor) {
+        self.placeholder.textColor = color
+    }
+    
+    func setViewColor(_ color: UIColor) {
+        self.containerView.backgroundColor = .yellow
+    }
     func setViewBorderColor(_ color: UIColor) {
         self.containerView.layer.borderColor = color.cgColor
     }
 
-    @objc func didTapIconImageVIew(_ sender: AnyObject) {
+    
+    private func setupSubviews() {
 
-        didTapIcon?()
+        // Add subviews to self.view or each other
+        
+        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.baseView.layer.cornerRadius = CornerRadius.headerInput
+
+        self.baseView.layer.borderWidth = 1
+        self.baseView.layer.borderColor = UIColor.systemPink.cgColor
+        
+       
+        //self.containerView.addSubview(self.placeholder)
+        self.baseView.addSubview(self.placeholder)
+        
+        self.containerView.addSubview(self.baseView)
+        self.baseView.addSubview(self.textField)
+        self.addSubview(self.containerView)
+    
+
+        // Initialize constraints
+        self.initConstraints()
     }
 
-    func setTextFieldDefaultValue(_ value: String) {
-        self.textField.text = value
-        self.slideUp(animated: false)
+    private func initConstraints() {
+
+        NSLayoutConstraint.activate([
+            self.placeholder.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            self.placeholder.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+            self.placeholder.topAnchor.constraint(equalTo: self.topAnchor),
+            self.placeholder.heightAnchor.constraint(equalToConstant: 20),
+
+            self.textField.leadingAnchor.constraint(equalTo: self.placeholder.leadingAnchor),
+            self.textField.trailingAnchor.constraint(equalTo: self.placeholder.trailingAnchor),
+            self.textField.topAnchor.constraint(equalTo: self.placeholder.bottomAnchor),
+            self.textField.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+/*
+            self.topSliderSeparatorView.leadingAnchor.constraint(equalTo: self.topSliderBaseView.leadingAnchor),
+            self.topSliderSeparatorView.trailingAnchor.constraint(equalTo: self.topSliderBaseView.trailingAnchor),
+            self.topSliderSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+            self.topSliderSeparatorView.bottomAnchor.constraint(equalTo: self.topSliderBaseView.bottomAnchor),*/
+        ])
+/*
+        NSLayoutConstraint.activate([
+            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.topSliderBaseView.bottomAnchor),
+            self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
+            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
+
+            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
+            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
+        ])
+*/
     }
-
-    func setTextFieldFont(_ font: UIFont) {
-        self.textField.font = font
-    }
-
-    func setHeaderLabelFont(_ font: UIFont) {
-        self.headerLabel.font = font
-    }
-
-    func setKeyboardType(_ keyboard: UIKeyboardType) {
-        self.textField.keyboardType = keyboard
-    }
-
-
-    func setPickerArray(_ array: [String]) {
-        selectionArray = array
-        pickerView.selectRow(0, inComponent: 0, animated: true)
-        textField.text = selectionArray[0]
-    }
-
-    func setSelectedPickerOption(option: Int) {
-        pickerView.selectRow(option, inComponent: 0, animated: true)
-        textField.text = selectionArray[option]
-    }
-
-    func setSelectionPicker(_ array: [String], headerVisible: Bool = false, defaultValue: Int = 0) {
-        selectionArray = array
-
-        pickerView.delegate = self
-        //pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
-
-        if !headerVisible {
-            headerLabel.isHidden = true
-        }
-        else {
-            slideUp(animated: false)
-        }
-
-        textField.inputView = pickerView
-        textField.text = selectionArray[defaultValue]
-        headerLabel.text = textField.text
-        headerLabel.isHidden = false
-
-        // Set arrow image
-        let arrowDropdownImageView = UIImageView()
-        arrowDropdownImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        let arrowImageView = UIImageView(image: UIImage(named: "selector_arrow_down_icon"))
-        arrowImageView.frame = CGRect(x: -20, y: -4, width: 10, height: 10)
-        arrowImageView.contentMode = .scaleAspectFit
-        arrowDropdownImageView.addSubview(arrowImageView)
-        textField.rightView = arrowDropdownImageView
-        textField.rightViewMode = .always
-
-        dismissPickerView()
-    }
-
-    func dismissPickerView() {
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        let button = UIBarButtonItem(title: localized("done"), style: .plain, target: self, action: #selector(pickerAction))
-
-        toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
-        toolBar.isUserInteractionEnabled = true
-        textField.inputAccessoryView = toolBar
-    }
-
-    @objc func pickerAction() {
-        self.endEditing(true)
-    }
-
+    
+    
 }
-
-
-extension DropDownSelectionView: UIPickerViewDelegate, UIPickerViewDataSource {
-    // PickerView override methods
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return selectionArray.count
-    }
-
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        self.didSelectPickerIndex?(row)
-        return selectionArray[row]
-    }
-
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        let selectedItem = selectionArray[row]
-        textField.text = selectedItem
-    }
-}
-

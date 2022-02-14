@@ -80,11 +80,11 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
         
-        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
+//        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
     
 
-        titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+      //  titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
@@ -138,9 +138,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         titleLabel.textColor = UIColor.App.inputText
 
-        titleHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        //titleHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        titleHeaderTextFieldView.setPlaceholderLabelColor(UIColor.App.highlightSecondary)
         titleHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
-        titleHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+       // titleHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         titleHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
@@ -183,14 +184,14 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func checkUserInputs() {
 
-        let titleText = titleHeaderTextFieldView.textField.text == "" ? false : true
+        //let titleText = titleHeaderTextFieldView.textField.text == "" ? false : true
         let firstNameText = firstNameHeaderTextFieldView.text == "" ? false : true
         let lastNameText = lastNameHeaderTextFieldView.text == "" ? false : true
         let address1Text = address1HeaderTextFieldView.text == "" ? false : true
         let cityText = cityHeaderTextFieldView.text == "" ? false : true
         let postalCodeText = postalCodeHeaderTextFieldView.text == "" ? false : true
 
-        if  titleText && firstNameText && lastNameText && address1Text && cityText && postalCodeText {
+        if   firstNameText && lastNameText && address1Text && cityText && postalCodeText {
             self.continueButton.isEnabled = true
             continueButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
             self.setupFullRegisterUserInfoForm()
@@ -266,7 +267,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     func setupFullRegisterUserInfoForm() {
-        let titleText = titleHeaderTextFieldView.textField.text
+       // let titleText = titleHeaderTextFieldView.textField.text
         let firstNameText = firstNameHeaderTextFieldView.text
         let lastNameText = lastNameHeaderTextFieldView.text
         var countryText = ""
