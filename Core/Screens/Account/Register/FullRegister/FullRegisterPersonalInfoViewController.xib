@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -28,7 +28,7 @@
                 <outlet property="progressLabel" destination="CDv-Bj-7E2" id="4pz-5m-4zT"/>
                 <outlet property="progressView" destination="wYz-X8-am6" id="Efo-cW-QiC"/>
                 <outlet property="scrollView" destination="PGo-ph-rLE" id="pcn-tZ-JlM"/>
-                <outlet property="titleHeaderTextFieldView" destination="2DY-eS-ZDP" id="Y6d-eo-xyz"/>
+                <outlet property="titleHeaderTextFieldView" destination="2DY-eS-ZDP" id="kYt-eP-mRa"/>
                 <outlet property="titleLabel" destination="SCA-Fr-P9U" id="jQt-vk-Lr0"/>
                 <outlet property="topView" destination="vDO-br-lFd" id="cpU-Zh-Uhl"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -83,7 +83,7 @@
                     </constraints>
                     <state key="normal" title="Button"/>
                     <connections>
-                        <action selector="continueAction" destination="-1" eventType="touchUpInside" id="fNJ-xM-ECn"/>
+                        <action selector="continueAction" destination="-1" eventType="touchUpInside" id="ass-js-li3"/>
                     </connections>
                 </button>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PGo-ph-rLE">
@@ -125,7 +125,7 @@
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
-                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2DY-eS-ZDP" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2DY-eS-ZDP" customClass="DropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
                                     <rect key="frame" x="16" y="153.5" width="382" height="80"/>
                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     <constraints>
@@ -253,7 +253,7 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_back_icon" width="14" height="23"/>
+        <image name="arrow_back_icon" width="12" height="21"/>
         <image name="progress_step_1" width="224" height="27"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

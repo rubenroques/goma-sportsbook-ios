@@ -14,7 +14,9 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var scrollView: UIScrollView!
-    @IBOutlet private var titleHeaderTextFieldView: HeaderTextFieldView!
+    
+    @IBOutlet weak var titleHeaderTextFieldView: DropDownSelectionView!
+ 
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var countryHeaderTextFieldView: HeaderTextFieldView!
@@ -58,8 +60,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -79,10 +79,12 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
+        
+//        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
-        titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
-        titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
-        titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+    
+
+      //  titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"), color: UIColor.App.inputTextTitle)
@@ -136,9 +138,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         titleLabel.textColor = UIColor.App.inputText
 
-        titleHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        //titleHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        titleHeaderTextFieldView.setPlaceholderLabelColor(UIColor.App.highlightSecondary)
         titleHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
-        titleHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+       // titleHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         titleHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
@@ -181,14 +184,14 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func checkUserInputs() {
 
-        let titleText = titleHeaderTextFieldView.text == "" ? false : true
+        //let titleText = titleHeaderTextFieldView.textField.text == "" ? false : true
         let firstNameText = firstNameHeaderTextFieldView.text == "" ? false : true
         let lastNameText = lastNameHeaderTextFieldView.text == "" ? false : true
         let address1Text = address1HeaderTextFieldView.text == "" ? false : true
         let cityText = cityHeaderTextFieldView.text == "" ? false : true
         let postalCodeText = postalCodeHeaderTextFieldView.text == "" ? false : true
 
-        if  titleText && firstNameText && lastNameText && address1Text && cityText && postalCodeText {
+        if   firstNameText && lastNameText && address1Text && cityText && postalCodeText {
             self.continueButton.isEnabled = true
             continueButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
             self.setupFullRegisterUserInfoForm()
@@ -212,13 +215,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             }
         .store(in: &cancellables)
 
-        self.titleHeaderTextFieldView.textPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.checkUserInputs()
-            })
-            .store(in: &cancellables)
-
+  
         self.firstNameHeaderTextFieldView.textPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -270,7 +267,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     func setupFullRegisterUserInfoForm() {
-        let titleText = titleHeaderTextFieldView.text
+       // let titleText = titleHeaderTextFieldView.textField.text
         let firstNameText = firstNameHeaderTextFieldView.text
         let lastNameText = lastNameHeaderTextFieldView.text
         var countryText = ""
@@ -285,7 +282,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let address2Text = address2HeaderTextFieldView.text
         let cityText = cityHeaderTextFieldView.text
         let postalCodeText = postalCodeHeaderTextFieldView.text
-        fullRegisterUserInfo = FullRegisterUserInfo(title: titleText,
+        fullRegisterUserInfo = FullRegisterUserInfo(title: "titleText",
             firstName: firstNameText,
             lastName: lastNameText,
             country: countryText,
@@ -303,12 +300,17 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
+        
+        //self.navigationController?.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
+        
         self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
-        // self.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true, completion: nil)
     }
 
     @IBAction private func closeAction() {
-        self.dismiss(animated: true, completion: nil)
+          // foi presented porque tem um presentingViewController
+       // self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popToRootViewController(animated: true)
+    
     }
 
     @objc func didTapBackground() {

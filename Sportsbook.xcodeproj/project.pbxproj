@@ -902,6 +902,8 @@
 		A9C82FD026F9E14800059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
 		A9C82FD126F9F16700059DCD /* PopUpPromotionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */; };
 		A9C82FD226F9F52E00059DCD /* PopUpPromotionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */; };
+		F47BB79F27B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
+		F47BB7A027B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
 		F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
 		F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
 		F47BF2662763986300648440 /* GameSuggestedView.xib in Resources */ = {isa = PBXBuildFile; fileRef = F47BF2652763986300648440 /* GameSuggestedView.xib */; };
@@ -1398,6 +1400,7 @@
 		A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PasswordUpdateViewController.xib; sourceTree = "<group>"; };
 		A9C82FCD26F9E0F900059DCD /* PopUpPromotionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopUpPromotionView.swift; sourceTree = "<group>"; };
 		A9C82FCF26F9E14800059DCD /* PopUpPromotionView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PopUpPromotionView.xib; sourceTree = "<group>"; };
+		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
 		F47BF2652763986300648440 /* GameSuggestedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameSuggestedView.xib; sourceTree = "<group>"; };
 		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2252,6 +2255,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F498349F27AC513A0091BEA1 /* DropDownSelectionView */,
 				A96B618227A03BEF005DC376 /* SearchViews */,
 				45A642D227985A15008EFD5B /* CardStatsViews */,
 				A9BCF4472750FC51006DD528 /* BetslipErrorView */,
@@ -3092,6 +3096,14 @@
 			path = Popup;
 			sourceTree = "<group>";
 		};
+		F498349F27AC513A0091BEA1 /* DropDownSelectionView */ = {
+			isa = PBXGroup;
+			children = (
+				F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */,
+			);
+			path = DropDownSelectionView;
+			sourceTree = "<group>";
+		};
 		F4E3B74F2742BE5200855C58 /* MultiSlider */ = {
 			isa = PBXGroup;
 			children = (
@@ -3845,6 +3857,7 @@
 				A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
 				457F496D2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */,
 				454E0A9C2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */,
+				F47BB79F27B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */,
 				A9BCF42D274BBE7B006DD528 /* PolicyLinkView.swift in Sources */,
 				45166CFD26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				A99DFBEA2731A2F700002CDB /* HomeFilterOptions.swift in Sources */,
@@ -4180,6 +4193,7 @@
 				A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */,
 				457F496E2737F9330047169D /* SubmitedBetTableViewCell.swift in Sources */,
 				454E0A9D2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift in Sources */,
+				F47BB7A027B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */,
 				A9BCF42E274BBE7B006DD528 /* PolicyLinkView.swift in Sources */,
 				45166CFE26F3548D00E69D65 /* RegisteredSSWampMessage.swift in Sources */,
 				A99DFBEB2731A2F700002CDB /* HomeFilterOptions.swift in Sources */,

@@ -162,6 +162,13 @@ class FullRegisterAddressCountryViewController: UIViewController {
         self.navigationController?.pushViewController(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true)
         // self.present(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true, completion: nil)
     }
+    
+    @IBAction private func closeAction() {
+       // self.dismiss(animated: true, completion: nil)
+        
+         self.navigationController?.popToRootViewController(animated: true)
+    }
+
 
     @objc func didTapBackground() {
         self.resignFirstResponder()
