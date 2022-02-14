@@ -10,8 +10,6 @@ import Combine
 
 class MatchLineTableViewCell: UITableViewCell {
 
-    let cellWidth: CGFloat = 331
-
     @IBOutlet private var debugLabel: UILabel!
     @IBOutlet private var backSliderView: UIView!
 
@@ -58,19 +56,10 @@ class MatchLineTableViewCell: UITableViewCell {
 
         self.collectionView.showsVerticalScrollIndicator = false
         self.collectionView.showsHorizontalScrollIndicator = false
-        
-        // let flowLayout = FadeInCenterHorizontalFlowLayout()
-        // flowLayout.alpha = 0.38
-        // flowLayout.minimumScale = 0.7
-        // flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
         self.collectionView.collectionViewLayout = flowLayout
-
-        // let screenWidth = UIScreen.main.bounds.size.width
-        // let inset = (screenWidth - cellWidth) / 2
-        // self.collectionView.contentInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
 
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
 

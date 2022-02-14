@@ -24,6 +24,7 @@ class BannerCellViewModel {
         case match
     }
 
+    var id: String
     var presentationType: PresentationType
     var matchId: String?
     var imageURL: URL?
@@ -48,7 +49,8 @@ class BannerCellViewModel {
 
     var cancellables = Set<AnyCancellable>()
 
-    init(matchId: String?, imageURL: String) {
+    init(id:String, matchId: String?, imageURL: String) {
+        self.id = id
         self.matchId = matchId
         let imageURLString = imageURL
 
@@ -76,7 +78,6 @@ class BannerCellViewModel {
 
         matchPublisher
             .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
             .sink { _ in
             } receiveValue: { value in
                 self.processOddAggregator(value)
@@ -169,10 +170,8 @@ class BannerCellViewModel {
         }
         .compactMap({$0})
 
-        for rawMarket  in rawMarketsList {
-
-            // Only 1X2 Ordinary Time
-            if rawMarket.eventPartId == "3" {
+        // Only 1X2 Ordinary Time
+        for rawMarket  in rawMarketsList where rawMarket.eventPartId == "3" {
 
                 let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
 
@@ -221,7 +220,7 @@ class BannerCellViewModel {
                                 bettingTypeId: rawMarket.bettingTypeId,
                                 outcomes: sortedOutcomes)
             matchMarkets.append(market)
-            }
+
         }
 
         let match = Match(id: rawMatch.id,

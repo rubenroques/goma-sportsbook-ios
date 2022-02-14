@@ -499,13 +499,14 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-
+        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
 
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

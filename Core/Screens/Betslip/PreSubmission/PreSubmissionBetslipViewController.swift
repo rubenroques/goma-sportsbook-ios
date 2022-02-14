@@ -631,6 +631,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.isSuggestedBetsLoading = true
 
+        // TODO: O que é este register?!
         for suggestedBetRegister in self.suggestedBetsRegisters {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
         }
@@ -643,7 +644,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 guard let betsArray = gomaBetsArray else {return}
 
                 self?.gomaSuggestedBetsResponse = betsArray
-
+                // TODO: Code review - Mais um DispatchQueue.main.async
                 DispatchQueue.main.async {
                     self?.betSuggestedCollectionView.reloadData()
                 }

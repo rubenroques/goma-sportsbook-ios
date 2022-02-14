@@ -380,6 +380,9 @@ extension RootViewController {
     func loadChildViewControllerIfNeeded(tab: TabItem) {
         if case .home = tab, !homeViewControllerLoaded {
             self.addChildViewController(self.homeViewController, toView: self.homeBaseView)
+            self.homeViewController.didTapBetslipButtonAction = { [weak self] in
+                self?.openBetslipModal()
+            }
             homeViewControllerLoaded = true
         }
         if case .preLive = tab, !preLiveViewControllerLoaded {
@@ -445,6 +448,10 @@ extension RootViewController {
     }
 
     func showPopUp(_ details: PopUpDetails) {
+
+        #if DEBUG
+        return
+        #endif
 
         if !PopUpStore.shouldShowPopUp(withId: details.id) {
             return

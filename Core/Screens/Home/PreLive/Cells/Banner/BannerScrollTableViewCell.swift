@@ -70,7 +70,7 @@ class BannerScrollTableViewCell: UITableViewCell {
         self.collectionView.backgroundView?.backgroundColor = .clear
     }
 
-    func setupWithViewModel(_ viewModel: BannerLineCellViewModel) {
+    func configure(withViewModel viewModel: BannerLineCellViewModel) {
         self.viewModel = viewModel
         self.collectionView.reloadData()
     }

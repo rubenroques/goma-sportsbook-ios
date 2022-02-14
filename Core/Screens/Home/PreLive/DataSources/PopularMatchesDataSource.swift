@@ -129,7 +129,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
                 if !didCachedBanners {
                     if let cachedViewModel = self.cachedBannerLineCellViewModel {
-                        cell.setupWithViewModel(cachedViewModel)
+                        cell.configure(withViewModel: cachedViewModel)
 
                         cell.tappedBannerMatchAction = { match in
                             self.didSelectMatchAction?(match)
@@ -183,7 +183,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 cells.append(cachedBannerCell)
             }
             else {
-                let cachedBannerCell = BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? "")
+                let cachedBannerCell = BannerCellViewModel(id: banner.id,
+                                                           matchId: banner.matchID,
+                                                           imageURL: banner.imageURL ?? "")
                 cachedBannerCellViewModel[banner.id] = cachedBannerCell
                 cells.append(cachedBannerCell)
             }

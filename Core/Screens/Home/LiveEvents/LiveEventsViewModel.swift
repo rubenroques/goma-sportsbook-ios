@@ -27,7 +27,7 @@ class LiveEventsViewModel: NSObject {
     
     var screenStatePublisher: CurrentValueSubject<screenState, Never> = .init(.noEmptyNoFilter)
     
-    private var allMatchesViewModelDataSource = AllMatchesViewModelDataSource(banners: [], allMatches: [])
+    private var allMatchesViewModelDataSource = AllMatchesViewModelDataSource(matches: [])
 
     private var isLoadingAllEventsList: CurrentValueSubject<Bool, Never> = .init(true)
 
@@ -179,10 +179,8 @@ class LiveEventsViewModel: NSObject {
             var marketSort: [Market] = []
             let favoriteMarketIndex = match.markets.firstIndex(where: { $0.typeId == filterOptionsValue.defaultMarket.marketId })
             marketSort.append(match.markets[favoriteMarketIndex ?? 0])
-            for market in match.markets {
-                if market.typeId != marketSort[0].typeId {
-                    marketSort.append(market)
-                }
+            for market in match.markets where market.typeId != marketSort[0].typeId {
+                marketSort.append(market)
             }
 
             // Check odds filter
@@ -210,7 +208,7 @@ class LiveEventsViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.allMatchesViewModelDataSource.allMatches = filterAllMatches(with: self.homeFilterOptions, matches: self.allMatches)
+        self.allMatchesViewModelDataSource.matches = filterAllMatches(with: self.homeFilterOptions, matches: self.allMatches)
 
         if self.allMatches.isNotEmpty, self.allMatches.count < (self.allMatchesCount * self.allMatchesPage) {
             self.allMatchesHasMorePages = false
@@ -222,7 +220,7 @@ class LiveEventsViewModel: NSObject {
 
         if let numberOfFilters = self.homeFilterOptions?.countFilters {
             if numberOfFilters > 0 {
-                if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                if !self.allMatchesViewModelDataSource.matches.isNotEmpty {
                     self.screenStatePublisher.send(.emptyAndFilter)
                 }
                 else {
@@ -230,7 +228,7 @@ class LiveEventsViewModel: NSObject {
                 }
             }
             else {
-                if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+                if !self.allMatchesViewModelDataSource.matches.isNotEmpty {
                     self.screenStatePublisher.send(.emptyNoFilter)
                 }
                 else {
@@ -239,7 +237,7 @@ class LiveEventsViewModel: NSObject {
             }
         }
         else {
-            if !self.allMatchesViewModelDataSource.allMatches.isNotEmpty{
+            if !self.allMatchesViewModelDataSource.matches.isNotEmpty {
                 self.screenStatePublisher.send(.emptyNoFilter)
             }
             else {
@@ -397,23 +395,14 @@ extension LiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
 
 class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var allMatches: [Match] = []
+    var matches: [Match] = []
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
     var shouldShowLoadingCell = true
 
-    var banners: [EveryMatrix.BannerInfo] = [] {
-        didSet {
-            self.bannersViewModel = self.createBannersViewModel()
-        }
-    }
-
-    private var bannersViewModel: BannerLineCellViewModel?
-
-    init(banners: [EveryMatrix.BannerInfo], allMatches: [Match]) {
-        self.banners = banners
-        self.allMatches = allMatches
+    init(matches: [Match]) {
+        self.matches = matches
         super.init()
     }
 
@@ -424,11 +413,11 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            return 0 // banners.isEmpty ? 0 : 1
+            return 0
         case 1:
             return 0
         case 2:
-            return self.allMatches.count
+            return self.matches.count
         case 3:
             return self.shouldShowLoadingCell ? 1 : 0
         default:
@@ -439,17 +428,12 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
-                if let viewModel = self.bannersViewModel {
-                    cell.setupWithViewModel(viewModel)
-                }
-                return cell
-            }
+            return UITableViewCell()
         case 1:
             return UITableViewCell()
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-               let match = self.allMatches[safe: indexPath.row] {
+               let match = self.matches[safe: indexPath.row] {
                 cell.setupWithMatch(match, liveMatch: true)
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
@@ -475,17 +459,6 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         }
         headerView.configureWithTitle(localized("all_live_events"))
         return headerView
-    }
-
-    private func createBannersViewModel() -> BannerLineCellViewModel? {
-        if self.banners.isEmpty {
-            return nil
-        }
-        var cells = [BannerCellViewModel]()
-        for banner in self.banners {
-            cells.append(BannerCellViewModel(matchId: banner.matchID, imageURL: banner.imageURL ?? ""))
-        }
-        return BannerLineCellViewModel(banners: cells)
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -523,7 +496,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 3, self.allMatches.isNotEmpty {
+        if indexPath.section == 3, self.matches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.startAnimating()
             }
