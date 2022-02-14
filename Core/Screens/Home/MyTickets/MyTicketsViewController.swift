@@ -56,8 +56,8 @@ class MyTicketsViewController: UIViewController {
         flowLayout.scrollDirection = .horizontal
       
        
-            self.myBetsSegmentedControl.selectedSegmentIndex = 0
-            self.viewModel.setMyTicketsType(.resolved)
+        self.myBetsSegmentedControl.selectedSegmentIndex = 0
+        self.viewModel.setMyTicketsType(.resolved)
             //self.didChangeSegmentValue(self.myBetsSegmentedControl)
         
         
@@ -157,11 +157,11 @@ class MyTicketsViewController: UIViewController {
         ], for: .selected)
         self.myBetsSegmentedControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
+            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
         ], for: .normal)
         self.myBetsSegmentedControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary.withAlphaComponent(0.5)
+            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
         ], for: .disabled)
 
         self.myBetsSegmentedControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
