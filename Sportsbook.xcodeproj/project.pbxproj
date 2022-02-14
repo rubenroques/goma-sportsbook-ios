@@ -201,10 +201,6 @@
 		455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB526BD9B6000EC572D /* EnvironmentType.swift */; };
 		455A0CB726BD9B6000EC572D /* EnvironmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB526BD9B6000EC572D /* EnvironmentType.swift */; };
 		455A0CB826BD9CEC00EC572D /* Showcase-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CA526BD973400EC572D /* Showcase-Assets.xcassets */; };
-		455A0CBB26BD9D4F00EC572D /* TestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB926BD9D4F00EC572D /* TestsViewController.swift */; };
-		455A0CBC26BD9D4F00EC572D /* TestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CB926BD9D4F00EC572D /* TestsViewController.swift */; };
-		455A0CBD26BD9D4F00EC572D /* TestsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */; };
-		455A0CBE26BD9D4F00EC572D /* TestsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */; };
 		455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC026BD9D9000EC572D /* RunningPlatform.swift */; };
 		455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC026BD9D9000EC572D /* RunningPlatform.swift */; };
 		455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0CC126BD9D9000EC572D /* Throttler.swift */; };
@@ -353,6 +349,10 @@
 		457BD60C27B6C00C00E5612E /* SportMatchLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60A27B6C00B00E5612E /* SportMatchLineViewModel.swift */; };
 		457BD60E27B6E45100E5612E /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
 		457BD60F27B6E45100E5612E /* HomeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD60D27B6E45100E5612E /* HomeStore.swift */; };
+		457BD61227BADEB200E5612E /* TestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD61027BADEB100E5612E /* TestsViewController.swift */; };
+		457BD61327BADEB200E5612E /* TestsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457BD61027BADEB100E5612E /* TestsViewController.swift */; };
+		457BD61427BADEB200E5612E /* TestsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457BD61127BADEB200E5612E /* TestsViewController.xib */; };
+		457BD61527BADEB200E5612E /* TestsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 457BD61127BADEB200E5612E /* TestsViewController.xib */; };
 		457EDABB2791ADEE00DDCD83 /* Sport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457EDABA2791ADEE00DDCD83 /* Sport.swift */; };
 		457EDABC2791ADEE00DDCD83 /* Sport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457EDABA2791ADEE00DDCD83 /* Sport.swift */; };
 		457EDABF2791C44400DDCD83 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 457EDABE2791C44400DDCD83 /* SwiftyJSON.swift */; };
@@ -1053,8 +1053,6 @@
 		455A0CB226BD985800EC572D /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = "pt-PT"; path = "pt-PT.lproj/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		455A0CB326BD985800EC572D /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		455A0CB526BD9B6000EC572D /* EnvironmentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvironmentType.swift; sourceTree = "<group>"; };
-		455A0CB926BD9D4F00EC572D /* TestsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestsViewController.swift; sourceTree = "<group>"; };
-		455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestsViewController.xib; sourceTree = "<group>"; };
 		455A0CC026BD9D9000EC572D /* RunningPlatform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RunningPlatform.swift; sourceTree = "<group>"; };
 		455A0CC126BD9D9000EC572D /* Throttler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Throttler.swift; sourceTree = "<group>"; };
 		455A0CC226BD9D9000EC572D /* Localization.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Localization.swift; sourceTree = "<group>"; };
@@ -1132,6 +1130,8 @@
 		457816BA2707632400F66878 /* TitleTableViewHeader.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewHeader.xib; sourceTree = "<group>"; };
 		457BD60A27B6C00B00E5612E /* SportMatchLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportMatchLineViewModel.swift; sourceTree = "<group>"; };
 		457BD60D27B6E45100E5612E /* HomeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeStore.swift; sourceTree = "<group>"; };
+		457BD61027BADEB100E5612E /* TestsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestsViewController.swift; sourceTree = "<group>"; };
+		457BD61127BADEB200E5612E /* TestsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TestsViewController.xib; sourceTree = "<group>"; };
 		457EDABA2791ADEE00DDCD83 /* Sport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sport.swift; sourceTree = "<group>"; };
 		457EDABE2791C44400DDCD83 /* SwiftyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
 		457EDAC62792002300DDCD83 /* MatchFieldWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchFieldWebViewController.swift; sourceTree = "<group>"; };
@@ -1975,6 +1975,8 @@
 		455A0D2226BDE7B900EC572D /* DebugHelper */ = {
 			isa = PBXGroup;
 			children = (
+				457BD61027BADEB100E5612E /* TestsViewController.swift */,
+				457BD61127BADEB200E5612E /* TestsViewController.xib */,
 				4589F42B26C02F01005DF543 /* DebugTableViewDescription.swift */,
 				455A0D1C26BDE7AE00EC572D /* DebugViewController.swift */,
 				455A0D1D26BDE7AE00EC572D /* DebugViewController.xib */,
@@ -2181,8 +2183,6 @@
 		4589F3E926BF0160005DF543 /* Screens */ = {
 			isa = PBXGroup;
 			children = (
-				455A0CB926BD9D4F00EC572D /* TestsViewController.swift */,
-				455A0CBA26BD9D4F00EC572D /* TestsViewController.xib */,
 				452047BE27036D4600B277B5 /* Splash */,
 				455C962526FE11B300456F30 /* Home */,
 				A995C1922799917100151462 /* Search */,
@@ -3326,7 +3326,6 @@
 				455C960E26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45BEA48326F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib in Resources */,
 				A9627A0127440F300001E1D5 /* EmailVerificationTableViewCell.xib in Resources */,
-				455A0CBD26BD9D4F00EC572D /* TestsViewController.xib in Resources */,
 				A9875797276CA50F0099990D /* DepositViewController.xib in Resources */,
 				456B343626C2819E009D7D27 /* Inconsolata-Bold.ttf in Resources */,
 				A9C6022C2716F13F00992E11 /* HomeFilterViewController.xib in Resources */,
@@ -3353,6 +3352,7 @@
 				456B342F26C18C75009D7D27 /* LogViewerViewController.xib in Resources */,
 				A96279EE273ED2290001E1D5 /* ActivationAlertView.xib in Resources */,
 				A98D3B3327148921003BAE6F /* SportSelectionCollectionViewCell.xib in Resources */,
+				457BD61427BADEB200E5612E /* TestsViewController.xib in Resources */,
 				A9C82FC526F89B4500059DCD /* PasswordUpdateViewController.xib in Resources */,
 				45B0BD48271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
 				455C962326FDD66400456F30 /* ProfileViewController.xib in Resources */,
@@ -3458,8 +3458,8 @@
 				A9627A18274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib in Resources */,
 				45DDBAA326F2146100A73E45 /* Gilroy-SemiBold.ttf in Resources */,
 				45A642D827985AAB008EFD5B /* HeadToHeadCardStatsView.xib in Resources */,
-				455A0CBE26BD9D4F00EC572D /* TestsViewController.xib in Resources */,
 				45CD7B4F2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */,
+				457BD61527BADEB200E5612E /* TestsViewController.xib in Resources */,
 				A92F5D97272C410400884BDF /* DocumentPickerView.xib in Resources */,
 				455C960F26FCDDE700456F30 /* CountrySelectorTableViewCell.xib in Resources */,
 				45D3DE3D271499DB00717124 /* BannerScrollTableViewCell.xib in Resources */,
@@ -3710,7 +3710,6 @@
 				45166CF526F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAD270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
-				455A0CBB26BD9D4F00EC572D /* TestsViewController.swift in Sources */,
 				457EDABB2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
@@ -3884,6 +3883,7 @@
 				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897A26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				A96B619727A0508E005DC376 /* RecentSearchTableViewCell.swift in Sources */,
+				457BD61227BADEB200E5612E /* TestsViewController.swift in Sources */,
 				454E0AA22732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */,
 				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896A26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
@@ -4045,7 +4045,6 @@
 				45166CF626F3548D00E69D65 /* SubscribedSSWampMessage.swift in Sources */,
 				45936CAE270E537E00E8260E /* UIViewController+SwiftUI.swift in Sources */,
 				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
-				455A0CBC26BD9D4F00EC572D /* TestsViewController.swift in Sources */,
 				457EDABC2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
@@ -4219,6 +4218,7 @@
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				A96B619827A0508E005DC376 /* RecentSearchTableViewCell.swift in Sources */,
+				457BD61327BADEB200E5612E /* TestsViewController.swift in Sources */,
 				454E0AA32732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */,
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896B26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
