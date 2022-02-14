@@ -20,9 +20,15 @@ class MyTicketsViewModel: NSObject {
         case resolved = 1
         case won = 2
     }
+
+    var clickedCellSnapshot: UIImage?
+    var clickedBetId: String?
+    var clickedBetStatus: String?
+    var clickedBetTokenPublisher: CurrentValueSubject<String, Never> = .init("")
     
     var reloadTableViewAction: (() -> Void)?
     var redrawTableViewAction: (() -> Void)?
+    var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
     private var matchDetailsDictionary: [String: Match] = [:]
 
@@ -87,7 +93,6 @@ class MyTicketsViewModel: NSObject {
                 self?.reloadTableView()
             }
             .store(in: &cancellables)
-
 
         Env.everyMatrixClient.userSessionStatusPublisher
             .receive(on: DispatchQueue.main)
@@ -288,7 +293,6 @@ class MyTicketsViewModel: NSObject {
         }
     }
 
-
     func isEmpty() -> Bool {
         switch myTicketsTypePublisher.value {
         case .resolved:
@@ -326,6 +330,37 @@ class MyTicketsViewModel: NSObject {
             }
             cachedViewModels[ticket.betId] = viewModel
             return viewModel
+        }
+    }
+
+    func getSharedBetTokens() {
+        if let betId = self.clickedBetId {
+            let betTokenRoute = TSRouter.getSharedBetTokens(betId: betId)
+
+            Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .failure(let apiError):
+                        switch apiError {
+                        case .requestError(let value):
+                            print("Bet token request error: \(value)")
+                        case .notConnected:
+                            ()
+                        default:
+                            ()
+                        }
+                    case .finished:
+                        ()
+                    }
+                },
+                      receiveValue: { [weak self] betTokens in
+                        print("BET TOKEN: \(betTokens)")
+                    let betToken = betTokens.sharedBetTokens.betTokenWithAllInfo
+                    self?.clickedBetTokenPublisher.send(betToken)
+
+                })
+                .store(in: &cancellables)
         }
     }
 
@@ -368,6 +403,12 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
             self?.redrawTableViewAction?()
         }
         cell.configure(withBetHistoryEntry: ticketValue, countryCodes: locationsCodes, viewModel: viewModel)
+
+        cell.tappedShareAction = { [weak self] in
+            if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {
+                self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+            }
+        }
 
         return cell
     }

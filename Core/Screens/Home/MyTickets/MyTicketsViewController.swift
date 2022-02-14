@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import LinkPresentation
 
 class MyTicketsViewController: UIViewController {
 
@@ -116,17 +117,31 @@ class MyTicketsViewController: UIViewController {
             self?.ticketsTableView.endUpdates()
         }
 
+        self.viewModel.requestShareActivityView = { [weak self] image, betId, betStatus in
+            self?.viewModel.clickedCellSnapshot = image
+            self?.viewModel.clickedBetId = betId
+            self?.viewModel.clickedBetStatus = betStatus
+            self?.viewModel.getSharedBetTokens()
+        }
+
         Env.betslipManager.newBetsPlacedPublisher
             .sink { [weak self] in
                 self?.viewModel.refresh()
             }
             .store(in: &cancellables)
 
+        self.viewModel.clickedBetTokenPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] token in
+                if token != "" {
+                    self?.shareBet()
+                }
+            })
+            .store(in: &cancellables)
+
         self.setupWithTheme()
         
     }
-
-    
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -178,6 +193,11 @@ class MyTicketsViewController: UIViewController {
         self.viewModel.refresh()
     }
     
+      private func shareBet() {
+        let share = UIActivityViewController(activityItems: [self], applicationActivities: nil)
+        present(share, animated: true, completion: nil)
+    }
+
     @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
 
         switch segmentControl.selectedSegmentIndex {
@@ -194,6 +214,40 @@ class MyTicketsViewController: UIViewController {
 
     }
 
+}
+
+extension MyTicketsViewController: UIActivityItemSource {
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        return ""
+    }
+
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        return nil
+    }
+
+    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+
+        let metadata = LPLinkMetadata()
+        let urlMobile = Env.urlMobileShares
+
+        if let gameSnapshot = self.viewModel.clickedCellSnapshot, let betStatus = self.viewModel.clickedBetStatus {
+
+            if betStatus == "OPEN" {
+                let betToken = self.viewModel.clickedBetTokenPublisher.value
+                let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+                metadata.url = matchUrl
+                metadata.originalURL = metadata.url
+            }
+
+            let imageProvider = NSItemProvider(object: gameSnapshot)
+            metadata.imageProvider = imageProvider
+
+            metadata.title = localized("look_bet_made")
+        }
+
+        return metadata
+
+    }
 }
 
 extension MyTicketsViewController {

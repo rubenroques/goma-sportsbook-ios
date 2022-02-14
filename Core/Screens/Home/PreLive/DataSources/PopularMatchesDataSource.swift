@@ -29,7 +29,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
-    var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
 
     init(banners: [EveryMatrix.BannerInfo], matches: [Match]) {
         self.banners = banners
@@ -132,7 +132,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                         cell.configure(withViewModel: cachedViewModel)
 
                         cell.tappedBannerMatchAction = { match in
-                            self.didSelectMatchAction?(match)
+                            self.didSelectMatchAction?(match, nil)
                         }
                         didCachedBanners = true
                     }
@@ -148,8 +148,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 }
                 cell.setupWithMatch(match)
 
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
+                cell.tappedMatchLineAction = { image in
+                    self.didSelectMatchAction?(match, image)
                 }
                 return cell
             }

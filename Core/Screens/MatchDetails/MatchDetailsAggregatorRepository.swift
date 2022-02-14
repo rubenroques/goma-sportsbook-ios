@@ -12,6 +12,7 @@ import OrderedCollections
 class MatchDetailsAggregatorRepository: NSObject {
 
     var matchId: String
+    var match: Match?
 
     var marketGroupsPublisher: CurrentValueSubject<[EveryMatrix.MarketGroup], Never> = .init([])
     var totalMarketsPublisher: CurrentValueSubject<Int, Never> = .init(0)
@@ -64,6 +65,25 @@ class MatchDetailsAggregatorRepository: NSObject {
     func connectPublishers() {
         self.connectMarketGroupsPublisher()
         // market groups details are called after the groups are processed (matchMarketGroupsPublisher initial dump)
+        self.getLocations()
+    }
+
+    func getLocations() {
+
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { _ in
+
+            },
+                  receiveValue: { [weak self] response in
+
+                (response.records ?? []).forEach { location in
+
+                    self?.locations[location.id] = location
+                }
+
+            })
+            .store(in: &cancellable)
     }
 
     func connectMarketGroupsPublisher() {
@@ -712,6 +732,8 @@ class MatchDetailsAggregatorRepository: NSObject {
             }
         }
 
+        self.getMatch(matchId: self.matchId)
+
         print("Finished dump processing on match details")
     }
 
@@ -773,5 +795,37 @@ class MatchDetailsAggregatorRepository: NSObject {
                 ()
             }
         }
+    }
+
+    func location(forId id: String) -> EveryMatrix.Location? {
+        return self.locations[id]
+    }
+
+    private func getMatch(matchId: String) {
+        var location: Location?
+
+        if let rawMatch = self.matches[matchId] {
+
+            if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
+            location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
+        }
+
+        let matchProcessed = Match(id: rawMatch.id,
+                          competitionId: rawMatch.parentId ?? "",
+                          competitionName: rawMatch.parentName ?? "",
+                          homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
+                                                       name: rawMatch.homeParticipantName ?? ""),
+                          awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
+                                                       name: rawMatch.awayParticipantName ?? ""),
+                          date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
+                          sportType: rawMatch.sportId ?? "",
+                          venue: location,
+                          numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
+                          markets: [],
+                          rootPartId: rawMatch.rootPartId ?? "")
+
+            self.match = matchProcessed
+        }
+
     }
 }

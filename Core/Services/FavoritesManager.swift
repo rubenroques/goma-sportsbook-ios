@@ -12,13 +12,14 @@ class FavoritesManager {
 
     var favoriteEventsIdPublisher: CurrentValueSubject<[String], Never>
     var favoriteEventsWithTypePublisher: CurrentValueSubject<[Event], Never>
-    var postGomaFavoritesPublisher: CurrentValueSubject<Bool, Never>
+    var requestGomaFavoritesEndpointsPublisher: CurrentValueSubject<Bool, Never>
     var cancellables = Set<AnyCancellable>()
+    var favoriteIdToRemove: String = ""
 
     init(eventsId: [String] = []) {
         self.favoriteEventsIdPublisher = .init(eventsId)
         self.favoriteEventsWithTypePublisher = .init([])
-        self.postGomaFavoritesPublisher = .init(false)
+        self.requestGomaFavoritesEndpointsPublisher = .init(false)
         self.favoriteEventsIdPublisher
             .filter(\.isNotEmpty)
             .receive(on: DispatchQueue.main)
@@ -27,12 +28,17 @@ class FavoritesManager {
             })
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(self.favoriteEventsWithTypePublisher, self.postGomaFavoritesPublisher)
+        Publishers.CombineLatest(self.favoriteEventsWithTypePublisher, self.requestGomaFavoritesEndpointsPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] favoriteEvents, postGoma in
-                if postGoma && (favoriteEvents.count == self?.favoriteEventsIdPublisher.value.count ) {
+                if postGoma && (favoriteEvents.count == self?.favoriteEventsIdPublisher.value.count) && self?.favoriteIdToRemove == "" {
                     self?.postFavoritesToGoma()
-                    self?.postGomaFavoritesPublisher.send(false)
+                    self?.requestGomaFavoritesEndpointsPublisher.send(false)
+                }
+                else if postGoma && (favoriteEvents.count == self?.favoriteEventsIdPublisher.value.count) && self?.favoriteIdToRemove != "" {
+                    self?.deleteFavoriteFromGoma()
+                    self?.requestGomaFavoritesEndpointsPublisher.send(false)
+                    self?.favoriteIdToRemove = ""
                 }
             })
             .store(in: &cancellables)
@@ -68,19 +74,18 @@ class FavoritesManager {
             .store(in: &cancellables)
     }
 
-    func postUserMetadata(favoriteEvents: [String]) {
+    private func postUserMetadata(favoriteEvents: [String]) {
         Env.everyMatrixClient.postUserMetadata(favoriteEvents: favoriteEvents)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
             } receiveValue: { _ in
-                //self.postFavoritesToGoma()
-                self.postGomaFavoritesPublisher.send(true)
+                self.requestGomaFavoritesEndpointsPublisher.send(true)
             }
             .store(in: &cancellables)
     }
 
-    func postFavoritesToGoma() {
+    private func postFavoritesToGoma() {
         var gomaFavorites: String = ""
 
         for (index, favorite) in self.favoriteEventsWithTypePublisher.value.enumerated() {
@@ -125,7 +130,7 @@ class FavoritesManager {
 
         }
 
-        Env.gomaNetworkClient.sendFavorites(deviceId: Env.deviceId, favorites: gomaFavorites)
+        Env.gomaNetworkClient.addFavorites(deviceId: Env.deviceId, favorites: gomaFavorites)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
             }, receiveValue: { _ in
@@ -134,26 +139,41 @@ class FavoritesManager {
 
     }
 
-    // TODO: Code Review - Isto ficou por corrigir, o check faz tudo, e não pode, tem que haver um addFavorite, um removeFavorite e é isso. O postUserMetadata tem que ser private, não pode ser chamado fora do manager.
+    private func deleteFavoriteFromGoma() {
+        let favorite = self.favoriteIdToRemove
+        Env.gomaNetworkClient.removeFavorite(deviceId: Env.deviceId, favorite: favorite)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+            }, receiveValue: { _ in
+            })
+            .store(in: &cancellables)
+    }
 
-    func checkFavorites(eventId: String, favoriteType: String) {
-        var favoriteMatchExists = false
+    // TODO: Code Review - Isto ficou por corrigir, o check faz tudo, e não pode, tem que haver um addFavorite, um removeFavorite e é isso. O postUserMetadata tem que ser private, não pode ser chamado fora do manager. UPDATE: Corrigido
+
+    func addFavorite(eventId: String, favoriteType: String) {
+        var favoriteEventsId = self.favoriteEventsIdPublisher.value
+
+        favoriteEventsId.append(eventId)
+        self.favoriteEventsIdPublisher.send(favoriteEventsId)
+
+        self.postUserMetadata(favoriteEvents: favoriteEventsId)
+    }
+
+    func removeFavorite(eventId: String, favoriteType: String) {
         var favoriteEventsId = self.favoriteEventsIdPublisher.value
 
         for favoriteEventId in favoriteEventsId where eventId == favoriteEventId {
-            // Remove from favorite
-            favoriteMatchExists = true
+
             favoriteEventsId = favoriteEventsId.filter {$0 != eventId}
 
             self.favoriteEventsIdPublisher.send(favoriteEventsId)
         }
 
-        // Add to favorite
-        if !favoriteMatchExists {
-            favoriteEventsId.append(eventId)
-            self.favoriteEventsIdPublisher.send(favoriteEventsId)
-        }
+        self.favoriteIdToRemove = eventId
 
         self.postUserMetadata(favoriteEvents: favoriteEventsId)
+
     }
+
 }

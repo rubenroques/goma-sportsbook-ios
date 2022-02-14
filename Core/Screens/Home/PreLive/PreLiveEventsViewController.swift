@@ -164,18 +164,20 @@ class PreLiveEventsViewController: UIViewController {
 
         }
 
-        self.viewModel.didSelectMatchAction = { match in
-
+        self.viewModel.didSelectMatchAction = { match, image in
             if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
             else {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
+                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
 
         }
+
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true

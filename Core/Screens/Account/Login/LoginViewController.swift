@@ -303,7 +303,6 @@ class LoginViewController: UIViewController {
 
     func loginGomaAPI(username: String, password: String) {
         let userLoginForm = UserLoginForm(username: username, password: password, deviceToken: Env.deviceFCMToken)
-
         Env.gomaNetworkClient.requestLogin(deviceId: Env.deviceId, loginForm: userLoginForm)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in

@@ -1,13 +1,14 @@
 //
-//  CompetitionsDataSource.swift
+//  MyFavoriteCompetitionsDataSource.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 18/01/2022.
+//  Created by André Lascas on 11/02/2022.
 //
 
+import Foundation
 import UIKit
 
-class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     var competitions: [Competition] = [] {
         didSet {
@@ -17,42 +18,70 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
-    init(competitions: [Competition]) {
-        self.competitions = competitions
+    init(favoriteCompetitions: [Competition]) {
+        self.competitions = favoriteCompetitions
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return competitions.count
+        return competitions.isEmpty ? 1 : competitions.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let competition = competitions[safe: section] {
             return competition.matches.count
         }
-        return 0
+        else {
+            return 1
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard
-            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-            let competition = self.competitions[safe: indexPath.section],
-            let match = competition.matches[safe: indexPath.row]
-        else {
-            fatalError()
-        }
-        if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
-            cell.matchStatsViewModel = matchStatsViewModel
-        }
-        cell.setupWithMatch(match)
-        cell.shouldShowCountryFlag(false)
-        cell.tappedMatchLineAction = { image in
-            self.didSelectMatchAction?(match, image)
-        }
+        if !competitions.isEmpty {
+            guard
+                let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+                let competition = self.competitions[safe: indexPath.section],
+                let match = competition.matches[safe: indexPath.row]
+            else {
+                fatalError()
+            }
 
-        return cell
+            if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                cell.matchStatsViewModel = matchStatsViewModel
+            }
+
+            if let matchInfo = Env.favoritesStorage.matchesInfoForMatch[match.id] {
+                cell.setupWithMatch(match, liveMatch: true)
+            }
+            else {
+                cell.setupWithMatch(match)
+            }
+
+            cell.shouldShowCountryFlag(false)
+            cell.tappedMatchLineAction = { image in
+                self.didSelectMatchAction?(match, image)
+            }
+            cell.matchWentLive = {
+                self.matchWentLiveAction?()
+            }
+
+            return cell
+        }
+        else {
+            guard
+                let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self)
+                else {
+                    fatalError()
+                }
+            cell.setDescription(primaryText: localized("empty_my_competitions"),
+                                secondaryText: localized("empty_my_competitions"),
+                                userIsLoggedIn: UserSessionStore.isUserLogged() )
+
+            return cell
+        }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -61,7 +90,12 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 as? TournamentTableViewHeader,
             let competition = self.competitions[safe: section]
         else {
-            fatalError()
+            if let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier)
+                as? TitleTableViewHeader {
+                headerView.configureWithTitle(localized("my_competitions"))
+                return headerView
+            }
+            return UIView()
         }
 
         headerView.nameTitleLabel.text = competition.name
@@ -81,6 +115,13 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 weakSelf.collapsedCompetitionsSections.insert(section)
             }
             weakSelf.needReloadSection(section, tableView: weakTableView)
+
+            if weakSelf.collapsedCompetitionsSections.contains(section) {
+                headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
+            }
+            else {
+                headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
+            }
         }
         if self.collapsedCompetitionsSections.contains(section) {
             headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
@@ -104,12 +145,18 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return 0
         }
+        if competitions.isEmpty {
+            return 600
+        }
         return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return 0
+        }
+        if competitions.isEmpty {
+            return 600
         }
         return MatchWidgetCollectionViewCell.cellHeight + 20
     }
@@ -126,4 +173,3 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
 }
-

@@ -15,7 +15,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
-    var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
 
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
@@ -51,8 +51,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
                 cell.setupWithMatch(match)
-                cell.tappedMatchLineAction = {
-                    self.didSelectMatchAction?(match)
+                cell.tappedMatchLineAction = { image in
+                    self.didSelectMatchAction?(match, image)
                 }
                 return cell
             }

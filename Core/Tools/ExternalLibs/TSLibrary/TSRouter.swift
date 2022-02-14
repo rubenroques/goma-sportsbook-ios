@@ -32,7 +32,7 @@ enum TSRouter {
     case getProfileStatus
     case getUserBalance
     case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
-    case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
+    case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String)
     case getOpenBets(language: String, records: Int, page: Int)
     case cashoutBet(language: String, betId: String)
     case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
@@ -43,13 +43,16 @@ enum TSRouter {
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
-    case placeSystemBet(language: String, amount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
+    case placeSystemBet(language: String, amount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String)
 
     case matchDetailsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
 
     case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [String], sortBy: [String])
+
+    case getSharedBetTokens(betId: String)
+    case getSharedBetData(betToken: String)
 
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
@@ -198,6 +201,12 @@ enum TSRouter {
 
         case .searchV2:
             return "/sports#searchV2"
+
+        case .getSharedBetTokens:
+            return "/sports#sharedBetTokens"
+
+        case .getSharedBetData:
+            return "/sports#sharedBetData"
 
         //
         // EM Subscription
@@ -444,7 +453,7 @@ enum TSRouter {
                           "selections": selection]
             return params
 
-        case .placeBet(let language, let amount, let betType, let tickets):
+        case .placeBet(let language, let amount, let betType, let tickets, let oddsValidationType):
             var selection: [Any] = []
             for ticket in tickets {
                 selection.append([
@@ -457,7 +466,7 @@ enum TSRouter {
                     "amount": amount,
                     "eachWay": false,
                     "type": betType.typeKeyword,
-                    "oddsValidationType": "ACCEPT_ANY",
+                    "oddsValidationType": oddsValidationType,
                     "selections": selection]
             return params
 
@@ -521,7 +530,7 @@ enum TSRouter {
 
             return params
 
-        case .placeSystemBet(let language, let amount, let systemBetType, let tickets):
+        case .placeSystemBet(let language, let amount, let systemBetType, let tickets, let oddsValidationType):
             var selection: [Any] = []
             for ticket in tickets {
                 selection.append([
@@ -535,7 +544,7 @@ enum TSRouter {
                     "eachWay": false,
                     "type": "SYSTEM",
                     "systemBetType": systemBetType.id,
-                    "oddsValidationType": "ACCEPT_ANY",
+                    "oddsValidationType": oddsValidationType,
                     "selections": selection]
             return params
 
@@ -553,6 +562,12 @@ enum TSRouter {
                     "include": include,
                     "bettingTypeIds": bettingTypeIds,
                     "sortBy": sortBy]
+
+        case .getSharedBetTokens(let betId):
+            return ["betId": betId]
+
+        case .getSharedBetData(let betToken):
+            return ["betToken": betToken]
 
         //
         //

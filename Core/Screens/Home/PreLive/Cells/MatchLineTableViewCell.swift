@@ -17,6 +17,7 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     private var match: Match?
+    private var repositoryType: AggregatorRepositoryType?
 
     private var shouldShowCountryFlag: Bool = true
     private var showingBackSliderView: Bool = false
@@ -27,7 +28,7 @@ class MatchLineTableViewCell: UITableViewCell {
 
     var matchStatsViewModel: MatchStatsViewModel?
 
-    var tappedMatchLineAction: (() -> Void)?
+    var tappedMatchLineAction: ((UIImage?) -> Void)?
     var matchWentLive: (() -> Void)?
 
     override func awakeFromNib() {
@@ -111,10 +112,11 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
-    func setupWithMatch(_ match: Match, liveMatch: Bool = false) {
+    func setupWithMatch(_ match: Match, liveMatch: Bool = false, repositoryType: AggregatorRepositoryType = .defaultRepository) {
         
         self.match = match
         self.liveMatch = liveMatch
+        self.repositoryType = repositoryType
 
         UIView.performWithoutAnimation {
             self.collectionView.reloadSections(IndexSet(integer: 0))
@@ -123,16 +125,31 @@ class MatchLineTableViewCell: UITableViewCell {
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
-        if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-            self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
-                .receive(on: DispatchQueue.main)
-                .sink(receiveValue: { [weak self] value in
-                    if value.contains(match.id) {
-                        self?.matchInfoPublisher?.cancel()
-                        self?.matchInfoPublisher = nil
-                        self?.matchWentLive?()
-                    }
-                })
+        if repositoryType == .defaultRepository {
+            if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
+                self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] value in
+                        if value.contains(match.id) {
+                            self?.matchInfoPublisher?.cancel()
+                            self?.matchInfoPublisher = nil
+                            self?.matchWentLive?()
+                        }
+                    })
+            }
+        }
+        else if repositoryType == .favoriteRepository {
+            if !Env.favoritesStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
+                self.matchInfoPublisher = Env.favoritesStorage.matchesInfoForMatchPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] value in
+                        if value.contains(match.id) {
+                            self?.matchInfoPublisher?.cancel()
+                            self?.matchInfoPublisher = nil
+                            self?.matchWentLive?()
+                        }
+                    })
+            }
         }
     }
 
@@ -159,7 +176,7 @@ extension MatchLineTableViewCell: UIScrollViewDelegate {
                 generator.prepare()
                 generator.impactOccurred()
 
-                self.tappedMatchLineAction?()
+                self.tappedMatchLineAction?(nil)
 
                 return
             }
@@ -227,7 +244,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 cell.configureWithSubtitleString(marketString)
             }
             cell.tappedAction = {
-                self.tappedMatchLineAction?()
+                self.tappedMatchLineAction?(nil)
             }
             return cell
         }
@@ -241,9 +258,16 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     fatalError()
                 }
                 if let match = self.match {
-                    cell.setupWithMatch(match)
+
+                    if self.repositoryType == .defaultRepository {
+                        cell.setupWithMatch(match)
+                    }
+                    else if self.repositoryType == .favoriteRepository {
+                        cell.setupWithMatch(match, repositoryType: .favoriteRepository)
+                    }
+
                     cell.tappedMatchWidgetAction = {
-                        self.tappedMatchLineAction?()
+                        self.tappedMatchLineAction?(cell.snapshot)
                     }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
@@ -256,13 +280,21 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     fatalError()
                 }
+
                 if let match = self.match {
-                    cell.setupWithMatch(match)
+                    if self.repositoryType == .defaultRepository {
+                        cell.setupWithMatch(match)
+                    }
+                    else if self.repositoryType == .favoriteRepository {
+                        cell.setupWithMatch(match, repositoryType: .favoriteRepository)
+                    }
+
                     cell.tappedMatchWidgetAction = {
-                        self.tappedMatchLineAction?()
+                        self.tappedMatchLineAction?(cell.snapshot)
                     }
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
+
                 return cell
             }
         }
@@ -277,7 +309,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?()
+                            self.tappedMatchLineAction?(nil)
                         }
                         return cell
                     }
@@ -287,7 +319,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         cell.matchStatsViewModel = self.matchStatsViewModel
                         cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
                         cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?()
+                            self.tappedMatchLineAction?(nil)
                         }
                         return cell
                     }

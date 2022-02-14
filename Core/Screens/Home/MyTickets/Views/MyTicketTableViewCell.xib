@@ -61,6 +61,9 @@
                                         </constraints>
                                         <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                         <state key="normal" image="send_bet_icon"/>
+                                        <connections>
+                                            <action selector="didTapShareButton" destination="KGk-i7-Jjw" eventType="touchUpInside" id="8Zt-8O-uE2"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <constraints>

@@ -1,60 +1,67 @@
 //
-//  AggregatorsRepository.swift
+//  FavoritesAggregatorRepository.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 08/10/2021.
+//  Created by André Lascas on 11/02/2022.
 //
 
 import Foundation
+
 import Combine
 import OrderedCollections
 
-enum AggregatorListType {
-    case popularEvents
-    case todayEvents
-    case competitions
-    case allLiveEvents
+enum FavoritesAggregatorListType {
     case favoriteMatchEvents
     case favoriteCompetitionEvents
-    case cashouts
-    case matchDetails
-    case suggestedMatches
 }
 
-class AggregatorsRepository {
+class FavoritesAggregatorsRepository {
 
-    var matchesForType: [AggregatorListType: [String] ] = [:]
-
+    var matchesForType: [FavoritesAggregatorListType: [String] ] = [:]
     var matches: [String: EveryMatrix.Match] = [:]
-    // var markets: [String: EveryMatrix.Market] = [:]
-    var marketsForMatch: [String: Set<String>] = [:]   // [Match ID: [Markets IDs] ]
-    var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
-    var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
+    var marketsForMatch: [String: Set<String>] = [:]
+    var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]
+    var bettingOffers: [String: EveryMatrix.BettingOffer] = [:]
 
     var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
     var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
-
     var bettingOutcomesForMarket: [String: Set<String>] = [:]
-
-    var cashoutsPublisher: [String: CurrentValueSubject<EveryMatrix.Cashout, Never>] = [:]
 
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
     var mainMarketsOrder: OrderedSet<String> = []
 
     var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
-    var cashouts: OrderedDictionary<String, EveryMatrix.Cashout> = [:]
+
     var tournamentsForLocation: [String: [String] ] = [:]
     var tournamentsForCategory: [String: [String] ] = [:]
-
     var tournaments: [String: EveryMatrix.Tournament] = [:]
-    var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
 
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     var matchesInfoForMatch: [String: Set<String> ] = [:]
     var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
 
-    func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: AggregatorListType, shouldClear: Bool = false) {
+    private var cancellables: Set<AnyCancellable> = []
+
+    func getLocations() {
+
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { _ in
+
+            },
+                  receiveValue: { [weak self] response in
+
+                (response.records ?? []).forEach { location in
+
+                    self?.locations[location.id] = location
+                }
+
+            })
+            .store(in: &cancellables)
+    }
+
+    func processAggregator(_ aggregator: EveryMatrix.FavoritesAggregator, withListType type: FavoritesAggregatorListType, shouldClear: Bool = false) {
 
         if shouldClear {
             self.matchesForType = [:]
@@ -138,16 +145,8 @@ class AggregatorsRepository {
                         bettingOutcomesForMarket[marketId] = newSet
                     }
                 }
-            case .marketGroup:
-                ()
-                
             case .location(let location):
                 self.locations[location.id] = location
-
-            case .cashout:
-                ()
-            case .event:
-                () // print("Events aren't processed")
             case .eventPartScore:
                 ()
             case .unknown:
@@ -158,7 +157,7 @@ class AggregatorsRepository {
         print("Finished dump processing")
     }
 
-    func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
+    func processContentUpdateAggregator(_ aggregator: EveryMatrix.FavoritesAggregator) {
 
         guard
             let contentUpdates = aggregator.contentUpdates
@@ -168,11 +167,10 @@ class AggregatorsRepository {
 
         for update in contentUpdates {
             switch update {
-            case .bettingOfferUpdate(let id, let statusId, let odd, let isLive, let isAvailable):
+            case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
                     let bettingOffer = publisher.value
                     let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
-                                                                               statusId: statusId,
                                                                                isLive: isLive,
                                                                                isAvailable: isAvailable)
                     publisher.send(updatedBettingOffer)
@@ -210,12 +208,6 @@ class AggregatorsRepository {
                     matchIdArray.append(matchId)
                     matchesInfoForMatchPublisher.send(matchIdArray)
                 }
-            case .cashoutUpdate:
-                ()
-            case .cashoutCreate:
-                ()
-            case .cashoutDelete:
-                ()
             case .unknown:
                 print("uknown")
             }
@@ -226,7 +218,7 @@ class AggregatorsRepository {
         return bettingOfferPublishers[id]?.eraseToAnyPublisher()
     }
 
-    func rawMatchesForListType(_ listType: AggregatorListType) -> EveryMatrix.Matches {
+    func rawMatchesForListType(_ listType: FavoritesAggregatorListType) -> EveryMatrix.Matches {
         guard let matchesIds = self.matchesForType[listType] else {
             return []
         }
@@ -239,7 +231,7 @@ class AggregatorsRepository {
         return matchesList
     }
 
-    func matchesForListType(_ listType: AggregatorListType) -> [Match] {
+    func matchesForListType(_ listType: FavoritesAggregatorListType) -> [Match] {
 
         guard let matchesIds = self.matchesForType[listType] else {
             return []
@@ -277,7 +269,6 @@ class AggregatorsRepository {
                     if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
                         let bettingOffer = BettingOffer(id: rawBettingOffer.id,
                                                         value: rawBettingOffer.oddsValue ?? 0.0,
-                                                        statusId: rawBettingOffer.statusId ?? "1",
                                                         isLive: rawBettingOffer.isLive ?? false,
                                                         isAvailable: rawBettingOffer.isAvailable ?? true)
 
@@ -348,117 +339,6 @@ class AggregatorsRepository {
 
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
-    }
-
-    func storeLocations(locations: [EveryMatrix.Location]) {
-        self.locations = [:]
-        for location in locations {
-            self.locations[location.id] = location
-        }
-    }
-
-    func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
-        self.tournaments = [:]
-        for tournament in tournaments {
-            self.tournaments[tournament.id] = tournament
-
-            if let venueId = tournament.venueId {
-                if var tournamentsForLocationWithId = self.tournamentsForLocation[venueId] {
-                    tournamentsForLocationWithId.append(tournament.id)
-                    self.tournamentsForLocation[venueId] = tournamentsForLocationWithId
-                }
-                else {
-                    self.tournamentsForLocation[venueId] = [tournament.id]
-                }
-            }
-
-            if let categoryId = tournament.categoryId {
-                if var tournamentsForCategoryWithId = self.tournamentsForCategory[categoryId] {
-                    tournamentsForCategoryWithId.append(tournament.id)
-                    self.tournamentsForCategory[categoryId] = tournamentsForCategoryWithId
-                }
-                else {
-                    self.tournamentsForCategory[categoryId] = [tournament.id]
-                }
-            }
-        }
-    }
-
-    func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
-        self.popularTournaments = [:]
-        for tournament in tournaments {
-            self.popularTournaments[tournament.id] = tournament
-        }
-    }
-    
-}
-
-struct OddOutcomesSortingHelper {
-
-    static func sortValueForOutcome(_ key: String) -> Int {
-        switch key.lowercased() {
-        case "yes": return 10
-        case "no": return 20
-
-        case "home": return 10
-        case "draw": return 20
-        case "none": return 21
-        case "": return 22
-        case "away": return 30
-
-        case "home_draw": return 10
-        case "home_away": return 20
-        case "away_draw": return 30
-
-        case "over": return 10
-        case "under": return 20
-
-        case "odd": return 10
-        case "even": return 20
-
-        case "exact": return 10
-        case "range": return 20
-        case "more_than": return 30
-
-        case "in_90_minutes": return 10
-        case "in_extra_time": return 20
-        case "on_penalties": return 30
-
-        case "home-true": return 10
-        case "home-false": return 15
-        case "-true": return 20
-        case "-false": return 25
-        case "away-true": return 30
-        case "away-false": return 35
-
-        case "home_draw-true": return 10
-        case "home_draw-false": return 15
-        case "home_away-true": return 20
-        case "home_away-false": return 25
-        case "away_draw-true": return 30
-        case "away_draw-false": return 35
-
-        case "over-true": return 10
-        case "over-false": return 15
-        case "under-true": return 20
-        case "under-false": return 25
-
-        case "odd-true": return 10
-        case "odd-false": return 15
-        case "even-true": return 20
-        case "even-false": return 25
-
-        case "yes-true": return 10
-        case "yes-false": return 15
-        case "no-true": return 20
-        case "no-false": return 25
-
-        case "true": return 10
-        case "false": return 20
-
-        default:
-            return 1000
-        }
     }
 
 }

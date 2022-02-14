@@ -168,6 +168,8 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        // TODO: Code Review - Remove this
+        self.testNewFavorites()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -354,6 +356,18 @@ class RootViewController: UIViewController {
         if liveEventsViewControllerLoaded {
             self.liveEventsViewController.reloadData()
         }
+    }
+
+
+    func testNewFavorites() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
+        self.topBarView.addGestureRecognizer(tap)
+    }
+
+    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
+        print("TAP")
+        let favoritesVC = MyFavoritesViewController()
+        self.present(favoritesVC, animated: true, completion: nil)
     }
 
     @IBAction private func didTapLogin() {

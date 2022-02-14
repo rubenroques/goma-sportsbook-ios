@@ -60,7 +60,10 @@ class MyTicketTableViewCell: UITableViewCell {
         }
     }
 
+    var snapshot: UIImage?
+
     var needsHeightRedraw: (() -> Void)?
+    var tappedShareAction: (() -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -346,6 +349,17 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.resetHighlightedCard()
             }
         }
+    }
+
+    @IBAction func didTapShareButton() {
+        let renderer = UIGraphicsImageRenderer(size: self.baseView.bounds.size)
+        let image = renderer.image { _ in
+            self.baseView.drawHierarchy(in: self.baseView.bounds, afterScreenUpdates: true)
+        }
+        self.snapshot = image
+
+        self.tappedShareAction?()
+        
     }
 
     @IBAction private func didTapCashoutButton() {
