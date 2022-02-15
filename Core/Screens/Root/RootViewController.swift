@@ -168,7 +168,7 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        // TODO: Code Review - Remove this
+        // TODO: Code Review 14/02 - Remove this after the option is added to the correct place
         self.testNewFavorites()
     }
 
@@ -311,7 +311,7 @@ class RootViewController: UIViewController {
 
     func setupWithState(_ state: ScreenState) {
         switch state {
-        case let .logged(user):
+        case let .logged:
             self.loginBaseView.isHidden = true
             self.profileBaseView.isHidden = false
             self.accountValueBaseView.isHidden = false
@@ -335,8 +335,7 @@ class RootViewController: UIViewController {
     func didChangedLiveSport(_ sport: Sport) {
         self.currentSport = sport
         if preLiveViewControllerLoaded {
-            // self.preLiveViewController.selectedSport = sportType
-            // TODO: Sport Selection
+            self.preLiveViewController.selectedSport = sport
         }
     }
 
@@ -358,7 +357,7 @@ class RootViewController: UIViewController {
         }
     }
 
-
+    //
     func testNewFavorites() {
         let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
         self.topBarView.addGestureRecognizer(tap)
@@ -370,6 +369,7 @@ class RootViewController: UIViewController {
         self.present(favoritesVC, animated: true, completion: nil)
     }
 
+    //
     @IBAction private func didTapLogin() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
@@ -427,7 +427,7 @@ extension RootViewController {
 
 extension RootViewController {
 
-    // ToDo: Not implemented on the flow
+    // TODO: Not implemented on the flow
     @IBAction private func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)

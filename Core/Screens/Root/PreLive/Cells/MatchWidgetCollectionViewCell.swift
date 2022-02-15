@@ -305,7 +305,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         if self.repositoryType == .defaultRepository {
             self.setupMarketsWithDefaultRepository(match: match)
         }
-        // TODO: Code Review - Merged problems
+        // TODO: Code Review 14/02 - Merged problems
         //        else if self.repositoryType == .favoriteRepository {
         //            self.setupMarketsWithFavoriteRepository(match: match)
         //        }

@@ -72,7 +72,7 @@ struct NetworkManager {
             .eraseToAnyPublisher()
     }
 
-    // TODO: Code Review -
+    // TODO: Code Review - remove this, requestEndpoint is enought 
     func requestEndpointArrayData<T: Decodable>(deviceId: String, endpoint: Endpoint) -> AnyPublisher<T?, NetworkError> {
 
         guard
