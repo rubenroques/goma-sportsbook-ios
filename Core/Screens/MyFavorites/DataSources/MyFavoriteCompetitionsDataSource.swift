@@ -22,7 +22,10 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
-    init(favoriteCompetitions: [Competition]) {
+    var repository: FavoritesAggregatorsRepository
+
+    init(favoriteCompetitions: [Competition], repository: FavoritesAggregatorsRepository) {
+        self.repository = repository
         self.competitions = favoriteCompetitions
     }
 
@@ -53,11 +56,13 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
                 cell.matchStatsViewModel = matchStatsViewModel
             }
 
-            if let matchInfo = Env.favoritesStorage.matchesInfoForMatch[match.id] {
-                cell.setupWithMatch(match, liveMatch: true)
+            let repository = FavoritesAggregatorsRepository.self as? AggregatorStore
+
+            if let repository = repository, repository.hasMatchesInfoForMatch(match.id) {
+                cell.setupWithMatch(match, liveMatch: true, repository: repository)
             }
             else {
-                cell.setupWithMatch(match)
+                cell.setupWithMatch(match, repository: repository)
             }
 
             cell.shouldShowCountryFlag(false)

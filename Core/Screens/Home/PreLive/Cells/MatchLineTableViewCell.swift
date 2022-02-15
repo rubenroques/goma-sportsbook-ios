@@ -19,7 +19,7 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     private var match: Match?
-    private var repositoryType: AggregatorRepositoryType?
+    private var repository: AggregatorStore?
 
     private var shouldShowCountryFlag: Bool = true
     private var showingBackSliderView: Bool = false
@@ -123,11 +123,11 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
-    func setupWithMatch(_ match: Match, liveMatch: Bool = false, repositoryType: AggregatorRepositoryType = .defaultRepository) {
+    func setupWithMatch(_ match: Match, liveMatch: Bool = false, repository: AggregatorStore?) {
         
         self.match = match
         self.liveMatch = liveMatch
-        self.repositoryType = repositoryType
+        self.repository = repository
 
         UIView.performWithoutAnimation {
             self.collectionView.reloadSections(IndexSet(integer: 0))
@@ -136,32 +136,20 @@ class MatchLineTableViewCell: UITableViewCell {
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
-        if repositoryType == .defaultRepository {
-            if !Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-                self.matchInfoPublisher = Env.everyMatrixStorage.matchesInfoForMatchPublisher
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] value in
-                        if value.contains(match.id) {
-                            self?.matchInfoPublisher?.cancel()
-                            self?.matchInfoPublisher = nil
-                            self?.matchWentLive?()
-                        }
-                    })
-            }
+
+        if let repository = self.repository, !repository.hasMatchesInfoForMatch(match.id)  {
+
+            self.matchInfoPublisher = repository.matchesInfoForMatchListPublisher()?
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] value in
+                    if value.contains(match.id) {
+                        self?.matchInfoPublisher?.cancel()
+                        self?.matchInfoPublisher = nil
+                        self?.matchWentLive?()
+                    }
+                })
         }
-        else if repositoryType == .favoriteRepository {
-            if !Env.favoritesStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-                self.matchInfoPublisher = Env.favoritesStorage.matchesInfoForMatchPublisher
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] value in
-                        if value.contains(match.id) {
-                            self?.matchInfoPublisher?.cancel()
-                            self?.matchInfoPublisher = nil
-                            self?.matchWentLive?()
-                        }
-                    })
-            }
-        }
+
     }
 
     func shouldShowCountryFlag(_ show: Bool) {
@@ -270,12 +258,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
                 if let match = self.match {
 
-                    if self.repositoryType == .defaultRepository {
-                        cell.setupWithMatch(match)
-                    }
-                    else if self.repositoryType == .favoriteRepository {
-                        cell.setupWithMatch(match, repositoryType: .favoriteRepository)
-                    }
+                    cell.setupWithMatch(match, withRepository: self.repository)
 
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?(cell.snapshot)
@@ -293,12 +276,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
 
                 if let match = self.match {
-                    if self.repositoryType == .defaultRepository {
-                        cell.setupWithMatch(match)
-                    }
-                    else if self.repositoryType == .favoriteRepository {
-                        cell.setupWithMatch(match, repositoryType: .favoriteRepository)
-                    }
+
+                    cell.setupWithMatch(match, repository: self.repository)
 
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?(cell.snapshot)

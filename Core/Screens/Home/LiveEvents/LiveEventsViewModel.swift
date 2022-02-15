@@ -450,7 +450,10 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.allMatches[safe: indexPath.row] {
-                cell.setupWithMatch(match, liveMatch: true)
+
+                let repository = Env.everyMatrixStorage as AggregatorStore
+
+                cell.setupWithMatch(match, liveMatch: true, repository: repository)
                 cell.tappedMatchLineAction = { image in
                     self.didSelectMatchAction?(match, image)
                 }

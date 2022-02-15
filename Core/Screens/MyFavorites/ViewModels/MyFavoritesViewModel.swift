@@ -35,13 +35,19 @@ class MyFavoritesViewModel: NSObject {
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     // Data Sources
-    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [])
-    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [])
+    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], repository: FavoritesAggregatorsRepository())
+    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], repository: FavoritesAggregatorsRepository())
+
+    var repository: FavoritesAggregatorsRepository = FavoritesAggregatorsRepository()
 
     override init() {
         super.init()
 
-        Env.favoritesStorage.getLocations()
+        self.repository.getLocations()
+
+        self.myFavoriteMatchesDataSource.repository = self.repository
+
+        self.myFavoriteCompetitionsDataSource.repository = self.repository
 
         self.myFavoriteMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
@@ -159,16 +165,18 @@ class MyFavoritesViewModel: NSObject {
 
     private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
 
-        Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
+        //Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
+        self.repository.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
 
-        self.favoriteMatches = Env.favoritesStorage.matchesForListType(.favoriteMatchEvents)
+        self.favoriteMatches = self.repository.matchesForListType(.favoriteMatchEvents)
 
         self.updateContentList()
     }
 
     private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
 
-        Env.favoritesStorage.processContentUpdateAggregator(aggregator)
+        //Env.favoritesStorage.processContentUpdateAggregator(aggregator)
+        self.repository.processContentUpdateAggregator(aggregator)
 
     }
 
@@ -214,9 +222,10 @@ class MyFavoritesViewModel: NSObject {
 
     private func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
 
-        Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
+        // Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
+        self.repository.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
 
-        var appMatches = Env.favoritesStorage.matchesForListType(.favoriteCompetitionEvents)
+        var appMatches = self.repository.matchesForListType(.favoriteCompetitionEvents)
 
         // Sort competitions by sport type
         appMatches.sort {
@@ -237,10 +246,10 @@ class MyFavoritesViewModel: NSObject {
 
         var processedCompetitions: [Competition] = []
         for competitionId in competitionsMatches.keys {
-            if let tournament = Env.favoritesStorage.tournaments[competitionId] {
+            if let tournament = self.repository.tournaments[competitionId] {
 
                 var location: Location?
-                if let rawLocation = Env.favoritesStorage.location(forId: tournament.venueId ?? "") {
+                if let rawLocation = self.repository.location(forId: tournament.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                         name: rawLocation.name ?? "",
                                         isoCode: rawLocation.code ?? "")
@@ -262,7 +271,8 @@ class MyFavoritesViewModel: NSObject {
 
     private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
 
-        Env.favoritesStorage.processContentUpdateAggregator(aggregator)
+        // Env.favoritesStorage.processContentUpdateAggregator(aggregator)
+        self.repository.processContentUpdateAggregator(aggregator)
 
     }
 

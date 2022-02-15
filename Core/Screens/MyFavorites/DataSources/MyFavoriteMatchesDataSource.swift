@@ -23,9 +23,11 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
 
     var collapsedSportSections: Set<Int> = []
 
-    init(userFavoriteMatches: [Match]) {
-        self.userFavoriteMatches = userFavoriteMatches
+    var repository: FavoritesAggregatorsRepository
 
+    init(userFavoriteMatches: [Match], repository: FavoritesAggregatorsRepository) {
+        self.userFavoriteMatches = userFavoriteMatches
+        self.repository = repository
         super.init()
     }
 
@@ -95,12 +97,14 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
+
+                let repository = self.repository as AggregatorStore
                 
-                if Env.favoritesStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-                    cell.setupWithMatch(match, liveMatch: true, repositoryType: .favoriteRepository)
+                if self.repository.matchesInfoForMatchPublisher.value.contains(match.id) {
+                    cell.setupWithMatch(match, liveMatch: true, repository: repository)
                 }
                 else {
-                    cell.setupWithMatch(match, repositoryType: .favoriteRepository)
+                    cell.setupWithMatch(match, repository: repository)
                 }
 
                 cell.setupFavoriteMatchInfoPublisher(match: match)

@@ -99,7 +99,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     
     var match: Match?
     var snapshot: UIImage?
-    var repositoryType: AggregatorRepositoryType?
+    var repository: AggregatorStore?
 
     var isFavorite: Bool = false {
         didSet {
@@ -279,7 +279,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
     }
 
-    func setupWithMatch(_ match: Match, repositoryType: AggregatorRepositoryType = .defaultRepository) {
+    func setupWithMatch(_ match: Match, repository: AggregatorStore?) {
         self.match = match
 
         let viewModel = MatchWidgetCellViewModel(match: match)
@@ -299,15 +299,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
         }
 
-        self.repositoryType = repositoryType
+        self.repository = repository
 
-        // Check repository to use
-        if self.repositoryType == .defaultRepository {
-            self.setupMarketsAndEventsInfoWithDefaultRepository(match: match)
-        }
-        else if self.repositoryType == .favoriteRepository {
-            self.setupMarketsAndEventsInfoWithFavoriteRepository(match: match)
-        }
+        self.setupMarketsAndEventsInfoWithRepository(match: match)
 
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             self.isFavorite = true
@@ -315,10 +309,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
     }
 
-    func setupMarketsAndEventsInfoWithDefaultRepository(match: Match) {
+    func setupMarketsAndEventsInfoWithRepository(match: Match) {
         if let market = match.markets.first {
 
-            if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+            if let marketPublisher = repository?.marketPublisher(withId: market.id) {
                 self.marketSubscriber = marketPublisher
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] marketUpdate in
@@ -357,8 +351,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.leftOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
                     //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -422,8 +415,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.middleOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
                     //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -488,8 +480,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.rightOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
                     //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -551,294 +542,11 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         var minutes = ""
         var matchPart = ""
 
-        if let matchInfoArray = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
+        // Env.everyMatrixStorage.matchesInfoForMatch[match.id]
+        if let matchInfoArray = repository?.matchesInfoForMatchList()[match.id] {
             for matchInfoId in matchInfoArray {
-                if let matchInfo = Env.everyMatrixStorage.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match?.rootPartId {
-                        // Goals
-                        if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
-                                homeGoals = "\(homeGoalsFloat)"
-                            }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
-                                awayGoals = "\(homeGoalsFloat)"
-                            }
-                        }
-                        if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
-                                homeGoals = "\(awayGoalsFloat)"
-                            }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
-                                awayGoals = "\(awayGoalsFloat)"
-                            }
-                        }
-                    }
-                    else if (matchInfo.typeId ?? "") == "95", let awayGoalsFloat = matchInfo.paramFloat1 {
-                        // Match Minutes
-                        minutes = "\(awayGoalsFloat)"
-                    }
-                    else if (matchInfo.typeId ?? "") == "92", let eventPartName = matchInfo.paramEventPartName1 {
-                        // Status
-                        matchPart = eventPartName
-                    }
-                }
-            }
-        }
-
-        if homeGoals.isNotEmpty && awayGoals.isNotEmpty {
-            self.resultLabel.text = "\(homeGoals) - \(awayGoals)"
-        }
-
-        if minutes.isNotEmpty && matchPart.isNotEmpty {
-            self.matchTimeLabel.text = "\(minutes)' - \(matchPart)"
-        }
-        else if minutes.isNotEmpty {
-            self.matchTimeLabel.text = "\(minutes)'"
-        }
-        else if matchPart.isNotEmpty {
-            self.matchTimeLabel.text = "\(matchPart)"
-        }
-    }
-
-    func setupMarketsAndEventsInfoWithFavoriteRepository(match: Match) {
-        if let market = match.markets.first {
-
-            if let marketPublisher = Env.favoritesStorage.marketsPublishers[market.id] {
-                self.marketSubscriber = marketPublisher
-                    .receive(on: DispatchQueue.main)
-                    .sink { [weak self] marketUpdate in
-                        if marketUpdate.isAvailable ?? true {
-                            self?.showMarketButtons()
-                        }
-                        else {
-                            if marketUpdate.isClosed ?? false {
-                                self?.showClosedView()
-                            }
-                            else {
-                                self?.showSuspendedView()
-                            }
-                        }
-                    }
-            }
-
-            if let outcome = market.outcomes[safe: 0] {
-                self.homeOddTitleLabel.text = outcome.typeName
-
-                if let marketValue = market.nameDigit1 {
-                    self.homeOddTitleLabel.text = "\(outcome.typeName) \(marketValue)"
-                }
-
-                self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentHomeOddValue = outcome.bettingOffer.value
-                self.leftOutcome = outcome
-
-                self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .left)
-                    self.homeOddValueLabel.text = "-"
-                }
-                else {
-                    self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
-
-                self.leftOddButtonSubscriber = Env.favoritesStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                    //.map(\.oddsValue)
-                    .compactMap({ $0 })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
-
-                        guard let weakSelf = self else { return }
-
-                        if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
-                            weakSelf.homeBaseView.isUserInteractionEnabled = false
-                            weakSelf.homeBaseView.alpha = 0.5
-                            weakSelf.homeOddValueLabel.text = "---"
-
-                            print("Suspended : closing betting offer \(weakSelf.match?.homeParticipant.name ?? "" )-\(market.name)-\(bettingOffer.oddsValue ?? 0.0) ")
-                        }
-                        else {
-                            weakSelf.homeBaseView.isUserInteractionEnabled = true
-                            weakSelf.homeBaseView.alpha = 1.0
-
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-
-                            if let currentOddValue = weakSelf.currentHomeOddValue {
-                                if newOddValue > currentOddValue {
-                                    weakSelf.highlightOddChangeUp(animated: true,
-                                                                  upChangeOddValueImage: weakSelf.homeUpChangeOddValueImage,
-                                                                  baseView: weakSelf.homeBaseView)
-                                }
-                                else if newOddValue < currentOddValue {
-                                    weakSelf.highlightOddChangeDown(animated: true,
-                                                                    downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
-                                                                    baseView: weakSelf.homeBaseView)
-                                }
-                            }
-                            weakSelf.currentHomeOddValue = newOddValue
-                            weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                            weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .left)
-                        }
-                    })
-            }
-
-            if let outcome = market.outcomes[safe: 1] {
-                self.drawOddTitleLabel.text = outcome.typeName
-
-                if let marketValue = market.nameDigit1 {
-                    self.drawOddTitleLabel.text = "\(outcome.typeName) \(marketValue)"
-                }
-
-                self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentDrawOddValue = outcome.bettingOffer.value
-                self.middleOutcome = outcome
-                self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .middle)
-                    self.drawOddValueLabel.text = "-"
-                }
-                else {
-                    self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
-
-                self.middleOddButtonSubscriber = Env.favoritesStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                    //.map(\.oddsValue)
-                    .compactMap({ $0 })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
-
-                        guard let weakSelf = self else { return }
-
-                        if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
-                            weakSelf.drawBaseView.isUserInteractionEnabled = false
-                            weakSelf.drawBaseView.alpha = 0.5
-                            weakSelf.drawOddValueLabel.text = "---"
-
-                            print("Suspended : closing betting offer \(weakSelf.match?.homeParticipant.name ?? "" )-\(market.name)-\(bettingOffer.oddsValue ?? 0.0) ")
-                        }
-                        else {
-                            weakSelf.drawBaseView.isUserInteractionEnabled = true
-                            weakSelf.drawBaseView.alpha = 1.0
-
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-                            if let currentOddValue = weakSelf.currentDrawOddValue {
-                                if newOddValue > currentOddValue {
-                                    weakSelf.highlightOddChangeUp(animated: true,
-                                                                  upChangeOddValueImage: weakSelf.drawUpChangeOddValueImage,
-                                                                  baseView: weakSelf.drawBaseView)
-                                }
-                                else if newOddValue < currentOddValue {
-                                    weakSelf.highlightOddChangeDown(animated: true,
-                                                                    downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
-                                                                    baseView: weakSelf.drawBaseView)
-                                }
-                            }
-                            weakSelf.currentDrawOddValue = newOddValue
-                            weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                            weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .middle)
-                        }
-                    })
-            }
-
-            if let outcome = market.outcomes[safe: 2] {
-                self.awayOddTitleLabel.text = outcome.typeName
-
-                if let marketValue = market.nameDigit1 {
-                    self.awayOddTitleLabel.text = "\(outcome.typeName) \(marketValue)"
-                }
-
-                self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentAwayOddValue = outcome.bettingOffer.value
-                self.rightOutcome = outcome
-
-                self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
-
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .right)
-                    self.awayOddValueLabel.text = "-"
-                    self.awayBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                }
-                else {
-                    self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
-
-                self.rightOddButtonSubscriber = Env.favoritesStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
-                    //.map(\.oddsValue)
-                    .compactMap({ $0 })
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] bettingOffer in
-
-                        guard let weakSelf = self else { return }
-
-                        if let isAvailable = bettingOffer.isAvailable, isAvailable == false {
-                            weakSelf.awayBaseView.isUserInteractionEnabled = false
-                            weakSelf.awayBaseView.alpha = 0.5
-                            weakSelf.awayOddValueLabel.text = "---"
-
-                            print("Suspended : closing betting offer \(weakSelf.match?.homeParticipant.name ?? "" )-\(market.name)-\(bettingOffer.oddsValue ?? 0.0) ")
-                        }
-                        else {
-                            weakSelf.awayBaseView.isUserInteractionEnabled = true
-                            weakSelf.awayBaseView.alpha = 1.0
-
-                            guard
-                                let newOddValue = bettingOffer.oddsValue
-                            else {
-                                return
-                            }
-                            if let currentOddValue = weakSelf.currentAwayOddValue {
-                                if newOddValue > currentOddValue {
-                                    weakSelf.highlightOddChangeUp(animated: true,
-                                                                  upChangeOddValueImage: weakSelf.awayUpChangeOddValueImage,
-                                                                  baseView: weakSelf.awayBaseView)
-                                }
-                                else if newOddValue < currentOddValue {
-                                    weakSelf.highlightOddChangeDown(animated: true,
-                                                                    downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
-                                                                    baseView: weakSelf.awayBaseView)
-                                }
-                            }
-
-                            weakSelf.currentAwayOddValue = newOddValue
-                            weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                            weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .right)
-                        }
-                    })
-            }
-            if market.outcomes.count == 2 {
-
-                awayBaseView.isHidden = true
-            }
-        }
-        else {
-            Logger.log("No markets found")
-            oddsStackView.alpha = 0.2
-
-            self.homeOddValueLabel.text = "---"
-            self.drawOddValueLabel.text = "---"
-            self.awayOddValueLabel.text = "---"
-        }
-
-        var homeGoals = ""
-        var awayGoals = ""
-        var minutes = ""
-        var matchPart = ""
-
-        if let matchInfoArray = Env.favoritesStorage.matchesInfoForMatch[match.id] {
-            for matchInfoId in matchInfoArray {
-                if let matchInfo = Env.favoritesStorage.matchesInfo[matchInfoId] {
+                // Env.everyMatrixStorage.matchesInfo[matchInfoId]
+                if let matchInfo = repository?.matchesInfoList()[matchInfoId] {
                     if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match?.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {

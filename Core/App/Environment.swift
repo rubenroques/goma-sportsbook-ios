@@ -29,7 +29,6 @@ class Environment {
     var date: () -> Date = { Date.init() }
 
     var favoritesManager = FavoritesManager()
-    var favoritesStorage = FavoritesAggregatorsRepository()
     var deviceFCMToken: String = ""
 
     var deviceId: String {

@@ -1131,7 +1131,6 @@ class PreLiveEventsViewModel: NSObject {
         Env.everyMatrixStorage.processContentUpdateAggregator(aggregator)
     }
 
-
 }
 
 extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
