@@ -349,11 +349,11 @@ extension FavoritesAggregatorsRepository: AggregatorStore {
         return marketPublisher
     }
 
-    func bettingOfferPublisher(_ id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
+    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
         return bettingOfferPublishers[id]?.eraseToAnyPublisher()
     }
 
-    func hasMatchesInfoForMatch(_ id: String) -> Bool {
+    func hasMatchesInfoForMatch(withId id: String) -> Bool {
         if matchesInfoForMatchPublisher.value.contains(id) {
             return true
         }

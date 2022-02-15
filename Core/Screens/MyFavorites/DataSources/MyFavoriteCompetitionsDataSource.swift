@@ -58,7 +58,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
 
             let repository = FavoritesAggregatorsRepository.self as? AggregatorStore
 
-            if let repository = repository, repository.hasMatchesInfoForMatch(match.id) {
+            if let repository = repository, repository.hasMatchesInfoForMatch(withId: match.id) {
                 cell.setupWithMatch(match, liveMatch: true, repository: repository)
             }
             else {

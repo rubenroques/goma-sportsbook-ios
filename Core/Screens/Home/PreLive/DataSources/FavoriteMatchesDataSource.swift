@@ -51,7 +51,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                     }
                     let repository = Env.everyMatrixStorage as AggregatorStore
 
-                    if repository.hasMatchesInfoForMatch(match.id) {
+                    if repository.hasMatchesInfoForMatch(withId: match.id) {
                         cell.setupWithMatch(match, liveMatch: true, repository: repository)
                     }
                     else {

@@ -137,7 +137,7 @@ class MatchLineTableViewCell: UITableViewCell {
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
 
-        if let repository = self.repository, !repository.hasMatchesInfoForMatch(match.id)  {
+        if let repository = self.repository, !repository.hasMatchesInfoForMatch(withId: match.id)  {
 
             self.matchInfoPublisher = repository.matchesInfoForMatchListPublisher()?
                 .receive(on: DispatchQueue.main)
@@ -257,8 +257,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     fatalError()
                 }
                 if let match = self.match {
-
-                    cell.setupWithMatch(match, withRepository: self.repository)
+                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.repository)
+                    // cell.setupWithMatch(match, withRepository: self.repository)
+                    cell.configure(withViewModel: cellViewModel)
 
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?(cell.snapshot)
@@ -276,8 +277,11 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
 
                 if let match = self.match {
+                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.repository)
 
-                    cell.setupWithMatch(match, repository: self.repository)
+                    cell.configure(withViewModel: cellViewModel)
+
+                    // cell.setupWithMatch(match, repository: self.repository)
 
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?(cell.snapshot)

@@ -280,10 +280,41 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
     }
 
+    func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
+
+        self.viewModel = viewModel
+
+        if let viewModel = self.viewModel {
+            self.eventNameLabel.text = "\(viewModel.competitionName)"
+            self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
+            self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
+            self.dateLabel.text = "\(viewModel.startDateString)"
+            self.timeLabel.text = "\(viewModel.startTimeString)"
+
+            // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            if viewModel.countryISOCode != "" {
+                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            }
+            else {
+                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+            }
+
+            if let match = viewModel.match {
+                self.setupMarketsWithGenericRepository(match: match)
+
+                for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value {
+                    if matchId == match.id {
+                        self.isFavorite = true
+                    }
+                }
+            }
+        }
+    }
+
     func setupWithMatch(_ match: Match, withRepository repository: AggregatorStore?) {
         self.match = match
 
-        let viewModel = MatchWidgetCellViewModel(match: match)
+        let viewModel = MatchWidgetCellViewModel(match: match, store: repository)
 
         self.eventNameLabel.text = "\(viewModel.competitionName)"
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
@@ -348,7 +379,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.leftOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = repository?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -391,7 +422,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.middleOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = repository?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -434,7 +465,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.rightOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = repository?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)

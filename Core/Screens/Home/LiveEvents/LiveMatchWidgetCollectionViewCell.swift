@@ -279,10 +279,40 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
     }
 
+    func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
+
+        self.viewModel = viewModel
+
+        if let viewModel = self.viewModel {
+            self.eventNameLabel.text = "\(viewModel.competitionName)"
+            self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
+            self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
+
+            self.resultLabel.text = ""
+            self.matchTimeLabel.text = ""
+
+           // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            if viewModel.countryISOCode != "" {
+                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            }
+            else {
+                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+            }
+
+            if let match = viewModel.match {
+                self.setupMarketsAndEventsInfoWithRepository(match: match)
+
+                for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+                    self.isFavorite = true
+                }
+            }
+        }
+    }
+
     func setupWithMatch(_ match: Match, repository: AggregatorStore?) {
         self.match = match
 
-        let viewModel = MatchWidgetCellViewModel(match: match)
+        let viewModel = MatchWidgetCellViewModel(match: match, store: repository)
 
         self.eventNameLabel.text = "\(viewModel.competitionName)"
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
@@ -312,7 +342,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     func setupMarketsAndEventsInfoWithRepository(match: Match) {
         if let market = match.markets.first {
 
-            if let marketPublisher = repository?.marketPublisher(withId: market.id) {
+            if let marketPublisher = self.viewModel?.store?.marketPublisher(withId: market.id) {
                 self.marketSubscriber = marketPublisher
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] marketUpdate in
@@ -351,7 +381,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.leftOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -415,7 +445,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.middleOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -480,7 +510,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.rightOddButtonSubscriber = repository?.bettingOfferPublisher(outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     //.map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -543,25 +573,25 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         var matchPart = ""
 
         // Env.everyMatrixStorage.matchesInfoForMatch[match.id]
-        if let matchInfoArray = repository?.matchesInfoForMatchList()[match.id] {
+        if let matchInfoArray = self.viewModel?.store?.matchesInfoForMatchList()[match.id] {
             for matchInfoId in matchInfoArray {
                 // Env.everyMatrixStorage.matchesInfo[matchInfoId]
-                if let matchInfo = repository?.matchesInfoList()[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match?.rootPartId {
+                if let matchInfo = self.viewModel?.store?.matchesInfoList()[matchInfoId] {
+                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.viewModel?.match?.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
+                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
                                 homeGoals = "\(homeGoalsFloat)"
                             }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
+                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
                                 awayGoals = "\(homeGoalsFloat)"
                             }
                         }
                         if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
+                            if self.viewModel?.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
                                 homeGoals = "\(awayGoalsFloat)"
                             }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
+                            else if self.viewModel?.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
                                 awayGoals = "\(awayGoalsFloat)"
                             }
                         }

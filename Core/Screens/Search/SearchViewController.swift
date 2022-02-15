@@ -339,7 +339,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
                     let repository = self.viewModel as AggregatorStore
 
-                    if repository.hasMatchesInfoForMatch(match.id) {
+                    if repository.hasMatchesInfoForMatch(withId: match.id) {
                         cell.setupWithMatch(match, liveMatch: true, repository: repository)
                     }
                     else {

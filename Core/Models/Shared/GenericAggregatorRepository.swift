@@ -11,12 +11,12 @@ import Combine
 protocol AggregatorStore {
     func marketPublisher(withId id: String) -> CurrentValueSubject<EveryMatrix.Market, Never>?
 
-    func bettingOfferPublisher(_ id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>?
+    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>?
 
     func matchesInfoForMatchListPublisher() ->
     CurrentValueSubject<[String], Never>?
 
-    func hasMatchesInfoForMatch(_ id: String) -> Bool
+    func hasMatchesInfoForMatch(withId id: String) -> Bool
 
     func matchesInfoForMatchList() -> [String: Set<String>]
 
