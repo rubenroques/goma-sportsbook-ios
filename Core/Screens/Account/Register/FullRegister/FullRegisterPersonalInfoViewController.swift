@@ -15,7 +15,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var scrollView: UIScrollView!
     
-    @IBOutlet weak var titleHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private weak var titleHeaderTextFieldView: HeaderTextFieldView!
  
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
@@ -58,7 +58,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
         self.setupPublishers()
 
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
 
     }
 
@@ -79,10 +82,8 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         titleLabel.text = localized("personal_information")
         titleLabel.font = AppFont.with(type: .bold, size: 18)
 
-        
         titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setPlaceholderText(localized("title"))
-    
 
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
 
@@ -175,7 +176,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         postalCodeHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         postalCodeHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
 
-     
         continueButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         continueButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         continueButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
@@ -217,7 +217,6 @@ class FullRegisterPersonalInfoViewController: UIViewController {
             }
         .store(in: &cancellables)
 
-  
         self.firstNameHeaderTextFieldView.textPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -302,17 +301,11 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     @IBAction private func continueAction() {
-        
-        //self.navigationController?.present(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
-        
         self.navigationController?.pushViewController(FullRegisterAddressCountryViewController(registerForm: self.fullRegisterUserInfo!), animated: true)
     }
 
     @IBAction private func closeAction() {
-          // foi presented porque tem um presentingViewController
-       // self.dismiss(animated: true, completion: nil)
         self.navigationController?.popToRootViewController(animated: true)
-    
     }
 
     @objc func didTapBackground() {

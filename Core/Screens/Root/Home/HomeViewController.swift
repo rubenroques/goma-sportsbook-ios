@@ -207,8 +207,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.setupWithMatch(match)
             cell.setupFavoriteMatchInfoPublisher(match: match)
-            cell.tappedMatchLineAction = {
-                self.didSelectMatchAction?(match)
+            cell.tappedMatchLineAction = { [weak self] image in // TODO: Code Review - UIImage ?!
+                self?.didSelectMatchAction?(match)
             }
 
             return cell

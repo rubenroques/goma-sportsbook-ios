@@ -291,7 +291,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = "\(viewModel.startDateString)"
         self.timeLabel.text = "\(viewModel.startTimeString)"
 
-       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         if viewModel.countryISOCode != "" {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         }
@@ -300,14 +300,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
 
         self.repositoryType = repositoryType
-
+        
         // Check repository to use
         if self.repositoryType == .defaultRepository {
             self.setupMarketsWithDefaultRepository(match: match)
         }
-        else if self.repositoryType == .favoriteRepository {
-            self.setupMarketsWithFavoriteRepository(match: match)
-        }
+        // TODO: Code Review - Merged problems
+        //        else if self.repositoryType == .favoriteRepository {
+        //            self.setupMarketsWithFavoriteRepository(match: match)
+        //        }
 
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value {
             if matchId == match.id {
@@ -522,21 +523,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.homeOddValueLabel.text = "-"
             self.drawOddValueLabel.text = "-"
             self.awayOddValueLabel.text = "-"
-           
+
         }
 
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             self.isFavorite = true
         }
-        else {
-            Logger.log("No markets found")
-            oddsStackView.alpha = 0.2
 
-            self.homeOddValueLabel.text = "---"
-            self.drawOddValueLabel.text = "---"
-            self.awayOddValueLabel.text = "---"
-
-        }
     }
 
     func setOddViewDisabled(disabled: Bool, oddViewPosition: OddViewPosition) {
