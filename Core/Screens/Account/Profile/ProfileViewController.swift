@@ -493,7 +493,8 @@ extension ProfileViewController {
     }
 
     @objc func historyViewTapped() {
-
+        let historyViewController = HistoryViewController()
+        self.navigationController?.pushViewController(historyViewController, animated: true)
     }
 
     @objc func limitsViewTapped() {

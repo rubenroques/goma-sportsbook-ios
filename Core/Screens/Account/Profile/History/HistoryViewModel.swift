@@ -6,29 +6,10 @@
 //
 
 import Foundation
+import UIKit
 import Combine
-import OrderedCollections
 
-class HistoryViewModel {
-
-    enum Content {
-        case userMessage
-        case userFavorites
-        case bannerLine
-        case suggestedBets
-        case sport(Sport)
-
-        var identifier: String {
-            switch self {
-            case .userMessage: return "userMessage"
-            case .userFavorites: return "userFavorites"
-            case .bannerLine: return "bannerLine"
-            case .suggestedBets: return "suggestedBets"
-            case .sport(let sport): return "sport[\(sport)]"
-            }
-        }
-        
-    }
+class HistoryViewModel : NSObject{
     enum ListType {
         case transactions
         case bettings
@@ -60,219 +41,281 @@ class HistoryViewModel {
         }
     }
     
+    private var selectedMyTicketsTypeIndex: Int = 0
+    var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
+    var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>
+
+    enum MyTicketsType: Int {
+        case opened = 0
+        case resolved = 1
+        case won = 2
+    }
+
+
+    var clickedBetId: String?
+    var clickedBetStatus: String?
+    var clickedBetTokenPublisher: CurrentValueSubject<String, Never> = .init("")
+    
+    var reloadTableViewAction: (() -> Void)?
+    var redrawTableViewAction: (() -> Void)?
+
+    private var matchDetailsDictionary: [String: Match] = [:]
+
+    private var resolvedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    private var openedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    private var wonMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+
+    private var isLoadingResolved: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingWon: CurrentValueSubject<Bool, Never> = .init(true)
+
+    private var locationsCodesDictionary: [String: String] = [:]
+
+    var isLoading: AnyPublisher<Bool, Never>
+
+    private let recordsPerPage = 1000
+
+    private var resolvedPage = 0
+    private var openedPage = 0
+    private var wonPage = 0
+
+    // Cached view models
+    var cachedViewModels: [String: MyTicketCellViewModel] = [:]
+
+    //
+    private var cancellables = Set<AnyCancellable>()
+    
     
 
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
     var scrollToContentPublisher = PassthroughSubject<Int?, Never>.init()
     
-    
     var listTypeSelected : CurrentValueSubject<ListType, Never> = .init(.transactions)
     
     var bettingTypeSelected : CurrentValueSubject<BettingType, Never> = .init(.none)
 
-    private let itemsPreSports = 4
-    private var userMessages: [String] = []
-    private var suggestedBets: [String] = []
 
-    private var favoriteMatchesIds: [String] = [] {
-        didSet {
-            var matches: [Match] = []
-            for matchId in self.favoriteMatchesIds {
-                if let match = self.store.matchWithId(id: matchId) {
-                    matches.append(match)
-                }
-            }
-            self.favoriteMatches = matches
-        }
-    }
-    private var favoriteMatches: [Match] = [] {
-        didSet {
-            self.refreshPublisher.send()
-        }
-    }
-
-    private var banners: [BannerInfo] = [] {
-        didSet {
-            var bannerCellViewModels: [BannerCellViewModel] = []
-
-            for banner in self.banners {
-                if let bannerViewModel = self.bannersLineViewModelCache[banner.id] {
-                    bannerCellViewModels.append(bannerViewModel)
-                }
-                else {
-                    let bannerViewModel = BannerCellViewModel(id: banner.id,
-                                                              matchId: banner.matchId,
-                                                              imageURL: banner.imageURL ?? "")
-                    bannerCellViewModels.append(bannerViewModel)
-                    self.bannersLineViewModelCache[banner.id] = bannerViewModel
-                }
-            }
-
-            self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
-        }
-    }
-
-    private var sportsToFetch: [Sport] = []
-    private var sportsLineViewModelsCache: [String: SportMatchLineViewModel] = [:]
-
-    private var bannersLineViewModelCache: [String: BannerCellViewModel] = [:]
-    private var bannersLineViewModel: BannerLineCellViewModel? {
-        didSet {
-            self.refreshPublisher.send()
-        }
-    }
-
-    //
-    // EM Registers
-    private var bannersInfoRegister: EndpointPublisherIdentifiable?
-    private var favoriteMatchesRegister: EndpointPublisherIdentifiable?
-
-    // Combine Publishers
-    private var bannersInfoPublisher: AnyCancellable?
-    private var favoriteMatchesPublisher: AnyCancellable?
-
-    // Updatable Storage
-    private var store: HomeStore = HomeStore()
-
-    private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Life Cycle
-    init() {
-        self.requestSports()
-        self.fetchBanners()
-        self.fetchFavoriteMatches()
+    override init(){
+        isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
+            .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
+                return isLoadingResolved || isLoadingOpened || isLoadingWon
+            })
+            .eraseToAnyPublisher()
+
+        self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
+
+        super.init()
+
+        isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
+            .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
+                switch myTicketsType {
+                case .resolved:
+                    if isLoadingResolved { return false }
+                    return self?.resolvedMyTickets.value.isEmpty ?? false
+                case .opened:
+                    if isLoadingOpened { return false }
+                    return self?.openedMyTickets.value.isEmpty ?? false
+                case .won:
+                    if isLoadingWon { return false }
+                    return self?.wonMyTickets.value.isEmpty ?? false
+                }
+            }
+            .eraseToAnyPublisher()
+
+        myTicketsTypePublisher
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] myTicketsType in
+                self?.selectedMyTicketsTypeIndex =  myTicketsType.rawValue
+
+                self?.reloadTableView()
+            }
+            .store(in: &cancellables)
+
+        Env.everyMatrixClient.userSessionStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSessionStatus in
+                switch userSessionStatus {
+                case .logged:
+                    self?.refresh()
+                case .anonymous:
+                    self?.clearData()
+                }
+            }
+            .store(in: &cancellables)
+
+        self.loadLocations()
+        self.initialLoadMyTickets()
+
     }
+    
+   
+    func loadResolvedTickets(page: Int) {
 
-    func refresh() {
+        self.isLoadingResolved.send(true)
 
-        self.requestSports()
-        self.fetchBanners()
-        self.fetchFavoriteMatches()
-    }
-
-    func requestSports() {
-
-        let language = "en"
-        Env.everyMatrixClient.getDisciplines(language: language)
-            .map(\.records)
-            .compactMap({ $0 })
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { response in
-                self.sportsToFetch = Array(response.map(Sport.init(discipline:)).prefix(10))
-                self.refreshPublisher.send()
+        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+                        self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
+                    default:
+                        ()
+                    }
+                case .finished:
+                    ()
+                }
+                self?.isLoadingResolved.send(false)
+            },
+            receiveValue: { [weak self] betHistoryResponse in
+                self?.resolvedMyTickets.value = betHistoryResponse.betList ?? []
+                if case .resolved = self?.myTicketsTypePublisher.value {
+                    self?.reloadTableView()
+                }
             })
             .store(in: &cancellables)
     }
+    
+    
+    func loadOpenedTickets(page: Int) {
 
-    // Banners
-    func stopBannerUpdates() {
-        if let bannersInfoRegister = bannersInfoRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: bannersInfoRegister)
-        }
+        self.isLoadingOpened.send(true)
 
-        self.bannersInfoPublisher?.cancel()
-        self.bannersInfoPublisher = nil
+        let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
+        Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+                        self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
+                    default:
+                        ()
+                    }
+                case .finished:
+                    ()
+                }
+                self?.isLoadingOpened.send(false)
+            },
+            receiveValue: { [weak self] betHistoryResponse in
+                self?.openedMyTickets.value = betHistoryResponse.betList ?? []
+                if case .opened = self?.myTicketsTypePublisher.value {
+                    self?.reloadTableView()
+                }
+            })
+            .store(in: &cancellables)
+
     }
 
-    func fetchBanners() {
+    func loadWonTickets(page: Int) {
 
-        self.stopBannerUpdates()
+        self.isLoadingWon.send(true)
 
-        let endpoint = TSRouter.bannersInfoPublisher(operatorId: Env.appSession.operatorId, language: "en")
-
-        self.bannersInfoPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.BannerInfo>.self)
+        let wonRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.won, records: recordsPerPage, page: page)
+        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                    case .requestError(let value) where value.lowercased().contains("you must be logged in to perform this action"):
+                        self?.clearData()
+                    case .notConnected:
+                        self?.clearData()
+                    default:
+                        ()
+                    }
+                case .finished:
+                    ()
+                }
+                self?.isLoadingWon.send(false)
+            },
+            receiveValue: { [weak self] betHistoryResponse in
+                self?.wonMyTickets.value = betHistoryResponse.betList ?? []
+                if case .won = self?.myTicketsTypePublisher.value {
+                    self?.reloadTableView()
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+    
+    func loadLocations() {
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
             .sink(receiveCompletion: { _ in
 
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.bannersInfoRegister = publisherIdentifiable
-                case .initialContent(let responde):
-                    print("HistoryViewModel bannersInfo initialContent")
-                    let sortedBanners = (responde.records ?? []).sorted {
-                        $0.priorityOrder ?? 0 < $1.priorityOrder ?? 1
+            },
+                  receiveValue: { [weak self] response in
+                self?.locationsCodesDictionary = [:]
+                (response.records ?? []).forEach { location in
+                    if let code = location.code {
+                        self?.locationsCodesDictionary[location.id] = code
                     }
-                    self?.banners = sortedBanners.map({
-                        BannerInfo(type: $0.type,
-                                   id: $0.id,
-                                   matchId: $0.matchID,
-                                   imageURL: $0.imageURL,
-                                   priorityOrder: $0.priorityOrder)
-                    })
-                    self?.stopBannerUpdates()
-                case .updatedContent:
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
-    }
-
-    private func fetchFavoriteMatches() {
-
-        if let favoriteMatchesRegister = favoriteMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
-        }
-
-        guard let userId = Env.userSessionStore.userSessionPublisher.value?.userId else { return }
-
-        let endpoint = TSRouter.favoriteMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                      language: "en",
-                                                      userId: userId)
-
-        self.favoriteMatchesPublisher?.cancel()
-        self.favoriteMatchesPublisher = nil
-
-        self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving Favorite data!")
-
-                case .finished:
-                    print("Favorite Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher connect")
-                    self?.favoriteMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher initialContent")
-                    self?.setupFavoriteMatchesAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher updatedContent")
-                    self?.updateFavoriteMatchesAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("PreLiveEventsViewModel favoriteMatchesPublisher disconnect")
                 }
 
             })
+            .store(in: &cancellables)
+    }
+    
+    func reloadTableView() {
+        self.reloadTableViewAction?()
+    }
+    
+    func refresh() {
+        self.resolvedPage = 0
+        self.openedPage = 0
+        self.wonPage = 0
+
+        self.initialLoadMyTickets()
+    }
+    
+    func initialLoadMyTickets() {
+        self.loadResolvedTickets(page: 0)
+        self.loadOpenedTickets(page: 0)
+        self.loadWonTickets(page: 0)
     }
 
-    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.storeContent(fromAggregator: aggregator)
+    func clearData() {
+        self.resolvedMyTickets.value = []
+        self.openedMyTickets.value = []
+        self.wonMyTickets.value = []
+        self.reloadTableView()
+    }
 
-        var matchesIds: [String] = []
-        for content in aggregator.content ?? [] {
-            switch content {
-            case .match(let matchContent):
-                matchesIds.append(matchContent.id)
-            default:
-                ()
-            }
+    func numberOfRows() -> Int {
+        switch myTicketsTypePublisher.value {
+        case .resolved:
+            return resolvedMyTickets.value.count
+        case .opened:
+            return openedMyTickets.value.count
+        case .won:
+            return wonMyTickets.value.count
         }
-        self.favoriteMatchesIds = matchesIds
     }
 
-    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.updateContent(fromAggregator: aggregator)
+    func isEmpty() -> Bool {
+        switch myTicketsTypePublisher.value {
+        case .resolved:
+            return resolvedMyTickets.value.isEmpty
+        case .opened:
+            return openedMyTickets.value.isEmpty
+        case .won:
+            return wonMyTickets.value.isEmpty
+        }
     }
+    
 }
 
 extension HistoryViewModel {
@@ -340,3 +383,43 @@ extension HistoryViewModel {
 
 }
 
+
+
+
+extension HistoryViewModel: UITableViewDelegate, UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.numberOfRows()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 130
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+   
+            let ticket: BetHistoryEntry?
+
+            switch myTicketsTypePublisher.value {
+            case .resolved:
+                ticket = resolvedMyTickets.value[safe: indexPath.row] ?? nil
+            case .opened:
+                ticket =  openedMyTickets.value[safe: indexPath.row] ?? nil
+            case .won:
+                ticket =  wonMyTickets.value[safe: indexPath.row] ?? nil
+            }
+            
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
+                let ticketValue = ticket
+            else {
+                fatalError("")
+            }
+     
+            cell.configure(withBetHistoryEntry: ticketValue)
+            return cell
+        
+        
+    }
+
+}

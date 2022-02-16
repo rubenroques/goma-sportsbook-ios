@@ -31,6 +31,22 @@ class BettingsTableViewCell : UITableViewCell {
     private lazy var betAmountStackView: UIStackView = Self.createVerticalStackView()
     private lazy var possibleEarningsStackView: UIStackView = Self.createVerticalStackView()
     
+    private var viewModel : HistoryViewModel?
+    private var betHistoryEntry: BetHistoryEntry?
+    
+    private func betStatusText(forCode code: String) -> String {
+        switch code {
+        case "OPEN": return localized("open")
+        case "DRAW": return localized("draw")
+        case "WON": return localized("won")
+        case "HALF_WON": return localized("half_won")
+        case "LOST": return localized("lost")
+        case "HALF_LOST": return localized("half_lost")
+        case "CANCELLED": return localized("cancelled")
+        case "CASHED_OUT": return localized("cashed_out")
+        default: return ""
+        }
+    }
     
     // MARK: - Lifetime and Cycle
 
@@ -75,23 +91,26 @@ class BettingsTableViewCell : UITableViewCell {
  
     }
     
-    func setupDetailsLabel(betType : String, betStatus : String ){
-        
-        if betStatus == "Lost"{
-            self.lateralView.backgroundColor = UIColor.App.myTicketsLost
-        }else if betStatus == "Won"{
-            self.lateralView.backgroundColor = UIColor.App.myTicketsWon
-        }else if betStatus == "Cashout"{
-            self.lateralView.backgroundColor = UIColor.App.alertWarning
-            
-        }else{
+    func setupDetailsLabel(bet : String){
 
-            self.lateralView.backgroundColor = .clear
-        }
-        
-        self.betTypeLabel.text = betType + " - " + betStatus
+        self.betTypeLabel.text = bet
         self.betTypeLabel.font = AppFont.with(type: .bold, size: 14)
     }
+    
+    func setupLateralView(status : String){
+
+        if status == "OPEN"{
+            self.lateralView.backgroundColor = .clear
+        }else if status == "WON"{
+            self.lateralView.backgroundColor = UIColor.App.myTicketsWon
+        }else if status == "LOST"{
+            self.lateralView.backgroundColor = UIColor.App.myTicketsLost
+        }else{
+            self.lateralView.backgroundColor = UIColor.App.alertWarning
+        }
+        
+    }
+    
     
     func setupDateLabel(date : String ){
       
@@ -134,6 +153,56 @@ class BettingsTableViewCell : UITableViewCell {
         self.possibleWinningsValueLabel.font = AppFont.with(type: .semibold, size: 16)
         self.possibleWinningsValueLabel.text = possibleWinnings
         
+    }
+    
+    func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry) {
+
+        self.betHistoryEntry = betHistoryEntry
+       
+
+
+        //
+        if betHistoryEntry.type == "SINGLE" {
+   
+            self.setupDetailsLabel(bet: localized("single")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
+        }
+        else if betHistoryEntry.type == "MULTIPLE" {
+           
+            self.setupDetailsLabel(bet: localized("multiple")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
+        }
+        else if betHistoryEntry.type == "SYSTEM" {
+           
+            self.setupDetailsLabel(bet: localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
+        }
+            self.setupIdLabel(id: betHistoryEntry.betId)
+        
+        
+        if let date = betHistoryEntry.placedDate {
+            self.setupDateLabel(date: MyTicketTableViewCell.dateFormatter.string(from: date))
+        }
+
+        if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
+       
+            self.setupOddValuesLabel(oddValue: "\(Double(floor(oddValue * 100)/100))")
+        }
+
+        if let betAmount = betHistoryEntry.totalBetAmount,
+           let betAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betAmount)) {
+            self.setupBetAmountValuesLabel(betAmount: betAmountString)
+        }
+
+        //
+    
+
+        if let status = betHistoryEntry.status?.uppercased() {
+        
+             if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
+                let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                 setupPossibleWinningsValuesLabel(possibleWinnings: maxWinningsString, betStatus: status)
+             }
+            setupLateralView(status: status)
+           
+        }
     }
 }
 
@@ -294,12 +363,12 @@ extension BettingsTableViewCell {
             self.betTypeLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
             self.betTypeLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12),
             
-            self.betDateLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
-            self.betDateLabel.centerXAnchor.constraint(equalTo: self.betTypeLabel.centerXAnchor),
-            self.betDateLabel.topAnchor.constraint(equalTo: self.betTypeLabel.bottomAnchor, constant: 6),
+            self.betIdLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
+            self.betIdLabel.centerXAnchor.constraint(equalTo: self.betTypeLabel.centerXAnchor),
+            self.betIdLabel.topAnchor.constraint(equalTo: self.betTypeLabel.bottomAnchor, constant: 6),
        
-            self.betIdLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
-            self.betIdLabel.centerYAnchor.constraint(equalTo: self.betTypeLabel.centerYAnchor),
+            self.betDateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
+            self.betDateLabel.centerYAnchor.constraint(equalTo: self.betTypeLabel.centerYAnchor),
             
             self.valuesStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.valuesStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),

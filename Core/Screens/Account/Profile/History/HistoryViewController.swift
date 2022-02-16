@@ -55,8 +55,8 @@ class HistoryViewController: UIViewController{
         self.topSliderCollectionView.delegate = self
         self.topSliderCollectionView.dataSource = self
 
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
+        self.tableView.delegate = self.viewModel
+        self.tableView.dataSource = self.viewModel
         self.tableView.contentInset.bottom = 12
      
         
@@ -78,7 +78,10 @@ class HistoryViewController: UIViewController{
         
         optionSegmentControl.addTarget(self, action: #selector(self.didChangeSegmentValue(_:)), for: .valueChanged)
       
-        
+        if filterSelectedOption == 0 {
+            self.viewModel.myTicketsTypePublisher.send(.resolved)
+           
+        }
         self.tableView.reloadData()
     }
 
@@ -188,10 +191,13 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
         }else{
             if indexPath.row == 0 {
                 self.viewModel.bettingTypeSelected.send(.resolved)
+                self.viewModel.myTicketsTypePublisher.send(.resolved)
             }else if indexPath.row == 1 {
                 self.viewModel.bettingTypeSelected.send(.open)
+                self.viewModel.myTicketsTypePublisher.send(.opened)
             }else if indexPath.row == 2 {
                 self.viewModel.bettingTypeSelected.send(.won)
+                self.viewModel.myTicketsTypePublisher.send(.won)
             }else if indexPath.row == 3 {
                 self.viewModel.bettingTypeSelected.send(.cashout)
             }
@@ -216,92 +222,6 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
 
 
 
-//
-// MARK: - TableView Protocols
-//
-extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-       
-        //cell.configure(withViewModel: sportMatchLineViewModel)
-        
-        switch self.viewModel.listTypeSelected.value {
-        case .transactions:
-            
-            guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: TransactionsTableViewCell.identifier, for: indexPath) as? TransactionsTableViewCell
-            else {
-                fatalError("")
-            }
-            
-            cell.setTransactionIcon(transactionType: self.filterSelectedOption)
-            cell.setTransactionTypeLabel(transactionType: self.filterSelectedOption)
-            cell.setTransactionDateLabel(transactionDate: "18/11/1997")
-            cell.setTransactionValueLabel(transactionType: self.filterSelectedOption, transactionValue: "13,24 $")
-            cell.setTransactionIdLabel(transactionId: "ID: 123456789")
-            
-            return cell
-            
-        case .bettings:
-            
-            guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell
-            else {
-                fatalError("")
-            }
-            
-            cell.setupDetailsLabel(betType: "Multiple", betStatus: self.viewModel.bettingTypeSelected.value.identifier)
-            cell.setupDateLabel(date: "22:22:22 18/11/1997")
-            cell.setupIdLabel(id: "ID: 123456789")
-            cell.setupOddValuesLabel(oddValue: "12.45 $")
-            cell.setupBetAmountValuesLabel(betAmount: "2.00 $")
-            cell.setupPossibleWinningsValuesLabel(possibleWinnings: "25.00 $", betStatus: self.viewModel.bettingTypeSelected.value.identifier)
-            return cell
-       
-        }
-     
-    }
-    
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        switch self.viewModel.listTypeSelected.value {
-        case .transactions:
-            return 100
-        case .bettings:
-            return 130
-        }
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        
-        switch self.viewModel.listTypeSelected.value {
-        case .transactions:
-            return 100
-        case .bettings:
-            return 130
-        }
-    }
-
-    
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 15
-    }
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 20
-    }
-
-    
-}
 //
 // MARK: - Actions
 //
