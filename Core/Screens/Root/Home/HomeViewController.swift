@@ -126,6 +126,20 @@ class HomeViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
+        Env.betslipManager.bettingTicketsPublisher
+            .map(\.count)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipValue in
+                if betslipValue == 0 {
+                    self?.betslipCountLabel.isHidden = true
+                }
+                else {
+                    self?.betslipCountLabel.text = "\(betslipValue)"
+                    self?.betslipCountLabel.isHidden = false
+                }
+            })
+            .store(in: &cancellables)
+
     }
 
 }
@@ -223,6 +237,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 fatalError()
             }
             cell.configure(withViewModel: suggestedBetLineViewModel)
+            cell.betNowCallbackAction = { [weak self] in
+                self?.didTapBetslipButtonAction?()
+            }
             return cell
         case .sport:
             guard
@@ -329,24 +346,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard
-            let contentType = self.viewModel.contentType(forSection: section)
-        else {
-            return .leastNormalMagnitude
-        }
-
-        switch contentType {
-        case .userMessage:
-            return .leastNormalMagnitude
-        case .bannerLine:
-            return .leastNormalMagnitude
-        case .userFavorites:
-            return 40
-        case .suggestedBets:
-            return .leastNormalMagnitude
-        case .sport:
-            return 40
-        }
+        return self.viewModel.shouldShowTitle(forSection: section) ? 40 : CGFloat.leastNormalMagnitude
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
@@ -375,9 +375,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - Actions
 //
 extension HomeViewController {
+
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
+
 }
 
 //

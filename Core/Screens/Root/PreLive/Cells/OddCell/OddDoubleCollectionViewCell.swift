@@ -100,6 +100,9 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.participantsNameLabel.text = ""
         self.marketNameLabel.text = ""
 
+        self.leftOddValueLabel.text = "-"
+        self.rightOddValueLabel.text = "-"
+
         self.suspendedBaseView.isHidden = true
 
         self.leftUpChangeOddValueImage.alpha = 0.0

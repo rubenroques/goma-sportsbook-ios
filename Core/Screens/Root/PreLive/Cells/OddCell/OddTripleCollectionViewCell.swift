@@ -115,6 +115,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.participantsNameLabel.text = ""
         self.marketNameLabel.text = ""
 
+        self.leftOddValueLabel.text = "-"
+        self.middleOddValueLabel.text = "-"
+        self.rightOddValueLabel.text = "-"
+
         self.suspendedBaseView.isHidden = true
 
         self.leftUpChangeOddValueImage.alpha = 0.0

@@ -14,7 +14,9 @@ class SuggestedBetLineViewModel: NSObject {
     var suggestedBetCardSummaries: [SuggestedBetCardSummary] = []
     
     var suggestedBetViewModelCache: [Int: SuggestedBetViewModel] = [:]
-    
+
+    private var cancellables = Set<AnyCancellable>()
+
     init(suggestedBetCardSummaries: [SuggestedBetCardSummary]) {
         self.suggestedBetCardSummaries = suggestedBetCardSummaries
     }
@@ -36,7 +38,7 @@ class SuggestedBetLineViewModel: NSObject {
         }
         else {
             let suggestedBetViewModel = SuggestedBetViewModel(suggestedBetCardSummary: suggestedBetCardSummaries)
-            
+
             self.suggestedBetViewModelCache[betHash] = suggestedBetViewModel
             return suggestedBetViewModel
         }
@@ -75,6 +77,7 @@ class SuggestedBetViewModel: NSObject {
     var bettingOffers: [String: EveryMatrix.BettingOffer] = [:]
     var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
     var tournaments: [String: EveryMatrix.Tournament] = [:]
+    var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
     var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
     var mainMarketsOrder: OrderedSet<String> = []
     var bettingOutcomesForMarket: [String: Set<String>] = [:]
@@ -89,14 +92,31 @@ class SuggestedBetViewModel: NSObject {
 
         super.init()
 
-        self.subscribeSuggestedBet(suggestedBetCardSummary: self.suggestedBetCardSummary)
+        self.getLocations()
+            .sink { [weak self] locations in
+                for location in locations {
+                    self?.locations[location.id] = location
+                }
+                self?.getSuggestedBetsOdds()
+            }
+            .store(in: &cancellables)
+    }
+
+    deinit {
+        self.unregisterSuggestedBets()
+    }
+
+    func getSuggestedBetsOdds() {
 
         self.suggestedBetsRetrievedPublishers.append(suggestedBet1RetrievedPublisher)
         self.suggestedBetsRetrievedPublishers.append(suggestedBet2RetrievedPublisher)
         self.suggestedBetsRetrievedPublishers.append(suggestedBet3RetrievedPublisher)
         self.suggestedBetsRetrievedPublishers.append(suggestedBet4RetrievedPublisher)
 
-        Publishers.CombineLatest4(self.suggestedBet1RetrievedPublisher, self.suggestedBet2RetrievedPublisher, self.suggestedBet3RetrievedPublisher, self.suggestedBet4RetrievedPublisher)
+        Publishers.CombineLatest4(self.suggestedBet1RetrievedPublisher,
+                                  self.suggestedBet2RetrievedPublisher,
+                                  self.suggestedBet3RetrievedPublisher,
+                                  self.suggestedBet4RetrievedPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { bet1, bet2, bet3, bet4 in
                 if bet1 && bet2 && bet3 && bet4 {
@@ -105,14 +125,11 @@ class SuggestedBetViewModel: NSObject {
             })
             .store(in: &cancellables)
 
-    }
+        self.subscribeSuggestedBet(suggestedBetCardSummary: self.suggestedBetCardSummary)
 
-    deinit {
-        self.unregisterSuggestedBets()
     }
 
     func unregisterSuggestedBets() {
-
         for suggestedBetRegister in self.suggestedBetsRegisters {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
         }
@@ -163,10 +180,9 @@ class SuggestedBetViewModel: NSObject {
                                     self.addOutcomeToTicketArray(match: match, market: market, outcome: betOutcome)
                                 }
                             }
-
                         }
-
                     }
+
                     // Over/Under Market
                     else {
                         let gameTitle = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
@@ -223,6 +239,17 @@ class SuggestedBetViewModel: NSObject {
         self.isViewModelFinishedLoading.send(true)
     }
 
+    func getLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
+
+        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .map(\.records)
+            .compactMap({$0})
+            .replaceError(with: [EveryMatrix.Location]())
+            .eraseToAnyPublisher()
+
+    }
+
     func addOutcomeToTicketArray(match: Match, market: Market, outcome: Outcome) {
         let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
         let marketDescription = market.name
@@ -242,7 +269,7 @@ class SuggestedBetViewModel: NSObject {
 
     func subscribeSuggestedBet(suggestedBetCardSummary: SuggestedBetCardSummary) {
 
-        var betArray = suggestedBetCardSummary.bets
+        let betArray = suggestedBetCardSummary.bets
         
         self.totalGomaSuggestedBets = betArray.count
 
@@ -261,12 +288,12 @@ class SuggestedBetViewModel: NSObject {
                 }, receiveValue: { [weak self] state in
                     switch state {
                     case .connect(let publisherIdentifiable):
-                        print(publisherIdentifiable)
                         self?.suggestedBetsRegisters.append(publisherIdentifiable)
                     case .initialContent(let aggregator):
                         self?.setupSuggestedMatchesAggregatorProcessor(aggregator: aggregator, index: index)
                     case .updatedContent:
-                        print("MyBets suggestedBets updatedContent")
+                        // TODO: Update odds for suggested bets
+                        ()
                     case .disconnect:
                         ()
                     }
@@ -352,9 +379,8 @@ class SuggestedBetViewModel: NSObject {
                 }
             case .marketGroup:
                 ()
-
             case .location:
-               ()
+                ()
             case .cashout:
                ()
             case .event:
@@ -467,6 +493,7 @@ class SuggestedBetViewModel: NSObject {
     }
 
     func location(forId id: String) -> EveryMatrix.Location? {
-        return Env.everyMatrixStorage.locations[id]
+        return self.locations[id]
     }
+
 }
