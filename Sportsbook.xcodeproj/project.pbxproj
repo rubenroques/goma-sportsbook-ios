@@ -934,6 +934,10 @@
 		A9E7C6A327B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */; };
 		A9E7C6A527BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */; };
 		A9E7C6A627BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */; };
+		A9E7C6AC27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */; };
+		A9E7C6AD27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */; };
+		A9E7C6B027BD63EE00F784C9 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */; };
+		A9E7C6B127BD63EE00F784C9 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */; };
 		F47BB79F27B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
 		F47BB7A027B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
 		F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
@@ -1448,6 +1452,8 @@
 		A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregator.swift; sourceTree = "<group>"; };
 		A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregatorRepository.swift; sourceTree = "<group>"; };
 		A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorRepositoryType.swift; sourceTree = "<group>"; };
+		A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsViewController.swift; sourceTree = "<group>"; };
+		A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
 		F47BF2652763986300648440 /* GameSuggestedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameSuggestedView.xib; sourceTree = "<group>"; };
@@ -2256,6 +2262,7 @@
 		4589F3EA26BF017A005DF543 /* Account */ = {
 			isa = PBXGroup;
 			children = (
+				A9E7C6AA27BD573000F784C9 /* AppSettings */,
 				A90D8AF2277200A300DF88EB /* Withdraw */,
 				A9875792276CA4ED0099990D /* Deposit */,
 				4589F3F126BF017A005DF543 /* Login */,
@@ -2307,6 +2314,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A9E7C6AE27BD63A100F784C9 /* SettingsViews */,
 				F498349F27AC513A0091BEA1 /* DropDownSelectionView */,
 				A96B618227A03BEF005DC376 /* SearchViews */,
 				45A642D227985A15008EFD5B /* CardStatsViews */,
@@ -3200,6 +3208,22 @@
 			path = Aggregators;
 			sourceTree = "<group>";
 		};
+		A9E7C6AA27BD573000F784C9 /* AppSettings */ = {
+			isa = PBXGroup;
+			children = (
+				A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */,
+			);
+			path = AppSettings;
+			sourceTree = "<group>";
+		};
+		A9E7C6AE27BD63A100F784C9 /* SettingsViews */ = {
+			isa = PBXGroup;
+			children = (
+				A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */,
+			);
+			path = SettingsViews;
+			sourceTree = "<group>";
+		};
 		F498349F27AC513A0091BEA1 /* DropDownSelectionView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3836,6 +3860,7 @@
 				457EDABB2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				A9E7C69F27B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
+				A9E7C6AC27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */,
 				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				45726331272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */,
@@ -4007,6 +4032,7 @@
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				A90D8B01277228B600DF88EB /* WithdrawResponse.swift in Sources */,
 				45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
+				A9E7C6B027BD63EE00F784C9 /* SettingsRowView.swift in Sources */,
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
@@ -4188,6 +4214,7 @@
 				457EDABC2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				A9E7C6A027B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
+				A9E7C6AD27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */,
 				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
 				45726332272B13D7002F2959 /* LoadingMoreTableViewCell.swift in Sources */,
@@ -4359,6 +4386,7 @@
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				A90D8B02277228B600DF88EB /* WithdrawResponse.swift in Sources */,
 				45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
+				A9E7C6B127BD63EE00F784C9 /* SettingsRowView.swift in Sources */,
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,

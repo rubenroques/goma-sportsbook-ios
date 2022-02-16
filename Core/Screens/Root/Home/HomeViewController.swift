@@ -216,7 +216,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
-                let suggestedBetLineViewModel = self.viewModel.suggestedBetLineViewModel()
+                let suggestedBetLineViewModel = self.viewModel.getSuggestedBetLineViewModel()
             else {
                 fatalError()
             }
