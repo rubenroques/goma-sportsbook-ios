@@ -163,6 +163,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.contentView.backgroundColor = UIColor.clear
 
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
+        
+        self.suspendedBettingOfferLabel.textColor =  UIColor.App.textPrimary
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.separatorView.backgroundColor = UIColor.App.separatorLine
@@ -171,11 +173,11 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         
         self.outcomeNameLabel.textColor = UIColor.App.textPrimary
         self.marketNameLabel.textColor = UIColor.App.textPrimary
-        self.matchDetailLabel.textColor = UIColor.App.textDisablePrimary
+        self.matchDetailLabel.textColor = UIColor.App.textSecondary
         self.returnsValueLabel.textColor = UIColor.App.textDisablePrimary
         
-        self.oddBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        self.oddValueLabel.backgroundColor = UIColor.App.backgroundTertiary
+        self.oddBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.oddValueLabel.backgroundColor = UIColor.App.backgroundPrimary
         self.oddValueLabel.textColor = UIColor.App.textPrimary
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
@@ -297,7 +299,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .map({ bettingOffer, market in
-                    return (bettingOffer.isAvailable ?? true, market.isAvailable ?? true)
+                    return (bettingOffer.isOpen, market.isAvailable ?? true)
                 })
                 .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
                     self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable

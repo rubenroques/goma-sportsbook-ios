@@ -107,7 +107,7 @@ enum TSRouter {
     case coolOff24h
 
     // GOMA EveryMatrix
-    case disciplines(payload: [String: Any]?)
+    case disciplines(language: String)
     case locations(payload: [String: Any]?)
     case tournaments(payload: [String: Any]?)
     case popularTournaments(payload: [String: Any]?)
@@ -582,8 +582,9 @@ enum TSRouter {
         //
         // Others
         //
-        case .disciplines(payload: let payload):
-            return payload
+        case .disciplines(let language):
+            return ["lang": language]
+
         case .locations(payload: let payload):
             return payload
         case .tournaments(payload: let payload):

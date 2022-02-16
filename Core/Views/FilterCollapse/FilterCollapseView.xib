@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -35,8 +33,7 @@
                             <rect key="frame" x="8" y="0.0" width="378" height="41"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CNk-4G-pza">
-                                    <rect key="frame" x="356" y="9.5" width="14" height="22"/>
-                                    <color key="backgroundColor" name="mainBackgroundColor"/>
+                                    <rect key="frame" x="355" y="9.5" width="15" height="22"/>
                                     <state key="normal" image="arrow_down_icon"/>
                                     <connections>
                                         <action selector="toggleCollapseAction" destination="-1" eventType="touchUpInside" id="Pqi-En-UE2"/>
@@ -47,7 +44,6 @@
                                     <subviews>
                                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HRR-RW-DUq" customClass="CheckboxButton" customModule="ShowcaseBeta" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="0.0" width="25" height="25"/>
-                                            <color key="backgroundColor" name="secondaryBackgroundColor"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="HRR-RW-DUq" secondAttribute="height" multiplier="1:1" id="nG1-H3-Qhj"/>
                                                 <constraint firstAttribute="width" constant="25" id="tEg-wH-grZ"/>
@@ -56,7 +52,7 @@
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r3W-gu-0r1">
                                             <rect key="frame" x="33" y="0.0" width="41.5" height="25"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                            <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -67,7 +63,6 @@
                                     </constraints>
                                 </stackView>
                             </subviews>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="IoM-Ny-LaF" firstAttribute="leading" secondItem="ae0-DA-TH7" secondAttribute="leading" constant="8" id="75m-uf-apf"/>
                                 <constraint firstAttribute="trailing" secondItem="CNk-4G-pza" secondAttribute="trailing" constant="8" id="BzM-bz-hwY"/>
@@ -87,7 +82,6 @@
                             </variation>
                         </stackView>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="J38-OW-1uH" secondAttribute="trailing" constant="8" id="1t9-PM-Iog"/>
                         <constraint firstItem="J38-OW-1uH" firstAttribute="top" secondItem="G2E-Ay-KaC" secondAttribute="top" constant="41" id="BS7-mG-AvQ"/>
@@ -108,7 +102,6 @@
                     </variation>
                 </view>
             </subviews>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="G2E-Ay-KaC" secondAttribute="trailing" constant="10" id="BzH-fh-9MM"/>
                 <constraint firstItem="G2E-Ay-KaC" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="10" id="Oiv-WV-JQx"/>
@@ -120,15 +113,6 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_down_icon" width="14" height="10"/>
-        <namedColor name="mainBackgroundColor">
-            <color red="0.14117647058823529" green="0.15294117647058825" blue="0.19215686274509805" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="secondaryBackgroundColor">
-            <color red="0.18823529411764706" green="0.20784313725490197" blue="0.2627450980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="arrow_down_icon" width="15" height="9"/>
     </resources>
 </document>

@@ -4,9 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -31,7 +29,6 @@
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pFn-Si-HDt">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="44" id="uNc-ay-DqF"/>
                             </constraints>
@@ -46,13 +43,13 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BOi-NY-HUI">
                             <rect key="frame" x="16" y="304" width="382" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JUi-eN-QWb">
                             <rect key="frame" x="30" y="345" width="354" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
+                            <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0tJ-FU-5Vx" customClass="RoundButton" customModule="ShowcaseBeta" customModuleProvider="target">
@@ -60,15 +57,12 @@
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="g1K-uC-Anq"/>
                             </constraints>
-                            <state key="normal" title="Button">
-                                <color key="titleColor" name="mainTintColor"/>
-                            </state>
+                            <state key="normal" title="Button"/>
                             <connections>
                                 <action selector="openEmailAppAction" destination="-1" eventType="touchUpInside" id="Wbf-ff-gAO"/>
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstItem="pFn-Si-HDt" firstAttribute="top" secondItem="xWO-QJ-OKq" secondAttribute="top" id="J3g-lT-2Ys"/>
                         <constraint firstItem="4N7-Kr-AUD" firstAttribute="top" secondItem="pFn-Si-HDt" secondAttribute="bottom" constant="70" id="M0y-36-BPE"/>
@@ -88,7 +82,6 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="xWO-QJ-OKq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="ENX-w0-c0o"/>
                 <constraint firstItem="xWO-QJ-OKq" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="FcR-c0-I4J"/>
@@ -98,12 +91,4 @@
             <point key="canvasLocation" x="86.956521739130437" y="55.580357142857139"/>
         </view>
     </objects>
-    <resources>
-        <namedColor name="mainTintColor">
-            <color red="0.14901960784313725" green="0.41568627450980394" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-    </resources>
 </document>

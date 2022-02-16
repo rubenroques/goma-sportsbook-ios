@@ -25,7 +25,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     var betslipTickets: [BettingTicket] = []
 
     var betNowCallbackAction: (() -> Void)?
-    var viewModel: BetSuggestedCollectionViewCellViewModel?
+    
+    var viewModel: SuggestedBetViewModel?
     var cancellables = Set<AnyCancellable>()
     var needsReload: PassthroughSubject<Void, Never> = .init()
 
@@ -49,7 +50,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func setupWithViewModel(viewModel: BetSuggestedCollectionViewCellViewModel) {
+    func setupWithViewModel(viewModel: SuggestedBetViewModel) {
         self.viewModel = viewModel
 
         self.viewModel?.isViewModelFinishedLoading
@@ -72,12 +73,12 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.totalOddValueLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.totalOddLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary
-        self.totalOddLabel.textColor = UIColor.App.textSecond
+        self.totalOddLabel.textColor = UIColor.App.textSecondary
         
         self.numberOfSelectionsLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.numberOfSelectionsValueLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.numberOfSelectionsValueLabel.textColor = UIColor.App.textPrimary
-        self.numberOfSelectionsLabel.textColor = UIColor.App.textSecond
+        self.numberOfSelectionsLabel.textColor = UIColor.App.textSecondary
         
         self.betsStackView.removeAllArrangedSubviews()
         self.betsStackView.backgroundColor = UIColor.App.backgroundSecondary

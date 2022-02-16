@@ -317,10 +317,11 @@ class MatchDetailsAggregatorRepository: NSObject {
 
         for update in contentUpdates {
             switch update {
-            case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
+            case .bettingOfferUpdate(let id, let statusId, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
                     let bettingOffer = publisher.value
                     let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
+                                                                               statusId: statusId,
                                                                                isLive: isLive,
                                                                                isAvailable: isAvailable)
                     publisher.send(updatedBettingOffer)
@@ -376,6 +377,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                 if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
                     let bettingOffer = BettingOffer(id: rawBettingOffer.id,
                                                     value: rawBettingOffer.oddsValue ?? 0.0,
+                                                    statusId: rawBettingOffer.statusId ?? "1",
                                                     isLive: rawBettingOffer.isLive ?? false,
                                                     isAvailable: rawBettingOffer.isAvailable ?? true)
 
@@ -504,6 +506,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                 if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
                     let bettingOffer = BettingOffer(id: rawBettingOffer.id,
                                                     value: rawBettingOffer.oddsValue ?? 0.0,
+                                                    statusId: rawBettingOffer.statusId ?? "1",
                                                     isLive: rawBettingOffer.isLive ?? false,
                                                     isAvailable: rawBettingOffer.isAvailable ?? true)
 
@@ -743,10 +746,11 @@ class MatchDetailsAggregatorRepository: NSObject {
 
         for update in contentUpdates {
             switch update {
-            case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
+            case .bettingOfferUpdate(let id, let statusId, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
                     let bettingOffer = publisher.value
                     let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
+                                                                               statusId: statusId,
                                                                                isLive: isLive,
                                                                                isAvailable: isAvailable)
                     publisher.send(updatedBettingOffer)

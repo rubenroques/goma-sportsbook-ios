@@ -1,0 +1,330 @@
+//
+//  HomeStore.swift
+//  Sportsbook
+//
+//  Created by Ruben Roques on 11/02/2022.
+//
+
+import Foundation
+import Combine
+import OrderedCollections
+
+//protocol AggregatorStore {
+//    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>?
+//    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>?
+//}
+
+class HomeStore {
+
+    private var matches: [String: EveryMatrix.Match] = [:]
+
+    private var marketsForMatch: [String: Set<String>] = [:]   // [Match ID: [Markets IDs] ]
+    private var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]     // [Market: Content]
+    private var bettingOffers: [String: EveryMatrix.BettingOffer] = [:] // [OutcomeId: Content]
+
+    private var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
+    private var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
+
+    private var bettingOutcomesForMarket: [String: Set<String>] = [:]
+
+    private var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
+    private var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
+    private var mainMarketsOrder: OrderedSet<String> = []
+
+    private var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
+//    private var tournamentsForLocation: [String: [String] ] = [:]
+//    private var tournamentsForCategory: [String: [String] ] = [:]
+
+    private var tournaments: [String: EveryMatrix.Tournament] = [:]
+//    private var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
+
+    private var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
+    private var matchesInfoForMatch: [String: Set<String> ] = [:]
+    private var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
+
+    func storeContent(fromAggregator aggregator: EveryMatrix.Aggregator) {
+
+        for content in aggregator.content ?? [] {
+            switch content {
+            case .tournament(let tournamentContent):
+                tournaments[tournamentContent.id] = tournamentContent
+
+            case .match(let matchContent):
+                matches[matchContent.id] = matchContent
+
+            case .matchInfo(let matchInfo):
+                matchesInfo[matchInfo.id] = matchInfo
+
+                if let matchId = matchInfo.matchId {
+                    if var matchInfoForIterationMatch = matchesInfoForMatch[matchId] {
+                        matchInfoForIterationMatch.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = matchInfoForIterationMatch
+                    }
+                    else {
+                        var newSet = Set<String>.init()
+                        newSet.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = newSet
+                        var matchIdArray = matchesInfoForMatchPublisher.value
+                        matchIdArray.append(matchId)
+                        matchesInfoForMatchPublisher.send(matchIdArray)
+                    }
+                }
+
+            case .market(let marketContent):
+                marketsPublishers[marketContent.id] = CurrentValueSubject<EveryMatrix.Market, Never>.init(marketContent)
+
+                if let matchId = marketContent.eventId {
+                    if var marketsForIterationMatch = marketsForMatch[matchId] {
+                        marketsForIterationMatch.insert(marketContent.id)
+                        marketsForMatch[matchId] = marketsForIterationMatch
+                    }
+                    else {
+                        var newSet = Set<String>.init()
+                        newSet.insert(marketContent.id)
+                        marketsForMatch[matchId] = newSet
+                    }
+                }
+            case .betOutcome(let betOutcomeContent):
+                betOutcomes[betOutcomeContent.id] = betOutcomeContent
+
+            case .bettingOffer(let bettingOfferContent):
+                if let outcomeIdValue = bettingOfferContent.outcomeId {
+                    bettingOffers[outcomeIdValue] = bettingOfferContent
+                }
+                bettingOfferPublishers[bettingOfferContent.id] = CurrentValueSubject<EveryMatrix.BettingOffer, Never>.init(bettingOfferContent)
+
+            case .mainMarket(let market):
+                mainMarkets[market.id] = market
+                mainMarketsOrder.append(market.bettingTypeId ?? "")
+
+            case .marketOutcomeRelation(let marketOutcomeRelationContent):
+                marketOutcomeRelations[marketOutcomeRelationContent.id] = marketOutcomeRelationContent
+
+                if let marketId = marketOutcomeRelationContent.marketId, let outcomeId = marketOutcomeRelationContent.outcomeId {
+                    if var outcomesForMatch = bettingOutcomesForMarket[marketId] {
+                        outcomesForMatch.insert(outcomeId)
+                        bettingOutcomesForMarket[marketId] = outcomesForMatch
+                    }
+                    else {
+                        var newSet = Set<String>.init()
+                        newSet.insert(outcomeId)
+                        bettingOutcomesForMarket[marketId] = newSet
+                    }
+                }
+            case .location(let location):
+                self.locations[location.id] = location
+
+            default:
+                ()
+            }
+        }
+    }
+
+    func updateContent(fromAggregator aggregator: EveryMatrix.Aggregator) {
+        guard
+            let contentUpdates = aggregator.contentUpdates
+        else {
+            return
+        }
+
+        for update in contentUpdates {
+            switch update {
+            case .bettingOfferUpdate(let id, let statusId, let odd, let isLive, let isAvailable):
+                if let publisher = bettingOfferPublishers[id] {
+                    let bettingOffer = publisher.value
+                    let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
+                                                                               statusId: statusId,
+                                                                               isLive: isLive,
+                                                                               isAvailable: isAvailable)
+                    publisher.send(updatedBettingOffer)
+                }
+            case .marketUpdate(let id, let isAvailable, let isClosed):
+                if let marketPublisher = marketsPublishers[id] {
+                    let market = marketPublisher.value
+                    let updatedMarket = market.martketUpdated(withAvailability: isAvailable, isCLosed: isClosed)
+                    marketPublisher.send(updatedMarket)
+                }
+            case .matchInfo(let id, let paramFloat1, let paramFloat2, let paramEventPartName1):
+                for matchInfoForMatch in matchesInfoForMatch {
+                    for matchInfoId in matchInfoForMatch.value {
+                        if let matchInfo = matchesInfo[id] {
+                            matchesInfo[id] = matchInfo.matchInfoUpdated(paramFloat1: paramFloat1,
+                                                                         paramFloat2: paramFloat2,
+                                                                         paramEventPartName1: paramEventPartName1)
+                        }
+                    }
+                }
+            case .fullMatchInfoUpdate(let matchInfo):
+                matchesInfo[matchInfo.id] = matchInfo
+
+                if let matchId = matchInfo.matchId {
+                    if var matchInfoForIterationMatch = matchesInfoForMatch[matchId] {
+                        matchInfoForIterationMatch.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = matchInfoForIterationMatch
+                    }
+                    else {
+                        var newSet = Set<String>.init()
+                        newSet.insert(matchInfo.id)
+                        matchesInfoForMatch[matchId] = newSet
+                    }
+                    var matchIdArray = matchesInfoForMatchPublisher.value
+                    matchIdArray.append(matchId)
+                    matchesInfoForMatchPublisher.send(matchIdArray)
+                }
+            default:
+                ()
+            }
+        }
+    }
+
+    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
+        return bettingOfferPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
+        return marketsPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func location(forId id: String) -> EveryMatrix.Location? {
+        return self.locations[id]
+    }
+
+    func matchWithId(id: String) -> Match? {
+
+        if let rawMatch = matches[id] {
+
+            var matchMarkets: [Market] = []
+
+            let marketsIds = self.marketsForMatch[rawMatch.id] ?? []
+            let rawMarketsList = marketsIds.map { id in
+                return self.marketsPublishers[id]?.value
+            }
+            .compactMap({$0})
+
+            for rawMarket  in rawMarketsList {
+
+                let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
+
+                let rawOutcomesList = rawOutcomeIds.map { id in
+                    return self.betOutcomes[id]
+                }
+                .compactMap({$0})
+
+                var outcomes: [Outcome] = []
+                for rawOutcome in rawOutcomesList {
+
+                    if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
+                        let bettingOffer = BettingOffer(id: rawBettingOffer.id,
+                                                        value: rawBettingOffer.oddsValue ?? 0.0,
+                                                        statusId: rawBettingOffer.statusId ?? "1",
+                                                        isLive: rawBettingOffer.isLive ?? false,
+                                                        isAvailable: rawBettingOffer.isAvailable ?? true)
+
+                        let outcome = Outcome(id: rawOutcome.id,
+                                              codeName: rawOutcome.headerNameKey ?? "",
+                                              typeName: rawOutcome.headerName ?? "",
+                                              translatedName: rawOutcome.translatedName ?? "",
+                                              nameDigit1: rawOutcome.paramFloat1,
+                                              nameDigit2: rawOutcome.paramFloat2,
+                                              nameDigit3: rawOutcome.paramFloat3,
+                                              paramBoolean1: rawOutcome.paramBoolean1,
+                                              marketName: rawMarket.shortName ?? "",
+                                              marketId: rawMarket.id,
+                                              bettingOffer: bettingOffer)
+                        outcomes.append(outcome)
+                    }
+                }
+
+                let sortedOutcomes = outcomes.sorted { out1, out2 in
+                    let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
+                    let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
+                    return out1Value < out2Value
+                }
+
+                let market = Market(id: rawMarket.id,
+                                    typeId: rawMarket.bettingTypeId ?? "",
+                                    name: rawMarket.shortName ?? "",
+                                    nameDigit1: rawMarket.paramFloat1,
+                                    nameDigit2: rawMarket.paramFloat2,
+                                    nameDigit3: rawMarket.paramFloat3,
+                                    eventPartId: rawMarket.eventPartId,
+                                    bettingTypeId: rawMarket.bettingTypeId,
+                                    outcomes: sortedOutcomes)
+                matchMarkets.append(market)
+            }
+
+            let sortedMarkets = matchMarkets.sorted { market1, market2 in
+                let position1 = mainMarketsOrder.firstIndex(of: market1.typeId) ?? 10000
+                let position2 = mainMarketsOrder.firstIndex(of: market2.typeId) ?? 10000
+                return position1 < position2
+            }
+
+            var location: Location?
+            if let rawLocation = self.location(forId: rawMatch.venueId ?? "") {
+                location = Location(id: rawLocation.id, name: rawLocation.name ?? "", isoCode: rawLocation.code ?? "")
+            }
+
+            let match = Match(id: rawMatch.id,
+                              competitionId: rawMatch.parentId ?? "",
+                              competitionName: rawMatch.parentName ?? "",
+                              homeParticipant: Participant(id: rawMatch.homeParticipantId ?? "",
+                                                           name: rawMatch.homeParticipantName ?? ""),
+                              awayParticipant: Participant(id: rawMatch.awayParticipantId ?? "",
+                                                           name: rawMatch.awayParticipantName ?? ""),
+                              date: rawMatch.startDate ?? Date(timeIntervalSince1970: 0),
+                              sportType: rawMatch.sportId ?? "",
+                              venue: location,
+                              numberTotalOfMarkets: rawMatch.numberOfMarkets ?? 0,
+                              markets: sortedMarkets,
+                              rootPartId: rawMatch.rootPartId ?? "")
+
+            return match
+        }
+        return nil
+    }
+/*
+
+
+    func storeLocations(locations: [EveryMatrix.Location]) {
+        self.locations = [:]
+        for location in locations {
+            self.locations[location.id] = location
+        }
+    }
+
+    func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.tournaments = [:]
+        for tournament in tournaments {
+            self.tournaments[tournament.id] = tournament
+
+            if let venueId = tournament.venueId {
+                if var tournamentsForLocationWithId = self.tournamentsForLocation[venueId] {
+                    tournamentsForLocationWithId.append(tournament.id)
+                    self.tournamentsForLocation[venueId] = tournamentsForLocationWithId
+                }
+                else {
+                    self.tournamentsForLocation[venueId] = [tournament.id]
+                }
+            }
+
+            if let categoryId = tournament.categoryId {
+                if var tournamentsForCategoryWithId = self.tournamentsForCategory[categoryId] {
+                    tournamentsForCategoryWithId.append(tournament.id)
+                    self.tournamentsForCategory[categoryId] = tournamentsForCategoryWithId
+                }
+                else {
+                    self.tournamentsForCategory[categoryId] = [tournament.id]
+                }
+            }
+        }
+    }
+
+    func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
+        self.popularTournaments = [:]
+        for tournament in tournaments {
+            self.popularTournaments[tournament.id] = tournament
+        }
+    }
+*/
+
+}

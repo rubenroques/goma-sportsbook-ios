@@ -53,7 +53,7 @@ class HomeAwayCardStatsView: NibView {
         self.awayProgressBar.trackTintColor = UIColor.App.buttonBackgroundSecondary
         self.awayProgressBar.progressTintColor = UIColor(hex: 0x46C1A7)
 
-        self.captionLabel.textColor = UIColor.App.textSecond
+        self.captionLabel.textColor = UIColor.App.textSecondary
     }
 
     override var intrinsicContentSize: CGSize {

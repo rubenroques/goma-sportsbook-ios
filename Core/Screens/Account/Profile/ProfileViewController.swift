@@ -345,7 +345,7 @@ class ProfileViewController: UIViewController {
         profilePictureImageView.backgroundColor = .clear
 
         usernameLabel.textColor = UIColor.App.textPrimary
-        userIdLabel.textColor = UIColor.App.textSecond
+        userIdLabel.textColor = UIColor.App.textSecondary
         currentBalanceTitleLabel.textColor =  UIColor.App.textPrimary
         currentBalanceLabel.textColor =  UIColor.App.textPrimary
 

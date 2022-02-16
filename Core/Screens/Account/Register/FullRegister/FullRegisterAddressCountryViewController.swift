@@ -109,9 +109,10 @@ class FullRegisterAddressCountryViewController: UIViewController {
         securityAnswerHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         securityAnswerHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        continueButton.backgroundColor = UIColor.App.backgroundPrimary
+        continueButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        continueButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         continueButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
-        continueButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        continueButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         continueButton.cornerRadius = CornerRadius.button
     }
 
@@ -162,6 +163,13 @@ class FullRegisterAddressCountryViewController: UIViewController {
         self.navigationController?.pushViewController(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true)
         // self.present(FullRegisterDocumentsViewController(registerForm: registerForm), animated: true, completion: nil)
     }
+    
+    @IBAction private func closeAction() {
+       // self.dismiss(animated: true, completion: nil)
+        
+         self.navigationController?.popToRootViewController(animated: true)
+    }
+
 
     @objc func didTapBackground() {
         self.resignFirstResponder()

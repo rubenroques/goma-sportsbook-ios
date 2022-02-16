@@ -210,8 +210,10 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-    func getDisciplinesData(payload: [String: Any]?) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
-        return self.manager.getModel(router: .disciplines(payload: payload), decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
+
+
+    func getDisciplines(language: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .disciplines(language: language) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .eraseToAnyPublisher()
     }
 

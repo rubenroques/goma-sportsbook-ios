@@ -125,7 +125,8 @@ class FullRegisterDocumentsViewController: UIViewController {
         idHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .semibold, size: 16))
         idHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .semibold, size: 16))
 
-        submitButton.backgroundColor = UIColor.App.backgroundPrimary
+        submitButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        submitButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
         submitButton.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
         submitButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         submitButton.cornerRadius = CornerRadius.button
@@ -232,7 +233,9 @@ class FullRegisterDocumentsViewController: UIViewController {
     }
 
     @IBAction private func closeAction() {
-        self.dismiss(animated: true, completion: nil)
+       // self.dismiss(animated: true, completion: nil)
+        
+         self.navigationController?.popToRootViewController(animated: true)
     }
 
     @IBAction func submitAction() {
@@ -254,6 +257,9 @@ class FullRegisterDocumentsViewController: UIViewController {
                                            phonePrefix: profile!.phonePrefix, personalID: registerForm.personalID, securityQuestion: registerForm.securityQuestion,
                                            securityAnswer: registerForm.securityAnswer)
         self.fullRegisterProfile(form: form)
+      
+  
+
     }
 
     private func fullRegisterProfile(form: EveryMatrix.ProfileForm) {
@@ -274,6 +280,7 @@ class FullRegisterDocumentsViewController: UIViewController {
                 }
             } receiveValue: { _ in
                 self.showAlert(type: .success, text: localized("profile_updated_success"))
+                self.navigationController?.popToRootViewController(animated: true)
             }
             .store(in: &cancellables)
     }

@@ -143,16 +143,16 @@ class HeaderTextFieldView: NibView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.setup()
+        self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
 
-        self.setup()
+        self.setupWithTheme()
     }
 
-    func setup() {
+    func setupWithTheme() {
 
         if textField.text != "" {
             self.slideUp()
@@ -274,6 +274,7 @@ class HeaderTextFieldView: NibView {
         self.textField.placeholder = ""
         self.headerLabel.text = placeholder
     }
+  
 
     func setPlaceholderColor(_ color: UIColor) {
         self.headerLabel.textColor = color
@@ -387,7 +388,7 @@ class HeaderTextFieldView: NibView {
         selectionArray = array
 
         pickerView.delegate = self
-        pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
+        //pickerView.selectRow(defaultValue, inComponent: 0, animated: true)
 
         if !headerVisible {
             headerLabel.isHidden = true
@@ -398,6 +399,7 @@ class HeaderTextFieldView: NibView {
 
         textField.inputView = pickerView
         textField.text = selectionArray[defaultValue]
+        
 
         // Set arrow image
         let arrowDropdownImageView = UIImageView()

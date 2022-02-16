@@ -157,7 +157,10 @@ extension MultiSlider {
     private func addThumbView() {
         let i = thumbViews.count
         let thumbView = UIImageView(image: thumbImage ?? defaultThumbImage)
-        thumbView.addShadow()
+        thumbView.layer.shadowColor = UIColor.gray.cgColor
+        thumbView.layer.shadowOpacity = 0.25
+        thumbView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        thumbView.layer.shadowRadius = 0.5
         thumbViews.append(thumbView)
         slideView.addConstrainedSubview(thumbView, constrain: NSLayoutConstraint.Attribute.center(in: orientation).perpendicularCenter)
         positionThumbView(i)

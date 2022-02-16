@@ -55,7 +55,7 @@ class WithdrawViewController: UIViewController {
 
         self.withdrawHeaderTextFieldView.setPlaceholderText(localized("withdraw_value"))
         self.withdrawHeaderTextFieldView.setKeyboardType(.decimalPad)
-        self.withdrawHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.textSecond)
+        self.withdrawHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.textSecondary)
 
         tipLabel.text = localized("minimum_withdraw_value")
         tipLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -99,10 +99,10 @@ class WithdrawViewController: UIViewController {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.withdrawHeaderTextFieldView.backgroundColor = .clear
-        self.withdrawHeaderTextFieldView.setPlaceholderColor(UIColor.App.textSecond)
+        self.withdrawHeaderTextFieldView.setPlaceholderColor(UIColor.App.textSecondary)
         self.withdrawHeaderTextFieldView.setTextFieldColor(UIColor.App.textPrimary)
 
-        self.tipLabel.textColor = UIColor.App.textSecond
+        self.tipLabel.textColor = UIColor.App.textSecondary
 
         self.nextButton.setBackgroundColor(UIColor.App.highlightPrimary, for: .normal)
         self.nextButton.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
@@ -111,7 +111,7 @@ class WithdrawViewController: UIViewController {
         self.nextButton.layer.cornerRadius = CornerRadius.button
         self.nextButton.layer.masksToBounds = true
 
-        self.paymentsLabel.textColor = UIColor.App.textSecond
+        self.paymentsLabel.textColor = UIColor.App.textSecondary
 
         self.paymentsLogosStackView.backgroundColor = .clear
     }
@@ -147,7 +147,7 @@ class WithdrawViewController: UIViewController {
         responsibleGamingLabel.text = fullString
         responsibleGamingLabel.numberOfLines = 0
         responsibleGamingLabel.font = AppFont.with(type: .medium, size: 10)
-        responsibleGamingLabel.textColor =  UIColor.App.textSecond
+        responsibleGamingLabel.textColor =  UIColor.App.textSecondary
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 
@@ -189,7 +189,7 @@ class WithdrawViewController: UIViewController {
         faqLabel.text = fullString
         faqLabel.numberOfLines = 0
         faqLabel.font = AppFont.with(type: .medium, size: 10)
-        faqLabel.textColor =  UIColor.App.textSecond
+        faqLabel.textColor =  UIColor.App.textSecondary
 
         let underlineAttriString = NSMutableAttributedString(string: fullString)
 

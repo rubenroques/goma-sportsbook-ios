@@ -4,9 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -96,7 +94,7 @@
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="See all" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qcP-0s-wxX">
                                                 <rect key="frame" x="158.5" y="6.5" width="34.5" height="11"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
-                                                <color key="textColor" name="headingMainColor"/>
+                                                <color key="textColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow_down_icon" translatesAutoresizingMaskIntoConstraints="NO" id="sDY-fB-YPJ">
@@ -107,7 +105,7 @@
                                                 </constraints>
                                             </imageView>
                                         </subviews>
-                                        <color key="backgroundColor" name="secondaryBackgroundColor"/>
+                                        <color key="backgroundColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstItem="sDY-fB-YPJ" firstAttribute="centerY" secondItem="K63-br-tt4" secondAttribute="centerY" id="1hb-Ac-iJW"/>
                                             <constraint firstItem="qcP-0s-wxX" firstAttribute="centerY" secondItem="K63-br-tt4" secondAttribute="centerY" id="FfX-wS-40w"/>
@@ -119,7 +117,7 @@
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemGrayColor"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="JbR-Wf-e1d" secondAttribute="trailing" constant="12" id="1VX-mG-x2n"/>
                             <constraint firstItem="OlA-UR-Bn9" firstAttribute="leading" secondItem="iYJ-UL-FZt" secondAttribute="leading" constant="8" id="4hD-wn-4rq"/>
@@ -155,15 +153,6 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="arrow_down_icon" width="14" height="10"/>
-        <namedColor name="headingMainColor">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="secondaryBackgroundColor">
-            <color red="0.18823529411764706" green="0.20784313725490197" blue="0.2627450980392157" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemGrayColor">
-            <color red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
+        <image name="arrow_down_icon" width="15" height="9"/>
     </resources>
 </document>

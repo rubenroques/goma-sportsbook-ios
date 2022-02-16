@@ -4,9 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
-        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -28,7 +26,6 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ls8-kk-Kds">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="MkL-Yg-HqH">
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
@@ -39,7 +36,7 @@
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mzd-jV-Gwm">
                                     <rect key="frame" x="186.5" y="15" width="41.5" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                    <color key="textColor" name="headingMainColor"/>
+                                    <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KTL-Fy-J5h">
@@ -48,13 +45,12 @@
                                         <constraint firstAttribute="height" constant="30" id="68x-SK-Rrn"/>
                                         <constraint firstAttribute="width" constant="30" id="FLK-lk-R9d"/>
                                     </constraints>
-                                    <state key="normal" image="thin_close_cross_icon"/>
+                                    <state key="normal" image="arrow_close_icon"/>
                                     <connections>
                                         <action selector="didTapCloseButton" destination="-1" eventType="touchUpInside" id="5RH-Bj-Gnz"/>
                                     </connections>
                                 </button>
                             </subviews>
-                            <color key="backgroundColor" name="mainBackgroundColor"/>
                             <constraints>
                                 <constraint firstItem="KTL-Fy-J5h" firstAttribute="leading" secondItem="D7B-QQ-aP4" secondAttribute="leading" constant="8" id="727-Bc-FBy"/>
                                 <constraint firstAttribute="height" constant="50" id="F4a-wJ-oaC"/>
@@ -72,7 +68,6 @@
                             </wkWebViewConfiguration>
                         </wkWebView>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="D7B-QQ-aP4" secondAttribute="trailing" id="1Sf-9R-Fah"/>
                         <constraint firstAttribute="trailing" secondItem="82L-qe-8BB" secondAttribute="trailing" id="1m8-ha-CIP"/>
@@ -85,7 +80,6 @@
                 </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
             <constraints>
                 <constraint firstItem="MkL-Yg-HqH" firstAttribute="top" secondItem="Ls8-kk-Kds" secondAttribute="bottom" id="CPf-of-g37"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="MkL-Yg-HqH" secondAttribute="bottom" id="PYA-fR-tM9"/>
@@ -100,15 +94,6 @@
         </view>
     </objects>
     <resources>
-        <image name="thin_close_cross_icon" width="13" height="13"/>
-        <namedColor name="headingMainColor">
-            <color red="0.090196078431372548" green="0.10196078431372549" blue="0.12941176470588237" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <namedColor name="mainBackgroundColor">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
+        <image name="arrow_close_icon" width="19" height="20"/>
     </resources>
 </document>
