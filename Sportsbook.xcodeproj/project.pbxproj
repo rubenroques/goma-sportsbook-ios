@@ -2510,11 +2510,9 @@
 			isa = PBXGroup;
 			children = (
 				45C3E8C827B190A1007A1A0F /* HomeViewController.swift */,
-				45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */,
-				45C3E8D427B56DC0007A1A0F /* SportLineTableViewCell.swift */,
-				457BD60A27B6C00B00E5612E /* SportMatchLineViewModel.swift */,
-				4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */,
 				457BD60D27B6E45100E5612E /* HomeStore.swift */,
+				45D8C9D527BD483D00C131E6 /* ViewModels */,
+				45D8C9D627BD484F00C131E6 /* Views */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -2621,6 +2619,24 @@
 				A9627A14274564890001E1D5 /* ActivationAlertScrollableTableViewCell.xib */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		45D8C9D527BD483D00C131E6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */,
+				457BD60A27B6C00B00E5612E /* SportMatchLineViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		45D8C9D627BD484F00C131E6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				45C3E8D427B56DC0007A1A0F /* SportLineTableViewCell.swift */,
+				4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		45D9CBE3270F440C00B8C321 /* Goma */ = {

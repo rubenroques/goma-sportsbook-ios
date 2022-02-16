@@ -49,7 +49,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var awayCircleCaptionView: UIView!
     @IBOutlet private weak var awayNameCaptionLabel: UILabel!
 
-    
     var matchStatsViewModel: MatchStatsViewModel?
 
     var match: Match?
@@ -114,6 +113,10 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.participantsNameLabel.text = ""
         self.marketNameLabel.text = ""
+
+        self.leftOddValueLabel.text = "-"
+        self.middleOddValueLabel.text = "-"
+        self.rightOddValueLabel.text = "-"
 
         self.suspendedBaseView.isHidden = true
 

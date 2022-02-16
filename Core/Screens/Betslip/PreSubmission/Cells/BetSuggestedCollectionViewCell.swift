@@ -38,8 +38,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
 
         self.setupWithTheme()
 
-        self.betNowButton.layer.cornerRadius = 5.0
-        self.layer.cornerRadius = 5.0
+        self.betNowButton.layer.cornerRadius = 5
+        self.layer.cornerRadius = 9
     }
     override func prepareForReuse() {
         super.prepareForReuse()

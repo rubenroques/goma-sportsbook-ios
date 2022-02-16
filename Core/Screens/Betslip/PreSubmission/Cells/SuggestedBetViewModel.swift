@@ -14,7 +14,9 @@ class SuggestedBetLineViewModel: NSObject {
     var suggestedBetCardSummaries: [SuggestedBetCardSummary] = []
     
     var suggestedBetViewModelCache: [Int: SuggestedBetViewModel] = [:]
-    
+
+    private var cancellables = Set<AnyCancellable>()
+
     init(suggestedBetCardSummaries: [SuggestedBetCardSummary]) {
         self.suggestedBetCardSummaries = suggestedBetCardSummaries
     }
@@ -36,7 +38,7 @@ class SuggestedBetLineViewModel: NSObject {
         }
         else {
             let suggestedBetViewModel = SuggestedBetViewModel(suggestedBetCardSummary: suggestedBetCardSummaries)
-            
+
             self.suggestedBetViewModelCache[betHash] = suggestedBetViewModel
             return suggestedBetViewModel
         }
