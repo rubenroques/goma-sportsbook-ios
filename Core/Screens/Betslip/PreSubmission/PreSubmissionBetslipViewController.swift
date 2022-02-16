@@ -202,7 +202,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
-    var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
+    var gomaSuggestedBetsResponse: [[SuggestedBetSummary]] = []
 
     var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
     var suggestedCancellables = Set<AnyCancellable>()
@@ -211,7 +211,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.suggestedBetsActivityIndicator.isHidden = !isSuggestedBetsLoading
         }
     }
-    var cachedBetSuggestedCollectionViewCellViewModels: [Int: BetSuggestedCollectionViewCellViewModel] = [:]
+    var cachedSuggestedBetViewModels: [Int: SuggestedBetViewModel] = [:]
     var suggestedCellLoadedPublisher: AnyCancellable?
 
     var maxStakeMultiple: Double?
@@ -246,7 +246,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     deinit {
-        cachedBetSuggestedCollectionViewCellViewModels = [:]
+        cachedSuggestedBetViewModels = [:]
     }
 
     override func viewDidLoad() {
@@ -685,7 +685,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.isSuggestedBetsLoading = true
 
-        // TODO: O que é este register?!
+        // TODO: Code Review - O que é este register?!
         for suggestedBetRegister in self.suggestedBetsRegisters {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
         }
@@ -959,12 +959,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.gomaSuggestedBetsResponse = []
 
-        for cachedBetSuggestedViewModel in self.cachedBetSuggestedCollectionViewCellViewModels.values {
-
+        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
             cachedBetSuggestedViewModel.unregisterSuggestedBets()
         }
 
-        self.cachedBetSuggestedCollectionViewCellViewModels = [:]
+        self.cachedSuggestedBetViewModels = [:]
 
         self.betSuggestedCollectionView.reloadData()
     }
@@ -1403,12 +1402,13 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
             fatalError()
         }
 
-        if let cachedViewModel = self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row].value {
+        if let cachedViewModel = self.cachedSuggestedBetViewModels[indexPath.row].value {
             cell.setupWithViewModel(viewModel: cachedViewModel)
         }
         else {
-            let viewModel = BetSuggestedCollectionViewCellViewModel(gomaArray: gomaSuggestedBetsResponse[indexPath.row])
-            self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row] = viewModel
+            let betsArray = gomaSuggestedBetsResponse[indexPath.row]
+            let viewModel = SuggestedBetViewModel(suggestedBetCardSummary: SuggestedBetCardSummary(bets: betsArray))
+            self.cachedSuggestedBetViewModels[indexPath.row] = viewModel
             cell.setupWithViewModel(viewModel: viewModel)
         }
 

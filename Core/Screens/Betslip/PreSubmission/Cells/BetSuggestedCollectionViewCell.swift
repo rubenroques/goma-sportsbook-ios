@@ -25,7 +25,8 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     var betslipTickets: [BettingTicket] = []
 
     var betNowCallbackAction: (() -> Void)?
-    var viewModel: BetSuggestedCollectionViewCellViewModel?
+    
+    var viewModel: SuggestedBetViewModel?
     var cancellables = Set<AnyCancellable>()
     var needsReload: PassthroughSubject<Void, Never> = .init()
 
@@ -49,7 +50,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func setupWithViewModel(viewModel: BetSuggestedCollectionViewCellViewModel) {
+    func setupWithViewModel(viewModel: SuggestedBetViewModel) {
         self.viewModel = viewModel
 
         self.viewModel?.isViewModelFinishedLoading

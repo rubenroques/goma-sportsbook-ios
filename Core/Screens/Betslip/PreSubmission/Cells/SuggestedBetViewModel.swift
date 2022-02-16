@@ -1,5 +1,5 @@
 //
-//  BetSuggestedCollectionViewCellViewModel.swift
+//  SuggestedBetViewModel.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 17/01/2022.
@@ -9,10 +9,46 @@ import Foundation
 import Combine
 import OrderedCollections
 
-class BetSuggestedCollectionViewCellViewModel: NSObject {
+class SuggestedBetLineViewModel: NSObject {
+    
+    var suggestedBetCardSummaries: [SuggestedBetCardSummary] = []
+    
+    var suggestedBetViewModelCache: [Int: SuggestedBetViewModel] = [:]
+    
+    init(suggestedBetCardSummaries: [SuggestedBetCardSummary]) {
+        self.suggestedBetCardSummaries = suggestedBetCardSummaries
+    }
+    
+    func numberOfItems() -> Int {
+        return suggestedBetCardSummaries.count
+    }
+    
+    func viewModel(forIndex index: Int) -> SuggestedBetViewModel? {
+        guard
+            let suggestedBetCardSummaries = self.suggestedBetCardSummaries[safe: index]
+        else {
+            return nil
+        }
+        
+        let betHash = suggestedBetCardSummaries.hashValue
+        if let suggestedBetViewModel = suggestedBetViewModelCache[betHash] {
+            return suggestedBetViewModel
+        }
+        else {
+            let suggestedBetViewModel = SuggestedBetViewModel(suggestedBetCardSummary: suggestedBetCardSummaries)
+            
+            self.suggestedBetViewModelCache[betHash] = suggestedBetViewModel
+            return suggestedBetViewModel
+        }
+    }
+    
+}
+
+class SuggestedBetViewModel: NSObject {
 
     var betsArray: [Match] = []
-    var gomaArray: [GomaSuggestedBets]
+    var suggestedBetCardSummary: SuggestedBetCardSummary
+    
     var betslipTickets: [BettingTicket] = []
     var gameSuggestedViewsArray: [GameSuggestedView] = []
     var totalOdd: Double = 0
@@ -47,13 +83,13 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
     var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
     var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
 
-    init(gomaArray: [GomaSuggestedBets]) {
+    init(suggestedBetCardSummary: SuggestedBetCardSummary) {
 
-        self.gomaArray = gomaArray
+        self.suggestedBetCardSummary = suggestedBetCardSummary
 
         super.init()
 
-        self.subscribeSuggestedBet(betArray: self.gomaArray)
+        self.subscribeSuggestedBet(suggestedBetCardSummary: self.suggestedBetCardSummary)
 
         self.suggestedBetsRetrievedPublishers.append(suggestedBet1RetrievedPublisher)
         self.suggestedBetsRetrievedPublishers.append(suggestedBet2RetrievedPublisher)
@@ -88,7 +124,7 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
 
         var validMarkets = 0
 
-        for gomaBet in gomaArray {
+        for gomaBet in self.suggestedBetCardSummary.bets {
 
             for match in betsArray {
 
@@ -204,8 +240,10 @@ class BetSuggestedCollectionViewCellViewModel: NSObject {
         self.betslipTickets.append(bettingTicket)
     }
 
-    func subscribeSuggestedBet(betArray: [GomaSuggestedBets]) {
+    func subscribeSuggestedBet(suggestedBetCardSummary: SuggestedBetCardSummary) {
 
+        var betArray = suggestedBetCardSummary.bets
+        
         self.totalGomaSuggestedBets = betArray.count
 
         for (index, bet) in betArray.enumerated() {

@@ -58,6 +58,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(SportLineTableViewCell.self, forCellReuseIdentifier: SportLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
 
         self.loadingBaseView.isHidden = true
 
@@ -213,7 +214,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             return cell
         case .suggestedBets:
-            return UITableViewCell()
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
+                let suggestedBetLineViewModel = self.viewModel.suggestedBetLineViewModel()
+            else {
+                fatalError()
+            }
+            cell.configure(withViewModel: suggestedBetLineViewModel)
+            return cell
         case .sport:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SportLineTableViewCell.identifier) as? SportLineTableViewCell,

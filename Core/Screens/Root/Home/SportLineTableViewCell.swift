@@ -148,6 +148,7 @@ class SportLineTableViewCell: UITableViewCell {
 }
 
 extension SportLineTableViewCell: UIScrollViewDelegate {
+    
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //
 //        let screenWidth = UIScreen.main.bounds.size.width
@@ -183,6 +184,7 @@ extension SportLineTableViewCell: UIScrollViewDelegate {
 //            }
 //        }
 //    }
+    
 }
 
 extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
