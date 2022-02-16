@@ -337,13 +337,13 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
-                    let repository = self.viewModel as AggregatorStore
+                    let store = self.viewModel as AggregatorStore
 
-                    if repository.hasMatchesInfoForMatch(withId: match.id) {
-                        cell.setupWithMatch(match, liveMatch: true, repository: repository)
+                    if store.hasMatchesInfoForMatch(withId: match.id) {
+                        cell.setupWithMatch(match, liveMatch: true, store: store)
                     }
                     else {
-                        cell.setupWithMatch(match, repository: repository)
+                        cell.setupWithMatch(match, store: store)
                     }
 //                    if self.viewModel.matchesInfoForMatchPublisher.value.contains(match.id) {
 //                        cell.setupWithMatch(match, liveMatch: true)

@@ -52,13 +52,13 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
                 cell.matchStatsViewModel = matchStatsViewModel
             }
 
-            let repository = Env.everyMatrixStorage as AggregatorStore
+            let store = Env.everyMatrixStorage as AggregatorStore
 
-            if repository.hasMatchesInfoForMatch(withId: match.id) {
-                cell.setupWithMatch(match, liveMatch: true, repository: repository)
+            if store.hasMatchesInfoForMatch(withId: match.id) {
+                cell.setupWithMatch(match, liveMatch: true, store: store)
             }
             else {
-                cell.setupWithMatch(match, repository: repository)
+                cell.setupWithMatch(match, store: store)
             }
 
             cell.shouldShowCountryFlag(false)

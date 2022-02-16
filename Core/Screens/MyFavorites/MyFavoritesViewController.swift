@@ -91,7 +91,7 @@ class MyFavoritesViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.didSelectMatchAction = { match, image in
-            if let matchInfo = viewModel.repository.matchesInfoForMatch[match.id] {
+            if viewModel.store.hasMatchesInfoForMatch(withId: match.id) {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
                 matchDetailsViewController.viewModel.gameSnapshot = image
                 // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)

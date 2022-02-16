@@ -78,7 +78,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     var match: Match?
     var snapshot: UIImage?
-    var repository: AggregatorStore?
 
     var isFavorite: Bool = false {
         didSet {
@@ -300,7 +299,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             if let match = viewModel.match {
-                self.setupMarketsWithGenericRepository(match: match)
+                self.setupMarketsWithStore(match: match)
 
                 for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value {
                     if matchId == match.id {
@@ -311,41 +310,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func setupWithMatch(_ match: Match, withRepository repository: AggregatorStore?) {
-        self.match = match
-
-        let viewModel = MatchWidgetCellViewModel(match: match, store: repository)
-
-        self.eventNameLabel.text = "\(viewModel.competitionName)"
-        self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
-        self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
-        self.dateLabel.text = "\(viewModel.startDateString)"
-        self.timeLabel.text = "\(viewModel.startTimeString)"
-
-       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        if viewModel.countryISOCode != "" {
-            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        }
-        else {
-            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
-        }
-
-        self.repository = repository
-
-        self.setupMarketsWithGenericRepository(match: match)
-
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value {
-            if matchId == match.id {
-                self.isFavorite = true
-            }
-        }
-
-    }
-
-    func setupMarketsWithGenericRepository(match: Match) {
+    func setupMarketsWithStore(match: Match) {
         if let market = match.markets.first {
 
-            if let marketPublisher = repository?.marketPublisher(withId: market.id) {
+            if let marketPublisher = self.viewModel?.store?.marketPublisher(withId: market.id) {
                 self.marketSubscriber = marketPublisher
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] marketUpdate in
@@ -379,7 +347,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.leftOddButtonSubscriber = repository?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -422,7 +390,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.middleOddButtonSubscriber = repository?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -465,7 +433,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                     self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
                 }
 
-                self.rightOddButtonSubscriber = repository?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .map(\.oddsValue)
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
@@ -579,13 +547,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         if UserDefaults.standard.userSession != nil {
 
             if self.isFavorite {
-                if let matchId = self.match?.id {
+                if let matchId = self.viewModel?.match?.id {
                     Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: "event")
                 }
                 self.isFavorite = false
             }
             else {
-                if let matchId = self.match?.id {
+                if let matchId = self.viewModel?.match?.id {
                     Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: "event")
                 }
                 self.isFavorite = true

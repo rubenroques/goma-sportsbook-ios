@@ -35,19 +35,19 @@ class MyFavoritesViewModel: NSObject {
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     // Data Sources
-    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], repository: FavoritesAggregatorsRepository())
-    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], repository: FavoritesAggregatorsRepository())
+    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], store: FavoritesAggregatorsRepository())
+    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], store: FavoritesAggregatorsRepository())
 
-    var repository: FavoritesAggregatorsRepository = FavoritesAggregatorsRepository()
+    var store: FavoritesAggregatorsRepository = FavoritesAggregatorsRepository()
 
     override init() {
         super.init()
 
-        self.repository.getLocations()
+        self.store.getLocations()
 
-        self.myFavoriteMatchesDataSource.repository = self.repository
+        self.myFavoriteMatchesDataSource.store = self.store
 
-        self.myFavoriteCompetitionsDataSource.repository = self.repository
+        self.myFavoriteCompetitionsDataSource.store = self.store
 
         self.myFavoriteMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
@@ -135,7 +135,7 @@ class MyFavoritesViewModel: NSObject {
         self.favoriteMatchesPublisher = nil
 
         self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.FavoritesAggregator.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -163,20 +163,18 @@ class MyFavoritesViewModel: NSObject {
             })
     }
 
-    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
+    private func setupFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
-        //Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
-        self.repository.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
+        self.store.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
 
-        self.favoriteMatches = self.repository.matchesForListType(.favoriteMatchEvents)
+        self.favoriteMatches = self.store.matchesForListType(.favoriteMatchEvents)
 
         self.updateContentList()
     }
 
-    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
+    private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
-        //Env.favoritesStorage.processContentUpdateAggregator(aggregator)
-        self.repository.processContentUpdateAggregator(aggregator)
+        self.store.processContentUpdateAggregator(aggregator)
 
     }
 
@@ -194,7 +192,7 @@ class MyFavoritesViewModel: NSObject {
         self.favoriteCompetitionsMatchesPublisher = nil
 
         self.favoriteCompetitionsMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.FavoritesAggregator.self)
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { completion in
                 switch completion {
@@ -220,12 +218,11 @@ class MyFavoritesViewModel: NSObject {
             })
     }
 
-    private func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
+    private func setupFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
-        // Env.favoritesStorage.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
-        self.repository.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
+        self.store.processAggregator(aggregator, withListType: .favoriteCompetitionEvents, shouldClear: true)
 
-        var appMatches = self.repository.matchesForListType(.favoriteCompetitionEvents)
+        var appMatches = self.store.matchesForListType(.favoriteCompetitionEvents)
 
         // Sort competitions by sport type
         appMatches.sort {
@@ -246,10 +243,10 @@ class MyFavoritesViewModel: NSObject {
 
         var processedCompetitions: [Competition] = []
         for competitionId in competitionsMatches.keys {
-            if let tournament = self.repository.tournaments[competitionId] {
+            if let tournament = self.store.tournaments[competitionId] {
 
                 var location: Location?
-                if let rawLocation = self.repository.location(forId: tournament.venueId ?? "") {
+                if let rawLocation = self.store.location(forId: tournament.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                         name: rawLocation.name ?? "",
                                         isoCode: rawLocation.code ?? "")
@@ -269,10 +266,10 @@ class MyFavoritesViewModel: NSObject {
         self.updateContentList()
     }
 
-    private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.FavoritesAggregator) {
+    private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
         // Env.favoritesStorage.processContentUpdateAggregator(aggregator)
-        self.repository.processContentUpdateAggregator(aggregator)
+        self.store.processContentUpdateAggregator(aggregator)
 
     }
 

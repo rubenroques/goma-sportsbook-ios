@@ -49,11 +49,11 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var awayCircleCaptionView: UIView!
     @IBOutlet private weak var awayNameCaptionLabel: UILabel!
 
-    
     var matchStatsViewModel: MatchStatsViewModel?
 
     var match: Match?
     var market: Market?
+    var store: AggregatorStore?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -158,6 +158,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.matchStatsViewModel = nil
         self.match = nil
         self.market = nil
+        self.store = nil
 
         self.leftOutcome = nil
         self.middleOutcome = nil
@@ -245,7 +246,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
     }
 
-    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
+    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String, store: AggregatorStore) {
 
         if let matchStatsViewModel = matchStatsViewModel,
            market.eventPartId != nil,
@@ -264,6 +265,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
         self.match = match
         self.market = market
+        self.store = store
         
         self.marketNameLabel.text = market.name
 
@@ -272,7 +274,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
         //
-        if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+        if let marketPublisher = self.store?.marketPublisher(withId: market.id) {
             self.marketSubscriber = marketPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] marketUpdate in
@@ -299,8 +301,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            self.leftOddButtonSubscriber = Env.everyMatrixStorage
-                .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+            self.leftOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 //.map(\.oddsValue)
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
@@ -350,8 +351,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            self.middleOddButtonSubscriber = Env.everyMatrixStorage
-                .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+            self.middleOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .map(\.oddsValue)
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
@@ -384,8 +384,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            self.rightOddButtonSubscriber = Env.everyMatrixStorage
-                .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+            self.rightOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .map(\.oddsValue)
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
@@ -413,7 +412,7 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
 
     }
 
-    @IBAction func didTapMatchView(_ sender: Any) {
+    @IBAction private func didTapMatchView(_ sender: Any) {
         self.tappedMatchWidgetAction?()
     }
 
@@ -602,7 +601,6 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
     }
     
 }
-
 
 extension OddTripleCollectionViewCell {
     private func setupStatsLine(withjson json: JSON) {

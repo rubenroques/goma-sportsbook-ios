@@ -19,7 +19,7 @@ class MatchLineTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     private var match: Match?
-    private var repository: AggregatorStore?
+    private var store: AggregatorStore?
 
     private var shouldShowCountryFlag: Bool = true
     private var showingBackSliderView: Bool = false
@@ -123,11 +123,11 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
-    func setupWithMatch(_ match: Match, liveMatch: Bool = false, repository: AggregatorStore?) {
+    func setupWithMatch(_ match: Match, liveMatch: Bool = false, store: AggregatorStore?) {
         
         self.match = match
         self.liveMatch = liveMatch
-        self.repository = repository
+        self.store = store
 
         UIView.performWithoutAnimation {
             self.collectionView.reloadSections(IndexSet(integer: 0))
@@ -137,9 +137,9 @@ class MatchLineTableViewCell: UITableViewCell {
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
 
-        if let repository = self.repository, !repository.hasMatchesInfoForMatch(withId: match.id)  {
+        if let store = self.store, !store.hasMatchesInfoForMatch(withId: match.id)  {
 
-            self.matchInfoPublisher = repository.matchesInfoForMatchListPublisher()?
+            self.matchInfoPublisher = store.matchesInfoForMatchListPublisher()?
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] value in
                     if value.contains(match.id) {
@@ -257,8 +257,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     fatalError()
                 }
                 if let match = self.match {
-                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.repository)
-                    // cell.setupWithMatch(match, withRepository: self.repository)
+                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.store)
+                    
                     cell.configure(withViewModel: cellViewModel)
 
                     cell.tappedMatchWidgetAction = {
@@ -277,11 +277,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
 
                 if let match = self.match {
-                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.repository)
+                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.store)
 
                     cell.configure(withViewModel: cellViewModel)
-
-                    // cell.setupWithMatch(match, repository: self.repository)
 
                     cell.tappedMatchWidgetAction = {
                         self.tappedMatchLineAction?(cell.snapshot)
@@ -301,7 +299,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
+                        if let store = self.store {
+                            cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, store: store)
+                        }
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?(nil)
                         }
@@ -311,7 +311,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
                         cell.matchStatsViewModel = self.matchStatsViewModel
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso)
+                        if let store = self.store {
+                            cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, store: store)
+                        }
                         cell.tappedMatchWidgetAction = {
                             self.tappedMatchLineAction?(nil)
                         }

@@ -99,7 +99,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     
     var match: Match?
     var snapshot: UIImage?
-    var repository: AggregatorStore?
 
     var isFavorite: Bool = false {
         didSet {
@@ -300,7 +299,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             if let match = viewModel.match {
-                self.setupMarketsAndEventsInfoWithRepository(match: match)
+                self.setupMarketsAndEventsInfoWithStore(match: match)
 
                 for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
                     self.isFavorite = true
@@ -309,37 +308,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    func setupWithMatch(_ match: Match, repository: AggregatorStore?) {
-        self.match = match
-
-        let viewModel = MatchWidgetCellViewModel(match: match, store: repository)
-
-        self.eventNameLabel.text = "\(viewModel.competitionName)"
-        self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
-        self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
-
-        self.resultLabel.text = ""
-        self.matchTimeLabel.text = ""
-
-       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        if viewModel.countryISOCode != "" {
-            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        }
-        else {
-            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
-        }
-
-        self.repository = repository
-
-        self.setupMarketsAndEventsInfoWithRepository(match: match)
-
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
-            self.isFavorite = true
-        }
-
-    }
-
-    func setupMarketsAndEventsInfoWithRepository(match: Match) {
+    func setupMarketsAndEventsInfoWithStore(match: Match) {
         if let market = match.markets.first {
 
             if let marketPublisher = self.viewModel?.store?.marketPublisher(withId: market.id) {
@@ -707,13 +676,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         if UserDefaults.standard.userSession != nil {
 
             if self.isFavorite {
-                if let matchId = self.match?.id {
+                if let matchId = self.viewModel?.match?.id {
                     Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: "event")
                 }
                 self.isFavorite = false
             }
             else {
-                if let matchId = self.match?.id {
+                if let matchId = self.viewModel?.match?.id {
                     Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: "event")
                 }
                 self.isFavorite = true

@@ -46,9 +46,9 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
             cell.matchStatsViewModel = matchStatsViewModel
         }
-        let repository = Env.everyMatrixStorage as AggregatorStore
+        let store = Env.everyMatrixStorage as AggregatorStore
 
-        cell.setupWithMatch(match, repository: repository)
+        cell.setupWithMatch(match, store: store)
         cell.shouldShowCountryFlag(false)
         cell.tappedMatchLineAction = { image in
             self.didSelectMatchAction?(match, image)

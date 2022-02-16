@@ -910,8 +910,6 @@
 		A9E7C69927B582DC00F784C9 /* SportSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69727B582DC00F784C9 /* SportSectionHeaderView.swift */; };
 		A9E7C69B27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */; };
 		A9E7C69C27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */; };
-		A9E7C69F27B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */; };
-		A9E7C6A027B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */; };
 		A9E7C6A227B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */; };
 		A9E7C6A327B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */; };
 		A9E7C6A527BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */; };
@@ -1418,7 +1416,6 @@
 		A9E7C69327B5638500F784C9 /* MyFavoriteMatchesDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteMatchesDataSource.swift; sourceTree = "<group>"; };
 		A9E7C69727B582DC00F784C9 /* SportSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSectionHeaderView.swift; sourceTree = "<group>"; };
 		A9E7C69A27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyFavoriteCompetitionsDataSource.swift; sourceTree = "<group>"; };
-		A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregator.swift; sourceTree = "<group>"; };
 		A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesAggregatorRepository.swift; sourceTree = "<group>"; };
 		A9E7C6A427BA779200F784C9 /* AggregatorRepositoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorRepositoryType.swift; sourceTree = "<group>"; };
 		A9E7C6A727BBC41800F784C9 /* GenericAggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericAggregatorRepository.swift; sourceTree = "<group>"; };
@@ -3142,7 +3139,6 @@
 		A9E7C69D27B6AF5C00F784C9 /* Aggregators */ = {
 			isa = PBXGroup;
 			children = (
-				A9E7C69E27B6AF7600F784C9 /* FavoritesAggregator.swift */,
 				A9E7C6A127B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift */,
 			);
 			path = Aggregators;
@@ -3769,7 +3765,6 @@
 				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBB26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				457EDABB2791ADEE00DDCD83 /* Sport.swift in Sources */,
-				A9E7C69F27B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
@@ -4114,7 +4109,6 @@
 				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				455A0CBC26BD9D4F00EC572D /* RootViewController.swift in Sources */,
 				457EDABC2791ADEE00DDCD83 /* Sport.swift in Sources */,
-				A9E7C6A027B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
 				456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */,
