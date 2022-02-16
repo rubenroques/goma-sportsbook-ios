@@ -352,7 +352,6 @@ class Router {
             case .tournament:
                 ()
             case .match(let matchContent):
-
                 match = matchContent
 
             case .matchInfo:

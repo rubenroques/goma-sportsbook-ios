@@ -725,8 +725,8 @@
 		A96B619A27A0508E005DC376 /* RecentSearchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = A96B619627A0508E005DC376 /* RecentSearchTableViewCell.xib */; };
 		A96B619C27A9A3D6005DC376 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
 		A96B619D27A9A3D6005DC376 /* OddViewPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */; };
-		A96B619F27AC0642005DC376 /* UrlSchemaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619E27AC0642005DC376 /* UrlSchemaManager.swift */; };
-		A96B61A027AC0642005DC376 /* UrlSchemaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619E27AC0642005DC376 /* UrlSchemaManager.swift */; };
+		A96B619F27AC0642005DC376 /* URLSchemaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619E27AC0642005DC376 /* URLSchemaManager.swift */; };
+		A96B61A027AC0642005DC376 /* URLSchemaManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B619E27AC0642005DC376 /* URLSchemaManager.swift */; };
 		A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A96B70B82739891200FEF07D /* FirebaseMessaging */; };
 		A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
 		A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
@@ -1346,7 +1346,7 @@
 		A96B619527A0508E005DC376 /* RecentSearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchTableViewCell.swift; sourceTree = "<group>"; };
 		A96B619627A0508E005DC376 /* RecentSearchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentSearchTableViewCell.xib; sourceTree = "<group>"; };
 		A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddViewPosition.swift; sourceTree = "<group>"; };
-		A96B619E27AC0642005DC376 /* UrlSchemaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrlSchemaManager.swift; sourceTree = "<group>"; };
+		A96B619E27AC0642005DC376 /* URLSchemaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchemaManager.swift; sourceTree = "<group>"; };
 		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
 		A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchOddsContent.swift; sourceTree = "<group>"; };
 		A979CA552762247900230E93 /* SuggestedBetSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetSummary.swift; sourceTree = "<group>"; };
@@ -1799,8 +1799,6 @@
 			children = (
 				F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */,
 				F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */,
-				F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */,
-				F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */,
 				454E0AC1273305E200794E0C /* SingleBettingTicketTableViewCell.swift */,
 				454E0AC2273305E200794E0C /* SingleBettingTicketTableViewCell.xib */,
 				454E0ACA2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift */,
@@ -1808,6 +1806,8 @@
 				F47BF2622763953900648440 /* GameSuggestedView.swift */,
 				F47BF2652763986300648440 /* GameSuggestedView.xib */,
 				A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */,
+				F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */,
+				F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2019,7 +2019,7 @@
 				A99DFBEC27342AEB00002CDB /* FavoritesManager.swift */,
 				456B341226C13AE1009D7D27 /* Networking */,
 				45D9CBE4270F444000B8C321 /* Helpers */,
-				A96B619E27AC0642005DC376 /* UrlSchemaManager.swift */,
+				A96B619E27AC0642005DC376 /* URLSchemaManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -3794,7 +3794,7 @@
 				45109A662799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */,
 				454E0AD42735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
-				A96B619F27AC0642005DC376 /* UrlSchemaManager.swift in Sources */,
+				A96B619F27AC0642005DC376 /* URLSchemaManager.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0726F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
 				A99A972226FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,
@@ -4146,7 +4146,7 @@
 				45109A672799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */,
 				454E0AD52735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
-				A96B61A027AC0642005DC376 /* UrlSchemaManager.swift in Sources */,
+				A96B61A027AC0642005DC376 /* URLSchemaManager.swift in Sources */,
 				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0826F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
 				A99A972326FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,

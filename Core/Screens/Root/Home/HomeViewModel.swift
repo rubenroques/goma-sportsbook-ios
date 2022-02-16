@@ -83,7 +83,7 @@ class HomeViewModel {
     
     //
     private var suggestedBets: [SuggestedBetCardSummary] = []
-    private var suggestedBetLineViewModel: SuggestedBetLineViewModel? {
+    private var cachedSuggestedBetLineViewModel: SuggestedBetLineViewModel? {
         didSet {
             self.refreshPublisher.send()
         }
@@ -357,6 +357,22 @@ extension HomeViewModel {
         }
     }
 
+    func shouldShowTitle(forSection section: Int) -> Bool {
+        switch section {
+        case 0: return false
+        case 1: return false
+        case 2: return self.favoriteMatches.isNotEmpty
+        case 3: return self.suggestedBets.isNotEmpty
+        default:
+            if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+    }
+
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
         switch section {
         case 0: return HomeViewModel.Content.userMessage
@@ -415,12 +431,12 @@ extension HomeViewModel {
             return nil
         }
         
-        if let suggestedBetLineViewModel = self.suggestedBetLineViewModel {
+        if let suggestedBetLineViewModel = self.cachedSuggestedBetLineViewModel {
             return suggestedBetLineViewModel
         }
         else {
-            self.suggestedBetLineViewModel = SuggestedBetLineViewModel(suggestedBetCardSummaries: self.suggestedBets)
-            return self.suggestedBetLineViewModel
+            self.cachedSuggestedBetLineViewModel = SuggestedBetLineViewModel(suggestedBetCardSummaries: self.suggestedBets)
+            return self.cachedSuggestedBetLineViewModel
         }
     }
     
