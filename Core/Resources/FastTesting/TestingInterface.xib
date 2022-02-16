@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
-        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19529"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -12,76 +11,31 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <rect key="frame" x="0.0" y="0.0" width="518" height="191"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="t1x-sB-X9q">
-                    <rect key="frame" x="0.0" y="377.5" width="414" height="328"/>
-                    <subviews>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="gTY-lz-hAc">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="160"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="160" id="AXo-uK-5Om"/>
-                            </constraints>
-                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="KSD-uX-IX6">
-                                <size key="itemSize" width="128" height="128"/>
-                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </collectionViewFlowLayout>
-                        </collectionView>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="mNz-oi-hgF">
-                            <rect key="frame" x="0.0" y="168" width="414" height="160"/>
-                            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="160" id="6f5-ep-eZm"/>
-                            </constraints>
-                            <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Opo-SR-eHj">
-                                <size key="itemSize" width="128" height="128"/>
-                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                            </collectionViewFlowLayout>
-                        </collectionView>
-                    </subviews>
-                </stackView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uss-bb-7uM">
-                    <rect key="frame" x="20" y="341" width="376" height="20.5"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <nil key="textColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jsD-AP-Q0f">
-                    <rect key="frame" x="16" y="721.5" width="382" height="33"/>
-                    <color key="backgroundColor" systemColor="systemTealColor"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="33" id="bg7-nM-Bgi"/>
-                    </constraints>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NnM-iW-on8">
+                    <rect key="frame" x="12" y="12" width="494" height="167"/>
+                    <color key="backgroundColor" systemColor="systemRedColor"/>
                 </view>
             </subviews>
-            <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
-            <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+            <color key="backgroundColor" systemColor="systemGreenColor"/>
             <constraints>
-                <constraint firstItem="jsD-AP-Q0f" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="1qF-du-rWz"/>
-                <constraint firstItem="Uss-bb-7uM" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="2v4-jC-gs4"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Uss-bb-7uM" secondAttribute="trailing" constant="18" id="c6K-eB-MQQ"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="jsD-AP-Q0f" secondAttribute="trailing" constant="16" id="cXb-ya-Iqt"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="t1x-sB-X9q" secondAttribute="trailing" id="hOH-sD-9i7"/>
-                <constraint firstItem="t1x-sB-X9q" firstAttribute="top" secondItem="Uss-bb-7uM" secondAttribute="bottom" constant="16" id="nkz-RL-1Sn"/>
-                <constraint firstItem="jsD-AP-Q0f" firstAttribute="top" secondItem="t1x-sB-X9q" secondAttribute="bottom" constant="16" id="u6g-nY-69C"/>
-                <constraint firstItem="Uss-bb-7uM" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="297" id="v82-SD-8sI"/>
-                <constraint firstItem="t1x-sB-X9q" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" id="vDO-jP-3Bc"/>
+                <constraint firstItem="NnM-iW-on8" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" constant="12" id="JsJ-qe-KE7"/>
+                <constraint firstAttribute="trailing" secondItem="NnM-iW-on8" secondAttribute="trailing" constant="12" id="KP0-Ul-ghT"/>
+                <constraint firstItem="NnM-iW-on8" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="12" id="W7g-11-E4k"/>
+                <constraint firstAttribute="bottom" secondItem="NnM-iW-on8" secondAttribute="bottom" constant="12" id="zhr-Db-uCm"/>
             </constraints>
-            <point key="canvasLocation" x="137.68115942028987" y="152.67857142857142"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="158" y="188"/>
         </view>
     </objects>
     <resources>
-        <systemColor name="systemBackgroundColor">
-            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        <systemColor name="systemGreenColor">
+            <color red="0.20392156862745098" green="0.7803921568627451" blue="0.34901960784313724" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemTealColor">
-            <color red="0.18823529411764706" green="0.69019607843137254" blue="0.7803921568627451" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

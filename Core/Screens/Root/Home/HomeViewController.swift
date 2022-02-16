@@ -58,6 +58,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(SportLineTableViewCell.self, forCellReuseIdentifier: SportLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
 
         self.loadingBaseView.isHidden = true
 
@@ -124,6 +125,20 @@ class HomeViewController: UIViewController {
                                             animated: true)
             })
             .store(in: &self.cancellables)
+
+        Env.betslipManager.bettingTicketsPublisher
+            .map(\.count)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipValue in
+                if betslipValue == 0 {
+                    self?.betslipCountLabel.isHidden = true
+                }
+                else {
+                    self?.betslipCountLabel.text = "\(betslipValue)"
+                    self?.betslipCountLabel.isHidden = false
+                }
+            })
+            .store(in: &cancellables)
 
     }
 
@@ -213,7 +228,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             return cell
         case .suggestedBets:
-            return UITableViewCell()
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
+                let suggestedBetLineViewModel = self.viewModel.suggestedBetLineViewModel()
+            else {
+                fatalError()
+            }
+            cell.configure(withViewModel: suggestedBetLineViewModel)
+            cell.betNowCallbackAction = { [weak self] in
+                self?.didTapBetslipButtonAction?()
+            }
+            return cell
         case .sport:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SportLineTableViewCell.identifier) as? SportLineTableViewCell,
@@ -319,24 +344,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        guard
-            let contentType = self.viewModel.contentType(forSection: section)
-        else {
-            return .leastNormalMagnitude
-        }
-
-        switch contentType {
-        case .userMessage:
-            return .leastNormalMagnitude
-        case .bannerLine:
-            return .leastNormalMagnitude
-        case .userFavorites:
-            return 40
-        case .suggestedBets:
-            return .leastNormalMagnitude
-        case .sport:
-            return 40
-        }
+        return self.viewModel.shouldShowTitle(forSection: section) ? 40 : CGFloat.leastNormalMagnitude
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
@@ -365,9 +373,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - Actions
 //
 extension HomeViewController {
+
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
     }
+
 }
 
 //

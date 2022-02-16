@@ -25,34 +25,43 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     var betslipTickets: [BettingTicket] = []
 
     var betNowCallbackAction: (() -> Void)?
-    var viewModel: BetSuggestedCollectionViewCellViewModel?
+    
+    var viewModel: SuggestedBetViewModel?
     var cancellables = Set<AnyCancellable>()
     var needsReload: PassthroughSubject<Void, Never> = .init()
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        setupWithTheme()
-        betNowButton.layer.cornerRadius = 5.0
-        layer.cornerRadius = 5.0
+
+        self.totalOddValueLabel.text = ""
+        self.numberOfSelectionsValueLabel.text = ""
+
+        self.setupWithTheme()
+
+        self.betNowButton.layer.cornerRadius = 5
+        self.layer.cornerRadius = 9
     }
     override func prepareForReuse() {
         super.prepareForReuse()
-        
+
+        self.betsStackView.removeAllArrangedSubviews()
+        self.totalOddValueLabel.text = ""
+        self.numberOfSelectionsValueLabel.text = ""
+
         self.viewModel = nil
-        
     }
 
     func setReloadedState(reloaded: Bool) {
-
         if let viewModel = self.viewModel {
             viewModel.reloadedState = reloaded
         }
     }
 
-    func setupWithViewModel(viewModel: BetSuggestedCollectionViewCellViewModel) {
+    func setupWithViewModel(viewModel: SuggestedBetViewModel) {
         self.viewModel = viewModel
 
         self.viewModel?.isViewModelFinishedLoading
+            .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] value in
                 if value {
                     self?.setupStackBetView()
@@ -62,6 +71,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     }
     
     func setupWithTheme() {
+
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
@@ -101,9 +111,6 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
             }
 
         }
-
-
-
     }
     
     func setupInfoBetValues(totalOdd: Double, numberOfSelection: Int) {

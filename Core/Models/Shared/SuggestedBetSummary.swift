@@ -1,5 +1,5 @@
 //
-//  GomaSuggestedBets.swift
+//  SuggestedBetSummary.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 09/12/2021.
@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct GomaSuggestedBets: Codable {
+struct SuggestedBetCardSummary: Codable, Hashable {
+    var bets: [SuggestedBetSummary]
+}
+
+struct SuggestedBetSummary: Codable, Hashable {
 
     let matchId: Int
     let matchName: String

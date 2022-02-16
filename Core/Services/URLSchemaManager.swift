@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class UrlSchemaManager {
+class URLSchemaManager {
 
     var redirectPublisher: CurrentValueSubject<[String: String], Never>
 

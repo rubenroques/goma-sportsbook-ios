@@ -34,8 +34,8 @@ class HomeViewModel {
 
     private let itemsPreSports = 4
     private var userMessages: [String] = []
-    private var suggestedBets: [String] = []
-
+    
+    //
     private var favoriteMatchesIds: [String] = [] {
         didSet {
             var matches: [Match] = []
@@ -53,6 +53,7 @@ class HomeViewModel {
         }
     }
 
+    //
     private var banners: [BannerInfo] = [] {
         didSet {
             var bannerCellViewModels: [BannerCellViewModel] = []
@@ -73,17 +74,25 @@ class HomeViewModel {
             self.bannersLineViewModel = BannerLineCellViewModel(banners: bannerCellViewModels)
         }
     }
-
-    private var sportsToFetch: [Sport] = []
-    private var sportsLineViewModelsCache: [String: SportMatchLineViewModel] = [:]
-
     private var bannersLineViewModelCache: [String: BannerCellViewModel] = [:]
     private var bannersLineViewModel: BannerLineCellViewModel? {
         didSet {
             self.refreshPublisher.send()
         }
     }
+    
+    //
+    private var suggestedBets: [SuggestedBetCardSummary] = []
+    private var cachedSuggestedBetLineViewModel: SuggestedBetLineViewModel? {
+        didSet {
+            self.refreshPublisher.send()
+        }
+    }
 
+    //
+    private var sportsToFetch: [Sport] = []
+    private var sportsLineViewModelsCache: [String: SportMatchLineViewModel] = [:]
+    
     //
     // EM Registers
     private var bannersInfoRegister: EndpointPublisherIdentifiable?
@@ -100,16 +109,14 @@ class HomeViewModel {
 
     // MARK: - Life Cycle
     init() {
-        self.requestSports()
-        self.fetchBanners()
-        self.fetchFavoriteMatches()
+        self.refresh()
     }
 
     func refresh() {
-
         self.requestSports()
         self.fetchBanners()
         self.fetchFavoriteMatches()
+        self.fetchSuggestedBets()
     }
 
     func requestSports() {
@@ -173,6 +180,7 @@ class HomeViewModel {
             })
     }
 
+    // Favorites
     private func fetchFavoriteMatches() {
 
         if let favoriteMatchesRegister = favoriteMatchesRegister {
@@ -229,11 +237,31 @@ class HomeViewModel {
                 ()
             }
         }
-        self.favoriteMatchesIds = matchesIds
+        self.favoriteMatchesIds = Array(matchesIds.prefix(2))
     }
 
     private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         self.store.updateContent(fromAggregator: aggregator)
+    }
+    
+    // Suggested Bets
+    func fetchSuggestedBets() {
+        
+        Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
+            .compactMap({$0})
+            .map({ betGroupsArray in
+                var cardsSummaryArray: [SuggestedBetCardSummary] = []
+                for betGroup in betGroupsArray {
+                    cardsSummaryArray.append(SuggestedBetCardSummary.init(bets: betGroup))
+                }
+                return cardsSummaryArray
+            })
+            .sink(receiveCompletion: { _ in
+            },
+            receiveValue: { [weak self] suggestedBets in
+                self?.suggestedBets = suggestedBets
+            })
+            .store(in: &cancellables)
     }
 }
 
@@ -260,7 +288,7 @@ extension HomeViewModel {
         case 2:
             return self.favoriteMatches.isEmpty ? 0 : 1
         case 3:
-            return  self.suggestedBets.isEmpty ? 0 : 1
+            return self.suggestedBets.isEmpty ? 0 : 1
         default:
             return 1
         }
@@ -303,7 +331,7 @@ extension HomeViewModel {
                 return 0
             }
         case 2: return self.favoriteMatches.count
-        case 3: return self.suggestedBets.count
+        case 3: return self.suggestedBets.isEmpty ? 0 : 1
         default:
             if self.sportsToFetch[safe: section-itemsPreSports] != nil {
                 return 3
@@ -329,12 +357,28 @@ extension HomeViewModel {
         }
     }
 
+    func shouldShowTitle(forSection section: Int) -> Bool {
+        switch section {
+        case 0: return false
+        case 1: return false
+        case 2: return self.favoriteMatches.isNotEmpty
+        case 3: return self.suggestedBets.isNotEmpty
+        default:
+            if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+    }
+
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
         switch section {
         case 0: return HomeViewModel.Content.userMessage
         case 1: return HomeViewModel.Content.bannerLine
         case 2: return HomeViewModel.Content.userFavorites
-        case 3: return HomeViewModel.Content.userFavorites
+        case 3: return HomeViewModel.Content.suggestedBets
         default:
             if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
                 return HomeViewModel.Content.sport(sportForIndex)
@@ -376,9 +420,24 @@ extension HomeViewModel {
         }
         return nil
     }
-
+    
     func favoriteMatch(forIndex index: Int) -> Match? {
         return self.favoriteMatches[safe: index]
     }
 
+    func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
+        
+        if self.suggestedBets.isEmpty {
+            return nil
+        }
+        
+        if let suggestedBetLineViewModel = self.cachedSuggestedBetLineViewModel {
+            return suggestedBetLineViewModel
+        }
+        else {
+            self.cachedSuggestedBetLineViewModel = SuggestedBetLineViewModel(suggestedBetCardSummaries: self.suggestedBets)
+            return self.cachedSuggestedBetLineViewModel
+        }
+    }
+    
 }

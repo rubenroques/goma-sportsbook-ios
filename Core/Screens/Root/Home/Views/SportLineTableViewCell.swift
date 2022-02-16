@@ -119,7 +119,7 @@ class SportLineTableViewCell: UITableViewCell {
         self.bottomCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomCollectionView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundOdds
+        self.seeAllView.backgroundColor = UIColor.App.backgroundTertiary
         self.seeAllView.layer.borderColor = UIColor.App.separatorLine.cgColor
         self.seeAllLabel.textColor = UIColor.App.textPrimary
     }
@@ -148,6 +148,7 @@ class SportLineTableViewCell: UITableViewCell {
 }
 
 extension SportLineTableViewCell: UIScrollViewDelegate {
+    
 //    func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //
 //        let screenWidth = UIScreen.main.bounds.size.width
@@ -183,6 +184,7 @@ extension SportLineTableViewCell: UIScrollViewDelegate {
 //            }
 //        }
 //    }
+    
 }
 
 extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
