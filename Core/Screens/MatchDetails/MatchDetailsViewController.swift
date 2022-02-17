@@ -540,24 +540,6 @@ class MatchDetailsViewController: UIViewController {
     @IBAction private func didTapShareButton() {
         // print("SNAPSHOT: \(self.viewModel.gameSnapshot)")
 
-        let share = UIActivityViewController(activityItems: [self], applicationActivities: nil)
-        present(share, animated: true, completion: nil)
-
-    }
-
-}
-
-extension MatchDetailsViewController: UIActivityItemSource {
-    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return ""
-    }
-
-    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-        return nil
-    }
-
-    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
-
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
 
@@ -566,11 +548,15 @@ extension MatchDetailsViewController: UIActivityItemSource {
             let imageProvider = NSItemProvider(object: gameSnapshot)
             metadata.imageProvider = imageProvider
             metadata.url = matchUrl
-            metadata.originalURL = metadata.url
+            metadata.originalURL = matchUrl
             metadata.title = localized("check_this_game")
         }
 
-        return metadata
+        let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+
+        let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.gameSnapshot], applicationActivities: nil)
+        present(share, animated: true, completion: nil)
 
     }
+
 }
