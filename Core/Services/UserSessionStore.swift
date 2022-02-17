@@ -121,6 +121,9 @@ class UserSessionStore {
         userSessionPublisher.send(nil)
         userBalanceWallet.send(nil)
         self.unsubscribeWalletUpdates()
+
+        Env.favoritesManager.clearCachedFavorites()
+
         UserDefaults.standard.removeObject(forKey: "user_betslip_settings")
         
         Env.gomaNetworkClient.reconnectSession()
@@ -130,6 +133,7 @@ class UserSessionStore {
             .sink(receiveCompletion: { completion in
                 Logger.log("User logout \(completion)")
             }, receiveValue: { _ in
+
             })
             .store(in: &cancellables)
 
@@ -153,7 +157,7 @@ class UserSessionStore {
                             email: sessionInfo.email,
                             userId: "\(sessionInfo.userID)",
                             birthDate: sessionInfo.birthDate,
-                            isEmailVerified: sessionInfo.isEmailVerified                    )
+                            isEmailVerified: sessionInfo.isEmailVerified)
             }
             .handleEvents(receiveOutput: saveUserSession)
             .eraseToAnyPublisher()

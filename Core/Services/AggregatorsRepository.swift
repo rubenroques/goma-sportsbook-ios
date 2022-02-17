@@ -462,3 +462,37 @@ struct OddOutcomesSortingHelper {
     }
 
 }
+
+extension AggregatorsRepository: AggregatorStore {
+
+    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
+        return marketsPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
+        return bettingOfferPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func hasMatchesInfoForMatch(withId id: String) -> Bool {
+        if matchesInfoForMatchPublisher.value.contains(id) {
+            return true
+        }
+
+        return false
+    }
+
+    func matchesInfoForMatchListPublisher() -> CurrentValueSubject<[String], Never>? {
+        let matchesInfoForMatchPublisher = matchesInfoForMatchPublisher
+        return matchesInfoForMatchPublisher
+    }
+
+    func matchesInfoForMatchList() -> [String: Set<String> ] {
+        let matchesInfoForMatch = matchesInfoForMatch
+        return matchesInfoForMatch
+    }
+
+    func matchesInfoList() -> [String: EveryMatrix.MatchInfo] {
+        let matchesInfo = matchesInfo
+        return matchesInfo
+    }
+}

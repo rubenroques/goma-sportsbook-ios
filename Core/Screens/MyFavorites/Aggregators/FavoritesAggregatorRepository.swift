@@ -61,7 +61,7 @@ class FavoritesAggregatorsRepository {
             .store(in: &cancellables)
     }
 
-    func processAggregator(_ aggregator: EveryMatrix.FavoritesAggregator, withListType type: FavoritesAggregatorListType, shouldClear: Bool = false) {
+    func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: FavoritesAggregatorListType, shouldClear: Bool = false) {
 
         if shouldClear {
             self.matchesForType = [:]
@@ -151,13 +151,19 @@ class FavoritesAggregatorsRepository {
                 ()
             case .unknown:
                 () // print("Unknown type ignored")
+            case .event(_):
+                ()
+            case .marketGroup(_):
+                ()
+            case .cashout(_):
+                ()
             }
         }
 
         print("Finished dump processing")
     }
 
-    func processContentUpdateAggregator(_ aggregator: EveryMatrix.FavoritesAggregator) {
+    func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
 
         guard
             let contentUpdates = aggregator.contentUpdates
@@ -167,7 +173,7 @@ class FavoritesAggregatorsRepository {
 
         for update in contentUpdates {
             switch update {
-            case .bettingOfferUpdate(let id, let odd, let isLive, let isAvailable):
+            case .bettingOfferUpdate(let id, let statusId, let odd, let isLive, let isAvailable):
                 if let publisher = bettingOfferPublishers[id] {
                     let bettingOffer = publisher.value
                     let updatedBettingOffer = bettingOffer.bettingOfferUpdated(withOdd: odd,
@@ -211,6 +217,12 @@ class FavoritesAggregatorsRepository {
                 }
             case .unknown:
                 print("uknown")
+            case .cashoutUpdate(_, _, _):
+                ()
+            case .cashoutCreate(_):
+                ()
+            case .cashoutDelete(_):
+                ()
             }
         }
     }
@@ -343,4 +355,39 @@ class FavoritesAggregatorsRepository {
         return self.locations[id]
     }
 
+}
+
+extension FavoritesAggregatorsRepository: AggregatorStore {
+
+    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
+        return marketsPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
+        return bettingOfferPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func hasMatchesInfoForMatch(withId id: String) -> Bool {
+        if matchesInfoForMatchPublisher.value.contains(id) {
+            return true
+        }
+
+        return false
+    }
+
+    func matchesInfoForMatchListPublisher() -> CurrentValueSubject<[String], Never>? {
+        let matchesInfoForMatchPublisher = matchesInfoForMatchPublisher
+        return matchesInfoForMatchPublisher
+    }
+
+    func matchesInfoForMatchList() -> [String: Set<String> ] {
+        let matchesInfoForMatch = matchesInfoForMatch
+        return matchesInfoForMatch
+    }
+
+    func matchesInfoList() -> [String: EveryMatrix.MatchInfo] {
+        let matchesInfo = matchesInfo
+        return matchesInfo
+    }
+    
 }

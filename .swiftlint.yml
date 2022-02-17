@@ -8,7 +8,7 @@ excluded: # paths to ignore during linting. Takes precedence over `included`.
   - Core/Tools
 
 line_length:
-  warning: 140
+  warning: 160
   # Some improbably large number because we don't want compile errors
   # just because of style problems
   error: 200

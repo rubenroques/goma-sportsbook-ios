@@ -146,7 +146,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                     cell.matchStatsViewModel = matchStatsViewModel
                 }
-                cell.setupWithMatch(match)
+                let store = Env.everyMatrixStorage as AggregatorStore
+
+                cell.setupWithMatch(match, store: store)
 
                 cell.tappedMatchLineAction = { image in
                     self.didSelectMatchAction?(match, image)

@@ -47,6 +47,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
     var match: Match?
     var market: Market?
+    var store: AggregatorStore?
 
     private var leftOutcome: Outcome?
     private var rightOutcome: Outcome?
@@ -57,7 +58,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
     private var rightOddButtonSubscriber: AnyCancellable?
 
     private var marketSubscriber: AnyCancellable?
-
 
     private var currentLeftOddValue: Double?
     private var currentRightOddValue: Double?
@@ -119,8 +119,6 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
 
-
-        
         self.setupWithTheme()
     }
 
@@ -138,6 +136,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.matchStatsViewModel = nil
         self.match = nil
         self.market = nil
+        self.store = nil
 
         self.leftOutcome = nil
         self.rightOutcome = nil
@@ -218,7 +217,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
         self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
     }
 
-    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String) {
+    func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String, store: AggregatorStore) {
 
         if let matchStatsViewModel = matchStatsViewModel,
            market.eventPartId != nil,
@@ -237,6 +236,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.match = match
         self.market = market
+        self.store = store
         
         self.marketNameLabel.text = market.name
 
@@ -244,7 +244,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
-        if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+        if let marketPublisher = store.marketPublisher(withId: market.id) {
             self.marketSubscriber = marketPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] marketUpdate in
@@ -264,13 +264,11 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
-            // self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
             self.leftOutcome = outcome
 
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            self.leftOddButtonSubscriber = Env.everyMatrixStorage
-                .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+            self.leftOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] bettingOffer in
@@ -308,13 +306,11 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         if let outcome = market.outcomes[safe: 1] {
             self.rightOddTitleLabel.text = outcome.typeName
-            // self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
             self.rightOutcome = outcome
 
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            self.rightOddButtonSubscriber = Env.everyMatrixStorage
-                .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+            self.rightOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] bettingOffer in
@@ -331,8 +327,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         weakSelf.rightBaseView.alpha = 1.0
                         
                         guard let newOddValue = bettingOffer.oddsValue else { return }
-                        
-                        
+
                         if let currentOddValue = weakSelf.currentRightOddValue {
                             if newOddValue > currentOddValue {
                                 weakSelf.highlightOddChangeUp(animated: true,
@@ -354,7 +349,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
     }
 
-    @IBAction func didTapMatchView(_ sender: Any) {
+    @IBAction private func didTapMatchView(_ sender: Any) {
         self.tappedMatchWidgetAction?()
     }
 

@@ -54,31 +54,11 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var suspendedBaseView: UIView!
     @IBOutlet private weak var suspendedLabel: UILabel!
 
-    var viewModel: MatchWidgetCellViewModel? {
-        didSet {
-            if let viewModelValue = self.viewModel {
-                self.eventNameLabel.text = "\(viewModelValue.competitionName)"
-                self.homeParticipantNameLabel.text = "\(viewModelValue.homeTeamName)"
-                self.awayParticipantNameLabel.text = "\(viewModelValue.awayTeamName)"
-                self.dateLabel.text = "\(viewModelValue.startDateString)"
-                self.timeLabel.text = "\(viewModelValue.startTimeString)"
-
-                if viewModelValue.countryISOCode != "" {
-                    self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
-                }
-                else {
-                    self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryId))
-                }
-
-            }
-        }
-    }
+    var viewModel: MatchWidgetCellViewModel?
 
     static var cellHeight: CGFloat = 156
 
-    var match: Match?
     var snapshot: UIImage?
-    var repositoryType: AggregatorRepositoryType?
 
     var isFavorite: Bool = false {
         didSet {
@@ -196,7 +176,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.match = nil
+
         self.snapshot = nil
 
         self.leftOutcome = nil
@@ -280,10 +260,9 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         
     }
 
-    func setupWithMatch(_ match: Match, repositoryType: AggregatorRepositoryType = .defaultRepository) {
-        self.match = match
+    func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
 
-        let viewModel = MatchWidgetCellViewModel(match: match)
+        self.viewModel = viewModel
 
         self.eventNameLabel.text = "\(viewModel.competitionName)"
         self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
@@ -291,7 +270,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = "\(viewModel.startDateString)"
         self.timeLabel.text = "\(viewModel.startTimeString)"
 
-        // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         if viewModel.countryISOCode != "" {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         }
@@ -299,29 +278,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
         }
 
-        self.repositoryType = repositoryType
-        
-        // Check repository to use
-        if self.repositoryType == .defaultRepository {
-            self.setupMarketsWithDefaultRepository(match: match)
-        }
-        // TODO: Code Review 14/02 - Merged problems
-        //        else if self.repositoryType == .favoriteRepository {
-        //            self.setupMarketsWithFavoriteRepository(match: match)
-        //        }
-
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value {
-            if matchId == match.id {
-                self.isFavorite = true
-            }
+        guard
+            let match = viewModel.match
+        else {
+            return
         }
 
-    }
-
-    func setupMarketsWithDefaultRepository(match: Match) {
         if let market = match.markets.first {
 
-            if let marketPublisher = Env.everyMatrixStorage.marketsPublishers[market.id] {
+            if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
                 self.marketSubscriber = marketPublisher
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] marketUpdate in
@@ -340,22 +305,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             if let outcome = market.outcomes[safe: 0] {
-                self.homeOddTitleLabel.text = outcome.typeName
-                // self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                self.leftOutcome = outcome
 
+                self.homeOddTitleLabel.text = outcome.typeName
+                self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .left)
-                    self.homeOddValueLabel.text = "-"
-                }
-                else {
-                    self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
-
-                self.leftOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.leftOddButtonSubscriber = viewModel.store
+                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
@@ -397,22 +353,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             if let outcome = market.outcomes[safe: 1] {
-                self.drawOddTitleLabel.text = outcome.typeName
-                // self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                self.middleOutcome = outcome
 
+                self.drawOddTitleLabel.text = outcome.typeName
+                self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .middle)
-                    self.drawOddValueLabel.text = "-"
-                }
-                else {
-                    self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
-
-                self.middleOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.middleOddButtonSubscriber = viewModel.store
+                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
@@ -453,23 +400,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
             }
 
             if let outcome = market.outcomes[safe: 2] {
-                self.awayOddTitleLabel.text = outcome.typeName
-                // self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                self.rightOutcome = outcome
 
+                self.awayOddTitleLabel.text = outcome.typeName
+                self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .right)
-                    self.awayOddValueLabel.text = "-"
-                    self.awayBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                }
-                else {
-                    self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
-
-                self.rightOddButtonSubscriber = Env.everyMatrixStorage
-                    .oddPublisherForBettingOfferId(outcome.bettingOffer.id)?
+                self.rightOddButtonSubscriber = viewModel.store
+                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] bettingOffer in
@@ -529,51 +466,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             self.isFavorite = true
         }
-
-    }
-
-    func setOddViewDisabled(disabled: Bool, oddViewPosition: OddViewPosition) {
-        if disabled {
-            switch oddViewPosition {
-            case .left:
-                self.homeBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                self.homeOddValueLabel.textColor = UIColor.App.textDisablePrimary
-                self.homeOddTitleLabel.textColor = UIColor.App.textDisablePrimary
-                self.leftOutcomeDisabled = disabled
-            case .middle:
-                self.drawBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                self.drawOddValueLabel.textColor = UIColor.App.textDisablePrimary
-                self.drawOddTitleLabel.textColor = UIColor.App.textDisablePrimary
-                self.middleOutcomeDisabled = disabled
-            case .right:
-                self.awayBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                self.awayOddValueLabel.textColor = UIColor.App.textDisablePrimary
-                self.awayOddTitleLabel.textColor = UIColor.App.textDisablePrimary
-                self.rightOutcomeDisabled = disabled
-            }
-
-        }
-        else {
-            switch oddViewPosition {
-            case .left:
-                self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
-                self.homeOddValueLabel.textColor = UIColor.App.textPrimary
-                self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
-                self.leftOutcomeDisabled = disabled
-
-            case .middle:
-                self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
-                self.drawOddValueLabel.textColor = UIColor.App.textPrimary
-                self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
-                self.middleOutcomeDisabled = disabled
-
-            case .right:
-                self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
-                self.awayOddValueLabel.textColor = UIColor.App.textPrimary
-                self.awayOddValueLabel.textColor = UIColor.App.textPrimary
-                self.rightOutcomeDisabled = disabled
-            }
-        }
     }
 
     //
@@ -587,13 +479,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.suspendedBaseView.isHidden = false
     }
 
-    func shouldShowCountryFlag(_ show: Bool) {
-        self.locationFlagImageView.isHidden = !show
-    }
-
     private func showClosedView() {
         self.suspendedLabel.text = localized("closed_market")
         self.suspendedBaseView.isHidden = false
+    }
+
+    //
+    //
+    func shouldShowCountryFlag(_ show: Bool) {
+        self.locationFlagImageView.isHidden = !show
     }
 
     //
@@ -602,13 +496,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         if UserDefaults.standard.userSession != nil {
 
             if self.isFavorite {
-                if let matchId = self.match?.id {
+                if let matchId = self.viewModel?.match?.id {
                     Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: "event")
                 }
                 self.isFavorite = false
             }
             else {
-                if let matchId = self.match?.id {
+                if let matchId = self.viewModel?.match?.id {
                     Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: "event")
                 }
                 self.isFavorite = true
@@ -620,6 +514,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.tappedMatchWidgetAction?()
     }
 
+    //
     // TODO: This func is called even if the cell is reused
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
@@ -658,6 +553,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     //
+    // Odd buttons interaction
+    //
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -673,8 +570,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @objc func didTapLeftOddButton() {
 
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.viewModel?.match,
+            let firstMarket = match.markets.first,
             let outcome = self.leftOutcome
         else {
             return
@@ -720,8 +617,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapMiddleOddButton() {
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.viewModel?.match,
+            let firstMarket = match.markets.first,
             let outcome = self.middleOutcome
         else {
             return
@@ -766,8 +663,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapRightOddButton() {
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.viewModel?.match,
+            let firstMarket = match.markets.first,
             let outcome = self.rightOutcome
         else {
             return
