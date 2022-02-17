@@ -57,7 +57,7 @@ class MyTicketsViewController: UIViewController {
       
        
         self.myBetsSegmentedControl.selectedSegmentIndex = 0
-        self.viewModel.setMyTicketsType(.resolved)
+        self.viewModel.setMyTicketsType(.opened)
             //self.didChangeSegmentValue(self.myBetsSegmentedControl)
         
         
@@ -182,10 +182,10 @@ class MyTicketsViewController: UIViewController {
 
         switch segmentControl.selectedSegmentIndex {
         case 0:
-            self.viewModel.setMyTicketsType(.resolved)
+            self.viewModel.setMyTicketsType(.opened)
  
         case 1:
-            self.viewModel.setMyTicketsType(.opened)
+            self.viewModel.setMyTicketsType(.resolved)
         case 2:
             self.viewModel.setMyTicketsType(.won)
         default:
