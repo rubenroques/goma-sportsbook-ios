@@ -244,7 +244,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.participantsCountryImageView.image = UIImage(named: "market_stats_icon")
 
-        if let marketPublisher = self.store?.marketPublisher(withId: market.id) {
+        if let marketPublisher = store.marketPublisher(withId: market.id) {
             self.marketSubscriber = marketPublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] marketUpdate in
@@ -264,13 +264,11 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         if let outcome = market.outcomes[safe: 0] {
             self.leftOddTitleLabel.text = outcome.typeName
-            // self.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
             self.leftOutcome = outcome
 
             self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            self.leftOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
-                //.map(\.oddsValue)
+            self.leftOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] bettingOffer in
@@ -308,13 +306,11 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         if let outcome = market.outcomes[safe: 1] {
             self.rightOddTitleLabel.text = outcome.typeName
-            // self.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
             self.rightOutcome = outcome
 
             self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-            self.rightOddButtonSubscriber = self.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
-                //.map(\.oddsValue)
+            self.rightOddButtonSubscriber = store.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                 .compactMap({ $0 })
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] bettingOffer in
@@ -331,8 +327,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         weakSelf.rightBaseView.alpha = 1.0
                         
                         guard let newOddValue = bettingOffer.oddsValue else { return }
-                        
-                        
+
                         if let currentOddValue = weakSelf.currentRightOddValue {
                             if newOddValue > currentOddValue {
                                 weakSelf.highlightOddChangeUp(animated: true,

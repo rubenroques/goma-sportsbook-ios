@@ -22,9 +22,9 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
-    var store: FavoritesAggregatorsRepository
+    var store: AggregatorStore
 
-    init(favoriteCompetitions: [Competition], store: FavoritesAggregatorsRepository) {
+    init(favoriteCompetitions: [Competition], store: AggregatorStore) {
         self.store = store
         self.competitions = favoriteCompetitions
     }
@@ -56,14 +56,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
                 cell.matchStatsViewModel = matchStatsViewModel
             }
 
-            let store = FavoritesAggregatorsRepository.self as? AggregatorStore
-
-            if let store = store, store.hasMatchesInfoForMatch(withId: match.id) {
-                cell.setupWithMatch(match, liveMatch: true, store: store)
-            }
-            else {
-                cell.setupWithMatch(match, store: store)
-            }
+            cell.setupWithMatch(match, liveMatch: true, store: self.store)
 
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = { image in

@@ -465,9 +465,8 @@ struct OddOutcomesSortingHelper {
 
 extension AggregatorsRepository: AggregatorStore {
 
-    func marketPublisher(withId id: String) -> CurrentValueSubject<EveryMatrix.Market, Never>? {
-        let marketPublisher = marketsPublishers[id]
-        return marketPublisher
+    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
+        return marketsPublishers[id]?.eraseToAnyPublisher()
     }
 
     func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {

@@ -8,21 +8,26 @@
 import Foundation
 import Combine
 
-class SportLineViewModel {
+class SportGroupViewModel {
 
 }
 
 class SportMatchLineViewModel {
 
-    enum MatchesType: String {
+    enum MatchesType: String, CaseIterable {
         case popular
         case live
         case topCompetition
     }
 
+    var redrawPublisher = PassthroughSubject<Void, Never>.init()
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
+
+    var numberOfLoadedMatchedPublisher = CurrentValueSubject<Int, Never>.init(0)
+
+    var store: HomeStore
 
     private var sport: Sport
     private var matchesType: MatchesType
@@ -37,9 +42,11 @@ class SportMatchLineViewModel {
     private var liveMatchesRegister: EndpointPublisherIdentifiable?
     private var competitionMatchesRegister: EndpointPublisherIdentifiable?
 
-    private var matchesIds: [String] = []
-
-    private var store: HomeStore
+    private var matchesIds: [String] = [] {
+        didSet {
+            self.numberOfLoadedMatchedPublisher.send(self.matchesIds.count)
+        }
+    }
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -58,18 +65,7 @@ class SportMatchLineViewModel {
             self.titlePublisher = .init( localized("Popular Competition").uppercased() )
         }
 
-        Env.everyMatrixClient.serviceStatusPublisher
-            .sink { _ in
-
-            } receiveValue: { status in
-                switch status {
-                case .connected:
-                    self.requestMatches()
-                case .disconnected:
-                    ()
-                }
-            }
-            .store(in: &cancellables)
+        self.requestMatches()
     }
 
 }

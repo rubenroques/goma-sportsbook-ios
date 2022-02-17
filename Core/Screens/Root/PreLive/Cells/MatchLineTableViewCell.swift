@@ -86,8 +86,11 @@ class MatchLineTableViewCell: UITableViewCell {
         self.collectionView.layoutSubviews()
         self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: false)
 
+        self.store = nil
         self.match = nil
+
         self.matchStatsViewModel = nil
+
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
@@ -112,10 +115,11 @@ class MatchLineTableViewCell: UITableViewCell {
         self.backSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
     }
 
-    func setupWithMatch(_ match: Match, liveMatch: Bool = false, store: AggregatorStore?) {
+    func setupWithMatch(_ match: Match, liveMatch: Bool = false, store: AggregatorStore) {
         
         self.match = match
         self.liveMatch = liveMatch
+
         self.store = store
 
         UIView.performWithoutAnimation {
@@ -125,9 +129,7 @@ class MatchLineTableViewCell: UITableViewCell {
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {
-
-        if let store = self.store, !store.hasMatchesInfoForMatch(withId: match.id)  {
-
+        if let store = self.store, !store.hasMatchesInfoForMatch(withId: match.id) {
             self.matchInfoPublisher = store.matchesInfoForMatchListPublisher()?
                 .receive(on: DispatchQueue.main)
                 .sink(receiveValue: { [weak self] value in
@@ -238,6 +240,12 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
         }
 
         if indexPath.row == 0 {
+
+            var store: AggregatorStore = Env.everyMatrixStorage
+            if let storeValue = self.store {
+                store = storeValue
+            }
+
             if !liveMatch {
                 guard
                     let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
@@ -246,7 +254,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     fatalError()
                 }
                 if let match = self.match {
-                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.store)
+                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: store)
                     
                     cell.configure(withViewModel: cellViewModel)
 
@@ -266,7 +274,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 }
 
                 if let match = self.match {
-                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: self.store)
+                    let cellViewModel = MatchWidgetCellViewModel(match: match, store: store)
 
                     cell.configure(withViewModel: cellViewModel)
 

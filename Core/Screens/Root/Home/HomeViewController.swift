@@ -55,7 +55,7 @@ class HomeViewController: UIViewController {
 
         self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
-        self.tableView.register(SportLineTableViewCell.self, forCellReuseIdentifier: SportLineTableViewCell.identifier)
+        self.tableView.register(SportMatchLineTableViewCell.self, forCellReuseIdentifier: SportMatchLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
@@ -142,6 +142,10 @@ class HomeViewController: UIViewController {
 
     }
 
+    func openMatchDetails(match: Match) {
+        let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
+        self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+    }
 }
 
 //
@@ -220,19 +224,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 fatalError()
             }
-            let store = Env.everyMatrixStorage as AggregatorStore
 
-            cell.setupWithMatch(match, store: store)
+            cell.setupWithMatch(match, store: self.viewModel.store)
             cell.setupFavoriteMatchInfoPublisher(match: match)
             cell.tappedMatchLineAction = { [weak self] image in // TODO: Code Review - UIImage ?!
-                self?.didSelectMatchAction?(match)
+                self?.openMatchDetails(match: match)
             }
 
             return cell
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
-                let suggestedBetLineViewModel = self.viewModel.getSuggestedBetLineViewModel()
+                let suggestedBetLineViewModel = self.viewModel.suggestedBetLineViewModel()
             else {
                 fatalError()
             }
@@ -243,12 +246,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .sport:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: SportLineTableViewCell.identifier) as? SportLineTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchLineTableViewCell.identifier) as? SportMatchLineTableViewCell,
                 let sportMatchLineViewModel = self.viewModel.sportMatchLineViewModel(forIndexPath: indexPath)
             else {
                 fatalError()
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
+            cell.tappedMatchLineAction = { [weak self] match in
+                self?.openMatchDetails(match: match)
+            }
             return cell
         }
     }
@@ -262,13 +268,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         switch contentType {
         case .userMessage:
-            return 40
+            return .leastNormalMagnitude
         case .bannerLine:
-            return 174
+            return 180
         case .userFavorites:
             return UITableView.automaticDimension
         case .suggestedBets:
-            return UITableView.automaticDimension
+            return 336
         case .sport:
             return UITableView.automaticDimension
         }
@@ -284,13 +290,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         switch contentType {
         case .userMessage:
-            return 40
+            return .leastNormalMagnitude
         case .bannerLine:
-            return 174
+            return 180
         case .userFavorites:
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case .suggestedBets:
-            return 40
+            return 336
         case .sport:
             return 356
         }
@@ -349,28 +355,50 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return self.viewModel.shouldShowTitle(forSection: section) ? 40 : CGFloat.leastNormalMagnitude
     }
 
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        guard
-            let contentType = self.viewModel.contentType(forSection: section)
-        else {
-            return .leastNormalMagnitude
-        }
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return self.viewModel.shouldShowTitle(forSection: section) ? 40 : CGFloat.leastNormalMagnitude
+    }
 
-        switch contentType {
-        case .userMessage:
-            return .leastNormalMagnitude
-        case .bannerLine:
-            return .leastNormalMagnitude
-        case .userFavorites:
-            return 40
-        case .suggestedBets:
-            return .leastNormalMagnitude
-        case .sport:
-            return 40
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+
+}
+
+extension HomeViewController: UITableViewDataSourcePrefetching {
+
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+
+        for indexPath in indexPaths {
+            guard
+                let contentType = self.viewModel.contentType(forSection: indexPath.section)
+            else {
+                return
+            }
+
+            switch contentType {
+            case .userMessage:
+                ()
+            case .bannerLine:
+                _ = self.viewModel.bannerLineViewModel()
+            case .userFavorites:
+                ()
+            case .suggestedBets:
+                _ = self.viewModel.suggestedBetLineViewModel()
+            case .sport:
+                _ = self.viewModel.sportMatchLineViewModel(forIndexPath: indexPath)
+            }
         }
     }
 }
-
 //
 // MARK: - Actions
 //
@@ -420,6 +448,9 @@ extension HomeViewController {
         tableView.separatorStyle = .none
         tableView.contentInset = .zero
         tableView.contentInsetAdjustmentBehavior = .never
+        if #available(iOS 15.0, *) {
+            tableView.sectionHeaderTopPadding = 0
+        }
         return tableView
     }
 

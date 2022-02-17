@@ -17,10 +17,11 @@ struct MatchWidgetCellViewModel {
     var competitionName: String
     var isToday: Bool
     var countryId: String
-    var store: AggregatorStore?
+    var store: AggregatorStore
+    
     var match: Match?
 
-    init(match: Match, store: AggregatorStore?) {
+    init(match: Match, store: AggregatorStore) {
 
         self.store = store
         self.match = match
@@ -62,6 +63,8 @@ struct MatchWidgetCellViewModel {
 
     init(match: Match) {
 
+        self.store = Env.everyMatrixStorage
+        
         self.homeTeamName = match.homeParticipant.name
         self.awayTeamName = match.awayParticipant.name
 
@@ -98,6 +101,8 @@ struct MatchWidgetCellViewModel {
     }
 
     init(match: EveryMatrix.Match) {
+
+        self.store = Env.everyMatrixStorage
 
         self.homeTeamName = match.homeParticipantName ?? ""
         self.awayTeamName = match.awayParticipantName ?? ""

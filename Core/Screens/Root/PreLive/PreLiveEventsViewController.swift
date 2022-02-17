@@ -158,10 +158,7 @@ class PreLiveEventsViewController: UIViewController {
             else if alertType == ActivationAlertType.profile {
                 let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
                 self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
-                
-                //self.present(fullRegisterViewController, animated: true, completion: nil)
             }
-
         }
 
         self.viewModel.didSelectMatchAction = { match, image in
@@ -175,9 +172,7 @@ class PreLiveEventsViewController: UIViewController {
                 matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
-
         }
-
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true

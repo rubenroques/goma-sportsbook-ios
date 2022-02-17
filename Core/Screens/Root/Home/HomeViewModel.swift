@@ -11,6 +11,16 @@ import OrderedCollections
 
 class HomeViewModel {
 
+    /*
+     case userMessage
+     case bannerLine
+     case userFavorites
+     case sport(Sport at index 0 - Football )
+     case suggestedBets
+     case sport(Sport at index 1)
+     case sport(Sport at index 2)
+     ....
+     */
     enum Content {
         case userMessage
         case userFavorites
@@ -29,10 +39,14 @@ class HomeViewModel {
         }
     }
 
+    var redrawPublisher = PassthroughSubject<Void, Never>.init()
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
     var scrollToContentPublisher = PassthroughSubject<Int?, Never>.init()
 
-    private let itemsPreSports = 4
+    // Updatable Storage
+    var store: HomeStore = HomeStore()
+
+    private let itemsBeforeSports = 5
     private var userMessages: [String] = []
     
     //
@@ -102,14 +116,34 @@ class HomeViewModel {
     private var bannersInfoPublisher: AnyCancellable?
     private var favoriteMatchesPublisher: AnyCancellable?
 
-    // Updatable Storage
-    private var store: HomeStore = HomeStore()
-
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: - Life Cycle
     init() {
         self.refresh()
+
+        Env.everyMatrixClient.serviceStatusPublisher
+            .filter(\.isConnected)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.refresh()
+            })
+            .store(in: &self.cancellables)
+
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.refresh()
+            })
+            .store(in: &self.cancellables)
+
+        Env.favoritesManager.favoriteEventsIdPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.fetchFavoriteMatches()
+            })
+            .store(in: &self.cancellables)
+
     }
 
     func refresh() {
@@ -276,7 +310,7 @@ extension HomeViewModel {
 extension HomeViewModel {
 
     func numberOfShortcutsSections() -> Int {
-        return itemsPreSports + sportsToFetch.count
+        return itemsBeforeSports + sportsToFetch.count
     }
 
     func numberOfShortcuts(forSection section: Int) -> Int {
@@ -302,10 +336,19 @@ extension HomeViewModel {
             return nil
         case 2:
             return "My Games"
-        case 3:
+        case 3: // Football
+            if let sportForIndex = self.sportsToFetch.first {
+                return sportForIndex.name
+            }
+            else {
+                return nil
+            }
+        case 4:
             return "Suggested Bets"
+
         default:
-            if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
+            let shiftedIndex = (section-itemsBeforeSports) + 1
+            if let sportForIndex = self.sportsToFetch[safe: shiftedIndex] {
                 return sportForIndex.name
             }
             else {
@@ -315,7 +358,7 @@ extension HomeViewModel {
     }
 
     func numberOfSections() -> Int {
-        return itemsPreSports + sportsToFetch.count
+        return itemsBeforeSports + sportsToFetch.count
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
@@ -331,9 +374,17 @@ extension HomeViewModel {
                 return 0
             }
         case 2: return self.favoriteMatches.count
-        case 3: return self.suggestedBets.isEmpty ? 0 : 1
+        case 3: // Football
+            if let sportForIndex = self.sportsToFetch.first {
+                return 3
+            }
+            else {
+                return 0
+            }
+        case 4: return self.suggestedBets.isEmpty ? 0 : 1
         default:
-            if self.sportsToFetch[safe: section-itemsPreSports] != nil {
+            let shiftedIndex = (section-itemsBeforeSports) + 1
+            if self.sportsToFetch[safe: shiftedIndex] != nil {
                 return 3
             }
             else {
@@ -346,9 +397,17 @@ extension HomeViewModel {
         switch section {
         case 0, 1: return (nil, nil)
         case 2: return ("My Games", nil)
-        case 3: return ("Suggested Bets", nil)
+        case 3: // Football
+            if let sportForIndex = self.sportsToFetch.first {
+                return (sportForIndex.name, sportForIndex.id)
+            }
+            else {
+                return (nil, nil)
+            }
+        case 4: return ("Suggested Bets", nil)
         default:
-            if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
+            let shiftedIndex = (section-itemsBeforeSports) + 1
+            if let sportForIndex = self.sportsToFetch[safe: shiftedIndex] {
                 return (sportForIndex.name, sportForIndex.id)
             }
             else {
@@ -362,9 +421,17 @@ extension HomeViewModel {
         case 0: return false
         case 1: return false
         case 2: return self.favoriteMatches.isNotEmpty
-        case 3: return self.suggestedBets.isNotEmpty
+        case 3: // Football
+            if self.sportsToFetch.first != nil {
+                return true
+            }
+            else {
+                return false
+            }
+        case 4: return self.suggestedBets.isNotEmpty
         default:
-            if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
+            let shiftedIndex = (section-itemsBeforeSports) + 1
+            if self.sportsToFetch[safe: shiftedIndex] != nil {
                 return true
             }
             else {
@@ -378,9 +445,17 @@ extension HomeViewModel {
         case 0: return HomeViewModel.Content.userMessage
         case 1: return HomeViewModel.Content.bannerLine
         case 2: return HomeViewModel.Content.userFavorites
-        case 3: return HomeViewModel.Content.suggestedBets
+        case 3: // Football
+            if let sportForIndex = self.sportsToFetch.first {
+                return HomeViewModel.Content.sport(sportForIndex)
+            }
+            else {
+                return nil
+            }
+        case 4: return HomeViewModel.Content.suggestedBets
         default:
-            if let sportForIndex = self.sportsToFetch[safe: section-itemsPreSports] {
+            let shiftedIndex = (section-itemsBeforeSports) + 1
+            if let sportForIndex = self.sportsToFetch[safe: shiftedIndex] {
                 return HomeViewModel.Content.sport(sportForIndex)
             }
             else {
@@ -404,28 +479,37 @@ extension HomeViewModel {
         let matchTypeIdentifier = SportMatchLineViewModel.matchesType(forIndex: indexPath.row)?.rawValue ?? ""
         let cacheKey = "\(contentId.identifier)-\(matchTypeIdentifier)"
 
+        var shiftedIndex = indexPath.section
+        if shiftedIndex == 3 {
+            shiftedIndex = 0
+        }
+        else {
+            shiftedIndex = (indexPath.section-itemsBeforeSports) + 1
+        }
+
         if let viewModel = sportsLineViewModelsCache[cacheKey] {
             return viewModel
         }
         else if
-            let sportForIndex = self.sportsToFetch[safe: indexPath.section-itemsPreSports],
+            let sportForIndex = self.sportsToFetch[safe: shiftedIndex],
             let matchType = SportMatchLineViewModel.matchesType(forIndex: indexPath.row)
         {
             let sportMatchLineViewModel = SportMatchLineViewModel(sport: sportForIndex,
                                                                   matchesType: matchType,
                                                                   store: self.store)
-
             self.sportsLineViewModelsCache[cacheKey] = sportMatchLineViewModel
             return sportMatchLineViewModel
         }
         return nil
     }
+
+
     
     func favoriteMatch(forIndex index: Int) -> Match? {
         return self.favoriteMatches[safe: index]
     }
 
-    func getSuggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
+    func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
         
         if self.suggestedBets.isEmpty {
             return nil

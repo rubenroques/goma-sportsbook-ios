@@ -1,5 +1,5 @@
 //
-//  SportLineTableViewCell.swift
+//  SportMatchLineTableViewCell.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 10/02/2022.
@@ -8,72 +8,16 @@
 import UIKit
 import Combine
 
-class SportLineTableViewCell: UITableViewCell {
+class SportMatchLineTableViewCell: UITableViewCell {
 
-    var tappedMatchLineAction: (() -> Void)?
+    var tappedMatchLineAction: ((Match) -> Void)?
 
-    private lazy var titleLabel: UILabel = {
-        var titleLabel = UILabel()
-        titleLabel.numberOfLines = 1
-        titleLabel.text = ""
-        titleLabel.font = AppFont.with(type: .semibold, size: 13)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        return titleLabel
-    }()
-
-    private lazy var linesStackView: UIStackView = {
-        var linesStackView = UIStackView()
-        linesStackView.axis = .vertical
-        linesStackView.alignment = .fill
-        linesStackView.distribution = .fill
-        linesStackView.spacing = 8
-        linesStackView.translatesAutoresizingMaskIntoConstraints = false
-        return linesStackView
-    }()
-
-    private lazy var topCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        var topCollectionView = UICollectionView.init(frame: .zero, collectionViewLayout: layout)
-        topCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        topCollectionView.showsVerticalScrollIndicator = false
-        topCollectionView.showsHorizontalScrollIndicator = false
-        topCollectionView.alwaysBounceHorizontal = true
-        topCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-
-        return topCollectionView
-    }()
-
-    private lazy var bottomCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        var bottomCollectionView = UICollectionView.init(frame: .zero, collectionViewLayout: layout)
-        bottomCollectionView.translatesAutoresizingMaskIntoConstraints = false
-        bottomCollectionView.showsVerticalScrollIndicator = false
-        bottomCollectionView.showsHorizontalScrollIndicator = false
-        bottomCollectionView.alwaysBounceHorizontal = true
-        bottomCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-        return bottomCollectionView
-    }()
-
-    private lazy var seeAllView: UIView = {
-        var seeAllView = UIView()
-        seeAllView.layer.borderColor = UIColor.gray.cgColor
-        seeAllView.layer.borderWidth = 0
-        seeAllView.layer.cornerRadius = 6
-        seeAllView.translatesAutoresizingMaskIntoConstraints = false
-        return seeAllView
-    }()
-
-    private lazy var seeAllLabel: UILabel = {
-        var seeAllLabel = UILabel()
-        seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "See All"
-        seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
-        seeAllLabel.textAlignment = .center
-        seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
-        return seeAllLabel
-    }()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var linesStackView: UIStackView = Self.createLinesStackView()
+    private lazy var topCollectionView: UICollectionView = Self.createTopCollectionView()
+    private lazy var bottomCollectionView: UICollectionView = Self.createBottomCollectionView()
+    private lazy var seeAllView: UIView = Self.createSeeAllView()
+    private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
     private var showingBackSliderView: Bool = false
 
@@ -94,9 +38,13 @@ class SportLineTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.viewModel = nil
+        self.topCollectionView.isHidden = false
+        self.bottomCollectionView.isHidden = false
 
+        self.viewModel = nil
         self.titleLabel.text = ""
+
+        self.reloadCollections()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -133,9 +81,29 @@ class SportLineTableViewCell: UITableViewCell {
             .sink(receiveValue: { [weak self] in self?.titleLabel.text = $0 })
             .store(in: &cancellables)
 
+        self.viewModel?.numberOfLoadedMatchedPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] numberOfLoadedMatched in
+                switch numberOfLoadedMatched {
+//                case 0:
+//                    self?.topCollectionView.isHidden = true
+//                    self?.bottomCollectionView.isHidden = true
+                case 1:
+                    self?.topCollectionView.isHidden = false
+                    self?.bottomCollectionView.isHidden = true
+                default:
+                    self?.topCollectionView.isHidden = false
+                    self?.bottomCollectionView.isHidden = false
+                }
+            })
+            .store(in: &cancellables)
+
         self.viewModel?.refreshPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: reloadCollections)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadCollections()
+            })
             .store(in: &cancellables)
         
     }
@@ -147,26 +115,36 @@ class SportLineTableViewCell: UITableViewCell {
 
 }
 
-extension SportLineTableViewCell: UIScrollViewDelegate {
+extension SportMatchLineTableViewCell: UIScrollViewDelegate {
     
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//
-//        let screenWidth = UIScreen.main.bounds.size.width
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        if scrollView == self.topCollectionView, let firstMatch = self.viewModel?.match(forLine: 0) {
+            let screenWidth = UIScreen.main.bounds.size.width
+            if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
+                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
+                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+                    generator.prepare()
+                    generator.impactOccurred()
+                    self.tappedMatchLineAction?(firstMatch)
+                    return
+                }
+            }
+        }
+        else if scrollView == self.bottomCollectionView, let secondMatch = self.viewModel?.match(forLine: 1) {
+            let screenWidth = UIScreen.main.bounds.size.width
+            if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
+                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
+                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+                    generator.prepare()
+                    generator.impactOccurred()
+                    self.tappedMatchLineAction?(secondMatch)
+                    return
+                }
+            }
+        }
+        
 //        let width = screenWidth*0.6
-//
-//        if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
-//            if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
-//
-//                let generator = UIImpactFeedbackGenerator(style: .heavy)
-//                generator.prepare()
-//                generator.impactOccurred()
-//
-//                self.tappedMatchLineAction?()
-//
-//                return
-//            }
-//        }
-//
 //        if scrollView.contentOffset.x > width {
 //            if !self.showingBackSliderView {
 //                self.showingBackSliderView = true
@@ -183,11 +161,11 @@ extension SportLineTableViewCell: UIScrollViewDelegate {
 //                }
 //            }
 //        }
-//    }
+    }
     
 }
 
-extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension SportMatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
 
@@ -229,6 +207,8 @@ extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
             fatalError()
         }
 
+        guard let viewModel = self.viewModel else { fatalError() }
+
         if indexPath.section == 1 {
             guard
                 let cell = collectionView.dequeueCellType(SeeMoreMarketsCollectionViewCell.self, indexPath: indexPath)
@@ -260,14 +240,11 @@ extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     fatalError()
                 }
 
-                let store = Env.everyMatrixStorage as AggregatorStore
-
-                //cell.setupWithMatch(match, store: store)
-                let cellViewModel = MatchWidgetCellViewModel(match: match, store: store)
+                let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
                 cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?()
+                    self.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -280,36 +257,20 @@ extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 else {
                     fatalError()
                 }
-                let store = Env.everyMatrixStorage as AggregatorStore
 
-                let cellViewModel = MatchWidgetCellViewModel(match: match, store: store)
+                let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
-
-                //cell.setupWithMatch(match)
                 cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?()
+                    self.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
             }
-//            guard
-//                let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
-//
-//            else {
-//                fatalError()
-//            }
-//
-//                cell.setupWithMatch(match)
-//                cell.tappedMatchWidgetAction = {
-//                    self.tappedMatchLineAction?()
-//                }
-//
-//            cell.shouldShowCountryFlag(true)
-//            return cell
+
         }
         else {
-            if let match = self.viewModel?.match(forLine: collectionLineIndex), let market = match.markets[safe: indexPath.row] {
+            if let match = viewModel.match(forLine: collectionLineIndex), let market = match.markets[safe: indexPath.row] {
 
                 let teamsText = "\(match.homeParticipant.name) - \(match.awayParticipant.name)"
                 let countryIso = match.venue?.isoCode ?? ""
@@ -317,23 +278,28 @@ extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
                         // TODO: cell.matchStatsViewModel = self.matchStatsViewModel
-                        let store = Env.everyMatrixStorage as AggregatorStore
 
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, store: store)
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso,
+                                             store: viewModel.store)
                         cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?()
+                            self.tappedMatchLineAction?(match)
                         }
                         return cell
                     }
                 }
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
-                        // TODO: cell.matchStatsViewModel = self.matchStatsViewModel
-                        let store = Env.everyMatrixStorage as AggregatorStore
 
-                        cell.setupWithMarket(market, match: match, teamsText: teamsText, countryIso: countryIso, store: store)
+                        // TODO: cell.matchStatsViewModel = self.matchStatsViewModel
+
+                        cell.setupWithMarket(market, match: match,
+                                             teamsText: teamsText,
+                                             countryIso: countryIso,
+                                             store: viewModel.store)
                         cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?()
+                            self.tappedMatchLineAction?(match)
                         }
                         return cell
                     }
@@ -392,7 +358,69 @@ extension SportLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
 }
 
 
-extension SportLineTableViewCell {
+extension SportMatchLineTableViewCell {
+
+    private static func createTitleLabel() -> UILabel {
+        let titleLabel = UILabel()
+        titleLabel.numberOfLines = 1
+        titleLabel.text = ""
+        titleLabel.font = AppFont.with(type: .semibold, size: 13)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        return titleLabel
+    }
+
+    private static func createLinesStackView() -> UIStackView {
+        let linesStackView = UIStackView()
+        linesStackView.axis = .vertical
+        linesStackView.alignment = .fill
+        linesStackView.distribution = .fill
+        linesStackView.spacing = 8
+        linesStackView.translatesAutoresizingMaskIntoConstraints = false
+        return linesStackView
+    }
+
+    private static func createTopCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let topCollectionView = UICollectionView.init(frame: .zero, collectionViewLayout: layout)
+        topCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        topCollectionView.showsVerticalScrollIndicator = false
+        topCollectionView.showsHorizontalScrollIndicator = false
+        topCollectionView.alwaysBounceHorizontal = true
+        topCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        return topCollectionView
+    }
+
+    private static func createBottomCollectionView() -> UICollectionView {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let bottomCollectionView = UICollectionView.init(frame: .zero, collectionViewLayout: layout)
+        bottomCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        bottomCollectionView.showsVerticalScrollIndicator = false
+        bottomCollectionView.showsHorizontalScrollIndicator = false
+        bottomCollectionView.alwaysBounceHorizontal = true
+        bottomCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        return bottomCollectionView
+    }
+
+    private static func createSeeAllView() -> UIView {
+        let seeAllView = UIView()
+        seeAllView.layer.borderColor = UIColor.gray.cgColor
+        seeAllView.layer.borderWidth = 0
+        seeAllView.layer.cornerRadius = 6
+        seeAllView.translatesAutoresizingMaskIntoConstraints = false
+        return seeAllView
+    }
+
+    private static func createSeeAllLabel() -> UILabel {
+        let seeAllLabel = UILabel()
+        seeAllLabel.numberOfLines = 1
+        seeAllLabel.text = "See All"
+        seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
+        seeAllLabel.textAlignment = .center
+        seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
+        return seeAllLabel
+    }
 
     private func setupSubviews() {
         // Add subviews to self.view or each other

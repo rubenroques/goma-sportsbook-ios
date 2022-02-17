@@ -54,29 +54,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var suspendedBaseView: UIView!
     @IBOutlet private weak var suspendedLabel: UILabel!
 
-    var viewModel: MatchWidgetCellViewModel? {
-        didSet {
-            if let viewModelValue = self.viewModel {
-                self.eventNameLabel.text = "\(viewModelValue.competitionName)"
-                self.homeParticipantNameLabel.text = "\(viewModelValue.homeTeamName)"
-                self.awayParticipantNameLabel.text = "\(viewModelValue.awayTeamName)"
-                self.dateLabel.text = "\(viewModelValue.startDateString)"
-                self.timeLabel.text = "\(viewModelValue.startTimeString)"
-
-                if viewModelValue.countryISOCode != "" {
-                    self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryISOCode))
-                }
-                else {
-                    self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModelValue.countryId))
-                }
-
-            }
-        }
-    }
+    var viewModel: MatchWidgetCellViewModel?
 
     static var cellHeight: CGFloat = 156
 
-    var match: Match?
     var snapshot: UIImage?
 
     var isFavorite: Bool = false {
@@ -195,7 +176,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.match = nil
+
         self.snapshot = nil
 
         self.leftOutcome = nil
@@ -283,37 +264,29 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.viewModel = viewModel
 
-        if let viewModel = self.viewModel {
-            self.eventNameLabel.text = "\(viewModel.competitionName)"
-            self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
-            self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
-            self.dateLabel.text = "\(viewModel.startDateString)"
-            self.timeLabel.text = "\(viewModel.startTimeString)"
+        self.eventNameLabel.text = "\(viewModel.competitionName)"
+        self.homeParticipantNameLabel.text = "\(viewModel.homeTeamName)"
+        self.awayParticipantNameLabel.text = "\(viewModel.awayTeamName)"
+        self.dateLabel.text = "\(viewModel.startDateString)"
+        self.timeLabel.text = "\(viewModel.startTimeString)"
 
-            // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-            if viewModel.countryISOCode != "" {
-                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-            }
-            else {
-                self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
-            }
-
-            if let match = viewModel.match {
-                self.setupMarketsWithStore(match: match)
-
-                for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value {
-                    if matchId == match.id {
-                        self.isFavorite = true
-                    }
-                }
-            }
+       // self.sportTypeImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        if viewModel.countryISOCode != "" {
+            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
         }
-    }
+        else {
+            self.locationFlagImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+        }
 
-    func setupMarketsWithStore(match: Match) {
+        guard
+            let match = viewModel.match
+        else {
+            return
+        }
+
         if let market = match.markets.first {
 
-            if let marketPublisher = self.viewModel?.store?.marketPublisher(withId: market.id) {
+            if let marketPublisher = viewModel.store.marketPublisher(withId: market.id) {
                 self.marketSubscriber = marketPublisher
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] marketUpdate in
@@ -330,134 +303,148 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                         }
                     }
             }
-            
-            if let outcome = market.outcomes[safe: 0] {
-                self.homeOddTitleLabel.text = outcome.typeName
-                //self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentHomeOddValue = outcome.bettingOffer.value
-                self.leftOutcome = outcome
 
+            if let outcome = market.outcomes[safe: 0] {
+
+                self.homeOddTitleLabel.text = outcome.typeName
+                self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .left)
-                    self.homeOddValueLabel.text = "-"
-                }
-                else {
-                    self.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
+                self.leftOddButtonSubscriber = viewModel.store
+                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                    .compactMap({ $0 })
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] bettingOffer in
 
-                self.leftOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
-                                    .map(\.oddsValue)
-                                    .compactMap({ $0 })
-                                    .receive(on: DispatchQueue.main)
-                                    .sink(receiveValue: { [weak self] newOddValue in
+                        guard let weakSelf = self else { return }
 
-                                        guard let weakSelf = self else { return }
+                        if !bettingOffer.isOpen {
+                            weakSelf.homeBaseView.isUserInteractionEnabled = false
+                            weakSelf.homeBaseView.alpha = 0.5
+                            weakSelf.homeOddValueLabel.text = "-"
+                        }
+                        else {
+                            weakSelf.homeBaseView.isUserInteractionEnabled = true
+                            weakSelf.homeBaseView.alpha = 1.0
 
-                                        if let currentOddValue = weakSelf.currentHomeOddValue {
-                                            if newOddValue > currentOddValue {
-                                                weakSelf.highlightOddChangeUp(animated: true,
-                                                                           upChangeOddValueImage: weakSelf.homeUpChangeOddValueImage,
-                                                                           baseView: weakSelf.homeBaseView)
-                                            }
-                                            else if newOddValue < currentOddValue {
-                                                weakSelf.highlightOddChangeDown(animated: true,
-                                                                           downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
-                                                                           baseView: weakSelf.homeBaseView)
-                                            }
-                                        }
-                                        weakSelf.currentHomeOddValue = newOddValue
-                                        weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                                        weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .left)
-                                    })
+                            guard
+                                let newOddValue = bettingOffer.oddsValue
+                            else {
+                                return
+                            }
+
+                            if let currentOddValue = weakSelf.currentHomeOddValue {
+                                if newOddValue > currentOddValue {
+                                    weakSelf.highlightOddChangeUp(animated: true,
+                                                                  upChangeOddValueImage: weakSelf.homeUpChangeOddValueImage,
+                                                                  baseView: weakSelf.homeBaseView)
+                                }
+                                else if newOddValue < currentOddValue {
+                                    weakSelf.highlightOddChangeDown(animated: true,
+                                                                    downChangeOddValueImage: weakSelf.homeDownChangeOddValueImage,
+                                                                    baseView: weakSelf.homeBaseView)
+                                }
+                            }
+                            weakSelf.currentHomeOddValue = newOddValue
+                            weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        }
+                    })
 
             }
 
             if let outcome = market.outcomes[safe: 1] {
-                self.drawOddTitleLabel.text = outcome.typeName
-                // self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentDrawOddValue = outcome.bettingOffer.value
-                self.middleOutcome = outcome
 
+                self.drawOddTitleLabel.text = outcome.typeName
+                self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .middle)
-                    self.drawOddValueLabel.text = "-"
-                }
-                else {
-                    self.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
-
-                self.middleOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
-                    .map(\.oddsValue)
+                self.middleOddButtonSubscriber = viewModel.store
+                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
                     .compactMap({ $0 })
                     .receive(on: DispatchQueue.main)
-                    .sink(receiveValue: { [weak self] newOddValue in
+                    .sink(receiveValue: { [weak self] bettingOffer in
 
                         guard let weakSelf = self else { return }
 
-                        if let currentOddValue = weakSelf.currentDrawOddValue {
-                            if newOddValue > currentOddValue {
-                                weakSelf.highlightOddChangeUp(animated: true,
-                                                           upChangeOddValueImage: weakSelf.drawUpChangeOddValueImage,
-                                                           baseView: weakSelf.drawBaseView)
-                            }
-                            else if newOddValue < currentOddValue {
-                                weakSelf.highlightOddChangeDown(animated: true,
-                                                           downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
-                                                           baseView: weakSelf.drawBaseView)
-                            }
+                        if !bettingOffer.isOpen {
+                            weakSelf.drawBaseView.isUserInteractionEnabled = false
+                            weakSelf.drawBaseView.alpha = 0.5
+                            weakSelf.drawOddValueLabel.text = "-"
                         }
-                        weakSelf.currentDrawOddValue = newOddValue
-                        weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                        weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .middle)
+                        else {
+                            weakSelf.drawBaseView.isUserInteractionEnabled = true
+                            weakSelf.drawBaseView.alpha = 1.0
+
+                            guard
+                                let newOddValue = bettingOffer.oddsValue
+                            else {
+                                return
+                            }
+
+                            if let currentOddValue = weakSelf.currentDrawOddValue {
+                                if newOddValue > currentOddValue {
+                                    weakSelf.highlightOddChangeUp(animated: true,
+                                                                  upChangeOddValueImage: weakSelf.drawUpChangeOddValueImage,
+                                                                  baseView: weakSelf.drawBaseView)
+                                }
+                                else if newOddValue < currentOddValue {
+                                    weakSelf.highlightOddChangeDown(animated: true,
+                                                                    downChangeOddValueImage: weakSelf.drawDownChangeOddValueImage,
+                                                                    baseView: weakSelf.drawBaseView)
+                                }
+                            }
+                            weakSelf.currentDrawOddValue = newOddValue
+                            weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        }
                     })
             }
 
             if let outcome = market.outcomes[safe: 2] {
-                self.awayOddTitleLabel.text = outcome.typeName
-                //self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                // self.currentAwayOddValue = outcome.bettingOffer.value
-                self.rightOutcome = outcome
 
+                self.awayOddTitleLabel.text = outcome.typeName
+                self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
-                if outcome.bettingOffer.value < 1.0 {
-                    self.setOddViewDisabled(disabled: true, oddViewPosition: .right)
-                    self.awayOddValueLabel.text = "-"
-                    self.awayBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                }
-                else {
-                    self.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: outcome.bettingOffer.value)
-                }
+                self.rightOddButtonSubscriber = viewModel.store
+                    .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
+                    .compactMap({ $0 })
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] bettingOffer in
 
-                self.rightOddButtonSubscriber = self.viewModel?.store?.bettingOfferPublisher(withId: outcome.bettingOffer.id)?
-                                    .map(\.oddsValue)
-                                    .compactMap({ $0 })
-                                    .receive(on: DispatchQueue.main)
-                                    .sink(receiveValue: { [weak self] newOddValue in
+                        guard let weakSelf = self else { return }
 
-                                        guard let weakSelf = self else { return }
+                        if !bettingOffer.isOpen {
+                            weakSelf.awayBaseView.isUserInteractionEnabled = false
+                            weakSelf.awayBaseView.alpha = 0.5
+                            weakSelf.awayOddValueLabel.text = "-"
+                        }
+                        else {
+                            weakSelf.awayBaseView.isUserInteractionEnabled = true
+                            weakSelf.awayBaseView.alpha = 1.0
 
-                                        if let currentOddValue = weakSelf.currentAwayOddValue {
-                                            if newOddValue > currentOddValue {
-                                                weakSelf.highlightOddChangeUp(animated: true,
-                                                                           upChangeOddValueImage: weakSelf.awayUpChangeOddValueImage,
-                                                                           baseView: weakSelf.awayBaseView)
-                                            }
-                                            else if newOddValue < currentOddValue {
-                                                weakSelf.highlightOddChangeDown(animated: true,
-                                                                           downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
-                                                                           baseView: weakSelf.awayBaseView)
-                                            }
-                                        }
+                            guard
+                                let newOddValue = bettingOffer.oddsValue
+                            else {
+                                return
+                            }
 
-                                        weakSelf.currentAwayOddValue = newOddValue
-                                        weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                                        weakSelf.setOddViewDisabled(disabled: false, oddViewPosition: .right)
-                                    })
+                            if let currentOddValue = weakSelf.currentAwayOddValue {
+                                if newOddValue > currentOddValue {
+                                    weakSelf.highlightOddChangeUp(animated: true,
+                                                                  upChangeOddValueImage: weakSelf.awayUpChangeOddValueImage,
+                                                                  baseView: weakSelf.awayBaseView)
+                                }
+                                else if newOddValue < currentOddValue {
+                                    weakSelf.highlightOddChangeDown(animated: true,
+                                                                    downChangeOddValueImage: weakSelf.awayDownChangeOddValueImage,
+                                                                    baseView: weakSelf.awayBaseView)
+                                }
+                            }
+
+                            weakSelf.currentAwayOddValue = newOddValue
+                            weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        }
+                    })
 
             }
 
@@ -479,51 +466,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             self.isFavorite = true
         }
-
-    }
-
-    func setOddViewDisabled(disabled: Bool, oddViewPosition: OddViewPosition) {
-        if disabled {
-            switch oddViewPosition {
-            case .left:
-                self.homeBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                self.homeOddValueLabel.textColor = UIColor.App.textDisablePrimary
-                self.homeOddTitleLabel.textColor = UIColor.App.textDisablePrimary
-                self.leftOutcomeDisabled = disabled
-            case .middle:
-                self.drawBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                self.drawOddValueLabel.textColor = UIColor.App.textDisablePrimary
-                self.drawOddTitleLabel.textColor = UIColor.App.textDisablePrimary
-                self.middleOutcomeDisabled = disabled
-            case .right:
-                self.awayBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
-                self.awayOddValueLabel.textColor = UIColor.App.textDisablePrimary
-                self.awayOddTitleLabel.textColor = UIColor.App.textDisablePrimary
-                self.rightOutcomeDisabled = disabled
-            }
-
-        }
-        else {
-            switch oddViewPosition {
-            case .left:
-                self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
-                self.homeOddValueLabel.textColor = UIColor.App.textPrimary
-                self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
-                self.leftOutcomeDisabled = disabled
-
-            case .middle:
-                self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
-                self.drawOddValueLabel.textColor = UIColor.App.textPrimary
-                self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
-                self.middleOutcomeDisabled = disabled
-
-            case .right:
-                self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
-                self.awayOddValueLabel.textColor = UIColor.App.textPrimary
-                self.awayOddValueLabel.textColor = UIColor.App.textPrimary
-                self.rightOutcomeDisabled = disabled
-            }
-        }
     }
 
     //
@@ -537,13 +479,15 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.suspendedBaseView.isHidden = false
     }
 
-    func shouldShowCountryFlag(_ show: Bool) {
-        self.locationFlagImageView.isHidden = !show
-    }
-
     private func showClosedView() {
         self.suspendedLabel.text = localized("closed_market")
         self.suspendedBaseView.isHidden = false
+    }
+
+    //
+    //
+    func shouldShowCountryFlag(_ show: Bool) {
+        self.locationFlagImageView.isHidden = !show
     }
 
     //
@@ -570,6 +514,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.tappedMatchWidgetAction?()
     }
 
+    //
     // TODO: This func is called even if the cell is reused
     func highlightOddChangeUp(animated: Bool = true, upChangeOddValueImage: UIImageView, baseView: UIView) {
         baseView.layer.borderWidth = 1.5
@@ -608,6 +553,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     //
+    // Odd buttons interaction
+    //
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
@@ -623,8 +570,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @objc func didTapLeftOddButton() {
 
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.viewModel?.match,
+            let firstMarket = match.markets.first,
             let outcome = self.leftOutcome
         else {
             return
@@ -670,8 +617,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapMiddleOddButton() {
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.viewModel?.match,
+            let firstMarket = match.markets.first,
             let outcome = self.middleOutcome
         else {
             return
@@ -716,8 +663,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     @objc func didTapRightOddButton() {
         guard
-            let match = self.match,
-            let firstMarket = self.match?.markets.first,
+            let match = self.viewModel?.match,
+            let firstMarket = match.markets.first,
             let outcome = self.rightOutcome
         else {
             return
