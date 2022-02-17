@@ -22,9 +22,13 @@ struct Sport {
     }
 
     static var football: Sport {
-        return Sport(id: "1",
-                     name: "Football",
-                     showEventCategory: false)
+        return Sport(id: "1", name: "Football", showEventCategory: false)
     }
     
+}
+
+extension Sport {
+    init(discipline: EveryMatrix.Discipline) {
+        self.init(id: discipline.id, name: discipline.name ?? "", showEventCategory: discipline.showEventCategory ?? false)
+    }
 }

@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import LinkPresentation
 
 class MatchDetailsViewController: UIViewController {
 
@@ -15,6 +16,8 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailTopView: UIView!
     @IBOutlet private var backButton: UIButton!
     @IBOutlet private var matchStatsButton: UIButton!
+    @IBOutlet private var shareButton: UIButton!
+
     @IBOutlet private var headerCompetitionDetailView: UIView!
     @IBOutlet private var headerCompetitionLabel: UILabel!
     @IBOutlet private var headerCompetitionImageView: UIImageView!
@@ -108,7 +111,8 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    var match: Match
+    var match: Match?
+    var matchId: String?
 
     var viewModel: MatchDetailsViewModel
 
@@ -127,6 +131,14 @@ class MatchDetailsViewController: UIViewController {
         super.init(nibName: "MatchDetailsViewController", bundle: nil)
     }
 
+    init(matchMode: MatchMode = .preLive, matchId: String) {
+        self.matchMode = matchMode
+        self.matchId = matchId
+        self.viewModel = MatchDetailsViewModel(matchId: matchId)
+        self.match = self.viewModel.match
+        super.init(nibName: "MatchDetailsViewController", bundle: nil)
+    }
+
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -139,7 +151,7 @@ class MatchDetailsViewController: UIViewController {
         self.setupWithTheme()
 
         self.matchStatsButton.isHidden = true
-        if self.match.sportType == "1" || self.match.sportType == "3" {
+        if self.match?.sportType == "1" || self.match?.sportType == "3" {
             self.matchStatsButton.isHidden = false
         }
 
@@ -193,8 +205,6 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -213,6 +223,9 @@ class MatchDetailsViewController: UIViewController {
         self.loadingView.stopAnimating()
 
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+
+        self.shareButton.setTitle("", for: .normal)
+        self.shareButton.setImage(UIImage(named: "send_bet_icon"), for: .normal)
 
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
@@ -352,8 +365,16 @@ class MatchDetailsViewController: UIViewController {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
         }
 
+        var matchIdSecured = ""
+        if let matchId = self.match?.id {
+            matchIdSecured = matchId
+        }
+        else if let matchId = self.matchId {
+            matchIdSecured = matchId
+        }
+
         let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
-                                                                language: "en", matchId: match.id)
+                                                                language: "en", matchId: self.match?.id ?? matchIdSecured)
 
         self.matchDetailsAggregatorPublisher?.cancel()
         self.matchDetailsAggregatorPublisher = nil
@@ -364,7 +385,7 @@ class MatchDetailsViewController: UIViewController {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    print("Error retrieving match detail data!")
                 case .finished:
                     print("Data retrieved!")
                 }
@@ -389,6 +410,15 @@ class MatchDetailsViewController: UIViewController {
 
         self.viewModel.store.processAggregatorForMatchDetail(aggregator)
 
+        if self.match == nil {
+            self.viewModel.match = self.viewModel.store.match
+            self.match = self.viewModel.match
+        }
+
+        if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
+            self.matchMode = .live
+        }
+
         setupHeaderDetails()
     }
 
@@ -404,19 +434,21 @@ class MatchDetailsViewController: UIViewController {
     }
 
     func setupHeaderDetails() {
-        let viewModel = MatchWidgetCellViewModel(match: self.match)
+        if let match = self.match {
+            let viewModel = MatchWidgetCellViewModel(match: match)
 
-        self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-        self.headerCompetitionLabel.text = viewModel.competitionName
-        self.headerDetailHomeLabel.text = viewModel.homeTeamName
-        self.headerDetailAwayLabel.text = viewModel.awayTeamName
+            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            self.headerCompetitionLabel.text = viewModel.competitionName
+            self.headerDetailHomeLabel.text = viewModel.homeTeamName
+            self.headerDetailAwayLabel.text = viewModel.awayTeamName
 
-        if matchMode == .preLive {
-            self.headerDetailPreliveTopLabel.text = viewModel.startDateString
-            self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
-        }
-        else {
-            updateHeaderDetails()
+            if matchMode == .preLive {
+                self.headerDetailPreliveTopLabel.text = viewModel.startDateString
+                self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
+            }
+            else {
+                updateHeaderDetails()
+            }
         }
     }
 
@@ -426,24 +458,24 @@ class MatchDetailsViewController: UIViewController {
         var minutes = ""
         var matchPart = ""
 
-        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[match.id] {
+        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[match?.id ?? ""] {
             for matchInfoId in matchInfoArray {
                 if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match.rootPartId {
+                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match?.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if self.match.homeParticipant.id == matchInfo.paramParticipantId1 {
+                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
                                 homeGoals = "\(homeGoalsFloat)"
                             }
-                            else if self.match.awayParticipant.id == matchInfo.paramParticipantId1 {
+                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
                                 awayGoals = "\(homeGoalsFloat)"
                             }
                         }
                         if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if self.match.homeParticipant.id == matchInfo.paramParticipantId2 {
+                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
                                 homeGoals = "\(awayGoalsFloat)"
                             }
-                            else if self.match.awayParticipant.id == matchInfo.paramParticipantId2 {
+                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
                                 awayGoals = "\(awayGoalsFloat)"
                             }
                         }
@@ -499,8 +531,46 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @IBAction private func didTapMatchStatsButton() {
-        let matchFieldWebViewController = MatchFieldWebViewController(match: self.match)
-        self.present(matchFieldWebViewController, animated: true, completion: nil)
+        if let match = self.match {
+            let matchFieldWebViewController = MatchFieldWebViewController(match: match)
+            self.present(matchFieldWebViewController, animated: true, completion: nil)
+        }
     }
 
+    @IBAction private func didTapShareButton() {
+        // print("SNAPSHOT: \(self.viewModel.gameSnapshot)")
+
+        let share = UIActivityViewController(activityItems: [self], applicationActivities: nil)
+        present(share, animated: true, completion: nil)
+
+    }
+
+}
+
+extension MatchDetailsViewController: UIActivityItemSource {
+    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
+        return ""
+    }
+
+    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
+        return nil
+    }
+
+    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
+
+        let metadata = LPLinkMetadata()
+        let urlMobile = Env.urlMobileShares
+
+        if let gameSnapshot = self.viewModel.gameSnapshot, let matchId = self.match?.id, let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+
+            let imageProvider = NSItemProvider(object: gameSnapshot)
+            metadata.imageProvider = imageProvider
+            metadata.url = matchUrl
+            metadata.originalURL = metadata.url
+            metadata.title = localized("check_this_game")
+        }
+
+        return metadata
+
+    }
 }

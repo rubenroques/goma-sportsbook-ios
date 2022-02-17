@@ -81,6 +81,8 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.currentOddValue = nil
+
         self.oddSubscriber?.cancel()
         self.oddSubscriber = nil
         
@@ -126,10 +128,13 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.oddBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.oddValueLabel.backgroundColor = UIColor.App.backgroundPrimary
         self.oddValueLabel.textColor = UIColor.App.textPrimary
-
     }
 
     func highlightOddChangeUp(animated: Bool = true) {
+
+        self.upChangeOddValueImage.alpha = 0.0
+        self.downChangeOddValueImage.alpha = 0.0
+
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.upChangeOddValueImage.alpha = 1.0
@@ -143,6 +148,10 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     }
 
     func highlightOddChangeDown(animated: Bool = true) {
+
+        self.upChangeOddValueImage.alpha = 0.0
+        self.downChangeOddValueImage.alpha = 0.0
+
         self.oddBaseView.layer.borderWidth = 1.5
         UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 0.0, options: .curveEaseIn, animations: {
             self.downChangeOddValueImage.alpha = 1.0
@@ -156,7 +165,9 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
     }
 
     func configureWithBettingTicket(_ bettingTicket: BettingTicket, errorBetting: String? = nil) {
+
         self.bettingTicket = bettingTicket
+
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
         self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
         self.marketNameLabel.text = bettingTicket.marketDescription
@@ -171,7 +182,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .map({ bettingOffer, market in
-                    return (bettingOffer.isAvailable ?? true, market.isAvailable ?? true)
+                    return (bettingOffer.isOpen, market.isAvailable ?? true)
                 })
                 .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
                     self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable

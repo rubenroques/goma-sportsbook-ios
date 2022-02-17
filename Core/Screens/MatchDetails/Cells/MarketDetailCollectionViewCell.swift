@@ -100,7 +100,9 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
         self.marketTypeLabel.text = outcome.typeName
 
-        self.updateBettingOffer(value: outcome.bettingOffer.value, isAvailableForBetting: true)
+        self.updateBettingOffer(value: outcome.bettingOffer.value,
+                                statusId: outcome.bettingOffer.statusId ?? "1",
+                                isAvailableForBetting: outcome.bettingOffer.isAvailable ?? true)
 
         self.isOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
 
@@ -127,10 +129,10 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
                     if let content = aggregator.content {
                         for contentType in content {
                             if case let .bettingOffer(bettingOffer) = contentType, let oddsValue = bettingOffer.oddsValue {
-
                                 self?.oddValue =  nil
-                                self?.updateBettingOffer(value: oddsValue, isAvailableForBetting: true)
-
+                                self?.updateBettingOffer(value: oddsValue,
+                                                         statusId: bettingOffer.statusId ?? "1",
+                                                         isAvailableForBetting: bettingOffer.isAvailable ?? true)
                                 break
                             }
                         }
@@ -140,8 +142,8 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
 
                     if let content = aggregatorUpdates.contentUpdates {
                         for contentType in content {
-                            if case let .bettingOfferUpdate(_, odd, _, isAvailable) = contentType {
-                                self?.updateBettingOffer(value: odd, isAvailableForBetting: isAvailable)
+                            if case let .bettingOfferUpdate(_, statusId, odd, _, isAvailable) = contentType {
+                                self?.updateBettingOffer(value: odd, statusId: statusId, isAvailableForBetting: isAvailable)
                             }
                         }
                     }
@@ -152,7 +154,7 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
             })
     }
 
-    private func updateBettingOffer(value: Double?, isAvailableForBetting available: Bool?) {
+    private func updateBettingOffer(value: Double?, statusId: String?, isAvailableForBetting available: Bool?) {
 
         if let currentOddValue = self.oddValue, let newOddValue = value {
             if newOddValue > currentOddValue {
@@ -168,15 +170,15 @@ class MarketDetailCollectionViewCell: UICollectionViewCell {
         }
 
         let oddValue = (value ?? self.oddValue) ?? 0.0
-        let isAvailable = (available ?? self.isAvailableForBet) ?? true
+        let isAvailable = (statusId ?? "1") == "1" && (available ?? self.isAvailableForBet) ?? true
 
         self.oddValue = oddValue
         self.isAvailableForBet = isAvailable
 
-        self.marketOddLabel.text = OddFormatter.formatOdd(withValue: oddValue)
         if isAvailable && OddFormatter.isValidOdd(withValue: oddValue) {
             self.isUserInteractionEnabled = true
             self.containerView.alpha = 1.0
+            self.marketOddLabel.text = OddFormatter.formatOdd(withValue: oddValue)
         }
         else {
             self.isUserInteractionEnabled = false

@@ -344,7 +344,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                         cell.setupWithMatch(match)
                     }
 
-                    cell.tappedMatchLineAction = {
+                    cell.tappedMatchLineAction = { image in
                         self.didSelectMatchAction?(match)
                     }
 

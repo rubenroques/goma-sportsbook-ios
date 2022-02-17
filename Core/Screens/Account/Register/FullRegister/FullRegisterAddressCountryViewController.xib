@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -12,7 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FullRegisterAddressCountryViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
                 <outlet property="backButton" destination="Y9i-nM-4U3" id="TgM-xm-crU"/>
-                <outlet property="closeButton" destination="2Ie-63-WDF" id="cgv-gh-SLc"/>
+                <outlet property="closeButton" destination="2Ie-63-WDF" id="BUz-Ie-ofU"/>
                 <outlet property="containerView" destination="a9N-Cr-jma" id="PQZ-vH-vcl"/>
                 <outlet property="continueButton" destination="uRP-Im-u3j" id="CbE-85-WAf"/>
                 <outlet property="navigationView" destination="GYk-k1-jlS" id="zyn-N5-n4Y"/>
@@ -55,6 +55,9 @@
                             <state key="normal" title="Close">
                                 <color key="titleColor" systemColor="systemBlueColor"/>
                             </state>
+                            <connections>
+                                <action selector="closeAction" destination="-1" eventType="touchUpInside" id="Snx-LN-hAG"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -181,7 +184,7 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_back_icon" width="14" height="23"/>
+        <image name="arrow_back_icon" width="12" height="21"/>
         <image name="progress_step_2" width="224" height="27"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

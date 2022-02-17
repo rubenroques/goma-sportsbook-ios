@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var window: UIWindow?
     var bootstrap: Bootstrap!
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         let file = FileDestination()  // log to default swiftybeaver.log file
         let cloud = SBPlatformDestination(appID: "jxEpzL",
@@ -90,6 +91,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         Env.everyMatrixClient.reconnectSocket()
+    }
+
+    // Universal Links
+    func application(_ application: UIApplication,
+                     continue userActivity: NSUserActivity,
+                     restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+
+        if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
+                guard let url = userActivity.webpageURL else {
+                    return false
+                }
+
+                let urlSections = url.pathComponents
+
+                if urlSections.contains("gamedetail") {
+                    if let gameDetailId = urlSections.last {
+                        Env.urlSchemaManager.setRedirect(subject: ["gamedetail": gameDetailId])
+                    }
+                }
+                else if urlSections.contains("bet") {
+                    if let betId = urlSections.last {
+                        print("BET ID: \(betId)")
+                        Env.urlSchemaManager.setRedirect(subject: ["bet": betId])
+                    }
+                }
+
+            }
+            return true
     }
 
 }

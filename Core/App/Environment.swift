@@ -13,7 +13,7 @@ class Environment {
 
     let appSession = AppSession()
 
-    let gomaNetworkClient = GomaGamingServiceClient() // session: Environment.pulseConnectedSession()))
+    let gomaNetworkClient = GomaGamingServiceClient()
     let everyMatrixClient = EveryMatrixServiceClient()
     let everyMatrixStorage = AggregatorsRepository()
 
@@ -29,11 +29,20 @@ class Environment {
     var date: () -> Date = { Date.init() }
 
     var favoritesManager = FavoritesManager()
+    var favoritesStorage = FavoritesAggregatorsRepository()
     var deviceFCMToken: String = ""
 
     var deviceId: String {
         UserDefaults.standard.string(forKey: "device_id") ?? ""
     }
+
+    let urlMobileShares: String = "https://sportsbook.gomagaming.com/mobile"
+    let urlSchemaManager = URLSchemaManager()
+
+    var userBetslipSettingsSelectorList: [BetslipSelection] = [BetslipSelection(key: "ACCEPT_ANY",
+                                                                                description: localized("accept_any")),
+                                                               BetslipSelection(key: "ACCEPT_HIGHER",
+                                                                                description: localized("accept_higher"))]
 
     func getUserSettings() -> [GomaClientSettings]? {
         let settingsData = UserDefaults.standard.data(forKey: "user_settings")

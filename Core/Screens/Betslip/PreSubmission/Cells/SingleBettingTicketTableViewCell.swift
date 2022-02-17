@@ -299,7 +299,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .map({ bettingOffer, market in
-                    return (bettingOffer.isAvailable ?? true, market.isAvailable ?? true)
+                    return (bettingOffer.isOpen, market.isAvailable ?? true)
                 })
                 .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
                     self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable

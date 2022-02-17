@@ -72,7 +72,7 @@ extension EveryMatrix {
 
     enum ContentUpdate: Decodable {
 
-        case bettingOfferUpdate(id: String, odd: Double?, isLive: Bool?, isAvailable: Bool?)
+        case bettingOfferUpdate(id: String, statusId: String?, odd: Double?, isLive: Bool?, isAvailable: Bool?)
         case marketUpdate(id: String, isAvailable: Bool?, isClosed: Bool?)
         case matchInfo(id: String, paramFloat1: Int?, paramFloat2: Int?, paramEventPartName1: String?)
         case fullMatchInfoUpdate(matchInfo: EveryMatrix.MatchInfo)
@@ -93,6 +93,7 @@ extension EveryMatrix {
 
         enum BettingOfferCodingKeys: String, CodingKey {
             case contentId = "id"
+            case statusId = "statusId"
             case oddValue = "odds"
             case isAvailable = "isAvailable"
             case isLive = "isLive"
@@ -139,14 +140,16 @@ extension EveryMatrix {
                     if let changedPropertiesContainer = try? container.nestedContainer(keyedBy: BettingOfferCodingKeys.self, forKey: .changedProperties) {
 
                         let newOddValue = try? changedPropertiesContainer.decode(Double.self, forKey: .oddValue)
+                        let statusIdValue = try? changedPropertiesContainer.decode(String.self, forKey: .statusId)
                         let isAvailableValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isAvailable)
                         let isLiveValue = try? changedPropertiesContainer.decode(Bool.self, forKey: .isLive)
 
                         if newOddValue != nil || isAvailableValue != nil || isLiveValue != nil {
                             contentUpdateType = .bettingOfferUpdate(id: contentId,
-                                                   odd: newOddValue,
-                                                   isLive: isLiveValue,
-                                                   isAvailable: isAvailableValue)
+                                                                    statusId: statusIdValue,
+                                                                    odd: newOddValue,
+                                                                    isLive: isLiveValue,
+                                                                    isAvailable: isAvailableValue)
                         }
                     }
                 }

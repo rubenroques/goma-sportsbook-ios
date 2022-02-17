@@ -19,9 +19,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var clearBaseView: UIView!
     @IBOutlet private weak var clearButton: UIButton!
-    
     @IBOutlet private weak var settingsButton: UIButton!
-    
+
     @IBOutlet private weak var tableView: UITableView!
 
     @IBOutlet private weak var systemBetBaseView: UIView!
@@ -36,6 +35,11 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var systemBetTypeSelectorContainerView: UIView!
     @IBOutlet private weak var systemBetTypePickerView: UIPickerView!
     @IBOutlet private weak var selectSystemBetTypeButton: UIButton!
+
+//    @IBOutlet private weak var settingsPickerBaseView: UIView!
+//    @IBOutlet private weak var settingsPickerContainerView: UIView!
+//    @IBOutlet private weak var settingsPickerView: UIPickerView!
+//    @IBOutlet private weak var settingsPickerButton: UIButton!
 
     @IBOutlet private weak var simpleWinningsBaseView: UIView!
     @IBOutlet private weak var simpleWinningsSeparatorView: UIView!
@@ -147,6 +151,19 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+//    var showingSettingsSelector: Bool = false {
+//        didSet {
+//            if showingSettingsSelector {
+//                self.settingsPickerBaseView.alpha = 1.0
+//            }
+//            else {
+//                self.settingsPickerBaseView.alpha = 0.0
+//            }
+//        }
+//    }
+
+    var selectedBetslipSetting: String?
+
     // Multiple Bets values
      var displayBetValue: Int = 0 {
         didSet {
@@ -185,7 +202,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
-    var gomaSuggestedBetsResponse: [[GomaSuggestedBets]] = []
+    var gomaSuggestedBetsResponse: [[SuggestedBetSummary]] = []
 
     var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
     var suggestedCancellables = Set<AnyCancellable>()
@@ -194,7 +211,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.suggestedBetsActivityIndicator.isHidden = !isSuggestedBetsLoading
         }
     }
-    var cachedBetSuggestedCollectionViewCellViewModels: [Int: BetSuggestedCollectionViewCellViewModel] = [:]
+    var cachedSuggestedBetViewModels: [Int: SuggestedBetViewModel] = [:]
     var suggestedCellLoadedPublisher: AnyCancellable?
 
     var maxStakeMultiple: Double?
@@ -229,7 +246,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     deinit {
-        cachedBetSuggestedCollectionViewCellViewModels = [:]
+        cachedSuggestedBetViewModels = [:]
     }
 
     override func viewDidLoad() {
@@ -238,12 +255,15 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
+        //self.settingsPickerBaseView.alpha = 0.0
 
         self.suggestedBetsActivityIndicator.isHidden = true
 
         self.view.bringSubviewToFront(systemBetTypeSelectorBaseView)
         self.view.bringSubviewToFront(emptyBetsBaseView)
+        //self.view.bringSubviewToFront(settingsPickerBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
+
 
         self.betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
@@ -254,6 +274,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
+
+//        self.settingsPickerView.delegate = self
+//        self.settingsPickerView.delegate = self
 
         self.placeBetButtonsBaseView.isHidden = true
         self.placeBetButtonsSeparatorView.alpha = 0.5
@@ -337,6 +360,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 self?.systemBetTypePickerView.reloadAllComponents()
 
+                let oldSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex ?? 0
+
                 if tickets.count < 3 {
                     if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
                         self?.betTypeSegmentControl.selectedSegmentIndex = 1
@@ -363,7 +388,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.selectedSegmentIndex = 1
                 }
 
-                if let segmentControl = self?.betTypeSegmentControl {
+                if let segmentControl = self?.betTypeSegmentControl,
+                   let newSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex,
+                   newSegmentIndex != oldSegmentIndex {
                     self?.didChangeSegmentValue(segmentControl)
                 }
 
@@ -592,7 +619,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.multipleBetslipSelectionState
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipState in
+                // print("MULTIPLE BET STATE: \(betslipState)")
                 self?.maxStakeMultiple = betslipState?.maxStake
+                if let multipleBetslipState = betslipState {
+                    self?.checkForbiddenCombinationErrors(multipleBetslipState: multipleBetslipState)
+
+                }
             })
             .store(in: &cancellables)
 
@@ -610,8 +642,27 @@ class PreSubmissionBetslipViewController: UIViewController {
         
         self.placeBetButton.isEnabled = false
 
+        self.getUserSettings()
+
         Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
 
+    }
+
+    func getUserSettings() {
+
+//        if let userSetting = UserDefaults.standard.string(forKey: "user_betslip_settings"),
+//           let userSettingIndex = Env.userBetslipSettingsSelectorList.firstIndex(where: {$0.key == userSetting}) {
+//
+//            self.settingsPickerView.selectRow(userSettingIndex, inComponent: 0, animated: true)
+//            self.selectedBetslipSetting = userSetting
+//        }
+//
+//        print("CURRENT USER BETSLIP SETTING: \(self.selectedBetslipSetting)")
+
+    }
+
+    func setUserSettings() {
+        UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
     }
 
 //    override func viewDidDisappear(_ animated: Bool) {
@@ -623,10 +674,19 @@ class PreSubmissionBetslipViewController: UIViewController {
 //        cachedBetSuggestedCollectionViewCellViewModels = [:]
 //    }
 
+    func checkForbiddenCombinationErrors(multipleBetslipState: BetslipSelectionState) {
+
+        if !multipleBetslipState.forbiddenCombinations.isEmpty {
+            self.showErrorView(errorMessage: localized("selections_not_combinable"))
+        }
+        self.tableView.reloadData()
+    }
+
     func getSuggestedBets() {
 
         self.isSuggestedBetsLoading = true
 
+        // TODO: Code Review - O que é este register?!
         for suggestedBetRegister in self.suggestedBetsRegisters {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
         }
@@ -639,7 +699,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                 guard let betsArray = gomaBetsArray else {return}
 
                 self?.gomaSuggestedBetsResponse = betsArray
-
+                // TODO: Code review - Mais um DispatchQueue.main.async
                 DispatchQueue.main.async {
                     self?.betSuggestedCollectionView.reloadData()
                 }
@@ -759,6 +819,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.amountBaseView.backgroundColor = UIColor.App.inputBackground
 
         self.clearButton.titleLabel?.textColor = UIColor.App.textPrimary
+        self.clearButton.tintColor = UIColor.App.backgroundOdds
+
+        self.settingsButton.titleLabel?.textColor = UIColor.App.textPrimary
+        self.settingsButton.tintColor = UIColor.App.backgroundOdds
+
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App.textPrimary
         self.secondaryAmountTextfield.attributedPlaceholder = NSAttributedString(string: localized("amount"), attributes: [
@@ -869,12 +934,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.selectSystemBetTypeButton.backgroundColor = UIColor.App.highlightPrimary
         
         self.betTypeSegmentControl.backgroundColor = UIColor.App.backgroundTertiary
-        
-        
-        
+
         StyleHelper.styleButton(button: self.selectSystemBetTypeButton)
         StyleHelper.styleButton(button: self.placeBetButton)
         StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
+        //StyleHelper.styleButton(button: self.settingsPickerButton)
 
         self.settingsButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.clearButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
@@ -885,17 +949,20 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.secondaryAmountTextfield.resignFirstResponder()
     }
 
+//    @IBAction private func didTapSettingsButton() {
+//        self.showingSettingsSelector = true
+//    }
+
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
 
         self.gomaSuggestedBetsResponse = []
 
-        for cachedBetSuggestedViewModel in self.cachedBetSuggestedCollectionViewCellViewModels.values {
-
+        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
             cachedBetSuggestedViewModel.unregisterSuggestedBets()
         }
 
-        self.cachedBetSuggestedCollectionViewCellViewModels = [:]
+        self.cachedSuggestedBetViewModels = [:]
 
         self.betSuggestedCollectionView.reloadData()
     }
@@ -931,6 +998,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.showingSystemBetOptionsSelector = false
         self.requestSystemBetInfo()
     }
+
+//    @IBAction private func didTapSettingsSelectButton() {
+//        self.showingSettingsSelector = false
+//    }
 
     func requestSystemBetsTypes() {
 
@@ -1245,16 +1316,33 @@ extension PreSubmissionBetslipViewController: UIPickerViewDelegate, UIPickerView
     }
 
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.systemBetOptions.count
+        if pickerView.tag == 1 {
+            return self.systemBetOptions.count
+        }
+        else {
+            return Env.userBetslipSettingsSelectorList.count
+        }
     }
 
     func pickerView(_ pickerView: UIPickerView, attributedTitleForRow row: Int, forComponent component: Int) -> NSAttributedString? {
-        return NSAttributedString(string: self.systemBetOptions[row].name ?? "--",
+        if pickerView.tag == 1 {
+            return NSAttributedString(string: self.systemBetOptions[safe: row]?.name ?? "--",
                                   attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
+        }
+        else {
+            return NSAttributedString(string: Env.userBetslipSettingsSelectorList[safe: row]?.description ?? "--",
+                                      attributes: [NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary])
+        }
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        self.selectedSystemBet = self.systemBetOptions[safe: row]
+        if pickerView.tag == 1 {
+            self.selectedSystemBet = self.systemBetOptions[safe: row]
+        }
+        else {
+            self.selectedBetslipSetting = Env.userBetslipSettingsSelectorList[safe:row]?.key
+            self.setUserSettings()
+        }
     }
 
 }
@@ -1294,34 +1382,33 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         return self.gomaSuggestedBetsResponse.count
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
         return 16
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard
             let cell = collectionView.dequeueCellType(BetSuggestedCollectionViewCell.self, indexPath: indexPath)
-                
         else {
             fatalError()
         }
 
-        if let cachedViewModel = self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row].value {
-
+        if let cachedViewModel = self.cachedSuggestedBetViewModels[indexPath.row].value {
             cell.setupWithViewModel(viewModel: cachedViewModel)
-
         }
         else {
-            let viewModel = BetSuggestedCollectionViewCellViewModel(gomaArray: gomaSuggestedBetsResponse[indexPath.row])
-
-            self.cachedBetSuggestedCollectionViewCellViewModels[indexPath.row] = viewModel
-
+            let betsArray = gomaSuggestedBetsResponse[indexPath.row]
+            let viewModel = SuggestedBetViewModel(suggestedBetCardSummary: SuggestedBetCardSummary(bets: betsArray))
+            self.cachedSuggestedBetViewModels[indexPath.row] = viewModel
             cell.setupWithViewModel(viewModel: viewModel)
-
         }
 
         cell.betNowCallbackAction = { [weak self] in
@@ -1331,7 +1418,6 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         cell.needsReload
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
-                print("NEED RELOAD")
                 self?.isSuggestedBetsLoading = false
                 cell.setReloadedState(reloaded: true)
                 collectionView.reloadData()
@@ -1341,16 +1427,14 @@ extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollec
         return cell
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         let bottomBarHeigth = 60.0
         var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
         if !self.gomaSuggestedBetsResponse[indexPath.row].isEmpty {
-//            if arrayValues.count == 3 {
-//                size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 3 * 60)
-//            }else{
             size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 4 * 60)
-           // }
         }
         return size
     }
@@ -1387,31 +1471,12 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
         let storedValue = self.bettingValueForId?(bettingTicket.id)
 
-        if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
+        let cellBetError = Env.betslipManager.getErrorsForSingleBetBettingTicket(bettingTicket: bettingTicket)
 
-            let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
-            var hasFoundCorrespondingId = false
-            var errorMessage = localized("error")
-
-            for bettingError in bettingTicketErrors {
-                if let bettingSelections = bettingError.selections {
-                    for selection in bettingSelections {
-                        if selection.id == bettingTicket.bettingId {
-                            hasFoundCorrespondingId = true
-                            errorMessage = bettingError.errorMessage ?? localized("error")
-                        }
-                    }
-                }
-            }
-
-            if hasFoundCorrespondingId {
-                cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: errorMessage)
-            }
-            else {
-                cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
-            }
-        }
-        else {
+        switch cellBetError.errorType {
+        case .placedBetError:
+            cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue, errorBetting: cellBetError.errorMessage)
+        default:
             cell.configureWithBettingTicket(bettingTicket, previousBettingAmount: storedValue)
         }
 
@@ -1447,48 +1512,15 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
         else {
             fatalError()
         }
-        if !Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value.isEmpty {
-            let bettingTicketErrors = Env.betslipManager.betslipPlaceBetResponseErrorsPublisher.value
-            var hasFoundCorrespondingId = false
-            var errorMessage = ""
-            for bettingError in bettingTicketErrors {
-                if let bettingErrorCode = bettingError.errorCode {
-                    // Error code with corresponding id
-                    if bettingErrorCode == "107" {
-                        if let bettingErrorMessage = bettingError.errorMessage {
-                            if bettingErrorMessage.contains(bettingTicket.bettingId) {
-                                hasFoundCorrespondingId = true
-                                errorMessage = bettingError.errorMessage ?? localized("error")
-                                break
-                            }
 
-                        }
-                    }
-                    else {
-                        if let bettingSelections = bettingError.selections {
-                            for selection in bettingSelections {
+        let cellBetError = Env.betslipManager.getErrorsForBettingTicket(bettingTicket: bettingTicket)
 
-                                if selection.id == bettingTicket.bettingId {
-                                    hasFoundCorrespondingId = true
-                                    errorMessage = bettingError.errorMessage ?? localized("error")
-                                    break
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            if hasFoundCorrespondingId {
-                cell.configureWithBettingTicket(bettingTicket, errorBetting: errorMessage)
-            }
-            else {
-                cell.configureWithBettingTicket(bettingTicket)
-            }
-
-        }
-        else {
+        switch cellBetError.errorType {
+        case .placedBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        case .forbiddenBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        default:
             cell.configureWithBettingTicket(bettingTicket)
         }
 
@@ -1523,7 +1555,17 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         else {
             fatalError()
         }
-        cell.configureWithBettingTicket(bettingTicket)
+        let cellBetError = Env.betslipManager.getErrorsForBettingTicket(bettingTicket: bettingTicket)
+
+        switch cellBetError.errorType {
+        case .placedBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        case .forbiddenBetError:
+            cell.configureWithBettingTicket(bettingTicket, errorBetting: cellBetError.errorMessage)
+        default:
+            cell.configureWithBettingTicket(bettingTicket)
+        }
+
         return cell
     }
 
