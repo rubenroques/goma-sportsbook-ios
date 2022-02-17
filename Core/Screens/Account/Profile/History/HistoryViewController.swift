@@ -55,8 +55,8 @@ class HistoryViewController: UIViewController{
         self.topSliderCollectionView.delegate = self
         self.topSliderCollectionView.dataSource = self
 
-        self.tableView.delegate = self.viewModel
-        self.tableView.dataSource = self.viewModel
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         self.tableView.contentInset.bottom = 12
      
         
@@ -144,6 +144,52 @@ class HistoryViewController: UIViewController{
             })
             .store(in: &self.cancellables)
 
+    }
+
+}
+
+//
+// MARK: - TableView Protocols
+//
+extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return self.viewModel.numberOfSections()
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.viewModel.numberOfRowsInTable()
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        
+                 let ticket: BetHistoryEntry?
+
+        switch self.viewModel.myTicketsTypePublisher.value {
+                 case .resolved:
+            ticket = self.viewModel.resolvedMyTickets.value[safe: indexPath.row] ?? nil
+                 case .opened:
+            ticket =  self.viewModel.openedMyTickets.value[safe: indexPath.row] ?? nil
+                 case .won:
+          
+            ticket =  self.viewModel.wonMyTickets.value[safe: indexPath.row] ?? nil
+                 }
+                 
+                 guard
+                     let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
+                     let ticketValue = ticket
+                 else {
+                     fatalError("")
+                 }
+          
+                 cell.configure(withBetHistoryEntry: ticketValue)
+                 return cell
+             
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 130
     }
 
 }

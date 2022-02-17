@@ -6,10 +6,10 @@
 //
 
 import Foundation
-import UIKit
 import Combine
+import OrderedCollections
 
-class HistoryViewModel : NSObject{
+class HistoryViewModel {
     enum ListType {
         case transactions
         case bettings
@@ -61,9 +61,10 @@ class HistoryViewModel : NSObject{
 
     private var matchDetailsDictionary: [String: Match] = [:]
 
-    private var resolvedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
-    private var openedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
-    private var wonMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var resolvedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var openedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var wonMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
 
     private var isLoadingResolved: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
@@ -97,7 +98,7 @@ class HistoryViewModel : NSObject{
 
 
     // MARK: - Life Cycle
-    override init(){
+     init(){
         isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
             .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
                 return isLoadingResolved || isLoadingOpened || isLoadingWon
@@ -106,7 +107,6 @@ class HistoryViewModel : NSObject{
 
         self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
 
-        super.init()
 
         isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
             .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
@@ -182,6 +182,18 @@ class HistoryViewModel : NSObject{
                 }
             })
             .store(in: &cancellables)
+    }
+    
+    func loadCashoutTickets(page: Int) {
+        var cashoutsArray: [BetHistoryEntry] = []
+        for ticket in self.resolvedMyTickets.value{
+            if ticket.status == "CASHED_OUT"{
+                cashoutsArray.append(ticket)
+               
+            }
+        }
+        print(cashoutsArray)
+        self.cashoutTickets.value = cashoutsArray
     }
     
     
@@ -285,6 +297,7 @@ class HistoryViewModel : NSObject{
         self.loadResolvedTickets(page: 0)
         self.loadOpenedTickets(page: 0)
         self.loadWonTickets(page: 0)
+        self.loadCashoutTickets(page: 0)
     }
 
     func clearData() {
@@ -294,7 +307,7 @@ class HistoryViewModel : NSObject{
         self.reloadTableView()
     }
 
-    func numberOfRows() -> Int {
+    func numberOfRowsInTable() -> Int {
         switch myTicketsTypePublisher.value {
         case .resolved:
             return resolvedMyTickets.value.count
@@ -384,7 +397,7 @@ extension HistoryViewModel {
 }
 
 
-
+/*
 
 extension HistoryViewModel: UITableViewDelegate, UITableViewDataSource {
 
@@ -423,3 +436,4 @@ extension HistoryViewModel: UITableViewDelegate, UITableViewDataSource {
     }
 
 }
+*/
