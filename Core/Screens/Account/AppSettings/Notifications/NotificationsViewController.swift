@@ -1,14 +1,13 @@
 //
-//  AppSettingsViewController.swift
+//  NotificationsViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 16/02/2022.
+//  Created by André Lascas on 17/02/2022.
 //
 
 import UIKit
-import Combine
 
-class AppSettingsViewController: UIViewController {
+class NotificationsViewController: UIViewController {
 
     // MARK: Private Properties
     private lazy var topView: UIView = Self.createTopView()
@@ -16,6 +15,8 @@ class AppSettingsViewController: UIViewController {
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
     private lazy var bottomStackView: UIStackView = Self.createBottomStackView()
+//    private lazy var deviceSettingsView: UIView = Self.createDeviceSettingsView()
+//    private lazy var deviceSettingsRowView: SettingsRowView = Self.createDeviceSettingsRowView()
 
     // MARK: Lifetime and Cycle
     init() {
@@ -58,49 +59,53 @@ class AppSettingsViewController: UIViewController {
         self.topStackView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.bottomStackView.backgroundColor = UIColor.App.backgroundSecondary
-    }
 
-    // MARK: Binding
-    private func bind(toViewModel viewModel: MyFavoritesViewModel) {
+//        self.deviceSettingsView.backgroundColor = UIColor.App.backgroundSecondary
+
     }
 
     private func setupTopStackView() {
-        let notificationView = SettingsRowView()
-        notificationView.setTitle(title: localized("notifications"))
-        notificationView.hasSeparatorLineView = true
-        let notiticationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapNotificationView))
-        notificationView.addGestureRecognizer(notiticationTap)
+        let deviceView = SettingsRowView()
+        deviceView.setTitle(title: localized("device_settings"))
+        deviceView.hasSeparatorLineView = true
+        let deviceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapDeviceView))
+        deviceView.addGestureRecognizer(deviceTap)
 
-        let appearanceView = SettingsRowView()
-        appearanceView.setTitle(title: localized("appearance"))
-        appearanceView.hasSeparatorLineView = true
-        let appearanceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapAppearanceView))
-        appearanceView.addGestureRecognizer(appearanceTap)
+        let gamesNotificationView = SettingsRowView()
+        gamesNotificationView.setTitle(title: localized("games_notification_defaults"))
+        gamesNotificationView.hasSeparatorLineView = true
+        let gamesNotificationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapGamesNotificationView))
+        gamesNotificationView.addGestureRecognizer(gamesNotificationTap)
 
-        let oddsView = SettingsRowView()
-        oddsView.setTitle(title: localized("odds"))
-        let oddsTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapOddsView))
-        oddsView.addGestureRecognizer(oddsTap)
+        let bettingNotificationView = SettingsRowView()
+        bettingNotificationView.setTitle(title: localized("betting_notification_defaults"))
+        let bettingNotificationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapBettingNotificationView))
+        bettingNotificationView.addGestureRecognizer(bettingNotificationTap)
 
-        self.topStackView.addArrangedSubview(notificationView)
-        self.topStackView.addArrangedSubview(appearanceView)
-        self.topStackView.addArrangedSubview(oddsView)
+        self.topStackView.addArrangedSubview(deviceView)
+        self.topStackView.addArrangedSubview(gamesNotificationView)
+        self.topStackView.addArrangedSubview(bettingNotificationView)
 
     }
 
     private func setupBottomStackView() {
 
-        let fingerprintView = SettingsRowView()
-        fingerprintView.setTitle(title: localized("fingerprint_login"))
-        fingerprintView.hasSeparatorLineView = true
-        fingerprintView.hasSwitchButton = true
+        let allowSportsbookView = SettingsRowView()
+        allowSportsbookView.setTitle(title: localized("allow_sportsbook_contact"))
 
-        let faceIdView = SettingsRowView()
-        faceIdView.setTitle(title: localized("face_id_login"))
-        faceIdView.hasSwitchButton = true
+        let smsView = SettingsRowView()
+        smsView.setTitle(title: localized("sms"))
+        smsView.hasSeparatorLineView = true
+        smsView.hasSwitchButton = true
 
-        self.bottomStackView.addArrangedSubview(fingerprintView)
-        self.bottomStackView.addArrangedSubview(faceIdView)
+        let emailView = SettingsRowView()
+        emailView.setTitle(title: localized("email"))
+        emailView.hasSwitchButton = true
+
+        self.bottomStackView.addArrangedSubview(allowSportsbookView)
+        self.bottomStackView.addArrangedSubview(smsView)
+        self.bottomStackView.addArrangedSubview(emailView)
+
     }
 
 }
@@ -108,34 +113,33 @@ class AppSettingsViewController: UIViewController {
 //
 // MARK: - Actions
 //
-extension AppSettingsViewController {
+extension NotificationsViewController {
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @objc private func didTapNotificationView() {
-        print("Notification")
-        let notificationViewController = NotificationsViewController()
-        self.navigationController?.pushViewController(notificationViewController, animated: true)
+    @objc private func didTapDeviceView() {
+        print("Device")
     }
 
-    @objc private func didTapAppearanceView() {
-        print("Appearance")
-        let appearanceViewController = AppearanceViewController()
-        self.navigationController?.pushViewController(appearanceViewController, animated: true)
+    @objc private func didTapGamesNotificationView() {
+        print("Games")
+        let gamesNotificationViewController = GamesNotificationViewController()
+        self.navigationController?.pushViewController(gamesNotificationViewController, animated: true)
     }
 
-    @objc private func didTapOddsView() {
-        print("Odds")
-        let oddsViewController = OddsViewController()
-        self.navigationController?.pushViewController(oddsViewController, animated: true)
+    @objc private func didTapBettingNotificationView() {
+        print("Betting")
+        let bettingNotificationViewController = BettingNotificationsViewController()
+        self.navigationController?.pushViewController(bettingNotificationViewController, animated: true)
     }
+
 }
 
 //
 // MARK: Subviews initialization and setup
 //
-extension AppSettingsViewController {
+extension NotificationsViewController {
 
     private static func createTopView() -> UIView {
         let view = UIView()
@@ -154,7 +158,7 @@ extension AppSettingsViewController {
     private static func createTopTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("app_settings")
+        label.text = localized("notifications")
         label.font = AppFont.with(type: .bold, size: 17)
         label.textAlignment = .center
         return label
@@ -178,6 +182,22 @@ extension AppSettingsViewController {
         return stackView
     }
 
+//    private static func createDeviceSettingsView() -> UIView {
+//        let view = UIView()
+//        view.translatesAutoresizingMaskIntoConstraints = false
+//        return view
+//    }
+//
+//    private static func createDeviceSettingsRowView() -> SettingsRowView {
+//        let deviceView = SettingsRowView()
+//        deviceView.translatesAutoresizingMaskIntoConstraints = false
+//        deviceView.setTitle(title: localized("notifications"))
+//        let deviceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapDeviceView))
+//        deviceView.addGestureRecognizer(deviceTap)
+//
+//        return deviceView
+//    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
@@ -186,7 +206,11 @@ extension AppSettingsViewController {
         self.topView.bringSubviewToFront(self.topTitleLabel)
 
         self.view.addSubview(self.topStackView)
+
         self.view.addSubview(self.bottomStackView)
+
+//        self.view.addSubview(self.deviceSettingsView)
+//        self.deviceSettingsView.addSubview(self.deviceSettingsRowView)
 
         self.initConstraints()
     }
@@ -211,7 +235,7 @@ extension AppSettingsViewController {
 
         ])
 
-        // StackView
+        // Top StackView
         NSLayoutConstraint.activate([
             self.topStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             self.topStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
@@ -219,13 +243,27 @@ extension AppSettingsViewController {
 
         ])
 
-        // StackView
+        // Bottom StackView
         NSLayoutConstraint.activate([
             self.bottomStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             self.bottomStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 16),
+            self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 16)
 
         ])
+
+        // Device Settings View
+//        NSLayoutConstraint.activate([
+//            self.deviceSettingsView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+//            self.deviceSettingsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+//            self.deviceSettingsView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8),
+//            self.deviceSettingsView.heightAnchor.constraint(equalToConstant: 60),
+//
+//            self.deviceSettingsRowView.leadingAnchor.constraint(equalTo: self.deviceSettingsView.leadingAnchor),
+//            self.deviceSettingsRowView.trailingAnchor.constraint(equalTo: self.deviceSettingsView.trailingAnchor),
+//            self.deviceSettingsRowView.topAnchor.constraint(equalTo: self.deviceSettingsView.topAnchor),
+//            self.deviceSettingsRowView.bottomAnchor.constraint(equalTo: self.deviceSettingsView.bottomAnchor),
+//
+//        ])
 
     }
 

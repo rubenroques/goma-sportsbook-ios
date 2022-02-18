@@ -25,4 +25,15 @@ extension Theme {
             return .dark
         }
     }
+
+    var themeId: Int {
+        switch self {
+        case .device:
+            return 3
+        case .light:
+            return 2
+        case .dark:
+            return 1
+        }
+    }
 }

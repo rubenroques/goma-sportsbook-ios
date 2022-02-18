@@ -21,6 +21,7 @@ enum GomaGamingService {
     case matchStats(matchId: String)
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
     case userSettings
+    case sendUserSettings(userSettings: UserSettingsGoma)
 }
 
 extension GomaGamingService: Endpoint {
@@ -58,6 +59,8 @@ extension GomaGamingService: Endpoint {
             return "/api/settings/\(apiVersion)/user"
         case .removeFavorite:
             return "/api/favorites/\(apiVersion)"
+        case .sendUserSettings:
+            return "/api/settings/\(apiVersion)/user"
         }
     }
 
@@ -69,7 +72,7 @@ extension GomaGamingService: Endpoint {
             return [URLQueryItem(name: "lat", value: latitude),
                     URLQueryItem(name: "lng", value: longitude)]
         case .settings, .simpleRegister, .modalPopUpDetails, .login,
-                .suggestedBets, .addFavorites, .matchStats, .userSettings:
+                .suggestedBets, .addFavorites, .matchStats, .userSettings, .sendUserSettings:
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
@@ -100,7 +103,7 @@ extension GomaGamingService: Endpoint {
         case .geolocation, .settings, .modalPopUpDetails, .suggestedBets,
                 .matchStats, .userSettings:
             return .get
-        case .log, .simpleRegister, .login, .addFavorites:
+        case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings:
             return .post
         case .removeFavorite:
             return .delete
@@ -145,6 +148,25 @@ extension GomaGamingService: Endpoint {
                     ]
                     }
                     """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .sendUserSettings(let userSettings):
+            let body = """
+                       {"odd_validation_type": "\(userSettings.oddValidationType)",
+                       "notifications": \(userSettings.notifications),
+                       "notifications_games_watchlist": \(userSettings.notificationGamesWatchlist),
+                       "notifications_competitions_watchlist": \(userSettings.notificationsCompetitionsWatchlist),
+                       "notifications_goal": \(userSettings.notificationGoal),
+                       "notifications_startgame": \(userSettings.notificationsStartgame),
+                       "notifications_halftime": \(userSettings.notificationsHalftime),
+                       "notifications_fulltime": \(userSettings.notificationsFulltime),
+                       "notifications_secondhalf": \(userSettings.notificationsSecondhalf),
+                       "notifications_redcard": \(userSettings.notificationsRedcard),
+                       "notifications_bets": \(userSettings.notificationsBets),
+                       "notification_bet_selections": \(userSettings.notificationBetSelections),
+                       "notification_email": \(userSettings.notificationEmail),
+                       "notification_sms": \(userSettings.notificationSms)}
+                       """
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:

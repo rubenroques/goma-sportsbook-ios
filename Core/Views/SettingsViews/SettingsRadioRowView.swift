@@ -1,19 +1,19 @@
 //
-//  SettingsRowView.swift
+//  SettingsRadioRowView.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 16/02/2022.
+//  Created by André Lascas on 18/02/2022.
 //
 
 import UIKit
 
-class SettingsRowView: UIView {
+class SettingsRadioRowView: UIView {
 
     // MARK: Private Properties
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
-    private lazy var switchButton: UISwitch = Self.createSwitchButton()
+    private lazy var radioButtonImageView: UIImageView = Self.createRadioButtonImageView()
 
     // MARK: Public Properties
     var hasSeparatorLineView: Bool = false {
@@ -27,29 +27,27 @@ class SettingsRowView: UIView {
         }
     }
 
-    var hasSwitchButton: Bool = false {
+    var isChecked: Bool = false {
         didSet {
-            if hasSwitchButton {
-                self.switchButton.isHidden = false
+            if isChecked {
+
+                self.radioButtonImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+                self.radioButtonImageView.backgroundColor = UIColor.App.highlightPrimary
+                self.radioButtonImageView.image = (UIImage(named: "white_dot_icon"))
+
             }
             else {
-                self.switchButton.isHidden = true
+
+                self.radioButtonImageView.layer.borderColor = UIColor.App.separatorLine.cgColor
+                self.radioButtonImageView.backgroundColor = UIColor.App.backgroundSecondary
+                self.radioButtonImageView.image = nil
+
             }
         }
     }
 
-    var isSwitchOn: Bool = false {
-        didSet {
-            if isSwitchOn {
-                self.switchButton.isOn = true
-            }
-            else {
-                self.switchButton.isOn = false
-            }
-        }
-    }
-
-    var didTappedSwitch: (() -> Void)?
+    var viewId: Int = 0
+    var didTapView: ((Bool) -> Void)?
 
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
@@ -70,10 +68,16 @@ class SettingsRowView: UIView {
 
     func commonInit() {
 
+        self.isChecked = false
         self.hasSeparatorLineView = false
-        self.hasSwitchButton = false
 
-        self.switchButton.addTarget(self, action: #selector(switchChanged), for: UIControl.Event.valueChanged)
+        let gestureTap = UITapGestureRecognizer(target: self, action: #selector(self.tappedView))
+        self.addGestureRecognizer(gestureTap)
+
+        // Round imageView
+        radioButtonImageView.layoutIfNeeded()
+        radioButtonImageView.layer.masksToBounds = true
+        radioButtonImageView.layer.cornerRadius = radioButtonImageView.frame.width/2
     }
 
     func setupWithTheme() {
@@ -85,28 +89,34 @@ class SettingsRowView: UIView {
 
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
-        self.switchButton.onTintColor = UIColor.App.buttonBackgroundPrimary
+        self.radioButtonImageView.layer.borderColor = UIColor.App.separatorLine.cgColor
+        self.radioButtonImageView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
 
     func setTitle(title: String) {
         self.titleLabel.text = title
     }
+}
 
-    @objc func switchChanged(settingSwitch: UISwitch) {
+//
+// MARK: Action
+//
+extension SettingsRadioRowView {
+    @objc func tappedView(sender: UITapGestureRecognizer) {
 
-        let switchValue = settingSwitch.isOn
-        self.isSwitchOn = switchValue
+        if !isChecked {
+            isChecked = true
+        }
 
-        self.didTappedSwitch?()
+        didTapView?(isChecked)
     }
-
 }
 
 //
 // MARK: Subviews initialization and setup
 //
-extension SettingsRowView {
+extension SettingsRadioRowView {
 
     private static func createContainerView() -> UIView {
         let view = UIView()
@@ -119,7 +129,6 @@ extension SettingsRowView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Title"
         label.font = AppFont.with(type: .bold, size: 16)
-        label.numberOfLines = 0
         return label
     }
 
@@ -129,20 +138,23 @@ extension SettingsRowView {
         return view
     }
 
-    private static func createSwitchButton() -> UISwitch {
-        let switchButton = UISwitch()
-        switchButton.translatesAutoresizingMaskIntoConstraints = false
-        switchButton.isOn = false
-        return switchButton
+    private static func createRadioButtonImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.layer.borderWidth = 2.0
+        imageView.image = nil
+        imageView.contentMode = .center
+        return imageView
     }
 
     private func setupSubviews() {
         self.addSubview(self.containerView)
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.separatorLineView)
-        self.containerView.addSubview(self.switchButton)
+        self.containerView.addSubview(self.radioButtonImageView)
 
         self.initConstraints()
+
     }
 
     private func initConstraints() {
@@ -157,10 +169,11 @@ extension SettingsRowView {
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -80),
 
-            self.switchButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.switchButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.radioButtonImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.radioButtonImageView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.radioButtonImageView.widthAnchor.constraint(equalToConstant: 20),
+            self.radioButtonImageView.heightAnchor.constraint(equalToConstant: 20),
 
             self.separatorLineView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),

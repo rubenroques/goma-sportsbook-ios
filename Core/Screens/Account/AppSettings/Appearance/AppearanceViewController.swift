@@ -1,21 +1,22 @@
 //
-//  AppSettingsViewController.swift
+//  AppearanceViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 16/02/2022.
+//  Created by André Lascas on 18/02/2022.
 //
 
 import UIKit
-import Combine
 
-class AppSettingsViewController: UIViewController {
+class AppearanceViewController: UIViewController {
 
     // MARK: Private Properties
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
-    private lazy var bottomStackView: UIStackView = Self.createBottomStackView()
+
+    // MARK: Public Properties
+    var themeRadioButtonViews: [SettingsRadioRowView] = []
 
     // MARK: Lifetime and Cycle
     init() {
@@ -34,7 +35,6 @@ class AppSettingsViewController: UIViewController {
         self.setupWithTheme()
 
         self.setupTopStackView()
-        self.setupBottomStackView()
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
     }
@@ -57,50 +57,69 @@ class AppSettingsViewController: UIViewController {
 
         self.topStackView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.bottomStackView.backgroundColor = UIColor.App.backgroundSecondary
-    }
-
-    // MARK: Binding
-    private func bind(toViewModel viewModel: MyFavoritesViewModel) {
     }
 
     private func setupTopStackView() {
-        let notificationView = SettingsRowView()
-        notificationView.setTitle(title: localized("notifications"))
-        notificationView.hasSeparatorLineView = true
-        let notiticationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapNotificationView))
-        notificationView.addGestureRecognizer(notiticationTap)
+        let themeColorView = SettingsRowView()
+        themeColorView.setTitle(title: localized("theme_color"))
 
-        let appearanceView = SettingsRowView()
-        appearanceView.setTitle(title: localized("appearance"))
-        appearanceView.hasSeparatorLineView = true
-        let appearanceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapAppearanceView))
-        appearanceView.addGestureRecognizer(appearanceTap)
+        let darkModeView = SettingsRadioRowView()
+        darkModeView.setTitle(title: localized("dark_mode"))
+        darkModeView.viewId = 1
+        darkModeView.hasSeparatorLineView = true
+        self.themeRadioButtonViews.append(darkModeView)
 
-        let oddsView = SettingsRowView()
-        oddsView.setTitle(title: localized("odds"))
-        let oddsTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapOddsView))
-        oddsView.addGestureRecognizer(oddsTap)
+        let lightModeView = SettingsRadioRowView()
+        lightModeView.setTitle(title: localized("light_mode"))
+        lightModeView.viewId = 2
+        lightModeView.hasSeparatorLineView = true
+        self.themeRadioButtonViews.append(lightModeView)
 
-        self.topStackView.addArrangedSubview(notificationView)
-        self.topStackView.addArrangedSubview(appearanceView)
-        self.topStackView.addArrangedSubview(oddsView)
+        let syncModeView = SettingsRadioRowView()
+        syncModeView.setTitle(title: localized("sync_mode"))
+        syncModeView.viewId = 3
+        self.themeRadioButtonViews.append(syncModeView)
+
+        // Set selected view
+        let themeChosenId = UserDefaults.standard.theme.themeId
+        
+        for view in self.themeRadioButtonViews {
+            view.didTapView = { _ in
+                self.checkThemeRadioOptionsSelected( viewTapped: view)
+            }
+            // Default market selected
+            if view.viewId == themeChosenId {
+                view.isChecked = true
+            }
+        }
+
+        self.topStackView.addArrangedSubview(themeColorView)
+        self.topStackView.addArrangedSubview(darkModeView)
+        self.topStackView.addArrangedSubview(lightModeView)
+        self.topStackView.addArrangedSubview(syncModeView)
 
     }
 
-    private func setupBottomStackView() {
+    private func checkThemeRadioOptionsSelected(viewTapped: SettingsRadioRowView) {
+        for view in self.themeRadioButtonViews {
+            view.isChecked = false
+        }
+        viewTapped.isChecked = true
 
-        let fingerprintView = SettingsRowView()
-        fingerprintView.setTitle(title: localized("fingerprint_login"))
-        fingerprintView.hasSeparatorLineView = true
-        fingerprintView.hasSwitchButton = true
+        if viewTapped.viewId == 1 {
+            UserDefaults.standard.theme = Theme.dark
+            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .dark
+        }
+        else if viewTapped.viewId == 2 {
+            UserDefaults.standard.theme = Theme.light
+            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .light
+        }
+        else if viewTapped.viewId == 3 {
+            UserDefaults.standard.theme = Theme.device
+            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .unspecified
 
-        let faceIdView = SettingsRowView()
-        faceIdView.setTitle(title: localized("face_id_login"))
-        faceIdView.hasSwitchButton = true
+        }
 
-        self.bottomStackView.addArrangedSubview(fingerprintView)
-        self.bottomStackView.addArrangedSubview(faceIdView)
     }
 
 }
@@ -108,34 +127,17 @@ class AppSettingsViewController: UIViewController {
 //
 // MARK: - Actions
 //
-extension AppSettingsViewController {
+extension AppearanceViewController {
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
 
-    @objc private func didTapNotificationView() {
-        print("Notification")
-        let notificationViewController = NotificationsViewController()
-        self.navigationController?.pushViewController(notificationViewController, animated: true)
-    }
-
-    @objc private func didTapAppearanceView() {
-        print("Appearance")
-        let appearanceViewController = AppearanceViewController()
-        self.navigationController?.pushViewController(appearanceViewController, animated: true)
-    }
-
-    @objc private func didTapOddsView() {
-        print("Odds")
-        let oddsViewController = OddsViewController()
-        self.navigationController?.pushViewController(oddsViewController, animated: true)
-    }
 }
 
 //
 // MARK: Subviews initialization and setup
 //
-extension AppSettingsViewController {
+extension AppearanceViewController {
 
     private static func createTopView() -> UIView {
         let view = UIView()
@@ -154,22 +156,13 @@ extension AppSettingsViewController {
     private static func createTopTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("app_settings")
+        label.text = localized("notifications")
         label.font = AppFont.with(type: .bold, size: 17)
         label.textAlignment = .center
         return label
     }
 
     private static func createTopStackView() -> UIStackView {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        stackView.layer.cornerRadius = CornerRadius.button
-        return stackView
-    }
-
-    private static func createBottomStackView() -> UIStackView {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
@@ -186,7 +179,6 @@ extension AppSettingsViewController {
         self.topView.bringSubviewToFront(self.topTitleLabel)
 
         self.view.addSubview(self.topStackView)
-        self.view.addSubview(self.bottomStackView)
 
         self.initConstraints()
     }
@@ -216,14 +208,6 @@ extension AppSettingsViewController {
             self.topStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             self.topStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             self.topStackView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8),
-
-        ])
-
-        // StackView
-        NSLayoutConstraint.activate([
-            self.bottomStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.bottomStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 16),
 
         ])
 

@@ -249,9 +249,23 @@ extension UserSessionStore {
                   receiveValue: { [weak self] userSettings in
                 print("User Settings: \(userSettings)")
                 self?.setUserSettings(userSettings: userSettings.settings.oddValidationType)
+                self?.registerUserSettings(userSettings: userSettings.settings)
             })
             .store(in: &cancellables)
 
+    }
+
+    private func registerUserSettings(userSettings: UserSettingsGoma) {
+        do {
+            let encoder = JSONEncoder()
+
+            let data = try encoder.encode(userSettings)
+
+            UserDefaults.standard.set(data, forKey: "gomaUserSettings")
+
+        } catch {
+            print("Unable to Encode User Settings Goma (\(error))")
+        }
     }
 
     func subscribeAccountBalanceWatcher() {

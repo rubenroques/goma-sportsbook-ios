@@ -1,22 +1,37 @@
 //
-//  AppSettingsViewController.swift
+//  GamesNotificationViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 16/02/2022.
+//  Created by André Lascas on 18/02/2022.
 //
 
 import UIKit
-import Combine
 
-class AppSettingsViewController: UIViewController {
+class GamesNotificationViewController: UIViewController {
 
     // MARK: Private Properties
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
+    private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
     private lazy var bottomStackView: UIStackView = Self.createBottomStackView()
 
+    // MARK: Public Properties
+    var notificationsEnabledViews: [SettingsRowView] = []
+
+    var isBottomStackViewDisabled: Bool = false {
+        didSet {
+            if isBottomStackViewDisabled {
+                self.bottomStackView.alpha = 0.7
+                self.bottomStackView.isUserInteractionEnabled = false
+            }
+            else {
+                self.bottomStackView.alpha = 1.0
+                self.bottomStackView.isUserInteractionEnabled = true
+            }
+        }
+    }
     // MARK: Lifetime and Cycle
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -55,52 +70,104 @@ class AppSettingsViewController: UIViewController {
 
         self.topTitleLabel.textColor = UIColor.App.textPrimary
 
+        self.scrollView.backgroundColor = .clear
+
         self.topStackView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.bottomStackView.backgroundColor = UIColor.App.backgroundSecondary
-    }
 
-    // MARK: Binding
-    private func bind(toViewModel viewModel: MyFavoritesViewModel) {
     }
 
     private func setupTopStackView() {
-        let notificationView = SettingsRowView()
-        notificationView.setTitle(title: localized("notifications"))
-        notificationView.hasSeparatorLineView = true
-        let notiticationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapNotificationView))
-        notificationView.addGestureRecognizer(notiticationTap)
+        let myGamesView = SettingsRowView()
+        myGamesView.setTitle(title: localized("allow_mygames_notifications"))
+        myGamesView.hasSeparatorLineView = true
+        myGamesView.hasSwitchButton = true
+        self.notificationsEnabledViews.append(myGamesView)
 
-        let appearanceView = SettingsRowView()
-        appearanceView.setTitle(title: localized("appearance"))
-        appearanceView.hasSeparatorLineView = true
-        let appearanceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapAppearanceView))
-        appearanceView.addGestureRecognizer(appearanceTap)
+        let myCompetitionsView = SettingsRowView()
+        myCompetitionsView.setTitle(title: localized("allow_mycompetitions_notifications"))
+        myCompetitionsView.hasSwitchButton = true
+        self.notificationsEnabledViews.append(myCompetitionsView)
 
-        let oddsView = SettingsRowView()
-        oddsView.setTitle(title: localized("odds"))
-        let oddsTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapOddsView))
-        oddsView.addGestureRecognizer(oddsTap)
+        self.topStackView.addArrangedSubview(myGamesView)
+        self.topStackView.addArrangedSubview(myCompetitionsView)
 
-        self.topStackView.addArrangedSubview(notificationView)
-        self.topStackView.addArrangedSubview(appearanceView)
-        self.topStackView.addArrangedSubview(oddsView)
+        self.checkNotificationSwitches()
 
     }
 
     private func setupBottomStackView() {
 
-        let fingerprintView = SettingsRowView()
-        fingerprintView.setTitle(title: localized("fingerprint_login"))
-        fingerprintView.hasSeparatorLineView = true
-        fingerprintView.hasSwitchButton = true
+        let notifyAboutView = SettingsRowView()
+        notifyAboutView.setTitle(title: localized("notify_me_about"))
 
-        let faceIdView = SettingsRowView()
-        faceIdView.setTitle(title: localized("face_id_login"))
-        faceIdView.hasSwitchButton = true
+        let startGameView = SettingsRowView()
+        startGameView.setTitle(title: localized("start_of_game"))
+        startGameView.hasSwitchButton = true
+        startGameView.hasSeparatorLineView = true
 
-        self.bottomStackView.addArrangedSubview(fingerprintView)
-        self.bottomStackView.addArrangedSubview(faceIdView)
+        let goalsView = SettingsRowView()
+        goalsView.setTitle(title: localized("goals"))
+        goalsView.hasSwitchButton = true
+        goalsView.hasSeparatorLineView = true
+
+        let halfTimeView = SettingsRowView()
+        halfTimeView.setTitle(title: localized("half_time"))
+        halfTimeView.hasSwitchButton = true
+        halfTimeView.hasSeparatorLineView = true
+
+        let secondHalfTimeView = SettingsRowView()
+        secondHalfTimeView.setTitle(title: localized("second_half_time"))
+        secondHalfTimeView.hasSwitchButton = true
+        secondHalfTimeView.hasSeparatorLineView = true
+
+        let fullTimeView = SettingsRowView()
+        fullTimeView.setTitle(title: localized("full_time"))
+        fullTimeView.hasSwitchButton = true
+        fullTimeView.hasSeparatorLineView = true
+
+        let redCardsView = SettingsRowView()
+        redCardsView.setTitle(title: localized("red_cards"))
+        redCardsView.hasSwitchButton = true
+
+        self.bottomStackView.addArrangedSubview(notifyAboutView)
+        self.bottomStackView.addArrangedSubview(startGameView)
+        self.bottomStackView.addArrangedSubview(goalsView)
+        self.bottomStackView.addArrangedSubview(halfTimeView)
+        self.bottomStackView.addArrangedSubview(secondHalfTimeView)
+        self.bottomStackView.addArrangedSubview(fullTimeView)
+        self.bottomStackView.addArrangedSubview(redCardsView)
+
+    }
+
+    private func checkNotificationSwitches() {
+        var disabledStackView = true
+
+        for view in self.notificationsEnabledViews {
+            if view.isSwitchOn {
+                disabledStackView = false
+            }
+            view.didTappedSwitch = {[weak self] in
+                self?.checkBottomStackViewDisableState()
+            }
+        }
+
+        self.isBottomStackViewDisabled = disabledStackView
+    }
+
+    private func checkBottomStackViewDisableState() {
+        var disabledStackView = true
+
+        for view in self.notificationsEnabledViews {
+            if view.isSwitchOn {
+                disabledStackView = false
+            }
+
+        }
+
+        self.isBottomStackViewDisabled = disabledStackView
+
     }
 
 }
@@ -108,34 +175,16 @@ class AppSettingsViewController: UIViewController {
 //
 // MARK: - Actions
 //
-extension AppSettingsViewController {
+extension GamesNotificationViewController {
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
-    }
-
-    @objc private func didTapNotificationView() {
-        print("Notification")
-        let notificationViewController = NotificationsViewController()
-        self.navigationController?.pushViewController(notificationViewController, animated: true)
-    }
-
-    @objc private func didTapAppearanceView() {
-        print("Appearance")
-        let appearanceViewController = AppearanceViewController()
-        self.navigationController?.pushViewController(appearanceViewController, animated: true)
-    }
-
-    @objc private func didTapOddsView() {
-        print("Odds")
-        let oddsViewController = OddsViewController()
-        self.navigationController?.pushViewController(oddsViewController, animated: true)
     }
 }
 
 //
 // MARK: Subviews initialization and setup
 //
-extension AppSettingsViewController {
+extension GamesNotificationViewController {
 
     private static func createTopView() -> UIView {
         let view = UIView()
@@ -158,6 +207,12 @@ extension AppSettingsViewController {
         label.font = AppFont.with(type: .bold, size: 17)
         label.textAlignment = .center
         return label
+    }
+
+    private static func createScrollView() -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
     }
 
     private static func createTopStackView() -> UIStackView {
@@ -185,8 +240,9 @@ extension AppSettingsViewController {
         self.topView.addSubview(self.topTitleLabel)
         self.topView.bringSubviewToFront(self.topTitleLabel)
 
-        self.view.addSubview(self.topStackView)
-        self.view.addSubview(self.bottomStackView)
+        self.view.addSubview(self.scrollView)
+        self.scrollView.addSubview(self.topStackView)
+        self.scrollView.addSubview(self.bottomStackView)
 
         self.initConstraints()
     }
@@ -211,20 +267,20 @@ extension AppSettingsViewController {
 
         ])
 
-        // StackView
+        // Scrollview
         NSLayoutConstraint.activate([
+            self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.scrollView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
             self.topStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             self.topStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            self.topStackView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8),
+            self.topStackView.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 8),
 
-        ])
-
-        // StackView
-        NSLayoutConstraint.activate([
             self.bottomStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             self.bottomStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-            self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 16),
-
+            self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 16)
         ])
 
     }
