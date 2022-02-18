@@ -55,9 +55,9 @@ class TransactionsTableViewCell: UITableViewCell {
     func setTransactionIcon(transactionType : Int){
         
         if transactionType == 0 {
-            self.transactionIcon.image = UIImage(named: "icon_excluded")
+            self.transactionIcon.image = UIImage(named: "deposit_icon")
         }else{
-            self.transactionIcon.image = UIImage(named: "icon_active")
+            self.transactionIcon.image = UIImage(named: "withdraw_icon")
         }
         
     }

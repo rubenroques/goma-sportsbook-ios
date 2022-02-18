@@ -1,16 +1,15 @@
 //
-//  HistoryViewController.swift
+//  FilterHistoryViewController.swift
 //  ShowcaseProd
 //
-//  Created by Teresa on 14/02/2022.
+//  Created by Teresa on 18/02/2022.
 //
 
 import Foundation
 import Combine
 import UIKit
 
-class HistoryViewController: UIViewController{
-
+class FilterHistoryViewController: UIViewController{
 
     // MARK: - Private Properties
     // Sub Views
@@ -31,7 +30,7 @@ class HistoryViewController: UIViewController{
     private lazy var emptyStateImageView: UIImageView = Self.createImageView()
     private lazy var emptyStateLabel: UILabel = Self.createTopLabel()
     private lazy var emptyStateSecondaryLabel: UILabel = Self.createTopLabel()
-    private lazy var emptyStateButton: UIButton = Self.createButton()
+    private lazy var emptyStateButton: RoundButton = RoundButton()
     
     private lazy var leftGradientBaseView: UIView = Self.createSimpleView()
     private lazy var rightGradientBaseView: UIView = Self.createSimpleView()
@@ -59,8 +58,6 @@ class HistoryViewController: UIViewController{
        
         self.setupSubviews()
         self.setupWithTheme()
-        
-       
     
         // Configure post-loading and self-dependent properties
         self.topSliderCollectionView.delegate = self
@@ -189,7 +186,7 @@ class HistoryViewController: UIViewController{
         self.emptyStateLabel.textAlignment = .center
         self.emptyStateSecondaryLabel.textAlignment = .center
         
-        self.emptyStateButton.layer.cornerRadius = 2.5
+        
         self.emptyStateButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         
         
@@ -220,8 +217,12 @@ class HistoryViewController: UIViewController{
                             self?.tableView.reloadData()
                         }
                     }
+                    
+
                 }
-            
+                
+                
+                
             })
             .store(in: &self.cancellables)
         
@@ -232,7 +233,7 @@ class HistoryViewController: UIViewController{
 //
 // MARK: - TableView Protocols
 //
-extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+extension FilterHistoryViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         
@@ -242,7 +243,6 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
             
             self.setupEmptyState()
         }else{
-            self.emptyStateBaseView.isHidden = true
             self.tableView.isHidden = false
         }
         return self.viewModel.numberOfSections()
@@ -324,7 +324,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - CollectionView Protocols
 //
 
-extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension FilterHistoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.viewModel.numberOfSections()
@@ -407,7 +407,7 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
 // MARK: - Actions
 //
 
-extension HistoryViewController {
+extension FilterHistoryViewController {
     /*
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
@@ -419,7 +419,7 @@ extension HistoryViewController {
      }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
-        //print("clicou nos filtros")
+        print("clicou nos filtros")
     
     }
 
@@ -450,7 +450,7 @@ extension HistoryViewController {
 //
 // MARK: - Subviews Initialization and Setup
 //
-extension HistoryViewController {
+extension FilterHistoryViewController {
 
     private static func createNavigationView() -> UIView {
         let view = UIView()
@@ -699,7 +699,16 @@ extension HistoryViewController {
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
-      
+     /*   NSLayoutConstraint.activate([
+           /* self.loadingBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor, constant: 4),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.loadingActivityIndicatorView.view.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -150),
+            self.loadingActivityIndicatorView.view.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
+           */
+        ])*/
         
         NSLayoutConstraint.activate([
             self.emptyStateBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),

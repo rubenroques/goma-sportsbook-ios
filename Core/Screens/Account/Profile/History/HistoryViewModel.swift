@@ -64,7 +64,7 @@ class HistoryViewModel {
     var listTypePublisher: CurrentValueSubject<ListType, Never> = .init(.transactions)
     var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>?
     var isTransactionsEmptyPublisher: AnyPublisher<Bool, Never>?
-    var isLoading: AnyPublisher<Bool, Never>
+
 
     // MARK: - data
     var resolvedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
@@ -78,6 +78,8 @@ class HistoryViewModel {
     var reloadTableViewAction: (() -> Void)?
     var redrawTableViewAction: (() -> Void)?
     
+    var isLoading: AnyPublisher<Bool, Never>
+
     // MARK: - Private Properties
     
     private var isLoadingResolved: CurrentValueSubject<Bool, Never> = .init(true)
@@ -89,7 +91,7 @@ class HistoryViewModel {
     private var isLoadingWithdraws: CurrentValueSubject<Bool, Never> = .init(true)
     
 
-    private let recordsPerPage = 5000
+    private let recordsPerPage = 1000
 
     private var cancellables = Set<AnyCancellable>()
     
@@ -99,16 +101,15 @@ class HistoryViewModel {
 
     // MARK: - Life Cycle
      init(){
-    
-         
-             isLoading = Publishers.CombineLatest(isLoadingDeposits, isLoadingWithdraws)
-                 .map({ isLoadingDeposits, isLoadingWithdraws in
-                     return isLoadingDeposits || isLoadingWithdraws
-                 })
-                 .eraseToAnyPublisher()
-
-             self.isTransactionsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
+         self.isTransactionsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
          self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
+         
+         isLoading = Publishers.CombineLatest(isLoadingDeposits, isLoadingWithdraws)
+             .map({ isLoadingDeposits, isLoadingWithdraws in
+                 return isLoadingDeposits
+             })
+             .eraseToAnyPublisher()
+         
             /* self.transactionsTypePublisher
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] tansactionType in
@@ -128,6 +129,8 @@ class HistoryViewModel {
          self.loadResolvedTickets(page: 0)
          self.loadOpenedTickets(page: 0)
          self.loadWonTickets(page: 0)
+         
+    
          //self.loadCashoutTickets(page: 0)
 
            
@@ -198,8 +201,6 @@ class HistoryViewModel {
         for ticket in self.resolvedTickets.value{
             if ticket.status == "CASHED_OUT"{
                 cashoutsArray.append(ticket)
-            }else{
-                print("berrou")
             }
         }
         self.cashoutTickets.value = cashoutsArray
@@ -281,10 +282,9 @@ class HistoryViewModel {
         
         let startTime = "2021-11-04T16:00:00.000"
         let endTime = "2022-02-10T16:00:00.000"
-        var pages = [2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-        for page in pages {
+    
        // let depositRoute = TSRouter.getTransactionHistory(type: "Deposit", startTime: startTime, endTime: endTime, pageIndex: 0, pageSize: 20)
-        let wonRoute = TSRouter.getTransactionHistory(type: "Deposit", startTime: "2021-05-04T16:00:00.000", endTime: "2022-02-10T16:00:00.000", pageIndex: page, pageSize: 1000)
+        let wonRoute = TSRouter.getTransactionHistory(type: "Deposit", startTime: "2021-01-13T15:59:00.000Z", endTime: "2022-01-13T15:59:00.000Z", pageIndex: 1, pageSize: 20)
         Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -293,7 +293,7 @@ class HistoryViewModel {
                     switch apiError {
                    
                     case .requestError(let value):
-                        print(value)
+ 
                         self?.clearData()
                     case .notConnected:
                         
@@ -306,19 +306,17 @@ class HistoryViewModel {
                 case .finished:
                     ()
                 }
-                print(completion)
                 self?.isLoadingDeposits.send(false)
             },
             receiveValue: { [weak self] depositHistoryResponse in
                 
-                print(depositHistoryResponse.transactions )
                 self?.deposits.value = depositHistoryResponse.transactions ?? []
-                self?.reloadTableView()
+                
                 
             })
             .store(in: &cancellables)
             
-        }
+        
 
     }
     func loadWithdraws(page: Int) {
@@ -332,9 +330,9 @@ class HistoryViewModel {
         let startTime = "2021-11-04T16:00:00.000"
         let endTime = "2022-02-10T16:00:00.000"
         var pages = [2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-        for page in pages {
+ 
        // let depositRoute = TSRouter.getTransactionHistory(type: "Deposit", startTime: startTime, endTime: endTime, pageIndex: 0, pageSize: 20)
-        let wonRoute = TSRouter.getTransactionHistory(type: "Withdraw", startTime: "2021-05-04T16:00:00.000", endTime: "2022-02-10T16:00:00.000", pageIndex: page, pageSize: 1000)
+        let wonRoute = TSRouter.getTransactionHistory(type: "Withdraw", startTime: "2021-01-13T15:59:00.000Z", endTime: "2022-01-13T15:59:00.000Z", pageIndex: 1, pageSize: 20)
         Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -343,7 +341,6 @@ class HistoryViewModel {
                     switch apiError {
                    
                     case .requestError(let value):
-                        print(value)
                         self?.clearData()
                     case .notConnected:
                         
@@ -356,19 +353,18 @@ class HistoryViewModel {
                 case .finished:
                     ()
                 }
-                print(completion)
+               
                 self?.isLoadingDeposits.send(false)
             },
-            receiveValue: { [weak self] depositHistoryResponse in
+            receiveValue: { [weak self] withdrawsHistoryResponse in
                 
-                print(depositHistoryResponse.transactions )
-                self?.deposits.value = depositHistoryResponse.transactions ?? []
+                self?.withdraws.value = withdrawsHistoryResponse.transactions ?? []
                 self?.reloadTableView()
                 
             })
             .store(in: &cancellables)
             
-        }
+        
 
     }
     
@@ -399,8 +395,6 @@ class HistoryViewModel {
         case .transactions:
             switch transactionsTypePublisher.value {
             case .deposit:
-                print(deposits.value.count)
-
                 return deposits.value.count
             case .withdraw:
                 return withdraws.value.count
@@ -415,7 +409,6 @@ class HistoryViewModel {
             case .won:
                 return wonTickets.value.count
             case .cashout:
-                print(cashoutTickets.value.count)
                 return cashoutTickets.value.count
             }
         }

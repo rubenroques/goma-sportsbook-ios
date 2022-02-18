@@ -33,10 +33,10 @@ extension EveryMatrix{
         let debit: DebitCredit
         let credit: DebitCredit
         let fees: [Fees]
-        let status: String
-        let transactionReference: String
-        let id: String
-        let isRallbackAllowed: Bool
+        let status: String?
+        let transactionReference: String?
+        let id: String?
+        let isRallbackAllowed: Bool?
         
         enum CodingKeys: String, CodingKey {
             case transactionID = "transactionID"

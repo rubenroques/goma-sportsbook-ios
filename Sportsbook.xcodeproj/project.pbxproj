@@ -976,6 +976,8 @@
 		F4E3B7652742BFEB00855C58 /* AvailableHapticFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */; };
 		F4F8C9EF27BEBAF90082CC08 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */; };
 		F4F8C9F027BEBAFE0082CC08 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */; };
+		F4F8C9F227C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */; };
+		F4F8C9F327C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1477,6 +1479,7 @@
 		F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSliderExtensions.swift; sourceTree = "<group>"; };
 		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
 		F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
+		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3248,6 +3251,7 @@
 				F410E62727BC4F78005C1964 /* Cells */,
 				F48D33B727BBD578006E04CB /* HistoryViewController.swift */,
 				F48D33B627BBD578006E04CB /* HistoryViewModel.swift */,
+				F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */,
 			);
 			path = History;
 			sourceTree = "<group>";
@@ -3853,6 +3857,7 @@
 				45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */,
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				453079382750EDBF00278B7C /* MatchDetailsViewModel.swift in Sources */,
+				F4F8C9F227C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */,
 				45109A662799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */,
 				454E0AD42735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
@@ -4210,6 +4215,7 @@
 				45F8B158274BFF710087652B /* SystemBetResponse.swift in Sources */,
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				453079392750EDBF00278B7C /* MatchDetailsViewModel.swift in Sources */,
+				F4F8C9F327C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */,
 				45109A672799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */,
 				454E0AD52735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
