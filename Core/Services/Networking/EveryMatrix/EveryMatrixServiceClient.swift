@@ -278,5 +278,10 @@ class EveryMatrixServiceClient: ObservableObject {
     func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrix.APIError> {
         return self.manager.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
     }
+    
+    func getTransactionsHistory(type: String, startTime: String, endTime: String, pageIndex: Int, pageSize: Int) -> AnyPublisher<EveryMatrix.TransactionsHistoryResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getTransactionHistory(type: type, startTime: startTime, endTime: endTime, pageIndex: pageIndex, pageSize: pageSize), decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+            .eraseToAnyPublisher()
+    }
 
 }

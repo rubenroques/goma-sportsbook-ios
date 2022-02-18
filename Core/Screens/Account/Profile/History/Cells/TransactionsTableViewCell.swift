@@ -19,6 +19,7 @@ class TransactionsTableViewCell: UITableViewCell {
     private lazy var transactionDateLabel: UILabel = Self.createLabel()
     private lazy var transactionIdLabel: UILabel = Self.createLabel()
     
+    var transactionHistoryEntry : EveryMatrix.TransactionHistory?
     
     
     // MARK: - Lifetime and Cycle
@@ -94,6 +95,31 @@ class TransactionsTableViewCell: UITableViewCell {
         self.transactionIdLabel.text = transactionId
         self.transactionIdLabel.font = AppFont.with(type: .medium, size: 12)
       
+    }
+    
+    
+    
+    func configure(withTransactionHistoryEntry transactionHistoryEntry: EveryMatrix.TransactionHistory, transactionType : Int) {
+
+        
+        setTransactionDateLabel(transactionDate: transactionHistoryEntry.time)
+        setTransactionIcon(transactionType: transactionType)
+        setTransactionTypeLabel(transactionType: transactionType)
+        if transactionType == 0{
+          if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)){
+                setTransactionValueLabel(transactionType: transactionType, transactionValue: amount)
+            }
+        
+        }else{
+            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.credit.amount)) {
+             
+                setTransactionValueLabel(transactionType: transactionType, transactionValue: amount)
+            }
+        }
+            setTransactionIdLabel(transactionId: transactionHistoryEntry.transactionID)
+            
+            
+ 
     }
 
 }

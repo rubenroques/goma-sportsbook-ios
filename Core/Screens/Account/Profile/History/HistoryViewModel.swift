@@ -10,6 +10,9 @@ import Combine
 import OrderedCollections
 
 class HistoryViewModel {
+    
+    // MARK: - Enums
+   
     enum ListType {
         case transactions
         case bettings
@@ -25,7 +28,7 @@ class HistoryViewModel {
     
     enum BettingType {
         case resolved
-        case open
+        case opened
         case won
         case cashout
         case none
@@ -33,7 +36,7 @@ class HistoryViewModel {
         var identifier: String {
             switch self {
             case .resolved: return "Resolved"
-            case .open: return "Open"
+            case .opened: return "Open"
             case .won: return "Won"
             case .cashout: return "Cashout"
             case .none: return "None"
@@ -41,122 +44,124 @@ class HistoryViewModel {
         }
     }
     
-    private var selectedMyTicketsTypeIndex: Int = 0
-    var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
-    var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>
-
-    enum MyTicketsType: Int {
+    enum TicketsType: Int {
         case opened = 0
         case resolved = 1
         case won = 2
+        case cashout = 3
+    }
+    
+    enum TransactionsType: Int {
+        case deposit = 0
+        case withdraw = 1
     }
 
+    
+    // MARK: - Publishers
+   
+    var transactionsTypePublisher: CurrentValueSubject<TransactionsType, Never> = .init(.deposit)
+    var ticketsTypePublisher: CurrentValueSubject<TicketsType, Never> = .init(.resolved)
+    var listTypePublisher: CurrentValueSubject<ListType, Never> = .init(.transactions)
+    var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>?
+    var isTransactionsEmptyPublisher: AnyPublisher<Bool, Never>?
+    var isLoading: AnyPublisher<Bool, Never>
 
-    var clickedBetId: String?
-    var clickedBetStatus: String?
-    var clickedBetTokenPublisher: CurrentValueSubject<String, Never> = .init("")
+    // MARK: - data
+    var resolvedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var openedTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var wonTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+    
+    var deposits: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
+    var withdraws: CurrentValueSubject<[EveryMatrix.TransactionHistory], Never> = .init([])
     
     var reloadTableViewAction: (() -> Void)?
     var redrawTableViewAction: (() -> Void)?
-
-    private var matchDetailsDictionary: [String: Match] = [:]
-
-    var resolvedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
-    var openedMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
-    var wonMyTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
-    var cashoutTickets: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
-
+    
+    // MARK: - Private Properties
+    
     private var isLoadingResolved: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
     private var isLoadingWon: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingCashout: CurrentValueSubject<Bool, Never> = .init(true)
+    
+    private var isLoadingDeposits: CurrentValueSubject<Bool, Never> = .init(true)
+    private var isLoadingWithdraws: CurrentValueSubject<Bool, Never> = .init(true)
+    
 
-    private var locationsCodesDictionary: [String: String] = [:]
+    private let recordsPerPage = 5000
 
-    var isLoading: AnyPublisher<Bool, Never>
-
-    private let recordsPerPage = 1000
-
-    private var resolvedPage = 0
-    private var openedPage = 0
-    private var wonPage = 0
-
-    // Cached view models
-    var cachedViewModels: [String: MyTicketCellViewModel] = [:]
-
-    //
     private var cancellables = Set<AnyCancellable>()
     
-    
-
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
     var scrollToContentPublisher = PassthroughSubject<Int?, Never>.init()
-    
-    var listTypeSelected : CurrentValueSubject<ListType, Never> = .init(.transactions)
-    
-    var bettingTypeSelected : CurrentValueSubject<BettingType, Never> = .init(.none)
-
 
 
     // MARK: - Life Cycle
      init(){
-        isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
-            .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
-                return isLoadingResolved || isLoadingOpened || isLoadingWon
-            })
-            .eraseToAnyPublisher()
+    
+         
+             isLoading = Publishers.CombineLatest(isLoadingDeposits, isLoadingWithdraws)
+                 .map({ isLoadingDeposits, isLoadingWithdraws in
+                     return isLoadingDeposits || isLoadingWithdraws
+                 })
+                 .eraseToAnyPublisher()
 
-        self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
-
-
-        isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
-            .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
-                switch myTicketsType {
-                case .resolved:
-                    if isLoadingResolved { return false }
-                    return self?.resolvedMyTickets.value.isEmpty ?? false
-                case .opened:
-                    if isLoadingOpened { return false }
-                    return self?.openedMyTickets.value.isEmpty ?? false
-                case .won:
-                    if isLoadingWon { return false }
-                    return self?.wonMyTickets.value.isEmpty ?? false
+             self.isTransactionsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
+         self.isTicketsEmptyPublisher = CurrentValueSubject<Bool, Never>.init(false).eraseToAnyPublisher()
+            /* self.transactionsTypePublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] tansactionType in
+                    switch tansactionType{
+                    case .deposit:
+                        self?.loadDeposits(page: 0)
+                        
+                    case .withdraw:
+                        self?.loadWithdraws(page: 0)
+                    }
+                     
                 }
-            }
-            .eraseToAnyPublisher()
+                .store(in: &cancellables)*/
+          
+         self.loadDeposits(page: 0)
+         self.loadWithdraws(page: 0)
+         self.loadResolvedTickets(page: 0)
+         self.loadOpenedTickets(page: 0)
+         self.loadWonTickets(page: 0)
+         //self.loadCashoutTickets(page: 0)
 
-        myTicketsTypePublisher
-            .dropFirst()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] myTicketsType in
-                self?.selectedMyTicketsTypeIndex =  myTicketsType.rawValue
-
-                self?.reloadTableView()
-            }
-            .store(in: &cancellables)
-
-        Env.everyMatrixClient.userSessionStatusPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] userSessionStatus in
-                switch userSessionStatus {
-                case .logged:
-                    self?.refresh()
-                case .anonymous:
-                    self?.clearData()
+           
+           /* self.loadResolvedTickets(page: 0)
+             self.ticketsTypePublisher
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] ticketsType in
+                    switch ticketsType{
+                    case .resolved:
+                        self?.loadResolvedTickets(page: 0)
+                        self?.reloadTableView()
+                    case .won:
+                        self?.loadWonTickets(page: 0)
+                        self?.reloadTableView()
+                    case .opened:
+                        self?.loadOpenedTickets(page: 0)
+                        self?.reloadTableView()
+                    case .cashout:
+                        self?.loadCashoutTickets(page: 0)
+                        self?.reloadTableView()
+                    }
                 }
-            }
-            .store(in: &cancellables)
-
-        self.loadLocations()
-        self.initialLoadMyTickets()
-
-    }
+                .store(in: &cancellables)
+         */
+         
+     }
     
    
     func loadResolvedTickets(page: Int) {
 
         self.isLoadingResolved.send(true)
+    
 
-        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved, records: recordsPerPage, page: page)
+        let resolvedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.resolved , records: recordsPerPage, page: page)
         Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -174,25 +179,29 @@ class HistoryViewModel {
                     ()
                 }
                 self?.isLoadingResolved.send(false)
+               
+                self?.refreshPublisher.send()
             },
             receiveValue: { [weak self] betHistoryResponse in
-                self?.resolvedMyTickets.value = betHistoryResponse.betList ?? []
-                if case .resolved = self?.myTicketsTypePublisher.value {
-                    self?.reloadTableView()
-                }
+                self?.resolvedTickets.value = betHistoryResponse.betList ?? []
+                self?.loadCashoutTickets(page: 0)
             })
             .store(in: &cancellables)
+        
+        
+       
     }
     
     func loadCashoutTickets(page: Int) {
+       
         var cashoutsArray: [BetHistoryEntry] = []
-        for ticket in self.resolvedMyTickets.value{
+        for ticket in self.resolvedTickets.value{
             if ticket.status == "CASHED_OUT"{
                 cashoutsArray.append(ticket)
-               
+            }else{
+                print("berrou")
             }
         }
-        print(cashoutsArray)
         self.cashoutTickets.value = cashoutsArray
     }
     
@@ -201,7 +210,9 @@ class HistoryViewModel {
 
         self.isLoadingOpened.send(true)
 
+    
         let openedRoute = TSRouter.getMyTickets(language: "en", ticketsType: EveryMatrix.MyTicketsType.opened, records: recordsPerPage, page: page)
+       
         Env.everyMatrixClient.manager.getModel(router: openedRoute, decodingType: BetHistoryResponse.self)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -221,10 +232,8 @@ class HistoryViewModel {
                 self?.isLoadingOpened.send(false)
             },
             receiveValue: { [weak self] betHistoryResponse in
-                self?.openedMyTickets.value = betHistoryResponse.betList ?? []
-                if case .opened = self?.myTicketsTypePublisher.value {
-                    self?.reloadTableView()
-                }
+                self?.openedTickets.value = betHistoryResponse.betList ?? []
+               
             })
             .store(in: &cancellables)
 
@@ -254,46 +263,120 @@ class HistoryViewModel {
                 self?.isLoadingWon.send(false)
             },
             receiveValue: { [weak self] betHistoryResponse in
-                self?.wonMyTickets.value = betHistoryResponse.betList ?? []
-                if case .won = self?.myTicketsTypePublisher.value {
-                    self?.reloadTableView()
-                }
+                self?.wonTickets.value = betHistoryResponse.betList ?? []
+               
+                
             })
             .store(in: &cancellables)
 
     }
     
-    func loadLocations() {
-        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .sink(receiveCompletion: { _ in
+    func loadDeposits(page: Int) {
 
-            },
-                  receiveValue: { [weak self] response in
-                self?.locationsCodesDictionary = [:]
-                (response.records ?? []).forEach { location in
-                    if let code = location.code {
-                        self?.locationsCodesDictionary[location.id] = code
+        self.isLoadingDeposits.send(true)
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-DD T HH:MM:SS.MMMZ"
+        dateFormatter.string(from: date)
+        
+        let startTime = "2021-11-04T16:00:00.000"
+        let endTime = "2022-02-10T16:00:00.000"
+        var pages = [2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        for page in pages {
+       // let depositRoute = TSRouter.getTransactionHistory(type: "Deposit", startTime: startTime, endTime: endTime, pageIndex: 0, pageSize: 20)
+        let wonRoute = TSRouter.getTransactionHistory(type: "Deposit", startTime: "2021-05-04T16:00:00.000", endTime: "2022-02-10T16:00:00.000", pageIndex: page, pageSize: 1000)
+        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                   
+                    case .requestError(let value):
+                        print(value)
+                        self?.clearData()
+                    case .notConnected:
+                        
+                        self?.clearData()
+
+                    default:
+                        
+                        ()
                     }
+                case .finished:
+                    ()
                 }
-
+                print(completion)
+                self?.isLoadingDeposits.send(false)
+            },
+            receiveValue: { [weak self] depositHistoryResponse in
+                
+                print(depositHistoryResponse.transactions )
+                self?.deposits.value = depositHistoryResponse.transactions ?? []
+                self?.reloadTableView()
+                
             })
             .store(in: &cancellables)
+            
+        }
+
+    }
+    func loadWithdraws(page: Int) {
+
+        self.isLoadingDeposits.send(true)
+        let date = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-DD T HH:MM:SS.MMMZ"
+        dateFormatter.string(from: date)
+        
+        let startTime = "2021-11-04T16:00:00.000"
+        let endTime = "2022-02-10T16:00:00.000"
+        var pages = [2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        for page in pages {
+       // let depositRoute = TSRouter.getTransactionHistory(type: "Deposit", startTime: startTime, endTime: endTime, pageIndex: 0, pageSize: 20)
+        let wonRoute = TSRouter.getTransactionHistory(type: "Withdraw", startTime: "2021-05-04T16:00:00.000", endTime: "2022-02-10T16:00:00.000", pageIndex: page, pageSize: 1000)
+        Env.everyMatrixClient.manager.getModel(router: wonRoute, decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let apiError):
+                    switch apiError {
+                   
+                    case .requestError(let value):
+                        print(value)
+                        self?.clearData()
+                    case .notConnected:
+                        
+                        self?.clearData()
+
+                    default:
+                        
+                        ()
+                    }
+                case .finished:
+                    ()
+                }
+                print(completion)
+                self?.isLoadingDeposits.send(false)
+            },
+            receiveValue: { [weak self] depositHistoryResponse in
+                
+                print(depositHistoryResponse.transactions )
+                self?.deposits.value = depositHistoryResponse.transactions ?? []
+                self?.reloadTableView()
+                
+            })
+            .store(in: &cancellables)
+            
+        }
+
     }
     
     func reloadTableView() {
         self.reloadTableViewAction?()
     }
     
-    func refresh() {
-        self.resolvedPage = 0
-        self.openedPage = 0
-        self.wonPage = 0
-
-        self.initialLoadMyTickets()
-    }
-    
-    func initialLoadMyTickets() {
+    func initialLoadTickets() {
         self.loadResolvedTickets(page: 0)
         self.loadOpenedTickets(page: 0)
         self.loadWonTickets(page: 0)
@@ -301,31 +384,54 @@ class HistoryViewModel {
     }
 
     func clearData() {
-        self.resolvedMyTickets.value = []
-        self.openedMyTickets.value = []
-        self.wonMyTickets.value = []
+        self.resolvedTickets.value = []
+        self.openedTickets.value = []
+        self.wonTickets.value = []
+        self.deposits.value = []
+        self.withdraws.value = []
+        
         self.reloadTableView()
     }
 
     func numberOfRowsInTable() -> Int {
-        switch myTicketsTypePublisher.value {
-        case .resolved:
-            return resolvedMyTickets.value.count
-        case .opened:
-            return openedMyTickets.value.count
-        case .won:
-            return wonMyTickets.value.count
+        
+       switch listTypePublisher.value{
+        case .transactions:
+            switch transactionsTypePublisher.value {
+            case .deposit:
+                print(deposits.value.count)
+
+                return deposits.value.count
+            case .withdraw:
+                return withdraws.value.count
+            
+            }
+        case .bettings:
+            switch ticketsTypePublisher.value {
+            case .resolved:
+                return resolvedTickets.value.count
+            case .opened:
+                return openedTickets.value.count
+            case .won:
+                return wonTickets.value.count
+            case .cashout:
+                print(cashoutTickets.value.count)
+                return cashoutTickets.value.count
+            }
         }
+        
     }
 
     func isEmpty() -> Bool {
-        switch myTicketsTypePublisher.value {
+        switch ticketsTypePublisher.value {
         case .resolved:
-            return resolvedMyTickets.value.isEmpty
+            return resolvedTickets.value.isEmpty
         case .opened:
-            return openedMyTickets.value.isEmpty
+            return openedTickets.value.isEmpty
         case .won:
-            return wonMyTickets.value.isEmpty
+            return wonTickets.value.isEmpty
+        case .cashout:
+            return cashoutTickets.value.isEmpty
         }
     }
     
@@ -346,7 +452,7 @@ extension HistoryViewModel {
     }
 
     func numberOfShortcuts(forSection section: Int) -> Int {
-        if listTypeSelected.value == .transactions {
+        if listTypePublisher.value == .transactions {
             return 2
         }
         else{
@@ -357,7 +463,7 @@ extension HistoryViewModel {
 
     func shortcutTitle(forIndex index: Int) -> String? {
         
-        if listTypeSelected.value == .transactions {
+        if listTypePublisher.value == .transactions {
             switch index {
             case 0:
                 return "Deposits"
@@ -413,13 +519,13 @@ extension HistoryViewModel: UITableViewDelegate, UITableViewDataSource {
    
             let ticket: BetHistoryEntry?
 
-            switch myTicketsTypePublisher.value {
+            switch ticketsTypePublisher.value {
             case .resolved:
-                ticket = resolvedMyTickets.value[safe: indexPath.row] ?? nil
+                ticket = resolvedTickets.value[safe: indexPath.row] ?? nil
             case .opened:
-                ticket =  openedMyTickets.value[safe: indexPath.row] ?? nil
+                ticket =  openedTickets.value[safe: indexPath.row] ?? nil
             case .won:
-                ticket =  wonMyTickets.value[safe: indexPath.row] ?? nil
+                ticket =  wonTickets.value[safe: indexPath.row] ?? nil
             }
             
             guard

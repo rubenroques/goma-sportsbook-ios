@@ -27,6 +27,11 @@ class HistoryViewController: UIViewController{
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    private lazy var emptyStateBaseView: UIView = Self.createEmptyStateView()
+    private lazy var emptyStateImageView: UIImageView = Self.createImageView()
+    private lazy var emptyStateLabel: UILabel = Self.createTopLabel()
+    private lazy var emptyStateSecondaryLabel: UILabel = Self.createTopLabel()
+    private lazy var emptyStateButton: UIButton = Self.createButton()
 
     // Logic
     private var cancellables: Set<AnyCancellable> = []
@@ -47,7 +52,7 @@ class HistoryViewController: UIViewController{
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+       
         self.setupSubviews()
         self.setupWithTheme()
     
@@ -63,14 +68,15 @@ class HistoryViewController: UIViewController{
         self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         
         
-       self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
+        self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
         self.tableView.register(BettingsTableViewCell.self, forCellReuseIdentifier: BettingsTableViewCell.identifier)
 
+        self.view.bringSubviewToFront(self.loadingBaseView)
         
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
-        self.filterBaseView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.filterBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapBackGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         backImage.isUserInteractionEnabled = true
@@ -79,10 +85,14 @@ class HistoryViewController: UIViewController{
         optionSegmentControl.addTarget(self, action: #selector(self.didChangeSegmentValue(_:)), for: .valueChanged)
       
         if filterSelectedOption == 0 {
-            self.viewModel.myTicketsTypePublisher.send(.resolved)
+            self.viewModel.ticketsTypePublisher.send(.resolved)
            
         }
-        self.tableView.reloadData()
+        
+        self.loadingBaseView.isHidden = true
+        self.tableView.isHidden = false
+        self.emptyStateBaseView.isHidden = true
+        self.bind(toViewModel: viewModel)
     }
 
     // MARK: - Layout and Theme
@@ -100,7 +110,7 @@ class HistoryViewController: UIViewController{
 
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-
+       
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -114,23 +124,46 @@ class HistoryViewController: UIViewController{
         
         self.topLabel.textColor = UIColor.App.textPrimary
         
-        self.filterBaseView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        self.loadingActivityIndicatorView.tintColor = UIColor.systemPink
+        
+        self.filterBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.optionSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
             NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
         ], for: .selected)
         self.optionSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
+            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
         ], for: .normal)
         self.optionSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary.withAlphaComponent(0.5)
+            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
         ], for: .disabled)
 
         self.optionSegmentControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
         self.optionSegmentControl.backgroundColor = UIColor.App.backgroundTertiary
+        
+        
+        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyStateImageView.image = UIImage(named: "no_content_icon")
    
+        self.emptyStateLabel.font = AppFont.with(type: .bold, size: 22)
+        self.emptyStateSecondaryLabel.font = AppFont.with(type: .bold, size: 16)
+        
+        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+        self.emptyStateSecondaryLabel.textColor = UIColor.App.textPrimary
+        
+        self.emptyStateLabel.numberOfLines = 4
+        self.emptyStateSecondaryLabel.numberOfLines = 4
+        
+        self.emptyStateLabel.textAlignment = .center
+        self.emptyStateSecondaryLabel.textAlignment = .center
+        
+        self.emptyStateButton.layer.cornerRadius = 2.5
+        self.emptyStateButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
+        
+        
     }
 
     // MARK: - Bindings
@@ -141,9 +174,11 @@ class HistoryViewController: UIViewController{
             .sink(receiveValue: { [weak self] in
                 self?.tableView.reloadData()
                 self?.topSliderCollectionView.reloadData()
+                self?.loadingBaseView.isHidden = true
+                self?.tableView.isHidden = false
             })
             .store(in: &self.cancellables)
-
+        
     }
 
 }
@@ -154,6 +189,16 @@ class HistoryViewController: UIViewController{
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
+        
+        if self.viewModel.numberOfRowsInTable() == 0{
+            self.emptyStateBaseView.isHidden = false
+            self.tableView.isHidden = true
+            
+            self.setupEmptyState()
+        }else{
+            self.emptyStateBaseView.isHidden = true
+            self.tableView.isHidden = false
+        }
         return self.viewModel.numberOfSections()
     }
 
@@ -163,28 +208,61 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        
-                 let ticket: BetHistoryEntry?
+        switch self.viewModel.listTypePublisher.value{
+        case .transactions:
+            let ticket: EveryMatrix.TransactionHistory?
+            var transactionType = 0
+            switch self.viewModel.transactionsTypePublisher.value{
+                case .deposit:
+                    ticket = self.viewModel.deposits.value[safe: indexPath.row] ?? nil
+                transactionType = 0
+                case .withdraw:
+                    ticket = self.viewModel.deposits.value[safe: indexPath.row] ?? nil
+                transactionType = 1
+            }
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: TransactionsTableViewCell.identifier, for: indexPath) as? TransactionsTableViewCell,
+                let ticketValue = ticket
+            else {
+                fatalError("")
+            }
 
-        switch self.viewModel.myTicketsTypePublisher.value {
-                 case .resolved:
-            ticket = self.viewModel.resolvedMyTickets.value[safe: indexPath.row] ?? nil
-                 case .opened:
-            ticket =  self.viewModel.openedMyTickets.value[safe: indexPath.row] ?? nil
-                 case .won:
-          
-            ticket =  self.viewModel.wonMyTickets.value[safe: indexPath.row] ?? nil
-                 }
-                 
-                 guard
-                     let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
-                     let ticketValue = ticket
-                 else {
-                     fatalError("")
-                 }
-          
-                 cell.configure(withBetHistoryEntry: ticketValue)
-                 return cell
+            cell.configure(withTransactionHistoryEntry: ticketValue , transactionType: transactionType)
+            return cell
+            
+            
+        case .bettings:
+            let ticket: BetHistoryEntry?
+
+            switch self.viewModel.ticketsTypePublisher.value {
+
+                case .cashout:
+                    ticket =  self.viewModel.cashoutTickets.value[safe: indexPath.row] ?? nil
+                case .resolved:
+                    ticket = self.viewModel.resolvedTickets.value[safe: indexPath.row] ?? nil
+                case .opened:
+                    ticket =  self.viewModel.openedTickets.value[safe: indexPath.row] ?? nil
+                case .won:
+                    ticket =  self.viewModel.wonTickets.value[safe: indexPath.row] ?? nil
+
+             }
+             
+             guard
+                 let cell = tableView.dequeueReusableCell(withIdentifier: BettingsTableViewCell.identifier, for: indexPath) as? BettingsTableViewCell,
+                 let ticketValue = ticket
+             else {
+                 fatalError("")
+             }
+
+             cell.configure(withBetHistoryEntry: ticketValue)
+             return cell
+            
+            
+    
+            
+        }
+        
+ 
              
     }
     
@@ -224,7 +302,6 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
             cell.setSelectedType(false)
         }
 
-        
         return cell
         
     }
@@ -233,20 +310,27 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
         self.filterSelectedOption = indexPath.row
         
         if self.optionSegmentControl.selectedSegmentIndex == 0 {
-            self.viewModel.bettingTypeSelected.send(.none)
+            
+            
+            self.viewModel.transactionsTypePublisher.send(.deposit)
+            self.viewModel.listTypePublisher.send(.transactions)
         }else{
             if indexPath.row == 0 {
-                self.viewModel.bettingTypeSelected.send(.resolved)
-                self.viewModel.myTicketsTypePublisher.send(.resolved)
+               
+                self.viewModel.ticketsTypePublisher.send(.resolved)
             }else if indexPath.row == 1 {
-                self.viewModel.bettingTypeSelected.send(.open)
-                self.viewModel.myTicketsTypePublisher.send(.opened)
+                
+                self.viewModel.ticketsTypePublisher.send(.opened)
+                self.viewModel.loadOpenedTickets(page: 0)
             }else if indexPath.row == 2 {
-                self.viewModel.bettingTypeSelected.send(.won)
-                self.viewModel.myTicketsTypePublisher.send(.won)
+               
+                self.viewModel.ticketsTypePublisher.send(.won)
+                self.viewModel.loadWonTickets(page: 0)
             }else if indexPath.row == 3 {
-                self.viewModel.bettingTypeSelected.send(.cashout)
+               
+                self.viewModel.ticketsTypePublisher.send(.cashout)
             }
+            self.viewModel.listTypePublisher.send(.bettings)
         }
         
         self.viewModel.didSelectShortcut(atSection: indexPath.section)
@@ -291,15 +375,21 @@ extension HistoryViewController {
     
     @objc func didChangeSegmentValue(_ sender: UISegmentedControl) {
         if self.optionSegmentControl.selectedSegmentIndex == 0 {
-            self.viewModel.listTypeSelected.send(.transactions)
+          
+            self.viewModel.listTypePublisher.send(.transactions)
+            self.viewModel.transactionsTypePublisher.send(.deposit)
         }else{
-            self.viewModel.listTypeSelected.send(.bettings)
+    
+            self.viewModel.listTypePublisher.send(.bettings)
+            self.viewModel.ticketsTypePublisher.send(.resolved)
+            self.tableView.reloadData()
         }
     
         self.filterSelectedOption = 0
-        self.viewModel.bettingTypeSelected.send(.resolved)
-        self.topSliderCollectionView.reloadData()
+        
+      
         self.tableView.reloadData()
+        self.topSliderCollectionView.reloadData()
         
     }
 
@@ -379,13 +469,30 @@ extension HistoryViewController {
         return tableView
     }
 
-
+    private static func createEmptyStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
 
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
+    }
+    
+    private static func createButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.enableButton()
+        
+        button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
+        button.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        button.setBackgroundColor(UIColor.App.buttonDisablePrimary, for: .disabled)
+        
+        return button
     }
 
     private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
@@ -394,6 +501,30 @@ extension HistoryViewController {
         activityIndicatorView.hidesWhenStopped = true
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
+    }
+    private func setupEmptyState(){
+        
+        
+        
+        switch self.viewModel.listTypePublisher.value{
+        case .transactions:
+        
+            self.emptyStateLabel.text = "There’s no transations here!"
+            self.emptyStateSecondaryLabel.text = "You haven’t made a transation yet, it’s time to deposit some money and start betting on your favourites."
+      
+            self.emptyStateButton.setTitle("Make a deposit", for: .normal)
+            self.emptyStateButton.setTitle("Make a deposit", for: .disabled)
+            
+        case .bettings:
+            self.emptyStateLabel.text = "There’s no bets here!"
+            self.emptyStateSecondaryLabel.text = "You haven’t made a bet yet, it’s time to bet on your favourites."
+      
+            
+            self.emptyStateButton.setTitle("Go to popular games", for: .normal)
+            self.emptyStateButton.setTitle("Go to popular games", for: .disabled)
+           
+        }
+    
     }
 
     private func setupSubviews() {
@@ -416,12 +547,19 @@ extension HistoryViewController {
         self.topSliderView.addSubview(self.filterBaseView)
         
         self.view.addSubview(self.topSliderView)
-        
 
         self.view.addSubview(self.tableView)
+        
+        
+        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
-        //self.view.addSubview(self.loadingBaseView)
-       // self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+        self.view.addSubview(self.loadingBaseView)
+        
+        self.emptyStateBaseView.addSubview(self.emptyStateImageView)
+        self.emptyStateBaseView.addSubview(self.emptyStateLabel)
+        self.emptyStateBaseView.addSubview(self.emptyStateSecondaryLabel)
+        self.emptyStateBaseView.addSubview(self.emptyStateButton)
+        self.view.addSubview(self.emptyStateBaseView)
 
         // Initialize constraints
         self.initConstraints()
@@ -495,16 +633,43 @@ extension HistoryViewController {
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
-       /* NSLayoutConstraint.activate([
-            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.loadingBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor, constant: 4),
             self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-
-            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
-            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+            
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor),
         ])
-*/
+        
+        NSLayoutConstraint.activate([
+            self.emptyStateBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
+            self.emptyStateBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
+            self.emptyStateBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor, constant: 4),
+            self.emptyStateBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateBaseView.topAnchor, constant: 30),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 120),
+            
+            self.emptyStateLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 16),
+            
+            self.emptyStateSecondaryLabel.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
+            self.emptyStateSecondaryLabel.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor, constant: 16),
+            self.emptyStateSecondaryLabel.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor, constant: -16),
+            
+
+            self.emptyStateSecondaryLabel.topAnchor.constraint(equalTo: self.emptyStateLabel.bottomAnchor, constant: 16),
+            
+            self.emptyStateButton.centerXAnchor.constraint(equalTo: self.emptyStateBaseView.centerXAnchor),
+            self.emptyStateButton.heightAnchor.constraint(equalToConstant: 40),
+            self.emptyStateButton.widthAnchor.constraint(equalToConstant: 250),
+            self.emptyStateButton.topAnchor.constraint(equalTo: self.emptyStateSecondaryLabel.bottomAnchor, constant: 50),
+            
+        ])
     }
 
 }

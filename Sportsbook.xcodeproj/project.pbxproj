@@ -974,6 +974,8 @@
 		F4E3B7612742BFB100855C58 /* AvailableHapticFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */; };
 		F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7622742BFE300855C58 /* SweeterSwift */; };
 		F4E3B7652742BFEB00855C58 /* AvailableHapticFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */; };
+		F4F8C9EF27BEBAF90082CC08 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */; };
+		F4F8C9F027BEBAFE0082CC08 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1474,6 +1476,7 @@
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
 		F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSliderExtensions.swift; sourceTree = "<group>"; };
 		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
+		F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2983,6 +2986,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				F4F8C9E227BEB6890082CC08 /* Transactions */,
 				A995C19C279AD50100151462 /* Search */,
 				A90D8AFF277228A300DF88EB /* Withdraws */,
 				A987579F276CDB860099990D /* Deposits */,
@@ -3265,6 +3269,14 @@
 				F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */,
 			);
 			path = MultiSlider;
+			sourceTree = "<group>";
+		};
+		F4F8C9E227BEB6890082CC08 /* Transactions */ = {
+			isa = PBXGroup;
+			children = (
+				F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */,
+			);
+			path = Transactions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3977,6 +3989,7 @@
 				A98E6C5C27B2C33900453CF9 /* BetslipSelection.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
+				F4F8C9EF27BEBAF90082CC08 /* TransactionHistory.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				455C960C26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4027149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
@@ -4310,6 +4323,7 @@
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				45A16E152707B6C100A95C01 /* ListTypeCollectionViewCell.swift in Sources */,
 				45ACEEB12721B54E00D0A45F /* BannerCellViewModel.swift in Sources */,
+				F4F8C9F027BEBAFE0082CC08 /* TransactionHistory.swift in Sources */,
 				A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
