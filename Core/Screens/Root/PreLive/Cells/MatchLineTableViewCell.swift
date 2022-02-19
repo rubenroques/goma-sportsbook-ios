@@ -125,7 +125,6 @@ class MatchLineTableViewCell: UITableViewCell {
         UIView.performWithoutAnimation {
             self.collectionView.reloadSections(IndexSet(integer: 0))
         }
-        
     }
 
     func setupFavoriteMatchInfoPublisher(match: Match) {

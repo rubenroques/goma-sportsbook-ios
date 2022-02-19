@@ -301,6 +301,8 @@
 		45626E472755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */; };
 		45628E7D27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */; };
 		45628E7E27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */; };
+		45628E8027BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45628E7F27BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift */; };
+		45628E8127BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45628E7F27BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift */; };
 		456B341D26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B341E26C17D43009D7D27 /* UIStackView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */; };
 		456B342126C17DF4009D7D27 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 456B342026C17DF4009D7D27 /* Optional+Extensions.swift */; };
@@ -1142,6 +1144,7 @@
 		45626E422755599D0069B89B /* OverUnderMarketDetailTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverUnderMarketDetailTableViewCell.swift; sourceTree = "<group>"; };
 		45626E432755599E0069B89B /* OverUnderMarketDetailTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OverUnderMarketDetailTableViewCell.xib; sourceTree = "<group>"; };
 		45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineViewModel.swift; sourceTree = "<group>"; };
+		45628E7F27BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionLineCollectionViewCell.swift; sourceTree = "<group>"; };
 		456B341C26C17D43009D7D27 /* UIStackView+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIStackView+Extensions.swift"; sourceTree = "<group>"; };
 		456B342026C17DF4009D7D27 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		456B342326C17E83009D7D27 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
@@ -2640,6 +2643,7 @@
 			children = (
 				45C3E8D427B56DC0007A1A0F /* SportMatchLineTableViewCell.swift */,
 				4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */,
+				45628E7F27BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3882,6 +3886,7 @@
 				45A0B2FF274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				A9BCF4492750FC89006DD528 /* BetslipErrorView.swift in Sources */,
 				A96B617E279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift in Sources */,
+				45628E8027BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift in Sources */,
 				45B0BD3B271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE826BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF826BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,
@@ -4235,6 +4240,7 @@
 				45A0B300274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift in Sources */,
 				A9BCF44A2750FC8A006DD528 /* BetslipErrorView.swift in Sources */,
 				A96B617F279EE6D2005DC376 /* CompetitionSearchTableViewCell.swift in Sources */,
+				45628E8127BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift in Sources */,
 				45B0BD3C271F180D009C41FA /* XcodePreviewViewController.swift in Sources */,
 				455A0CE926BD9D9000EC572D /* AutoLayoutDSL.swift in Sources */,
 				455A0CF926BD9D9000EC572D /* UIColor+Extensions.swift in Sources */,

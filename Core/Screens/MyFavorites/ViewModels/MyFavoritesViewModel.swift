@@ -243,19 +243,20 @@ class MyFavoritesViewModel: NSObject {
 
         var processedCompetitions: [Competition] = []
         for competitionId in competitionsMatches.keys {
-            if let tournament = self.store.tournaments[competitionId] {
+            if let rawCompetition = self.store.tournaments[competitionId] {
 
                 var location: Location?
-                if let rawLocation = self.store.location(forId: tournament.venueId ?? "") {
+                if let rawLocation = self.store.location(forId: rawCompetition.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                         name: rawLocation.name ?? "",
                                         isoCode: rawLocation.code ?? "")
                 }
 
                 let competition = Competition(id: competitionId,
-                                              name: tournament.name ?? "",
+                                              name: rawCompetition.name ?? "",
                                               matches: (competitionsMatches[competitionId] ?? []),
-                                              venue: location)
+                                              venue: location,
+                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 processedCompetitions.append(competition)
 
             }

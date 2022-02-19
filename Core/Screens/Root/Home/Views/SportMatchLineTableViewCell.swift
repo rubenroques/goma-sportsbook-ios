@@ -16,6 +16,7 @@ class SportMatchLineTableViewCell: UITableViewCell {
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
     private lazy var topCollectionView: UICollectionView = Self.createTopCollectionView()
     private lazy var bottomCollectionView: UICollectionView = Self.createBottomCollectionView()
+    private lazy var seeAllBaseView: UIView = Self.createSeeAllBaseView()
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
@@ -29,6 +30,10 @@ class SportMatchLineTableViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        self.topCollectionView.isHidden = true
+        self.bottomCollectionView.isHidden = true
+        self.seeAllBaseView.isHidden = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -40,6 +45,7 @@ class SportMatchLineTableViewCell: UITableViewCell {
 
         self.topCollectionView.isHidden = false
         self.bottomCollectionView.isHidden = false
+        self.seeAllBaseView.isHidden = false
 
         self.viewModel = nil
         self.titleLabel.text = ""
@@ -78,24 +84,36 @@ class SportMatchLineTableViewCell: UITableViewCell {
 
         self.viewModel?.titlePublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in self?.titleLabel.text = $0 })
+            .sink(receiveValue: { [weak self] in
+                self?.titleLabel.text = $0
+            })
             .store(in: &cancellables)
 
-        self.viewModel?.numberOfLoadedMatchedPublisher
+//        self.viewModel?.layoutTypePublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink { layoutType in
+//                switch layoutType {
+//                case .doubleLine:
+//                    self.topCollectionView.isHidden = false
+//                    self.bottomCollectionView.isHidden = false
+//                    self.seeAllBaseView.isHidden = false
+//                case .singleLine:
+//                    self.topCollectionView.isHidden = false
+//                    self.bottomCollectionView.isHidden = true
+//                    self.seeAllBaseView.isHidden = false
+//                case .competition:
+//                    self.topCollectionView.isHidden = false
+//                    self.bottomCollectionView.isHidden = true
+//                    self.seeAllBaseView.isHidden = true
+//                }
+//            }
+//            .store(in: &cancellables)
+
+        self.viewModel?.layoutTypePublisher
             .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] numberOfLoadedMatched in
-                switch numberOfLoadedMatched {
-//                case 0:
-//                    self?.topCollectionView.isHidden = true
-//                    self?.bottomCollectionView.isHidden = true
-                case 1:
-                    self?.topCollectionView.isHidden = false
-                    self?.bottomCollectionView.isHidden = true
-                default:
-                    self?.topCollectionView.isHidden = false
-                    self?.bottomCollectionView.isHidden = false
-                }
+            .sink(receiveValue: { [weak self] _ in
+                self?.reloadCollections()
             })
             .store(in: &cancellables)
 
@@ -105,7 +123,7 @@ class SportMatchLineTableViewCell: UITableViewCell {
                 self?.reloadCollections()
             })
             .store(in: &cancellables)
-        
+
     }
 
     func reloadCollections() {
@@ -226,12 +244,26 @@ extension SportMatchLineTableViewCell: UICollectionViewDelegate, UICollectionVie
                     marketString = singularMarketRawString.replacingOccurrences(of: "%s", with: "\(numberTotalOfMarkets)")
                 }
                 cell.configureWithSubtitleString(marketString)
+
+                if numberTotalOfMarkets == 0 {
+                    cell.hideSubtitle()
+                }
             }
 
             return cell
         }
 
-        if indexPath.row == 0, let match = self.viewModel?.match(forLine: collectionLineIndex) {
+        if collectionLineIndex == 0 && viewModel.isCompetitionLine() {
+            guard
+                let cell = collectionView.dequeueCellType(CompetitionLineCollectionViewCell.self, indexPath: indexPath),
+                let viewModel = self.viewModel?.competitionViewModel()
+            else {
+                fatalError()
+            }
+            cell.configure(withViewModel: viewModel)
+            return cell
+        }
+        else if indexPath.row == 0, let match = self.viewModel?.match(forLine: collectionLineIndex) {
 
             if self.viewModel?.isMatchLineLive() ?? false {
                 guard
@@ -341,18 +373,21 @@ extension SportMatchLineTableViewCell: UICollectionViewDelegate, UICollectionVie
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
+        var cellHeight = MatchWidgetCollectionViewCell.cellHeight
+        if self.viewModel?.isCompetitionLine() ?? false {
+            cellHeight = 124
+        }
+
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: MatchWidgetCollectionViewCell.cellHeight)
+            return CGSize(width: 99, height: cellHeight)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
             var width = screenWidth*0.87
-
             if width > 390 {
                 width = 390
             }
-
-            return CGSize(width: width, height: MatchWidgetCollectionViewCell.cellHeight) // design width: 331
+            return CGSize(width: width, height: cellHeight)
         }
     }
 }
@@ -403,6 +438,13 @@ extension SportMatchLineTableViewCell {
         return bottomCollectionView
     }
 
+
+    private static func createSeeAllBaseView() -> UIView {
+        let seeAllView = UIView()
+        seeAllView.translatesAutoresizingMaskIntoConstraints = false
+        return seeAllView
+    }
+
     private static func createSeeAllView() -> UIView {
         let seeAllView = UIView()
         seeAllView.layer.borderColor = UIColor.gray.cgColor
@@ -428,10 +470,11 @@ extension SportMatchLineTableViewCell {
 
         self.linesStackView.addArrangedSubview(self.topCollectionView)
         self.linesStackView.addArrangedSubview(self.bottomCollectionView)
+        self.linesStackView.addArrangedSubview(self.seeAllBaseView)
 
         self.contentView.addSubview(self.linesStackView)
 
-        self.contentView.addSubview(self.seeAllView)
+        self.seeAllBaseView.addSubview(self.seeAllView)
         self.seeAllView.addSubview(self.seeAllLabel)
 
         self.topCollectionView.delegate = self
@@ -440,12 +483,16 @@ extension SportMatchLineTableViewCell {
         self.bottomCollectionView.delegate = self
         self.bottomCollectionView.dataSource = self
 
+        self.topCollectionView.register(CompetitionLineCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionLineCollectionViewCell.identifier)
+
         self.topCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
         self.topCollectionView.register(OddTripleCollectionViewCell.nib, forCellWithReuseIdentifier: OddTripleCollectionViewCell.identifier)
         self.topCollectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
         self.topCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+
+        self.bottomCollectionView.register(CompetitionLineCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionLineCollectionViewCell.identifier)
 
         self.bottomCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
@@ -470,7 +517,7 @@ extension SportMatchLineTableViewCell {
             self.linesStackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.linesStackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.linesStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16),
-            self.linesStackView.bottomAnchor.constraint(equalTo: self.seeAllView.topAnchor, constant: -16),
+            self.linesStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
 
             self.topCollectionView.heightAnchor.constraint(equalToConstant: 160),
             self.bottomCollectionView.heightAnchor.constraint(equalToConstant: 160),
@@ -479,10 +526,14 @@ extension SportMatchLineTableViewCell {
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),
             self.seeAllLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.seeAllView.trailingAnchor, constant: 8),
 
-            self.seeAllView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
-            self.seeAllView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
             self.seeAllView.heightAnchor.constraint(equalToConstant: 34),
-            self.seeAllView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
+
+            self.seeAllBaseView.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor, constant: -16),
+            self.seeAllBaseView.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor, constant: 16),
+
+            self.seeAllBaseView.topAnchor.constraint(equalTo: self.seeAllView.topAnchor),
+            self.seeAllBaseView.bottomAnchor.constraint(equalTo: self.seeAllView.bottomAnchor),
+
      ])
     }
 }

@@ -966,7 +966,9 @@ class PreLiveEventsViewModel: NSObject {
         var popularCompetitions = [Competition]()
         for popularCompetition in Env.everyMatrixStorage.popularTournaments.values where (popularCompetition.sportId ?? "") == self.selectedSport.id {
 
-            let competition = Competition(id: popularCompetition.id, name: popularCompetition.name ?? "")
+            let competition = Competition(id: popularCompetition.id,
+                                          name: popularCompetition.name ?? "",
+                                          outrightMarkets: popularCompetition.numberOfOutrightMarkets ?? 0)
             addedCompetitionIds.append(popularCompetition.id)
             popularCompetitions.append(competition)
         }
@@ -996,7 +998,9 @@ class PreLiveEventsViewModel: NSObject {
                     continue
                 }
 
-                let competition = Competition(id: rawCompetition.id, name: rawCompetition.name ?? "")
+                let competition = Competition(id: rawCompetition.id,
+                                              name: rawCompetition.name ?? "",
+                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 addedCompetitionIds.append(rawCompetition.id)
                 locationCompetitions.append(competition)
             }
@@ -1040,19 +1044,20 @@ class PreLiveEventsViewModel: NSObject {
 
         var processedCompetitions: [Competition] = []
         for competitionId in competitionsMatches.keys {
-            if let tournament = Env.everyMatrixStorage.tournaments[competitionId] {
+            if let rawCompetition = Env.everyMatrixStorage.tournaments[competitionId] {
 
                 var location: Location?
-                if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
+                if let rawLocation = Env.everyMatrixStorage.location(forId: rawCompetition.venueId ?? "") {
                     location = Location(id: rawLocation.id,
                                     name: rawLocation.name ?? "",
                                     isoCode: rawLocation.code ?? "")
                 }
 
                 let competition = Competition(id: competitionId,
-                                              name: tournament.name ?? "",
+                                              name: rawCompetition.name ?? "",
                                               matches: (competitionsMatches[competitionId] ?? []),
-                                              venue: location)
+                                              venue: location,
+                                              outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                 processedCompetitions.append(competition)
             }
         }
@@ -1084,21 +1089,22 @@ class PreLiveEventsViewModel: NSObject {
 
         var processedCompetitions: [Competition] = []
         for competitionId in competitionsMatches.keys {
-            if let tournament = Env.everyMatrixStorage.tournaments[competitionId], let tournamentSportTypeId = tournament.sportId {
+            if let rawCompetition = Env.everyMatrixStorage.tournaments[competitionId], let tournamentSportTypeId = rawCompetition.sportId {
 
                 if tournamentSportTypeId == self.selectedSport.id {
 
                     var location: Location?
-                    if let rawLocation = Env.everyMatrixStorage.location(forId: tournament.venueId ?? "") {
+                    if let rawLocation = Env.everyMatrixStorage.location(forId: rawCompetition.venueId ?? "") {
                         location = Location(id: rawLocation.id,
                                         name: rawLocation.name ?? "",
                                         isoCode: rawLocation.code ?? "")
                     }
 
                     let competition = Competition(id: competitionId,
-                                                  name: tournament.name ?? "",
+                                                  name: rawCompetition.name ?? "",
                                                   matches: (competitionsMatches[competitionId] ?? []),
-                                                  venue: location)
+                                                  venue: location,
+                                                  outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
                     processedCompetitions.append(competition)
                 }
 

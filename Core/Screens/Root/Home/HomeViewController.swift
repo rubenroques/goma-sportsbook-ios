@@ -109,6 +109,7 @@ class HomeViewController: UIViewController {
     private func bind(toViewModel viewModel: HomeViewModel) {
 
         viewModel.refreshPublisher
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.tableView.reloadData()
@@ -158,7 +159,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.viewModel.numberOfShortcuts(forSection: section)
+        return self.viewModel.title(forSection: section) != nil ? 1 : 0
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -167,7 +168,8 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         else {
             fatalError()
         }
-        cell.setupWithTitle( self.viewModel.shortcutTitle(forSection: indexPath.section) ?? "")
+        let title = self.viewModel.title(forSection: indexPath.section) ?? ""
+        cell.setupWithTitle(title)
         return cell
     }
 
@@ -247,10 +249,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .sport:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchLineTableViewCell.identifier) as? SportMatchLineTableViewCell,
-                let sportMatchLineViewModel = self.viewModel.sportMatchLineViewModel(forIndexPath: indexPath)
+                let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
+                let sportMatchLineViewModel = sportGroupViewModel.sportMatchLineViewModel(forIndex: indexPath.row)
             else {
                 fatalError()
             }
+
             cell.configure(withViewModel: sportMatchLineViewModel)
             cell.tappedMatchLineAction = { [weak self] match in
                 self?.openMatchDetails(match: match)
@@ -338,10 +342,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             titleStackView.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
         ])
 
-        if let title = self.viewModel.title(forSection: section).0 {
+        if let title = self.viewModel.title(forSection: section) {
             titleLabel.text = title
         }
-        if let imageName = self.viewModel.title(forSection: section).1 {
+        if let imageName = self.viewModel.iconName(forSection: section) {
             sportImageView.image = UIImage(named: "sport_type_icon_\(imageName)")
         }
         else {
@@ -394,7 +398,7 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .suggestedBets:
                 _ = self.viewModel.suggestedBetLineViewModel()
             case .sport:
-                _ = self.viewModel.sportMatchLineViewModel(forIndexPath: indexPath)
+                _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
             }
         }
     }
@@ -446,6 +450,7 @@ extension HomeViewController {
         let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
+        tableView.allowsSelection = false
         tableView.contentInset = .zero
         tableView.contentInsetAdjustmentBehavior = .never
         if #available(iOS 15.0, *) {
