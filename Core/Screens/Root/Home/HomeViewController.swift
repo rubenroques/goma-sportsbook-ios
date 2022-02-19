@@ -109,7 +109,7 @@ class HomeViewController: UIViewController {
     private func bind(toViewModel viewModel: HomeViewModel) {
 
         viewModel.refreshPublisher
-            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
+            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.tableView.reloadData()
@@ -176,6 +176,7 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         self.viewModel.didSelectShortcut(atSection: indexPath.section)
+        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -403,6 +404,16 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
         }
     }
 }
+
+extension HomeViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.isTracking && scrollView == self.tableView {
+            let tableViewCenter = CGPoint(x: self.tableView.bounds.midX, y: self.tableView.bounds.midY)
+            let middleIndexPath = self.tableView.indexPathForRow(at: tableViewCenter)
+        }
+    }
+}
+
 //
 // MARK: - Actions
 //

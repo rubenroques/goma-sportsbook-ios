@@ -54,7 +54,7 @@ class PreLiveEventsViewModel: NSObject {
     private var favoriteMatches: [Match] = []
     private var favoriteCompetitions: [Competition] = []
 
-    private var popularMatchesDataSource = PopularMatchesDataSource(banners: [], matches: [])
+    private var popularMatchesDataSource = PopularMatchesDataSource(matches: [])
     private var todayMatchesDataSource = TodayMatchesDataSource(todayMatches: [])
     private var competitionsDataSource = CompetitionsDataSource(competitions: [])
     private var favoriteMatchesDataSource = FavoriteMatchesDataSource(userFavoriteMatches: [])
@@ -297,8 +297,6 @@ class PreLiveEventsViewModel: NSObject {
 
         self.popularMatchesDataSource.matches = filterPopularMatches(with: self.homeFilterOptions,
                                                                               matches: self.popularMatches)
-
-        self.popularMatchesDataSource.banners = self.banners
 
         self.todayMatchesDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions,
                                                                               matches: self.todayMatches)

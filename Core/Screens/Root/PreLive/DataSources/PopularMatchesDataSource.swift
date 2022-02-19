@@ -9,17 +9,6 @@ import UIKit
 
 class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var banners: [EveryMatrix.BannerInfo] = [] {
-        didSet {
-            self.bannersViewModel = self.createBannersViewModel()
-        }
-    }
-
-    private var bannersViewModel: BannerLineCellViewModel?
-    var cachedBannerCellViewModel: [String: BannerCellViewModel] = [:]
-    var cachedBannerLineCellViewModel: BannerLineCellViewModel?
-    var didCachedBanners: Bool = false
-
     var matches: [Match] = []
 
     var alertsArray: [ActivationAlert] = []
@@ -31,8 +20,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match, UIImage?) -> Void)?
 
-    init(banners: [EveryMatrix.BannerInfo], matches: [Match]) {
-        self.banners = banners
+    init( matches: [Match]) {
         self.matches = matches
 
         if let userSession = UserSessionStore.loggedUserSession() {
@@ -84,7 +72,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        4
+        return 4
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -100,7 +88,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             }
             return 0
         case 1:
-            return banners.isEmpty ? 0 : 1
+            return 0
         case 2:
             return self.matches.count
         case 3:
@@ -123,20 +111,6 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                     self.didSelectActivationAlertAction?(alertType)
                 }
                 cell.setAlertArrayData(arrayData: alertsArray)
-                return cell
-            }
-        case 1:
-            if let cell = tableView.dequeueCellType(BannerScrollTableViewCell.self) {
-                if !didCachedBanners {
-                    if let cachedViewModel = self.cachedBannerLineCellViewModel {
-                        cell.configure(withViewModel: cachedViewModel)
-
-                        cell.tappedBannerMatchAction = { match in
-                            self.didSelectMatchAction?(match, nil)
-                        }
-                        didCachedBanners = true
-                    }
-                }
                 return cell
             }
         case 2:
@@ -173,32 +147,6 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         }
         headerView.configureWithTitle(localized("popular_games"))
         return headerView
-    }
-
-    private func createBannersViewModel() -> BannerLineCellViewModel? {
-        if self.banners.isEmpty {
-            return nil
-        }
-        var cells = [BannerCellViewModel]()
-        for banner in self.banners {
-            if let cachedBannerCell = cachedBannerCellViewModel[banner.id] {
-                cells.append(cachedBannerCell)
-            }
-            else {
-                let cachedBannerCell = BannerCellViewModel(id: banner.id,
-                                                           matchId: banner.matchID,
-                                                           imageURL: banner.imageURL ?? "")
-                cachedBannerCellViewModel[banner.id] = cachedBannerCell
-                cells.append(cachedBannerCell)
-            }
-        }
-        if let cachedBannerLineCellViewModel = cachedBannerLineCellViewModel {
-            return cachedBannerLineCellViewModel
-        }
-        else {
-            cachedBannerLineCellViewModel = BannerLineCellViewModel(banners: cells)
-            return cachedBannerLineCellViewModel
-        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
