@@ -66,7 +66,7 @@ class BettingsTableViewCell : UITableViewCell {
 
     private func setupWithTheme() {
         self.baseView.layer.cornerRadius = 10
-       
+        self.lateralView.layer.cornerRadius = 10
         
         self.interiorView.backgroundColor = .clear
         
@@ -158,10 +158,7 @@ class BettingsTableViewCell : UITableViewCell {
     func configure(withBetHistoryEntry betHistoryEntry: BetHistoryEntry) {
 
         self.betHistoryEntry = betHistoryEntry
-       
 
-
-        //
         if betHistoryEntry.type == "SINGLE" {
    
             self.setupDetailsLabel(bet: localized("single")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
@@ -175,8 +172,7 @@ class BettingsTableViewCell : UITableViewCell {
             self.setupDetailsLabel(bet: localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
         }
             self.setupIdLabel(id: betHistoryEntry.betId)
-        
-        
+    
         if let date = betHistoryEntry.placedDate {
             self.setupDateLabel(date: MyTicketTableViewCell.dateFormatter.string(from: date))
         }
@@ -190,9 +186,6 @@ class BettingsTableViewCell : UITableViewCell {
            let betAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: betAmount)) {
             self.setupBetAmountValuesLabel(betAmount: betAmountString)
         }
-
-        //
-    
 
         if let status = betHistoryEntry.status?.uppercased() {
         

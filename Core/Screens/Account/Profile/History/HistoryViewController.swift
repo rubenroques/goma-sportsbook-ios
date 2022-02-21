@@ -41,6 +41,8 @@ class HistoryViewController: UIViewController{
     private let viewModel: HistoryViewModel
     private var filterSelectedOption: Int = 0
     
+  
+    
     // MARK: - Lifetime and Cycle
     init(viewModel: HistoryViewModel = HistoryViewModel()) {
         self.viewModel = viewModel
@@ -60,8 +62,6 @@ class HistoryViewController: UIViewController{
         self.setupSubviews()
         self.setupWithTheme()
         
-       
-    
         // Configure post-loading and self-dependent properties
         self.topSliderCollectionView.delegate = self
         self.topSliderCollectionView.dataSource = self
@@ -101,7 +101,7 @@ class HistoryViewController: UIViewController{
         self.bind(toViewModel: viewModel)
         let color = UIColor.App.backgroundPrimary
         
-        self.leftGradientBaseView.backgroundColor = color
+        self.leftGradientBaseView.backgroundColor = UIColor.systemPink
         let leftGradientMaskLayer = CAGradientLayer()
         leftGradientMaskLayer.frame = self.leftGradientBaseView.bounds
         leftGradientMaskLayer.colors = [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
@@ -109,6 +109,7 @@ class HistoryViewController: UIViewController{
         leftGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         leftGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.leftGradientBaseView.layer.mask = leftGradientMaskLayer
+        self.leftGradientBaseView.isHidden = false
 
         //
         self.rightGradientBaseView.backgroundColor = color
@@ -119,6 +120,7 @@ class HistoryViewController: UIViewController{
         rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
+        self.emptyStateButton.layer.cornerRadius = CornerRadius.button
     }
 
     // MARK: - Layout and Theme
@@ -151,10 +153,6 @@ class HistoryViewController: UIViewController{
         self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundTertiary
         
         self.topLabel.textColor = UIColor.App.textPrimary
-        
-        //self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-       // self.loadingActivityIndicatorView.tintColor = UIColor.systemPink
-        //self.loadingActivityIndicatorView.backgroundColor = UIColor.yellow
         
         self.filterBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.optionSegmentControl.setTitleTextAttributes([
@@ -190,6 +188,7 @@ class HistoryViewController: UIViewController{
         self.emptyStateSecondaryLabel.textAlignment = .center
         
         self.emptyStateButton.layer.cornerRadius = 2.5
+       
         self.emptyStateButton.titleLabel?.font = AppFont.with(type: .bold, size: 17)
         
         
