@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BettingNotificationsViewController: UIViewController {
 
@@ -14,10 +15,18 @@ class BettingNotificationsViewController: UIViewController {
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
+    var viewModel: BettingNotificationViewModel
+    var shouldUpdateSettings: Bool = false
 
     // MARK: Lifetime and Cycle
     init() {
+        self.viewModel = BettingNotificationViewModel()
         super.init(nibName: nil, bundle: nil)
+
+        self.bind(toViewModel: self.viewModel)
     }
 
     @available(iOS, unavailable)
@@ -56,15 +65,43 @@ class BettingNotificationsViewController: UIViewController {
 
     }
 
+    // MARK: Binding
+    private func bind(toViewModel viewModel: BettingNotificationViewModel) {
+
+        viewModel.shouldSendSettingsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] sendState in
+                self?.shouldUpdateSettings = sendState
+            })
+            .store(in: &cancellables)
+
+        viewModel.settingsUpdatedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                if self?.shouldUpdateSettings == true {
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
     private func setupTopStackView() {
         let betsFinalView = SettingsRowView()
         betsFinalView.setTitle(title: localized("notify_bets_final_result"))
         betsFinalView.hasSeparatorLineView = true
         betsFinalView.hasSwitchButton = true
+        self.viewModel.setBetsSelectedOption(view: betsFinalView, settingType: .betFinal)
+        betsFinalView.didTappedSwitch = { [weak self] in
+            self?.viewModel.updateBetsSetting(isSettingEnabled: betsFinalView.isSwitchOn, settingType: .betFinal)
+        }
 
         let betsOptionsView = SettingsRowView()
         betsOptionsView.setTitle(title: localized("notify_bets_options_results"))
         betsOptionsView.hasSwitchButton = true
+        self.viewModel.setBetsSelectedOption(view: betsOptionsView, settingType: .betSelection)
+        betsOptionsView.didTappedSwitch = { [weak self] in
+            self?.viewModel.updateBetsSetting(isSettingEnabled: betsOptionsView.isSwitchOn, settingType: .betSelection)
+        }
 
         self.topStackView.addArrangedSubview(betsFinalView)
         self.topStackView.addArrangedSubview(betsOptionsView)
@@ -78,7 +115,12 @@ class BettingNotificationsViewController: UIViewController {
 //
 extension BettingNotificationsViewController {
     @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        if self.shouldUpdateSettings {
+            self.viewModel.setUserSettings()
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 

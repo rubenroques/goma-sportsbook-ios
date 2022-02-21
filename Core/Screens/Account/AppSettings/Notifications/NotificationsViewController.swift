@@ -15,11 +15,13 @@ class NotificationsViewController: UIViewController {
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
     private lazy var bottomStackView: UIStackView = Self.createBottomStackView()
-//    private lazy var deviceSettingsView: UIView = Self.createDeviceSettingsView()
-//    private lazy var deviceSettingsRowView: SettingsRowView = Self.createDeviceSettingsRowView()
+
+    // MARK: Public Properties
+    var viewModel: NotificationsViewModel
 
     // MARK: Lifetime and Cycle
     init() {
+        self.viewModel = NotificationsViewModel()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -98,9 +100,34 @@ class NotificationsViewController: UIViewController {
         smsView.hasSeparatorLineView = true
         smsView.hasSwitchButton = true
 
+        smsView.didTappedSwitch = {
+            self.viewModel.updateSmsSetting(isSettingEnabled: smsView.isSwitchOn)
+        }
+
         let emailView = SettingsRowView()
         emailView.setTitle(title: localized("email"))
         emailView.hasSwitchButton = true
+
+        emailView.didTappedSwitch = {
+            self.viewModel.updateEmailSetting(isSettingEnabled: emailView.isSwitchOn)
+        }
+
+        // Check options
+        if let userSettings = self.viewModel.userSettings {
+            if userSettings.notificationSms == 1 {
+                smsView.isSwitchOn = true
+            }
+            else {
+                smsView.isSwitchOn = false
+            }
+
+            if userSettings.notificationEmail == 1 {
+                emailView.isSwitchOn = true
+            }
+            else {
+                emailView.isSwitchOn = false
+            }
+        }
 
         self.bottomStackView.addArrangedSubview(allowSportsbookView)
         self.bottomStackView.addArrangedSubview(smsView)
@@ -119,17 +146,17 @@ extension NotificationsViewController {
     }
 
     @objc private func didTapDeviceView() {
-        print("Device")
+        if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+            UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+        }
     }
 
     @objc private func didTapGamesNotificationView() {
-        print("Games")
         let gamesNotificationViewController = GamesNotificationViewController()
         self.navigationController?.pushViewController(gamesNotificationViewController, animated: true)
     }
 
     @objc private func didTapBettingNotificationView() {
-        print("Betting")
         let bettingNotificationViewController = BettingNotificationsViewController()
         self.navigationController?.pushViewController(bettingNotificationViewController, animated: true)
     }
@@ -182,22 +209,6 @@ extension NotificationsViewController {
         return stackView
     }
 
-//    private static func createDeviceSettingsView() -> UIView {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }
-//
-//    private static func createDeviceSettingsRowView() -> SettingsRowView {
-//        let deviceView = SettingsRowView()
-//        deviceView.translatesAutoresizingMaskIntoConstraints = false
-//        deviceView.setTitle(title: localized("notifications"))
-//        let deviceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapDeviceView))
-//        deviceView.addGestureRecognizer(deviceTap)
-//
-//        return deviceView
-//    }
-
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
@@ -208,9 +219,6 @@ extension NotificationsViewController {
         self.view.addSubview(self.topStackView)
 
         self.view.addSubview(self.bottomStackView)
-
-//        self.view.addSubview(self.deviceSettingsView)
-//        self.deviceSettingsView.addSubview(self.deviceSettingsRowView)
 
         self.initConstraints()
     }
@@ -250,20 +258,6 @@ extension NotificationsViewController {
             self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 16)
 
         ])
-
-        // Device Settings View
-//        NSLayoutConstraint.activate([
-//            self.deviceSettingsView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-//            self.deviceSettingsView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
-//            self.deviceSettingsView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8),
-//            self.deviceSettingsView.heightAnchor.constraint(equalToConstant: 60),
-//
-//            self.deviceSettingsRowView.leadingAnchor.constraint(equalTo: self.deviceSettingsView.leadingAnchor),
-//            self.deviceSettingsRowView.trailingAnchor.constraint(equalTo: self.deviceSettingsView.trailingAnchor),
-//            self.deviceSettingsRowView.topAnchor.constraint(equalTo: self.deviceSettingsView.topAnchor),
-//            self.deviceSettingsRowView.bottomAnchor.constraint(equalTo: self.deviceSettingsView.bottomAnchor),
-//
-//        ])
 
     }
 

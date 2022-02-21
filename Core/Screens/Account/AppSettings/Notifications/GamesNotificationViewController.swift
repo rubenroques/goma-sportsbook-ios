@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class GamesNotificationViewController: UIViewController {
 
@@ -16,9 +17,11 @@ class GamesNotificationViewController: UIViewController {
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
     private lazy var bottomStackView: UIStackView = Self.createBottomStackView()
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var notificationsEnabledViews: [SettingsRowView] = []
+    var viewModel: GamesNotificationViewModel
+    var shouldUpdateSettings: Bool = false
 
     var isBottomStackViewDisabled: Bool = false {
         didSet {
@@ -34,7 +37,10 @@ class GamesNotificationViewController: UIViewController {
     }
     // MARK: Lifetime and Cycle
     init() {
+        self.viewModel = GamesNotificationViewModel()
         super.init(nibName: nil, bundle: nil)
+
+        self.bind(toViewModel: self.viewModel)
     }
 
     @available(iOS, unavailable)
@@ -78,22 +84,59 @@ class GamesNotificationViewController: UIViewController {
 
     }
 
+    // MARK: Binding
+    private func bind(toViewModel viewModel: GamesNotificationViewModel) {
+
+        viewModel.isStackViewDisabledPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] disabledState in
+                self?.isBottomStackViewDisabled = disabledState
+            })
+            .store(in: &cancellables)
+
+        viewModel.shouldSendSettingsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] sendState in
+                self?.shouldUpdateSettings = sendState
+            })
+            .store(in: &cancellables)
+
+        viewModel.settingsUpdatedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                if self?.shouldUpdateSettings == true {
+                    self?.navigationController?.popViewController(animated: true)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
     private func setupTopStackView() {
         let myGamesView = SettingsRowView()
         myGamesView.setTitle(title: localized("allow_mygames_notifications"))
         myGamesView.hasSeparatorLineView = true
         myGamesView.hasSwitchButton = true
-        self.notificationsEnabledViews.append(myGamesView)
+        self.viewModel.setGamesSelectedOption(view: myGamesView, settingType: .gamesWatchList)
+        myGamesView.didTappedSwitch = { [weak self] in
+            self?.viewModel.checkBottomStackViewDisableState()
+            self?.viewModel.updateGamesSetting(isSettingEnabled: myGamesView.isSwitchOn, settingType: .gamesWatchList)
+        }
+        self.viewModel.notificationsEnabledViews.append(myGamesView)
 
         let myCompetitionsView = SettingsRowView()
         myCompetitionsView.setTitle(title: localized("allow_mycompetitions_notifications"))
         myCompetitionsView.hasSwitchButton = true
-        self.notificationsEnabledViews.append(myCompetitionsView)
+        self.viewModel.setGamesSelectedOption(view: myCompetitionsView, settingType: .competitionWatchList)
+        myCompetitionsView.didTappedSwitch = { [weak self] in
+            self?.viewModel.checkBottomStackViewDisableState()
+            self?.viewModel.updateGamesSetting(isSettingEnabled: myCompetitionsView.isSwitchOn, settingType: .competitionWatchList)
+        }
+        self.viewModel.notificationsEnabledViews.append(myCompetitionsView)
 
         self.topStackView.addArrangedSubview(myGamesView)
         self.topStackView.addArrangedSubview(myCompetitionsView)
 
-        self.checkNotificationSwitches()
+        self.viewModel.checkNotificationSwitches()
 
     }
 
@@ -106,30 +149,54 @@ class GamesNotificationViewController: UIViewController {
         startGameView.setTitle(title: localized("start_of_game"))
         startGameView.hasSwitchButton = true
         startGameView.hasSeparatorLineView = true
+        self.viewModel.setGamesSelectedOption(view: startGameView, settingType: .startGame)
+        startGameView.didTappedSwitch = {
+            self.viewModel.updateGamesSetting(isSettingEnabled: startGameView.isSwitchOn, settingType: .startGame)
+        }
 
         let goalsView = SettingsRowView()
         goalsView.setTitle(title: localized("goals"))
         goalsView.hasSwitchButton = true
         goalsView.hasSeparatorLineView = true
+        self.viewModel.setGamesSelectedOption(view: goalsView, settingType: .goals)
+        goalsView.didTappedSwitch = {
+            self.viewModel.updateGamesSetting(isSettingEnabled: goalsView.isSwitchOn, settingType: .goals)
+        }
 
         let halfTimeView = SettingsRowView()
         halfTimeView.setTitle(title: localized("half_time"))
         halfTimeView.hasSwitchButton = true
         halfTimeView.hasSeparatorLineView = true
+        self.viewModel.setGamesSelectedOption(view: halfTimeView, settingType: .halfTime)
+        halfTimeView.didTappedSwitch = {
+            self.viewModel.updateGamesSetting(isSettingEnabled: halfTimeView.isSwitchOn, settingType: .halfTime)
+        }
 
         let secondHalfTimeView = SettingsRowView()
         secondHalfTimeView.setTitle(title: localized("second_half_time"))
         secondHalfTimeView.hasSwitchButton = true
         secondHalfTimeView.hasSeparatorLineView = true
+        self.viewModel.setGamesSelectedOption(view: secondHalfTimeView, settingType: .secondHalfTime)
+        secondHalfTimeView.didTappedSwitch = {
+            self.viewModel.updateGamesSetting(isSettingEnabled: secondHalfTimeView.isSwitchOn, settingType: .secondHalfTime)
+        }
 
         let fullTimeView = SettingsRowView()
         fullTimeView.setTitle(title: localized("full_time"))
         fullTimeView.hasSwitchButton = true
         fullTimeView.hasSeparatorLineView = true
+        self.viewModel.setGamesSelectedOption(view: fullTimeView, settingType: .fullTime)
+        fullTimeView.didTappedSwitch = {
+            self.viewModel.updateGamesSetting(isSettingEnabled: fullTimeView.isSwitchOn, settingType: .fullTime)
+        }
 
         let redCardsView = SettingsRowView()
         redCardsView.setTitle(title: localized("red_cards"))
         redCardsView.hasSwitchButton = true
+        self.viewModel.setGamesSelectedOption(view: redCardsView, settingType: .redCard)
+        redCardsView.didTappedSwitch = {
+            self.viewModel.updateGamesSetting(isSettingEnabled: redCardsView.isSwitchOn, settingType: .redCard)
+        }
 
         self.bottomStackView.addArrangedSubview(notifyAboutView)
         self.bottomStackView.addArrangedSubview(startGameView)
@@ -141,35 +208,6 @@ class GamesNotificationViewController: UIViewController {
 
     }
 
-    private func checkNotificationSwitches() {
-        var disabledStackView = true
-
-        for view in self.notificationsEnabledViews {
-            if view.isSwitchOn {
-                disabledStackView = false
-            }
-            view.didTappedSwitch = {[weak self] in
-                self?.checkBottomStackViewDisableState()
-            }
-        }
-
-        self.isBottomStackViewDisabled = disabledStackView
-    }
-
-    private func checkBottomStackViewDisableState() {
-        var disabledStackView = true
-
-        for view in self.notificationsEnabledViews {
-            if view.isSwitchOn {
-                disabledStackView = false
-            }
-
-        }
-
-        self.isBottomStackViewDisabled = disabledStackView
-
-    }
-
 }
 
 //
@@ -177,7 +215,12 @@ class GamesNotificationViewController: UIViewController {
 //
 extension GamesNotificationViewController {
     @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        if self.shouldUpdateSettings {
+            self.viewModel.setUserSettings()
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 }
 

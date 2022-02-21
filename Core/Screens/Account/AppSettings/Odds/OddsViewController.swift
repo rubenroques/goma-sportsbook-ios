@@ -18,12 +18,12 @@ class OddsViewController: UIViewController {
     private lazy var bottomStackView: UIStackView = Self.createBottomStackView()
 
     // MARK: Public Properties
-    var oddsFormatRadioButtonViews: [SettingsRadioRowView] = []
-    var oddsVariationRadioButtonViews: [SettingsRadioRowView] = []
     var cancellables = Set<AnyCancellable>()
+    var viewModel: OddsViewModel
 
     // MARK: Lifetime and Cycle
     init() {
+        self.viewModel = OddsViewModel()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -74,32 +74,20 @@ class OddsViewController: UIViewController {
         euOddView.setTitle(title: localized("eu_odd"))
         euOddView.viewId = 1
         euOddView.hasSeparatorLineView = true
-        self.oddsFormatRadioButtonViews.append(euOddView)
+        self.viewModel.oddsFormatRadioButtonViews.append(euOddView)
 
         let ukOddView = SettingsRadioRowView()
         ukOddView.setTitle(title: localized("uk_odd"))
         ukOddView.viewId = 2
         ukOddView.hasSeparatorLineView = true
-        self.oddsFormatRadioButtonViews.append(ukOddView)
+        self.viewModel.oddsFormatRadioButtonViews.append(ukOddView)
 
         let usOddView = SettingsRadioRowView()
         usOddView.setTitle(title: localized("us_odd"))
         usOddView.viewId = 3
-        self.oddsFormatRadioButtonViews.append(usOddView)
+        self.viewModel.oddsFormatRadioButtonViews.append(usOddView)
 
-        // Set selected view
-        let oddsFormat = UserDefaults.standard.userOddsFormat
-        let oddsFormatId = oddsFormat.oddsFormatId
-
-        for view in self.oddsFormatRadioButtonViews {
-            view.didTapView = { _ in
-                self.checkOddsFormatOptionsSelected( viewTapped: view)
-            }
-            // Default market selected
-            if view.viewId == oddsFormatId {
-                view.isChecked = true
-            }
-        }
+        self.viewModel.setOddsFormatSelectedValues()
 
         self.topStackView.addArrangedSubview(themeColorView)
         self.topStackView.addArrangedSubview(euOddView)
@@ -116,104 +104,19 @@ class OddsViewController: UIViewController {
         acceptHigherView.setTitle(title: localized("accept_higher"))
         acceptHigherView.viewId = 1
         acceptHigherView.hasSeparatorLineView = true
-        self.oddsVariationRadioButtonViews.append(acceptHigherView)
+        self.viewModel.oddsVariationRadioButtonViews.append(acceptHigherView)
 
         let acceptAnyView = SettingsRadioRowView()
         acceptAnyView.setTitle(title: localized("accept_any"))
         acceptAnyView.viewId = 2
-        self.oddsVariationRadioButtonViews.append(acceptAnyView)
+        self.viewModel.oddsVariationRadioButtonViews.append(acceptAnyView)
 
-        // Set selected view
-        let oddsVariationTypeString = UserDefaults.standard.userBetslipSettings
-        let oddVariationId = getOddsVariationType(userBetslipSetting: oddsVariationTypeString)
-
-        for view in self.oddsVariationRadioButtonViews {
-            view.didTapView = { _ in
-                self.checkOddsVariationOptionsSelected( viewTapped: view)
-            }
-            // Default market selected
-            if view.viewId == oddVariationId {
-                view.isChecked = true
-            }
-        }
+        self.viewModel.setOddsVariationSelectedValues()
 
         self.bottomStackView.addArrangedSubview(oddsVariationView)
         self.bottomStackView.addArrangedSubview(acceptHigherView)
         self.bottomStackView.addArrangedSubview(acceptAnyView)
 
-    }
-
-    private func getOddsVariationType(userBetslipSetting: String) -> Int {
-        if userBetslipSetting == "ACCEPT_HIGHER" {
-            return 1
-        }
-        else if userBetslipSetting == "ACCEPT_ANY" {
-            return 2
-        }
-
-        return 0
-    }
-
-    private func checkOddsFormatOptionsSelected(viewTapped: SettingsRadioRowView) {
-        for view in self.oddsFormatRadioButtonViews {
-            view.isChecked = false
-        }
-        viewTapped.isChecked = true
-
-        if viewTapped.viewId == 1 {
-            UserDefaults.standard.userOddsFormat = .europe
-        }
-        else if viewTapped.viewId == 2 {
-            UserDefaults.standard.userOddsFormat = .unitedKingdom
-        }
-        else if viewTapped.viewId == 3 {
-            UserDefaults.standard.userOddsFormat = .usa
-        }
-    }
-
-    private func checkOddsVariationOptionsSelected(viewTapped: SettingsRadioRowView) {
-        for view in self.oddsVariationRadioButtonViews {
-            view.isChecked = false
-        }
-        viewTapped.isChecked = true
-
-        if viewTapped.viewId == 1 {
-            UserDefaults.standard.userBetslipSettings = "ACCEPT_HIGHER"
-        }
-        else if viewTapped.viewId == 2 {
-            UserDefaults.standard.userBetslipSettings = "ACCEPT_ANY"
-        }
-
-        self.postOddsSettingsToGoma()
-    }
-
-    private func postOddsSettingsToGoma() {
-        // Read/Get Data
-        if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
-            do {
-                let decoder = JSONDecoder()
-
-                var userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-                userSettings.oddValidationType = UserDefaults.standard.userBetslipSettings
-
-                Env.gomaNetworkClient.sendUserSettings(deviceId: Env.deviceId, userSettings: userSettings)
-                    .receive(on: DispatchQueue.main)
-                    .sink(receiveCompletion: { completion in
-                        switch completion {
-                        case .failure(let error):
-                            print("GOMA SETTINGS ERROR: \(error)")
-                        case .finished:
-                            print("Finished")
-                        }
-                    }, receiveValue: { value in
-                        print("GOMA SETTINGS: \(value)")
-                    })
-                    .store(in: &cancellables)
-
-            } catch {
-                print("Unable to Decode UserSettings Goma (\(error))")
-            }
-        }
     }
 
 }

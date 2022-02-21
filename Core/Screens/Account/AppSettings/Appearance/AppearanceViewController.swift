@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class AppearanceViewController: UIViewController {
 
@@ -14,13 +15,18 @@ class AppearanceViewController: UIViewController {
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var themeRadioButtonViews: [SettingsRadioRowView] = []
+    var viewModel: AppearanceViewModel
 
     // MARK: Lifetime and Cycle
     init() {
+        self.viewModel = AppearanceViewModel()
         super.init(nibName: nil, bundle: nil)
+
+        self.bind(toViewModel: self.viewModel)
     }
 
     @available(iOS, unavailable)
@@ -59,6 +65,26 @@ class AppearanceViewController: UIViewController {
 
     }
 
+    // MARK: Binding
+    private func bind(toViewModel viewModel: AppearanceViewModel) {
+
+        viewModel.selectedThemePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { theme in
+                if theme == Theme.dark {
+                UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .dark
+                }
+                else if theme == Theme.light {
+                    UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .light
+                }
+                else if theme == Theme.device {
+                    UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .unspecified
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
     private func setupTopStackView() {
         let themeColorView = SettingsRowView()
         themeColorView.setTitle(title: localized("theme_color"))
@@ -67,58 +93,25 @@ class AppearanceViewController: UIViewController {
         darkModeView.setTitle(title: localized("dark_mode"))
         darkModeView.viewId = 1
         darkModeView.hasSeparatorLineView = true
-        self.themeRadioButtonViews.append(darkModeView)
+        self.viewModel.themeRadioButtonViews.append(darkModeView)
 
         let lightModeView = SettingsRadioRowView()
         lightModeView.setTitle(title: localized("light_mode"))
         lightModeView.viewId = 2
         lightModeView.hasSeparatorLineView = true
-        self.themeRadioButtonViews.append(lightModeView)
+        self.viewModel.themeRadioButtonViews.append(lightModeView)
 
         let syncModeView = SettingsRadioRowView()
         syncModeView.setTitle(title: localized("sync_mode"))
         syncModeView.viewId = 3
-        self.themeRadioButtonViews.append(syncModeView)
+        self.viewModel.themeRadioButtonViews.append(syncModeView)
 
-        // Set selected view
-        let themeChosenId = UserDefaults.standard.theme.themeId
-        
-        for view in self.themeRadioButtonViews {
-            view.didTapView = { _ in
-                self.checkThemeRadioOptionsSelected( viewTapped: view)
-            }
-            // Default market selected
-            if view.viewId == themeChosenId {
-                view.isChecked = true
-            }
-        }
+        self.viewModel.setSelectedView()
 
         self.topStackView.addArrangedSubview(themeColorView)
         self.topStackView.addArrangedSubview(darkModeView)
         self.topStackView.addArrangedSubview(lightModeView)
         self.topStackView.addArrangedSubview(syncModeView)
-
-    }
-
-    private func checkThemeRadioOptionsSelected(viewTapped: SettingsRadioRowView) {
-        for view in self.themeRadioButtonViews {
-            view.isChecked = false
-        }
-        viewTapped.isChecked = true
-
-        if viewTapped.viewId == 1 {
-            UserDefaults.standard.theme = Theme.dark
-            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .dark
-        }
-        else if viewTapped.viewId == 2 {
-            UserDefaults.standard.theme = Theme.light
-            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .light
-        }
-        else if viewTapped.viewId == 3 {
-            UserDefaults.standard.theme = Theme.device
-            UIApplication.shared.keyWindow?.overrideUserInterfaceStyle = .unspecified
-
-        }
 
     }
 

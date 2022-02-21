@@ -101,6 +101,10 @@ class AppSettingsViewController: UIViewController {
 
         self.bottomStackView.addArrangedSubview(fingerprintView)
         self.bottomStackView.addArrangedSubview(faceIdView)
+
+        // Disable for now
+        self.bottomStackView.alpha = 0.7
+        self.bottomStackView.isUserInteractionEnabled = false
     }
 
 }
@@ -114,19 +118,16 @@ extension AppSettingsViewController {
     }
 
     @objc private func didTapNotificationView() {
-        print("Notification")
         let notificationViewController = NotificationsViewController()
         self.navigationController?.pushViewController(notificationViewController, animated: true)
     }
 
     @objc private func didTapAppearanceView() {
-        print("Appearance")
         let appearanceViewController = AppearanceViewController()
         self.navigationController?.pushViewController(appearanceViewController, animated: true)
     }
 
     @objc private func didTapOddsView() {
-        print("Odds")
         let oddsViewController = OddsViewController()
         self.navigationController?.pushViewController(oddsViewController, animated: true)
     }
