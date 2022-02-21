@@ -92,6 +92,7 @@ class HistoryViewController: UIViewController{
         let tapDepositGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapMakeDeposit))
         emptyStateButton.isUserInteractionEnabled = true
         emptyStateButton.addGestureRecognizer(tapDepositGestureRecognizer)
+        StyleHelper.styleButton(button: self.emptyStateButton)
         
         
         optionSegmentControl.addTarget(self, action: #selector(self.didChangeSegmentValue(_:)), for: .valueChanged)
