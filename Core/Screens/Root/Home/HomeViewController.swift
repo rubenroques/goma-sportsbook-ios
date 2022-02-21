@@ -29,6 +29,8 @@ class HomeViewController: UIViewController {
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: HomeViewModel
 
+    private var shortcutSelectedOption: Int = -1
+    
     // MARK: - Lifetime and Cycle
     init(viewModel: HomeViewModel = HomeViewModel()) {
         self.viewModel = viewModel
@@ -55,10 +57,14 @@ class HomeViewController: UIViewController {
 
         self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
-        self.tableView.register(SportMatchLineTableViewCell.self, forCellReuseIdentifier: SportMatchLineTableViewCell.identifier)
+        self.tableView.register(SportMatchDoubleLineTableViewCell.self, forCellReuseIdentifier: SportMatchDoubleLineTableViewCell.identifier)
+        self.tableView.register(SportMatchSingleLineTableViewCell.self, forCellReuseIdentifier: SportMatchSingleLineTableViewCell.identifier)
+        self.tableView.register(TopCompetitionLineTableViewCell.self, forCellReuseIdentifier: TopCompetitionLineTableViewCell.identifier)
         self.tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+
 
         self.loadingBaseView.isHidden = true
 
@@ -109,7 +115,7 @@ class HomeViewController: UIViewController {
     private func bind(toViewModel viewModel: HomeViewModel) {
 
         viewModel.refreshPublisher
-            .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
+            // .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.tableView.reloadData()
@@ -117,7 +123,8 @@ class HomeViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-        viewModel.scrollToContentPublisher
+        viewModel.scrollToSectionPublisher
+            .removeDuplicates()
             .compactMap({$0})
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] newSection in
@@ -127,6 +134,22 @@ class HomeViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
+        viewModel.scrollToShortcutSectionPublisher
+            .removeDuplicates()
+            .compactMap({$0})
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] newSection in
+                self?.shortcutSelectedOption = newSection
+                
+                self?.topSliderCollectionView.reloadData()
+                self?.topSliderCollectionView.layoutIfNeeded()
+                
+                self?.topSliderCollectionView.scrollToItem(at: IndexPath(row: 0, section: newSection),
+                                                           at: .centeredHorizontally,
+                                                           animated: true)
+            })
+            .store(in: &self.cancellables)
+        
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
             .receive(on: DispatchQueue.main)
@@ -170,12 +193,26 @@ extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         let title = self.viewModel.title(forSection: indexPath.section) ?? ""
         cell.setupWithTitle(title)
+        
+        if shortcutSelectedOption == indexPath.section {
+            cell.setSelectedType(true)
+        }
+        else {
+            cell.setSelectedType(false)
+        }
+        
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         self.viewModel.didSelectShortcut(atSection: indexPath.section)
+        
+        shortcutSelectedOption = indexPath.section
+        
+        collectionView.reloadData()
+        collectionView.layoutIfNeeded()
+        
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
     }
 
@@ -249,18 +286,59 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return cell
         case .sport:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchLineTableViewCell.identifier) as? SportMatchLineTableViewCell,
                 let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
                 let sportMatchLineViewModel = sportGroupViewModel.sportMatchLineViewModel(forIndex: indexPath.row)
             else {
                 fatalError()
             }
-
-            cell.configure(withViewModel: sportMatchLineViewModel)
-            cell.tappedMatchLineAction = { [weak self] match in
-                self?.openMatchDetails(match: match)
+            
+            switch sportMatchLineViewModel.loadingPublisher.value {
+            case .loading, .empty:
+                let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+                return cell
+            case.loaded:
+                ()
+                
             }
-            return cell
+            
+            switch sportMatchLineViewModel.layoutTypePublisher.value {
+            case .doubleLine:
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchDoubleLineTableViewCell.identifier)
+                        as? SportMatchDoubleLineTableViewCell
+                else {
+                    fatalError()
+                }
+                cell.configure(withViewModel: sportMatchLineViewModel)
+                cell.tappedMatchLineAction = { [weak self] match in
+                    self?.openMatchDetails(match: match)
+                }
+                return cell
+            case .singleLine:
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchSingleLineTableViewCell.identifier)
+                        as? SportMatchSingleLineTableViewCell
+                else {
+                    fatalError()
+                }
+                cell.configure(withViewModel: sportMatchLineViewModel)
+                cell.tappedMatchLineAction = { [weak self] match in
+                    self?.openMatchDetails(match: match)
+                }
+                return cell
+            case .competition:
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionLineTableViewCell.identifier)
+                        as? TopCompetitionLineTableViewCell
+                else {
+                    fatalError()
+                }
+                cell.configure(withViewModel: sportMatchLineViewModel)
+                cell.tappedMatchLineAction = { [weak self] match in
+                    self?.openMatchDetails(match: match)
+                }
+                return cell
+            }
         }
     }
 
@@ -280,8 +358,31 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableView.automaticDimension
         case .suggestedBets:
             return 336
-        case .sport:
-            return UITableView.automaticDimension
+        case .sport(let sport):
+            guard
+                let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
+                let sportMatchLineViewModel = sportGroupViewModel.sportMatchLineViewModel(forIndex: indexPath.row)
+            else {
+                return UITableView.automaticDimension
+            }
+            
+            if sportMatchLineViewModel.loadingPublisher.value == .empty {
+                
+                return .leastNormalMagnitude
+            }
+            else if sportMatchLineViewModel.loadingPublisher.value == .loading {
+//                if sport.id == "1" {
+//                    return 400
+//                }
+                return .leastNormalMagnitude
+            }
+            else {
+                switch sportMatchLineViewModel.layoutTypePublisher.value {
+                case .doubleLine: return 437
+                case .singleLine: return 277
+                case .competition: return 180
+                }
+            }
         }
 
     }
@@ -311,7 +412,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         let titleView = UIView()
-        titleView.backgroundColor = UIColor.App.backgroundSecondary
+        titleView.backgroundColor = UIColor.clear
 
         let titleStackView = UIStackView()
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -326,7 +427,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.font = AppFont.with(type: .bold, size: 16)
+        titleLabel.font = AppFont.with(type: .bold, size: 17)
 
         titleView.addSubview(titleStackView)
         titleStackView.addArrangedSubview(sportImageView)
@@ -334,7 +435,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         NSLayoutConstraint.activate([
             sportImageView.widthAnchor.constraint(equalTo: sportImageView.heightAnchor, multiplier: 1),
-            sportImageView.widthAnchor.constraint(equalToConstant: 16),
+            sportImageView.widthAnchor.constraint(equalToConstant: 17),
 
             titleStackView.leadingAnchor.constraint(equalTo: titleView.leadingAnchor, constant: 18),
             titleStackView.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: 18),
@@ -407,9 +508,11 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
 
 extension HomeViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.isTracking && scrollView == self.tableView {
+        if (scrollView.isDragging || scrollView.isTracking) && scrollView == self.tableView {
             let tableViewCenter = CGPoint(x: self.tableView.bounds.midX, y: self.tableView.bounds.midY)
-            let middleIndexPath = self.tableView.indexPathForRow(at: tableViewCenter)
+            if let middleIndexPath = self.tableView.indexPathForRow(at: tableViewCenter) {
+                self.viewModel.scrolledToSection(middleIndexPath.section)
+            }
         }
     }
 }
@@ -458,7 +561,7 @@ extension HomeViewController {
     }
 
     private static func createTableView() -> UITableView {
-        let tableView = UITableView.init(frame: .zero, style: .plain)
+        let tableView = UITableView.init(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false

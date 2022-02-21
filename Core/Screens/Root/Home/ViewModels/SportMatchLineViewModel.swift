@@ -30,24 +30,7 @@ class SportGroupViewModel {
     }
 
     func numberOfRows() -> Int {
-        var count = 3
-
-//        let popularState = self.cachedViewModelStates[.popular]
-//        if popularState == .loaded {
-//            count += 1
-//        }
-//
-//        let liveState = self.cachedViewModelStates[.live]
-//        if liveState  == .loaded {
-//            count += 1
-//        }
-//
-//        let competitionState = self.cachedViewModelStates[.topCompetition]
-//        if competitionState  == .loaded {
-//            count += 1
-//        }
-
-        return count
+        return 3
     }
 
     func sportMatchLineViewModel(forIndex index: Int) -> SportMatchLineViewModel? {
@@ -102,9 +85,8 @@ class SportMatchLineViewModel {
     }
 
     enum LoadingState {
-        case idle
-        case loaded
         case loading
+        case loaded
         case empty
     }
 
@@ -118,7 +100,7 @@ class SportMatchLineViewModel {
 
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
 
-    var loadingPublisher: CurrentValueSubject<LoadingState, Never> = .init(.idle)
+    var loadingPublisher: CurrentValueSubject<LoadingState, Never> = .init(.loading)
     var layoutTypePublisher: CurrentValueSubject<LayoutType, Never> = .init(.doubleLine)
 
     var store: HomeStore
@@ -222,7 +204,7 @@ extension SportMatchLineViewModel {
         else if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
             if section == 0 {
-                return lineMatch.markets.count
+                return lineMatch.markets.isEmpty ? 1 : lineMatch.markets.count
             }
             else if section == 1 {
                 return 1
@@ -231,7 +213,7 @@ extension SportMatchLineViewModel {
         return 0
     }
 
-    func numberOfMatchMarket(forLine lineIndex: Int) -> Int {
+    func numberOfMatchMarket(forLine lineIndex: Int = 0) -> Int {
         if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
             return lineMatch.numberTotalOfMarkets
@@ -239,7 +221,7 @@ extension SportMatchLineViewModel {
         return 0
     }
 
-    func match(forLine lineIndex: Int) -> Match? {
+    func match(forLine lineIndex: Int = 0) -> Match? {
         if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
             return lineMatch
@@ -291,11 +273,11 @@ extension SportMatchLineViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    self?.finishedWithError()
                 case .finished:
                     print("Data retrieved!")
                 }
-                self?.finishedLoading()
+                
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
@@ -307,6 +289,7 @@ extension SportMatchLineViewModel {
                 case .disconnect:
                     ()
                 }
+                self?.updatedContent()
             })
     }
 
@@ -329,11 +312,10 @@ extension SportMatchLineViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    self?.finishedWithError()
                 case .finished:
                     print("Data retrieved!")
                 }
-                self?.finishedLoading()
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
@@ -345,6 +327,7 @@ extension SportMatchLineViewModel {
                 case .disconnect:
                     ()
                 }
+                self?.updatedContent()
             })
     }
 
@@ -360,11 +343,10 @@ extension SportMatchLineViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    self?.finishedWithError()
                 case .finished:
                     print("Data retrieved!")
                 }
-                self?.finishedLoading()
             }, receiveValue: {  [weak self] tournaments in
                 if let topCompetition = tournaments.first(where: { $0.sportId == self?.sport.id }) {
                     var location: Location?
@@ -377,7 +359,6 @@ extension SportMatchLineViewModel {
                                                     name: topCompetition.name ?? "",
                                                     venue: location,
                                                     outrightMarkets: topCompetition.numberOfOutrightMarkets ?? 0)
-                    // self?.fetchCompetitionsWithId(topCompetition.id)
                 }
                 self?.updatedContent()
             })
@@ -397,14 +378,12 @@ extension SportMatchLineViewModel {
         }
         self.store.storeContent(fromAggregator: aggregator)
         self.matchesIds = Array(matchesIds.prefix(2))
-
-        self.updatedContent()
     }
 
-    private func finishedLoading() {
-        self.loadingPublisher.send(.loaded)
+    private func finishedWithError() {
+        self.loadingPublisher.send(.empty)
     }
-
+    
     private func updatedContent() {
 
         switch self.matchesType {
@@ -417,7 +396,6 @@ extension SportMatchLineViewModel {
             else {
                 self.loadingPublisher.send(.loaded)
             }
-
         case .live, .popular:
             if self.matchesIds.count == 2 {
                 self.layoutTypePublisher.send(.doubleLine)

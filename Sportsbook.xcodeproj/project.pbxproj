@@ -482,6 +482,12 @@
 		45A642D527985A96008EFD5B /* HeadToHeadCardStatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A642D327985A96008EFD5B /* HeadToHeadCardStatsView.swift */; };
 		45A642D727985AAB008EFD5B /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
 		45A642D827985AAB008EFD5B /* HeadToHeadCardStatsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */; };
+		45AA91CA27C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
+		45AA91CB27C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */; };
+		45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */; };
+		45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */; };
+		45AA91D027C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
+		45AA91D127C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */; };
 		45ACEEB02721B54E00D0A45F /* BannerCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ACEEAF2721B54E00D0A45F /* BannerCellViewModel.swift */; };
 		45ACEEB12721B54E00D0A45F /* BannerCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45ACEEAF2721B54E00D0A45F /* BannerCellViewModel.swift */; };
 		45B0BD31271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */; };
@@ -544,8 +550,6 @@
 		45C3E8D027B40559007A1A0F /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */; };
 		45C3E8D227B406D8007A1A0F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
 		45C3E8D327B406D8007A1A0F /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D127B406D8007A1A0F /* README.md */; };
-		45C3E8D527B56DC0007A1A0F /* SportMatchLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3E8D427B56DC0007A1A0F /* SportMatchLineTableViewCell.swift */; };
-		45C3E8D627B56DC0007A1A0F /* SportMatchLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45C3E8D427B56DC0007A1A0F /* SportMatchLineTableViewCell.swift */; };
 		45C3E8DA27B57548007A1A0F /* TestingInterface.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D927B57548007A1A0F /* TestingInterface.xib */; };
 		45C3E8DB27B57548007A1A0F /* TestingInterface.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45C3E8D927B57548007A1A0F /* TestingInterface.xib */; };
 		45CD7B4E2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */; };
@@ -1232,6 +1236,9 @@
 		45A2898526C418F700BCD5DA /* NetworkError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkError.swift; sourceTree = "<group>"; };
 		45A642D327985A96008EFD5B /* HeadToHeadCardStatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadToHeadCardStatsView.swift; sourceTree = "<group>"; };
 		45A642D627985AAB008EFD5B /* HeadToHeadCardStatsView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HeadToHeadCardStatsView.xib; sourceTree = "<group>"; };
+		45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportMatchDoubleLineTableViewCell.swift; sourceTree = "<group>"; };
+		45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportMatchSingleLineTableViewCell.swift; sourceTree = "<group>"; };
+		45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopCompetitionLineTableViewCell.swift; sourceTree = "<group>"; };
 		45ACEEAF2721B54E00D0A45F /* BannerCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerCellViewModel.swift; sourceTree = "<group>"; };
 		45B0BD30271EED6C009C41FA /* CompetitionSectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionSectionViewModel.swift; sourceTree = "<group>"; };
 		45B0BD33271EEE58009C41FA /* CompetitionFilterHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompetitionFilterHeaderView.swift; sourceTree = "<group>"; };
@@ -1263,7 +1270,6 @@
 		45C3E8C827B190A1007A1A0F /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		45C3E8CE27B40559007A1A0F /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		45C3E8D127B406D8007A1A0F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
-		45C3E8D427B56DC0007A1A0F /* SportMatchLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportMatchLineTableViewCell.swift; sourceTree = "<group>"; };
 		45C3E8D927B57548007A1A0F /* TestingInterface.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TestingInterface.xib; sourceTree = "<group>"; };
 		45CD7B4A2716F5CB003044C5 /* OddDoubleCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = OddDoubleCollectionViewCell.xib; sourceTree = "<group>"; };
 		45CD7B4B2716F5CB003044C5 /* OddDoubleCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OddDoubleCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -2641,7 +2647,9 @@
 		45D8C9D627BD484F00C131E6 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				45C3E8D427B56DC0007A1A0F /* SportMatchLineTableViewCell.swift */,
+				45AA91C927C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift */,
+				45AA91CC27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift */,
+				45AA91CF27C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift */,
 				4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */,
 				45628E7F27BFBE4900AAB160 /* CompetitionLineCollectionViewCell.swift */,
 			);
@@ -3746,6 +3754,7 @@
 				F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */,
 				A9B840B126DF99B500269B05 /* EveryMatrixServiceClient.swift in Sources */,
 				A98D3B2A271481A8003BAE6F /* SportSelectionViewController.swift in Sources */,
+				45AA91CA27C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				A9C6023E2716FACB00992E11 /* RadioButton.swift in Sources */,
 				452047B62703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
@@ -3872,7 +3881,6 @@
 				A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3127148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
 				F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */,
-				45C3E8D527B56DC0007A1A0F /* SportMatchLineTableViewCell.swift in Sources */,
 				A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AA26E6597300269B05 /* Tournament.swift in Sources */,
 				45626E442755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
@@ -3913,6 +3921,7 @@
 				457816AF2706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457F495C2737C2280047169D /* UserBalance.swift in Sources */,
 				A948BF94279ED6B9006053C9 /* SearchEvent.swift in Sources */,
+				45AA91D027C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift in Sources */,
 				A979CA53275E6C0B00230E93 /* MatchOddsContent.swift in Sources */,
 				45166CF326F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
@@ -4037,6 +4046,7 @@
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
+				45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
@@ -4100,6 +4110,7 @@
 				F4CE68422742CD8A003413AE /* MultiSlider+Drag.swift in Sources */,
 				A9B840B226DF99B500269B05 /* EveryMatrixServiceClient.swift in Sources */,
 				A98D3B2C27148589003BAE6F /* SportSelectionViewController.swift in Sources */,
+				45AA91CB27C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				A9C6023F2716FACB00992E11 /* RadioButton.swift in Sources */,
 				452047B72703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
@@ -4226,7 +4237,6 @@
 				A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */,
 				A98D3B3227148921003BAE6F /* SportSelectionCollectionViewCell.swift in Sources */,
 				F4CE68442742CD8A003413AE /* MultiSlider.swift in Sources */,
-				45C3E8D627B56DC0007A1A0F /* SportMatchLineTableViewCell.swift in Sources */,
 				A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */,
 				A9B841AB26E6597300269B05 /* Tournament.swift in Sources */,
 				45626E452755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
@@ -4267,6 +4277,7 @@
 				457816B02706699900F66878 /* MatchWidgetCollectionViewCell.swift in Sources */,
 				457F495D2737C2280047169D /* UserBalance.swift in Sources */,
 				A948BF95279ED6B9006053C9 /* SearchEvent.swift in Sources */,
+				45AA91D127C16B1F00F8BFDD /* TopCompetitionLineTableViewCell.swift in Sources */,
 				A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */,
 				45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
@@ -4391,6 +4402,7 @@
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
+				45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,

@@ -40,8 +40,10 @@ class HomeViewModel {
     }
 
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
-    var scrollToContentPublisher = PassthroughSubject<Int?, Never>.init()
+    var scrollToSectionPublisher = PassthroughSubject<Int?, Never>.init()
 
+    var scrollToShortcutSectionPublisher = PassthroughSubject<Int?, Never>.init()
+    
     // Updatable Storage
     var store: HomeStore = HomeStore()
 
@@ -302,7 +304,7 @@ class HomeViewModel {
 extension HomeViewModel {
 
     func didSelectShortcut(atSection section: Int) {
-        self.scrollToContentPublisher.send(section)
+        self.scrollToSectionPublisher.send(section)
     }
 
 }
@@ -422,7 +424,7 @@ extension HomeViewModel {
             let sportGroupViewModel = SportGroupViewModel(sport: sportForSection, store: self.store)
 
             sportGroupViewModel.requestRefreshPublisher
-                .sink { [weak self] _ in
+                .sink { [weak self] _ in
                     self?.refreshPublisher.send()
                 }
                 .store(in: &cancellables)
@@ -452,6 +454,14 @@ extension HomeViewModel {
         }
     }
     
+}
+
+extension HomeViewModel {
+    func scrolledToSection(_ section: Int) {
+        if self.title(forSection: section) != nil {
+            self.scrollToShortcutSectionPublisher.send(section)
+        }
+    }
 }
 
 extension HomeViewModel {
