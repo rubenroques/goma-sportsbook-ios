@@ -1,5 +1,5 @@
 //
-//  HistoryFilterViewController.swift
+//  HistoryViewController.swift
 //  ShowcaseProd
 //
 //  Created by Teresa on 14/02/2022.
@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-class HistoryFilterViewController: UIViewController{
+class HistoryViewController: UIViewController{
 
 
     // MARK: - Private Properties
@@ -87,6 +87,12 @@ class HistoryFilterViewController: UIViewController{
         let tapBackGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
         backImage.isUserInteractionEnabled = true
         backImage.addGestureRecognizer(tapBackGestureRecognizer)
+        
+        
+        let tapDepositGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapMakeDeposit))
+        emptyStateButton.isUserInteractionEnabled = true
+        emptyStateButton.addGestureRecognizer(tapDepositGestureRecognizer)
+        
         
         optionSegmentControl.addTarget(self, action: #selector(self.didChangeSegmentValue(_:)), for: .valueChanged)
       
@@ -231,7 +237,7 @@ class HistoryFilterViewController: UIViewController{
 //
 // MARK: - TableView Protocols
 //
-extension HistoryFilterViewController: UITableViewDelegate, UITableViewDataSource {
+extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         
@@ -323,7 +329,7 @@ extension HistoryFilterViewController: UITableViewDelegate, UITableViewDataSourc
 // MARK: - CollectionView Protocols
 //
 
-extension HistoryFilterViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.viewModel.numberOfSections()
@@ -406,7 +412,7 @@ extension HistoryFilterViewController: UICollectionViewDelegate, UICollectionVie
 // MARK: - Actions
 //
 
-extension HistoryFilterViewController {
+extension HistoryViewController {
     /*
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
@@ -419,8 +425,14 @@ extension HistoryFilterViewController {
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
         //print("clicou nos filtros")
-        
-  
+    
+    }
+    
+    @objc func didTapMakeDeposit(sender: UITapGestureRecognizer) {
+        let depositViewController = Router.navigationController(with: DepositViewController())
+        self.present(depositViewController, animated: true, completion: nil)
+
+    
     
     }
 
@@ -451,7 +463,7 @@ extension HistoryFilterViewController {
 //
 // MARK: - Subviews Initialization and Setup
 //
-extension HistoryFilterViewController {
+extension HistoryViewController {
 
     private static func createNavigationView() -> UIView {
         let view = UIView()
