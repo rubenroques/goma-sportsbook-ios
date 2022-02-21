@@ -1,5 +1,5 @@
 //
-//  HistoryViewController.swift
+//  HistoryFilterViewController.swift
 //  ShowcaseProd
 //
 //  Created by Teresa on 14/02/2022.
@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-class HistoryViewController: UIViewController{
+class HistoryFilterViewController: UIViewController{
 
 
     // MARK: - Private Properties
@@ -231,7 +231,7 @@ class HistoryViewController: UIViewController{
 //
 // MARK: - TableView Protocols
 //
-extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+extension HistoryFilterViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         
@@ -323,7 +323,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
 // MARK: - CollectionView Protocols
 //
 
-extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension HistoryFilterViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return self.viewModel.numberOfSections()
@@ -406,7 +406,7 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
 // MARK: - Actions
 //
 
-extension HistoryViewController {
+extension HistoryFilterViewController {
     /*
     @objc func didTapBetslipView() {
         self.didTapBetslipButtonAction?()
@@ -419,6 +419,8 @@ extension HistoryViewController {
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
         //print("clicou nos filtros")
+        
+  
     
     }
 
@@ -449,7 +451,7 @@ extension HistoryViewController {
 //
 // MARK: - Subviews Initialization and Setup
 //
-extension HistoryViewController {
+extension HistoryFilterViewController {
 
     private static func createNavigationView() -> UIView {
         let view = UIView()

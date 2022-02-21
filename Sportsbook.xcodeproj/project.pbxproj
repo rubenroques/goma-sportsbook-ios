@@ -950,8 +950,8 @@
 		F48CB9A327628C280070052B /* BetSuggestedCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */; };
 		F48D33B827BBD578006E04CB /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B627BBD578006E04CB /* HistoryViewModel.swift */; };
 		F48D33B927BBD578006E04CB /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B627BBD578006E04CB /* HistoryViewModel.swift */; };
-		F48D33BA27BBD578006E04CB /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B727BBD578006E04CB /* HistoryViewController.swift */; };
-		F48D33BB27BBD578006E04CB /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B727BBD578006E04CB /* HistoryViewController.swift */; };
+		F48D33BA27BBD578006E04CB /* HistoryFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B727BBD578006E04CB /* HistoryFilterViewController.swift */; };
+		F48D33BB27BBD578006E04CB /* HistoryFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B727BBD578006E04CB /* HistoryFilterViewController.swift */; };
 		F4A438E5274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4A438E6274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */; };
 		F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */; };
@@ -1468,7 +1468,7 @@
 		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
 		F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetSuggestedCollectionViewCell.xib; sourceTree = "<group>"; };
 		F48D33B627BBD578006E04CB /* HistoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
-		F48D33B727BBD578006E04CB /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		F48D33B727BBD578006E04CB /* HistoryFilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryFilterViewController.swift; sourceTree = "<group>"; };
 		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
 		F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCardTableViewCell.swift; sourceTree = "<group>"; };
 		F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCardTableViewCell.xib; sourceTree = "<group>"; };
@@ -3249,7 +3249,7 @@
 			isa = PBXGroup;
 			children = (
 				F410E62727BC4F78005C1964 /* Cells */,
-				F48D33B727BBD578006E04CB /* HistoryViewController.swift */,
+				F48D33B727BBD578006E04CB /* HistoryFilterViewController.swift */,
 				F48D33B627BBD578006E04CB /* HistoryViewModel.swift */,
 				F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */,
 			);
@@ -3766,7 +3766,7 @@
 				A9C82FCE26F9E0F900059DCD /* PopUpPromotionView.swift in Sources */,
 				45B0BD3F271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
 				A9BCF434274D1A77006DD528 /* MatchDetailsViewController.swift in Sources */,
-				F48D33BA27BBD578006E04CB /* HistoryViewController.swift in Sources */,
+				F48D33BA27BBD578006E04CB /* HistoryFilterViewController.swift in Sources */,
 				452047BA27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				A979CA562762247900230E93 /* SuggestedBetSummary.swift in Sources */,
@@ -4124,7 +4124,7 @@
 				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45B0BD40271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
 				A9BCF435274D1A77006DD528 /* MatchDetailsViewController.swift in Sources */,
-				F48D33BB27BBD578006E04CB /* HistoryViewController.swift in Sources */,
+				F48D33BB27BBD578006E04CB /* HistoryFilterViewController.swift in Sources */,
 				452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				A979CA572762247900230E93 /* SuggestedBetSummary.swift in Sources */,
