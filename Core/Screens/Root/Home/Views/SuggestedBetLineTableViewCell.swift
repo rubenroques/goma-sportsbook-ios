@@ -11,7 +11,7 @@ import Combine
 class SuggestedBetLineTableViewCell: UITableViewCell {
 
     var betNowCallbackAction: (() -> Void)?
-    
+
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -20,7 +20,7 @@ class SuggestedBetLineTableViewCell: UITableViewCell {
         topCollectionView.showsVerticalScrollIndicator = false
         topCollectionView.showsHorizontalScrollIndicator = false
         topCollectionView.alwaysBounceHorizontal = true
-        topCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        topCollectionView.contentInset = UIEdgeInsets(top: 0, left: 18, bottom: 0, right: 18)
 
         return topCollectionView
     }()
@@ -105,9 +105,9 @@ extension SuggestedBetLineTableViewCell: UICollectionViewDelegate, UICollectionV
 
         cell.setupWithViewModel(viewModel: viewModel)
         
-//        cell.betNowCallbackAction = { [weak self] in
-//            self?.betNowCallbackAction()
-//        }
+        cell.betNowCallbackAction = { [weak self] in
+            self?.betNowCallbackAction?()
+        }
 
         return cell
     }
@@ -129,7 +129,8 @@ extension SuggestedBetLineTableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(BetSuggestedCollectionViewCell.nib, forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
+        self.collectionView.register(BetSuggestedCollectionViewCell.nib,
+                                     forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
         
         // Initialize constraints
         self.initConstraints()
@@ -138,12 +139,12 @@ extension SuggestedBetLineTableViewCell {
     private func initConstraints() {
         NSLayoutConstraint.activate([
 
-            self.collectionView.heightAnchor.constraint(equalToConstant: 310),
+            self.collectionView.heightAnchor.constraint(equalToConstant: 320),
             
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
-            self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 0),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
+            self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
      ])
     }
 }

@@ -75,13 +75,10 @@ class MatchDetailsAggregatorRepository: NSObject {
             .sink(receiveCompletion: { _ in
 
             },
-                  receiveValue: { [weak self] response in
-
+            receiveValue: { [weak self] response in
                 (response.records ?? []).forEach { location in
-
                     self?.locations[location.id] = location
                 }
-
             })
             .store(in: &cancellable)
     }
@@ -140,7 +137,6 @@ class MatchDetailsAggregatorRepository: NSObject {
 
                 case .disconnect:
                     print("SportsViewModel competitionsMatchesPublisher disconnect")
-
                 }
             })
 
@@ -590,7 +586,8 @@ class MatchDetailsAggregatorRepository: NSObject {
                     // Undefined markets without keys for outcomes grouping
                     let sequentialMarketGroupOrganizer = SequentialMarketGroupOrganizer(id: firstMarket.id,
                                                                                         name: marketGroupName,
-                                                                                        market: firstMarket)
+                                                                                        market: firstMarket,
+                                                                                        sortedByOdd: false)
                     marketGroupOrganizers.append(sequentialMarketGroupOrganizer)
                     
                 }

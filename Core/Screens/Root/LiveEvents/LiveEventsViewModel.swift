@@ -31,6 +31,8 @@ class LiveEventsViewModel: NSObject {
 
     private var isLoadingAllEventsList: CurrentValueSubject<Bool, Never> = .init(true)
 
+    private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
+
     var isLoading: AnyPublisher<Bool, Never>
 
     var sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()
@@ -85,6 +87,9 @@ class LiveEventsViewModel: NSObject {
 
         self.allMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match, image in
             self?.didSelectMatchAction?(match, image)
+        }
+        self.allMatchesViewModelDataSource.matchStatsViewModelForMatch = { [weak self] match in
+            return self?.matchStatsViewModel(forMatch: match)
         }
 
         self.getSportsLive()
@@ -163,6 +168,17 @@ class LiveEventsViewModel: NSObject {
     func updateSportsAggregatorProcessor(aggregator: EveryMatrix.SportsAggregator) {
         sportsRepository.processContentUpdateSportsAggregator(aggregator)
 
+    }
+
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+        if let viewModel = cachedMatchStatsViewModels[match.id] {
+            return viewModel
+        }
+        else {
+            let viewModel = MatchStatsViewModel(match: match)
+            cachedMatchStatsViewModels[match.id] = viewModel
+            return viewModel
+        }
     }
 
     func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
@@ -399,6 +415,8 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match, UIImage?) -> Void)?
 
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+
     var shouldShowLoadingCell = true
 
     init(matches: [Match]) {
@@ -434,7 +452,14 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
-                cell.setupWithMatch(match, liveMatch: true)
+
+                if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                    cell.matchStatsViewModel = matchStatsViewModel
+                }
+
+                let store = Env.everyMatrixStorage as AggregatorStore
+
+                cell.setupWithMatch(match, liveMatch: true, store: store)
                 cell.tappedMatchLineAction = { image in
                     self.didSelectMatchAction?(match, image)
                 }

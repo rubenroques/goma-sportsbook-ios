@@ -66,6 +66,7 @@ struct NetworkManager {
                     return NetworkError(errors: [.forbidden])
                 }
                 else {
+
                     return NetworkError(errors: [.invalidResponse])
                 }
             }

@@ -66,9 +66,7 @@ class FavoritesManager {
             .sink { _ in
             } receiveValue: { [weak self] userMetadata in
                 if let userMetadataRecords = userMetadata.records[0].value {
-
                     self?.favoriteEventsIdPublisher.send(userMetadataRecords)
-
                 }
             }
             .store(in: &cancellables)
@@ -149,11 +147,14 @@ class FavoritesManager {
             .store(in: &cancellables)
     }
 
+    func clearCachedFavorites() {
+        self.favoriteEventsIdPublisher.send([])
+    }
+
     // TODO: Code Review - Isto ficou por corrigir, o check faz tudo, e não pode, tem que haver um addFavorite, um removeFavorite e é isso. O postUserMetadata tem que ser private, não pode ser chamado fora do manager. UPDATE: Corrigido
 
     func addFavorite(eventId: String, favoriteType: String) {
         var favoriteEventsId = self.favoriteEventsIdPublisher.value
-
         favoriteEventsId.append(eventId)
         self.favoriteEventsIdPublisher.send(favoriteEventsId)
 
@@ -162,7 +163,7 @@ class FavoritesManager {
 
     func removeFavorite(eventId: String, favoriteType: String) {
         var favoriteEventsId = self.favoriteEventsIdPublisher.value
-
+        
         for favoriteEventId in favoriteEventsId where eventId == favoriteEventId {
 
             favoriteEventsId = favoriteEventsId.filter {$0 != eventId}
