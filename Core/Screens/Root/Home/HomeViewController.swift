@@ -719,12 +719,11 @@ extension HomeViewController {
 
             self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -12),
+
+            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
         ])
 
-        NSLayoutConstraint.activate([
-            betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
-            betslipCountLabel.widthAnchor.constraint(equalTo: betslipCountLabel.heightAnchor),
-        ])
     }
 
 }

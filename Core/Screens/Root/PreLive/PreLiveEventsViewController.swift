@@ -94,6 +94,10 @@ class PreLiveEventsViewController: UIViewController {
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
+            if oldValue.id == selectedSport.id {
+                return
+            }
+
             if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
             }
@@ -105,6 +109,8 @@ class PreLiveEventsViewController: UIViewController {
             self.viewModel.selectedSport = selectedSport
         }
     }
+
+    var openScreenOnCompetition: String?
 
     var didChangeSport: ((Sport) -> Void)?
     var didTapBetslipButtonAction: (() -> Void)?
@@ -144,6 +150,13 @@ class PreLiveEventsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        competitionsFiltersView.selectedIds
+            .receive(on: DispatchQueue.main)
+            .sink { idsSet in
+                print("selectedIds -> \(idsSet)")
+            }
+            .store(in: &cancellables)
 
         self.commonInit()
         self.setupWithTheme()
@@ -306,8 +319,8 @@ class PreLiveEventsViewController: UIViewController {
             self.openCompetitionsFilters()
         }
 
-        self.competitionsFiltersDarkBackgroundView.alpha = 0.2
-        self.competitionsFiltersBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.competitionsFiltersDarkBackgroundView.alpha = 1
+        self.competitionsFiltersBaseView.backgroundColor = UIColor.clear
         self.competitionsFiltersBaseView.addSubview(self.competitionsFiltersView)
 
         NSLayoutConstraint.activate([
@@ -344,6 +357,10 @@ class PreLiveEventsViewController: UIViewController {
         self.shouldDetectScrollMovement = false
         self.competitionsFiltersBaseView.isHidden = true
         self.competitionsFiltersDarkBackgroundView.isHidden = true
+
+        if let openScreenOnCompetition = openScreenOnCompetition {
+            self.competitionsFiltersView.selectIds([openScreenOnCompetition])
+        }
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
@@ -408,10 +425,8 @@ class PreLiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(self.viewModel.matchListTypePublisher, self.competitionsFiltersView.selectedIds)
-            .map { matchListTypePublisher, selectedIds -> Bool in
-                return selectedIds.isEmpty && matchListTypePublisher == .competitions
-            }
+        self.viewModel.matchListTypePublisher
+            .map {  $0 == .competitions }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] isCompetitionTab in
 
@@ -563,10 +578,8 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     func openCompetitionTab(withId id: String) {
-        self.competitionsFiltersView.selectIds([id])
-        self.viewModel.fetchCompetitionsMatchesWithIds([id])
+        self.applyCompetitionsFiltersWithIds([id], animated: false)
         self.openTab(atIndex: 2)
-        self.showBottomBarCompetitionsFilters()
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
@@ -575,9 +588,9 @@ class PreLiveEventsViewController: UIViewController {
         self.present(homeFilterViewController, animated: true, completion: nil)
     }
 
-    func applyCompetitionsFiltersWithIds(_ ids: [String]) {
+    func applyCompetitionsFiltersWithIds(_ ids: [String], animated: Bool = true) {
         self.viewModel.fetchCompetitionsMatchesWithIds(ids)
-        self.showBottomBarCompetitionsFilters()
+        self.showBottomBarCompetitionsFilters(animated: animated)
     }
 
     func reloadData() {
@@ -590,7 +603,9 @@ class PreLiveEventsViewController: UIViewController {
     }
 
     func openCompetitionsFilters() {
+
         guard
+            self.viewModel.matchListTypePublisher.value == .competitions,
             competitionsFiltersView.state != .opened
         else {
             return

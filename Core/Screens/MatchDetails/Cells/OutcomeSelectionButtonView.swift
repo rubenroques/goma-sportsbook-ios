@@ -213,26 +213,45 @@ class OutcomeSelectionButtonView: NibView {
     @objc func didTapOddButton() {
 
         guard
-            let match = self.match,
-            let marketId = self.outcome?.marketId,
-            let outcome = self.outcome
+            let outcome = self.outcome,
+            let marketId = outcome.marketId
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = outcome.marketName ?? ""
-        let outcomeDescription = outcome.translatedName
+        var bettingTicket: BettingTicket
 
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: marketId,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        if let match = self.match {
+            let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
+            let marketDescription = outcome.marketName ?? ""
+            let outcomeDescription = outcome.translatedName
+
+            bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                              outcomeId: outcome.id,
+                                              marketId: marketId,
+                                              matchId: match.id,
+                                              value: outcome.bettingOffer.value,
+                                              isAvailable: outcome.bettingOffer.isAvailable,
+                                              matchDescription: matchDescription,
+                                              marketDescription: marketDescription,
+                                              outcomeDescription: outcomeDescription)
+        }
+        else {
+            let marketName = outcome.marketName ?? ""
+            let matchDescription =  marketName.isNotEmpty ? "\(outcome.translatedName), \(marketName)" : "\(outcome.translatedName)"
+            let marketDescription = outcome.marketName ?? ""
+            let outcomeDescription = outcome.translatedName
+
+            bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
+                                              outcomeId: outcome.id,
+                                              marketId: marketId,
+                                              matchId: "",
+                                              value: outcome.bettingOffer.value,
+                                              isAvailable: outcome.bettingOffer.isAvailable,
+                                              matchDescription: matchDescription,
+                                              marketDescription: marketDescription,
+                                              outcomeDescription: outcomeDescription)
+        }
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)

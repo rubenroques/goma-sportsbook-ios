@@ -838,7 +838,6 @@ class PreLiveEventsViewModel: NSObject {
         self.isLoadingTodayList.send(false)
 
         self.updateContentList()
-
     }
 
     private func setupCompetitionGroups() {

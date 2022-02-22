@@ -62,6 +62,9 @@ class OutrightMarketDetailsViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
+        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
+        betslipButtonView.addGestureRecognizer(tapBetslipView)
+
         self.bind(toViewModel: self.viewModel)
     }
 
@@ -93,6 +96,7 @@ class OutrightMarketDetailsViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
     }
@@ -133,6 +137,20 @@ class OutrightMarketDetailsViewController: UIViewController {
     @objc func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
+
+    @objc func didTapBetslipView() {
+        self.openBetslipModal()
+    }
+
+    func openBetslipModal() {
+
+        let betslipViewController = BetslipViewController()
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
 }
 
 // MARK: - TableView Protocols
@@ -442,6 +460,9 @@ extension OutrightMarketDetailsViewController {
 
             self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -12),
             self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -12),
+
+            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
         ])
     }
 }
