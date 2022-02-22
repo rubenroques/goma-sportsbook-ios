@@ -442,7 +442,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
         let titleView = UIView()
-        titleView.backgroundColor = UIColor.clear
+        titleView.backgroundColor = UIColor.App.backgroundPrimary
 
         let titleStackView = UIStackView()
         titleStackView.translatesAutoresizingMaskIntoConstraints = false
@@ -591,11 +591,11 @@ extension HomeViewController {
 //    }
 
     private static func createTableView() -> UITableView {
-        let tableView = UITableView.init(frame: .zero, style: .grouped)
+        let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        tableView.contentInset = UIEdgeInsets(top: -20, left: 0, bottom: 0, right: 0)
+        //tableView.contentInset = UIEdgeInsets(top: -20, left: 0, bottom: 0, right: 0)
         tableView.contentInsetAdjustmentBehavior = .never
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0

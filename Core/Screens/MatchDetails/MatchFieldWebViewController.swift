@@ -17,6 +17,8 @@ class MatchFieldWebViewController: UIViewController {
     @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var webView: WKWebView!
 
+    @IBOutlet private weak var heightConstraint: NSLayoutConstraint!
+
     private var match: Match
 
     init(match: Match) {
@@ -52,8 +54,6 @@ class MatchFieldWebViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    
-
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
@@ -62,19 +62,49 @@ class MatchFieldWebViewController: UIViewController {
         self.webView.backgroundColor = UIColor.App.backgroundSecondary
     }
 
-
     @IBAction private func didTapBackButton() {
-        //self.navigationController?.popViewController(animated: true)
         self.presentingViewController?.dismiss(animated: true, completion: nil)
+    }
+
+    private func recalculateWebview() {
+
+        executeDelayed(0.5) {
+
+            self.webView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
+                if let heightFloat = height as? CGFloat {
+                    self.redrawWebView(withHeight: heightFloat)
+                }
+            })
+        }
+    }
+
+    private func redrawWebView(withHeight heigth: CGFloat) {
+        self.heightConstraint.constant = heigth
+        self.view.setNeedsLayout()
+        self.view.layoutIfNeeded()
+    }
+
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+
+        self.recalculateWebview()
     }
 }
 
 extension MatchFieldWebViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         activityIndicatorView.stopAnimating()
+
+        self.webView.evaluateJavaScript("document.readyState", completionHandler: { complete, error in
+            if complete != nil {
+                self.recalculateWebview()
+            }
+        })
+
     }
 
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         activityIndicatorView.stopAnimating()
     }
+
 }

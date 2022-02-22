@@ -98,7 +98,7 @@
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="no_content_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Zr1-IX-MMC">
                             <rect key="frame" x="131" y="50" width="161" height="161"/>
                         </imageView>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9QP-4d-L0p">
+                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9QP-4d-L0p">
                             <rect key="frame" x="30" y="325" width="363" height="50"/>
                             <color key="backgroundColor" name="mainTintColor"/>
                             <constraints>

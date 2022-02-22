@@ -44,7 +44,7 @@ class MyTicketsViewModel: NSObject {
 
     var isLoading: AnyPublisher<Bool, Never>
 
-    private let recordsPerPage = 1000
+    private let recordsPerPage = 30
 
     private var resolvedPage = 0
     private var openedPage = 0
