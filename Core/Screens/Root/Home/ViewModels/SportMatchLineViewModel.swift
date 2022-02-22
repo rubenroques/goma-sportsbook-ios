@@ -8,26 +8,107 @@
 import Foundation
 import Combine
 
-class SportLineViewModel {
+class SportGroupViewModel {
+
+    var requestRefreshPublisher = PassthroughSubject<Void, Never>.init()
+
+    private var store: HomeStore
+    private var sport: Sport
+
+    private var cachedViewModels: [SportMatchLineViewModel.MatchesType: SportMatchLineViewModel] = [:]
+    private var cachedViewModelStates: [SportMatchLineViewModel.MatchesType: SportMatchLineViewModel.LoadingState] = [:]
+
+    private var cancellables: Set<AnyCancellable> = []
+
+    init(sport: Sport, store: HomeStore) {
+        self.sport = sport
+        self.store = store
+//
+//        for type in SportMatchLineViewModel.MatchesType.allCases {
+//            _ = self.sportMatchLineViewModel(forType: type)
+//        }
+    }
+
+    func numberOfRows() -> Int {
+        return 3
+    }
+
+    func sportMatchLineViewModel(forIndex index: Int) -> SportMatchLineViewModel? {
+        if let matchType = SportMatchLineViewModel.matchesType(forIndex: index) {
+            return self.sportMatchLineViewModel(forType: matchType)
+        }
+        return nil
+    }
+
+    func sportMatchLineViewModel(forType type: SportMatchLineViewModel.MatchesType) -> SportMatchLineViewModel {
+
+        if let sportMatchLineViewModel = cachedViewModels[type] {
+            print("HomeDebug cached - \(self.sport.name);\(type)")
+            return sportMatchLineViewModel
+        }
+        else {
+
+            print("HomeDebug create - \(self.sport.name);\(type)")
+
+            let sportMatchLineViewModel = SportMatchLineViewModel(sport: self.sport, matchesType: type, store: self.store)
+
+            sportMatchLineViewModel.loadingPublisher
+                .removeDuplicates()
+                .sink { [weak self] loadingState in
+                    self?.updateLoadingState(loadingState: loadingState, forMatchType: type)
+                }
+                .store(in: &cancellables)
+            cachedViewModels[type] = sportMatchLineViewModel
+
+            return sportMatchLineViewModel
+        }
+
+    }
+
+    private func updateLoadingState(loadingState: SportMatchLineViewModel.LoadingState,
+                                    forMatchType matchType: SportMatchLineViewModel.MatchesType) {
+
+        print("HomeDebug updateLoading - \(self.sport.name);\(matchType);\(loadingState)")
+
+        self.cachedViewModelStates[matchType] = loadingState
+        self.requestRefreshPublisher.send()
+    }
 
 }
 
 class SportMatchLineViewModel {
 
-    enum MatchesType: String {
+    enum MatchesType: String, CaseIterable {
         case popular
         case live
         case topCompetition
+    }
+
+    enum LoadingState {
+        case loading
+        case loaded
+        case empty
+    }
+
+    enum LayoutType {
+        case doubleLine
+        case singleLine
+        case competition
     }
 
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
 
-    private var sport: Sport
-    private var matchesType: MatchesType
+    var loadingPublisher: CurrentValueSubject<LoadingState, Never> = .init(.loading)
+    var layoutTypePublisher: CurrentValueSubject<LayoutType, Never> = .init(.doubleLine)
 
-    private var competition: Competition?
+    var store: HomeStore
+
+    var sport: Sport
+    var competition: Competition?
+
+    private var matchesType: MatchesType
 
     private var popularMatchesPublisher: AnyCancellable?
     private var liveMatchesPublisher: AnyCancellable?
@@ -38,8 +119,6 @@ class SportMatchLineViewModel {
     private var competitionMatchesRegister: EndpointPublisherIdentifiable?
 
     private var matchesIds: [String] = []
-
-    private var store: HomeStore
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -56,25 +135,24 @@ class SportMatchLineViewModel {
             self.titlePublisher = .init( localized("Live").uppercased() )
         case .topCompetition:
             self.titlePublisher = .init( localized("Popular Competition").uppercased() )
+            self.layoutTypePublisher.send(.competition)
         }
 
-        Env.everyMatrixClient.serviceStatusPublisher
-            .sink { _ in
-
-            } receiveValue: { status in
-                switch status {
-                case .connected:
-                    self.requestMatches()
-                case .disconnected:
-                    ()
-                }
-            }
-            .store(in: &cancellables)
+        self.requestMatches()
     }
 
 }
 
 extension SportMatchLineViewModel {
+
+    func isCompetitionLine() -> Bool {
+        if case .topCompetition = self.matchesType {
+            return true
+        }
+        else {
+            return false
+        }
+    }
 
     func isMatchLineLive() -> Bool {
         if case .live = self.matchesType {
@@ -95,7 +173,13 @@ extension SportMatchLineViewModel {
     }
 
     func numberOfSections(forLine lineIndex: Int) -> Int {
-        if let lineMatchId = matchesIds[safe: lineIndex],
+        if self.isCompetitionLine() {
+            if self.competition != nil {
+                return 2
+            }
+            return 0
+        }
+        else if let lineMatchId = matchesIds[safe: lineIndex],
             self.store.matchWithId(id: lineMatchId) != nil {
             return 2
         }
@@ -105,10 +189,22 @@ extension SportMatchLineViewModel {
     }
 
     func numberOfItems(forLine lineIndex: Int, forSection section: Int) -> Int {
-        if let lineMatchId = matchesIds[safe: lineIndex],
+
+        if lineIndex == 0 && self.isCompetitionLine() {
+            if self.competition != nil {
+                if section == 1 {
+                    return 1 // see all
+                }
+                else {
+                    return 1 // competition card
+                }
+            }
+            return 0
+        }
+        else if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
             if section == 0 {
-                return lineMatch.markets.count
+                return lineMatch.markets.isEmpty ? 1 : lineMatch.markets.count
             }
             else if section == 1 {
                 return 1
@@ -117,7 +213,7 @@ extension SportMatchLineViewModel {
         return 0
     }
 
-    func numberOfMatchMarket(forLine lineIndex: Int) -> Int {
+    func numberOfMatchMarket(forLine lineIndex: Int = 0) -> Int {
         if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
             return lineMatch.numberTotalOfMarkets
@@ -125,10 +221,17 @@ extension SportMatchLineViewModel {
         return 0
     }
 
-    func match(forLine lineIndex: Int) -> Match? {
+    func match(forLine lineIndex: Int = 0) -> Match? {
         if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
             return lineMatch
+        }
+        return nil
+    }
+
+    func competitionViewModel() -> CompetitionWidgetViewModel? {
+        if let competition = self.competition {
+            return CompetitionWidgetViewModel(competition: competition)
         }
         return nil
     }
@@ -138,6 +241,9 @@ extension SportMatchLineViewModel {
 extension SportMatchLineViewModel {
 
     private func requestMatches() {
+
+        self.loadingPublisher.send(.loading)
+
         switch self.matchesType {
         case .popular:
             self.fetchPopularMatches()
@@ -164,13 +270,14 @@ extension SportMatchLineViewModel {
         self.popularMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    self?.finishedWithError()
                 case .finished:
                     print("Data retrieved!")
                 }
+                
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
@@ -182,6 +289,7 @@ extension SportMatchLineViewModel {
                 case .disconnect:
                     ()
                 }
+                self?.updatedContent()
             })
     }
 
@@ -201,14 +309,13 @@ extension SportMatchLineViewModel {
         self.liveMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    self?.finishedWithError()
                 case .finished:
                     print("Data retrieved!")
                 }
-
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
@@ -220,76 +327,43 @@ extension SportMatchLineViewModel {
                 case .disconnect:
                     ()
                 }
+                self?.updatedContent()
             })
     }
-
 
     func fetchTopCompetitionMatches() {
 
         let language = "en"
-       let endpoint = TSRouter.getCustomTournaments(language: language, sportId: self.sport.id)
+        let endpoint = TSRouter.getCustomTournaments(language: language, sportId: self.sport.id)
 
         Env.everyMatrixClient.manager
             .getModel(router: endpoint, decodingType: EveryMatrixSocketResponse<EveryMatrix.Tournament>.self)
             .map(\.records)
             .compactMap({ $0 })
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    self?.finishedWithError()
                 case .finished:
                     print("Data retrieved!")
                 }
             }, receiveValue: {  [weak self] tournaments in
                 if let topCompetition = tournaments.first(where: { $0.sportId == self?.sport.id }) {
-                    self?.competition = Competition(id: topCompetition.id, name: topCompetition.name ?? "")
-                    self?.fetchCompetitionsWithId(topCompetition.id)
+                    var location: Location?
+                    if let rawLocation = self?.store.location(forId: topCompetition.venueId ?? "") {
+                        location = Location(id: rawLocation.id,
+                                        name: rawLocation.name ?? "",
+                                        isoCode: rawLocation.code ?? "")
+                    }
+                    self?.competition = Competition(id: topCompetition.id,
+                                                    name: topCompetition.name ?? "",
+                                                    venue: location,
+                                                    outrightMarkets: topCompetition.numberOfOutrightMarkets ?? 0)
                 }
+                self?.updatedContent()
             })
             .store(in: &cancellables)
 
-    }
-
-    func fetchCompetitionsWithId(_ id: String) {
-
-        if let competitionMatchesRegister = competitionMatchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionMatchesRegister)
-        }
-
-        let language = "en"
-        let endpoint = TSRouter.competitionsMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                             language: language,
-                                                             sportId: self.sport.id,
-                                                             events: [id])
-
-        self.competitionsMatchesPublisher?.cancel()
-        self.competitionsMatchesPublisher = nil
-
-        self.competitionsMatchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("fetchCompetitionsWithIds competitionsMatchesPublisher connect")
-                    self?.competitionMatchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("fetchCompetitionsWithIds competitionsMatchesPublisher initialContent")
-                    self?.storeMatches(fromAggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateMatches(fromAggregator: aggregatorUpdates)
-                    print("fetchCompetitionsWithIds competitionsMatchesPublisher updatedContent")
-                case .disconnect:
-                    print("fetchCompetitionsWithIds competitionsMatchesPublisher disconnect")
-                }
-            })
     }
 
     func storeMatches(fromAggregator aggregator: EveryMatrix.Aggregator) {
@@ -304,6 +378,40 @@ extension SportMatchLineViewModel {
         }
         self.store.storeContent(fromAggregator: aggregator)
         self.matchesIds = Array(matchesIds.prefix(2))
+    }
+
+    private func finishedWithError() {
+        self.loadingPublisher.send(.empty)
+    }
+    
+    private func updatedContent() {
+
+        switch self.matchesType {
+        case .topCompetition:
+            self.layoutTypePublisher.send(.competition)
+
+            if self.competition == nil {
+                self.loadingPublisher.send(.empty)
+            }
+            else {
+                self.loadingPublisher.send(.loaded)
+            }
+        case .live, .popular:
+            if self.matchesIds.count == 2 {
+                self.layoutTypePublisher.send(.doubleLine)
+            }
+            else if matchesIds.count == 1 {
+                self.layoutTypePublisher.send(.singleLine)
+            }
+
+            if self.matchesIds.isEmpty {
+                self.loadingPublisher.send(.empty)
+            }
+            else {
+                self.loadingPublisher.send(.loaded)
+            }
+        }
+
         self.refreshPublisher.send()
     }
 

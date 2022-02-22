@@ -33,6 +33,7 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.subtitleLabel.isHidden = false
         self.subtitleLabel.text = ""
     }
 
@@ -59,6 +60,10 @@ class SeeMoreMarketsCollectionViewCell: UICollectionViewCell {
 
     func configureWithSubtitleString(_ subtitle: String) {
         self.subtitleLabel.text = subtitle
+    }
+
+    func hideSubtitle() {
+        self.subtitleLabel.isHidden = true
     }
     
 }

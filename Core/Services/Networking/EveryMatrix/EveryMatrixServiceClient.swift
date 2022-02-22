@@ -5,6 +5,15 @@ import Reachability
 enum EveryMatrixServiceSocketStatus {
     case connected
     case disconnected
+
+    var isConnected: Bool {
+        switch self {
+        case .connected:
+            return true
+        case .disconnected:
+            return false
+        }
+    }
 }
 
 enum EveryMatrixServiceUserSessionStatus {

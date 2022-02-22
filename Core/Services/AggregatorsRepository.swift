@@ -50,6 +50,8 @@ class AggregatorsRepository {
     var tournaments: [String: EveryMatrix.Tournament] = [:]
     var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
 
+    var outrightTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
+
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     var matchesInfoForMatch: [String: Set<String> ] = [:]
     var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
@@ -156,6 +158,20 @@ class AggregatorsRepository {
         }
 
         print("Finished dump processing")
+    }
+
+    func processOutrightTournamentsAggregator(_ aggregator: EveryMatrix.Aggregator) {
+
+        self.outrightTournaments = [:]
+
+        for content in aggregator.content ?? [] {
+            switch content {
+            case .tournament(let tournamentContent):
+                outrightTournaments[tournamentContent.id] = tournamentContent
+            default:
+                ()
+            }
+        }
     }
 
     func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
@@ -390,6 +406,8 @@ class AggregatorsRepository {
             self.popularTournaments[tournament.id] = tournament
         }
     }
+
+
     
 }
 
@@ -461,4 +479,38 @@ struct OddOutcomesSortingHelper {
         }
     }
 
+}
+
+extension AggregatorsRepository: AggregatorStore {
+
+    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
+        return marketsPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
+        return bettingOfferPublishers[id]?.eraseToAnyPublisher()
+    }
+
+    func hasMatchesInfoForMatch(withId id: String) -> Bool {
+        if matchesInfoForMatchPublisher.value.contains(id) {
+            return true
+        }
+
+        return false
+    }
+
+    func matchesInfoForMatchListPublisher() -> CurrentValueSubject<[String], Never>? {
+        let matchesInfoForMatchPublisher = matchesInfoForMatchPublisher
+        return matchesInfoForMatchPublisher
+    }
+
+    func matchesInfoForMatchList() -> [String: Set<String> ] {
+        let matchesInfoForMatch = matchesInfoForMatch
+        return matchesInfoForMatch
+    }
+
+    func matchesInfoList() -> [String: EveryMatrix.MatchInfo] {
+        let matchesInfo = matchesInfo
+        return matchesInfo
+    }
 }

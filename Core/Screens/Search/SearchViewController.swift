@@ -337,12 +337,20 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
                 if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self) {
 
-                    if self.viewModel.matchesInfoForMatchPublisher.value.contains(match.id) {
-                        cell.setupWithMatch(match, liveMatch: true)
+                    let store = self.viewModel as AggregatorStore
+
+                    if store.hasMatchesInfoForMatch(withId: match.id) {
+                        cell.setupWithMatch(match, liveMatch: true, store: store)
                     }
                     else {
-                        cell.setupWithMatch(match)
+                        cell.setupWithMatch(match, store: store)
                     }
+//                    if self.viewModel.matchesInfoForMatchPublisher.value.contains(match.id) {
+//                        cell.setupWithMatch(match, liveMatch: true)
+//                    }
+//                    else {
+//                        cell.setupWithMatch(match)
+//                    }
 
                     cell.tappedMatchLineAction = { image in
                         self.didSelectMatchAction?(match)
