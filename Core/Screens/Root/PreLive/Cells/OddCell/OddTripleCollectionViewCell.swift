@@ -334,7 +334,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                             }
                         }
                         weakSelf.currentLeftOddValue = newOddValue
-                        weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.leftOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     }
                 })
         }
@@ -376,7 +377,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                             }
                         }
                         weakSelf.currentMiddleOddValue = newOddValue
-                        weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.middleOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.middleOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     }
                 })
         }
@@ -419,7 +421,8 @@ class OddTripleCollectionViewCell: UICollectionViewCell {
                         }
 
                         weakSelf.currentRightOddValue = newOddValue
-                        weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.rightOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     }
                 })
         }

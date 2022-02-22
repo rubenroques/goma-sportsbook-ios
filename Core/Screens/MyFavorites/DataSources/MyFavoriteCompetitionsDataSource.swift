@@ -56,7 +56,13 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
                 cell.matchStatsViewModel = matchStatsViewModel
             }
 
-            cell.setupWithMatch(match, liveMatch: true, store: self.store)
+            if self.store.hasMatchesInfoForMatch(withId: match.id) {
+                cell.setupWithMatch(match, liveMatch: true, store: self.store)
+            }
+            else {
+                cell.setupWithMatch(match, store: self.store)
+            }
+
 
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = { image in

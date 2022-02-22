@@ -439,7 +439,7 @@ extension HomeViewModel {
         return self.favoriteMatches[safe: index]
     }
 
-    func suggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
+    func getSuggestedBetLineViewModel() -> SuggestedBetLineViewModel? {
         
         if self.suggestedBets.isEmpty {
             return nil

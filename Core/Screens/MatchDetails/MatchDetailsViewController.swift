@@ -232,7 +232,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.headerCompetitionImageView.image = UIImage(named: "")
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
-        self.headerCompetitionImageView.contentMode = .center
+        self.headerCompetitionImageView.contentMode = .scaleAspectFill
 
         self.headerDetailHomeLabel.text = localized("home_label_default")
         self.headerDetailHomeLabel.font = AppFont.with(type: .bold, size: 16)
@@ -437,7 +437,15 @@ class MatchDetailsViewController: UIViewController {
         if let match = self.match {
             let viewModel = MatchWidgetCellViewModel(match: match)
 
-            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            // self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+
+            if viewModel.countryISOCode != "" {
+                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            }
+            else {
+                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+            }
+
             self.headerCompetitionLabel.text = viewModel.competitionName
             self.headerDetailHomeLabel.text = viewModel.homeTeamName
             self.headerDetailAwayLabel.text = viewModel.awayTeamName

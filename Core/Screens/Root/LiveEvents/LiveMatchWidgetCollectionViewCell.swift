@@ -353,7 +353,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                 }
                             }
                             weakSelf.currentHomeOddValue = newOddValue
-                            weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                            //weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                            weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
 
@@ -401,7 +402,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                                 }
                             }
                             weakSelf.currentDrawOddValue = newOddValue
-                            weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                            //weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                            weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
             }
@@ -449,7 +451,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                             }
 
                             weakSelf.currentAwayOddValue = newOddValue
-                            weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                            //weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                            weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
 

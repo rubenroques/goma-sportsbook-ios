@@ -268,7 +268,8 @@ class WithdrawViewController: UIViewController {
     @IBAction private func didTapNextButton() {
         self.activityIndicatorView.isHidden = false
 
-        let amount = self.withdrawHeaderTextFieldView.text
+        let amountText = self.withdrawHeaderTextFieldView.text
+        let amount = amountText.replacingOccurrences(of: ",", with: ".")
         var currency = ""
         var gamingAccountId = ""
 
@@ -294,11 +295,10 @@ class WithdrawViewController: UIViewController {
                 self.activityIndicatorView.isHidden = true
 
             }, receiveValue: { value in
-                DispatchQueue.main.async {
-                    let withdrawWebViewController = WithdrawWebViewController(withdrawUrl: value.cashierUrl)
+                let withdrawWebViewController = WithdrawWebViewController(withdrawUrl: value.cashierUrl)
 
-                    self.navigationController?.pushViewController(withdrawWebViewController, animated: true)
-                }
+                self.navigationController?.pushViewController(withdrawWebViewController, animated: true)
+
             })
             .store(in: &cancellables)
     }

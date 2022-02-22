@@ -11,6 +11,8 @@ enum UserDefaultsKey: String {
     case theme = "appThemeKey"
     case userSession = "userSession"
     case userSkippedLoginFlow = "userSkippedLoginFlow"
+    case userBetslipSettings = "user_betslip_settings"
+    case userOddsFormat = "userOddsFormat"
 }
 
 extension UserDefaults {
@@ -44,6 +46,25 @@ extension UserDefaults {
         }
         set {
             setValue(newValue, forKey: UserDefaultsKey.userSkippedLoginFlow.rawValue)
+        }
+    }
+
+    var userBetslipSettings: String {
+        get {
+            return UserDefaults.standard.string(forKey: "user_betslip_settings") ?? ""
+        }
+        set {
+            UserDefaults.standard.setValue(newValue, forKey: "user_betslip_settings")
+        }
+    }
+
+    var userOddsFormat: OddsFormat {
+        get {
+            register(defaults: [UserDefaultsKey.userOddsFormat.rawValue: OddsFormat.europe.rawValue])
+            return OddsFormat(rawValue: integer(forKey: UserDefaultsKey.userOddsFormat.rawValue)) ?? .europe
+        }
+        set {
+            set(newValue.rawValue, forKey: UserDefaultsKey.userOddsFormat.rawValue)
         }
     }
 

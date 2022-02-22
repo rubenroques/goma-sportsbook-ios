@@ -414,8 +414,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multiplierPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
-                self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
-                self?.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
+//                self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
+//                self?.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
+                self?.multipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
+                self?.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
             })
             .store(in: &cancellables)
 
