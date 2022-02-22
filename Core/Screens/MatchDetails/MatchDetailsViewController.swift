@@ -232,7 +232,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.headerCompetitionImageView.image = UIImage(named: "")
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
-        self.headerCompetitionImageView.contentMode = .center
+        self.headerCompetitionImageView.contentMode = .scaleAspectFill
 
         self.headerDetailHomeLabel.text = localized("home_label_default")
         self.headerDetailHomeLabel.font = AppFont.with(type: .bold, size: 16)
@@ -437,7 +437,15 @@ class MatchDetailsViewController: UIViewController {
         if let match = self.match {
             let viewModel = MatchWidgetCellViewModel(match: match)
 
-            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            // self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+
+            if viewModel.countryISOCode != "" {
+                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+            }
+            else {
+                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+            }
+
             self.headerCompetitionLabel.text = viewModel.competitionName
             self.headerDetailHomeLabel.text = viewModel.homeTeamName
             self.headerDetailAwayLabel.text = viewModel.awayTeamName
@@ -540,24 +548,6 @@ class MatchDetailsViewController: UIViewController {
     @IBAction private func didTapShareButton() {
         // print("SNAPSHOT: \(self.viewModel.gameSnapshot)")
 
-        let share = UIActivityViewController(activityItems: [self], applicationActivities: nil)
-        present(share, animated: true, completion: nil)
-
-    }
-
-}
-
-extension MatchDetailsViewController: UIActivityItemSource {
-    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return ""
-    }
-
-    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-        return nil
-    }
-
-    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
-
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
 
@@ -566,11 +556,15 @@ extension MatchDetailsViewController: UIActivityItemSource {
             let imageProvider = NSItemProvider(object: gameSnapshot)
             metadata.imageProvider = imageProvider
             metadata.url = matchUrl
-            metadata.originalURL = metadata.url
+            metadata.originalURL = matchUrl
             metadata.title = localized("check_this_game")
         }
 
-        return metadata
+        let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+
+        let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.gameSnapshot], applicationActivities: nil)
+        present(share, animated: true, completion: nil)
 
     }
+
 }

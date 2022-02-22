@@ -187,6 +187,7 @@ class LiveEventsViewController: UIViewController {
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
+        filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -306,16 +307,18 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
+        
+   
+        
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
-
-       
+        
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        self.filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
         self.filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         
         self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
