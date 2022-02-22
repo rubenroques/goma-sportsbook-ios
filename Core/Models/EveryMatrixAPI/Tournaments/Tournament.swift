@@ -23,6 +23,8 @@ extension EveryMatrix {
         let numberOfLiveEvents: Int?
         let numberOfLiveMarkets: Int?
         let numberOfLiveBettingOffers: Int?
+        let numberOfOutrightMarkets: Int?
+        let numberOfUpcomingMatches: Int?
         let sportId: String?
         let sportName: String?
         let shortSportName: String?
@@ -49,6 +51,8 @@ extension EveryMatrix {
             case numberOfLiveEvents = "numberOfLiveEvents"
             case numberOfLiveMarkets = "numberOfLiveMarkets"
             case numberOfLiveBettingOffers = "numberOfLiveBettingOffers"
+            case numberOfOutrightMarkets = "numberOfOutrightMarkets"
+            case numberOfUpcomingMatches = "numberOfUpcomingMatches"
             case sportId = "sportId"
             case sportName = "sportName"
             case shortSportName = "shortSportName"

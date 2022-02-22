@@ -325,6 +325,16 @@ class RootViewController: UIViewController {
         }
     }
 
+    func selectSport(_ sport: Sport) {
+        self.currentSport = sport
+        if preLiveViewControllerLoaded {
+            self.preLiveViewController.selectedSport = sport
+        }
+        if liveEventsViewControllerLoaded {
+            self.liveEventsViewController.selectedSport = sport
+        }
+    }
+
     func didChangedPreLiveSport(_ sport: Sport) {
         self.currentSport = sport
         if liveEventsViewControllerLoaded {
@@ -378,14 +388,43 @@ class RootViewController: UIViewController {
     @IBAction private func didTapSearchButton() {
         let searchViewController = SearchViewController()
 
-        searchViewController.didSelectCompetitionAction = { value in
+        searchViewController.didSelectCompetitionAction = { [weak self] value in
             searchViewController.dismiss(animated: true, completion: nil)
-            self.preLiveViewController.filterSelectedOption = 2
-            self.preLiveViewController.setSelectedCollectionViewItem = 2
-            self.preLiveViewController.applyCompetitionsFiltersWithIds([value])
+            self?.preLiveViewController.selectedShortcutItem = 2
+            self?.preLiveViewController.applyCompetitionsFiltersWithIds([value])
         }
 
         self.present(searchViewController, animated: true, completion: nil)
+    }
+}
+
+// Navigations between tabs
+extension RootViewController {
+
+    func didSelectSeeAllPopular(sport: Sport) {
+        self.loadChildViewControllerIfNeeded(tab: .preLive)
+        if preLiveViewControllerLoaded {
+            self.selectSport(sport)
+            self.preLiveViewController.openPopularTab()
+            self.didTapSportsTabItem()
+        }
+    }
+
+    func didSelectSeeAllLive(sport: Sport) {
+        self.loadChildViewControllerIfNeeded(tab: .live)
+        if liveEventsViewControllerLoaded {
+            self.selectSport(sport)
+            self.didTapLiveTabItem()
+        }
+    }
+
+    func didSelectSeeAllCompetition(sport: Sport, competitionId: String) {
+        self.loadChildViewControllerIfNeeded(tab: .preLive)
+        if preLiveViewControllerLoaded {
+            self.selectSport(sport)
+            self.preLiveViewController.openCompetitionTab(withId: competitionId)
+            self.didTapSportsTabItem()
+        }
     }
 
 }
@@ -397,8 +436,20 @@ extension RootViewController {
             self.homeViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
             }
+
+            self.homeViewController.didSelectSeeAllPopular = { [weak self] sport in
+                self?.didSelectSeeAllPopular(sport: sport)
+            }
+            self.homeViewController.didSelectSeeAllLive = { [weak self] sport in
+                self?.didSelectSeeAllLive(sport: sport)
+            }
+            self.homeViewController.didSelectSeeAllCompetition = { [weak self] sport, competitionId in
+                self?.didSelectSeeAllCompetition(sport: sport, competitionId: competitionId)
+            }
+
             homeViewControllerLoaded = true
         }
+
         if case .preLive = tab, !preLiveViewControllerLoaded {
             self.addChildViewController(self.preLiveViewController, toView: self.preLiveBaseView)
             self.preLiveViewController.selectedSport = self.currentSport
@@ -410,6 +461,7 @@ extension RootViewController {
             }
             preLiveViewControllerLoaded = true
         }
+
         if case .live = tab, !liveEventsViewControllerLoaded {
             self.addChildViewController(self.liveEventsViewController, toView: self.liveBaseView)
             self.liveEventsViewController.selectedSport = self.currentSport

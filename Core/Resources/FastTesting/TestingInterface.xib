@@ -3,7 +3,7 @@
     <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19529"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -16,7 +16,32 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NnM-iW-on8">
                     <rect key="frame" x="12" y="12" width="494" height="167"/>
+                    <subviews>
+                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="LeN-w1-Iso">
+                            <rect key="frame" x="10" y="10" width="474" height="147"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FMl-Ue-3wR">
+                                    <rect key="frame" x="0.0" y="0.0" width="474" height="127"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                </button>
+                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="zmx-3s-Zua">
+                                    <rect key="frame" x="0.0" y="127" width="474" height="20"/>
+                                </activityIndicatorView>
+                            </subviews>
+                            <constraints>
+                                <constraint firstAttribute="trailing" secondItem="zmx-3s-Zua" secondAttribute="trailing" constant="30" id="69u-Qr-khf"/>
+                                <constraint firstItem="zmx-3s-Zua" firstAttribute="leading" secondItem="LeN-w1-Iso" secondAttribute="leading" constant="30" id="gfE-mw-jm4"/>
+                            </constraints>
+                        </stackView>
+                    </subviews>
                     <color key="backgroundColor" systemColor="systemRedColor"/>
+                    <constraints>
+                        <constraint firstItem="LeN-w1-Iso" firstAttribute="top" secondItem="NnM-iW-on8" secondAttribute="top" constant="10" id="aFl-Fb-uPg"/>
+                        <constraint firstAttribute="bottom" secondItem="LeN-w1-Iso" secondAttribute="bottom" constant="10" id="dm1-73-ic9"/>
+                        <constraint firstAttribute="trailing" secondItem="LeN-w1-Iso" secondAttribute="trailing" constant="10" id="rcy-Y4-L9i"/>
+                        <constraint firstItem="LeN-w1-Iso" firstAttribute="leading" secondItem="NnM-iW-on8" secondAttribute="leading" constant="10" id="s0w-zo-31f"/>
+                    </constraints>
                 </view>
             </subviews>
             <color key="backgroundColor" systemColor="systemGreenColor"/>

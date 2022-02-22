@@ -49,6 +49,8 @@ enum TSRouter {
     case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupDetailsPublisher(operatorId: String, language: String, matchId: String, marketGroupName: String)
 
+    case tournamentOddsPublisher(operatorId: String, language: String, eventId: String)
+
     case searchV2(language: String, limit: Int, query: String, eventStatuses: [Int], include: [String], bettingTypeIds: [String], sortBy: [String])
 
     case getSharedBetTokens(betId: String)
@@ -60,7 +62,9 @@ enum TSRouter {
     case bettingOfferPublisher(operatorId: String, language: String, bettingOfferId: String)
     case liveMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case popularMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
+    case popularTournamentsPublisher(operatorId: String, language: String, sportId: String, tournamentsCount: Int)
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
+
     case todayMatchesFilterPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int, timeRange: String)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
@@ -199,6 +203,9 @@ enum TSRouter {
         case .matchDetailsAggregatorPublisher(let operatorId, let language, let matchId):
             return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
 
+        case .tournamentOddsPublisher(let operatorId, let language, let eventId):
+            return "/sports/\(operatorId)/\(language)/\(eventId)/tournament-odds"
+
         case .searchV2:
             return "/sports#searchV2"
 
@@ -226,9 +233,13 @@ enum TSRouter {
         case .liveMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/live-matches-aggregator-main/\(sportId)/all-locations/default-event-info/\(matchesCount)/\(marketsCount)"
+
         case .popularMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
+        case .popularTournamentsPublisher(let operatorId, let language, let sportId, let tournamentsCount):
+            return "/sports/\(operatorId)/\(language)/popular-tournaments/\(sportId)/\(tournamentsCount)"
+
         case .todayMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/next-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
@@ -681,6 +692,8 @@ enum TSRouter {
             return .sportsInitialDump(topic: self.procedure)
         case .popularMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
+        case .popularTournamentsPublisher:
+            return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .todayMatchesFilterPublisher:
@@ -706,6 +719,8 @@ enum TSRouter {
         case .matchDetailsAggregatorPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .matchMarketOdds:
+            return .sportsInitialDump(topic: self.procedure)
+        case .tournamentOddsPublisher:
             return .sportsInitialDump(topic: self.procedure)
         case .eventPartScoresPublisher:
             return .sportsInitialDump(topic: self.procedure)

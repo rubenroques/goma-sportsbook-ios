@@ -11,7 +11,7 @@ import Combine
 class SuggestedBetLineTableViewCell: UITableViewCell {
 
     var betNowCallbackAction: (() -> Void)?
-    
+
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -139,12 +139,12 @@ extension SuggestedBetLineTableViewCell {
     private func initConstraints() {
         NSLayoutConstraint.activate([
 
-            self.collectionView.heightAnchor.constraint(equalToConstant: 310),
+            self.collectionView.heightAnchor.constraint(equalToConstant: 320),
             
             self.collectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 0),
             self.collectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 0),
             self.collectionView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
-            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: 0),
+            self.collectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
      ])
     }
 }
