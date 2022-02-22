@@ -273,7 +273,7 @@ extension FilterHistoryViewController: UITableViewDelegate, UITableViewDataSourc
                 fatalError("")
             }
 
-            cell.configure(withTransactionHistoryEntry: ticketValue , transactionType: transactionType)
+            cell.configure(withTransactionHistoryEntry: ticketValue , transactionType: viewModel.transactionsTypePublisher.value)
             return cell
             
             

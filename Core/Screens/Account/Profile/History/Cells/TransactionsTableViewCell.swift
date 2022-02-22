@@ -50,76 +50,79 @@ class TransactionsTableViewCell: UITableViewCell {
         self.transactionDateLabel.textColor = UIColor.App.textSecondary
         self.transactionValueLabel.textColor = UIColor.App.textPrimary
         
+        self.transactionTypeLabel.font = AppFont.with(type: .bold, size: 14)
+        self.transactionValueLabel.font = AppFont.with(type: .semibold, size: 16)
+        self.transactionDateLabel.font = AppFont.with(type: .medium, size: 12)
+        self.transactionIdLabel.font = AppFont.with(type: .medium, size: 12)
     }
     
-    func setTransactionIcon(transactionType : Int){
-        
-        if transactionType == 0 {
+    func setTransactionIcon(transactionType : HistoryViewModel.TransactionsType){
+        switch transactionType{
+            
+        case .deposit:
             self.transactionIcon.image = UIImage(named: "deposit_icon")
-        }else{
+        case .withdraw:
             self.transactionIcon.image = UIImage(named: "withdraw_icon")
         }
         
+        
     }
 
-    func setTransactionTypeLabel(transactionType : Int){
-        
-        if transactionType == 0 {
+    func setTransactionTypeLabel(transactionType : HistoryViewModel.TransactionsType){
+        switch transactionType{
+            
+        case .deposit:
             self.transactionTypeLabel.text = "Deposit"
-        }else{
+        case .withdraw:
             self.transactionTypeLabel.text = "Withdraw"
         }
-        self.transactionTypeLabel.font = AppFont.with(type: .bold, size: 14)
         
     }
 
-    func setTransactionValueLabel(transactionType : Int, transactionValue : String){
-        
-        if transactionType == 0 {
+    func setTransactionValueLabel(transactionType : HistoryViewModel.TransactionsType, transactionValue : String){
+        switch transactionType{
+            
+        case .deposit:
             self.transactionValueLabel.text = "+"+transactionValue
-        }else{
+        case .withdraw:
             self.transactionValueLabel.text = "-"+transactionValue
         }
-        self.transactionValueLabel.font = AppFont.with(type: .semibold, size: 16)
-        
+    
     }
     
     func setTransactionDateLabel(transactionDate : String){
-        
+       
         self.transactionDateLabel.text = transactionDate
-        self.transactionDateLabel.font = AppFont.with(type: .medium, size: 12)
+        
     }
     
     func setTransactionIdLabel(transactionId : String){
         
         self.transactionIdLabel.text = transactionId
-        self.transactionIdLabel.font = AppFont.with(type: .medium, size: 12)
+       
       
     }
     
     
     
-    func configure(withTransactionHistoryEntry transactionHistoryEntry: EveryMatrix.TransactionHistory, transactionType : Int) {
+    func configure(withTransactionHistoryEntry transactionHistoryEntry: EveryMatrix.TransactionHistory, transactionType : HistoryViewModel.TransactionsType) {
 
         
         setTransactionDateLabel(transactionDate: transactionHistoryEntry.time)
         setTransactionIcon(transactionType: transactionType)
         setTransactionTypeLabel(transactionType: transactionType)
-        if transactionType == 0{
-          if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)){
-                setTransactionValueLabel(transactionType: transactionType, transactionValue: amount)
-            }
-        
-        }else{
+        switch transactionType{
+        case .deposit:
+            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)){
+                  setTransactionValueLabel(transactionType: transactionType, transactionValue: amount)
+              }
+        case .withdraw:
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.credit.amount)) {
              
                 setTransactionValueLabel(transactionType: transactionType, transactionValue: amount)
             }
         }
-            setTransactionIdLabel(transactionId: transactionHistoryEntry.transactionID)
-            
-            
- 
+        setTransactionIdLabel(transactionId: transactionHistoryEntry.transactionID)
     }
 
 }
@@ -145,7 +148,6 @@ extension TransactionsTableViewCell {
     
     private static func createLabel() -> UILabel {
         let label = UILabel()
-        label.font = AppFont.with(type: .bold, size: 17)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
