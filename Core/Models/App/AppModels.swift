@@ -25,12 +25,14 @@ struct Competition {
     var name: String
     var matches: [Match]
     var venue: Location?
+    var outrightMarkets: Int
 
-    init(id: String, name: String, matches: [Match] = [], venue: Location? = nil) {
+    init(id: String, name: String, matches: [Match] = [], venue: Location? = nil, outrightMarkets: Int) {
         self.id = id
         self.name = name
         self.matches = matches
         self.venue = venue
+        self.outrightMarkets = outrightMarkets
     }
 }
 

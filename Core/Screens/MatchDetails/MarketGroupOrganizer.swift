@@ -299,13 +299,18 @@ struct SequentialMarketGroupOrganizer: MarketGroupOrganizer {
 
     private var sortedOutcomes: [Outcome]
 
-    init(id: String, name: String, market: Market) {
+    init(id: String, name: String, market: Market, sortedByOdd: Bool) {
 
         self.id = id
         self.name = name
         self.market = market
 
-        self.sortedOutcomes = market.outcomes.sorted(by: \.translatedName)
+        if sortedByOdd {
+            self.sortedOutcomes = market.outcomes.sorted(by: \.bettingOffer.value)
+        }
+        else {
+            self.sortedOutcomes = market.outcomes.sorted(by: \.translatedName)
+        }
 
         self.maxColumnValue = 3
         if self.sortedOutcomes.count == 2 {

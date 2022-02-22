@@ -60,7 +60,15 @@ class Router {
         else {
             bootRootViewController = Router.createLoginViewControllerFlow()
         }
+
         self.rootWindow.rootViewController = bootRootViewController
+//        let viewModel =  OutrightMarketDetailsViewModel(competition:
+//                                                            Competition(id: "157127366340038656",
+//                                                                        name: "F1",
+//                                                                        outrightMarkets: 0),
+//                                                        store: OutrightMarketDetailsStore())
+//        self.rootWindow.rootViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
+        
     }
 
     func subscribeToUserActionBlockers() {
