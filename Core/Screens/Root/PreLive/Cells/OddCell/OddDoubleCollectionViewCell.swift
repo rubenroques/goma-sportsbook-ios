@@ -299,7 +299,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                             }
                         }
                         weakSelf.currentLeftOddValue = newOddValue
-                        weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.leftOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.leftOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     }
                 })
         }
@@ -342,7 +343,8 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
                         }
                         
                         weakSelf.currentRightOddValue = newOddValue
-                        weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.rightOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.rightOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     }
                 })
         }

@@ -10,7 +10,7 @@ import Foundation
 enum OddsFormat: Int {
     case europe
     case unitedKingdom
-    case usa
+    case unitedStates
 
     var oddsFormatId: Int {
         switch self {
@@ -18,7 +18,7 @@ enum OddsFormat: Int {
             return 1
         case .unitedKingdom:
             return 2
-        case .usa:
+        case .unitedStates:
             return 3
         }
     }

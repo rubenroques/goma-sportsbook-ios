@@ -90,7 +90,7 @@ class OddsViewModel: NSObject {
             UserDefaults.standard.userOddsFormat = .unitedKingdom
         }
         else if viewTapped.viewId == 3 {
-            UserDefaults.standard.userOddsFormat = .usa
+            UserDefaults.standard.userOddsFormat = .unitedStates
         }
     }
 
