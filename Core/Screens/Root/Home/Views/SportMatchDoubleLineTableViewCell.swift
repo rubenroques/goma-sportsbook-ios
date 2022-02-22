@@ -10,6 +10,9 @@ import Combine
 
 class SportMatchDoubleLineTableViewCell: UITableViewCell {
 
+    var didSelectSeeAllPopular: ((Sport) -> Void)?
+    var didSelectSeeAllLive: ((Sport) -> Void)?
+
     var tappedMatchLineAction: ((Match) -> Void)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
@@ -30,6 +33,9 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAllView))
+        self.seeAllBaseView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -38,10 +44,6 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
-//        self.topCollectionView.isHidden = false
-//        self.bottomCollectionView.isHidden = false
-//        self.seeAllBaseView.isHidden = false
 
         self.viewModel = nil
         self.titleLabel.text = ""
@@ -143,6 +145,18 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         self.bottomCollectionView.reloadData()
     }
 
+    @objc func didTapSeeAllView() {
+
+        guard let viewModel = self.viewModel else { return }
+
+        if viewModel.isMatchLineLive() {
+            self.didSelectSeeAllLive?(viewModel.sport)
+        }
+        else {
+            self.didSelectSeeAllPopular?(viewModel.sport)
+        }
+
+    }
 }
 
 extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
@@ -267,7 +281,7 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
 
         if collectionLineIndex == 0 && viewModel.isCompetitionLine() {
             guard
-                let cell = collectionView.dequeueCellType(CompetitionLineCollectionViewCell.self, indexPath: indexPath),
+                let cell = collectionView.dequeueCellType(CompetitionWidgetCollectionViewCell.self, indexPath: indexPath),
                 let viewModel = self.viewModel?.competitionViewModel()
             else {
                 fatalError()
@@ -491,7 +505,7 @@ extension SportMatchDoubleLineTableViewCell {
         self.bottomCollectionView.delegate = self
         self.bottomCollectionView.dataSource = self
 
-        self.topCollectionView.register(CompetitionLineCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionLineCollectionViewCell.identifier)
+        self.topCollectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
 
         self.topCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)

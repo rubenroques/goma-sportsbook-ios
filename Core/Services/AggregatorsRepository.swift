@@ -50,6 +50,8 @@ class AggregatorsRepository {
     var tournaments: [String: EveryMatrix.Tournament] = [:]
     var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
 
+    var outrightTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
+
     var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     var matchesInfoForMatch: [String: Set<String> ] = [:]
     var matchesInfoForMatchPublisher: CurrentValueSubject<[String], Never> = .init([])
@@ -156,6 +158,20 @@ class AggregatorsRepository {
         }
 
         print("Finished dump processing")
+    }
+
+    func processOutrightTournamentsAggregator(_ aggregator: EveryMatrix.Aggregator) {
+
+        self.outrightTournaments = [:]
+
+        for content in aggregator.content ?? [] {
+            switch content {
+            case .tournament(let tournamentContent):
+                outrightTournaments[tournamentContent.id] = tournamentContent
+            default:
+                ()
+            }
+        }
     }
 
     func processContentUpdateAggregator(_ aggregator: EveryMatrix.Aggregator) {
@@ -390,6 +406,8 @@ class AggregatorsRepository {
             self.popularTournaments[tournament.id] = tournament
         }
     }
+
+
     
 }
 

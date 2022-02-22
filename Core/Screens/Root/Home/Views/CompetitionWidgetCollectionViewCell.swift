@@ -1,21 +1,21 @@
 //
-//  CompetitionLineCollectionViewCell.swift
+//  CompetitionWidgetCollectionViewCell.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 18/02/2022.
 //
 
-import Foundation
-
 import UIKit
 import Combine
 
-class CompetitionLineViewModel {
+class CompetitionWidgetViewModel {
 
+    var competition: Competition
     var name: String
     var countryImageName: String
 
     init(competition: Competition) {
+        self.competition = competition
         self.name = competition.name
 
         if let isoCode = competition.venue?.isoCode {
@@ -28,7 +28,7 @@ class CompetitionLineViewModel {
 
 }
 
-class CompetitionLineCollectionViewCell: UICollectionViewCell {
+class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
     var tappedLineAction: ((Competition) -> Void)?
 
@@ -43,7 +43,7 @@ class CompetitionLineCollectionViewCell: UICollectionViewCell {
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
     
-    private var viewModel: CompetitionLineViewModel?
+    private var viewModel: CompetitionWidgetViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
     override init(frame: CGRect) {
@@ -81,7 +81,6 @@ class CompetitionLineCollectionViewCell: UICollectionViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
         self.titleLabel.textColor = UIColor.App.textPrimary
@@ -90,7 +89,7 @@ class CompetitionLineCollectionViewCell: UICollectionViewCell {
         self.seeAllLabel.textColor = UIColor.App.textPrimary
     }
 
-    func configure(withViewModel viewModel: CompetitionLineViewModel) {
+    func configure(withViewModel viewModel: CompetitionWidgetViewModel) {
         self.viewModel = viewModel
 
         self.titleLabel.text = viewModel.name
@@ -99,7 +98,7 @@ class CompetitionLineCollectionViewCell: UICollectionViewCell {
 
 }
 
-extension CompetitionLineCollectionViewCell {
+extension CompetitionWidgetCollectionViewCell {
 
     private static func createBaseView() -> UIView {
         let view = UIView()

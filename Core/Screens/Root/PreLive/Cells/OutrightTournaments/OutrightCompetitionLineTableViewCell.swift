@@ -1,24 +1,46 @@
 //
-//  TopCompetitionLineTableViewCell.swift
+//  OutrightCompetitionLineTableViewCell.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 19/02/2022.
+//  Created by Ruben Roques on 21/02/2022.
 //
 
 import UIKit
 import Combine
 
-class TopCompetitionLineTableViewCell: UITableViewCell {
+class OutrightCompetitionLineViewModel {
 
-    var didSelectSeeAllCompetitionAction: ((Sport, Competition) -> Void)?
+    var competition: Competition
+    var numberOfMarkets: Int
 
-    private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    init(competition: Competition) {
+        self.competition = competition
+        self.numberOfMarkets = competition.outrightMarkets
+    }
+
+    func numberOfSection() -> Int {
+        return 2
+    }
+
+    func numberOfItems(forSection section: Int) -> Int {
+        return 1
+    }
+
+    func outrightCompetitionWidgetViewModel() -> OutrightCompetitionWidgetViewModel {
+        return OutrightCompetitionWidgetViewModel(competition: self.competition)
+    }
+}
+
+class OutrightCompetitionLineTableViewCell: UITableViewCell {
+
+    var didSelectCompetitionAction: ((Competition) -> Void)?
+
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
 
     private var showingBackSliderView: Bool = false
 
-    private var viewModel: SportMatchLineViewModel?
+    private var viewModel: OutrightCompetitionLineViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -39,8 +61,6 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = ""
-
         self.reloadCollections()
     }
 
@@ -54,31 +74,15 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
-
         self.linesStackView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.collectionView.backgroundColor = UIColor.App.backgroundPrimary
    }
 
-    func configure(withViewModel viewModel: SportMatchLineViewModel) {
+    func configure(withViewModel viewModel: OutrightCompetitionLineViewModel) {
 
         self.viewModel = viewModel
-
-        self.viewModel?.titlePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                self?.titleLabel.text = $0
-            })
-            .store(in: &cancellables)
-
-        self.viewModel?.refreshPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                self?.reloadCollections()
-            })
-            .store(in: &cancellables)
 
         self.reloadCollections()
     }
@@ -89,21 +93,19 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
 
     @objc func didTapSeeAll() {
         guard
-            let viewModel = self.viewModel,
-            let competition = viewModel.competition
+            let viewModel = self.viewModel
         else { return }
 
-        self.didSelectSeeAllCompetitionAction?(viewModel.sport, competition)
+        self.didSelectCompetitionAction?(viewModel.competition)
     }
 }
 
-extension TopCompetitionLineTableViewCell: UIScrollViewDelegate {
-    
+extension OutrightCompetitionLineTableViewCell: UIScrollViewDelegate {
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
         if scrollView == self.collectionView,
-           let viewModel = self.viewModel,
-           let competition = viewModel.competition
+           let viewModel = self.viewModel
         {
             let screenWidth = UIScreen.main.bounds.size.width
             if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
@@ -111,26 +113,26 @@ extension TopCompetitionLineTableViewCell: UIScrollViewDelegate {
                     let generator = UIImpactFeedbackGenerator(style: .heavy)
                     generator.prepare()
                     generator.impactOccurred()
-                    self.didSelectSeeAllCompetitionAction?(viewModel.sport, competition)
+                    self.didSelectCompetitionAction?(viewModel.competition)
                     return
                 }
             }
         }
 
     }
-    
+
 }
 
-extension TopCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard let viewModel = self.viewModel else { return 0 }
-        return viewModel.numberOfSections(forLine: 0)
+        return viewModel.numberOfSection()
     }
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let viewModel = self.viewModel else { return 0 }
-        return viewModel.numberOfItems(forLine: 0, forSection: section)
+        return viewModel.numberOfItems(forSection: section)
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -143,7 +145,8 @@ extension TopCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectio
             else {
                 fatalError()
             }
-            if let numberTotalOfMarkets = self.viewModel?.numberOfMatchMarket() {
+
+            if let numberTotalOfMarkets = self.viewModel?.numberOfMarkets {
                 let marketsRawString = localized("number_of_markets")
                 let singularMarketRawString = localized("number_of_market_singular")
                 var marketString = ""
@@ -162,16 +165,12 @@ extension TopCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectio
 
             return cell
         }
-        
-        guard
-            let cell = collectionView.dequeueCellType(CompetitionWidgetCollectionViewCell.self, indexPath: indexPath),
-            let viewModel = viewModel.competitionViewModel()
-        else {
-            fatalError()
+        else if let cell = collectionView.dequeueCellType(OutrightCompetitionWidgetCollectionViewCell.self, indexPath: indexPath) {
+            let cellViewModel = viewModel.outrightCompetitionWidgetViewModel()
+            cell.configure(withViewModel: cellViewModel)
+            return cell
         }
-        cell.configure(withViewModel: viewModel)
-        return cell
-
+        fatalError()
     }
 
     func collectionView(_ collectionView: UICollectionView,
@@ -215,16 +214,7 @@ extension TopCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectio
     }
 }
 
-extension TopCompetitionLineTableViewCell {
-
-    private static func createTitleLabel() -> UILabel {
-        let titleLabel = UILabel()
-        titleLabel.numberOfLines = 1
-        titleLabel.text = ""
-        titleLabel.font = AppFont.with(type: .semibold, size: 13)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        return titleLabel
-    }
+extension OutrightCompetitionLineTableViewCell {
 
     private static func createLinesStackView() -> UIStackView {
         let linesStackView = UIStackView()
@@ -249,18 +239,17 @@ extension TopCompetitionLineTableViewCell {
     }
 
     private func setupSubviews() {
-        // Add subviews to self.view or each other
-        self.contentView.addSubview(self.titleLabel)
+
         self.contentView.clipsToBounds = true
 
         self.linesStackView.addArrangedSubview(self.collectionView)
 
         self.contentView.addSubview(self.linesStackView)
-  
+
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
+        self.collectionView.register(OutrightCompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: OutrightCompetitionWidgetCollectionViewCell.identifier)
         self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
         self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
 
@@ -270,19 +259,15 @@ extension TopCompetitionLineTableViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 16),
-
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 24),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
-            self.titleLabel.heightAnchor.constraint(equalToConstant: 19),
 
             self.linesStackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.linesStackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.linesStackView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16),
-            self.linesStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -16),
+            self.linesStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
+            self.linesStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
 
             self.collectionView.heightAnchor.constraint(equalToConstant: 160),
      ])
     }
 }
+
 

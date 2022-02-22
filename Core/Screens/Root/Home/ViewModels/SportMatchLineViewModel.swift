@@ -105,10 +105,10 @@ class SportMatchLineViewModel {
 
     var store: HomeStore
 
-    private var sport: Sport
-    private var matchesType: MatchesType
+    var sport: Sport
+    var competition: Competition?
 
-    private var competition: Competition?
+    private var matchesType: MatchesType
 
     private var popularMatchesPublisher: AnyCancellable?
     private var liveMatchesPublisher: AnyCancellable?
@@ -229,9 +229,9 @@ extension SportMatchLineViewModel {
         return nil
     }
 
-    func competitionViewModel() -> CompetitionLineViewModel? {
+    func competitionViewModel() -> CompetitionWidgetViewModel? {
         if let competition = self.competition {
-            return CompetitionLineViewModel(competition: competition)
+            return CompetitionWidgetViewModel(competition: competition)
         }
         return nil
     }

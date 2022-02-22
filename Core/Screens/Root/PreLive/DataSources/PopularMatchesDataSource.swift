@@ -9,6 +9,7 @@ import UIKit
 
 class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
+    var outrightCompetitions: [Competition] = []
     var matches: [Match] = []
 
     var alertsArray: [ActivationAlert] = []
@@ -19,9 +20,11 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var requestNextPageAction: (() -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectCompetitionAction: ((Competition) -> Void)?
 
-    init( matches: [Match]) {
+    init(matches: [Match], outrightCompetitions: [Competition]) {
         self.matches = matches
+        self.outrightCompetitions = outrightCompetitions
 
         if let userSession = UserSessionStore.loggedUserSession() {
             if !userSession.isEmailVerified {
@@ -71,6 +74,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         }
     }
 
+    func shouldShowOutrightMarkets() -> Bool {
+        return self.matches.isEmpty
+    }
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 4
     }
@@ -88,7 +95,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             }
             return 0
         case 1:
-            return 0
+            return self.shouldShowOutrightMarkets() ? self.outrightCompetitions.count : 0
         case 2:
             return self.matches.count
         case 3:
@@ -113,6 +120,19 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 cell.setAlertArrayData(arrayData: alertsArray)
                 return cell
             }
+        case 1:
+            guard
+                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier) as? OutrightCompetitionLineTableViewCell,
+                let competition = self.outrightCompetitions[safe: indexPath.row]
+            else {
+                fatalError()
+            }
+            cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+            cell.didSelectCompetitionAction = { [weak self] competition in
+                self?.didSelectCompetitionAction?(competition)
+            }
+            return cell
+
         case 2:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
@@ -140,6 +160,11 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        if self.matches.isEmpty {
+            return nil
+        }
+
         guard
             let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: TitleTableViewHeader.identifier) as? TitleTableViewHeader
         else {
@@ -150,23 +175,34 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+
+        if self.matches.isEmpty {
+            return .leastNonzeroMagnitude
+        }
+
         if section == 2 {
             return 54
         }
-        return 0.01
+        return .leastNonzeroMagnitude
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        if self.matches.isEmpty {
+            return .leastNonzeroMagnitude
+        }
+
         if section == 2 {
             return 54
         }
-        return 0.01
+        return .leastNonzeroMagnitude
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
             return 132 // Banner
+        case 1:
+            return 140
         case 3:
             return 70 // Loading cell
         default:
@@ -177,7 +213,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 130 // Banner
+            return 140 // Banner
+        case 1:
+            return 130
         case 3:
             return 70 // Loading cell
         default:

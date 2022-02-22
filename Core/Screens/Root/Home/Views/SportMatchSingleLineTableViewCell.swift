@@ -10,6 +10,9 @@ import Combine
 
 class SportMatchSingleLineTableViewCell: UITableViewCell {
 
+    var didSelectSeeAllPopular: ((Sport) -> Void)?
+    var didSelectSeeAllLive: ((Sport) -> Void)?
+
     var tappedMatchLineAction: ((Match) -> Void)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
@@ -29,6 +32,9 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAllView))
+        self.seeAllBaseView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -37,10 +43,6 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
-//        self.collectionView.isHidden = false
-//        self.bottomCollectionView.isHidden = false
-//        self.seeAllBaseView.isHidden = false
 
         self.viewModel = nil
         self.titleLabel.text = ""
@@ -134,6 +136,18 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
+    @objc func didTapSeeAllView() {
+
+        guard let viewModel = self.viewModel else { return }
+
+        if viewModel.isMatchLineLive() {
+            self.didSelectSeeAllLive?(viewModel.sport)
+        }
+        else {
+            self.didSelectSeeAllPopular?(viewModel.sport)
+        }
+
+    }
 }
 
 extension SportMatchSingleLineTableViewCell: UIScrollViewDelegate {
@@ -412,7 +426,7 @@ extension SportMatchSingleLineTableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(CompetitionLineCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionLineCollectionViewCell.identifier)
+        self.collectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
 
         self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)

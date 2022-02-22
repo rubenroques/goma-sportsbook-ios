@@ -254,6 +254,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         }
     }
 
+    func selectIds(_ ids: [String]) {
+        self.selectedIds.send(Set.init(ids))
+    }
+
     @IBAction func didTapApplyButton() {
         self.applyFiltersAction?(Array(self.selectedIds.value))
     }
