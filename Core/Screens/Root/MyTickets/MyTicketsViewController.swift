@@ -58,7 +58,7 @@ class MyTicketsViewController: UIViewController {
       
        
         self.myBetsSegmentedControl.selectedSegmentIndex = 0
-        self.viewModel.setMyTicketsType(.resolved)
+        self.viewModel.setMyTicketsType(.opened)
             //self.didChangeSegmentValue(self.myBetsSegmentedControl)
         
         
@@ -194,18 +194,45 @@ class MyTicketsViewController: UIViewController {
     }
     
       private func shareBet() {
-        let share = UIActivityViewController(activityItems: [self], applicationActivities: nil)
-        present(share, animated: true, completion: nil)
+
+          let metadata = LPLinkMetadata()
+          let urlMobile = Env.urlMobileShares
+
+          if let gameSnapshot = self.viewModel.clickedCellSnapshot, let betStatus = self.viewModel.clickedBetStatus {
+
+              if betStatus == "OPEN" {
+                  let betToken = self.viewModel.clickedBetTokenPublisher.value
+                  let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
+                  metadata.url = matchUrl
+                  metadata.originalURL = metadata.url
+              }
+
+              let imageProvider = NSItemProvider(object: gameSnapshot)
+              metadata.imageProvider = imageProvider
+              metadata.title = localized("look_bet_made")
+          }
+
+          let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+
+          if let betStatus = self.viewModel.clickedBetStatus, betStatus == "OPEN" {
+              let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot], applicationActivities: nil)
+              present(share, animated: true, completion: nil)
+          }
+          else {
+              let share = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot], applicationActivities: nil)
+              present(share, animated: true, completion: nil)
+          }
+
     }
 
     @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
 
         switch segmentControl.selectedSegmentIndex {
         case 0:
-            self.viewModel.setMyTicketsType(.resolved)
+            self.viewModel.setMyTicketsType(.opened)
  
         case 1:
-            self.viewModel.setMyTicketsType(.opened)
+            self.viewModel.setMyTicketsType(.resolved)
         case 2:
             self.viewModel.setMyTicketsType(.won)
         default:
@@ -214,40 +241,6 @@ class MyTicketsViewController: UIViewController {
 
     }
 
-}
-
-extension MyTicketsViewController: UIActivityItemSource {
-    func activityViewControllerPlaceholderItem(_ activityViewController: UIActivityViewController) -> Any {
-        return ""
-    }
-
-    func activityViewController(_ activityViewController: UIActivityViewController, itemForActivityType activityType: UIActivity.ActivityType?) -> Any? {
-        return nil
-    }
-
-    func activityViewControllerLinkMetadata(_ activityViewController: UIActivityViewController) -> LPLinkMetadata? {
-
-        let metadata = LPLinkMetadata()
-        let urlMobile = Env.urlMobileShares
-
-        if let gameSnapshot = self.viewModel.clickedCellSnapshot, let betStatus = self.viewModel.clickedBetStatus {
-
-            if betStatus == "OPEN" {
-                let betToken = self.viewModel.clickedBetTokenPublisher.value
-                let matchUrl = URL(string: "\(urlMobile)/bet/\(betToken)")
-                metadata.url = matchUrl
-                metadata.originalURL = metadata.url
-            }
-
-            let imageProvider = NSItemProvider(object: gameSnapshot)
-            metadata.imageProvider = imageProvider
-
-            metadata.title = localized("look_bet_made")
-        }
-
-        return metadata
-
-    }
 }
 
 extension MyTicketsViewController {

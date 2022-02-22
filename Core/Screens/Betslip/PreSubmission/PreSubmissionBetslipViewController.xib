@@ -72,6 +72,10 @@
                 <outlet property="secondarySystemWinningsValueLabel" destination="TuV-QP-gC8" id="EYE-jJ-9f8"/>
                 <outlet property="selectSystemBetTypeButton" destination="Jd6-2e-fEy" id="W77-Hz-ATY"/>
                 <outlet property="settingsButton" destination="Koe-cc-PIx" id="6ts-dO-MrB"/>
+                <outlet property="settingsPickerBaseView" destination="H2b-Xt-3TX" id="7Ku-Z6-Fjg"/>
+                <outlet property="settingsPickerButton" destination="62P-Nu-muD" id="Mxh-ga-6t8"/>
+                <outlet property="settingsPickerContainerView" destination="LdG-8S-b4P" id="IVm-DD-jUC"/>
+                <outlet property="settingsPickerView" destination="nGc-yu-cVs" id="uRZ-l2-SrX"/>
                 <outlet property="simpleOddsTitleLabel" destination="bev-aJ-ykz" id="fky-9y-fBl"/>
                 <outlet property="simpleOddsValueLabel" destination="jDg-5s-jBE" id="yg3-nI-qPH"/>
                 <outlet property="simpleWinningsBaseView" destination="dob-5h-mcC" id="KVc-Dw-yAw"/>
@@ -111,7 +115,7 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lFv-H0-UYg">
                             <rect key="frame" x="0.0" y="791" width="757" height="316"/>
                             <subviews>
-                                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w5T-Qz-QOo">
+                                <pickerView tag="1" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="w5T-Qz-QOo">
                                     <rect key="frame" x="0.0" y="0.0" width="757" height="216"/>
                                 </pickerView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jd6-2e-fEy">
@@ -143,6 +147,47 @@
                         <constraint firstAttribute="trailing" secondItem="lFv-H0-UYg" secondAttribute="trailing" id="5GZ-WA-pEf"/>
                         <constraint firstAttribute="bottom" secondItem="lFv-H0-UYg" secondAttribute="bottom" id="aMe-iE-cRe"/>
                         <constraint firstItem="lFv-H0-UYg" firstAttribute="leading" secondItem="5vv-uL-mhc" secondAttribute="leading" id="gVw-bF-XKn"/>
+                    </constraints>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H2b-Xt-3TX">
+                    <rect key="frame" x="0.0" y="0.0" width="757" height="1107"/>
+                    <subviews>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LdG-8S-b4P">
+                            <rect key="frame" x="0.0" y="791" width="757" height="316"/>
+                            <subviews>
+                                <pickerView tag="2" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nGc-yu-cVs">
+                                    <rect key="frame" x="0.0" y="0.0" width="757" height="216"/>
+                                </pickerView>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="62P-Nu-muD">
+                                    <rect key="frame" x="22" y="216" width="713" height="50"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="50" id="aAz-RO-npJ"/>
+                                    </constraints>
+                                    <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="18"/>
+                                    <state key="normal" title="Select"/>
+                                    <connections>
+                                        <action selector="didTapSettingsSelectButton" destination="-1" eventType="touchUpInside" id="s9O-7W-dsq"/>
+                                        <action selector="didTapSystemBetTypeSelectButton" destination="-1" eventType="primaryActionTriggered" id="edg-JM-jVw"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <constraints>
+                                <constraint firstItem="nGc-yu-cVs" firstAttribute="leading" secondItem="LdG-8S-b4P" secondAttribute="leading" id="18e-Yu-ePQ"/>
+                                <constraint firstAttribute="trailing" secondItem="nGc-yu-cVs" secondAttribute="trailing" id="DOQ-Nf-046"/>
+                                <constraint firstItem="62P-Nu-muD" firstAttribute="leading" secondItem="LdG-8S-b4P" secondAttribute="leading" constant="22" id="J6f-En-1Of"/>
+                                <constraint firstAttribute="trailing" secondItem="62P-Nu-muD" secondAttribute="trailing" constant="22" id="Wz0-Yh-FiR"/>
+                                <constraint firstItem="62P-Nu-muD" firstAttribute="top" secondItem="nGc-yu-cVs" secondAttribute="bottom" id="mUb-dY-KjD"/>
+                                <constraint firstAttribute="bottomMargin" secondItem="62P-Nu-muD" secondAttribute="bottom" constant="8" id="qdb-wE-nB7"/>
+                                <constraint firstItem="nGc-yu-cVs" firstAttribute="top" secondItem="LdG-8S-b4P" secondAttribute="top" id="toi-zh-c63"/>
+                            </constraints>
+                        </view>
+                    </subviews>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="trailing" secondItem="LdG-8S-b4P" secondAttribute="trailing" id="F9Z-Qt-Efc"/>
+                        <constraint firstItem="LdG-8S-b4P" firstAttribute="leading" secondItem="H2b-Xt-3TX" secondAttribute="leading" id="t9B-bJ-EZg"/>
+                        <constraint firstAttribute="bottom" secondItem="LdG-8S-b4P" secondAttribute="bottom" id="yPy-PG-6yx"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WId-wH-AbA">
@@ -815,6 +860,9 @@
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Settings"/>
+                            <connections>
+                                <action selector="didTapSettingsButton" destination="-1" eventType="touchUpInside" id="rs7-E4-IMF"/>
+                            </connections>
                         </button>
                     </subviews>
                     <constraints>
@@ -839,6 +887,8 @@
                 <constraint firstAttribute="bottom" secondItem="5vv-uL-mhc" secondAttribute="bottom" id="25z-6S-Cey"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="TZO-Zq-dgn" secondAttribute="trailing" id="6iz-nP-xVf"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Wu6-kU-jpt" secondAttribute="trailing" id="8bQ-S8-J4v"/>
+                <constraint firstAttribute="bottom" secondItem="H2b-Xt-3TX" secondAttribute="bottom" id="9AM-SJ-cvr"/>
+                <constraint firstItem="H2b-Xt-3TX" firstAttribute="trailing" secondItem="fnl-2z-Ty3" secondAttribute="trailing" id="9V2-e8-S1F"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="WId-wH-AbA" secondAttribute="trailing" id="9g6-h3-u9H"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Q4m-H4-Smm" secondAttribute="trailing" id="9hW-sm-FEB"/>
                 <constraint firstItem="7Oi-Vo-9uT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="A3P-F9-55f"/>
@@ -854,6 +904,7 @@
                 <constraint firstItem="cEh-jz-3Se" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="JYD-x5-dYe"/>
                 <constraint firstItem="Q4m-H4-Smm" firstAttribute="top" secondItem="cEh-jz-3Se" secondAttribute="bottom" id="Kaj-53-lFt"/>
                 <constraint firstItem="TZO-Zq-dgn" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Rs3-Dx-TMe"/>
+                <constraint firstItem="H2b-Xt-3TX" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="UXx-XR-Xcw"/>
                 <constraint firstItem="xKU-nI-d1a" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Uak-KN-F1S"/>
                 <constraint firstAttribute="trailing" secondItem="5vv-uL-mhc" secondAttribute="trailing" id="Y4e-ES-5lF"/>
                 <constraint firstItem="aLF-yD-t2E" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="ZH1-yP-tXM"/>
@@ -865,6 +916,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="cEh-jz-3Se" secondAttribute="trailing" id="kp5-m8-hTj"/>
                 <constraint firstItem="TZO-Zq-dgn" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="l3j-2W-Ut8"/>
                 <constraint firstItem="WId-wH-AbA" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="s0U-oO-tcV"/>
+                <constraint firstItem="H2b-Xt-3TX" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="scS-pg-QRs"/>
                 <constraint firstAttribute="trailing" secondItem="aLF-yD-t2E" secondAttribute="trailing" id="tNx-YX-GMm"/>
                 <constraint firstAttribute="bottom" secondItem="xKU-nI-d1a" secondAttribute="bottom" id="tOV-MC-0Pj"/>
                 <constraint firstItem="Wu6-kU-jpt" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="y9b-jL-nM5"/>

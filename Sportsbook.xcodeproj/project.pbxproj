@@ -679,6 +679,8 @@
 		A90D8B02277228B600DF88EB /* WithdrawResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8B00277228B600DF88EB /* WithdrawResponse.swift */; };
 		A90D8B0427737FF800DF88EB /* FavoriteGoma.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8B0327737FF800DF88EB /* FavoriteGoma.swift */; };
 		A90D8B0527737FF800DF88EB /* FavoriteGoma.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8B0327737FF800DF88EB /* FavoriteGoma.swift */; };
+		A91F4B2A27BE918C008C7510 /* LinkPresentationItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91F4B2927BE918C008C7510 /* LinkPresentationItemSource.swift */; };
+		A91F4B2B27BE918C008C7510 /* LinkPresentationItemSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91F4B2927BE918C008C7510 /* LinkPresentationItemSource.swift */; };
 		A91F4B2E27BEAF0F008C7510 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91F4B2D27BEAF0F008C7510 /* NotificationsViewController.swift */; };
 		A91F4B2F27BEAF0F008C7510 /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91F4B2D27BEAF0F008C7510 /* NotificationsViewController.swift */; };
 		A91F4B3227BFB8FB008C7510 /* AppearanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A91F4B3127BFB8FB008C7510 /* AppearanceViewController.swift */; };
@@ -1369,6 +1371,7 @@
 		A90D8AFA277223DC00DF88EB /* WithdrawWebViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawWebViewController.xib; sourceTree = "<group>"; };
 		A90D8B00277228B600DF88EB /* WithdrawResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawResponse.swift; sourceTree = "<group>"; };
 		A90D8B0327737FF800DF88EB /* FavoriteGoma.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteGoma.swift; sourceTree = "<group>"; };
+		A91F4B2927BE918C008C7510 /* LinkPresentationItemSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkPresentationItemSource.swift; sourceTree = "<group>"; };
 		A91F4B2D27BEAF0F008C7510 /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		A91F4B3127BFB8FB008C7510 /* AppearanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewController.swift; sourceTree = "<group>"; };
 		A91F4B3427BFBF46008C7510 /* SettingsRadioRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRadioRowView.swift; sourceTree = "<group>"; };
@@ -2220,6 +2223,7 @@
 				A9B8408026CFB49000269B05 /* DateUserLocation.swift */,
 				45936CAF270EEFA200E8260E /* LoadableContent.swift */,
 				454E0A8D2731B01F00794E0C /* FailableDecodable.swift */,
+				A91F4B2927BE918C008C7510 /* LinkPresentationItemSource.swift */,
 			);
 			path = MiscHelpers;
 			sourceTree = "<group>";
@@ -4099,6 +4103,7 @@
 				45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				A9E7C6A227B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
+				A91F4B2A27BE918C008C7510 /* LinkPresentationItemSource.swift in Sources */,
 				A91F4B4227C002FA008C7510 /* OddsFormat.swift in Sources */,
 				A9B841BB26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDE270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
@@ -4475,6 +4480,7 @@
 				45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				A9E7C6A327B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */,
 				455A0D1326BD9D9000EC572D /* Observable.swift in Sources */,
+				A91F4B2B27BE918C008C7510 /* LinkPresentationItemSource.swift in Sources */,
 				A91F4B4327C002FA008C7510 /* OddsFormat.swift in Sources */,
 				A9B841BC26EA1A7600269B05 /* MarketOutcomeRelation.swift in Sources */,
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
