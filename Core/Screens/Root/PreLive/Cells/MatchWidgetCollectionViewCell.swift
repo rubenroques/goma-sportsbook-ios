@@ -511,6 +511,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
+        let renderer = UIGraphicsImageRenderer(size: self.contentView.bounds.size)
+        let image = renderer.image { _ in
+            self.contentView.drawHierarchy(in: self.contentView.bounds, afterScreenUpdates: true)
+        }
+        self.snapshot = image
+
         self.tappedMatchWidgetAction?()
     }
 
