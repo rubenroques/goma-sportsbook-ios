@@ -9,11 +9,6 @@ import Foundation
 import Combine
 import OrderedCollections
 
-protocol AggregatorStore {
-    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>?
-    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>?
-}
-
 class HomeStore {
 
     private var matches: [String: EveryMatrix.Match] = [:]
@@ -177,14 +172,6 @@ class HomeStore {
         }
     }
 
-    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
-        return bettingOfferPublishers[id]?.eraseToAnyPublisher()
-    }
-
-    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
-        return marketsPublishers[id]?.eraseToAnyPublisher()
-    }
-
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
     }
@@ -282,49 +269,38 @@ class HomeStore {
         }
         return nil
     }
-/*
 
+}
 
-    func storeLocations(locations: [EveryMatrix.Location]) {
-        self.locations = [:]
-        for location in locations {
-            self.locations[location.id] = location
-        }
+extension HomeStore: AggregatorStore {
+
+    func marketPublisher(withId id: String) -> AnyPublisher<EveryMatrix.Market, Never>? {
+        return marketsPublishers[id]?.eraseToAnyPublisher()
     }
 
-    func storeTournaments(tournaments: [EveryMatrix.Tournament]) {
-        self.tournaments = [:]
-        for tournament in tournaments {
-            self.tournaments[tournament.id] = tournament
-
-            if let venueId = tournament.venueId {
-                if var tournamentsForLocationWithId = self.tournamentsForLocation[venueId] {
-                    tournamentsForLocationWithId.append(tournament.id)
-                    self.tournamentsForLocation[venueId] = tournamentsForLocationWithId
-                }
-                else {
-                    self.tournamentsForLocation[venueId] = [tournament.id]
-                }
-            }
-
-            if let categoryId = tournament.categoryId {
-                if var tournamentsForCategoryWithId = self.tournamentsForCategory[categoryId] {
-                    tournamentsForCategoryWithId.append(tournament.id)
-                    self.tournamentsForCategory[categoryId] = tournamentsForCategoryWithId
-                }
-                else {
-                    self.tournamentsForCategory[categoryId] = [tournament.id]
-                }
-            }
-        }
+    func bettingOfferPublisher(withId id: String) -> AnyPublisher<EveryMatrix.BettingOffer, Never>? {
+        return bettingOfferPublishers[id]?.eraseToAnyPublisher()
     }
 
-    func storePopularTournaments(tournaments: [EveryMatrix.Tournament]) {
-        self.popularTournaments = [:]
-        for tournament in tournaments {
-            self.popularTournaments[tournament.id] = tournament
+    func hasMatchesInfoForMatch(withId id: String) -> Bool {
+        if matchesInfoForMatchPublisher.value.contains(id) {
+            return true
         }
+        return false
     }
-*/
 
+    func matchesInfoForMatchListPublisher() -> CurrentValueSubject<[String], Never>? {
+        let matchesInfoForMatchPublisher = matchesInfoForMatchPublisher
+        return matchesInfoForMatchPublisher
+    }
+
+    func matchesInfoForMatchList() -> [String: Set<String> ] {
+        let matchesInfoForMatch = matchesInfoForMatch
+        return matchesInfoForMatch
+    }
+
+    func matchesInfoList() -> [String: EveryMatrix.MatchInfo] {
+        let matchesInfo = matchesInfo
+        return matchesInfo
+    }
 }

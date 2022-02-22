@@ -255,7 +255,7 @@
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4rF-OG-Pdw">
                                     <rect key="frame" x="0.0" y="0.0" width="182" height="52"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_sports_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Iba-we-Ish">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="tabbar_home_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Iba-we-Ish">
                                             <rect key="frame" x="81" y="9" width="20" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Iba-we-Ish" secondAttribute="height" id="GEk-3a-JGs"/>
@@ -378,8 +378,12 @@
         <image name="logo_horizontal_medium" width="400" height="44"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <image name="search_bar_icon" width="24" height="24"/>
+        <image name="tabbar_home_icon" width="25" height="25"/>
         <image name="tabbar_live_icon" width="25" height="23"/>
         <image name="tabbar_sports_icon" width="28" height="23"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemBlueColor">
             <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

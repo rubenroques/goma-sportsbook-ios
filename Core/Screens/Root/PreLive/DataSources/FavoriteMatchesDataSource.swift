@@ -49,11 +49,13 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                     if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
                         cell.matchStatsViewModel = matchStatsViewModel
                     }
-                    if Env.everyMatrixStorage.matchesInfoForMatchPublisher.value.contains(match.id) {
-                        cell.setupWithMatch(match, liveMatch: true)
+                    let store = Env.everyMatrixStorage as AggregatorStore
+
+                    if store.hasMatchesInfoForMatch(withId: match.id) {
+                        cell.setupWithMatch(match, liveMatch: true, store: store)
                     }
                     else {
-                        cell.setupWithMatch(match)
+                        cell.setupWithMatch(match, store: store)
                     }
 
                     cell.setupFavoriteMatchInfoPublisher(match: match)
