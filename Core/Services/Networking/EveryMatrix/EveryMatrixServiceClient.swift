@@ -219,8 +219,6 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-
-
     func getDisciplines(language: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
         return self.manager.getModel(router: .disciplines(language: language) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .eraseToAnyPublisher()
@@ -257,6 +255,11 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+    func getLimits() -> AnyPublisher<EveryMatrix.LimitsResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getLimits, decodingType: EveryMatrix.LimitsResponse.self)
+            .eraseToAnyPublisher()
+    }
+
     func subscribeOdds(language: String, matchId: String) -> AnyPublisher<EveryMatrixSocketResponse<Odd>, EveryMatrix.APIError> {
         do {
 
@@ -286,6 +289,11 @@ class EveryMatrixServiceClient: ObservableObject {
 
     func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrix.APIError> {
         return self.manager.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
+    }
+
+    func setLimit(limitType: String, period: String, amount: String, currency: String) -> AnyPublisher<EveryMatrix.LimitSetResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .setLimit(type: limitType, period: period, amount: amount, currency: currency), decodingType: EveryMatrix.LimitSetResponse.self)
+            .eraseToAnyPublisher()
     }
 
 }

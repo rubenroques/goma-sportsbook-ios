@@ -536,7 +536,7 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         self.isActive = false
 
         if isCurrency {
-            textField.text = textField.text?.currencyFormatting()
+            textField.text = textField.text?.currencyTypeFormatting()
         }
 
         if self.textField.text != "" {

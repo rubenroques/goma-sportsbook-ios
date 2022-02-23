@@ -646,10 +646,10 @@ enum TSRouter {
             return ["bonusID": bID]
 
         // swiftlint:disable identifier_name
-        case .setLimit(type: _, period: let p, amount: let a, currency: let c):
-            return ["period": p,
-                    "amount": a,
-                    "currency": c]
+        case .setLimit(type: _, let period, let amount, let currency):
+            return ["period": period,
+                    "amount": amount,
+                    "currency": currency]
 
         case .realityCheckSet(value: let val):
             return ["value": val]

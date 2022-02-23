@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ProfileLimitsManagementViewController: UIViewController {
 
@@ -34,7 +35,12 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var exclusionLabel: UILabel!
     @IBOutlet private var exclusionSelectTextFieldView: SelectTextFieldView!
 
+    var viewModel: ProfileLimitsManagementViewModel
+    private var cancellables: Set<AnyCancellable> = []
+
     init() {
+        self.viewModel = ProfileLimitsManagementViewModel()
+
         super.init(nibName: "ProfileLimitsManagementViewController", bundle: nil)
     }
 
@@ -165,6 +171,57 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
+
+        self.setupPublishers()
+    }
+
+    private func setupPublishers() {
+
+        self.viewModel.limitsLoadedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { loaded in
+                if loaded {
+                    self.setupLimitsInfo()
+                }
+            })
+            .store(in: &cancellables)
+
+    }
+
+    private func setupLimitsInfo() {
+
+        if let depositLimit = self.viewModel.depositLimit {
+            if let limitAmount = depositLimit.current?.amount {
+                let amountString = "\(limitAmount)"
+                self.depositHeaderTextFieldView.setText(amountString.currencyTypeFormatting())
+            }
+
+            if let limitPeriod = depositLimit.current?.period {
+                self.depositFrequencySelectTextFieldView.setDefaultPickerOption(option: limitPeriod)
+            }
+        }
+
+        if let wageringLimit = self.viewModel.wageringLimit {
+            if let wageringAmount = wageringLimit.current?.amount {
+                let amountString = "\(wageringAmount)"
+                self.bettingHeaderTextFieldView.setText(amountString)
+            }
+
+            if let wageringPeriod = wageringLimit.current?.period {
+                self.bettingFrequencySelectTextFieldView.setDefaultPickerOption(option: wageringPeriod)
+            }
+        }
+
+        if let lossLimit = self.viewModel.lossLimit {
+            if let lossAmount = lossLimit.current?.amount {
+                let amountString = "\(lossAmount)"
+                self.lossHeaderTextFieldView.setText(amountString)
+            }
+
+            if let lossPeriod = lossLimit.current?.period {
+                self.lossFrequencySelectHeaderTextFieldView.setDefaultPickerOption(option: lossPeriod)
+            }
+        }
     }
 
     // TESTING
@@ -191,6 +248,35 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
     }
 
+    private func saveLimitsOptions() {
+        let acceptedInputs = Set("0123456789.,")
+        if depositHeaderTextFieldView.text != "" {
+            let period = self.depositFrequencySelectTextFieldView.getPickerOption()
+            let amountString = self.depositHeaderTextFieldView.text
+            let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+
+            let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+            Env.everyMatrixClient.setLimit(limitType: "Deposit", period: period, amount: amount, currency: currency)
+                .receive(on: DispatchQueue.main)
+                .sink(receiveCompletion: { completion in
+                    switch completion {
+                    case .failure(let error):
+                        print("LIMITS SET ERROR: \(error)")
+                        self.showAlert(type: .error)
+                    case .finished:
+                        print("LIMITS SET FINISHED")
+                        self.showAlert(type: .success)
+                    }
+                }, receiveValue: { _ in
+                    print("LIMITS SET!")
+                })
+                .store(in: &cancellables)
+
+        }
+
+    }
+
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
@@ -205,12 +291,8 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     @IBAction private func editAction() {
         // TEST
-        if depositHeaderTextFieldView.text != "" {
-            self.showAlert(type: .success)
-        }
-        else {
-            self.showAlert(type: .error)
-        }
+        self.saveLimitsOptions()
+
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {

@@ -74,7 +74,7 @@ class SelectTextFieldView: NibView {
         containerView.addGestureRecognizer(viewTapGesture)
     }
 
-    @objc func didTapView(){
+    @objc func didTapView() {
         textField.becomeFirstResponder()
     }
     
@@ -114,6 +114,23 @@ class SelectTextFieldView: NibView {
         textField.text = selectionArray[0]
 
         dismissPickerView()
+    }
+
+    func setDefaultPickerOption(option: String) {
+
+        for (key, selection) in selectionArray.enumerated() {
+            if option == selection {
+                pickerView.selectRow(key, inComponent: 0, animated: true)
+                textField.text = option
+            }
+        }
+    }
+
+    func getPickerOption() -> String {
+        if let pickerOption = self.textField.text {
+            return pickerOption
+        }
+        return ""
     }
 
     func dismissPickerView() {

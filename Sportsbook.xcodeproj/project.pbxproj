@@ -657,6 +657,10 @@
 		45F8B154274BC3B60087652B /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 45F8B153274BC3B60087652B /* FirebaseMessaging */; };
 		45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
 		45F8B158274BFF710087652B /* SystemBetResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F8B156274BFF710087652B /* SystemBetResponse.swift */; };
+		A90BC91327C54D6000667616 /* LimitsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91227C54D6000667616 /* LimitsResponse.swift */; };
+		A90BC91427C54D6000667616 /* LimitsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91227C54D6000667616 /* LimitsResponse.swift */; };
+		A90BC91627C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */; };
+		A90BC91727C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */; };
 		A90D8AF5277200C400DF88EB /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */; };
 		A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */; };
 		A90D8AF7277200C400DF88EB /* WithdrawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */; };
@@ -1332,6 +1336,8 @@
 		45EF5435270C603D00D1E13E /* MatchFiltersViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MatchFiltersViewController.xib; sourceTree = "<group>"; };
 		45EF543A270C664100D1E13E /* CollapsibleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleView.swift; sourceTree = "<group>"; };
 		45F8B156274BFF710087652B /* SystemBetResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemBetResponse.swift; sourceTree = "<group>"; };
+		A90BC91227C54D6000667616 /* LimitsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsResponse.swift; sourceTree = "<group>"; };
+		A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewModel.swift; sourceTree = "<group>"; };
 		A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewController.swift; sourceTree = "<group>"; };
 		A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawViewController.xib; sourceTree = "<group>"; };
 		A90D8AF9277223DC00DF88EB /* WithdrawWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawWebViewController.swift; sourceTree = "<group>"; };
@@ -2739,6 +2745,14 @@
 			path = Filters;
 			sourceTree = "<group>";
 		};
+		A90BC91127C54D4F00667616 /* Limits */ = {
+			isa = PBXGroup;
+			children = (
+				A90BC91227C54D6000667616 /* LimitsResponse.swift */,
+			);
+			path = Limits;
+			sourceTree = "<group>";
+		};
 		A90D8AF2277200A300DF88EB /* Withdraw */ = {
 			isa = PBXGroup;
 			children = (
@@ -2926,6 +2940,7 @@
 			children = (
 				A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */,
 				A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */,
+				A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */,
 			);
 			path = LimitsManagement;
 			sourceTree = "<group>";
@@ -3028,6 +3043,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				A90BC91127C54D4F00667616 /* Limits */,
 				A995C19C279AD50100151462 /* Search */,
 				A90D8AFF277228A300DF88EB /* Withdraws */,
 				A987579F276CDB860099990D /* Deposits */,
@@ -3878,6 +3894,7 @@
 				F48CB9A027628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */,
 				454E0ACC2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
+				A90BC91327C54D6000667616 /* LimitsResponse.swift in Sources */,
 				458F4C962712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A626DE831400269B05 /* RequestLocationAccessViewController.swift in Sources */,
@@ -4064,6 +4081,7 @@
 				454F0A8027C4E95A003123DF /* OutrightMarketDetailsViewModel.swift in Sources */,
 				45B0BD34271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9BCF45627554E88006DD528 /* CashoutSubmission.swift in Sources */,
+				A90BC91627C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -4240,6 +4258,7 @@
 				F48CB9A127628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */,
 				454E0ACD2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
+				A90BC91427C54D6000667616 /* LimitsResponse.swift in Sources */,
 				458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A926DE86BE00269B05 /* RequestLocationAccessViewController.swift in Sources */,
@@ -4426,6 +4445,7 @@
 				454F0A8127C4E95A003123DF /* OutrightMarketDetailsViewModel.swift in Sources */,
 				45B0BD35271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9BCF45727554E88006DD528 /* CashoutSubmission.swift in Sources */,
+				A90BC91727C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
