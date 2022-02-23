@@ -289,7 +289,8 @@ class EveryMatrixServiceClient: ObservableObject {
     }
     
     func getTransactionsHistory(type: String, startTime: String, endTime: String, pageIndex: Int, pageSize: Int) -> AnyPublisher<EveryMatrix.TransactionsHistoryResponse, EveryMatrix.APIError> {
-        return self.manager.getModel(router: .getTransactionHistory(type: type, startTime: startTime, endTime: endTime, pageIndex: pageIndex, pageSize: pageSize), decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+        return self.manager.getModel(router: .getTransactionHistory(type: type, startTime: startTime, endTime: endTime, pageIndex: pageIndex, pageSize: pageSize),
+                                     decodingType: EveryMatrix.TransactionsHistoryResponse.self)
             .eraseToAnyPublisher()
     }
 

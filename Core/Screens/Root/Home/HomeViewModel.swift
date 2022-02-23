@@ -12,15 +12,16 @@ import OrderedCollections
 class HomeViewModel {
 
     /*
-     case userMessage
-     case bannerLine
-     case userFavorites
-     case sport(Sport at index 0 - Football )
-     case suggestedBets
-     case sport(Sport at index 1)
-     case sport(Sport at index 2)
+    userMessage
+    bannerLine
+    userFavorites
+    sport(Sport at index 0 - Football )
+    suggestedBets
+    sport(Sport at index 1)
+    sport(Sport at index 2)
      ....
      */
+
     enum Content {
         case userMessage
         case userFavorites
@@ -108,7 +109,9 @@ class HomeViewModel {
     private var sportsToFetch: [Sport] = []
     private var sportsLineViewModelsCache: [String: SportMatchLineViewModel] = [:]
     private var sportGroupViewModelCache: [String: SportGroupViewModel] = [:]
-    
+
+    private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
+
     //
     // EM Registers
     private var bannersInfoRegister: EndpointPublisherIdentifiable?
@@ -387,6 +390,18 @@ extension HomeViewModel {
         }
     }
 
+    func shouldShowFooter(forSection section: Int) -> Bool {
+        switch section {
+        case 0: return false
+        case 1: return false
+        case 2: return self.favoriteMatches.isNotEmpty
+        // case 3 is the first sport from the sports list
+        case 4: return false
+        default:
+            return false
+        }
+    }
+
     func contentType(forSection section: Int) -> HomeViewModel.Content? {
         switch section {
         case 0: return HomeViewModel.Content.userMessage
@@ -451,6 +466,18 @@ extension HomeViewModel {
         else {
             self.cachedSuggestedBetLineViewModel = SuggestedBetLineViewModel(suggestedBetCardSummaries: self.suggestedBets)
             return self.cachedSuggestedBetLineViewModel
+        }
+    }
+
+
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+        if let viewModel = cachedMatchStatsViewModels[match.id] {
+            return viewModel
+        }
+        else {
+            let viewModel = MatchStatsViewModel(match: match)
+            cachedMatchStatsViewModels[match.id] = viewModel
+            return viewModel
         }
     }
     
