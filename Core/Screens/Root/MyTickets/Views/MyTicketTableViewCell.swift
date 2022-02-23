@@ -145,9 +145,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.cashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+       /* self.titleLabel.textColor = UIColor.App.textPrimary
         self.subtitleLabel.textColor = UIColor.App.textSecondary
-        /*self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
         self.totalOddSubtitleLabel.textColor = UIColor.App.textPrimary
         self.betAmountTitleLabel.textColor = UIColor.App.textPrimary
         self.betAmountSubtitleLabel.textColor = UIColor.App.textPrimary
