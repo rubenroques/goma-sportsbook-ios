@@ -279,7 +279,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
-                let suggestedBetLineViewModel = self.viewModel.suggestedBetLineViewModel()
+                let suggestedBetLineViewModel = self.viewModel.getSuggestedBetLineViewModel()
             else {
                 fatalError()
             }
@@ -528,7 +528,7 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .userFavorites:
                 ()
             case .suggestedBets:
-                _ = self.viewModel.suggestedBetLineViewModel()
+                _ = self.viewModel.getSuggestedBetLineViewModel()
             case .sport:
                 _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
             }

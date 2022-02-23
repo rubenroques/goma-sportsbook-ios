@@ -103,7 +103,9 @@ class MyTicketBetLineView: NibView {
         self.oddTitleLabel.text = localized("odd")
 
         if let oddValue = self.betHistoryEntrySelection.priceValue {
-            self.oddValueLabel.text = String(format: "%.2f", Double(floor(oddValue * 100)/100))
+            // self.oddValueLabel.text = String(format: "%.2f", Double(floor(oddValue * 100)/100))
+            let newOddValue = Double(floor(oddValue * 100)/100)
+            self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         }
 
         self.dateLabel.text = ""
@@ -157,7 +159,7 @@ class MyTicketBetLineView: NibView {
         self.oddValueLabel.textColor = UIColor.App.textPrimary
         self.dateLabel.textColor = UIColor.App.textPrimary
 
-        self.indicatorLabel.textColor = UIColor.App.textPrimary
+        self.indicatorLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.bottomBaseView.backgroundColor = .clear
         

@@ -40,7 +40,8 @@ class Router {
     }
 
     func makeKeyAndVisible() {
-        // self.rootWindow.overrideUserInterfaceStyle = Theme.dark.userInterfaceStyle // UserDefaults.standard.theme.userInterfaceStyle
+        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })

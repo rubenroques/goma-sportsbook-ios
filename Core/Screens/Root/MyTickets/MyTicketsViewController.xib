@@ -42,8 +42,8 @@
                         <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="ONa-9d-I7u">
                             <rect key="frame" x="98" y="9.5" width="227" height="32"/>
                             <segments>
-                                <segment title="Resolved"/>
                                 <segment title="Open"/>
+                                <segment title="Resolved"/>
                                 <segment title="Won"/>
                             </segments>
                             <connections>

@@ -259,7 +259,9 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
-        self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
+        //self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
+        let newOddValue = Double(floor(bettingTicket.value * 100)/100)
+        self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         self.marketNameLabel.text = bettingTicket.marketDescription
         self.matchDetailLabel.text = bettingTicket.matchDescription
 
@@ -289,7 +291,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 }
                 
                 self?.currentOddValue = newOddValue
-                self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                //self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
             })
         
         if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),

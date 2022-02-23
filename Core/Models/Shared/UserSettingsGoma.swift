@@ -18,6 +18,7 @@ struct UserSettingsGomaResponse: Codable {
 struct UserSettingsGoma: Codable {
 
     var oddValidationType: String
+    var notifications: Int
     var notificationGamesWatchlist: Int
     var notificationsCompetitionsWatchlist: Int
     var notificationGoal: Int
@@ -27,9 +28,13 @@ struct UserSettingsGoma: Codable {
     var notificationsSecondhalf: Int
     var notificationsRedcard: Int
     var notificationsBets: Int
+    var notificationBetSelections: Int
+    var notificationEmail: Int
+    var notificationSms: Int
 
     enum CodingKeys: String, CodingKey {
         case oddValidationType = "odd_validation_type"
+        case notifications = "notifications"
         case notificationGamesWatchlist = "notifications_games_watchlist"
         case notificationsCompetitionsWatchlist = "notifications_competitions_watchlist"
         case notificationGoal = "notifications_goal"
@@ -39,5 +44,9 @@ struct UserSettingsGoma: Codable {
         case notificationsSecondhalf = "notifications_secondhalf"
         case notificationsRedcard = "notifications_redcard"
         case notificationsBets = "notifications_bets"
+        case notificationBetSelections = "notification_bet_selections"
+        case notificationEmail = "notification_email"
+        case notificationSms = "notification_sms"
     }
+    
 }

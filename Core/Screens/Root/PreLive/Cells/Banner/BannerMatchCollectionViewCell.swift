@@ -318,7 +318,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 //                            }
 //                        }
 //                        weakSelf.currentHomeOddValue = newOddValue
-                        weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
 
             }
@@ -351,7 +352,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 //                            }
 //                        }
 //                        weakSelf.currentDrawOddValue = newOddValue
-                        weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
             }
             if let outcome = market.outcomes[safe: 2] {
@@ -384,7 +386,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 //                        }
 //
 //                        weakSelf.currentAwayOddValue = newOddValue
-                        weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        //weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+                        weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
 
             }
