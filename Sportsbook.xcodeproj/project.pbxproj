@@ -982,6 +982,14 @@
 		A9E7C6AD27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */; };
 		A9E7C6B027BD63EE00F784C9 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */; };
 		A9E7C6B127BD63EE00F784C9 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */; };
+		F410E62927BC4FAB005C1964 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
+		F410E62A27BC4FAC005C1964 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
+		F410E62C27BD183A005C1964 /* BettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62B27BD183A005C1964 /* BettingsTableViewCell.swift */; };
+		F410E62D27BD183A005C1964 /* BettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62B27BD183A005C1964 /* BettingsTableViewCell.swift */; };
+		F476CD0D27C553F20042B7ED /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B627BBD578006E04CB /* HistoryViewModel.swift */; };
+		F476CD0E27C553F30042B7ED /* HistoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B627BBD578006E04CB /* HistoryViewModel.swift */; };
+		F476CD0F27C553F50042B7ED /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B727BBD578006E04CB /* HistoryViewController.swift */; };
+		F476CD1027C553F60042B7ED /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F48D33B727BBD578006E04CB /* HistoryViewController.swift */; };
 		F47BB79F27B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
 		F47BB7A027B2D0EF003FA2BC /* DropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */; };
 		F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47BF2622763953900648440 /* GameSuggestedView.swift */; };
@@ -1014,6 +1022,10 @@
 		F4E3B7612742BFB100855C58 /* AvailableHapticFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */; };
 		F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7622742BFE300855C58 /* SweeterSwift */; };
 		F4E3B7652742BFEB00855C58 /* AvailableHapticFeedback in Frameworks */ = {isa = PBXBuildFile; productRef = F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */; };
+		F4F8C9EF27BEBAF90082CC08 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */; };
+		F4F8C9F027BEBAFE0082CC08 /* TransactionHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */; };
+		F4F8C9F227C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */; };
+		F4F8C9F327C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1520,11 +1532,15 @@
 		A9E7C6A727BBC41800F784C9 /* AggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorRepository.swift; sourceTree = "<group>"; };
 		A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsViewController.swift; sourceTree = "<group>"; };
 		A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
+		F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
+		F410E62B27BD183A005C1964 /* BettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingsTableViewCell.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
 		F47BF2622763953900648440 /* GameSuggestedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSuggestedView.swift; sourceTree = "<group>"; };
 		F47BF2652763986300648440 /* GameSuggestedView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GameSuggestedView.xib; sourceTree = "<group>"; };
 		F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetSuggestedCollectionViewCell.swift; sourceTree = "<group>"; };
 		F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = BetSuggestedCollectionViewCell.xib; sourceTree = "<group>"; };
+		F48D33B627BBD578006E04CB /* HistoryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewModel.swift; sourceTree = "<group>"; };
+		F48D33B727BBD578006E04CB /* HistoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
 		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
 		F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCardTableViewCell.swift; sourceTree = "<group>"; };
 		F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCardTableViewCell.xib; sourceTree = "<group>"; };
@@ -1534,6 +1550,8 @@
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
 		F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSliderExtensions.swift; sourceTree = "<group>"; };
 		F4E3B74C2742B47100855C58 /* MainMarketType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainMarketType.swift; sourceTree = "<group>"; };
+		F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionHistory.swift; sourceTree = "<group>"; };
+		F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterHistoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3112,6 +3130,7 @@
 		A9B840C126E1270E00269B05 /* EveryMatrixAPI */ = {
 			isa = PBXGroup;
 			children = (
+				F4F8C9E227BEB6890082CC08 /* Transactions */,
 				A995C19C279AD50100151462 /* Search */,
 				A90D8AFF277228A300DF88EB /* Withdraws */,
 				A987579F276CDB860099990D /* Deposits */,
@@ -3273,6 +3292,7 @@
 		A9C82FB226F3AB3400059DCD /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				F48D33B527BBD55E006E04CB /* History */,
 				A96279F02743D36A0001E1D5 /* EmailVerification */,
 				455C961F26FDD66300456F30 /* ProfileViewController.swift */,
 				455C962026FDD66300456F30 /* ProfileViewController.xib */,
@@ -3376,6 +3396,26 @@
 			path = SettingsViews;
 			sourceTree = "<group>";
 		};
+		F410E62727BC4F78005C1964 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */,
+				F410E62B27BD183A005C1964 /* BettingsTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		F48D33B527BBD55E006E04CB /* History */ = {
+			isa = PBXGroup;
+			children = (
+				F410E62727BC4F78005C1964 /* Cells */,
+				F48D33B727BBD578006E04CB /* HistoryViewController.swift */,
+				F48D33B627BBD578006E04CB /* HistoryViewModel.swift */,
+				F4F8C9F127C0126D0082CC08 /* FilterHistoryViewController.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
 		F498349F27AC513A0091BEA1 /* DropDownSelectionView */ = {
 			isa = PBXGroup;
 			children = (
@@ -3393,6 +3433,14 @@
 				F4CE68402742CD8A003413AE /* MultiSliderExtensions.swift */,
 			);
 			path = MultiSlider;
+			sourceTree = "<group>";
+		};
+		F4F8C9E227BEB6890082CC08 /* Transactions */ = {
+			isa = PBXGroup;
+			children = (
+				F4F8C9EE27BEBAF90082CC08 /* TransactionHistory.swift */,
+			);
+			path = Transactions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3934,6 +3982,7 @@
 				A995C19E279AD52300151462 /* SearchV2Response.swift in Sources */,
 				F4CE68452742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				A9BCF45027552851006DD528 /* Cashout.swift in Sources */,
+				F476CD0D27C553F20042B7ED /* HistoryViewModel.swift in Sources */,
 				A98F3A562795C20F0029C3DB /* SuggestedBetViewModel.swift in Sources */,
 				45166CE126F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -3949,6 +3998,7 @@
 				45D712F827033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */,
+				F476CD0F27C553F50042B7ED /* HistoryViewController.swift in Sources */,
 				457816B52707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
 				454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */,
 				45E5190C270C8B570052794F /* Color+Extensions.swift in Sources */,
@@ -3960,6 +4010,7 @@
 				4515636B26BE949300690896 /* UserSettings.swift in Sources */,
 				4589F40326BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				4589F42926C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
+				F410E62927BC4FAB005C1964 /* TransactionsTableViewCell.swift in Sources */,
 				45B7DAE226F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
 				A99622A32788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */,
 				455A0CE626BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
@@ -3971,6 +4022,7 @@
 				45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */,
 				455A0CEC26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				453079382750EDBF00278B7C /* MatchDetailsViewModel.swift in Sources */,
+				F4F8C9F227C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */,
 				45109A662799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */,
 				454E0AD42735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
@@ -4020,7 +4072,6 @@
 				457EDAC82792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				457EDABB2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				A90BC90227C3A8EF00667616 /* NotificationsViewModel.swift in Sources */,
-				A9E7C69F27B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABA26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				A9E7C6AC27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */,
 				F47BF2632763953900648440 /* GameSuggestedView.swift in Sources */,
@@ -4113,11 +4164,13 @@
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
+				F410E62C27BD183A005C1964 /* BettingsTableViewCell.swift in Sources */,
 				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E38275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				A98E6C5C27B2C33900453CF9 /* BetslipSelection.swift in Sources */,
 				455A0CF426BD9D9000EC572D /* UIView+Extensions.swift in Sources */,
 				45166D0D26F3548D00E69D65 /* WelcomeSSWampMessage.swift in Sources */,
+				F4F8C9EF27BEBAF90082CC08 /* TransactionHistory.swift in Sources */,
 				455A0CB626BD9B6000EC572D /* EnvironmentType.swift in Sources */,
 				455C960C26FCDDE700456F30 /* CountrySelectorTableViewCell.swift in Sources */,
 				45D3DE4027149BE800717124 /* BannerTopCollectionViewCell.swift in Sources */,
@@ -4311,6 +4364,7 @@
 				A995C19F279AD52300151462 /* SearchV2Response.swift in Sources */,
 				F4CE68462742CD8A003413AE /* MultiSlider+Internal.swift in Sources */,
 				A9BCF45127552851006DD528 /* Cashout.swift in Sources */,
+				F476CD0E27C553F30042B7ED /* HistoryViewModel.swift in Sources */,
 				A98F3A572795C20F0029C3DB /* SuggestedBetViewModel.swift in Sources */,
 				45166CE226F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
@@ -4326,6 +4380,7 @@
 				45D712F927033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
 				A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */,
+				F476CD1027C553F60042B7ED /* HistoryViewController.swift in Sources */,
 				457816B62707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
 				454E0A922732A78B00794E0C /* BetslipManager.swift in Sources */,
 				45E5190D270C8B570052794F /* Color+Extensions.swift in Sources */,
@@ -4337,6 +4392,7 @@
 				4515636C26BE949300690896 /* UserSettings.swift in Sources */,
 				4589F40426BF017A005DF543 /* RecoverPasswordViewController.swift in Sources */,
 				4589F42A26C02EAA005DF543 /* StaticTableViewController.swift in Sources */,
+				F410E62A27BC4FAC005C1964 /* TransactionsTableViewCell.swift in Sources */,
 				45B7DAE326F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
 				A99622A42788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */,
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
@@ -4348,6 +4404,7 @@
 				45F8B158274BFF710087652B /* SystemBetResponse.swift in Sources */,
 				455A0CED26BD9D9000EC572D /* Array+Extensions.swift in Sources */,
 				453079392750EDBF00278B7C /* MatchDetailsViewModel.swift in Sources */,
+				F4F8C9F327C0126D0082CC08 /* FilterHistoryViewController.swift in Sources */,
 				45109A672799C83700E4AC2E /* MatchStatsViewModel.swift in Sources */,
 				454E0AD52735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
@@ -4397,7 +4454,6 @@
 				457EDAC92792002300DDCD83 /* MatchFieldWebViewController.swift in Sources */,
 				457EDABC2791ADEE00DDCD83 /* Sport.swift in Sources */,
 				A90BC90327C3A8EF00667616 /* NotificationsViewModel.swift in Sources */,
-				A9E7C6A027B6AF7600F784C9 /* FavoritesAggregator.swift in Sources */,
 				45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */,
 				A9E7C6AD27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */,
 				F47BF2642763953900648440 /* GameSuggestedView.swift in Sources */,
@@ -4470,6 +4526,7 @@
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				45A16E152707B6C100A95C01 /* ListTypeCollectionViewCell.swift in Sources */,
 				45ACEEB12721B54E00D0A45F /* BannerCellViewModel.swift in Sources */,
+				F4F8C9F027BEBAFE0082CC08 /* TransactionHistory.swift in Sources */,
 				A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
@@ -4490,6 +4547,7 @@
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
+				F410E62D27BD183A005C1964 /* BettingsTableViewCell.swift in Sources */,
 				A92F5DA7272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E39275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				A98E6C5D27B2C33900453CF9 /* BetslipSelection.swift in Sources */,

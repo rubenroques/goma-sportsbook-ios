@@ -722,7 +722,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             errorView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             errorView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
         ])
-
+        
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
             errorView.alpha = 1.0
             UIView.animate(withDuration: 0.2, delay: 5.0, options: .curveEaseOut, animations: {
