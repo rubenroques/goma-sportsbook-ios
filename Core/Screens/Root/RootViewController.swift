@@ -374,9 +374,9 @@ class RootViewController: UIViewController {
     }
 
     @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        print("TAP")
         let favoritesVC = MyFavoritesViewController()
-        self.present(favoritesVC, animated: true, completion: nil)
+        // self.present(favoritesVC, animated: true, completion: nil)
+        self.navigationController?.pushViewController(favoritesVC, animated: true)
     }
 
     //
