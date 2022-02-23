@@ -5,9 +5,10 @@
 //  Created by Teresa on 14/02/2022.
 //
 
-import Foundation
-import Combine
 import UIKit
+import Combine
+import OrderedCollections
+import SwiftUI
 
 class HistoryViewController: UIViewController{
 
@@ -41,12 +42,27 @@ class HistoryViewController: UIViewController{
     private let viewModel: HistoryViewModel
     private var filterSelectedOption: Int = 0
     
-  
+    lazy var gradient: CAGradientLayer = {
+        let gradient = CAGradientLayer()
+        gradient.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
+        gradient.locations =  [0, 0.45, 1]
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
+        gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
+        return gradient
+        
+        
+    }()
+   /* rightGradientMaskLayer.frame = rightGradientBaseView.bounds
+    rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
+    rightGradientMaskLayer.locations = [0, 0.45, 1]
+    rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
+    rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
+    rightGradientBaseView.layer.mask = rightGradientMaskLayer*/
     
     // MARK: - Lifetime and Cycle
     init(viewModel: HistoryViewModel = HistoryViewModel()) {
         self.viewModel = viewModel
-        //self.viewModel.reloadTableView()
+        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -106,28 +122,16 @@ class HistoryViewController: UIViewController{
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
         self.bind(toViewModel: viewModel)
-        let color = UIColor.App.backgroundPrimary
         
-        self.leftGradientBaseView.backgroundColor = UIColor.systemPink
-        let leftGradientMaskLayer = CAGradientLayer()
-        leftGradientMaskLayer.frame = self.leftGradientBaseView.bounds
-        leftGradientMaskLayer.colors = [UIColor.white.cgColor, UIColor.white.cgColor, UIColor.clear.cgColor]
-        leftGradientMaskLayer.locations = [0, 0.55, 1]
-        leftGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-        leftGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        self.leftGradientBaseView.layer.mask = leftGradientMaskLayer
-        self.leftGradientBaseView.isHidden = false
-
-        //
-        self.rightGradientBaseView.backgroundColor = color
+        //rightGradientBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        rightGradientBaseView.backgroundColor = color
         let rightGradientMaskLayer = CAGradientLayer()
-        rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
+        rightGradientMaskLayer.frame = rightGradientBaseView.bounds
         rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
         rightGradientMaskLayer.locations = [0, 0.45, 1]
         rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
-        self.emptyStateButton.layer.cornerRadius = CornerRadius.button
+        rightGradientBaseView.layer.mask = rightGradientMaskLayer
     }
 
     // MARK: - Layout and Theme
@@ -145,8 +149,8 @@ class HistoryViewController: UIViewController{
 
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        self.leftGradientBaseView.backgroundColor = UIColor.systemPink
-        self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
+       
+       
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
@@ -608,21 +612,14 @@ extension HistoryViewController {
         self.view.addSubview(self.optionSegmentControlBaseView)
         
         self.topSliderView.addSubview(self.topSliderCollectionView)
-        self.topSliderView.addSubview(self.filterBaseView)
         self.topSliderView.addSubview(self.rightGradientBaseView)
-        self.topSliderView.addSubview(self.leftGradientBaseView)
+        self.topSliderView.addSubview(self.filterBaseView)
+        
         
         self.filterBaseView.addSubview(self.filtersButtonImage)
-        
-        
-        
+    
         self.view.addSubview(self.topSliderView)
-
         self.view.addSubview(self.tableView)
-        
-        
-       // self.loadingBaseView.addSubview(self.loadingActivityIndicatorView.view)
-
         self.view.addSubview(self.loadingBaseView.view)
         
         self.emptyStateBaseView.addSubview(self.emptyStateImageView)
@@ -631,7 +628,6 @@ extension HistoryViewController {
         self.emptyStateBaseView.addSubview(self.emptyStateButton)
         self.view.addSubview(self.emptyStateBaseView)
 
-        // Initialize constraints
         self.initConstraints()
     }
 
@@ -692,17 +688,22 @@ extension HistoryViewController {
             self.filtersButtonImage.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -4),
             self.filtersButtonImage.centerYAnchor.constraint(equalTo: self.filterBaseView.centerYAnchor),
             //self.filtersButtonImage.centerXAnchor.constraint(equalTo: self.filterBaseView.centerXAnchor),
-            self.leftGradientBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
+            /*self.leftGradientBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
             self.leftGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.topAnchor),
             self.leftGradientBaseView.bottomAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
             self.leftGradientBaseView.widthAnchor.constraint(equalToConstant: 40),
+          
             
-            
+            self.rightGradientBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
+            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
+            self.rightGradientBaseView.widthAnchor.constraint(equalToConstant: 50),
+             */
+            self.rightGradientBaseView.widthAnchor.constraint(equalToConstant: 50),
+            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderCollectionView.topAnchor),
+            self.rightGradientBaseView.bottomAnchor.constraint(equalTo: self.topSliderCollectionView.bottomAnchor),
             self.rightGradientBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
-            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.rightGradientBaseView.leadingAnchor.constraint(equalTo: self.filtersButtonImage.leadingAnchor),
-            
+            self.rightGradientBaseView.centerYAnchor.constraint(equalTo: self.topSliderCollectionView.centerYAnchor),
         ])
         
         
