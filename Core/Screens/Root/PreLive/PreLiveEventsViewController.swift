@@ -615,11 +615,8 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.4
             self.openedCompetitionsFiltersConstraint.constant = 0
             self.tableView.contentInset.bottom = 16
-            // competitionsFiltersView.openedBarHeaderViewSize()
             self.competitionsFiltersView.state = .opened
-
             self.betslipButtonViewBottomConstraint?.constant = -self.tableView.contentInset.bottom
-
             self.view.layoutIfNeeded()
         }, completion: nil)
 
@@ -631,11 +628,8 @@ class PreLiveEventsViewController: UIViewController {
             self.competitionsFiltersDarkBackgroundView.alpha = 0.0
             self.openedCompetitionsFiltersConstraint.constant = -(self.competitionsFiltersView.frame.size.height - 52)
             self.tableView.contentInset.bottom = 54+16
-            // competitionsFiltersView.closedBarHeaderViewSize()
             self.competitionsFiltersView.state = .bar
-
             self.betslipButtonViewBottomConstraint?.constant = -60
-
             self.view.layoutIfNeeded()
         }, completion: nil)
     }

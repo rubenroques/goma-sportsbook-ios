@@ -27,11 +27,8 @@ class HomeStore {
     private var mainMarketsOrder: OrderedSet<String> = []
 
     private var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
-//    private var tournamentsForLocation: [String: [String] ] = [:]
-//    private var tournamentsForCategory: [String: [String] ] = [:]
 
     private var tournaments: [String: EveryMatrix.Tournament] = [:]
-//    private var popularTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
 
     private var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     private var matchesInfoForMatch: [String: Set<String> ] = [:]

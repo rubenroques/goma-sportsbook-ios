@@ -20,9 +20,6 @@ class HomeViewController: UIViewController {
 
     // MARK: - Private Properties
     // Sub Views
-//    private lazy var topSliderBaseView: UIView = Self.createTopSliderBaseView()
-//    private lazy var topSliderSeparatorView: UIView = Self.createTopSliderSeparatorView()
-//    private lazy var topSliderCollectionView: UICollectionView = Self.createTopSliderCollectionView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
@@ -52,14 +49,8 @@ class HomeViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        // Configure post-loading and self-dependent properties
-//        self.topSliderCollectionView.delegate = self
-//        self.topSliderCollectionView.dataSource = self
-
         self.tableView.delegate = self
         self.tableView.dataSource = self
-
-//        self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
         self.tableView.register(SportMatchDoubleLineTableViewCell.self, forCellReuseIdentifier: SportMatchDoubleLineTableViewCell.identifier)
         self.tableView.register(SportMatchSingleLineTableViewCell.self, forCellReuseIdentifier: SportMatchSingleLineTableViewCell.identifier)
@@ -68,7 +59,6 @@ class HomeViewController: UIViewController {
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
-
 
         self.loadingBaseView.isHidden = true
 
@@ -103,57 +93,21 @@ class HomeViewController: UIViewController {
         self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
         self.loadingActivityIndicatorView.tintColor = UIColor.gray
 
-//        self.topSliderBaseView.backgroundColor = UIColor.App.backgroundSecondary
-//        self.topSliderSeparatorView.backgroundColor = UIColor.App.separatorLine
-//
-//        self.topSliderCollectionView.backgroundView?.backgroundColor = .clear
-//        self.topSliderCollectionView.backgroundColor = .clear
-
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
-        
     }
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: HomeViewModel) {
 
         viewModel.refreshPublisher
-            // .debounce(for: .milliseconds(200), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.tableView.reloadData()
-//                self?.topSliderCollectionView.reloadData()
             })
             .store(in: &self.cancellables)
-//
-//        viewModel.scrollToSectionPublisher
-//            .removeDuplicates()
-//            .compactMap({$0})
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] newSection in
-//                self?.tableView.scrollToRow(at: IndexPath(row: 0, section: newSection),
-//                                            at: UITableView.ScrollPosition.top,
-//                                            animated: true)
-//            })
-//            .store(in: &self.cancellables)
-//
-//        viewModel.scrollToShortcutSectionPublisher
-//            .removeDuplicates()
-//            .compactMap({$0})
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] newSection in
-//                self?.shortcutSelectedOption = newSection
-//
-//                self?.topSliderCollectionView.reloadData()
-//                self?.topSliderCollectionView.layoutIfNeeded()
-//
-//                self?.topSliderCollectionView.scrollToItem(at: IndexPath(row: 0, section: newSection),
-//                                                           at: .centeredHorizontally,
-//                                                           animated: true)
-//            })
-//            .store(in: &self.cancellables)
-        
+
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
             .receive(on: DispatchQueue.main)
@@ -170,63 +124,20 @@ class HomeViewController: UIViewController {
 
     }
 
-    func openMatchDetails(match: Match) {
+    private func openMatchDetails(match: Match) {
         let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
-}
 
-//
-// MARK: - CollectionView Protocols
-//
-//extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-//
-//    func numberOfSections(in collectionView: UICollectionView) -> Int {
-//        return self.viewModel.numberOfSections()
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        return self.viewModel.title(forSection: section) != nil ? 1 : 0
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        guard
-//            let cell = collectionView.dequeueCellType(ListTypeCollectionViewCell.self, indexPath: indexPath)
-//        else {
-//            fatalError()
-//        }
-//        let title = self.viewModel.title(forSection: indexPath.section) ?? ""
-//        cell.setupWithTitle(title)
-//
-//        if shortcutSelectedOption == indexPath.section {
-//            cell.setSelectedType(true)
-//        }
-//        else {
-//            cell.setSelectedType(false)
-//        }
-//
-//        return cell
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        collectionView.deselectItem(at: indexPath, animated: true)
-//        self.viewModel.didSelectShortcut(atSection: indexPath.section)
-//
-//        shortcutSelectedOption = indexPath.section
-//
-//        collectionView.reloadData()
-//        collectionView.layoutIfNeeded()
-//
-//        collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView,
-//                        layout collectionViewLayout: UICollectionViewLayout,
-//                        insetForSectionAt section: Int) -> UIEdgeInsets {
-//        return UIEdgeInsets(top: 0, left: 2, bottom: 0, right: 2)
-//    }
-//
-//}
+    @objc private func didTapOpenFavorites() {
+        self.openFavorites()
+    }
+
+    private func openFavorites() {
+        let myFavoritesViewController = MyFavoritesViewController()
+        self.present(Router.navigationController(with: myFavoritesViewController), animated: true, completion: nil)
+    }
+}
 
 //
 // MARK: - TableView Protocols
@@ -261,6 +172,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
             return cell
+
         case .userFavorites:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: MatchLineTableViewCell.identifier) as? MatchLineTableViewCell,
@@ -269,13 +181,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 fatalError()
             }
 
+            cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
             cell.setupWithMatch(match, store: self.viewModel.store)
             cell.setupFavoriteMatchInfoPublisher(match: match)
             cell.tappedMatchLineAction = { [weak self] image in // TODO: Code Review - UIImage ?!
                 self?.openMatchDetails(match: match)
             }
-
             return cell
+
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
@@ -288,6 +201,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 self?.didTapBetslipButtonAction?()
             }
             return cell
+
         case .sport:
             guard
                 let sportGroupViewModel = self.viewModel.sportGroupViewModel(forSection: indexPath.section),
@@ -313,6 +227,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 else {
                     fatalError()
                 }
+
+                cell.matchStatsViewModelForMatch = { [weak self] match in
+                    self?.viewModel.matchStatsViewModel(forMatch: match)
+                }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.openMatchDetails(match: match)
@@ -324,6 +242,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.didSelectSeeAllPopular?(sport)
                 }
                 return cell
+
             case .singleLine:
                 guard
                     let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchSingleLineTableViewCell.identifier)
@@ -331,6 +250,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 else {
                     fatalError()
                 }
+                cell.matchStatsViewModelForMatch = { [weak self] match in
+                    self?.viewModel.matchStatsViewModel(forMatch: match)
+                }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.tappedMatchLineAction = { [weak self] match in
                     self?.openMatchDetails(match: match)
@@ -342,6 +264,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.didSelectSeeAllPopular?(sport)
                 }
                 return cell
+                
             case .competition:
                 guard
                     let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionLineTableViewCell.identifier)
@@ -496,15 +419,57 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
+        guard
+            self.viewModel.shouldShowFooter(forSection: section)
+        else {
+            return UIView()
+        }
+
+        let baseView = UIView()
+        baseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        let seeAllView = UIView()
+        seeAllView.translatesAutoresizingMaskIntoConstraints = false
+        seeAllView.layer.borderColor = UIColor.gray.cgColor
+        seeAllView.layer.borderWidth = 0
+        seeAllView.layer.cornerRadius = 6
+
+        let seeAllLabel = UILabel()
+        seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
+        seeAllLabel.numberOfLines = 1
+        seeAllLabel.text = "Open Favorites"
+        seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
+        seeAllLabel.textAlignment = .center
+
+        seeAllView.addSubview(seeAllLabel)
+        baseView.addSubview(seeAllView)
+
+        NSLayoutConstraint.activate([
+            seeAllLabel.centerYAnchor.constraint(equalTo: seeAllView.centerYAnchor),
+            seeAllLabel.centerXAnchor.constraint(equalTo: seeAllView.centerXAnchor),
+            seeAllLabel.leadingAnchor.constraint(equalTo: seeAllView.leadingAnchor),
+
+            seeAllView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor),
+            seeAllView.centerXAnchor.constraint(equalTo: baseView.centerXAnchor),
+            seeAllView.topAnchor.constraint(equalTo: baseView.topAnchor, constant: 2),
+            seeAllView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 16),
+        ])
+
+        seeAllView.backgroundColor = UIColor.App.backgroundTertiary
+        seeAllLabel.textColor = UIColor.App.textPrimary
+
+        seeAllView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
+
+        return baseView
+
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+        return self.viewModel.shouldShowFooter(forSection: section) ? 40 : CGFloat.leastNormalMagnitude
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
+        return self.viewModel.shouldShowFooter(forSection: section) ? 40 : CGFloat.leastNormalMagnitude
     }
 
 }
@@ -536,17 +501,6 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
     }
 }
 
-//extension HomeViewController: UIScrollViewDelegate {
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        if (scrollView.isDragging || scrollView.isTracking) && scrollView == self.tableView {
-//            let tableViewCenter = CGPoint(x: self.tableView.bounds.midX, y: self.tableView.bounds.midY)
-//            if let middleIndexPath = self.tableView.indexPathForRow(at: tableViewCenter) {
-//                self.viewModel.scrolledToSection(middleIndexPath.section)
-//            }
-//        }
-//    }
-//}
-
 //
 // MARK: - Actions
 //
@@ -563,39 +517,11 @@ extension HomeViewController {
 //
 extension HomeViewController {
 
-//    private static func createTopSliderBaseView() -> UIView {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }
-//
-//    private static func createTopSliderSeparatorView() -> UIView {
-//        let view = UIView()
-//        view.translatesAutoresizingMaskIntoConstraints = false
-//        return view
-//    }
-//
-//    private static func createTopSliderCollectionView() -> UICollectionView {
-//        let collectionLayout = UICollectionViewFlowLayout()
-//        collectionLayout.scrollDirection = .horizontal
-//        collectionLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-//
-//        let collectionView = UICollectionView.init(frame: .zero, collectionViewLayout: collectionLayout)
-//        collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.showsVerticalScrollIndicator = false
-//        collectionView.showsHorizontalScrollIndicator = false
-//        collectionView.alwaysBounceHorizontal = true
-//        collectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
-//
-//        return collectionView
-//    }
-
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        //tableView.contentInset = UIEdgeInsets(top: -20, left: 0, bottom: 0, right: 0)
         tableView.contentInsetAdjustmentBehavior = .never
         if #available(iOS 15.0, *) {
             tableView.sectionHeaderTopPadding = 0
@@ -655,11 +581,6 @@ extension HomeViewController {
 
     private func setupSubviews() {
 
-        // Add subviews to self.view or each other
-//        self.view.addSubview(self.topSliderBaseView)
-//        self.topSliderBaseView.addSubview(self.topSliderCollectionView)
-//        self.topSliderBaseView.addSubview(self.topSliderSeparatorView)
-
         self.view.addSubview(self.tableView)
 
         self.view.addSubview(self.loadingBaseView)
@@ -678,23 +599,6 @@ extension HomeViewController {
     }
 
     private func initConstraints() {
-
-//        NSLayoutConstraint.activate([
-//            self.topSliderBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-//            self.topSliderBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-//            self.topSliderBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
-//            self.topSliderBaseView.heightAnchor.constraint(equalToConstant: 70),
-//
-//            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.topSliderBaseView.leadingAnchor),
-//            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.topSliderBaseView.trailingAnchor),
-//            self.topSliderCollectionView.topAnchor.constraint(equalTo: self.topSliderBaseView.topAnchor),
-//            self.topSliderCollectionView.bottomAnchor.constraint(equalTo: self.topSliderBaseView.bottomAnchor),
-//
-//            self.topSliderSeparatorView.leadingAnchor.constraint(equalTo: self.topSliderBaseView.leadingAnchor),
-//            self.topSliderSeparatorView.trailingAnchor.constraint(equalTo: self.topSliderBaseView.trailingAnchor),
-//            self.topSliderSeparatorView.heightAnchor.constraint(equalToConstant: 1),
-//            self.topSliderSeparatorView.bottomAnchor.constraint(equalTo: self.topSliderBaseView.bottomAnchor),
-//        ])
 
         NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),

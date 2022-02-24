@@ -161,7 +161,7 @@ class LoginViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
         skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        skipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         skipButton.backgroundColor = .clear
 
         loginLabel.textColor = UIColor.App.textHeadlinePrimary

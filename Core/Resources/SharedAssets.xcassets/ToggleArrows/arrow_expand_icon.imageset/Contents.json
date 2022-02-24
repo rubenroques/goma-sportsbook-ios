@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Check-1.png",
+      "filename" : "arrow expand 2.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Check.png",
+      "filename" : "arrow expand.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Check@2x-1.png",
+      "filename" : "arrow expand 2@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Check@2x.png",
+      "filename" : "arrow expand@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Check@3x-1.png",
+      "filename" : "arrow expand 2@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Check@3x.png",
+      "filename" : "arrow expand@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
