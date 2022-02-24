@@ -274,8 +274,13 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 extension MyFavoritesViewController {
     @objc private func didTapBackButton() {
         self.viewModel.unregisterEndpoints()
-        // self.dismiss(animated: true, completion: nil)
-        self.navigationController?.popViewController(animated: true)
+
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc func didTapBetslipView() {
