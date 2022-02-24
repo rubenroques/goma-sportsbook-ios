@@ -15,6 +15,8 @@ class HeaderTextFieldView: NibView {
 
     @IBOutlet private weak var showPassImageView: UIImageView!
     @IBOutlet private weak var showStateImageView: UIImageView!
+    @IBOutlet private weak var showRemoveImageView: UIImageView!
+
     @IBOutlet private weak var imageWidthConstraint: NSLayoutConstraint!
     @IBOutlet private weak var centerBottomConstraint: NSLayoutConstraint!
     @IBOutlet private weak var centerTopConstraint: NSLayoutConstraint!
@@ -34,6 +36,7 @@ class HeaderTextFieldView: NibView {
     var hasText: ((Bool) -> Void)?
     var didSelectPickerIndex: ((Int) -> Void)?
     var shouldBeginEditing: (() -> Bool)?
+    var didTapRemoveIcon: (() -> Void)?
 
     // Variables
     let datePicker = UIDatePicker()
@@ -131,11 +134,13 @@ class HeaderTextFieldView: NibView {
             if self.isDisabled {
                 self.textField.textColor = UIColor.App.inputText
                 self.textField.isUserInteractionEnabled = false
+                self.containerView.alpha = 0.7
             }
             else {
                 self.headerLabel.isHidden = false
                 self.textField.textColor = UIColor.App.inputText
                 self.textField.isUserInteractionEnabled = true
+                self.containerView.alpha = 1
             }
         }
     }
@@ -169,9 +174,11 @@ class HeaderTextFieldView: NibView {
 
         self.showPassImageView.isUserInteractionEnabled = true
         self.showStateImageView.isUserInteractionEnabled = true
+        self.showRemoveImageView.isUserInteractionEnabled = true
 
         self.showStateImageView.isHidden = true
         self.showPassImageView.isHidden = true
+        self.showRemoveImageView.isHidden = true
 
         self.fieldState = .hidden
 
@@ -327,6 +334,23 @@ class HeaderTextFieldView: NibView {
 
         didTapIcon?()
     }
+
+    func setRemoveTextField(size: CGFloat = 30) {
+        self.showRemoveImageView.image = UIImage(named: "trash_icon")
+        self.showRemoveImageView.isHidden = false
+        //self.imageWidthConstraint.constant = size
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapRemoveImageView(_:)))
+
+        self.showRemoveImageView.isUserInteractionEnabled = true
+        self.showRemoveImageView.addGestureRecognizer(tapGestureRecognizer)
+    }
+
+    @objc func didTapRemoveImageView(_ sender: AnyObject) {
+
+        didTapRemoveIcon?()
+    }
+
 
     func setTextFieldDefaultValue(_ value: String) {
         self.textField.text = value

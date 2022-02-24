@@ -17,10 +17,13 @@ extension UIViewController {
         return presentingIsModal || presentingIsNavigation || presentingIsTabBar
     }
 
-    func showAlert(type: EditAlertView.AlertState) {
+    func showAlert(type: EditAlertView.AlertState, errorText: String = "") {
 
         let popup = EditAlertView()
         popup.alertState = type
+        if errorText != "" {
+            popup.setAlertText(errorText)
+        }
         popup.translatesAutoresizingMaskIntoConstraints = false
         popup.alpha = 0
         self.view.addSubview(popup)

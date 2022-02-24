@@ -26,6 +26,7 @@
                 <outlet property="imageWidthConstraint" destination="LkK-Sf-wuu" id="aWG-eF-Yx2"/>
                 <outlet property="showPassImageView" destination="8PW-Vp-Av7" id="IFI-HT-rmj"/>
                 <outlet property="showPasswordLabel" destination="6ip-xz-zoH" id="VHI-Xl-FOA"/>
+                <outlet property="showRemoveImageView" destination="ubs-qm-BxD" id="C9W-MO-wDU"/>
                 <outlet property="showStateImageView" destination="caT-Aa-aRl" id="mf1-Jg-vqe"/>
                 <outlet property="textField" destination="Nwd-z2-2mz" id="Anu-7p-bbG"/>
                 <outlet property="tipImageView" destination="Ie6-5o-AJy" id="lvO-49-HSZ"/>
@@ -57,7 +58,7 @@
                             <textInputTraits key="textInputTraits"/>
                         </textField>
                         <stackView opaque="NO" contentMode="scaleToFill" spacing="2" translatesAutoresizingMaskIntoConstraints="NO" id="mXr-aB-swK">
-                            <rect key="frame" x="195.5" y="30.5" width="105.5" height="30"/>
+                            <rect key="frame" x="163.5" y="30.5" width="137.5" height="30"/>
                             <subviews>
                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8PW-Vp-Av7">
                                     <rect key="frame" x="0.0" y="0.0" width="30" height="30"/>
@@ -72,8 +73,14 @@
                                         <constraint firstAttribute="width" secondItem="caT-Aa-aRl" secondAttribute="height" multiplier="1:1" id="Knh-ax-wyC"/>
                                     </constraints>
                                 </imageView>
+                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="ubs-qm-BxD">
+                                    <rect key="frame" x="64" y="0.0" width="30" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" secondItem="ubs-qm-BxD" secondAttribute="height" multiplier="1:1" id="2NV-Km-vEV"/>
+                                    </constraints>
+                                </imageView>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6ip-xz-zoH">
-                                    <rect key="frame" x="64" y="0.0" width="41.5" height="30"/>
+                                    <rect key="frame" x="96" y="0.0" width="41.5" height="30"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -81,6 +88,7 @@
                             </subviews>
                             <constraints>
                                 <constraint firstItem="6ip-xz-zoH" firstAttribute="centerY" secondItem="mXr-aB-swK" secondAttribute="centerY" id="2aM-Om-PFE"/>
+                                <constraint firstItem="ubs-qm-BxD" firstAttribute="width" secondItem="ubs-qm-BxD" secondAttribute="height" multiplier="1:1" id="CNs-4a-O4j"/>
                                 <constraint firstAttribute="bottom" secondItem="6ip-xz-zoH" secondAttribute="bottom" id="mHJ-3y-pAb"/>
                                 <constraint firstItem="caT-Aa-aRl" firstAttribute="width" secondItem="8PW-Vp-Av7" secondAttribute="width" id="uNM-j4-REu"/>
                                 <constraint firstItem="6ip-xz-zoH" firstAttribute="top" secondItem="mXr-aB-swK" secondAttribute="top" id="uaf-Z2-5tA"/>

@@ -287,6 +287,7 @@ Terms of use, Privacy Policy and EULA";
 "email_address_or_username" = "Email or Username";
 "app_version_profile" = "App Version %s (%s)\nSportsbook® All Rights Reserved";
 "daily" = "Daily";
+"weekly" = "Weekly";
 "monthly" = "Monthly";
 "anual" = "Anual";
 "active" = "Active";
@@ -321,3 +322,5 @@ Terms of use, Privacy Policy and EULA";
 "closed_market" = "Closed";
 
 "home" = "Home";
+"remove_limit" = "Remove Limit";
+"remove_limit_warning" = "Are you sure you want to remove this limit?";

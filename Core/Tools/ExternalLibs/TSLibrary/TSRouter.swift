@@ -99,7 +99,7 @@ enum TSRouter {
     case applyBonusCode(bonusCode: String)
     case forfeitBonus(bonusID: String)
     case getLimits
-    case removeLimit(type: String)
+    case removeLimit(type: String, period: String)
     case setLimit(type: String, period: String, amount: String, currency: String)
     case realityCheckGetCfg
     case realityCheckGet
@@ -341,7 +341,7 @@ enum TSRouter {
             return "/user/bonus#forfeit"
         case .getLimits:
             return "/user/limit#getLimits"
-        case .removeLimit(let type):
+        case .removeLimit(let type, _):
             return "/user/limit#remove\(type)Limit"
         case .setLimit(let type, _, _, _):
             return "/user/limit#set\(type)Limit"
@@ -650,6 +650,8 @@ enum TSRouter {
             return ["period": period,
                     "amount": amount,
                     "currency": currency]
+        case .removeLimit(type: _, let period):
+            return ["period": period]
 
         case .realityCheckSet(value: let val):
             return ["value": val]

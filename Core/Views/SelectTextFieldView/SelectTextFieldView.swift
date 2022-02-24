@@ -33,6 +33,19 @@ class SelectTextFieldView: NibView {
         return self.textField.textPublisher
     }
 
+    var isDisabled: Bool = false {
+        didSet {
+            if self.isDisabled {
+                self.isUserInteractionEnabled = false
+                self.containerView.alpha = 0.7
+            }
+            else {
+                self.isUserInteractionEnabled = true
+                self.containerView.alpha = 1
+            }
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -116,12 +129,16 @@ class SelectTextFieldView: NibView {
         dismissPickerView()
     }
 
-    func setDefaultPickerOption(option: String) {
+    func setDefaultPickerOption(option: String, lowerCasedString: Bool = false) {
 
         for (key, selection) in selectionArray.enumerated() {
-            if option == selection {
+            var selectionString = selection
+            if lowerCasedString {
+                selectionString = selectionString.lowercased()
+            }
+            if option == selectionString {
                 pickerView.selectRow(key, inComponent: 0, animated: true)
-                textField.text = option
+                textField.text = selection
             }
         }
     }

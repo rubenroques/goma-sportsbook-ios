@@ -34,9 +34,61 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var exclusionView: UIView!
     @IBOutlet private var exclusionLabel: UILabel!
     @IBOutlet private var exclusionSelectTextFieldView: SelectTextFieldView!
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     var viewModel: ProfileLimitsManagementViewModel
     private var cancellables: Set<AnyCancellable> = []
+
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+            }
+        }
+    }
+
+    var isDepositUpdatable: Bool = true {
+        didSet {
+            if isDepositUpdatable {
+                self.depositHeaderTextFieldView.isDisabled = false
+                self.depositFrequencySelectTextFieldView.isDisabled = false
+            }
+            else {
+                self.depositHeaderTextFieldView.isDisabled = true
+                self.depositFrequencySelectTextFieldView.isDisabled = true
+            }
+        }
+    }
+
+    var isWageringUpdatable: Bool = true {
+        didSet {
+            if isWageringUpdatable {
+                self.bettingHeaderTextFieldView.isDisabled = false
+                self.bettingFrequencySelectTextFieldView.isDisabled = false
+            }
+            else {
+                self.bettingHeaderTextFieldView.isDisabled = true
+                self.bettingFrequencySelectTextFieldView.isDisabled = true
+            }
+        }
+    }
+
+    var isLossUpdatable: Bool = true {
+        didSet {
+            if isLossUpdatable {
+                self.lossHeaderTextFieldView.isDisabled = false
+                self.lossFrequencySelectHeaderTextFieldView.isDisabled = false
+            }
+            else {
+                self.lossHeaderTextFieldView.isDisabled = true
+                self.lossFrequencySelectHeaderTextFieldView.isDisabled = true
+            }
+        }
+    }
 
     init() {
         self.viewModel = ProfileLimitsManagementViewModel()
@@ -62,6 +114,8 @@ class ProfileLimitsManagementViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
         containerView.backgroundColor = UIColor.App.backgroundPrimary
 
         headerView.backgroundColor = UIColor.App.backgroundPrimary
@@ -83,6 +137,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         depositHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         depositHeaderTextFieldView.setSecureField(false)
+        depositHeaderTextFieldView.setRemoveTextField()
 
         depositLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -94,6 +149,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         bettingHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         bettingHeaderTextFieldView.setSecureField(false)
+        bettingHeaderTextFieldView.setRemoveTextField()
 
         bettingLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -105,6 +161,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         lossHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         lossHeaderTextFieldView.setSecureField(false)
+        lossHeaderTextFieldView.setRemoveTextField()
 
         lossLineView.backgroundColor = UIColor.App.inputTextTitle.withAlphaComponent(0.2)
 
@@ -115,6 +172,8 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     func commonInit() {
+
+        self.isLoading = false
 
         headerLabel.font = AppFont.with(type: .semibold, size: 17)
         headerLabel.text = localized("limits_management")
@@ -131,8 +190,14 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositHeaderTextFieldView.didTapIcon = {
             self.showFieldInfo(view: self.depositHeaderTextFieldView.superview!)
         }
+        depositHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
+            if let period = self?.depositFrequencySelectTextFieldView.getPickerOption() {
+                self?.showRemoveAlert(limitType: "Deposit", period: period)
+            }
 
-        depositFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("monthly"), localized("anual")])
+        }
+
+        depositFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
         bettingLabel.text = localized("betting_limit")
         bettingLabel.font = AppFont.with(type: .semibold, size: 17)
@@ -145,7 +210,14 @@ class ProfileLimitsManagementViewController: UIViewController {
             self.showFieldInfo(view: self.bettingHeaderTextFieldView.superview!)
         }
 
-        bettingFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("monthly"), localized("anual")])
+        bettingHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
+            if let period = self?.bettingFrequencySelectTextFieldView.getPickerOption() {
+                self?.showRemoveAlert(limitType: "Wagering", period: period)
+            }
+
+        }
+
+        bettingFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
         lossLabel.text = localized("loss_limit")
         lossLabel.font = AppFont.with(type: .semibold, size: 17)
@@ -158,7 +230,14 @@ class ProfileLimitsManagementViewController: UIViewController {
             self.showFieldInfo(view: self.lossHeaderTextFieldView.superview!)
         }
 
-        lossFrequencySelectHeaderTextFieldView.setSelectionPicker([localized("daily"), localized("monthly"), localized("anual")])
+        lossHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
+            if let period = self?.lossFrequencySelectHeaderTextFieldView.getPickerOption() {
+                self?.showRemoveAlert(limitType: "Loss", period: period)
+            }
+
+        }
+
+        lossFrequencySelectHeaderTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
         exclusionLabel.text = localized("auto_exclusion")
         exclusionLabel.font = AppFont.with(type: .semibold, size: 17)
@@ -186,10 +265,31 @@ class ProfileLimitsManagementViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        self.viewModel.limitOptionsCheckPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { limitOptions in
+                if limitOptions == self.viewModel.limitOptionsSet && self.viewModel.limitOptionsSet.isNotEmpty {
+                    print("ALL OPTION CHECKED!")
+                    self.isLoading = false
+                    self.showAlert(type: .success)
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.limitOptionsErrorPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] errorText in
+                if errorText != "" {
+                    self?.showAlert(type: .error, errorText: errorText)
+                }
+            })
+            .store(in: &cancellables)
+
     }
 
     private func setupLimitsInfo() {
 
+        // Check deposit infot
         if let depositLimit = self.viewModel.depositLimit {
             if let limitAmount = depositLimit.current?.amount {
                 let amountString = "\(limitAmount)"
@@ -197,34 +297,55 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
 
             if let limitPeriod = depositLimit.current?.period {
-                self.depositFrequencySelectTextFieldView.setDefaultPickerOption(option: limitPeriod)
+                self.depositFrequencySelectTextFieldView.setDefaultPickerOption(option: limitPeriod, lowerCasedString: true)
+            }
+
+            if depositLimit.updatable {
+                self.isDepositUpdatable = true
+            }
+            else {
+                self.isDepositUpdatable = false
             }
         }
 
-        if let wageringLimit = self.viewModel.wageringLimit {
+        // Check wagering info
+        if let wageringLimit = self.viewModel.getWageringOption() {
             if let wageringAmount = wageringLimit.current?.amount {
                 let amountString = "\(wageringAmount)"
-                self.bettingHeaderTextFieldView.setText(amountString)
+                self.bettingHeaderTextFieldView.setText(amountString.currencyTypeFormatting())
             }
 
             if let wageringPeriod = wageringLimit.current?.period {
-                self.bettingFrequencySelectTextFieldView.setDefaultPickerOption(option: wageringPeriod)
+                self.bettingFrequencySelectTextFieldView.setDefaultPickerOption(option: wageringPeriod, lowerCasedString: true)
+            }
+
+            if wageringLimit.updatable {
+                self.isWageringUpdatable = true
+            }
+            else {
+                self.isWageringUpdatable = false
             }
         }
 
-        if let lossLimit = self.viewModel.lossLimit {
+        if let lossLimit = self.viewModel.getLossOption() {
             if let lossAmount = lossLimit.current?.amount {
                 let amountString = "\(lossAmount)"
-                self.lossHeaderTextFieldView.setText(amountString)
+                self.lossHeaderTextFieldView.setText(amountString.currencyTypeFormatting())
             }
 
             if let lossPeriod = lossLimit.current?.period {
-                self.lossFrequencySelectHeaderTextFieldView.setDefaultPickerOption(option: lossPeriod)
+                self.lossFrequencySelectHeaderTextFieldView.setDefaultPickerOption(option: lossPeriod, lowerCasedString: true)
+            }
+
+            if lossLimit.updatable {
+                self.isLossUpdatable = true
+            }
+            else {
+                self.isLossUpdatable = false
             }
         }
     }
 
-    // TESTING
     func showFieldInfo(view: UIView) {
         let infoView = EditAlertView()
         infoView.alertState = .info
@@ -248,33 +369,56 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
     }
 
+    private func showRemoveAlert(limitType: String, period: String) {
+        let removeLimitAlert = UIAlertController(title: localized("remove_limit"), message: localized("remove_limit_warning"), preferredStyle: UIAlertController.Style.alert)
+
+        removeLimitAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
+            self.viewModel.removeLimit(limitType: limitType, period: period)
+        }))
+
+        removeLimitAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+
+        self.present(removeLimitAlert, animated: true, completion: nil)
+    }
+
     private func saveLimitsOptions() {
+        self.isLoading = true
+
         let acceptedInputs = Set("0123456789.,")
-        if depositHeaderTextFieldView.text != "" {
+
+        if self.viewModel.canUpdateDeposit {
             let period = self.depositFrequencySelectTextFieldView.getPickerOption()
             let amountString = self.depositHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
             let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
-            Env.everyMatrixClient.setLimit(limitType: "Deposit", period: period, amount: amount, currency: currency)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { completion in
-                    switch completion {
-                    case .failure(let error):
-                        print("LIMITS SET ERROR: \(error)")
-                        self.showAlert(type: .error)
-                    case .finished:
-                        print("LIMITS SET FINISHED")
-                        self.showAlert(type: .success)
-                    }
-                }, receiveValue: { _ in
-                    print("LIMITS SET!")
-                })
-                .store(in: &cancellables)
+
+            self.viewModel.sendLimit(limitType: "Deposit", period: period, amount: amount, currency: currency)
 
         }
+        else if self.viewModel.canUpdateWagering {
+            let period = self.bettingFrequencySelectTextFieldView.getPickerOption()
+            let amountString = self.bettingHeaderTextFieldView.text
+            let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
+            let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+
+            self.viewModel.sendLimit(limitType: "Wagering", period: period, amount: amount, currency: currency)
+
+        }
+        else if self.viewModel.canUpdateLoss {
+            let period = self.lossFrequencySelectHeaderTextFieldView.getPickerOption()
+            let amountString = self.lossHeaderTextFieldView.text
+            let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
+            let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
+
+            let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
+
+            self.viewModel.sendLimit(limitType: "Loss", period: period, amount: amount, currency: currency)
+
+        }
     }
 
     @objc func didTapBackground() {
@@ -290,7 +434,22 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     @IBAction private func editAction() {
-        // TEST
+
+        self.viewModel.checkLimitUpdatableStatus(limitType: "deposit",
+                                                 limitAmount: self.depositHeaderTextFieldView.text,
+                                                 limitPeriod: self.depositFrequencySelectTextFieldView.getPickerOption(),
+                                                 isLimitUpdatable: isDepositUpdatable)
+
+        self.viewModel.checkLimitUpdatableStatus(limitType: "wagering",
+                                                 limitAmount: self.bettingHeaderTextFieldView.text,
+                                                 limitPeriod: self.bettingFrequencySelectTextFieldView.getPickerOption(),
+                                                 isLimitUpdatable: isWageringUpdatable)
+
+        self.viewModel.checkLimitUpdatableStatus(limitType: "loss",
+                                                 limitAmount: self.lossHeaderTextFieldView.text,
+                                                 limitPeriod: self.lossFrequencySelectHeaderTextFieldView.getPickerOption(),
+                                                 isLimitUpdatable: isLossUpdatable)
+
         self.saveLimitsOptions()
 
     }
@@ -317,4 +476,39 @@ class ProfileLimitsManagementViewController: UIViewController {
         scrollView.contentInset = contentInset
     }
 
+}
+
+extension ProfileLimitsManagementViewController {
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.stopAnimating()
+        return activityIndicatorView
+    }
+
+    private func setupSubviews() {
+        self.containerView.addSubview(self.loadingBaseView)
+        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+
+        self.initConstraints()
+    }
+
+    private func initConstraints() {
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.containerView.centerXAnchor),
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor)
+        ])
+    }
 }

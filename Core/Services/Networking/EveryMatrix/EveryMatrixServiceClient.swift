@@ -296,4 +296,9 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+    func removeLimit(limitType: String, period: String) -> AnyPublisher<EveryMatrix.LimitSetResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .removeLimit(type: limitType, period: period), decodingType: EveryMatrix.LimitSetResponse.self)
+            .eraseToAnyPublisher()
+    }
+
 }

@@ -12,14 +12,26 @@ extension EveryMatrix {
 
         let deposit: Limit?
         let wagering: Limit?
+        let wageringPerDay: Limit?
+        let wageringPerWeek: Limit?
+        let wageringPerMonth: Limit?
         let loss: Limit?
+        let lossPerDay: Limit?
+        let lossPerWeek: Limit?
+        let lossPerMonth: Limit?
 
         enum CodingKeys: String, CodingKey {
             case deposit = "deposit"
             case wagering = "wagering"
+            case wageringPerDay = "wageringPerDay"
+            case wageringPerWeek = "wageringPerWeek"
+            case wageringPerMonth = "wageringPerMonth"
             case loss = "loss"
+            case lossPerDay = "lossPerDay"
+            case lossPerWeek = "lossPerWeek"
+            case lossPerMonth = "lossPerMonth"
         }
-
+        
     }
 
     struct Limit: Decodable {
