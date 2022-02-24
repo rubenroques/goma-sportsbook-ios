@@ -70,17 +70,20 @@ class NotificationsViewController: UIViewController {
         let deviceView = SettingsRowView()
         deviceView.setTitle(title: localized("device_settings"))
         deviceView.hasSeparatorLineView = true
+        deviceView.hasNavigationImageView = true
         let deviceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapDeviceView))
         deviceView.addGestureRecognizer(deviceTap)
 
         let gamesNotificationView = SettingsRowView()
         gamesNotificationView.setTitle(title: localized("games_notification_defaults"))
         gamesNotificationView.hasSeparatorLineView = true
+        gamesNotificationView.hasNavigationImageView = true
         let gamesNotificationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapGamesNotificationView))
         gamesNotificationView.addGestureRecognizer(gamesNotificationTap)
 
         let bettingNotificationView = SettingsRowView()
         bettingNotificationView.setTitle(title: localized("betting_notification_defaults"))
+        bettingNotificationView.hasNavigationImageView = true
         let bettingNotificationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapBettingNotificationView))
         bettingNotificationView.addGestureRecognizer(bettingNotificationTap)
 

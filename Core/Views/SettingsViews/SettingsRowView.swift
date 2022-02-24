@@ -14,6 +14,7 @@ class SettingsRowView: UIView {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
     private lazy var switchButton: UISwitch = Self.createSwitchButton()
+    private lazy var rightImageView: UIImageView = Self.createRightImageView()
 
     // MARK: Public Properties
     var hasSeparatorLineView: Bool = false {
@@ -49,6 +50,17 @@ class SettingsRowView: UIView {
         }
     }
 
+    var hasNavigationImageView: Bool = false {
+        didSet {
+            if hasNavigationImageView {
+                self.rightImageView.isHidden = false
+            }
+            else {
+                self.rightImageView.isHidden = true
+            }
+        }
+    }
+
     var didTappedSwitch: (() -> Void)?
 
     // MARK: Lifetime and Cycle
@@ -72,6 +84,7 @@ class SettingsRowView: UIView {
 
         self.hasSeparatorLineView = false
         self.hasSwitchButton = false
+        self.hasNavigationImageView = false
 
         self.switchButton.addTarget(self, action: #selector(switchChanged), for: UIControl.Event.valueChanged)
     }
@@ -136,11 +149,20 @@ extension SettingsRowView {
         return switchButton
     }
 
+    private static func createRightImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "nav_arrow_right_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
     private func setupSubviews() {
         self.addSubview(self.containerView)
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.separatorLineView)
         self.containerView.addSubview(self.switchButton)
+        self.containerView.addSubview(self.rightImageView)
 
         self.initConstraints()
     }
@@ -161,6 +183,10 @@ extension SettingsRowView {
 
             self.switchButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
             self.switchButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+
+            self.rightImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.rightImageView.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.rightImageView.widthAnchor.constraint(equalToConstant: 15),
 
             self.separatorLineView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),

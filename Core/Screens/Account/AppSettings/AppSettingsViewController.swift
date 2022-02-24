@@ -68,17 +68,20 @@ class AppSettingsViewController: UIViewController {
         let notificationView = SettingsRowView()
         notificationView.setTitle(title: localized("notifications"))
         notificationView.hasSeparatorLineView = true
+        notificationView.hasNavigationImageView = true
         let notiticationTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapNotificationView))
         notificationView.addGestureRecognizer(notiticationTap)
 
         let appearanceView = SettingsRowView()
         appearanceView.setTitle(title: localized("appearance"))
         appearanceView.hasSeparatorLineView = true
+        appearanceView.hasNavigationImageView = true
         let appearanceTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapAppearanceView))
         appearanceView.addGestureRecognizer(appearanceTap)
 
         let oddsView = SettingsRowView()
         oddsView.setTitle(title: localized("odds"))
+        oddsView.hasNavigationImageView = true
         let oddsTap = UITapGestureRecognizer(target: self, action: #selector(self.didTapOddsView))
         oddsView.addGestureRecognizer(oddsTap)
 
