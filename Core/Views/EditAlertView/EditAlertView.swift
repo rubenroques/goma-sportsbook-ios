@@ -45,6 +45,16 @@ class EditAlertView: NibView {
         }
     }
 
+    var hasBorder: Bool = false {
+        didSet {
+            if hasBorder {
+                containerView.layer.cornerRadius = CornerRadius.button
+                containerView.layer.borderWidth = 1
+                containerView.layer.borderColor = UIColor.App.textPrimary.cgColor
+            }
+        }
+    }
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -102,7 +112,7 @@ class EditAlertView: NibView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: self.frame.width, height: 100)
+        return CGSize(width: self.frame.width, height: self.alertTextLabel.frame.height + 30)
     }
 
 }

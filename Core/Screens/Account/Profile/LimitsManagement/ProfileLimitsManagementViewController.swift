@@ -104,6 +104,7 @@ class ProfileLimitsManagementViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupSubviews()
         commonInit()
         setupWithTheme()
 
@@ -114,9 +115,9 @@ class ProfileLimitsManagementViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
-
         containerView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
 
         headerView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -184,11 +185,14 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositLabel.font = AppFont.with(type: .semibold, size: 17)
 
         depositHeaderTextFieldView.setPlaceholderText(localized("deposit_limit"))
-        depositHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
-        depositHeaderTextFieldView.setKeyboardType(.numberPad)
+        if let infoImage = UIImage(named: "question_circle_icon") {
+            depositHeaderTextFieldView.setImageTextField(infoImage)
+        }
+        depositHeaderTextFieldView.setKeyboardType(.decimalPad)
         depositHeaderTextFieldView.isCurrency = true
-        depositHeaderTextFieldView.didTapIcon = {
-            self.showFieldInfo(view: self.depositHeaderTextFieldView.superview!)
+        depositHeaderTextFieldView.didTapIcon = { [weak self] in
+            self?.setLimitAlertInfo(alertType: "deposit")
+
         }
         depositHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
             if let period = self?.depositFrequencySelectTextFieldView.getPickerOption() {
@@ -203,11 +207,13 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingLabel.font = AppFont.with(type: .semibold, size: 17)
 
         bettingHeaderTextFieldView.setPlaceholderText(localized("betting_limit"))
-        bettingHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
+        if let infoImage = UIImage(named: "question_circle_icon") {
+            bettingHeaderTextFieldView.setImageTextField(infoImage)
+        }
         bettingHeaderTextFieldView.setKeyboardType(.numberPad)
         bettingHeaderTextFieldView.isCurrency = true
-        bettingHeaderTextFieldView.didTapIcon = {
-            self.showFieldInfo(view: self.bettingHeaderTextFieldView.superview!)
+        bettingHeaderTextFieldView.didTapIcon = { [weak self] in
+            self?.setLimitAlertInfo(alertType: "wagering")
         }
 
         bettingHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
@@ -223,11 +229,13 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossLabel.font = AppFont.with(type: .semibold, size: 17)
 
         lossHeaderTextFieldView.setPlaceholderText(localized("loss_limit"))
-        lossHeaderTextFieldView.setImageTextField(UIImage(named: "question_circle_icon")!)
+        if let infoImage = UIImage(named: "question_circle_icon") {
+            lossHeaderTextFieldView.setImageTextField(infoImage)
+        }
         lossHeaderTextFieldView.setKeyboardType(.numberPad)
         lossHeaderTextFieldView.isCurrency = true
-        lossHeaderTextFieldView.didTapIcon = {
-            self.showFieldInfo(view: self.lossHeaderTextFieldView.superview!)
+        lossHeaderTextFieldView.didTapIcon = { [weak self] in
+            self?.setLimitAlertInfo(alertType: "loss")
         }
 
         lossHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
@@ -247,6 +255,7 @@ class ProfileLimitsManagementViewController: UIViewController {
                                                         iconArray: [UIImage(named: "icon_active")!,
                                                                     UIImage(named: "icon_limited")!,
                                                                     UIImage(named: "icon_excluded")!])
+        exclusionSelectTextFieldView.isDisabled = true
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(tapGestureRecognizer)
@@ -258,20 +267,24 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         self.viewModel.limitsLoadedPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { loaded in
+            .sink(receiveValue: { [weak self] loaded in
                 if loaded {
-                    self.setupLimitsInfo()
+                    self?.setupLimitsInfo()
+                }
+                else {
+                    self?.isLoading = true
                 }
             })
             .store(in: &cancellables)
 
         self.viewModel.limitOptionsCheckPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { limitOptions in
-                if limitOptions == self.viewModel.limitOptionsSet && self.viewModel.limitOptionsSet.isNotEmpty {
-                    print("ALL OPTION CHECKED!")
-                    self.isLoading = false
-                    self.showAlert(type: .success)
+            .sink(receiveValue: { [weak self] limitOptions in
+                if let viewModel = self?.viewModel {
+                    if limitOptions == viewModel.limitOptionsSet && viewModel.limitOptionsSet.isNotEmpty {
+                        self?.isLoading = false
+                        self?.showAlert(type: .success)
+                    }
                 }
             })
             .store(in: &cancellables)
@@ -284,6 +297,26 @@ class ProfileLimitsManagementViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
+    }
+
+    private func setLimitAlertInfo(alertType: String) {
+
+        if alertType == "deposit" {
+            let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
+            let alertTitle = localized("deposit_limit")
+            self.showFieldInfo(view: self.depositView, alertTitle: alertTitle, alertText: alertText)
+        }
+        else if alertType == "wagering" {
+            let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
+            let alertTitle = localized("betting_limit")
+            self.showFieldInfo(view: self.bettingView, alertTitle: alertTitle, alertText: alertText)
+        }
+        else if alertType == "loss" {
+            let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
+            let alertTitle = localized("loss_limit")
+            self.showFieldInfo(view: self.lossView, alertTitle: alertTitle, alertText: alertText)
+        }
 
     }
 
@@ -344,15 +377,29 @@ class ProfileLimitsManagementViewController: UIViewController {
                 self.isLossUpdatable = false
             }
         }
+
+        self.isLoading = false
     }
 
-    func showFieldInfo(view: UIView) {
+    func showFieldInfo(view: UIView, alertTitle: String = "", alertText: String = "") {
         let infoView = EditAlertView()
         infoView.alertState = .info
+
+        if alertTitle != "" {
+            infoView.setAlertTitle(alertTitle)
+        }
+
+        if alertText != "" {
+            infoView.setAlertText(alertText)
+        }
+
+        infoView.hasBorder = true
+
         view.addSubview(infoView)
         NSLayoutConstraint.activate([
             infoView.topAnchor.constraint(equalTo: view.topAnchor),
-            infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            infoView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            infoView.widthAnchor.constraint(lessThanOrEqualToConstant: 300)
         ])
 
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn) {
@@ -489,13 +536,15 @@ extension ProfileLimitsManagementViewController {
         let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
         activityIndicatorView.hidesWhenStopped = true
-        activityIndicatorView.stopAnimating()
+        activityIndicatorView.startAnimating()
         return activityIndicatorView
     }
 
     private func setupSubviews() {
         self.containerView.addSubview(self.loadingBaseView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+
+        self.containerView.bringSubviewToFront(self.loadingBaseView)
 
         self.initConstraints()
     }

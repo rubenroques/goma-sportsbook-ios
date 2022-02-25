@@ -17,8 +17,6 @@ class SelectTextFieldView: NibView {
     @IBOutlet private var textField: UITextField!
     @IBOutlet private var iconLabelImageView: UIImageView!
     // Constraints
-    @IBOutlet private var labelImageConstraint: NSLayoutConstraint!
-    @IBOutlet private var labelLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var textFieldLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var textFieldImageConstraint: NSLayoutConstraint!
 
@@ -116,6 +114,8 @@ class SelectTextFieldView: NibView {
             iconLabelImageView.isHidden = false
             iconLabelImageView.image = iconArray[0]
             selectionIconArray = iconArray
+            textFieldLeadingConstraint.isActive = false
+            textFieldImageConstraint.isActive = true
         }
 
         selectionArray = array
