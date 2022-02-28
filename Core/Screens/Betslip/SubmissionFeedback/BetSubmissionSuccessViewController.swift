@@ -29,6 +29,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var possibleEarningsLabel: UILabel!
     @IBOutlet private weak var betsMadeLabel: UILabel!
     
+    
+    @IBOutlet private weak var checkboxButton: UIButton!
+    
     var totalOddsValue: String
     var possibleEarningsValue: String
     var numberOfBets: Int
@@ -63,7 +66,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         // Number Of Bets
         self.numberOfBets = betPlacedDetailsArray.count
 
-        //
          super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
     }
 
@@ -80,6 +82,12 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.betsMadeValueLabel.text = String(numberOfBets)
 
         self.setupWithTheme()
+    
+        self.checkboxButton.isEnabled = true
+        
+        //let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckboxButton))
+        //checkboxButton.addGestureRecognizer(checkboxTap)
+        
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -105,7 +113,9 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
         self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
         self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
+        
         StyleHelper.styleButton(button: self.continueButton)
+        checkboxButton.isHidden = false
     }
 
     @IBAction private func didTapContinueButton() {
@@ -118,5 +128,15 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBAction private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
-
+    
+  
+    
+    @IBAction private func didTapCheckbox() {
+     
+        self.checkboxButton.setImage(UIImage(named: "active_toggle_icon"), for: .normal)
+        self.checkboxButton.backgroundColor = UIColor.App.highlightPrimary
+        self.checkboxButton.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+        self.checkboxButton.titleLabel?.text = "twstedfkldfs"
+     
+    }
 }
