@@ -16,7 +16,7 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
     }
     var collapsedCompetitionsSections: Set<Int> = []
 
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -62,8 +62,8 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
             }
 
             cell.shouldShowCountryFlag(false)
-            cell.tappedMatchLineAction = { image in
-                self.didSelectMatchAction?(match, image)
+            cell.tappedMatchLineAction = {
+                self.didSelectMatchAction?(match)
             }
             cell.matchWentLive = {
                 self.matchWentLiveAction?()

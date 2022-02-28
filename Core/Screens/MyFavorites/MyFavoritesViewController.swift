@@ -90,16 +90,14 @@ class MyFavoritesViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.didSelectMatchAction = { match, image in
+        viewModel.didSelectMatchAction = { match in
             if viewModel.store.hasMatchesInfoForMatch(withId: match.id) {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
                 self.present(matchDetailsViewController, animated: true, completion: nil)
             }
             else {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
                 self.present(matchDetailsViewController, animated: true, completion: nil)
 
