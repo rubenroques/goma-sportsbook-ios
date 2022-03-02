@@ -290,6 +290,16 @@ class EveryMatrixServiceClient: ObservableObject {
     func requestInitialDump(topic: String) -> AnyPublisher<String, EveryMatrix.APIError> {
         return self.manager.getModel(router: .sportsInitialDump(topic: topic), decodingType: String.self).eraseToAnyPublisher()
     }
+    
+    func getTransactionsHistory(type: String, startTime: String, endTime: String, pageIndex: Int, pageSize: Int) -> AnyPublisher<EveryMatrix.TransactionsHistoryResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getTransactionHistory(type: type,
+                                                                    startTime: startTime,
+                                                                    endTime: endTime,
+                                                                    pageIndex: pageIndex,
+                                                                    pageSize: pageSize),
+                                     decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+            .eraseToAnyPublisher()
+    }
 
     func setLimit(limitType: String, period: String, amount: String, currency: String) -> AnyPublisher<EveryMatrix.LimitSetResponse, EveryMatrix.APIError> {
         return self.manager.getModel(router: .setLimit(type: limitType, period: period, amount: amount, currency: currency), decodingType: EveryMatrix.LimitSetResponse.self)

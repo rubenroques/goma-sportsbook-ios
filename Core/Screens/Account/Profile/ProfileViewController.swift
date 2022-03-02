@@ -157,8 +157,6 @@ class ProfileViewController: UIViewController {
         setupWithTheme()
     }
 
-    
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
@@ -493,7 +491,8 @@ extension ProfileViewController {
     }
 
     @objc func historyViewTapped() {
-
+        let historyViewController = HistoryViewController()
+        self.navigationController?.pushViewController(historyViewController, animated: true)
     }
 
     @objc func limitsViewTapped() {
@@ -502,7 +501,8 @@ extension ProfileViewController {
     }
 
     @objc func appSettingsViewTapped() {
-
+        let appSettingsViewController = AppSettingsViewController()
+        self.navigationController?.pushViewController(appSettingsViewController, animated: true)
     }
 
     @objc func supportViewTapped() {

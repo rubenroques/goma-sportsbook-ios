@@ -11,12 +11,15 @@ import Combine
 class MyFavoritesViewController: UIViewController {
 
     // MARK: Private Properties
+    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topSliderCollectionView: UICollectionView = Self.createTopSliderCollectionView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingScreenBaseView: UIView = Self.createLoadingScreenBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+    private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
+    private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
@@ -57,9 +60,21 @@ class MyFavoritesViewController: UIViewController {
         self.isLoading = true
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
+
+        self.betslipCountLabel.isHidden = true
+
+        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
+        betslipButtonView.addGestureRecognizer(tapBetslipView)
     }
 
     // MARK: Layout and Theme
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
+        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
@@ -68,6 +83,8 @@ class MyFavoritesViewController: UIViewController {
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.topSafeAreaView.backgroundColor = .clear
 
         self.topView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -78,6 +95,11 @@ class MyFavoritesViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
+        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
     }
 
     // MARK: Binding
@@ -104,6 +126,30 @@ class MyFavoritesViewController: UIViewController {
             }
 
         }
+
+        Env.betslipManager.bettingTicketsPublisher
+            .map(\.count)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipValue in
+                if betslipValue == 0 {
+                    self?.betslipCountLabel.isHidden = true
+                }
+                else {
+                    self?.betslipCountLabel.text = "\(betslipValue)"
+                    self?.betslipCountLabel.isHidden = false
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    func openBetslipModal() {
+        let betslipViewController = BetslipViewController()
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
 }
@@ -226,7 +272,17 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 extension MyFavoritesViewController {
     @objc private func didTapBackButton() {
         self.viewModel.unregisterEndpoints()
-        self.dismiss(animated: true, completion: nil)
+
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    @objc func didTapBetslipView() {
+        self.openBetslipModal()
     }
 }
 
@@ -234,6 +290,12 @@ extension MyFavoritesViewController {
 // MARK: Subviews initialization and setup
 //
 extension MyFavoritesViewController {
+
+    private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
     private static func createTopView() -> UIView {
         let view = UIView()
@@ -287,7 +349,44 @@ extension MyFavoritesViewController {
         return activityIndicatorView
     }
 
+    private static func createBetslipButtonView() -> UIView {
+        let betslipButtonView = UIView()
+        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "betslip_button_icon")
+        betslipButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
+            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 30),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
+        ])
+
+        return betslipButtonView
+    }
+
+    private static func createBetslipCountLabel() -> UILabel {
+        let betslipCountLabel = UILabel()
+        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        betslipCountLabel.textColor = UIColor.App.textPrimary
+        betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
+        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
+        betslipCountLabel.textAlignment = .center
+        betslipCountLabel.clipsToBounds = true
+        betslipCountLabel.layer.masksToBounds = true
+        betslipCountLabel.text = "0"
+        return betslipCountLabel
+    }
+
     private func setupSubviews() {
+        self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.topView)
 
         self.topView.addSubview(self.backButton)
@@ -317,16 +416,28 @@ extension MyFavoritesViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
+        self.betslipButtonView.addSubview(self.betslipCountLabel)
+
+        self.view.addSubview(self.betslipButtonView)
+
         self.initConstraints()
     }
 
     private func initConstraints() {
 
+        // Top Safe Area View
+        NSLayoutConstraint.activate([
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.topAnchor)
+        ])
+
         // Top bar
         NSLayoutConstraint.activate([
             self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 70),
 
             self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 10),
@@ -358,6 +469,18 @@ extension MyFavoritesViewController {
 
             self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingScreenBaseView.centerXAnchor),
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingScreenBaseView.centerYAnchor)
+        ])
+
+        // Betslip
+        NSLayoutConstraint.activate([
+            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
+            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
+
+            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
+            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -40),
+
+            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
         ])
     }
 

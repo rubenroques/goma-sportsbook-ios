@@ -26,9 +26,6 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
-
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAll))
-        self.linesStackView.addGestureRecognizer(tapGestureRecognizer)
    }
 
     required init?(coder aDecoder: NSCoder) {
@@ -87,10 +84,9 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
-    @objc func didTapSeeAll() {
+    func didSelectSeeAllCompetition(competition: Competition) {
         guard
-            let viewModel = self.viewModel,
-            let competition = viewModel.competition
+            let viewModel = self.viewModel
         else { return }
 
         self.didSelectSeeAllCompetitionAction?(viewModel.sport, competition)
@@ -99,25 +95,25 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
 
 extension TopCompetitionLineTableViewCell: UIScrollViewDelegate {
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-
-        if scrollView == self.collectionView,
-           let viewModel = self.viewModel,
-           let competition = viewModel.competition
-        {
-            let screenWidth = UIScreen.main.bounds.size.width
-            if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
-                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
-                    let generator = UIImpactFeedbackGenerator(style: .heavy)
-                    generator.prepare()
-                    generator.impactOccurred()
-                    self.didSelectSeeAllCompetitionAction?(viewModel.sport, competition)
-                    return
-                }
-            }
-        }
-
-    }
+//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//
+//        if scrollView == self.collectionView,
+//           let viewModel = self.viewModel,
+//           let competition = viewModel.competition
+//        {
+//            let screenWidth = UIScreen.main.bounds.size.width
+//            if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
+//                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
+//                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+//                    generator.prepare()
+//                    generator.impactOccurred()
+//                    self.didSelectSeeAllCompetitionAction?(viewModel.sport, competition)
+//                    return
+//                }
+//            }
+//        }
+//
+//    }
     
 }
 
@@ -165,11 +161,15 @@ extension TopCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectio
         
         guard
             let cell = collectionView.dequeueCellType(CompetitionWidgetCollectionViewCell.self, indexPath: indexPath),
-            let viewModel = viewModel.competitionViewModel()
+            let viewModel = viewModel.competitionViewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
         cell.configure(withViewModel: viewModel)
+        cell.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectSeeAllCompetition(competition: competition)
+        }
+        
         return cell
 
     }

@@ -228,7 +228,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundSecondary
         self.tableView.backgroundColor = UIColor.App.backgroundSecondary
-        self.buttonBaseVIew.backgroundColor = UIColor.App.backgroundPrimary
+        self.buttonBaseVIew.backgroundColor = UIColor.App.backgroundTertiary
 
         self.applyButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.applyButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)

@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="activityIndicatorView" destination="lt1-gE-euL" id="UZO-Dk-mfp"/>
                 <outlet property="backButton" destination="4hQ-9Y-7X9" id="95o-bk-C4y"/>
+                <outlet property="heightConstraint" destination="7KA-42-c7b" id="BUp-jm-dxQ"/>
                 <outlet property="navigationView" destination="dGa-YN-ygi" id="adq-eV-swm"/>
                 <outlet property="topSafeAreaView" destination="hD6-9m-bmG" id="Tvw-xz-MWn"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
@@ -50,9 +51,12 @@
                     <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                     <color key="backgroundColor" systemColor="systemRedColor"/>
                 </view>
-                <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Oi-NS-FDT">
-                    <rect key="frame" x="0.0" y="88" width="414" height="808"/>
+                <wkWebView contentMode="scaleToFill" placeholderIntrinsicWidth="414" placeholderIntrinsicHeight="808" translatesAutoresizingMaskIntoConstraints="NO" id="4Oi-NS-FDT">
+                    <rect key="frame" x="0.0" y="88" width="414" height="1"/>
                     <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="7KA-42-c7b"/>
+                    </constraints>
                     <wkWebViewConfiguration key="configuration">
                         <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                         <wkPreferences key="preferences"/>
@@ -68,7 +72,6 @@
                 <constraint firstItem="lt1-gE-euL" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Bg0-Zu-36A"/>
                 <constraint firstAttribute="trailing" secondItem="dGa-YN-ygi" secondAttribute="trailing" id="Ilz-sJ-9ej"/>
                 <constraint firstItem="dGa-YN-ygi" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="Jop-0V-vRW"/>
-                <constraint firstAttribute="bottom" secondItem="4Oi-NS-FDT" secondAttribute="bottom" id="LFH-Go-GQN"/>
                 <constraint firstItem="hD6-9m-bmG" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="PgF-Qw-NS2"/>
                 <constraint firstItem="4Oi-NS-FDT" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="S0G-pp-h6T"/>
                 <constraint firstItem="dGa-YN-ygi" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="T9u-2Q-DRg"/>
@@ -79,7 +82,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="4Oi-NS-FDT" secondAttribute="trailing" id="sD4-x9-RWQ"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="hD6-9m-bmG" secondAttribute="trailing" id="vv7-am-G9b"/>
             </constraints>
-            <point key="canvasLocation" x="139" y="4"/>
+            <point key="canvasLocation" x="165" y="3"/>
         </view>
     </objects>
     <resources>

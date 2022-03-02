@@ -414,8 +414,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multiplierPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
-                self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
-                self?.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
+//                self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
+//                self?.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
+                self?.multipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
+                self?.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
             })
             .store(in: &cancellables)
 
@@ -720,7 +722,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             errorView.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
             errorView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.safeAreaLayoutGuide.topAnchor, constant: -10)
         ])
-
+        
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseIn, animations: {
             errorView.alpha = 1.0
             UIView.animate(withDuration: 0.2, delay: 5.0, options: .curveEaseOut, animations: {

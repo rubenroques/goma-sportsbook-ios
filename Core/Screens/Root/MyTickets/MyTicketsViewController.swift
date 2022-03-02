@@ -48,6 +48,9 @@ class MyTicketsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        self.noBetsButton.isHidden = true
+
         self.myBetsSegmentedControlBaseView.isHidden = false
         self.myBetsSegmentedControlBaseView.backgroundColor = .systemPink
         self.loadingBaseView.isHidden = true
@@ -105,6 +108,7 @@ class MyTicketsViewController: UIViewController {
                 else {
                     self?.emptyBaseView.isHidden = !isTicketsEmpty
                 }
+
             })
             .store(in: &cancellables)
 
@@ -181,8 +185,6 @@ class MyTicketsViewController: UIViewController {
 
         self.myBetsSegmentedControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
 
-      
-
         self.myBetsSegmentedControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.myBetsSegmentedControl.backgroundColor = UIColor.App.backgroundTertiary
 
@@ -230,7 +232,6 @@ class MyTicketsViewController: UIViewController {
         switch segmentControl.selectedSegmentIndex {
         case 0:
             self.viewModel.setMyTicketsType(.opened)
- 
         case 1:
             self.viewModel.setMyTicketsType(.resolved)
         case 2:

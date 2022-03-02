@@ -69,7 +69,7 @@ class DepositViewController: UIViewController {
 
         self.depositHeaderTextFieldView.setPlaceholderText(localized("deposit_value"))
         self.depositHeaderTextFieldView.setKeyboardType(.decimalPad)
-        self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.inputBackground)
+        self.depositHeaderTextFieldView.setRightLabelCustom(title: "€", font: AppFont.with(type: .semibold, size: 20), color: UIColor.App.textSecondary)
 
         depositTipLabel.text = localized("minimum_deposit_value")
         depositTipLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -395,7 +395,8 @@ class DepositViewController: UIViewController {
     @IBAction private func didTapNextButton() {
         self.activityIndicatorView.isHidden = false
 
-        let amount = self.depositHeaderTextFieldView.text
+        let amountText = self.depositHeaderTextFieldView.text
+        let amount = amountText.replacingOccurrences(of: ",", with: ".")
         var currency = ""
         var gamingAccountId = ""
 
@@ -421,11 +422,10 @@ class DepositViewController: UIViewController {
                 self.activityIndicatorView.isHidden = true
 
             }, receiveValue: { value in
-                DispatchQueue.main.async {
-                    let depositWebViewController = DepositWebViewController(depositUrl: value.cashierUrl)
+                let depositWebViewController = DepositWebViewController(depositUrl: value.cashierUrl)
 
-                    self.navigationController?.pushViewController(depositWebViewController, animated: true)
-                }
+                self.navigationController?.pushViewController(depositWebViewController, animated: true)
+
             })
             .store(in: &cancellables)
     }

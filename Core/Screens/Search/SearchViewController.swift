@@ -23,6 +23,8 @@ class SearchViewController: UIViewController {
     @IBOutlet private weak var noResultsLabel: UILabel!
     @IBOutlet private weak var activityIndicatorBaseView: UIView!
     @IBOutlet private weak var activityIndicatorView: UIActivityIndicatorView!
+    private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
+    private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
 
     // Variables
     var viewModel: SearchViewModel
@@ -74,11 +76,25 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupSubviews()
         commonInit()
         setupWithTheme()
 
         setupPublishers()
 
+        self.view.layoutSubviews()
+
+        self.betslipCountLabel.isHidden = true
+
+        let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
+        betslipButtonView.addGestureRecognizer(tapBetslipView)
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
+        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
     }
 
     func setupWithTheme() {
@@ -102,6 +118,11 @@ class SearchViewController: UIViewController {
         self.noResultsLabel.textColor = UIColor.App.textPrimary
 
         self.activityIndicatorBaseView.backgroundColor = UIColor.App.backgroundTertiary
+
+        self.betslipCountLabel.backgroundColor = UIColor.App.alertError
+        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
     }
 
     func commonInit() {
@@ -172,6 +193,7 @@ class SearchViewController: UIViewController {
         self.noResultsLabel.font = AppFont.with(type: .bold, size: 22)
 
         self.activityIndicatorBaseView.isHidden = true
+
     }
 
     func setupPublishers() {
@@ -246,6 +268,20 @@ class SearchViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        Env.betslipManager.bettingTicketsPublisher
+            .map(\.count)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipValue in
+                if betslipValue == 0 {
+                    self?.betslipCountLabel.isHidden = true
+                }
+                else {
+                    self?.betslipCountLabel.text = "\(betslipValue)"
+                    self?.betslipCountLabel.isHidden = false
+                }
+            })
+            .store(in: &cancellables)
+
     }
 
     func configureNoResultsViewText() {
@@ -257,12 +293,26 @@ class SearchViewController: UIViewController {
         }
     }
 
+    func openBetslipModal() {
+        let betslipViewController = BetslipViewController()
+        betslipViewController.willDismissAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
     @IBAction private func didTapCancelButton() {
         self.dismiss(animated: true, completion: nil)
     }
 
     @objc func didTapBackground() {
         self.searchBarView.resignFirstResponder()
+    }
+
+    @objc func didTapBetslipView() {
+        //self.didTapBetslipButtonAction?()
+        self.openBetslipModal()
     }
 
 }
@@ -500,6 +550,75 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return 0.01
+    }
+
+}
+
+//
+// MARK: Subviews initialization and setup
+//
+extension SearchViewController {
+
+    private static func createBetslipButtonView() -> UIView {
+        let betslipButtonView = UIView()
+        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "betslip_button_icon")
+        betslipButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            betslipButtonView.widthAnchor.constraint(equalToConstant: 56),
+            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 30),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
+        ])
+
+        return betslipButtonView
+    }
+
+    private static func createBetslipCountLabel() -> UILabel {
+        let betslipCountLabel = UILabel()
+        betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
+        betslipCountLabel.textColor = UIColor.App.textPrimary
+        betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
+        betslipCountLabel.font = AppFont.with(type: .semibold, size: 10)
+        betslipCountLabel.textAlignment = .center
+        betslipCountLabel.clipsToBounds = true
+        betslipCountLabel.layer.masksToBounds = true
+        betslipCountLabel.text = "0"
+        return betslipCountLabel
+    }
+
+    private func setupSubviews() {
+
+        self.betslipButtonView.addSubview(self.betslipCountLabel)
+
+        self.containerView.addSubview(self.betslipButtonView)
+
+        self.initConstraints()
+
+        self.containerView.layoutSubviews()
+    }
+
+    private func initConstraints() {
+
+        // Betslip
+        NSLayoutConstraint.activate([
+            self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
+            self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
+
+            self.betslipButtonView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -20),
+            self.betslipButtonView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -40),
+
+            self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
+            self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+        ])
     }
 
 }

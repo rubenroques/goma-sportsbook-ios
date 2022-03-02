@@ -14,7 +14,6 @@ class MyTicketTableViewCell: UITableViewCell {
 
     @IBOutlet private weak var topStatusView: UIView!
 
-    
     @IBOutlet private weak var headerBaseView: UIView!
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var subtitleLabel: UILabel!
@@ -146,9 +145,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
         self.cashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
 
-        self.titleLabel.textColor = UIColor.App.textPrimary
+       /* self.titleLabel.textColor = UIColor.App.textPrimary
         self.subtitleLabel.textColor = UIColor.App.textSecondary
-        /*self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
         self.totalOddSubtitleLabel.textColor = UIColor.App.textPrimary
         self.betAmountTitleLabel.textColor = UIColor.App.textPrimary
         self.betAmountSubtitleLabel.textColor = UIColor.App.textPrimary
@@ -251,7 +250,9 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-            self.totalOddSubtitleLabel.text = "\(Double(floor(oddValue * 100)/100))"
+            //self.totalOddSubtitleLabel.text = "\(Double(floor(oddValue * 100)/100))"
+            let newOddValue = Double(floor(oddValue * 100)/100)
+            self.totalOddSubtitleLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         }
 
         if let betAmount = betHistoryEntry.totalBetAmount,

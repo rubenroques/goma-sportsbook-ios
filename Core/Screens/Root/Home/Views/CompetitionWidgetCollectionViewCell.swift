@@ -30,7 +30,7 @@ class CompetitionWidgetViewModel {
 
 class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
-    var tappedLineAction: ((Competition) -> Void)?
+    var didSelectCompetitionAction: ((Competition) -> Void)?
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var baseStackView: UIStackView = Self.createBaseStackView()
@@ -51,6 +51,9 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOpenCompetition))
+        self.contentView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -94,6 +97,12 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
         self.titleLabel.text = viewModel.name
         self.flagImageView.image = UIImage(named: viewModel.countryImageName)
+    }
+
+    @objc func didTapOpenCompetition() {
+        if let competition = self.viewModel?.competition {
+            self.didSelectCompetitionAction?(competition)
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "Check Copy.png",
+      "filename" : "Check-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -17,7 +17,7 @@
       "scale" : "1x"
     },
     {
-      "filename" : "Check Copy@2x.png",
+      "filename" : "Check@2x-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -33,7 +33,7 @@
       "scale" : "2x"
     },
     {
-      "filename" : "Check Copy@3x.png",
+      "filename" : "Check@3x-1.png",
       "idiom" : "universal",
       "scale" : "3x"
     },

@@ -173,18 +173,20 @@ class LiveEventsViewController: UIViewController {
         self.leftGradientBaseView.layer.mask = leftGradientMaskLayer
 
         //
-        rightGradientBaseView.backgroundColor = color
+        self.rightGradientBaseView.backgroundColor = color
         let rightGradientMaskLayer = CAGradientLayer()
-        rightGradientMaskLayer.frame = rightGradientBaseView.bounds
+        rightGradientMaskLayer.frame = self.rightGradientBaseView.bounds
         rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
         rightGradientMaskLayer.locations = [0, 0.45, 1]
         rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-        rightGradientBaseView.layer.mask = rightGradientMaskLayer
+        self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
+        
       
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
+        filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -316,7 +318,6 @@ class LiveEventsViewController: UIViewController {
         self.sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        self.filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
         self.filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         
         self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
@@ -337,7 +338,7 @@ class LiveEventsViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         
-        
+        self.filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary

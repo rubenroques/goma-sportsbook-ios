@@ -40,7 +40,8 @@ class Router {
     }
 
     func makeKeyAndVisible() {
-        // self.rootWindow.overrideUserInterfaceStyle = Theme.dark.userInterfaceStyle // UserDefaults.standard.theme.userInterfaceStyle
+        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
         })
@@ -403,8 +404,10 @@ class Router {
             let marketDescription = "\(betSelection.marketName), \(betSelection.bettingTypeEventPartName)"
             let bettingTicket = BettingTicket(id: bettingOfferId,
                                               outcomeId: betSelection.outcomeId,
-                                              marketId: markets.first?.id ?? "1", matchId: betSelection.eventId,
-                                              value: betSelection.priceValue, isAvailable: markets.first?.isAvailable ?? true,
+                                              marketId: markets.first?.id ?? "1",
+                                              matchId: betSelection.eventId,
+                                              value: betSelection.priceValue,
+                                              isAvailable: markets.first?.isAvailable ?? true,
                                               matchDescription: betSelection.eventName,
                                               marketDescription: marketDescription,
                                               outcomeDescription: betSelection.betName)
