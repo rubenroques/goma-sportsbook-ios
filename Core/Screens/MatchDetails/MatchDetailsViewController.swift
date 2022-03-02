@@ -121,6 +121,7 @@ class MatchDetailsViewController: UIViewController {
     var match: Match?
     var matchId: String?
 
+    private var shouldShowWebView = false
     private var matchFielHeight: CGFloat = 0
     private var isMatchFieldExpanded: Bool = false {
         didSet {
@@ -215,12 +216,14 @@ class MatchDetailsViewController: UIViewController {
             .store(in: &cancellables)
 
         // Hide match field if the sport doesn't support it
-//        if self.match?.sportType != "1" || self.match?.sportType != "3" {
-//            self.matchFieldBaseView.isHidden = true
-//            self.hiddenMatchFieldConstraint.isActive = true
-//        }
+        self.matchFieldBaseView.isHidden = true
 
-        if let match = self.match {
+        let validSportType = self.match?.sportType == "1" || self.match?.sportType == "3"
+        if self.matchMode == .live && validSportType {
+            self.shouldShowWebView = true
+        }
+
+        if shouldShowWebView, let match = self.match {
             let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
             self.matchFieldWebView.load(request)
         }
@@ -640,6 +643,10 @@ extension MatchDetailsViewController: WKNavigationDelegate {
         self.matchFieldWebView.evaluateJavaScript("document.readyState", completionHandler: { complete, error in
             if complete != nil {
                 self.recalculateWebview()
+
+                if self.shouldShowWebView {
+                    self.matchFieldBaseView.isHidden = false
+                }
             }
             else if let error = error {
                 Logger.log("Match details WKWebView didFinish error \(error)")

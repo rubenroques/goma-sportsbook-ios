@@ -125,7 +125,8 @@ class HomeViewController: UIViewController {
     }
 
     private func openMatchDetails(match: Match) {
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
+        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
+        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
