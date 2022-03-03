@@ -354,3 +354,12 @@ Terms of use, Privacy Policy and EULA";
 "betting_notifications" = "Betting notifications";
 "notify_bets_final_result" = "Notify me about my Bets final results";
 "notify_bets_options_results" = "Notify me about my Bets options results";
+
+"add_promo_code" = "Add promotional code";
+"bonus_code" = "Bonus Code";
+
+"more_info" = "More Info";
+"get_bonus" = "Get Bonus";
+
+"available" = "Available";
+"no_bonus" = "No bonus here!";

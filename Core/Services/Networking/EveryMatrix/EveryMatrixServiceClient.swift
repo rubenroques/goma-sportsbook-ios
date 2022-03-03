@@ -298,4 +298,18 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+    func getApplicableBonus(type: String, gamingAccountId: String)
+    -> AnyPublisher<EveryMatrix.ApplicableBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getApplicableBonuses(type: type, gamingAccountID: gamingAccountId),
+                                     decodingType: EveryMatrix.ApplicableBonusResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getClaimableBonus()
+    -> AnyPublisher<EveryMatrix.ClaimableBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getClaimableBonuses,
+                                     decodingType: EveryMatrix.ClaimableBonusResponse.self)
+            .eraseToAnyPublisher()
+    }
+
 }

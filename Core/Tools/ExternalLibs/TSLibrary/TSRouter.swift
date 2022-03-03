@@ -95,7 +95,7 @@ enum TSRouter {
     case removeFromFavorites(id: String)
     case watchBalance
     case balanceChanged
-    case getApplicableBonuses(gamingAccountID: Int)
+    case getApplicableBonuses(type: String, gamingAccountID: String)
     case applyBonusCode(bonusCode: String)
     case forfeitBonus(bonusID: String)
     case getLimits
@@ -632,9 +632,9 @@ enum TSRouter {
                     "specificExportFields": ["gameID"]
             ]
 
-        case .getApplicableBonuses(gamingAccountID: let gamingAcctID):
-            return ["type": "transfer",
-                    "gamingAccountID": gamingAcctID]
+        case .getApplicableBonuses(let type, let gamingAccountId):
+            return ["type": type,
+                    "gamingAccountID": gamingAccountId]
 
         case .getGrantedBonuses, .getClaimableBonuses:
             return [:]
