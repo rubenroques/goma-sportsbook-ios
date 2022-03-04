@@ -12,24 +12,10 @@ import Combine
 class BonusHistoryDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: Public Properties
-    var bonusHistory: [String] = []
-    var shouldReloadData: PassthroughSubject<Void, Never> = .init()
-    var isEmptyStatePublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var bonusHistory: [EveryMatrix.GrantedBonus] = []
 
     override init() {
         super.init()
-
-        self.getBonusHistory()
-    }
-
-    private func getBonusHistory() {
-        //self.bonusActive.append("1")
-
-        if self.bonusHistory.isEmpty {
-            self.isEmptyStatePublisher.send(true)
-        }
-
-        self.shouldReloadData.send()
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -46,7 +32,9 @@ class BonusHistoryDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             if let cell = tableView.dequeueCellType(BonusHistoryTableViewCell.self) {
-
+                if let historyBonus = self.bonusHistory[safe: indexPath.row] {
+                    cell.setupBonus(bonus: historyBonus)
+                }
                 return cell
             }
 

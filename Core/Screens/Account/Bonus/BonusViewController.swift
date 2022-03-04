@@ -19,7 +19,7 @@ class BonusViewController: UIViewController {
     private lazy var promoCodeBaseView: UIView = Self.createPromoCodeBaseView()
     private lazy var promoCodeStackView: UIStackView = Self.createPromoCodeStackView()
     private lazy var promoCodeLabel: UILabel = Self.createPromoCodeLabel()
-    private lazy var promoCodeTextFieldView: HeaderTextFieldView = Self.createPromoCodeTextFieldView()
+    private lazy var promoCodeTextFieldView: ActionTextFieldView = Self.createPromoCodeTextFieldView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
@@ -115,6 +115,8 @@ class BonusViewController: UIViewController {
         self.promoCodeLabel.textColor = UIColor.App.textPrimary
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     // MARK: Binding
@@ -153,14 +155,52 @@ class BonusViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-//        viewModel.isBonusAvailableEmptyPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] emptyState in
-//                if viewModel.bonusListTypePublisher.value == .available && emptyState {
-//                    self?.isEmptyState = emptyState
-//                }
-//            })
-//            .store(in: &cancellables)
+        Publishers.CombineLatest(viewModel.isBonusApplicableLoading, viewModel.isBonusClaimableLoading)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { isApplicableLoading, isClaimableLoading in
+                if isApplicableLoading && isClaimableLoading {
+                    self.isLoading = true
+                }
+                else {
+                    self.isLoading = false
+                    self.tableView.reloadData()
+                }
+
+            })
+            .store(in: &cancellables)
+
+        viewModel.requestBonusDetail = { [weak self] bonus in
+            //self?.showBonusDetail(bonus: bonus)
+            self?.viewModel.updateDataSources()
+        }
+
+        viewModel.requestApplyBonus = { [weak self] bonus in
+            let bonusCode = bonus.code
+            self?.applyBonus(bonusCode: bonusCode)
+        }
+
+    }
+
+    private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus) {
+        let bonusDetailViewController = BonusDetailViewController(bonus: bonus)
+        self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
+    }
+
+    private func applyBonus(bonusCode: String) {
+        Env.everyMatrixClient.applyBonus(bonusCode: bonusCode)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("APPLY BONUS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { [weak self] bonusResponse in
+                print("APPLY BONUS: \(bonusResponse)")
+                self?.viewModel.updateDataSources()
+            })
+            .store(in: &cancellables)
     }
 
 }
@@ -181,9 +221,9 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
         return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
     }
 
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
-    }
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
+//    }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
@@ -193,21 +233,21 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
         return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
     }
 
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
-    }
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
+//    }
+//
+//    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+//        return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
+//    }
 
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 0.01
-    }
+//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return 0.01
+//    }
+//
+//    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+//        return 0.01
+//    }
 
 }
 
@@ -316,8 +356,9 @@ extension BonusViewController {
         return label
     }
 
-    private static func createPromoCodeTextFieldView() -> HeaderTextFieldView {
-        let textFieldView = HeaderTextFieldView()
+    private static func createPromoCodeTextFieldView() -> ActionTextFieldView {
+        let textFieldView = ActionTextFieldView()
+        textFieldView.translatesAutoresizingMaskIntoConstraints = false
         textFieldView.setPlaceholderText(localized("bonus_code"))
         return textFieldView
     }
@@ -421,13 +462,13 @@ extension BonusViewController {
             self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 70),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 30),
             self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
             self.backButton.heightAnchor.constraint(equalToConstant: 20),
             self.backButton.widthAnchor.constraint(equalToConstant: 15),
 
-            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 20),
-            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -20),
+            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 40),
+            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -40),
             self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor)
 
         ])
@@ -451,15 +492,17 @@ extension BonusViewController {
             self.promoCodeStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.promoCodeStackView.topAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.bottomAnchor, constant: 16),
 
-            self.promoCodeLabel.leadingAnchor.constraint(equalTo: self.promoCodeBaseView.leadingAnchor, constant: 16),
-            self.promoCodeLabel.trailingAnchor.constraint(equalTo: self.promoCodeBaseView.trailingAnchor, constant: -16),
+            self.promoCodeBaseView.leadingAnchor.constraint(equalTo: self.promoCodeStackView.leadingAnchor),
+            self.promoCodeBaseView.trailingAnchor.constraint(equalTo: self.promoCodeStackView.trailingAnchor),
+
+            self.promoCodeLabel.leadingAnchor.constraint(equalTo: self.promoCodeBaseView.leadingAnchor, constant: 30),
+            self.promoCodeLabel.trailingAnchor.constraint(equalTo: self.promoCodeBaseView.trailingAnchor, constant: -30),
             self.promoCodeLabel.topAnchor.constraint(equalTo: self.promoCodeBaseView.topAnchor, constant: 8),
 
-            self.promoCodeTextFieldView.leadingAnchor.constraint(equalTo: self.promoCodeBaseView.leadingAnchor, constant: 16),
-            self.promoCodeTextFieldView.trailingAnchor.constraint(equalTo: self.promoCodeBaseView.trailingAnchor, constant: -16),
+            self.promoCodeTextFieldView.leadingAnchor.constraint(equalTo: self.promoCodeBaseView.leadingAnchor, constant: 30),
+            self.promoCodeTextFieldView.trailingAnchor.constraint(equalTo: self.promoCodeBaseView.trailingAnchor, constant: -30),
             self.promoCodeTextFieldView.topAnchor.constraint(equalTo: self.promoCodeLabel.bottomAnchor, constant: 8),
-            self.promoCodeTextFieldView.bottomAnchor.constraint(equalTo: self.promoCodeBaseView.bottomAnchor, constant: 16),
-            self.promoCodeTextFieldView.heightAnchor.constraint(equalToConstant: 80)
+            self.promoCodeTextFieldView.bottomAnchor.constraint(equalTo: self.promoCodeBaseView.bottomAnchor),
         ])
 
         // Table view

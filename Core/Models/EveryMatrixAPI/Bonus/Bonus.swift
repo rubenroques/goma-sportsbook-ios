@@ -26,11 +26,11 @@ extension EveryMatrix {
 
     struct ApplicableBonus: Decodable {
 
-        let code: String?
-        let name: String?
-        let description: String?
-        let url: String?
-        let html: String?
+        let code: String
+        let name: String
+        let description: String
+        let url: String
+        let html: String
         // let minAmount: CurrencyBonus?
 
         enum CodingKeys: String, CodingKey {
@@ -56,13 +56,9 @@ extension EveryMatrix {
         }
     }
 
+    // typealias ClaimableBonusResponse = [ApplicableBonus]
     struct ClaimableBonusResponse: Decodable {
-        let bonuses: [ClaimableBonus]
-
-        init(from decoder: Decoder) throws {
-            var container = try decoder.unkeyedContainer()
-            bonuses = try container.decode([ClaimableBonus].self)
-        }
+        let locallyInjectedKey: [ApplicableBonus]
     }
 
     struct ClaimableBonus: Decodable {
@@ -75,5 +71,48 @@ extension EveryMatrix {
             case name = "name"
         }
 
+    }
+
+    struct GrantedBonusResponse: Decodable {
+
+        let totalRecords: Int?
+        let bonuses: [GrantedBonus]?
+
+        enum CodingKeys: String, CodingKey {
+            case totalRecords = "totalRecords"
+            case bonuses = "bonuses"
+        }
+    }
+
+    struct GrantedBonus: Decodable {
+        let id: String?
+        let name: String?
+        let status: String
+        let type: String?
+        let localizedType: String?
+        let description: String?
+        let vendor: String?
+        let currency: String?
+        let amount: Double?
+        let expiryDate: String?
+        let grantedDate: String?
+
+        enum CodingKeys: String, CodingKey {
+            case id = "id"
+            case name = "name"
+            case status = "status"
+            case type = "type"
+            case localizedType = "localizedType"
+            case description = "description"
+            case vendor = "vendor"
+            case currency = "currency"
+            case amount = "amount"
+            case expiryDate = "expiryDate"
+            case grantedDate = "grantedDate"
+        }
+    }
+
+    struct ApplyBonusResponse: Decodable {
+        
     }
 }

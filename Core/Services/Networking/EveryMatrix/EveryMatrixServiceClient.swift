@@ -219,8 +219,6 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-
-
     func getDisciplines(language: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
         return self.manager.getModel(router: .disciplines(language: language) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .eraseToAnyPublisher()
@@ -309,6 +307,20 @@ class EveryMatrixServiceClient: ObservableObject {
     -> AnyPublisher<EveryMatrix.ClaimableBonusResponse, EveryMatrix.APIError> {
         return self.manager.getModel(router: .getClaimableBonuses,
                                      decodingType: EveryMatrix.ClaimableBonusResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getGrantedBonus()
+    -> AnyPublisher<EveryMatrix.GrantedBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getGrantedBonuses,
+                                     decodingType: EveryMatrix.GrantedBonusResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func applyBonus(bonusCode: String)
+    -> AnyPublisher<EveryMatrix.ApplyBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .applyBonusCode(bonusCode: bonusCode),
+                                     decodingType: EveryMatrix.ApplyBonusResponse.self)
             .eraseToAnyPublisher()
     }
 

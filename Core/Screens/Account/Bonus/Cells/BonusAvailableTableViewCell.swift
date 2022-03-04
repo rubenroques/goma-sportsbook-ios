@@ -31,6 +31,20 @@ class BonusAvailableTableViewCell: UITableViewCell {
         }
     }
 
+    var isClaimableBonus: Bool = false {
+        didSet {
+            if isClaimableBonus {
+                self.getBonusButton.isHidden = false
+            }
+            else {
+                self.getBonusButton.isHidden = true
+            }
+        }
+    }
+
+    var didTapMoreInfoAction: (() -> Void)?
+    var didTapGetBonusAction: (() -> Void)?
+
     // MARK: Lifetime and Cycle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -73,6 +87,20 @@ class BonusAvailableTableViewCell: UITableViewCell {
         self.bottomStackView.backgroundColor = .clear
     }
 
+    func setupBonus(bonus: EveryMatrix.ApplicableBonus) {
+
+        self.titleLabel.text = bonus.name
+
+        self.subtitleLabel.text = bonus.description
+
+        if bonus.url != "" {
+            self.hasBannerImage = true
+        }
+        else {
+            self.hasBannerImage = false
+        }
+    }
+
 }
 
 //
@@ -81,10 +109,12 @@ class BonusAvailableTableViewCell: UITableViewCell {
 extension BonusAvailableTableViewCell {
     @objc private func didTapMoreInfoButton() {
         print("More Info")
+        self.didTapMoreInfoAction?()
     }
 
     @objc private func didTapGetBonusButton() {
         print("Get Bonus")
+        self.didTapGetBonusAction?()
     }
 
 }
@@ -106,8 +136,8 @@ extension BonusAvailableTableViewCell {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.distribution = .fillProportionally
-        stackView.spacing = 0
+        stackView.distribution = .equalSpacing
+        stackView.spacing = 8
         return stackView
     }
 
@@ -215,7 +245,7 @@ extension BonusAvailableTableViewCell {
         NSLayoutConstraint.activate([
             self.bottomStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 12),
             self.bottomStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -12),
-            self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 8),
+            self.bottomStackView.topAnchor.constraint(equalTo: self.topStackView.bottomAnchor, constant: 16),
             self.bottomStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -25),
             self.bottomStackView.heightAnchor.constraint(equalToConstant: 50),
 

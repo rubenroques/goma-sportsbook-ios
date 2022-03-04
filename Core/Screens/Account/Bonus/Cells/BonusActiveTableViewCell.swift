@@ -48,6 +48,13 @@ class BonusActiveTableViewCell: UITableViewCell {
 
     }
 
+    func setupBonus(bonus: EveryMatrix.GrantedBonus) {
+
+        self.titleLabel.text = bonus.name
+
+        self.dateLabel.text = bonus.expiryDate
+    }
+
 }
 
 //
@@ -76,7 +83,7 @@ extension BonusActiveTableViewCell {
     private static func createSubtitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Subtitle here"
+        label.text = "\(localized("expire_date")):"
         label.font = AppFont.with(type: .medium, size: 11)
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -86,7 +93,7 @@ extension BonusActiveTableViewCell {
     private static func createDateLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "01.01.0101"
+        label.text = "01.01.2022"
         label.font = AppFont.with(type: .medium, size: 11)
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)

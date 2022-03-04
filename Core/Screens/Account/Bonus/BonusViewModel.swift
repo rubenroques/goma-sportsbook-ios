@@ -24,7 +24,11 @@ class BonusViewModel: NSObject {
     var isBonusAvailableEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusActiveEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusHistoryEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var isBonusAvailableLoading: CurrentValueSubject<Bool, Never> = .init(false)
+    var isBonusApplicableLoading: CurrentValueSubject<Bool, Never> = .init(false)
+    var isBonusClaimableLoading: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var requestBonusDetail: ((EveryMatrix.ApplicableBonus) -> Void)?
+    var requestApplyBonus: ((EveryMatrix.ApplicableBonus) -> Void)?
 
     enum BonusListType: Int {
         case available = 0
@@ -37,49 +41,176 @@ class BonusViewModel: NSObject {
         super.init()
 
         self.setupPublishers()
+
+        self.getAvailableBonus()
+        self.getGrantedBonus()
     }
 
     func setBonusType(_ type: BonusListType) {
         self.bonusListTypePublisher.value = type
-        print("BONUS TYPE: \(type)")
     }
 
     func setupPublishers() {
 
-        self.bonusAvailableDataSource.shouldReloadData
+        self.bonusAvailableDataSource.requestBonusDetail = { [weak self] bonusIndex in
+            if let bonus = self?.bonusAvailableDataSource.bonusAvailable[safe: bonusIndex] {
+                self?.requestBonusDetail?(bonus.bonus)
+            }
+        }
+
+        self.bonusAvailableDataSource.requestApplyBonus = { [weak self] bonusIndex in
+            if let bonus = self?.bonusAvailableDataSource.bonusAvailable[safe: bonusIndex] {
+                self?.requestApplyBonus?(bonus.bonus)
+            }
+        }
+    }
+
+    func updateDataSources() {
+        self.bonusAvailableDataSource.bonusAvailable = []
+        self.bonusActiveDataSource.bonusActive = []
+        self.bonusHistoryDataSource.bonusHistory = []
+
+        self.getAvailableBonus()
+        self.getGrantedBonus()
+        
+    }
+
+    private func getAvailableBonus() {
+        self.isBonusApplicableLoading.send(true)
+        self.isBonusClaimableLoading.send(true)
+
+        var gamingAccountId = ""
+
+        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
+            gamingAccountId = "\(walletGamingAccountId)"
+        }
+
+        // Get Applicable Bonus
+        Env.everyMatrixClient.getApplicableBonus(type: "deposit", gamingAccountId: gamingAccountId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.shouldReloadData.send()
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("APPLICABLE BONUS ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+                self.isBonusApplicableLoading.send(false)
+            }, receiveValue: { [weak self] bonusResponse in
+                print("APPLICABLE BONUS: \(bonusResponse)")
+                if let bonusList = bonusResponse.bonuses {
+                    for bonus in bonusList {
+                        let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
+                        self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)
+
+                    }
+                }
+
             })
             .store(in: &cancellables)
 
-        self.bonusAvailableDataSource.isEmptyStatePublisher
+        // Get Claimable Bonus
+        Env.everyMatrixClient.getClaimableBonus()
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] emptyState in
-                self?.isBonusAvailableEmptyPublisher.send(emptyState)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("CLAIMABLE BONUS ERROR: \(error)")
+                case .finished:
+                    ()
+                    self.isBonusClaimableLoading.send(false)
+                }
+            }, receiveValue: { [weak self] bonusResponse in
+                print("CLAIMABLE BONUS: \(bonusResponse)")
+                for bonus in bonusResponse.locallyInjectedKey {
+                    let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .claimable)
+                    self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)
+                    }
+
             })
             .store(in: &cancellables)
 
-        self.bonusAvailableDataSource.isBonusLoading
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] loading in
-                ()
-            })
-            .store(in: &cancellables)
+        if self.bonusAvailableDataSource.bonusAvailable.isEmpty {
+            self.isBonusAvailableEmptyPublisher.send(true)
+        }
 
-        self.bonusActiveDataSource.isEmptyStatePublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] emptyState in
-                self?.isBonusActiveEmptyPublisher.send(emptyState)
-            })
-            .store(in: &cancellables)
+    }
 
-        self.bonusHistoryDataSource.isEmptyStatePublisher
+    private func getGrantedBonus() {
+
+        Env.everyMatrixClient.getGrantedBonus()
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] emptyState in
-                self?.isBonusHistoryEmptyPublisher.send(emptyState)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("GRANTED BONUS ERROR: \(error)")
+                case .finished:
+                    ()                }
+            }, receiveValue: { [weak self] bonusResponse in
+                print("GRANTED BONUS: \(bonusResponse)")
+
+                if let bonuses = bonusResponse.bonuses {
+                    self?.processGrantedBonus(bonuses: bonuses)
+                }
+                else {
+                    self?.isBonusActiveEmptyPublisher.send(true)
+                    self?.isBonusHistoryEmptyPublisher.send(true)
+                }
+                //self?.testGranted()
+
             })
             .store(in: &cancellables)
+    }
+
+    private func testGranted() {
+        let bonus1 = EveryMatrix.GrantedBonus(id: "1",
+                                              name: "Bonus1",
+                                              status: "active",
+                                              type: "type",
+                                              localizedType: "type",
+                                              description: "Lorem ipsum dolor",
+                                              vendor: "",
+                                              currency: "",
+                                              amount: 1.0,
+                                              expiryDate: "2022-04-01",
+                                              grantedDate: "2022-03-04")
+
+        let bonus2 = EveryMatrix.GrantedBonus(id: "2",
+                                              name: "Bonus2",
+                                              status: "expired",
+                                              type: "type",
+                                              localizedType: "type",
+                                              description: "Lorem ipsum dolor amen",
+                                              vendor: "",
+                                              currency: "",
+                                              amount: 2.0,
+                                              expiryDate: "2022-03-02",
+                                              grantedDate: "2022-02-01")
+
+        self.bonusActiveDataSource.bonusActive.append(bonus1)
+
+        self.bonusHistoryDataSource.bonusHistory.append(bonus2)
+    }
+
+    private func processGrantedBonus(bonuses: [EveryMatrix.GrantedBonus]) {
+
+        for bonus in bonuses {
+            if bonus.status == "active" {
+                self.bonusActiveDataSource.bonusActive.append(bonus)
+            }
+            else {
+                self.bonusHistoryDataSource.bonusHistory.append(bonus)
+            }
+        }
+
+        if self.bonusActiveDataSource.bonusActive.isEmpty {
+            self.isBonusActiveEmptyPublisher.send(true)
+        }
+
+        if self.bonusHistoryDataSource.bonusHistory.isEmpty {
+            self.isBonusHistoryEmptyPublisher.send(true)
+        }
+
     }
 }
 

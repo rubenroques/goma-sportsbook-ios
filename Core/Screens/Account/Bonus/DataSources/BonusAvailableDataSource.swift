@@ -15,72 +15,13 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var bonusAvailable: [EveryMatrix.ApplicableBonus] = []
-    var shouldReloadData: PassthroughSubject<Void, Never> = .init()
-    var isEmptyStatePublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var isBonusLoading: CurrentValueSubject<Bool, Never> = .init(false)
+    var bonusAvailable: [BonusTypeData] = []
+    var requestBonusDetail: ((Int) -> Void)?
+    var requestApplyBonus: ((Int) -> Void)?
 
     override init() {
         super.init()
 
-        self.getBonusAvailable()
-    }
-
-    private func getBonusAvailable() {
-        self.isBonusLoading.send(true)
-
-        var gamingAccountId = ""
-
-        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
-            gamingAccountId = "\(walletGamingAccountId)"
-        }
-
-        // Get Applicable Bonus
-        Env.everyMatrixClient.getApplicableBonus(type: "deposit", gamingAccountId: gamingAccountId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("APPLICABLE BONUS ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] bonusResponse in
-                print("APPLICABLE BONUS: \(bonusResponse)")
-                if let bonusList = bonusResponse.bonuses {
-                    for bonus in bonusList {
-                        self?.bonusAvailable.append(bonus)
-                    }
-                }
-
-            })
-            .store(in: &cancellables)
-
-        // Get Claimable Bonus
-        Env.everyMatrixClient.getClaimableBonus()
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("CLAIMABLE BONUS ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            }, receiveValue: { [weak self] bonusResponse in
-                print("CLAIMABLE BONUS: \(bonusResponse)")
-//                if let bonusList = bonusResponse.bonuses {
-//                    for bonus in bonusList {
-//                        //self?.bonusAvailable.append(bonus)
-//                    }
-//                }
-            })
-            .store(in: &cancellables)
-
-        if self.bonusAvailable.isEmpty {
-            self.isEmptyStatePublisher.send(true)
-        }
-
-        self.shouldReloadData.send()
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -97,8 +38,24 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             if let cell = tableView.dequeueCellType(BonusAvailableTableViewCell.self) {
+                if let availableBonus = self.bonusAvailable[safe: indexPath.row] {
+                    cell.setupBonus(bonus: availableBonus.bonus)
 
-                cell.hasBannerImage = true
+                    if availableBonus.bonusType == .claimable {
+                        cell.isClaimableBonus = true
+                    }
+                    else {
+                        cell.isClaimableBonus = false
+                    }
+                }
+
+                cell.didTapMoreInfoAction = { [weak self] in
+                    self?.requestBonusDetail?(indexPath.row)
+                }
+
+                cell.didTapGetBonusAction = { [weak self] in
+                    self?.requestApplyBonus?(indexPath.row)
+                }
 
                 return cell
             }
@@ -132,5 +89,15 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
         return 240
 
+    }
+}
+
+struct BonusTypeData {
+    var bonus: EveryMatrix.ApplicableBonus
+    var bonusType: BonusType
+
+    enum BonusType {
+        case applicable
+        case claimable
     }
 }

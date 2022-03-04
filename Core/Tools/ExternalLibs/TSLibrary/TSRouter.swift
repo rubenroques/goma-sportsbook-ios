@@ -639,8 +639,8 @@ enum TSRouter {
         case .getGrantedBonuses, .getClaimableBonuses:
             return [:]
 
-        case .applyBonusCode(bonusCode: let bCode):
-            return ["bonusCode": bCode]
+        case .applyBonusCode(let bonusCode):
+            return ["bonusCode": bonusCode]
 
         case .forfeitBonus(bonusID: let bID):
             return ["bonusID": bID]

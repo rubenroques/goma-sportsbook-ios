@@ -58,6 +58,17 @@ class BonusHistoryTableViewCell: UITableViewCell {
         self.bonusStatusLabel.textColor = UIColor.App.textPrimary
     }
 
+    func setupBonus(bonus: EveryMatrix.GrantedBonus) {
+
+        self.titleLabel.text = bonus.name
+
+        self.startDateLabel.text = bonus.grantedDate
+
+        self.endDateLabel.text = bonus.expiryDate
+
+        self.bonusStatusLabel.text = bonus.status.capitalized
+    }
+
 }
 
 //
@@ -87,7 +98,7 @@ extension BonusHistoryTableViewCell {
     private static func createStartDateDescriptionLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Start Date"
+        label.text = "\(localized("start_date")):"
         label.font = AppFont.with(type: .medium, size: 11)
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -107,7 +118,7 @@ extension BonusHistoryTableViewCell {
     private static func createEndDateDescriptionLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "End Date"
+        label.text = "\(localized("expire_date")):"
         label.font = AppFont.with(type: .medium, size: 11)
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)

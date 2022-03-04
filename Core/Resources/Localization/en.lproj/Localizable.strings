@@ -363,3 +363,6 @@ Terms of use, Privacy Policy and EULA";
 
 "available" = "Available";
 "no_bonus" = "No bonus here!";
+
+"expire_date" = "Expire Date";
+"start_date" = "Start Date";

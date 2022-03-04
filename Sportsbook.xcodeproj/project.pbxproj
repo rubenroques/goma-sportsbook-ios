@@ -870,6 +870,10 @@
 		A99F7A1027D11704008BAF41 /* BonusHistoryDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A0E27D11704008BAF41 /* BonusHistoryDataSource.swift */; };
 		A99F7A1327D11BFE008BAF41 /* Bonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1227D11BFE008BAF41 /* Bonus.swift */; };
 		A99F7A1427D11BFE008BAF41 /* Bonus.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1227D11BFE008BAF41 /* Bonus.swift */; };
+		A99F7A1627D256D0008BAF41 /* ActionTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */; };
+		A99F7A1727D256D0008BAF41 /* ActionTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */; };
+		A99F7A1927D2784C008BAF41 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
+		A99F7A1A27D2784C008BAF41 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -1498,6 +1502,8 @@
 		A99F7A0B27D1168C008BAF41 /* BonusActiveDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusActiveDataSource.swift; sourceTree = "<group>"; };
 		A99F7A0E27D11704008BAF41 /* BonusHistoryDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusHistoryDataSource.swift; sourceTree = "<group>"; };
 		A99F7A1227D11BFE008BAF41 /* Bonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bonus.swift; sourceTree = "<group>"; };
+		A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTextFieldView.swift; sourceTree = "<group>"; };
+		A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusDetailViewController.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -2478,6 +2484,7 @@
 				A9C6023A2716F99A00992E11 /* CheckboxButton.swift */,
 				A9C6023D2716FACB00992E11 /* RadioButton.swift */,
 				457BD61627BBAF6100E5612E /* ContainerViewController.swift */,
+				A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -3093,6 +3100,7 @@
 				A99F79FD27D0D1E8008BAF41 /* Cells */,
 				A99F79F727CF98FB008BAF41 /* BonusViewController.swift */,
 				A99F79FA27CFC949008BAF41 /* BonusViewModel.swift */,
+				A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */,
 			);
 			path = Bonus;
 			sourceTree = "<group>";
@@ -4045,6 +4053,7 @@
 				45D3DE332714889200717124 /* Date+Extension.swift in Sources */,
 				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				457BD61727BBAF6100E5612E /* ContainerViewController.swift in Sources */,
+				A99F7A1627D256D0008BAF41 /* ActionTextFieldView.swift in Sources */,
 				45166D1326F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
 				454990CF27163D3200D57CE2 /* CollapsibleGroupView.swift in Sources */,
 				A9B841B526E914FB00269B05 /* BetOutcome.swift in Sources */,
@@ -4277,6 +4286,7 @@
 				45166CEF26F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
 				45166CF926F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
 				457F49602737C3630047169D /* BetslipSelectionState.swift in Sources */,
+				A99F7A1927D2784C008BAF41 /* BonusDetailViewController.swift in Sources */,
 				45EF5436270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				457BD60E27B6E45100E5612E /* HomeStore.swift in Sources */,
 				A92F5D8D271ED08400884BDF /* CGFloat+Extensions.swift in Sources */,
@@ -4437,6 +4447,7 @@
 				45D3DE342714889200717124 /* Date+Extension.swift in Sources */,
 				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				457BD61827BBAF6100E5612E /* ContainerViewController.swift in Sources */,
+				A99F7A1727D256D0008BAF41 /* ActionTextFieldView.swift in Sources */,
 				45166D1426F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
 				454990D027163D3200D57CE2 /* CollapsibleGroupView.swift in Sources */,
 				A9B841B626E914FB00269B05 /* BetOutcome.swift in Sources */,
@@ -4669,6 +4680,7 @@
 				45166CF026F3548D00E69D65 /* PublishedSSWampMessage.swift in Sources */,
 				45166CFA26F3548D00E69D65 /* UnsubscribedSSWampMessage.swift in Sources */,
 				457F49612737C3630047169D /* BetslipSelectionState.swift in Sources */,
+				A99F7A1A27D2784C008BAF41 /* BonusDetailViewController.swift in Sources */,
 				45EF5437270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				457BD60F27B6E45100E5612E /* HomeStore.swift in Sources */,
 				A92F5D8E271ED08400884BDF /* CGFloat+Extensions.swift in Sources */,
