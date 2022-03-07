@@ -191,12 +191,12 @@ class ProfileLimitsManagementViewController: UIViewController {
         depositHeaderTextFieldView.setKeyboardType(.decimalPad)
         depositHeaderTextFieldView.isCurrency = true
         depositHeaderTextFieldView.didTapIcon = { [weak self] in
-            self?.setLimitAlertInfo(alertType: "deposit")
+            self?.setLimitAlertInfo(alertType: LimitType.deposit.identifier.lowercased())
 
         }
         depositHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
             if let period = self?.depositFrequencySelectTextFieldView.getPickerOption() {
-                self?.showRemoveAlert(limitType: "Deposit", period: period)
+                self?.showRemoveAlert(limitType: LimitType.deposit.identifier, period: period)
             }
 
         }
@@ -213,12 +213,12 @@ class ProfileLimitsManagementViewController: UIViewController {
         bettingHeaderTextFieldView.setKeyboardType(.numberPad)
         bettingHeaderTextFieldView.isCurrency = true
         bettingHeaderTextFieldView.didTapIcon = { [weak self] in
-            self?.setLimitAlertInfo(alertType: "wagering")
+            self?.setLimitAlertInfo(alertType: LimitType.wagering.identifier.lowercased())
         }
 
         bettingHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
             if let period = self?.bettingFrequencySelectTextFieldView.getPickerOption() {
-                self?.showRemoveAlert(limitType: "Wagering", period: period)
+                self?.showRemoveAlert(limitType: LimitType.wagering.identifier, period: period)
             }
 
         }
@@ -235,12 +235,12 @@ class ProfileLimitsManagementViewController: UIViewController {
         lossHeaderTextFieldView.setKeyboardType(.numberPad)
         lossHeaderTextFieldView.isCurrency = true
         lossHeaderTextFieldView.didTapIcon = { [weak self] in
-            self?.setLimitAlertInfo(alertType: "loss")
+            self?.setLimitAlertInfo(alertType: LimitType.loss.identifier.lowercased())
         }
 
         lossHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
             if let period = self?.lossFrequencySelectHeaderTextFieldView.getPickerOption() {
-                self?.showRemoveAlert(limitType: "Loss", period: period)
+                self?.showRemoveAlert(limitType: LimitType.loss.identifier, period: period)
             }
 
         }
@@ -302,17 +302,17 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     private func setLimitAlertInfo(alertType: String) {
 
-        if alertType == "deposit" {
+        if alertType == LimitType.deposit.identifier.lowercased() {
             let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
             let alertTitle = localized("deposit_limit")
             self.showFieldInfo(view: self.depositView, alertTitle: alertTitle, alertText: alertText)
         }
-        else if alertType == "wagering" {
+        else if alertType == LimitType.wagering.identifier.lowercased() {
             let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
             let alertTitle = localized("betting_limit")
             self.showFieldInfo(view: self.bettingView, alertTitle: alertTitle, alertText: alertText)
         }
-        else if alertType == "loss" {
+        else if alertType == LimitType.loss.identifier.lowercased() {
             let alertText = self.viewModel.getAlertInfoText(alertType: alertType)
             let alertTitle = localized("loss_limit")
             self.showFieldInfo(view: self.lossView, alertTitle: alertTitle, alertText: alertText)
@@ -321,12 +321,13 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     private func setupLimitsInfo() {
-
+        let currencyFormatter = CurrencyFormater()
         // Check deposit infot
         if let depositLimit = self.viewModel.depositLimit {
             if let limitAmount = depositLimit.current?.amount {
                 let amountString = "\(limitAmount)"
-                self.depositHeaderTextFieldView.setText(amountString.currencyTypeFormatting())
+                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+                self.depositHeaderTextFieldView.setText(amountFormatted)
             }
 
             if let limitPeriod = depositLimit.current?.period {
@@ -345,7 +346,8 @@ class ProfileLimitsManagementViewController: UIViewController {
         if let wageringLimit = self.viewModel.getWageringOption() {
             if let wageringAmount = wageringLimit.current?.amount {
                 let amountString = "\(wageringAmount)"
-                self.bettingHeaderTextFieldView.setText(amountString.currencyTypeFormatting())
+                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+                self.bettingHeaderTextFieldView.setText(amountFormatted)
             }
 
             if let wageringPeriod = wageringLimit.current?.period {
@@ -363,7 +365,8 @@ class ProfileLimitsManagementViewController: UIViewController {
         if let lossLimit = self.viewModel.getLossOption() {
             if let lossAmount = lossLimit.current?.amount {
                 let amountString = "\(lossAmount)"
-                self.lossHeaderTextFieldView.setText(amountString.currencyTypeFormatting())
+                let amountFormatted = currencyFormatter.currencyTypeFormatting(string: amountString)
+                self.lossHeaderTextFieldView.setText(amountFormatted)
             }
 
             if let lossPeriod = lossLimit.current?.period {
@@ -441,7 +444,7 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
-            self.viewModel.sendLimit(limitType: "Deposit", period: period, amount: amount, currency: currency)
+            self.viewModel.sendLimit(limitType: LimitType.deposit.identifier, period: period, amount: amount, currency: currency)
 
         }
         else if self.viewModel.canUpdateWagering {
@@ -452,7 +455,7 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
-            self.viewModel.sendLimit(limitType: "Wagering", period: period, amount: amount, currency: currency)
+            self.viewModel.sendLimit(limitType: LimitType.wagering.identifier, period: period, amount: amount, currency: currency)
 
         }
         else if self.viewModel.canUpdateLoss {
@@ -463,7 +466,7 @@ class ProfileLimitsManagementViewController: UIViewController {
 
             let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
 
-            self.viewModel.sendLimit(limitType: "Loss", period: period, amount: amount, currency: currency)
+            self.viewModel.sendLimit(limitType: LimitType.loss.identifier, period: period, amount: amount, currency: currency)
 
         }
     }
@@ -482,17 +485,17 @@ class ProfileLimitsManagementViewController: UIViewController {
 
     @IBAction private func editAction() {
 
-        self.viewModel.checkLimitUpdatableStatus(limitType: "deposit",
+        self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.deposit.identifier.lowercased(),
                                                  limitAmount: self.depositHeaderTextFieldView.text,
                                                  limitPeriod: self.depositFrequencySelectTextFieldView.getPickerOption(),
                                                  isLimitUpdatable: isDepositUpdatable)
 
-        self.viewModel.checkLimitUpdatableStatus(limitType: "wagering",
+        self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.wagering.identifier.lowercased(),
                                                  limitAmount: self.bettingHeaderTextFieldView.text,
                                                  limitPeriod: self.bettingFrequencySelectTextFieldView.getPickerOption(),
                                                  isLimitUpdatable: isWageringUpdatable)
 
-        self.viewModel.checkLimitUpdatableStatus(limitType: "loss",
+        self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.loss.identifier.lowercased(),
                                                  limitAmount: self.lossHeaderTextFieldView.text,
                                                  limitPeriod: self.lossFrequencySelectHeaderTextFieldView.getPickerOption(),
                                                  isLimitUpdatable: isLossUpdatable)

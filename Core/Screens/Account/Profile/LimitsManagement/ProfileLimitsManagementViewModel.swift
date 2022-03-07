@@ -23,10 +23,12 @@ class ProfileLimitsManagementViewModel: NSObject {
     var lossLimitPerDay: EveryMatrix.Limit?
     var lossLimitPerWeek: EveryMatrix.Limit?
     var lossLimitPerMonth: EveryMatrix.Limit?
+
     var limitsLoadedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var limitOptionsSet: [String] = []
     var limitOptionsCheckPublisher: CurrentValueSubject<[String], Never> = .init([])
     var limitOptionsErrorPublisher: CurrentValueSubject<String, Never> = .init("")
+
     var canUpdateDeposit: Bool = false
     var canUpdateWagering: Bool = false
     var canUpdateLoss: Bool = false

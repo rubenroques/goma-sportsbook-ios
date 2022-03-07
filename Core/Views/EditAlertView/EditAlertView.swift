@@ -105,6 +105,7 @@ class EditAlertView: NibView {
 
     func setAlertText(_ text: String) {
         alertTextLabel.text = text
+        self.invalidateIntrinsicContentSize()
     }
 
     @IBAction private func closeView() {

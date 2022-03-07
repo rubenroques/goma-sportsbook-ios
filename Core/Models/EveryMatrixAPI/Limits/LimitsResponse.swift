@@ -66,3 +66,20 @@ extension EveryMatrix {
     }
 
 }
+
+enum LimitType {
+    case deposit
+    case wagering
+    case loss
+
+    var identifier: String {
+        switch self {
+        case .deposit:
+            return "Deposit"
+        case .wagering:
+            return "Wagering"
+        case .loss:
+            return "Loss"
+        }
+    }
+}

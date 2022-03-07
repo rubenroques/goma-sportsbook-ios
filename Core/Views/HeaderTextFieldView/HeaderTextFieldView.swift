@@ -560,7 +560,9 @@ extension HeaderTextFieldView: UITextFieldDelegate {
         self.isActive = false
 
         if isCurrency {
-            textField.text = textField.text?.currencyTypeFormatting()
+            let currencyFormatter = CurrencyFormater()
+            let amountFormatted = currencyFormatter.currencyTypeFormatting(string: textField.text ?? "")
+            textField.text = amountFormatted
         }
 
         if self.textField.text != "" {
