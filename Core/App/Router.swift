@@ -255,7 +255,7 @@ class Router {
         let betslipViewController = BetslipViewController()
         betslipViewController.isModalInPresentation = true
 
-        Env.urlSchemaManager.showBetslipPublisher.send(false)
+        Env.urlSchemaManager.shouldShowBetslipPublisher.send(false)
 
         self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
 
@@ -265,7 +265,7 @@ class Router {
 
         Env.urlSchemaManager.getBetslipTicketData(betToken: betToken)
 
-        Env.urlSchemaManager.showBetslipPublisher
+        Env.urlSchemaManager.shouldShowBetslipPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] showBetslip in
                 if showBetslip {

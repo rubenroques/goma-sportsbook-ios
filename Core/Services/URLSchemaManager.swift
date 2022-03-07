@@ -19,13 +19,12 @@ class URLSchemaManager {
     var redirectPublisher: CurrentValueSubject<[String: String], Never>
 
     var ticketPublisher: AnyCancellable?
-    var showBetslipPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var shouldShowBetslipPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     // MARK: Lifetime and Cycle
     init() {
         self.redirectPublisher = .init([:])
     }
-
 
     // MARK: General functions
     func setRedirect(subject: [String: String]) {
@@ -71,7 +70,7 @@ class URLSchemaManager {
                 if tickets.count == betData.selections.count && self?.isSharedBet == true {
                     self?.isSharedBet = false
                     self?.unregisterSharedBets()
-                    self?.showBetslipPublisher.send(true)
+                    self?.shouldShowBetslipPublisher.send(true)
                 }
             })
 
@@ -111,22 +110,19 @@ class URLSchemaManager {
 
     private func processBetAggregator(aggregator: EveryMatrix.Aggregator, betSelection: SharedBet) {
 
-        var match: EveryMatrix.Match?
         var markets: [EveryMatrix.Market] = []
         var betOutcomes: [EveryMatrix.BetOutcome] = []
         var marketOutcomeRelations: [EveryMatrix.MarketOutcomeRelation] = []
         var bettingOffers: [EveryMatrix.BettingOffer] = []
 
         var betSelectionBettingOfferId: String?
-        var marketId: String?
 
         for content in aggregator.content ?? [] {
             switch content {
             case .tournament:
                 ()
-            case .match(let matchContent):
-                match = matchContent
-
+            case .match:
+                ()
             case .matchInfo:
                 ()
             case .market(let marketContent):
@@ -149,7 +145,6 @@ class URLSchemaManager {
                 marketOutcomeRelations.append(marketOutcomeRelationContent)
             case .marketGroup:
                 ()
-
             case .location:
                ()
             case .cashout:
