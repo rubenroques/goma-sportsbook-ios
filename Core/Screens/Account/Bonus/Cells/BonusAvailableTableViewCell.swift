@@ -93,12 +93,14 @@ class BonusAvailableTableViewCell: UITableViewCell {
 
         self.subtitleLabel.text = bonus.description
 
-        if bonus.url != "" {
-            self.hasBannerImage = true
-        }
-        else {
-            self.hasBannerImage = false
-        }
+        // Testing image banner
+//        if bonus.url != "" {
+//            self.hasBannerImage = true
+//        }
+//        else {
+//            self.hasBannerImage = false
+//        }
+        self.hasBannerImage = false
     }
 
 }

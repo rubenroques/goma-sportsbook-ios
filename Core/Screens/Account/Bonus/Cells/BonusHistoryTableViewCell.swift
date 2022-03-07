@@ -62,11 +62,28 @@ class BonusHistoryTableViewCell: UITableViewCell {
 
         self.titleLabel.text = bonus.name
 
-        self.startDateLabel.text = bonus.grantedDate
+        self.startDateLabel.text = getDateFormatted(dateString: bonus.grantedDate ?? "")
 
-        self.endDateLabel.text = bonus.expiryDate
+        self.endDateLabel.text = getDateFormatted(dateString: bonus.expiryDate ?? "")
 
         self.bonusStatusLabel.text = bonus.status.capitalized
+    }
+
+    func getDateFormatted(dateString: String) -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+
+        let date = dateString
+
+        if let formattedDate = dateFormatterGet.date(from: date) {
+
+            return dateFormatterPrint.string(from: formattedDate)
+        }
+
+        return ""
     }
 
 }

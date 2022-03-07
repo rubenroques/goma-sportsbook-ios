@@ -366,3 +366,8 @@ Terms of use, Privacy Policy and EULA";
 
 "expire_date" = "Expire Date";
 "start_date" = "Start Date";
+"add" = "Add";
+"invalid_bonus_code" = "Invalid bonus code.";
+"error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
+"permanent" = "Permanent";
+"terms_conditions" = "Terms and conditions";

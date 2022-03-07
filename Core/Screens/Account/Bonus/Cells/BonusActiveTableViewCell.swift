@@ -49,10 +49,35 @@ class BonusActiveTableViewCell: UITableViewCell {
     }
 
     func setupBonus(bonus: EveryMatrix.GrantedBonus) {
-
+        
         self.titleLabel.text = bonus.name
 
-        self.dateLabel.text = bonus.expiryDate
+        let formattedDate = getDateFormatted(dateString: bonus.expiryDate ?? "")
+
+        if formattedDate != "" {
+            self.dateLabel.text = formattedDate
+        }
+        else {
+            self.dateLabel.text = localized("permanent")
+        }
+
+    }
+
+    func getDateFormatted(dateString: String) -> String {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+
+        let dateFormatterPrint = DateFormatter()
+        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+
+        let date = dateString
+
+        if let formattedDate = dateFormatterGet.date(from: date) {
+
+            return dateFormatterPrint.string(from: formattedDate)
+        }
+
+        return ""
     }
 
 }

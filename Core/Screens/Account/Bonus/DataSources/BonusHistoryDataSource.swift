@@ -35,6 +35,9 @@ class BonusHistoryDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 if let historyBonus = self.bonusHistory[safe: indexPath.row] {
                     cell.setupBonus(bonus: historyBonus)
                 }
+
+                cell.selectionStyle = .none
+
                 return cell
             }
 

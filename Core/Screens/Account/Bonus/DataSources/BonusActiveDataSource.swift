@@ -35,6 +35,9 @@ class BonusActiveDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
                 if let activeBonus = self.bonusActive[safe: indexPath.row] {
                     cell.setupBonus(bonus: activeBonus)
                 }
+                
+                cell.selectionStyle = .none
+
                 return cell
             }
 

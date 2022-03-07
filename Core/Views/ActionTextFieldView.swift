@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ActionTextFieldView: UIView {
 
@@ -15,15 +16,32 @@ class ActionTextFieldView: UIView {
     private lazy var textField: UITextField = Self.createTextField()
     private lazy var actionButton: UIButton = Self.createActionButton()
 
-    private lazy var centerBottomConstraint: NSLayoutConstraint = Self.createCenterBottomConstraint()
-    private lazy var centerTopConstraint: NSLayoutConstraint = Self.createCenterTopConstraint()
+    private lazy var headerLabelCenterConstraint: NSLayoutConstraint = Self.createHeaderLabelCenterConstraint()
+    private lazy var headerLabelCenterTopConstraint: NSLayoutConstraint = Self.createHeaderLabelCenterTopConstraint()
 
     private var isActive: Bool = false
 
     // MARK: Public Properties
     var shouldScalePlaceholder = true
     var shouldBeginEditing: (() -> Bool)?
-    var hasText: ((Bool) -> Void)?
+    var didTapButtonAction: (() -> Void)?
+
+    var textPublisher: AnyPublisher<String?, Never> {
+        return self.textField.textPublisher
+    }
+
+    var isActionDisabled: Bool = true {
+        didSet {
+            if isActionDisabled {
+                self.actionButton.isEnabled = false
+                self.actionButton.layer.borderColor = UIColor.App.buttonTextDisablePrimary.cgColor
+            }
+            else {
+                self.actionButton.isEnabled = true
+                self.actionButton.layer.borderColor = UIColor.App.textPrimary.cgColor
+            }
+        }
+    }
 
     var highlightColor = UIColor.App.highlightPrimary {
         didSet {
@@ -51,6 +69,8 @@ class ActionTextFieldView: UIView {
 
     func commonInit() {
         self.textField.delegate = self
+
+        self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
     }
 
     func setupWithTheme() {
@@ -65,9 +85,18 @@ class ActionTextFieldView: UIView {
 
     }
 
-    func setPlaceholderText(_ placeholder: String) {
+    func setPlaceholderText(placeholder: String) {
         self.textField.placeholder = ""
         self.headerLabel.text = placeholder
+    }
+
+    func setActionButtonTitle(title: String) {
+        self.actionButton.setTitle(title, for: .normal)
+    }
+
+    func getTextFieldValue() -> String {
+        let text = self.textField.text ?? ""
+        return text
     }
 
     func shouldSlideDown() -> Bool {
@@ -83,8 +112,8 @@ class ActionTextFieldView: UIView {
             return
         }
 
-        self.centerBottomConstraint.isActive = false
-        self.centerTopConstraint.isActive = true
+        self.headerLabelCenterConstraint.isActive = false
+        self.headerLabelCenterTopConstraint.isActive = true
 
         UIView.animate(withDuration: animated ? 0.2 : 0, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
@@ -105,8 +134,8 @@ class ActionTextFieldView: UIView {
             return
         }
 
-        self.centerBottomConstraint.isActive = true
-        self.centerTopConstraint.isActive = false
+        self.headerLabelCenterConstraint.isActive = true
+        self.headerLabelCenterTopConstraint.isActive = false
 
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
@@ -127,6 +156,16 @@ class ActionTextFieldView: UIView {
         self.textField.resignFirstResponder()
         return true
     }
+}
+
+//
+// MARK: - Actions
+//
+extension ActionTextFieldView {
+    @objc private func didTapActionButton() {
+        self.didTapButtonAction?()
+    }
+
 }
 
 //
@@ -153,6 +192,7 @@ extension ActionTextFieldView {
     private static func createTextField() -> UITextField {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return textField
     }
 
@@ -163,15 +203,16 @@ extension ActionTextFieldView {
         button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         StyleHelper.styleInfoButton(button: button)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+        button.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return button
     }
 
-    private static func createCenterBottomConstraint() -> NSLayoutConstraint {
+    private static func createHeaderLabelCenterConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
 
-    private static func createCenterTopConstraint() -> NSLayoutConstraint {
+    private static func createHeaderLabelCenterTopConstraint() -> NSLayoutConstraint {
         let constraint = NSLayoutConstraint()
         return constraint
     }
@@ -200,12 +241,10 @@ extension ActionTextFieldView {
 
             self.headerLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
             self.headerLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            //self.headerLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 20),
-            self.headerLabel.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
 
             self.textField.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 16),
-            self.textField.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -30),
-            self.textField.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.textField.trailingAnchor.constraint(equalTo: self.actionButton.leadingAnchor, constant: -10),
+            self.textField.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor, constant: 5),
 
             self.actionButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
             self.actionButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
@@ -213,11 +252,25 @@ extension ActionTextFieldView {
 
         ])
 
-        self.centerBottomConstraint = NSLayoutConstraint(item: self.headerLabel, attribute: .top, relatedBy: .equal, toItem: self.containerView, attribute: .top, multiplier: 1, constant: 20)
-        self.centerBottomConstraint.isActive = true
+        self.headerLabelCenterConstraint =
+        NSLayoutConstraint(item: self.headerLabel,
+                           attribute: .centerY,
+                           relatedBy: .equal,
+                           toItem: self.containerView,
+                           attribute: .centerY,
+                           multiplier: 1,
+                           constant: 0)
+        self.headerLabelCenterConstraint.isActive = true
 
-        self.centerTopConstraint = NSLayoutConstraint(item: self.headerLabel, attribute: .top, relatedBy: .equal, toItem: self.containerView, attribute: .top, multiplier: 1, constant: 10)
-        self.centerTopConstraint.isActive = false
+        self.headerLabelCenterTopConstraint =
+        NSLayoutConstraint(item: self.headerLabel,
+                           attribute: .centerY,
+                           relatedBy: .equal,
+                           toItem: self.containerView,
+                           attribute: .centerY,
+                           multiplier: 1,
+                           constant: -15)
+        self.headerLabelCenterTopConstraint.isActive = false
 
     }
 
@@ -253,32 +306,10 @@ extension ActionTextFieldView: UITextFieldDelegate {
 
         self.isActive = false
 
-        if self.textField.text != "" {
-            hasText?(true)
-        }
-        else {
-            hasText?(false)
-        }
-
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        //self.didTapReturn?()
         return true
     }
 
-//    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-//
-//        if self.isCurrency {
-//            let decimals = CharacterSet(charactersIn: "0123456789.")
-//            if range.length>0  && range.location == 0 {
-//                return false
-//
-//            }
-//            else if string.rangeOfCharacter(from: decimals) == nil && string != "" {
-//                    return false
-//            }
-//        }
-//        return true
-//    }
 }

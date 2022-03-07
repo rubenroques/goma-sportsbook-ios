@@ -20,6 +20,7 @@ class BonusViewController: UIViewController {
     private lazy var promoCodeStackView: UIStackView = Self.createPromoCodeStackView()
     private lazy var promoCodeLabel: UILabel = Self.createPromoCodeLabel()
     private lazy var promoCodeTextFieldView: ActionTextFieldView = Self.createPromoCodeTextFieldView()
+    private lazy var promoCodeLineSeparatorView: UIView = Self.createPromoCodeLineSeparatorView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var emptyStateView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
@@ -89,6 +90,24 @@ class BonusViewController: UIViewController {
 
         self.bonusSegmentedControl.addTarget(self, action: #selector(didChangeSegmentValue), for: .valueChanged)
 
+        self.promoCodeTextFieldView.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] text in
+                if text != "" {
+                    self?.promoCodeTextFieldView.isActionDisabled = false
+                }
+                else {
+                    self?.promoCodeTextFieldView.isActionDisabled = true
+                }
+            })
+            .store(in: &cancellables)
+
+        self.promoCodeTextFieldView.didTapButtonAction = { [weak self] in
+            print("APPLY BONUS!")
+            let bonusCode = self?.promoCodeTextFieldView.getTextFieldValue() ?? ""
+            self?.applyBonus(bonusCode: bonusCode)
+        }
+
     }
 
     // MARK: Layout and Theme
@@ -113,6 +132,8 @@ class BonusViewController: UIViewController {
         self.promoCodeBaseView.backgroundColor = .clear
 
         self.promoCodeLabel.textColor = UIColor.App.textPrimary
+
+        self.promoCodeLineSeparatorView.backgroundColor = UIColor.App.buttonTextDisablePrimary
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -170,8 +191,8 @@ class BonusViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.requestBonusDetail = { [weak self] bonus in
-            //self?.showBonusDetail(bonus: bonus)
-            self?.viewModel.updateDataSources()
+            self?.showBonusDetail(bonus: bonus)
+            //self?.viewModel.updateDataSources()
         }
 
         viewModel.requestApplyBonus = { [weak self] bonus in
@@ -193,6 +214,14 @@ class BonusViewController: UIViewController {
                 switch completion {
                 case .failure(let error):
                     print("APPLY BONUS ERROR: \(error)")
+                    let errorString = "\(error)"
+                    if errorString.lowercased().contains("invalid") {
+                        self.showAlert(type: .error, text: localized("invalid_bonus_code"))
+                    }
+                    else {
+                        self.showAlert(type: .error, text: localized("error_bonus_code"))
+                    }
+
                 case .finished:
                     ()
                 }
@@ -201,6 +230,34 @@ class BonusViewController: UIViewController {
                 self?.viewModel.updateDataSources()
             })
             .store(in: &cancellables)
+    }
+
+    func showAlert(type: EditAlertView.AlertState, text: String = "") {
+
+        let popup = EditAlertView()
+        popup.alertState = type
+        if text != "" {
+            popup.setAlertText(text)
+        }
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseIn, animations: {
+            popup.alpha = 1
+        }, completion: { _ in
+        })
+        popup.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(popup)
+        NSLayoutConstraint.activate([
+            popup.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor),
+            popup.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor),
+            popup.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        popup.onClose = {
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
+                popup.alpha = 0
+            }, completion: { _ in
+                popup.removeFromSuperview()
+            })
+        }
+        self.view.bringSubviewToFront(popup)
     }
 
 }
@@ -359,8 +416,15 @@ extension BonusViewController {
     private static func createPromoCodeTextFieldView() -> ActionTextFieldView {
         let textFieldView = ActionTextFieldView()
         textFieldView.translatesAutoresizingMaskIntoConstraints = false
-        textFieldView.setPlaceholderText(localized("bonus_code"))
+        textFieldView.setPlaceholderText(placeholder: localized("bonus_code"))
+        textFieldView.setActionButtonTitle(title: localized("add"))
         return textFieldView
+    }
+
+    private static func createPromoCodeLineSeparatorView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createTableView() -> UITableView {
@@ -425,6 +489,7 @@ extension BonusViewController {
 
         self.promoCodeBaseView.addSubview(self.promoCodeLabel)
         self.promoCodeBaseView.addSubview(self.promoCodeTextFieldView)
+        self.promoCodeBaseView.addSubview(self.promoCodeLineSeparatorView)
 
         self.view.addSubview(self.tableView)
 
@@ -502,7 +567,12 @@ extension BonusViewController {
             self.promoCodeTextFieldView.leadingAnchor.constraint(equalTo: self.promoCodeBaseView.leadingAnchor, constant: 30),
             self.promoCodeTextFieldView.trailingAnchor.constraint(equalTo: self.promoCodeBaseView.trailingAnchor, constant: -30),
             self.promoCodeTextFieldView.topAnchor.constraint(equalTo: self.promoCodeLabel.bottomAnchor, constant: 8),
-            self.promoCodeTextFieldView.bottomAnchor.constraint(equalTo: self.promoCodeBaseView.bottomAnchor),
+            self.promoCodeTextFieldView.bottomAnchor.constraint(equalTo: self.promoCodeLineSeparatorView.topAnchor, constant: -20),
+
+            self.promoCodeLineSeparatorView.leadingAnchor.constraint(equalTo: self.promoCodeBaseView.leadingAnchor, constant: 30),
+            self.promoCodeLineSeparatorView.trailingAnchor.constraint(equalTo: self.promoCodeBaseView.trailingAnchor, constant: -30),
+            self.promoCodeLineSeparatorView.heightAnchor.constraint(equalToConstant: 1),
+            self.promoCodeLineSeparatorView.bottomAnchor.constraint(equalTo: self.promoCodeBaseView.bottomAnchor),
         ])
 
         // Table view

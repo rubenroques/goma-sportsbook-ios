@@ -15,6 +15,8 @@ class BonusDetailViewController: UIViewController {
     private lazy var containerView: UIView = Self.createContainerView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var descriptionLabel: UILabel = Self.createDescriptionLabel()
+    private lazy var termsTitleLabel: UILabel = Self.createTermsTitleLabel()
+    private lazy var termsLinkLabel: UILabel = Self.createTermsLinkLabel()
     private var bonus: EveryMatrix.ApplicableBonus
 
     // MARK: Lifetime and Cycle
@@ -36,6 +38,11 @@ class BonusDetailViewController: UIViewController {
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
 
+        let termsLinktap = UITapGestureRecognizer(target: self, action: #selector(didTapTermsLinkLabel))
+
+        self.termsLinkLabel.isUserInteractionEnabled = true
+        self.termsLinkLabel.addGestureRecognizer(termsLinktap)
+
         self.setupBonusDetails()
     }
 
@@ -50,12 +57,24 @@ class BonusDetailViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.descriptionLabel.textColor = UIColor.App.textPrimary
+
+        self.termsTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.termsLinkLabel.textColor = UIColor.App.textPrimary
     }
 
     private func setupBonusDetails() {
         self.titleLabel.text = self.bonus.name
 
         self.descriptionLabel.text = self.bonus.description
+
+        self.termsTitleLabel.text = localized("terms_conditions")
+
+        self.termsLinkLabel.text = "https://sportsbook.gomagaming.com/terms/bonus"
     }
 
 }
@@ -66,6 +85,12 @@ class BonusDetailViewController: UIViewController {
 extension BonusDetailViewController {
     @objc private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc private func didTapTermsLinkLabel() {
+        if let url = URL(string: "https://sportsbook.gomagaming.com/terms/bonus") {
+            UIApplication.shared.open(url)
+        }
     }
 
 }
@@ -124,6 +149,26 @@ extension BonusDetailViewController {
         return label
     }
 
+    private static func createTermsTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Terms"
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
+
+    private static func createTermsLinkLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Terms Link"
+        label.font = AppFont.with(type: .medium, size: 10)
+        label.textAlignment = .left
+        label.numberOfLines = 0
+        return label
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topView)
 
@@ -134,6 +179,8 @@ extension BonusDetailViewController {
 
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.descriptionLabel)
+        self.containerView.addSubview(self.termsTitleLabel)
+        self.containerView.addSubview(self.termsLinkLabel)
 
         self.initConstraints()
     }
@@ -171,7 +218,15 @@ extension BonusDetailViewController {
 
             self.descriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
             self.descriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 20)
+            self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 20),
+
+            self.termsTitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
+            self.termsTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
+            self.termsTitleLabel.topAnchor.constraint(equalTo: self.descriptionLabel.bottomAnchor, constant: 30),
+
+            self.termsLinkLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
+            self.termsLinkLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
+            self.termsLinkLabel.topAnchor.constraint(equalTo: self.termsTitleLabel.bottomAnchor, constant: 20),
         ])
     }
 

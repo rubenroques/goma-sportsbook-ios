@@ -156,40 +156,9 @@ class BonusViewModel: NSObject {
                     self?.isBonusActiveEmptyPublisher.send(true)
                     self?.isBonusHistoryEmptyPublisher.send(true)
                 }
-                //self?.testGranted()
 
             })
             .store(in: &cancellables)
-    }
-
-    private func testGranted() {
-        let bonus1 = EveryMatrix.GrantedBonus(id: "1",
-                                              name: "Bonus1",
-                                              status: "active",
-                                              type: "type",
-                                              localizedType: "type",
-                                              description: "Lorem ipsum dolor",
-                                              vendor: "",
-                                              currency: "",
-                                              amount: 1.0,
-                                              expiryDate: "2022-04-01",
-                                              grantedDate: "2022-03-04")
-
-        let bonus2 = EveryMatrix.GrantedBonus(id: "2",
-                                              name: "Bonus2",
-                                              status: "expired",
-                                              type: "type",
-                                              localizedType: "type",
-                                              description: "Lorem ipsum dolor amen",
-                                              vendor: "",
-                                              currency: "",
-                                              amount: 2.0,
-                                              expiryDate: "2022-03-02",
-                                              grantedDate: "2022-02-01")
-
-        self.bonusActiveDataSource.bonusActive.append(bonus1)
-
-        self.bonusHistoryDataSource.bonusHistory.append(bonus2)
     }
 
     private func processGrantedBonus(bonuses: [EveryMatrix.GrantedBonus]) {

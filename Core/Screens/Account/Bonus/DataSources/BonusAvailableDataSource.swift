@@ -57,6 +57,8 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
                     self?.requestApplyBonus?(indexPath.row)
                 }
 
+                cell.selectionStyle = .none
+
                 return cell
             }
 
