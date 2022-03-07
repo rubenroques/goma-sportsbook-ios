@@ -29,7 +29,7 @@ class BetslipManager: NSObject {
 
     var betPlacedDetailsErrorsPublisher: CurrentValueSubject<[BetPlacedDetails], Never>
     var betslipPlaceBetResponseErrorsPublisher: CurrentValueSubject<[BetslipPlaceBetResponse], Never>
-
+   
 
     private var bettingTicketRegisters: [String: EndpointPublisherIdentifiable] = [:]
     private var bettingTicketSubscribers: [String: AnyCancellable] = [:]
@@ -403,6 +403,7 @@ extension BetslipManager {
         return Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipPlaceBetResponse.self)
             .map({ response in
+                
                 return BetPlacedDetails.init(response: response, tickets: updatedTicketSelections)
             })
             .eraseToAnyPublisher()
@@ -427,7 +428,7 @@ extension BetslipManager {
             .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
-                    self.clearAllBettingTickets()
+                    //self.clearAllBettingTickets()
                     self.newBetsPlacedPublisher.send()
                 }
             })
@@ -453,7 +454,7 @@ extension BetslipManager {
             .map({ return BetPlacedDetails.init(response: $0, tickets: updatedTicketSelections) })
             .handleEvents(receiveOutput: { betslipPlaceBetResponse in
                 if betslipPlaceBetResponse.response.betSucceed ?? false {
-                    self.clearAllBettingTickets()
+                    //self.clearAllBettingTickets()
                     self.newBetsPlacedPublisher.send()
                 }
             })

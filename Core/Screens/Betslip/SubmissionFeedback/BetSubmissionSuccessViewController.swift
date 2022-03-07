@@ -37,7 +37,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     var totalOddsValue: String
     var possibleEarningsValue: String
     var numberOfBets: Int
-    var isChecked : Bool = false
+    var isChecked : Bool = true
 
     var willDismissAction: (() -> Void)?
 
@@ -61,8 +61,6 @@ class BetSubmissionSuccessViewController: UIViewController {
                 betPlacedDetails.response.totalPriceValue ?? 1.0
             })
             .reduce(1.0, *)
-
-        // self.totalOddsValue = OddFormatter.formatOdd(withValue: totalOddDouble)
         self.totalOddsValue = OddConverter.stringForValue(totalOddDouble, format: UserDefaults.standard.userOddsFormat)
 
         //
@@ -86,8 +84,6 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.setupWithTheme()
     
-        
-        
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
         checkboxImage.addGestureRecognizer(checkboxTap)
         
@@ -129,7 +125,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
         self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)
        
-        self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
+        self.checkboxImage.image = UIImage(named: "checkbox_selected_icon")
         StyleHelper.styleButton(button: self.continueButton)
         self.checkboxLabel.backgroundColor = .clear
         self.checkboxLabel.textColor = UIColor.App.textSecondary
@@ -139,6 +135,12 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     @IBAction private func didTapContinueButton() {
+       
+        
+        if !isChecked {
+            Env.betslipManager.clearAllBettingTickets()
+        }
+        
         if self.isModal {
             self.willDismissAction?()
             self.dismiss(animated: true, completion: nil)
