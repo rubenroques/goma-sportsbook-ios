@@ -29,12 +29,15 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var possibleEarningsLabel: UILabel!
     @IBOutlet private weak var betsMadeLabel: UILabel!
     
+    @IBOutlet private weak var checkboxImage: UIImageView!
     
-    @IBOutlet private weak var checkboxButton: UIButton!
+    @IBOutlet private weak var checkboxLabel: UILabel!
+    
     
     var totalOddsValue: String
     var possibleEarningsValue: String
     var numberOfBets: Int
+    var isChecked : Bool = false
 
     var willDismissAction: (() -> Void)?
 
@@ -83,10 +86,10 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.setupWithTheme()
     
-        self.checkboxButton.isEnabled = true
         
-        //let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckboxButton))
-        //checkboxButton.addGestureRecognizer(checkboxTap)
+        
+        let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
+        checkboxImage.addGestureRecognizer(checkboxTap)
         
     }
 
@@ -105,17 +108,34 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.bottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
+        
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
         self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
-        self.betsMadeLabel.textColor = UIColor.App.textPrimary
-        self.totalOddsLabel.textColor = UIColor.App.textPrimary
-        self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
-        self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
-        self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
-        self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
+        self.messageTitleLabel.font = AppFont.with(type: .bold, size: 32)
+        self.messageSubtitleLabel.font = AppFont.with(type: .semibold, size: 24)
         
+        self.betsMadeLabel.textColor = UIColor.App.textPrimary
+        self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
+        self.betsMadeLabel.font = AppFont.with(type: .semibold, size: 16)
+        self.betsMadeValueLabel.font = AppFont.with(type: .bold, size: 23)
+        
+        self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
+        self.totalOddsLabel.textColor = UIColor.App.textPrimary
+        self.totalOddsValueLabel.font = AppFont.with(type: .bold, size: 23)
+        self.totalOddsLabel.font = AppFont.with(type: .semibold, size: 16)
+        
+        self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
+        self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
+        self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
+        self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)
+       
+        self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
         StyleHelper.styleButton(button: self.continueButton)
-        checkboxButton.isHidden = false
+        self.checkboxLabel.backgroundColor = .clear
+        self.checkboxLabel.textColor = UIColor.App.textSecondary
+        self.checkboxLabel.text = localized("keep_bet_checkbox")
+        self.checkboxLabel.font = AppFont.with(type: .semibold, size: 14)
+
     }
 
     @IBAction private func didTapContinueButton() {
@@ -132,11 +152,15 @@ class BetSubmissionSuccessViewController: UIViewController {
   
     
     @IBAction private func didTapCheckbox() {
-     
-        self.checkboxButton.setImage(UIImage(named: "active_toggle_icon"), for: .normal)
-        self.checkboxButton.backgroundColor = UIColor.App.highlightPrimary
-        self.checkboxButton.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        self.checkboxButton.titleLabel?.text = "twstedfkldfs"
-     
+       
+        if self.isChecked{
+            self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
+           
+        }else{
+            self.checkboxImage.image = UIImage(named: "checkbox_selected_icon")
+           
+        }
+        self.isChecked = !isChecked
+
     }
 }
