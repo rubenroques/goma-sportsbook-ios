@@ -252,10 +252,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.commonInit()
-        
-        let notificationCenter = NotificationCenter.default
-        notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
-        
+   
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
         self.settingsPickerBaseView.alpha = 0.0
@@ -654,6 +651,12 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.isKeyboardShowingPublisher.send(false) 
+    }
+
+    
     func getUserSettings() {
 
         if let userSetting = UserDefaults.standard.string(forKey: "user_betslip_settings"),
@@ -664,7 +667,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
     }
-
+    
+   
     func setUserSettings() {
         UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
     }
@@ -1169,10 +1173,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
-    @objc func appMovedToBackground(){
-        self.isKeyboardShowingPublisher.send(false)
-        
-    }
     
     @objc func keyboardWillShow(notification: NSNotification) {
     
