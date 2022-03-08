@@ -252,7 +252,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.commonInit()
-        
+   
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
         self.settingsPickerBaseView.alpha = 0.0
@@ -651,6 +651,12 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.isKeyboardShowingPublisher.send(false) 
+    }
+
+    
     func getUserSettings() {
 
         if let userSetting = UserDefaults.standard.string(forKey: "user_betslip_settings"),
@@ -661,7 +667,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
     }
-
+    
+   
     func setUserSettings() {
         UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
     }
@@ -1166,6 +1173,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+    
     @objc func keyboardWillShow(notification: NSNotification) {
     
         self.isKeyboardShowingPublisher.send(true)
