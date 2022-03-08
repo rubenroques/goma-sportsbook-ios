@@ -8,6 +8,7 @@
 import UIKit
 import Combine
 import LinkPresentation
+import WebKit
 
 class MatchDetailsViewController: UIViewController {
 
@@ -15,7 +16,6 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailView: UIView!
     @IBOutlet private var headerDetailTopView: UIView!
     @IBOutlet private var backButton: UIButton!
-    @IBOutlet private var matchStatsButton: UIButton!
     @IBOutlet private var shareButton: UIButton!
 
     @IBOutlet private var headerCompetitionDetailView: UIView!
@@ -40,7 +40,14 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
 
     @IBOutlet private var marketTypeSeparator: UILabel!
-    
+
+    @IBOutlet private var matchFieldBaseView: UIView!
+    @IBOutlet private var matchFieldToggleView: UIView!
+    @IBOutlet private var matchFieldTitleLabel: UILabel!
+    @IBOutlet private var matchFieldTitleArrowImageView: UIImageView!
+    @IBOutlet private var matchFieldWebView: WKWebView!
+    @IBOutlet private var matchFieldWebViewHeight: NSLayoutConstraint!
+
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
 
@@ -114,12 +121,31 @@ class MatchDetailsViewController: UIViewController {
     var match: Match?
     var matchId: String?
 
+    private var matchFielHeight: CGFloat = 0
+    private var isMatchFieldExpanded: Bool = false {
+        didSet {
+            if isMatchFieldExpanded {
+                self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_collapse_icon")
+                self.matchFieldWebViewHeight.constant = matchFielHeight
+            }
+            else {
+                self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
+                self.matchFieldWebViewHeight.constant = 0
+            }
+
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut) {
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+
     var viewModel: MatchDetailsViewModel
 
     var matchDetails: [Match] = []
 
     private var matchDetailsRegister: EndpointPublisherIdentifiable?
-    var matchDetailsAggregatorPublisher: AnyCancellable?
+    private var matchDetailsAggregatorPublisher: AnyCancellable?
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -136,6 +162,7 @@ class MatchDetailsViewController: UIViewController {
         self.matchId = matchId
         self.viewModel = MatchDetailsViewModel(matchId: matchId)
         self.match = self.viewModel.match
+
         super.init(nibName: "MatchDetailsViewController", bundle: nil)
     }
 
@@ -147,13 +174,10 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.matchFieldWebViewHeight.constant = 0
+
         self.commonInit()
         self.setupWithTheme()
-
-        self.matchStatsButton.isHidden = true
-        if self.match?.sportType == "1" || self.match?.sportType == "3" {
-            self.matchStatsButton.isHidden = false
-        }
 
         self.viewModel.marketGroupsTypesDataChanged = { [weak self] in
             self?.marketTypesCollectionView.reloadData()
@@ -189,7 +213,18 @@ class MatchDetailsViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
-        
+
+        // Hide match field if the sport doesn't support it
+//        if self.match?.sportType != "1" || self.match?.sportType != "3" {
+//            self.matchFieldBaseView.isHidden = true
+//            self.hiddenMatchFieldConstraint.isActive = true
+//        }
+
+        if let match = self.match {
+            let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
+            self.matchFieldWebView.load(request)
+        }
+
         self.marketTypesCollectionView.reloadData()
         self.tableView.reloadData()
 
@@ -276,7 +311,7 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.showsHorizontalScrollIndicator = false
         self.marketTypesCollectionView.alwaysBounceHorizontal = true
         self.marketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
-                                       forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
+                                                forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         self.marketTypesCollectionView.delegate = self.viewModel
         self.marketTypesCollectionView.dataSource = self.viewModel
 
@@ -307,6 +342,12 @@ class MatchDetailsViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        self.matchFieldWebView.scrollView.alwaysBounceVertical = false
+        self.matchFieldWebView.scrollView.bounces = false
+        self.matchFieldWebView.navigationDelegate = self
+
+        self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
@@ -358,6 +399,12 @@ class MatchDetailsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
+
+        self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.matchFieldToggleView.backgroundColor = UIColor.App.backgroundTertiary
+        self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
+
+        self.matchFieldTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     func setupMatchDetailPublisher() {
@@ -532,7 +579,11 @@ class MatchDetailsViewController: UIViewController {
         })
 
     }
-    
+
+    @IBAction private func didTapFieldToogleView() {
+        self.isMatchFieldExpanded.toggle()
+    }
+
     @IBAction private func didTapBackAction() {
         self.navigationController?.popViewController(animated: true)
         self.dismiss(animated: true, completion: nil)
@@ -546,8 +597,6 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @IBAction private func didTapShareButton() {
-        // print("SNAPSHOT: \(self.viewModel.gameSnapshot)")
-
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
 
@@ -563,8 +612,42 @@ class MatchDetailsViewController: UIViewController {
         let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
         let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.gameSnapshot], applicationActivities: nil)
-        present(share, animated: true, completion: nil)
-
+        self.present(share, animated: true, completion: nil)
     }
 
+}
+
+extension MatchDetailsViewController: WKNavigationDelegate {
+
+    private func recalculateWebview() {
+        executeDelayed(0.5) {
+            self.matchFieldWebView.evaluateJavaScript("document.body.scrollHeight", completionHandler: { height, error in
+                if let heightFloat = height as? CGFloat {
+                    self.redrawWebView(withHeight: heightFloat)
+                }
+                if let error = error {
+                    Logger.log("Match details WKWebView didFinish error \(error)")
+                }
+            })
+        }
+    }
+
+    private func redrawWebView(withHeight heigth: CGFloat) {
+        self.matchFielHeight = heigth
+    }
+
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        self.matchFieldWebView.evaluateJavaScript("document.readyState", completionHandler: { complete, error in
+            if complete != nil {
+                self.recalculateWebview()
+            }
+            else if let error = error {
+                Logger.log("Match details WKWebView didFinish error \(error)")
+            }
+        })
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+
+    }
 }

@@ -192,6 +192,8 @@
 		454F0A8127C4E95A003123DF /* OutrightMarketDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A7F27C4E95A003123DF /* OutrightMarketDetailsViewModel.swift */; };
 		454F0A8327C4EA69003123DF /* OutrightMarketDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8227C4EA69003123DF /* OutrightMarketDetailsStore.swift */; };
 		454F0A8427C4EA69003123DF /* OutrightMarketDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8227C4EA69003123DF /* OutrightMarketDetailsStore.swift */; };
+		454F0A8927C6468B003123DF /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
+		454F0A8A27C6468B003123DF /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
 		4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
 		455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455643A026F2634E00EE78FA /* GomaClientSettings.swift */; };
@@ -1133,6 +1135,7 @@
 		454F0A7C27C41C22003123DF /* OutrightMarketDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightMarketDetailsViewController.swift; sourceTree = "<group>"; };
 		454F0A7F27C4E95A003123DF /* OutrightMarketDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightMarketDetailsViewModel.swift; sourceTree = "<group>"; };
 		454F0A8227C4EA69003123DF /* OutrightMarketDetailsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightMarketDetailsStore.swift; sourceTree = "<group>"; };
+		454F0A8827C6468B003123DF /* SportGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportGroupViewModel.swift; sourceTree = "<group>"; };
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
 		455643A026F2634E00EE78FA /* GomaClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaClientSettings.swift; sourceTree = "<group>"; };
 		455A0C5026BD902C00EC572D /* ShowcaseProd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShowcaseProd.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2741,6 +2744,7 @@
 		45D8C9D527BD483D00C131E6 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				454F0A8827C6468B003123DF /* SportGroupViewModel.swift */,
 				457BD60A27B6C00B00E5612E /* SportMatchLineViewModel.swift */,
 				45628E7C27BEE02400AAB160 /* SuggestedBetLineViewModel.swift */,
 			);
@@ -3334,11 +3338,11 @@
 		A9E7C68A27B526C500F784C9 /* MyFavorites */ = {
 			isa = PBXGroup;
 			children = (
+				A9E7C68B27B526EA00F784C9 /* MyFavoritesViewController.swift */,
 				A9E7C69D27B6AF5C00F784C9 /* Aggregators */,
 				A9E7C69627B581BD00F784C9 /* Cells */,
 				A9E7C69227B5636800F784C9 /* DataSources */,
 				A9E7C68E27B5404400F784C9 /* ViewModels */,
-				A9E7C68B27B526EA00F784C9 /* MyFavoritesViewController.swift */,
 			);
 			path = MyFavorites;
 			sourceTree = "<group>";
@@ -4202,6 +4206,7 @@
 				45EF5436270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				457BD60E27B6E45100E5612E /* HomeStore.swift in Sources */,
 				A92F5D8D271ED08400884BDF /* CGFloat+Extensions.swift in Sources */,
+				454F0A8927C6468B003123DF /* SportGroupViewModel.swift in Sources */,
 				A9E7C69027B5405B00F784C9 /* MyFavoritesViewModel.swift in Sources */,
 				4515635F26BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
@@ -4584,6 +4589,7 @@
 				45EF5437270C603D00D1E13E /* MatchFiltersViewController.swift in Sources */,
 				457BD60F27B6E45100E5612E /* HomeStore.swift in Sources */,
 				A92F5D8E271ED08400884BDF /* CGFloat+Extensions.swift in Sources */,
+				454F0A8A27C6468B003123DF /* SportGroupViewModel.swift in Sources */,
 				A9E7C69127B5405B00F784C9 /* MyFavoritesViewModel.swift in Sources */,
 				4515636026BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
@@ -4826,7 +4832,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00315;
+				CURRENT_PROJECT_VERSION = 00400;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4834,7 +4840,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -4852,7 +4858,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00315;
+				CURRENT_PROJECT_VERSION = 00400;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4860,7 +4866,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.3;
+				MARKETING_VERSION = 0.0.4;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";

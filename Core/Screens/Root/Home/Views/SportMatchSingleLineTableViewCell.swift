@@ -14,6 +14,7 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     var didSelectSeeAllLive: ((Sport) -> Void)?
 
     var tappedMatchLineAction: ((Match) -> Void)?
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
@@ -68,7 +69,6 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.seeAllView.backgroundColor = UIColor.App.backgroundTertiary
-        self.seeAllView.layer.borderColor = UIColor.App.separatorLine.cgColor
         self.seeAllLabel.textColor = UIColor.App.textPrimary
     }
 
@@ -273,7 +273,10 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
-                        // TODO: cell.matchStatsViewModel = self.matchStatsViewModel
+
+                        if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                            cell.matchStatsViewModel = matchStatsViewModel
+                        }
 
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
@@ -288,7 +291,9 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
 
-                        // TODO: cell.matchStatsViewModel = self.matchStatsViewModel
+                        if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                            cell.matchStatsViewModel = matchStatsViewModel
+                        }
 
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,

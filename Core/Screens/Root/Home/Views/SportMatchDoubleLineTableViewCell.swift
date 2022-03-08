@@ -14,6 +14,7 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
     var didSelectSeeAllLive: ((Sport) -> Void)?
 
     var tappedMatchLineAction: ((Match) -> Void)?
+    var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
@@ -87,55 +88,17 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
             })
             .store(in: &cancellables)
 
-//        Publishers.CombineLatest(viewModel.layoutTypePublisher, viewModel.loadingPublisher)
-//            //.removeDuplicates()
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] layoutType, loadingState in
-//                
-//                self?.titleLabel.text = "\(layoutType) \(loadingState)"
-//
-//                if loadingState == .loading {
-//                }
-//                else if loadingState == .empty {
-//                    self?.topCollectionView.isHidden = true
-//                    self?.bottomCollectionView.isHidden = true
-//                    self?.seeAllBaseView.isHidden = true
-//                }
-//                else if loadingState == .loaded {
-//                    
-//                    switch layoutType {
-//                    case .doubleLine:
-//                        self?.topCollectionView.isHidden = false
-//                        self?.bottomCollectionView.isHidden = false
-//                        self?.seeAllBaseView.isHidden = false
-//                    case .singleLine:
-//                        self?.topCollectionView.isHidden = false
-//                        self?.bottomCollectionView.isHidden = true
-//                        self?.seeAllBaseView.isHidden = false
-//                    case .competition:
-//                        self?.topCollectionView.isHidden = false
-//                        self?.bottomCollectionView.isHidden = true
-//                        self?.seeAllBaseView.isHidden = true
-//                    }
-//                }
-//            }
-//            .store(in: &cancellables)
-
-//        self.viewModel?.layoutTypePublisher
-//            .removeDuplicates()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] layoutType in
-//                // self?.reloadCollections()
-//                self?.titleLabel.text = "\(layoutType)"
-//            })
-//            .store(in: &cancellables)
-
         self.viewModel?.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.reloadCollections()
             })
             .store(in: &cancellables)
+
+        self.seeAllLabel.text = "Go to Popular"
+        if self.viewModel?.isMatchLineLive() ?? false {
+            self.seeAllLabel.text = "Go to Live"
+        }
 
         self.reloadCollections()
     }
@@ -187,24 +150,7 @@ extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
                 }
             }
         }
-        
-//        let width = screenWidth*0.6
-//        if scrollView.contentOffset.x > width {
-//            if !self.showingBackSliderView {
-//                self.showingBackSliderView = true
-//                UIView.animate(withDuration: 0.2) {
-//                    self.backSliderView.alpha = 1.0
-//                }
-//            }
-//        }
-//        else {
-//            if self.showingBackSliderView {
-//                self.showingBackSliderView = false
-//                UIView.animate(withDuration: 0.2) {
-//                    self.backSliderView.alpha = 0.0
-//                }
-//            }
-//        }
+
     }
     
 }
@@ -278,17 +224,6 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
 
             return cell
         }
-
-        if collectionLineIndex == 0 && viewModel.isCompetitionLine() {
-            guard
-                let cell = collectionView.dequeueCellType(CompetitionWidgetCollectionViewCell.self, indexPath: indexPath),
-                let viewModel = self.viewModel?.competitionViewModel()
-            else {
-                fatalError()
-            }
-            cell.configure(withViewModel: viewModel)
-            return cell
-        }
         else if indexPath.row == 0, let match = self.viewModel?.match(forLine: collectionLineIndex) {
 
             if self.viewModel?.isMatchLineLive() ?? false {
@@ -311,7 +246,6 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
             else {
                 guard
                     let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
-
                 else {
                     fatalError()
                 }
@@ -325,7 +259,6 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.shouldShowCountryFlag(true)
                 return cell
             }
-
         }
         else {
             if let match = viewModel.match(forLine: collectionLineIndex), let market = match.markets[safe: indexPath.row] {
@@ -335,8 +268,10 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
 
                 if market.outcomes.count == 2 {
                     if let cell = collectionView.dequeueCellType(OddDoubleCollectionViewCell.self, indexPath: indexPath) {
-                        // TODO: cell.matchStatsViewModel = self.matchStatsViewModel
 
+                        if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                            cell.matchStatsViewModel = matchStatsViewModel
+                        }
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso,
@@ -350,8 +285,9 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 else {
                     if let cell = collectionView.dequeueCellType(OddTripleCollectionViewCell.self, indexPath: indexPath) {
 
-                        // TODO: cell.matchStatsViewModel = self.matchStatsViewModel
-
+                        if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                            cell.matchStatsViewModel = matchStatsViewModel
+                        }
                         cell.setupWithMarket(market, match: match,
                                              teamsText: teamsText,
                                              countryIso: countryIso,
