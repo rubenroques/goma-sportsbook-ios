@@ -252,6 +252,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.commonInit()
+        
         let notificationCenter = NotificationCenter.default
         notificationCenter.addObserver(self, selector: #selector(appMovedToBackground), name: UIApplication.willResignActiveNotification, object: nil)
         
@@ -1169,7 +1170,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     @objc func appMovedToBackground(){
-        self.secondaryPlaceBetBaseView.isHidden = true
+        self.isKeyboardShowingPublisher.send(false)
         
     }
     
