@@ -187,7 +187,7 @@ class LiveEventsViewController: UIViewController {
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
-        filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
+        filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize

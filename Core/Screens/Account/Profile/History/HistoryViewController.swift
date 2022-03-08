@@ -41,24 +41,7 @@ class HistoryViewController: UIViewController{
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: HistoryViewModel
     private var filterSelectedOption: Int = 0
-    
-    lazy var gradient: CAGradientLayer = {
-        let gradient = CAGradientLayer()
-        gradient.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
-        gradient.locations =  [0, 0.45, 1]
-        gradient.startPoint = CGPoint(x: 0.0, y: 0.5)
-        gradient.endPoint = CGPoint(x: 1.0, y: 0.5)
-        return gradient
-        
-        
-    }()
-   /* rightGradientMaskLayer.frame = rightGradientBaseView.bounds
-    rightGradientMaskLayer.colors = [UIColor.clear.cgColor, UIColor.white.cgColor, UIColor.white.cgColor]
-    rightGradientMaskLayer.locations = [0, 0.45, 1]
-    rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
-    rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
-    rightGradientBaseView.layer.mask = rightGradientMaskLayer*/
-    
+
     // MARK: - Lifetime and Cycle
     init(viewModel: HistoryViewModel = HistoryViewModel()) {
         self.viewModel = viewModel
@@ -123,7 +106,7 @@ class HistoryViewController: UIViewController{
         self.emptyStateBaseView.isHidden = true
         self.bind(toViewModel: viewModel)
         
-        //rightGradientBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        let color = UIColor.App.backgroundPrimary
         rightGradientBaseView.backgroundColor = color
         let rightGradientMaskLayer = CAGradientLayer()
         rightGradientMaskLayer.frame = rightGradientBaseView.bounds
@@ -132,6 +115,7 @@ class HistoryViewController: UIViewController{
         rightGradientMaskLayer.startPoint = CGPoint(x: 0.0, y: 0.5)
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         rightGradientBaseView.layer.mask = rightGradientMaskLayer
+        
     }
 
     // MARK: - Layout and Theme
@@ -149,7 +133,6 @@ class HistoryViewController: UIViewController{
 
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-       
        
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
@@ -687,23 +670,13 @@ extension HistoryViewController {
             self.filtersButtonImage.topAnchor.constraint(equalTo: self.filterBaseView.topAnchor, constant: 8),
             self.filtersButtonImage.trailingAnchor.constraint(equalTo: self.filterBaseView.trailingAnchor, constant: -4),
             self.filtersButtonImage.centerYAnchor.constraint(equalTo: self.filterBaseView.centerYAnchor),
-            //self.filtersButtonImage.centerXAnchor.constraint(equalTo: self.filterBaseView.centerXAnchor),
-            /*self.leftGradientBaseView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
-            self.leftGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.topAnchor),
-            self.leftGradientBaseView.bottomAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.leftGradientBaseView.widthAnchor.constraint(equalToConstant: 40),
-          
-            
+       
+            self.rightGradientBaseView.widthAnchor.constraint(equalToConstant: 55),
+            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.rightGradientBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            self.rightGradientBaseView.centerYAnchor.constraint(equalTo: self.topSliderView.centerYAnchor),
             self.rightGradientBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderView.bottomAnchor),
-            self.rightGradientBaseView.widthAnchor.constraint(equalToConstant: 50),
-             */
-            self.rightGradientBaseView.widthAnchor.constraint(equalToConstant: 50),
-            self.rightGradientBaseView.topAnchor.constraint(equalTo: self.topSliderCollectionView.topAnchor),
-            self.rightGradientBaseView.bottomAnchor.constraint(equalTo: self.topSliderCollectionView.bottomAnchor),
-            self.rightGradientBaseView.trailingAnchor.constraint(equalTo: self.topSliderView.trailingAnchor),
-            self.rightGradientBaseView.centerYAnchor.constraint(equalTo: self.topSliderCollectionView.centerYAnchor),
+            
         ])
         
         
