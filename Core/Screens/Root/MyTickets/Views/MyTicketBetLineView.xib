@@ -25,6 +25,7 @@
                 <outlet property="indicatorBaseView" destination="Ovs-WL-i4P" id="m9K-yg-umc"/>
                 <outlet property="indicatorInternalBaseView" destination="yXI-4y-bft" id="e2g-Vg-Yok"/>
                 <outlet property="indicatorLabel" destination="kfI-T8-xC9" id="rvO-it-W4Q"/>
+                <outlet property="liveIcon" destination="g0N-Di-45e" id="A6c-6a-grl"/>
                 <outlet property="locationImageView" destination="eP6-bT-gBw" id="BU6-oh-MZt"/>
                 <outlet property="marketLabel" destination="aec-Af-FUf" id="fuA-3X-Mxv"/>
                 <outlet property="oddTitleLabel" destination="2au-VK-aFF" id="DaD-pC-QSV"/>
@@ -68,8 +69,14 @@
                                 </label>
                             </subviews>
                         </stackView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_live" translatesAutoresizingMaskIntoConstraints="NO" id="g0N-Di-45e">
+                            <rect key="frame" x="568" y="13.5" width="12" height="10"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="12" id="Tt4-sP-YFf"/>
+                            </constraints>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" text="Vestibulum venenatis purus a nisl consequat tincidunt. Ut laoreet finibus nisl, s" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dDo-fO-dxP">
-                            <rect key="frame" x="514" y="8.5" width="62" height="20"/>
+                            <rect key="frame" x="514" y="7" width="62" height="23.5"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="62" id="PPA-or-mfe"/>
                             </constraints>
@@ -87,14 +94,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="588" height="31"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="248" verticalHuggingPriority="248" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="DGC-11-9Ob">
-                                                    <rect key="frame" x="12" y="2.5" width="522" height="26.5"/>
+                                                    <rect key="frame" x="12" y="-0.5" width="523.5" height="32.5"/>
                                                     <string key="text">Vestibulum venenatis purus a nisl consequat tincidunt. Ut laoreet finibus nisl, semper porta orci porttitor id. In leo lacus, maximus vitae felis ornare, feugiat bibendum nibh. </string>
                                                     <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="REn-8L-ovb">
-                                                    <rect key="frame" x="540" y="8.5" width="36" height="14"/>
+                                                    <rect key="frame" x="541.5" y="7.5" width="34.5" height="16.5"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -113,14 +120,14 @@
                                             <rect key="frame" x="0.0" y="31" width="588" height="31"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="248" verticalHuggingPriority="248" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.75" translatesAutoresizingMaskIntoConstraints="NO" id="cii-t0-3Ds">
-                                                    <rect key="frame" x="12" y="2.5" width="522" height="26.5"/>
+                                                    <rect key="frame" x="12" y="-0.5" width="523.5" height="32.5"/>
                                                     <string key="text">Vestibulum venenatis purus a nisl consequat tincidunt. Ut laoreet finibus nisl, semper porta orci porttitor id. In leo lacus, maximus vitae felis ornare, feugiat bibendum nibh. </string>
                                                     <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KM0-Io-NHp">
-                                                    <rect key="frame" x="540" y="8.5" width="36" height="14"/>
+                                                    <rect key="frame" x="541.5" y="7.5" width="34.5" height="16.5"/>
                                                     <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -163,14 +170,14 @@
                                             <rect key="frame" x="0.0" y="0.0" width="588" height="29"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="248" verticalHuggingPriority="248" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aec-Af-FUf">
-                                                    <rect key="frame" x="12" y="2.5" width="392.5" height="24"/>
+                                                    <rect key="frame" x="12" y="0.5" width="378" height="28"/>
                                                     <string key="text">Vestibulum venenatis purus a nisl consequat tincidunt. Ut laoreet finibus nisl, semper porta orci porttitor id. In leo lacus, maximus vitae felis ornare, feugiat bibendum nibh. </string>
                                                     <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kN9-vA-zBm">
-                                                    <rect key="frame" x="410.5" y="2.5" width="165.5" height="24"/>
+                                                    <rect key="frame" x="396" y="0.5" width="180" height="28"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="lessThanOrEqual" constant="180" id="BFZ-gt-ifU"/>
                                                     </constraints>
@@ -193,14 +200,14 @@
                                             <rect key="frame" x="0.0" y="29" width="588" height="29"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="248" verticalHuggingPriority="248" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2au-VK-aFF">
-                                                    <rect key="frame" x="12" y="8.5" width="508" height="12"/>
+                                                    <rect key="frame" x="12" y="7.5" width="508" height="14"/>
                                                     <string key="text">Vestibulum venenatis purus a nisl consequat tincidunt. Ut laoreet finibus nisl, semper porta orci porttitor id. In leo lacus, maximus vitae felis ornare, feugiat bibendum nibh. </string>
                                                     <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="12"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b8e-Jr-sFQ">
-                                                    <rect key="frame" x="526" y="8.5" width="50" height="12"/>
+                                                    <rect key="frame" x="526" y="7.5" width="50" height="14"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="5h7-8s-QHF"/>
                                                     </constraints>
@@ -234,6 +241,8 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="dDo-fO-dxP" secondAttribute="trailing" constant="12" id="0Oe-wh-7IF"/>
                         <constraint firstAttribute="trailing" secondItem="YBe-bD-GYV" secondAttribute="trailing" id="4w7-fI-HTr"/>
+                        <constraint firstItem="g0N-Di-45e" firstAttribute="centerY" secondItem="rwQ-5M-fWg" secondAttribute="centerY" id="7UT-ay-2Bf"/>
+                        <constraint firstAttribute="trailing" secondItem="g0N-Di-45e" secondAttribute="trailing" constant="8" id="Fii-Qh-tKj"/>
                         <constraint firstItem="b6t-KY-r0L" firstAttribute="top" secondItem="rwQ-5M-fWg" secondAttribute="bottom" constant="8" id="Idp-Cg-wkd"/>
                         <constraint firstItem="YBe-bD-GYV" firstAttribute="leading" secondItem="YPg-OO-9uf" secondAttribute="leading" id="Iol-gX-SAx"/>
                         <constraint firstItem="dDo-fO-dxP" firstAttribute="centerY" secondItem="rwQ-5M-fWg" secondAttribute="centerY" id="LXZ-yf-uzb"/>
@@ -251,14 +260,14 @@
                     </constraints>
                 </view>
                 <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ovs-WL-i4P">
-                    <rect key="frame" x="547" y="11" width="52" height="19"/>
+                    <rect key="frame" x="548" y="11" width="51" height="19"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yXI-4y-bft">
-                            <rect key="frame" x="0.0" y="0.0" width="72" height="19"/>
+                            <rect key="frame" x="0.0" y="0.0" width="71" height="19"/>
                             <color key="backgroundColor" white="0.074962797619999993" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kfI-T8-xC9">
-                            <rect key="frame" x="12" y="4" width="28" height="11"/>
+                            <rect key="frame" x="12" y="3" width="27" height="13"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="11"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
@@ -289,4 +298,7 @@
             <point key="canvasLocation" x="33.333333333333336" y="207.92410714285714"/>
         </view>
     </objects>
+    <resources>
+        <image name="icon_live" width="10" height="10"/>
+    </resources>
 </document>
