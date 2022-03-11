@@ -116,3 +116,20 @@ extension EveryMatrix {
         
     }
 }
+
+enum GrantedBonusType {
+    case freeBet
+    case oddsBoost
+    case standard
+
+    var identifier: String {
+        switch self {
+        case .freeBet:
+            return "freeBet"
+        case .oddsBoost:
+            return "oddsBoost"
+        case .standard:
+            return "standard"
+        }
+    }
+}

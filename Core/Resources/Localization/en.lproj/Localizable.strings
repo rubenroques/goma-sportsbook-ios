@@ -371,3 +371,6 @@ Terms of use, Privacy Policy and EULA";
 "error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
 "permanent" = "Permanent";
 "terms_conditions" = "Terms and conditions";
+
+"use_freebet" = "Use %s of freebet.";
+"use_boosted_odds" = "Use boosted odds %s";

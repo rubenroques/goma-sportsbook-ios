@@ -51,6 +51,23 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var errorLateralTopView: UIView!
     @IBOutlet private weak var errorLateralBottomView: UIView!
 
+    private lazy var bonusStackView: UIStackView = Self.createBonusStackView()
+
+    private lazy var freeBetView: BonusSwitchView = Self.createFreeBetView()
+
+    var showBonusInfo: Bool = false {
+        didSet {
+            if showBonusInfo {
+                self.bonusStackView.isHidden = false
+            }
+            else {
+                self.bonusStackView.isHidden = true
+            }
+        }
+    }
+
+    var isFreeBetSelected: ((Bool) -> Void)?
+
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
 
@@ -94,6 +111,10 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.setupWithTheme()
 
         self.errorView.isHidden = true
+
+        self.showBonusInfo = false
+
+        self.setupSubviews()
 
     }
 
@@ -154,6 +175,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.maxStake = 0
         self.userBalance = 0
+
+        self.freeBetView.isSwitchOn = false
     }
 
     func setupWithTheme() {
@@ -353,6 +376,31 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     }
 
+    func setupFreeBetInfo(freeBet: BetslipFreebet, isSwitchOn: Bool = false) {
+        self.freeBetView.setupBonusInfo(bonus: freeBet, bonusType: .freeBet)
+
+        if isSwitchOn {
+            self.freeBetView.isSwitchOn = true
+            self.buttonsBaseView.isUserInteractionEnabled = false
+        }
+
+        self.freeBetView.didTappedSwitch = {
+            if self.freeBetView.isSwitchOn {
+                //self.changedFreebetSelectionState?(freeBet)
+                self.currentValue = Int(freeBet.freeBetAmount * 100.0)
+                self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBet.freeBetAmount))
+                self.buttonsBaseView.isUserInteractionEnabled = false
+                self.isFreeBetSelected?(true)
+            }
+            else {                //self.changedFreebetSelectionState?(nil)
+                self.currentValue = 0
+                self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: 0))
+                self.buttonsBaseView.isUserInteractionEnabled = true
+                self.isFreeBetSelected?(false)
+            }
+        }
+    }
+
     @IBAction private func didTapDeleteButton() {
         if let bettingTicket = self.bettingTicket {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -442,4 +490,44 @@ extension SingleBettingTicketTableViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
+}
+
+//
+// MARK: Subviews initialization and setup
+//
+extension SingleBettingTicketTableViewCell {
+
+    private static func createBonusStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .vertical
+        stackView.spacing = 0
+        return stackView
+    }
+
+    private static func createFreeBetView() -> BonusSwitchView {
+        let bonusSwitchView = BonusSwitchView()
+        bonusSwitchView.translatesAutoresizingMaskIntoConstraints = false
+        return bonusSwitchView
+    }
+
+    private func setupSubviews() {
+        self.stackView.addArrangedSubview(self.bonusStackView)
+
+        self.bonusStackView.addArrangedSubview(self.freeBetView)
+
+        self.initConstraints()
+    }
+
+    private func initConstraints() {
+
+        // Bonus stack view
+        NSLayoutConstraint.activate([
+            self.bonusStackView.leadingAnchor.constraint(equalTo: self.stackView.leadingAnchor, constant: 0),
+            self.bonusStackView.trailingAnchor.constraint(equalTo: self.stackView.trailingAnchor, constant: 0),
+
+        ])
+
+    }
+
 }

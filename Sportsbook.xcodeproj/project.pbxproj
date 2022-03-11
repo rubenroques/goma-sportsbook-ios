@@ -874,6 +874,12 @@
 		A99F7A1727D256D0008BAF41 /* ActionTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */; };
 		A99F7A1927D2784C008BAF41 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
 		A99F7A1A27D2784C008BAF41 /* BonusDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */; };
+		A99F7A1D27DA1182008BAF41 /* BonusSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */; };
+		A99F7A1E27DA1182008BAF41 /* BonusSwitchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */; };
+		A99F7A2027DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */; };
+		A99F7A2127DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */; };
+		A99F7A2327DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
+		A99F7A2427DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -1504,6 +1510,9 @@
 		A99F7A1227D11BFE008BAF41 /* Bonus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bonus.swift; sourceTree = "<group>"; };
 		A99F7A1527D256D0008BAF41 /* ActionTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionTextFieldView.swift; sourceTree = "<group>"; };
 		A99F7A1827D2784C008BAF41 /* BonusDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusDetailViewController.swift; sourceTree = "<group>"; };
+		A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchView.swift; sourceTree = "<group>"; };
+		A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreSubmissionBetslipViewModel.swift; sourceTree = "<group>"; };
+		A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -1934,6 +1943,7 @@
 				A98F3A552795C20F0029C3DB /* SuggestedBetViewModel.swift */,
 				F48CB99E27628C280070052B /* BetSuggestedCollectionViewCell.swift */,
 				F48CB99F27628C280070052B /* BetSuggestedCollectionViewCell.xib */,
+				A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -2355,6 +2365,7 @@
 				454E0A9A2732C0EA00794E0C /* PreSubmissionBetslipViewController.swift */,
 				454E0A9B2732C0EA00794E0C /* PreSubmissionBetslipViewController.xib */,
 				454E0AC0273305BE00794E0C /* Cells */,
+				A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */,
 			);
 			path = PreSubmission;
 			sourceTree = "<group>";
@@ -2458,6 +2469,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A99F7A1B27DA1139008BAF41 /* BonusViews */,
 				A9E7C6AE27BD63A100F784C9 /* SettingsViews */,
 				F498349F27AC513A0091BEA1 /* DropDownSelectionView */,
 				A96B618227A03BEF005DC376 /* SearchViews */,
@@ -3131,6 +3143,14 @@
 				A99F7A1227D11BFE008BAF41 /* Bonus.swift */,
 			);
 			path = Bonus;
+			sourceTree = "<group>";
+		};
+		A99F7A1B27DA1139008BAF41 /* BonusViews */ = {
+			isa = PBXGroup;
+			children = (
+				A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */,
+			);
+			path = BonusViews;
 			sourceTree = "<group>";
 		};
 		A9A836AF26C6AC5D00508923 /* Maintenance */ = {
@@ -4080,6 +4100,7 @@
 				455A0C5426BD902C00EC572D /* AppDelegate.swift in Sources */,
 				45D712F827033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFA26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				A99F7A2027DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift in Sources */,
 				A99622A02788563F00ABDF97 /* SportsAggregator.swift in Sources */,
 				F476CD0F27C553F50042B7ED /* HistoryViewController.swift in Sources */,
 				457816B52707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
@@ -4279,6 +4300,7 @@
 				454E0AB02732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B502716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
 				A99F7A0C27D1168C008BAF41 /* BonusActiveDataSource.swift in Sources */,
+				A99F7A2327DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */,
 				45D527E22720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */,
 				4515638126BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				45936CB3270EF02200E8260E /* SearchTextField.swift in Sources */,
@@ -4353,6 +4375,7 @@
 				A9E7C6B027BD63EE00F784C9 /* SettingsRowView.swift in Sources */,
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
+				A99F7A1D27DA1182008BAF41 /* BonusSwitchView.swift in Sources */,
 				A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
@@ -4474,6 +4497,7 @@
 				455A0CA326BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				45D712F927033BEF00AC0364 /* LiveEventsViewController.swift in Sources */,
 				455A0CFB26BD9D9000EC572D /* UIImage+Extensions.swift in Sources */,
+				A99F7A2127DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift in Sources */,
 				A99622A12788563F00ABDF97 /* SportsAggregator.swift in Sources */,
 				F476CD1027C553F60042B7ED /* HistoryViewController.swift in Sources */,
 				457816B62707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
@@ -4673,6 +4697,7 @@
 				454E0AB12732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B512716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
 				A99F7A0D27D1168C008BAF41 /* BonusActiveDataSource.swift in Sources */,
+				A99F7A2427DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */,
 				45D527E32720575000744D34 /* CompetitionFilterRowViewModel.swift in Sources */,
 				4515638226BEDA6200690896 /* FeatureFlag.swift in Sources */,
 				45936CB4270EF02200E8260E /* SearchTextField.swift in Sources */,
@@ -4747,6 +4772,7 @@
 				A9E7C6B127BD63EE00F784C9 /* SettingsRowView.swift in Sources */,
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
+				A99F7A1E27DA1182008BAF41 /* BonusSwitchView.swift in Sources */,
 				A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,

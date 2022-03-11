@@ -42,6 +42,32 @@ struct BetslipWinningsInfo: Decodable {
     }
 }
 
+struct BetslipFreebet: Decodable {
+    var walletId: String
+    var freeBetAmount: Double
+    var currency: String
+    var validForSelectionOdds: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case walletId = "walletId"
+        case freeBetAmount = "freeBetAmount"
+        case currency = "currency"
+        case validForSelectionOdds = "validForSelectionOdds"
+    }
+}
+
+struct BetslipOddsBoost: Decodable {
+    var walletId: String
+    var oddsBoost: Double
+    var validForSelectionOdds: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case walletId = "walletId"
+        case oddsBoost = "oddsBoost"
+        case validForSelectionOdds = "validForSelectionOdds"
+    }
+}
+
 struct BetslipSelectionState: Decodable {
 
     var minStake: Double?
@@ -50,6 +76,7 @@ struct BetslipSelectionState: Decodable {
     var availableForManualBetRequest: Bool?
     var winnings: BetslipWinningsInfo?
     var forbiddenCombinations: [BetslipForbiddenCombination]
+    var freeBets: [BetslipFreebet]
 
     enum CodingKeys: String, CodingKey {
         case minStake = "minStake"
@@ -58,6 +85,7 @@ struct BetslipSelectionState: Decodable {
         case availableForManualBetRequest = "availableForManualBetRequest"
         case forbiddenCombinations = "forbiddenCombinations"
         case winnings = "maxWinningAndTaxes"
+        case freeBets = "freeBets"
     }
 
     init(from decoder: Decoder) throws {
@@ -69,6 +97,7 @@ struct BetslipSelectionState: Decodable {
         self.availableForManualBetRequest = try? container.decode(Bool.self, forKey: .availableForManualBetRequest)
         self.forbiddenCombinations = (try? container.decode([BetslipForbiddenCombination].self, forKey: .forbiddenCombinations)) ?? []
         self.winnings = try? container.decode(BetslipWinningsInfo.self, forKey: .winnings)
+        self.freeBets = (try? container.decode([BetslipFreebet].self, forKey: .freeBets)) ?? []
     }
 }
 

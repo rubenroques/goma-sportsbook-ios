@@ -32,7 +32,7 @@ enum TSRouter {
     case getProfileStatus
     case getUserBalance
     case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
-    case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String)
+    case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String, freeBet: Bool, ubsWalletId: String)
     case getOpenBets(language: String, records: Int, page: Int)
     case cashoutBet(language: String, betId: String)
     case getMatchOdds(language: String, matchId: String, bettingTypeId: String)
@@ -43,7 +43,7 @@ enum TSRouter {
 
     case getSystemBetTypes(tickets: [EveryMatrix.BetslipTicketSelection])
     case getSystemBetSelectionInfo(language: String, stakeAmount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection])
-    case placeSystemBet(language: String, amount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String)
+    case placeSystemBet(language: String, amount: Double, systemBetType: SystemBetType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String, freeBet: Bool, ubsWalletId: String)
 
     case matchDetailsPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketGroupsPublisher(operatorId: String, language: String, matchId: String)
@@ -464,7 +464,7 @@ enum TSRouter {
                           "selections": selection]
             return params
 
-        case .placeBet(let language, let amount, let betType, let tickets, let oddsValidationType):
+        case .placeBet(let language, let amount, let betType, let tickets, let oddsValidationType, let freeBet, let ubsWalletId):
             var selection: [Any] = []
             for ticket in tickets {
                 selection.append([
@@ -478,7 +478,9 @@ enum TSRouter {
                     "eachWay": false,
                     "type": betType.typeKeyword,
                     "oddsValidationType": oddsValidationType,
-                    "selections": selection]
+                    "selections": selection,
+                    "freeBet": freeBet,
+                    "ubsWalletId": ubsWalletId]
             return params
 
         case .getOpenBets(let language, let records, let page):
@@ -541,7 +543,7 @@ enum TSRouter {
 
             return params
 
-        case .placeSystemBet(let language, let amount, let systemBetType, let tickets, let oddsValidationType):
+        case .placeSystemBet(let language, let amount, let systemBetType, let tickets, let oddsValidationType, let freeBet, let ubsWalletId):
             var selection: [Any] = []
             for ticket in tickets {
                 selection.append([
@@ -556,7 +558,9 @@ enum TSRouter {
                     "type": "SYSTEM",
                     "systemBetType": systemBetType.id,
                     "oddsValidationType": oddsValidationType,
-                    "selections": selection]
+                    "selections": selection,
+                    "freeBet": freeBet,
+                    "ubsWalletId": ubsWalletId]
             return params
 
         case .getMyTickets(let language,let ticketsType, let records, let page):
