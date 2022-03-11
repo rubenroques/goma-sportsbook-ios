@@ -78,7 +78,6 @@ class MyTicketBetLineView: NibView {
         self.baseView.clipsToBounds = true
         self.baseView.layer.cornerRadius = 8
         self.baseView.layer.masksToBounds = true
-        self.liveIcon.isHidden = true
 
         self.locationImageView.contentMode = .scaleAspectFill
         self.locationImageView.clipsToBounds = true
