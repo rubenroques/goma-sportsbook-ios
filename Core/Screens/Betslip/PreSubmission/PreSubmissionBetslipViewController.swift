@@ -656,6 +656,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
+        self.isKeyboardShowingPublisher.send(false) 
     }
 
     func getUserSettings() {
@@ -668,7 +669,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
     }
-
+    
+   
     func setUserSettings() {
         UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
     }
@@ -1096,25 +1098,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.secondarySystemOddsValueLabel.text = "-.--€"
         }
 
-//        if let totalBetAmountNetto = selectedSystemBetWinnings.totalBetAmountNetto, totalBetAmountNetto != 0 {
-//
-//            self.systemOddsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmountNetto)) ?? "-.--€"
-//            self.secondarySystemOddsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmountNetto)) ?? "-.--€"
-//        }
-//        else {
-//            self.systemOddsValueLabel.text = "-.--€"
-//            self.secondarySystemOddsValueLabel.text = "-.--€"
-//        }
-//
-//        if let maxWinningNetto = selectedSystemBetWinnings.maxWinningNetto, maxWinningNetto != 0 {
-//            self.systemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
-//            self.secondarySystemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
-//        }
-//        else {
-//            self.systemWinningsValueLabel.text = "-.--€"
-//            self.secondarySystemWinningsValueLabel.text = "-.--€"
-//        }
-
         self.maxStakeSystem = systemBetInfo.maxStake
     }
 
@@ -1199,6 +1182,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+    
     @objc func keyboardWillShow(notification: NSNotification) {
     
         self.isKeyboardShowingPublisher.send(true)
