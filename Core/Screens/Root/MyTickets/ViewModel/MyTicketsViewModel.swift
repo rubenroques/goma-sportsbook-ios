@@ -9,17 +9,18 @@ import Foundation
 import UIKit
 import Combine
 
+enum MyTicketsType: Int {
+    case opened = 0
+    case resolved = 1
+    case won = 2
+}
+
 class MyTicketsViewModel: NSObject {
 
     private var selectedMyTicketsTypeIndex: Int = 0
     var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
     var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>
 
-    enum MyTicketsType: Int {
-        case opened = 0
-        case resolved = 1
-        case won = 2
-    }
 
     var clickedCellSnapshot: UIImage?
     var clickedBetId: String?
@@ -56,9 +57,14 @@ class MyTicketsViewModel: NSObject {
     //
     private var cancellables = Set<AnyCancellable>()
 
-    override init() {
+    private var highlightTicket: String?
 
-        isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
+    init(myTicketType: MyTicketsType = .opened, highlightTicket: String? = nil) {
+
+        self.myTicketsTypePublisher.send(myTicketType)
+        self.highlightTicket = highlightTicket
+
+        self.isLoading = Publishers.CombineLatest3(isLoadingResolved, isLoadingOpened, isLoadingWon)
             .map({ isLoadingResolved, isLoadingOpened, isLoadingWon in
                 return isLoadingResolved || isLoadingOpened || isLoadingWon
             })
@@ -68,7 +74,7 @@ class MyTicketsViewModel: NSObject {
 
         super.init()
 
-        isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
+        self.isTicketsEmptyPublisher = Publishers.CombineLatest4(myTicketsTypePublisher, isLoadingResolved, isLoadingOpened, isLoadingWon)
             .map { [weak self] myTicketsType, isLoadingResolved, isLoadingOpened, isLoadingWon in
                 switch myTicketsType {
                 case .resolved:
@@ -84,7 +90,7 @@ class MyTicketsViewModel: NSObject {
             }
             .eraseToAnyPublisher()
 
-        myTicketsTypePublisher
+        self.myTicketsTypePublisher
             .dropFirst()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] myTicketsType in

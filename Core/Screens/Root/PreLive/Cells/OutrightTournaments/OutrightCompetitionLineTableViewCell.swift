@@ -13,13 +13,16 @@ class OutrightCompetitionLineViewModel {
     var competition: Competition
     var numberOfMarkets: Int
 
-    init(competition: Competition) {
+    private var shouldShowSeeAllOption: Bool
+
+    init(competition: Competition, shouldShowSeeAllOption: Bool = true) {
         self.competition = competition
         self.numberOfMarkets = competition.outrightMarkets
+        self.shouldShowSeeAllOption = shouldShowSeeAllOption
     }
 
     func numberOfSection() -> Int {
-        return 2
+        return shouldShowSeeAllOption ? 2 : 1
     }
 
     func numberOfItems(forSection section: Int) -> Int {
@@ -105,8 +108,7 @@ extension OutrightCompetitionLineTableViewCell: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
         if scrollView == self.collectionView,
-           let viewModel = self.viewModel
-        {
+           let viewModel = self.viewModel {
             let screenWidth = UIScreen.main.bounds.size.width
             if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
                 if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
@@ -168,6 +170,9 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
         else if let cell = collectionView.dequeueCellType(OutrightCompetitionWidgetCollectionViewCell.self, indexPath: indexPath) {
             let cellViewModel = viewModel.outrightCompetitionWidgetViewModel()
             cell.configure(withViewModel: cellViewModel)
+            cell.tappedLineAction = { [weak self] competition in
+                self?.didTapSeeAll()
+            }
             return cell
         }
         fatalError()

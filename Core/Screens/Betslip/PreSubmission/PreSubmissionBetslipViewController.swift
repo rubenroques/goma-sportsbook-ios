@@ -641,13 +641,20 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
         
         self.placeBetButton.isEnabled = false
 
         self.getUserSettings()
 
         Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
+
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
 
     }
 
