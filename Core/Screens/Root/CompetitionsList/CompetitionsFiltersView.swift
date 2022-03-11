@@ -48,7 +48,9 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var competitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             self.expandedCellsDictionary = [:]
-            self.competitions.forEach({ competition in self.expandedCellsDictionary[competition.id] = false })
+            self.competitions.forEach({ competition in
+                self.expandedCellsDictionary[competition.id] = (competition.id == "0") // Only popular competition will be true, to appear opened by default
+            })
             self.searchBarView.text = nil
             self.filteredCompetitions = competitions
         }
@@ -133,34 +135,13 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.applyButton.layer.masksToBounds = true
 
         self.searchBarBaseView.backgroundColor = .clear
-        
+
+        self.searchBarView.returnKeyType = .done
         self.searchBarView.searchBarStyle = UISearchBar.Style.prominent
         self.searchBarView.sizeToFit()
         self.searchBarView.isTranslucent = false
         self.searchBarView.backgroundImage = UIImage()
-        self.searchBarView.tintColor = .white
-        self.searchBarView.barTintColor = .white
-        self.searchBarView.backgroundImage = UIColor.App.backgroundPrimary.image()
-        // self.searchBarView.placeholder = localized("search")
-        self.searchBarView.backgroundColor = UIColor.App.inputBackground
-        //self.searchBarView.delegate = self
-
-        if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundPrimary
-            textfield.textColor = .white
-            textfield.tintColor = .white
-            textfield.font = AppFont.with(type: .semibold, size: 15)
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field_competitions"),
-                                                            attributes: [
-                    .foregroundColor: UIColor.App.textPrimary,
-                    .font: AppFont.with(type: .semibold, size: 15)
-                ])
-
-            if let glassIconView = textfield.leftView as? UIImageView {
-                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.backgroundPrimary
-            }
-        }
+        self.searchBarView.delegate = self
 
         self.smallTitleLabel.alpha = 0.0
 
@@ -237,8 +218,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.applyButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         self.applyButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
 
-        self.searchBarView.backgroundImage = UIColor.App.backgroundPrimary.image()
-        self.searchBarView.backgroundColor = UIColor.App.backgroundSecondary
+        self.searchBarView.tintColor = .white
+        self.searchBarView.barTintColor = .white
+        self.searchBarView.backgroundImage = UIColor.App.backgroundSecondary.image()
+
         if let textfield = searchBarView.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundPrimary
             textfield.textColor = UIColor.App.textSecondary
@@ -467,6 +450,11 @@ extension CompetitionsFiltersView: UISearchBarDelegate {
 
             var newCompetitionGroup = competitionGroup
 
+            if newCompetitionGroup.name.lowercased().contains(searchText) {
+                filteredCompetitionGroup.append(newCompetitionGroup)
+                continue
+            }
+
             var filteredCompetitions = [CompetitionFilterRowViewModel]()
             for competition in competitionGroup.cells {
                 if competition.name.lowercased().contains(searchText) {
@@ -475,10 +463,6 @@ extension CompetitionsFiltersView: UISearchBarDelegate {
             }
 
             newCompetitionGroup.cells = filteredCompetitions
-
-//            if newCompetitionGroup.name.lowercased().contains(searchText) || filteredCompetitions.isNotEmpty {
-//                filteredCompetitionGroup.append(newCompetitionGroup)
-//            }
 
             if filteredCompetitions.isNotEmpty {
                 filteredCompetitionGroup.append(newCompetitionGroup)

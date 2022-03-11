@@ -103,6 +103,8 @@ class DepositViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topView.backgroundColor = UIColor.App.backgroundPrimary
+        
+        self.activityIndicatorView.color = .gray
 
         self.containerView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -394,7 +396,7 @@ class DepositViewController: UIViewController {
 
     @IBAction private func didTapNextButton() {
         self.activityIndicatorView.isHidden = false
-
+    
         let amountText = self.depositHeaderTextFieldView.text
         let amount = amountText.replacingOccurrences(of: ",", with: ".")
         var currency = ""

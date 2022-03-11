@@ -33,7 +33,7 @@ class MyTicketBetLineView: NibView {
     @IBOutlet private weak var oddValueLabel: UILabel!
 
     @IBOutlet private weak var dateLabel: UILabel!
-    @IBOutlet private weak var liveIcon: UIImageView!
+    @IBOutlet private weak var liveIconImage: UIImageView!
     
     @IBOutlet private weak var indicatorBaseView: UIView!
     @IBOutlet private weak var indicatorInternalBaseView: UIView!
@@ -111,24 +111,27 @@ class MyTicketBetLineView: NibView {
         }
 
         self.dateLabel.text = ""
-        
-        if let statusId = self.betHistoryEntrySelection.eventStatusId{
+        if let statusId = self.betHistoryEntrySelection.eventStatusId {
             if statusId == "2" {
                 self.dateLabel.isHidden = true
-                self.liveIcon.isHidden = false
-                
+                self.liveIconImage.isHidden = false
+              
             }else{
                 if let date = self.betHistoryEntrySelection.eventDate {
                     self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
-                    self.liveIcon.isHidden = true
+                    self.liveIconImage.isHidden = true
                     self.dateLabel.isHidden = false
-                    
                 }
             }
+        }else{
+            if let date = self.betHistoryEntrySelection.eventDate {
+                self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
+                self.liveIconImage.isHidden = true
+                self.dateLabel.isHidden = false
+                
+            }
         }
-        
-        
-
+              
         self.homeTeamScoreLabel.text = ""
         self.awayTeamScoreLabel.text = ""
 

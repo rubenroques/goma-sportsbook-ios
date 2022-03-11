@@ -33,8 +33,8 @@ class MyTicketsViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init() {
-        self.viewModel = MyTicketsViewModel()
+    init(viewModel: MyTicketsViewModel = MyTicketsViewModel() ) {
+        self.viewModel = viewModel
         
         super.init(nibName: "MyTicketsViewController", bundle: nil)
 
@@ -58,13 +58,16 @@ class MyTicketsViewController: UIViewController {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
-      
-       
-        self.myBetsSegmentedControl.selectedSegmentIndex = 0
-        self.viewModel.setMyTicketsType(.opened)
-            //self.didChangeSegmentValue(self.myBetsSegmentedControl)
-        
-        
+
+        switch self.viewModel.myTicketsTypePublisher.value {
+        case .opened:
+            self.myBetsSegmentedControl.selectedSegmentIndex = 0
+        case .resolved:
+            self.myBetsSegmentedControl.selectedSegmentIndex = 1
+        case .won:
+            self.myBetsSegmentedControl.selectedSegmentIndex = 2
+        }
+
         self.ticketsTableView.delegate = self.viewModel
         self.ticketsTableView.dataSource = self.viewModel
         self.ticketsTableView.register(MyTicketTableViewCell.nib, forCellReuseIdentifier: MyTicketTableViewCell.identifier)

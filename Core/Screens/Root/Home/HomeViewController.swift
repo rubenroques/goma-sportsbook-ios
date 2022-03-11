@@ -124,8 +124,21 @@ class HomeViewController: UIViewController {
 
     }
 
+    private func openCompetitionDetails(competitionId: String, sport: Sport) {
+        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
+        let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+        self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+    }
+
+    private func openOutrightCompetition(competition: Competition) {
+        let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
+        let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
+    }
+
     private func openMatchDetails(match: Match) {
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
+        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
+        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -241,6 +254,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllPopular = { [weak self] sport in
                     self?.didSelectSeeAllPopular?(sport)
                 }
+                cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
+                    self?.openOutrightCompetition(competition: competition)
+                }
                 return cell
 
             case .singleLine:
@@ -274,7 +290,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.didSelectSeeAllCompetitionAction = { [weak self] sport, competition in
-                    self?.didSelectSeeAllCompetition?(sport, competition.id)
+                    self?.openCompetitionDetails(competitionId: competition.id, sport: sport)
                 }
                 return cell
             }
