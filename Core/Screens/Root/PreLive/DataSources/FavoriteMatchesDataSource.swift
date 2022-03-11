@@ -11,7 +11,7 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
 
     var userFavoriteMatches: [Match] = []
 
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -59,8 +59,8 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                     }
 
                     cell.setupFavoriteMatchInfoPublisher(match: match)
-                    cell.tappedMatchLineAction = { image in
-                        self.didSelectMatchAction?(match, image)
+                    cell.tappedMatchLineAction = {
+                        self.didSelectMatchAction?(match)
                     }
                     cell.matchWentLive = {
                         DispatchQueue.main.async {

@@ -22,7 +22,7 @@ class MyFavoritesViewModel: NSObject {
 
     private var cancellables = Set<AnyCancellable>()
     var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
 
@@ -58,11 +58,11 @@ class MyFavoritesViewModel: NSObject {
         }
 
         // Match Select
-        self.myFavoriteMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.myFavoriteMatchesDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
-        self.myFavoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.myFavoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
 
         // Match went live

@@ -15,7 +15,7 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
@@ -53,8 +53,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 let store = Env.everyMatrixStorage as AggregatorStore
 
                 cell.setupWithMatch(match, store: store)
-                cell.tappedMatchLineAction = { image in
-                    self.didSelectMatchAction?(match, image)
+                cell.tappedMatchLineAction = {
+                    self.didSelectMatchAction?(match)
                 }
                 return cell
             }

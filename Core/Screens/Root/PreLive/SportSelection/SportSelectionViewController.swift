@@ -107,8 +107,8 @@ class SportSelectionViewController: UIViewController {
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 

@@ -9,6 +9,13 @@ import UIKit
 import Combine
 import SwiftUI
 
+enum Route {
+    case openBet(id: String)
+    case resolvedBet(id: String)
+    case event(id: String)
+    case none
+}
+
 class Router {
 
     var rootWindow: UIWindow
@@ -22,6 +29,8 @@ class Router {
     var blockerViewController: UIViewController?
     var screenBlocker: ScreenBlocker = .none
 
+    var startingRoute: Route = .none
+
     enum ScreenBlocker {
         case maintenance
         case updateRequired
@@ -33,6 +42,15 @@ class Router {
 
     init(window: UIWindow) {
         self.rootWindow = window
+
+
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+
     }
 
     func makeKeyAndVisible() {
@@ -45,10 +63,15 @@ class Router {
         self.rootWindow.makeKeyAndVisible()
     }
 
+    @objc func applicationDidBecomeActive(notification: NSNotification) {
+
+    }
+
     func showPostLoadingFlow() {
 
         self.subscribeToUserActionBlockers()
-        self.subscribeToUserActionRedirects()
+        self.subscribeToURLRedirects()
+        self.subscribeToNotificationsOpened()
 
         var bootRootViewController: UIViewController
         if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
@@ -59,13 +82,6 @@ class Router {
         }
 
         self.rootWindow.rootViewController = bootRootViewController
-//        let viewModel =  OutrightMarketDetailsViewModel(competition:
-//                                                            Competition(id: "157127366340038656",
-//                                                                        name: "F1",
-//                                                                        outrightMarkets: 0),
-//                                                        store: OutrightMarketDetailsStore())
-//        self.rootWindow.rootViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
-        
     }
 
     func subscribeToUserActionBlockers() {
@@ -128,18 +144,14 @@ class Router {
             .store(in: &cancellables)
     }
 
-    func subscribeToUserActionRedirects() {
+    func subscribeToURLRedirects() {
         Publishers.CombineLatest(Env.urlSchemaManager.redirectPublisher, Env.everyMatrixClient.serviceStatusPublisher)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] urlSubject, serviceStatus in
-
                         if serviceStatus == .connected {
-
                             if Env.everyMatrixClient.manager.isConnected {
                                 if let urlSubject = urlSubject["gamedetail"] {
-
                                     self?.showMatchDetailScreen(matchId: urlSubject)
-
                                 }
                                 else if let urlSubject = urlSubject["bet"] {
 
@@ -149,6 +161,46 @@ class Router {
                         }
                     })
                     .store(in: &cancellables)
+    }
+
+    func subscribeToNotificationsOpened() {
+        Env.everyMatrixClient.serviceStatusPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] serviceStatus in
+                        if let requestStartingRoute = self?.requestStartingRoute(),
+                           serviceStatus == .connected {
+                            self?.openRoute(requestStartingRoute)
+                        }
+                    })
+                    .store(in: &cancellables)
+    }
+
+    // Open from notifications
+    func configureStartingRoute(_ route: Route) {
+        self.startingRoute = route
+    }
+
+    func requestStartingRoute() -> Route {
+        let tempStartingRoute = self.startingRoute
+        self.startingRoute = .none
+        return tempStartingRoute
+    }
+
+    func openedNotificationRouteWhileActive(_ route: Route) {
+        self.openRoute(route)
+    }
+
+    func openRoute(_ route: Route) {
+        switch route {
+        case .openBet(let id):
+            self.showMyTickets(ticketType: MyTicketsType.opened, ticketId: id)
+        case .resolvedBet(let id):
+            self.showMyTickets(ticketType: MyTicketsType.resolved, ticketId: id)
+        case .event(let id):
+            self.showMatchDetailScreen(matchId: id)
+        case .none:
+            ()
+        }
     }
 
     // MaintenanceScreen
@@ -245,6 +297,17 @@ class Router {
         let matchDetailViewController = MatchDetailsViewController(matchId: matchId)
         matchDetailViewController.isModalInPresentation = true
         self.rootViewController?.present(matchDetailViewController, animated: true, completion: nil)
+    }
+
+    func showMyTickets(ticketType: MyTicketsType, ticketId: String) {
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        let betslipViewController = BetslipViewController.init(startScreen: .myTickets(ticketType, ticketId) )
+        betslipViewController.isModalInPresentation = true
+
+        self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
     }
 
     func showBetslip() {

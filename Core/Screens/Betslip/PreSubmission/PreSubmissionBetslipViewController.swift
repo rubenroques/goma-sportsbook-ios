@@ -252,7 +252,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.commonInit()
-        
+
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
         self.settingsPickerBaseView.alpha = 0.0
@@ -641,7 +641,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.setupWithTheme()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
         
         self.placeBetButton.isEnabled = false
 
@@ -649,6 +651,12 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
 
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.isKeyboardShowingPublisher.send(false) 
     }
 
     func getUserSettings() {
@@ -661,7 +669,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
     }
-
+    
+   
     func setUserSettings() {
         UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
     }
@@ -790,6 +799,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemBetTypeLabel.textColor = UIColor.App.textPrimary
         self.systemBetTypeTitleLabel.textColor = UIColor.App.textSecondary
         self.systemBetTypeSelectorBaseView.backgroundColor = .clear
+        self.systemBetTypeSelectorContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
@@ -902,6 +912,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multipleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.multipleWinningsTitleLabel.textColor = UIColor.App.textSecondary
         self.multipleWinningsValueLabel.textColor = UIColor.App.textPrimary
+
 
         self.secondaryMultipleWinningsBaseView.backgroundColor = UIColor.App.backgroundPrimary
        // self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundSecondary
@@ -1061,28 +1072,33 @@ class PreSubmissionBetslipViewController: UIViewController {
             return
         }
 
-        if let totalBetAmountNetto = selectedSystemBetWinnings.totalBetAmountNetto, totalBetAmountNetto != 0 {
-            
-            self.systemOddsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmountNetto)) ?? "-.--€"
-            self.secondarySystemOddsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmountNetto)) ?? "-.--€"
-        }
-    
-        else {
-            self.systemOddsValueLabel.text = "-.--€"
-            self.secondarySystemOddsValueLabel.text = "-.--€"
-        }
+        if let priceValueFactor = systemBetInfo.priceValueFactor, self.realBetValue != 0 {
+            let possibleWinnings = priceValueFactor * self.realBetValue
 
-        if let maxWinningNetto = selectedSystemBetWinnings.maxWinningNetto, maxWinningNetto != 0 {
-            self.systemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
-            self.secondarySystemWinningsValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinningNetto)) ?? "-.--€"
+            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
+
+            self.systemWinningsValueLabel.text = possibleWinningsString
+            self.secondarySystemWinningsValueLabel.text = possibleWinningsString
         }
         else {
             self.systemWinningsValueLabel.text = "-.--€"
             self.secondarySystemWinningsValueLabel.text = "-.--€"
         }
 
-        self.maxStakeSystem = systemBetInfo.maxStake
+        if let numberOfBets = self.selectedSystemBet?.numberOfBets, self.realBetValue != 0  {
+            let totalBetAmount = Double(numberOfBets) * self.realBetValue
 
+            let totalBetAmountString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalBetAmount)) ?? "-.--€"
+
+            self.systemOddsValueLabel.text = totalBetAmountString
+            self.secondarySystemOddsValueLabel.text = totalBetAmountString
+        }
+        else {
+            self.systemOddsValueLabel.text = "-.--€"
+            self.secondarySystemOddsValueLabel.text = "-.--€"
+        }
+
+        self.maxStakeSystem = systemBetInfo.maxStake
     }
 
     func checkMaxAmountTransition() {
@@ -1166,6 +1182,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
     }
 
+    
     @objc func keyboardWillShow(notification: NSNotification) {
     
         self.isKeyboardShowingPublisher.send(true)

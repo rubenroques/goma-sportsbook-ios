@@ -175,15 +175,13 @@ class PreLiveEventsViewController: UIViewController {
             }
         }
 
-        self.viewModel.didSelectMatchAction = { match, image in
+        self.viewModel.didSelectMatchAction = { match in
             if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
             else {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
         }
@@ -451,7 +449,7 @@ class PreLiveEventsViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                self?.competitionsFiltersView.competitions = competitions
+                self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
             }
             .store(in: &cancellables)
 

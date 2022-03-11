@@ -16,7 +16,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
     var collapsedCompetitionsSections: Set<Int> = []
 
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -50,8 +50,8 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         cell.setupWithMatch(match, store: store)
         cell.shouldShowCountryFlag(false)
-        cell.tappedMatchLineAction = { image in
-            self.didSelectMatchAction?(match, image)
+        cell.tappedMatchLineAction = {
+            self.didSelectMatchAction?(match)
         }
 
         return cell
