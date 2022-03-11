@@ -40,15 +40,19 @@ class SportMatchLineViewModel {
     var sport: Sport
     var topCompetitions: [Competition]?
 
+    var outrightCompetitions: [Competition] = []
+
     private var matchesType: MatchesType
 
     private var popularMatchesPublisher: AnyCancellable?
     private var liveMatchesPublisher: AnyCancellable?
     private var competitionsMatchesPublisher: AnyCancellable?
+    private var outrightCompetitionsPublisher: AnyCancellable?
 
     private var popularMatchesRegister: EndpointPublisherIdentifiable?
     private var liveMatchesRegister: EndpointPublisherIdentifiable?
     private var competitionMatchesRegister: EndpointPublisherIdentifiable?
+    private var outrightCompetitionsRegister: EndpointPublisherIdentifiable?
 
     private var matchesIds: [String] = []
 
@@ -111,6 +115,9 @@ extension SportMatchLineViewModel {
             }
             return 0
         }
+        else if self.isOutrightCompetitionLine() {
+            return 1
+        }
         else if let lineMatchId = matchesIds[safe: lineIndex],
             self.store.matchWithId(id: lineMatchId) != nil {
             return 2
@@ -133,6 +140,19 @@ extension SportMatchLineViewModel {
             }
             return 0
         }
+        else if self.isOutrightCompetitionLine() {
+            if section == 1 {
+                return 1 // see all
+            }
+            else {
+                if self.outrightCompetitions.count == 2 {
+                    return 1
+                }
+                else if outrightCompetitions.count == 1 {
+                    return lineIndex == 0 ? 1 : 0
+                }
+            }
+        }
         else if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
             if section == 0 {
@@ -153,6 +173,7 @@ extension SportMatchLineViewModel {
         return 0
     }
 
+
     func match(forLine lineIndex: Int = 0) -> Match? {
         if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
@@ -166,6 +187,15 @@ extension SportMatchLineViewModel {
             return CompetitionWidgetViewModel(competition: competition)
         }
         return nil
+    }
+
+
+    func isOutrightCompetitionLine() -> Bool {
+        return outrightCompetitions.isNotEmpty
+    }
+
+    func outrightCompetition(forLine lineIndex: Int = 0) -> Competition? {
+        return outrightCompetitions[safe: lineIndex]
     }
 
 }
@@ -306,6 +336,57 @@ extension SportMatchLineViewModel {
 
     }
 
+    private func fetchOutrightCompetitions() {
+
+        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
+        }
+
+        let endpoint = TSRouter.popularTournamentsPublisher(operatorId: Env.appSession.operatorId,
+                                                        language: "en",
+                                                            sportId: self.sport.id,
+                                                        tournamentsCount: 2)
+        self.outrightCompetitionsPublisher?.cancel()
+        self.outrightCompetitionsPublisher = nil
+
+        self.outrightCompetitionsPublisher = Env.everyMatrixClient.manager
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    self?.outrightCompetitionsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    self?.storeOutrightCompetitions(aggregator: aggregator)
+                case .updatedContent: // (let aggregatorUpdates):
+                    ()
+                case .disconnect:
+                    ()
+                }
+            })
+    }
+
+    func storeOutrightCompetitions(aggregator: EveryMatrix.Aggregator) {
+
+        self.store.storeOutrightTournaments(aggregator)
+
+        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament in
+            Competition.init(id: rawTournament.id,
+                             name: rawTournament.name ?? "",
+                             outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
+        }
+
+        self.outrightCompetitions = Array(localOutrightCompetitions.prefix(2))
+        self.updatedContent()
+    }
+
     func storeMatches(fromAggregator aggregator: EveryMatrix.Aggregator) {
         var matchesIds: [String] = []
         for content in aggregator.content ?? [] {
@@ -318,6 +399,12 @@ extension SportMatchLineViewModel {
         }
         self.store.storeContent(fromAggregator: aggregator)
         self.matchesIds = Array(matchesIds.prefix(2))
+
+        // Request outright if no popular matches found
+        if self.matchesType == .popular && self.matchesIds.isEmpty && self.outrightCompetitions.isEmpty {
+            self.fetchOutrightCompetitions()
+        }
+
     }
 
     private func finishedWithError() {
@@ -326,29 +413,43 @@ extension SportMatchLineViewModel {
     
     private func updatedContent() {
 
-        switch self.matchesType {
-        case .topCompetition:
-            self.layoutTypePublisher.send(.competition)
+        if self.isOutrightCompetitionLine() {
+            self.loadingPublisher.send(.loaded)
 
-            if self.topCompetitions == nil {
-                self.loadingPublisher.send(.empty)
-            }
-            else {
-                self.loadingPublisher.send(.loaded)
-            }
-        case .live, .popular:
-            if self.matchesIds.count == 2 {
+            if self.outrightCompetitions.count == 2 {
                 self.layoutTypePublisher.send(.doubleLine)
             }
-            else if matchesIds.count == 1 {
+            else if outrightCompetitions.count == 1 {
                 self.layoutTypePublisher.send(.singleLine)
             }
 
-            if self.matchesIds.isEmpty {
-                self.loadingPublisher.send(.empty)
-            }
-            else {
-                self.loadingPublisher.send(.loaded)
+            self.titlePublisher.send("Outright Markets")
+        }
+        else {
+            switch self.matchesType {
+            case .topCompetition:
+                self.layoutTypePublisher.send(.competition)
+
+                if self.topCompetitions == nil {
+                    self.loadingPublisher.send(.empty)
+                }
+                else {
+                    self.loadingPublisher.send(.loaded)
+                }
+            case .live, .popular:
+                if self.matchesIds.count == 2 {
+                    self.layoutTypePublisher.send(.doubleLine)
+                }
+                else if matchesIds.count == 1 {
+                    self.layoutTypePublisher.send(.singleLine)
+                }
+
+                if self.matchesIds.isEmpty {
+                    self.loadingPublisher.send(.empty)
+                }
+                else {
+                    self.loadingPublisher.send(.loaded)
+                }
             }
         }
 

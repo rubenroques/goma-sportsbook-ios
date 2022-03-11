@@ -9,7 +9,7 @@ import UIKit
 
 class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var outrightCompetitions: [Competition] = []
+    var outrightCompetitions: [Competition]? = []
     var matches: [Match] = []
 
     var alertsArray: [ActivationAlert] = []
@@ -22,7 +22,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var didSelectMatchAction: ((Match, UIImage?) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
 
-    init(matches: [Match], outrightCompetitions: [Competition]) {
+    init(matches: [Match], outrightCompetitions: [Competition]? = nil) {
         self.matches = matches
         self.outrightCompetitions = outrightCompetitions
 
@@ -95,7 +95,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             }
             return 0
         case 1:
-            return self.shouldShowOutrightMarkets() ? self.outrightCompetitions.count : 0
+            if self.shouldShowOutrightMarkets(), let count = self.outrightCompetitions?.count {
+                return count
+            }
+            return 0
         case 2:
             return self.matches.count
         case 3:
@@ -122,8 +125,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             }
         case 1:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier) as? OutrightCompetitionLineTableViewCell,
-                let competition = self.outrightCompetitions[safe: indexPath.row]
+                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+                    as? OutrightCompetitionLineTableViewCell,
+                let competition = self.outrightCompetitions?[safe: indexPath.row]
             else {
                 fatalError()
             }

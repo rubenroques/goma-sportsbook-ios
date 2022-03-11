@@ -40,7 +40,7 @@ class OutrightMarketDetailsViewModel {
         return 1
     }
 
-    func numberOfRows(forSection section: Int) -> Int  {
+    func numberOfRows(forSection section: Int) -> Int {
         return marketGroupOrganizers.count
     }
 

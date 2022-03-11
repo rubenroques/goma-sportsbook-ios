@@ -14,7 +14,7 @@ let swiftyBeaverLog = SwiftyBeaver.self
 
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
     // TO-DO: Integrate fastlane
     var window: UIWindow?
@@ -119,6 +119,62 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
             }
             return true
+    }
+
+}
+
+extension AppDelegate: UNUserNotificationCenterDelegate {
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                willPresent notification: UNNotification,
+                                withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler(.alert)
+    }
+
+
+    func userNotificationCenter(_ center: UNUserNotificationCenter,
+                                didReceive response: UNNotificationResponse,
+                                withCompletionHandler completionHandler: @escaping () -> Void) {
+
+        let userInfo = response.notification.request.content.userInfo
+
+        // Print message ID.
+        let gcmMessageIDKey = "gcm.message_id"
+        if let messageID = userInfo[gcmMessageIDKey] {
+            print("Message ID: \(messageID)")
+        }
+
+        var route: Route?
+        let application = UIApplication.shared
+
+        let routeId = userInfo["routeId"] as? String ?? ""
+        let routeLabel = userInfo["routeLabel"] as? String ?? ""
+        let routeType = userInfo["routeType"] as? String ?? ""
+
+        switch (routeLabel, routeType) {
+        case ("pending", "bet"):
+            route = .openBet(id: routeId)
+        case ("resolved", "bet"):
+            route = .resolvedBet(id: routeId)
+        case (_, "event"):
+            route = .event(id: routeId)
+        default:
+            ()
+        }
+
+        if let routeValue = route {
+            if application.applicationState == .active {
+                self.bootstrap.router.openedNotificationRouteWhileActive(routeValue)
+            }
+            if application.applicationState == .inactive {
+                self.bootstrap.router.configureStartingRoute(routeValue)
+            }
+            if application.applicationState == .background {
+                self.bootstrap.router.configureStartingRoute(routeValue)
+            }
+        }
+
+        completionHandler()
     }
 
 }

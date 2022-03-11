@@ -29,6 +29,7 @@ class HomeStore {
     private var locations: OrderedDictionary<String, EveryMatrix.Location> = [:]
 
     private var tournaments: [String: EveryMatrix.Tournament] = [:]
+    var outrightTournaments: OrderedDictionary<String, EveryMatrix.Tournament> = [:]
 
     private var matchesInfo: [String: EveryMatrix.MatchInfo] = [:]
     private var matchesInfoForMatch: [String: Set<String> ] = [:]
@@ -106,6 +107,20 @@ class HomeStore {
             case .location(let location):
                 self.locations[location.id] = location
 
+            default:
+                ()
+            }
+        }
+    }
+
+    func storeOutrightTournaments(_ aggregator: EveryMatrix.Aggregator) {
+
+        self.outrightTournaments = [:]
+
+        for content in aggregator.content ?? [] {
+            switch content {
+            case .tournament(let tournamentContent):
+                outrightTournaments[tournamentContent.id] = tournamentContent
             default:
                 ()
             }

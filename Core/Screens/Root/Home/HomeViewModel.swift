@@ -302,6 +302,11 @@ class HomeViewModel {
             })
             .store(in: &cancellables)
     }
+
+    func isMatchLive(withMatchId matchId: String) -> Bool {
+        return self.store.hasMatchesInfoForMatch(withId: matchId)
+    }
+
 }
 
 extension HomeViewModel {

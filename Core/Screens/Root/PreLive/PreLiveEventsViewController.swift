@@ -451,7 +451,7 @@ class PreLiveEventsViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                self?.competitionsFiltersView.competitions = competitions
+                self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
             }
             .store(in: &cancellables)
 
