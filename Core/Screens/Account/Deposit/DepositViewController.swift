@@ -133,6 +133,8 @@ class DepositViewController: UIViewController {
         self.paymentsLabel.textColor = UIColor.App.textSecondary
 
         self.paymentsLogosStackView.backgroundColor = .clear
+        
+        self.activityIndicatorView.tintColor = UIColor.systemPink
     }
 
     func setupPublishers() {
@@ -394,6 +396,7 @@ class DepositViewController: UIViewController {
 
     @IBAction private func didTapNextButton() {
         self.activityIndicatorView.isHidden = false
+        self.activityIndicatorView.color = .gray
 
         let amountText = self.depositHeaderTextFieldView.text
         let amount = amountText.replacingOccurrences(of: ",", with: ".")
