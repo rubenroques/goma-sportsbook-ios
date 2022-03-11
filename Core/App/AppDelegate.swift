@@ -12,7 +12,6 @@ import SwiftyBeaver
 
 let swiftyBeaverLog = SwiftyBeaver.self
 
-
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
 
@@ -130,7 +129,6 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         completionHandler(.alert)
     }
-
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 didReceive response: UNNotificationResponse,

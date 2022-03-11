@@ -66,9 +66,12 @@ class BettingsTableViewCell : UITableViewCell {
 
     private func setupWithTheme() {
         self.baseView.layer.cornerRadius = 10
-        self.lateralView.layer.cornerRadius = 10
         
-        self.interiorView.backgroundColor = .clear
+        self.lateralView.clipsToBounds = true
+        self.lateralView.layer.cornerRadius = 8
+        
+        //self.lateralView.layer.masksToBounds = true
+        self.lateralView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         
         self.baseView.backgroundColor = UIColor.App.backgroundCards
 
@@ -106,7 +109,7 @@ class BettingsTableViewCell : UITableViewCell {
         }else if status == "LOST"{
             self.lateralView.backgroundColor = UIColor.App.myTicketsLost
         }else{
-            self.lateralView.backgroundColor = UIColor.App.alertWarning
+            self.lateralView.backgroundColor = UIColor.App.myTicketsOther
         }
         
     }
@@ -143,7 +146,7 @@ class BettingsTableViewCell : UITableViewCell {
     
     func setupPossibleWinningsValuesLabel(possibleWinnings : String, betStatus : String){
         
-        if betStatus == "Cashout"{
+        if betStatus == "CASHED_OUT"{
             self.possibleWinningsLabel.text = localized("return")
         }else{
             self.possibleWinningsLabel.text = localized("possible_winnings")

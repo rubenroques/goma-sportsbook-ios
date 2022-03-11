@@ -182,11 +182,10 @@ class LiveEventsViewController: UIViewController {
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
         
-      
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
-        filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
+        
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -280,7 +279,6 @@ class LiveEventsViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState in
               
-            
                 switch screenState {
                 case .noEmptyNoFilter:
                     self?.emptyBaseView.isHidden = true
@@ -306,14 +304,8 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        
-   
-        
-        self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
+    
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        
-        self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
@@ -334,6 +326,7 @@ class LiveEventsViewController: UIViewController {
 
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
@@ -350,6 +343,7 @@ class LiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
         self.liveEventsCountLabel.textColor = UIColor.App.buttonTextPrimary
+        
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
