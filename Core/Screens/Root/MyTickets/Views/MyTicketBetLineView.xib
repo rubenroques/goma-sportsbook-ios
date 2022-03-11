@@ -25,6 +25,7 @@
                 <outlet property="indicatorBaseView" destination="Ovs-WL-i4P" id="m9K-yg-umc"/>
                 <outlet property="indicatorInternalBaseView" destination="yXI-4y-bft" id="e2g-Vg-Yok"/>
                 <outlet property="indicatorLabel" destination="kfI-T8-xC9" id="rvO-it-W4Q"/>
+                <outlet property="liveIconImage" destination="258-Kg-H0Z" id="VsB-cq-e1y"/>
                 <outlet property="locationImageView" destination="eP6-bT-gBw" id="BU6-oh-MZt"/>
                 <outlet property="marketLabel" destination="aec-Af-FUf" id="fuA-3X-Mxv"/>
                 <outlet property="oddTitleLabel" destination="2au-VK-aFF" id="DaD-pC-QSV"/>
@@ -68,6 +69,13 @@
                                 </label>
                             </subviews>
                         </stackView>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_live" translatesAutoresizingMaskIntoConstraints="NO" id="258-Kg-H0Z">
+                            <rect key="frame" x="564" y="12.5" width="12" height="12"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="12" id="0VZ-Wc-TqJ"/>
+                                <constraint firstAttribute="width" constant="12" id="ju1-q0-IGY"/>
+                            </constraints>
+                        </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="748" verticalCompressionResistancePriority="748" text="Vestibulum venenatis purus a nisl consequat tincidunt. Ut laoreet finibus nisl, s" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dDo-fO-dxP">
                             <rect key="frame" x="514" y="8.5" width="62" height="20"/>
                             <constraints>
@@ -234,6 +242,7 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="dDo-fO-dxP" secondAttribute="trailing" constant="12" id="0Oe-wh-7IF"/>
                         <constraint firstAttribute="trailing" secondItem="YBe-bD-GYV" secondAttribute="trailing" id="4w7-fI-HTr"/>
+                        <constraint firstItem="258-Kg-H0Z" firstAttribute="centerY" secondItem="rwQ-5M-fWg" secondAttribute="centerY" id="Dqi-rM-yU8"/>
                         <constraint firstItem="b6t-KY-r0L" firstAttribute="top" secondItem="rwQ-5M-fWg" secondAttribute="bottom" constant="8" id="Idp-Cg-wkd"/>
                         <constraint firstItem="YBe-bD-GYV" firstAttribute="leading" secondItem="YPg-OO-9uf" secondAttribute="leading" id="Iol-gX-SAx"/>
                         <constraint firstItem="dDo-fO-dxP" firstAttribute="centerY" secondItem="rwQ-5M-fWg" secondAttribute="centerY" id="LXZ-yf-uzb"/>
@@ -245,6 +254,7 @@
                         <constraint firstAttribute="trailing" secondItem="b6t-KY-r0L" secondAttribute="trailing" id="Xe3-ss-1sN"/>
                         <constraint firstAttribute="trailing" secondItem="rwQ-5M-fWg" secondAttribute="trailing" constant="78" id="aAO-Vh-y9N"/>
                         <constraint firstItem="b6t-KY-r0L" firstAttribute="leading" secondItem="YPg-OO-9uf" secondAttribute="leading" id="bFp-6f-7xu"/>
+                        <constraint firstAttribute="trailing" secondItem="258-Kg-H0Z" secondAttribute="trailing" constant="12" id="c7U-Z7-wxA"/>
                         <constraint firstItem="rwQ-5M-fWg" firstAttribute="leading" secondItem="YPg-OO-9uf" secondAttribute="leading" constant="12" id="kNH-BD-vgc"/>
                         <constraint firstItem="YBe-bD-GYV" firstAttribute="top" secondItem="b6t-KY-r0L" secondAttribute="bottom" constant="1" id="p9g-yT-HmO"/>
                         <constraint firstItem="rwQ-5M-fWg" firstAttribute="top" secondItem="YPg-OO-9uf" secondAttribute="top" constant="12" id="x8V-zU-J2W"/>
@@ -289,4 +299,7 @@
             <point key="canvasLocation" x="33.333333333333336" y="207.92410714285714"/>
         </view>
     </objects>
+    <resources>
+        <image name="icon_live" width="10" height="10"/>
+    </resources>
 </document>
