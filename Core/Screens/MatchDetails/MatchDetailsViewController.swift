@@ -92,6 +92,14 @@ class MatchDetailsViewController: UIViewController {
         ])
         return betslipCountLabel
     }()
+
+    private lazy var sharedGameCardView: SharedGameCardView = {
+        let gameCard = SharedGameCardView()
+        gameCard.translatesAutoresizingMaskIntoConstraints = false
+        gameCard.isHidden = true
+
+        return gameCard
+    }()
     
     enum MatchMode {
         case preLive
@@ -231,6 +239,9 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.reloadData()
         self.tableView.reloadData()
 
+        // Shared Game
+        self.view.sendSubviewToBack(self.sharedGameCardView)
+
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -351,6 +362,15 @@ class MatchDetailsViewController: UIViewController {
         self.matchFieldWebView.navigationDelegate = self
 
         self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
+        
+        self.view.addSubview(self.sharedGameCardView)
+
+        NSLayoutConstraint.activate([
+            sharedGameCardView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            sharedGameCardView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
+            sharedGameCardView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            sharedGameCardView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
 
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
@@ -507,6 +527,9 @@ class MatchDetailsViewController: UIViewController {
             else {
                 updateHeaderDetails()
             }
+
+            self.sharedGameCardView.setupSharedCardInfo(viewModel: self.viewModel)
+
         }
     }
 
@@ -600,12 +623,19 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @IBAction private func didTapShareButton() {
+        self.sharedGameCardView.isHidden = false
+
+        let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
+        let snapshot = renderer.image { _ in
+            self.sharedGameCardView.drawHierarchy(in: self.sharedGameCardView.bounds, afterScreenUpdates: true)
+        }
+
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
 
-        if let gameSnapshot = self.viewModel.gameSnapshot, let matchId = self.match?.id, let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+        if let matchId = self.match?.id, let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
 
-            let imageProvider = NSItemProvider(object: gameSnapshot)
+            let imageProvider = NSItemProvider(object: snapshot)
             metadata.imageProvider = imageProvider
             metadata.url = matchUrl
             metadata.originalURL = matchUrl
@@ -614,8 +644,13 @@ class MatchDetailsViewController: UIViewController {
 
         let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
-        let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.gameSnapshot], applicationActivities: nil)
-        self.present(share, animated: true, completion: nil)
+        let share = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
+
+        share.completionWithItemsHandler = { [weak self] _, success, _, _ in
+            self?.sharedGameCardView.isHidden = true
+        }
+
+        present(share, animated: true, completion: nil)
     }
 
 }

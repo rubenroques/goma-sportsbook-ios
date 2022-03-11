@@ -219,8 +219,6 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
-
-
     func getDisciplines(language: String) -> AnyPublisher<EveryMatrixSocketResponse<EveryMatrix.Discipline>, EveryMatrix.APIError> {
         return self.manager.getModel(router: .disciplines(language: language) , decodingType: EveryMatrixSocketResponse<EveryMatrix.Discipline>.self)
             .eraseToAnyPublisher()
@@ -254,6 +252,11 @@ class EveryMatrixServiceClient: ObservableObject {
     -> AnyPublisher<EveryMatrix.WithdrawResponse, EveryMatrix.APIError> {
         return self.manager.getModel(router: .getWithdrawCashier(currency: currency, amount: amount, gamingAccountId: gamingAccountId),
                                      decodingType: EveryMatrix.WithdrawResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getLimits() -> AnyPublisher<EveryMatrix.LimitsResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getLimits, decodingType: EveryMatrix.LimitsResponse.self)
             .eraseToAnyPublisher()
     }
 
@@ -295,6 +298,16 @@ class EveryMatrixServiceClient: ObservableObject {
                                                                     pageIndex: pageIndex,
                                                                     pageSize: pageSize),
                                      decodingType: EveryMatrix.TransactionsHistoryResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func setLimit(limitType: String, period: String, amount: String, currency: String) -> AnyPublisher<EveryMatrix.LimitSetResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .setLimit(type: limitType, period: period, amount: amount, currency: currency), decodingType: EveryMatrix.LimitSetResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func removeLimit(limitType: String, period: String) -> AnyPublisher<EveryMatrix.LimitSetResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .removeLimit(type: limitType, period: period), decodingType: EveryMatrix.LimitSetResponse.self)
             .eraseToAnyPublisher()
     }
 

@@ -197,7 +197,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
             cell.setupWithMatch(match, store: self.viewModel.store)
             cell.setupFavoriteMatchInfoPublisher(match: match)
-            cell.tappedMatchLineAction = { [weak self] image in // TODO: Code Review - UIImage ?!
+            cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
             return cell
