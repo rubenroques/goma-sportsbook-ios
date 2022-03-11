@@ -39,6 +39,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     init(betPlacedDetailsArray: [BetPlacedDetails]) {
 
         self.betPlacedDetailsArray = betPlacedDetailsArray
+        
         //
         // Possible Earnings
         var possibleEarningsDouble = betPlacedDetailsArray
@@ -83,9 +84,9 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.possibleEarningsValueLabel.text = possibleEarningsValue
         self.totalOddsValueLabel.text = totalOddsValue
         self.betsMadeValueLabel.text = String(numberOfBets)
-        if let betType = betPlacedDetailsArray[0].response.type {
-            if betType == "SYSTEM"{
-                
+        
+        if let betType = betPlacedDetailsArray.first?.response.type {
+            if betType == "SYSTEM" {
                 self.totalOddsLabel.isHidden = true
                 self.totalOddsValueLabel.isHidden = true
                 
