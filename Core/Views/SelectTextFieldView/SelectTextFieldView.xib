@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -14,6 +14,8 @@
                 <outlet property="iconLabelImageView" destination="y5L-DZ-fCD" id="dqC-3v-1ba"/>
                 <outlet property="selectImageView" destination="fRK-gj-WMe" id="iXF-hq-Uq6"/>
                 <outlet property="textField" destination="0lh-dk-Q5D" id="2Be-PW-P5C"/>
+                <outlet property="textFieldImageConstraint" destination="dhh-Oi-FG2" id="ZOO-5L-667"/>
+                <outlet property="textFieldLeadingConstraint" destination="A43-y7-DtI" id="o89-Dm-4zM"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -51,11 +53,17 @@
                         <constraint firstAttribute="trailing" secondItem="0lh-dk-Q5D" secondAttribute="trailing" id="HYk-5x-kaF"/>
                         <constraint firstItem="y5L-DZ-fCD" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="MZw-Kn-N5P"/>
                         <constraint firstItem="0lh-dk-Q5D" firstAttribute="top" secondItem="day-vo-sb5" secondAttribute="top" id="UpH-BZ-lQS"/>
+                        <constraint firstItem="0lh-dk-Q5D" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="15" id="dhh-Oi-FG2"/>
                         <constraint firstAttribute="bottom" secondItem="0lh-dk-Q5D" secondAttribute="bottom" id="giz-se-DkH"/>
                         <constraint firstItem="y5L-DZ-fCD" firstAttribute="leading" secondItem="day-vo-sb5" secondAttribute="leading" constant="-6" id="jT0-cp-l3t"/>
                         <constraint firstItem="0lh-dk-Q5D" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="r7K-L4-8E3"/>
                         <constraint firstItem="fRK-gj-WMe" firstAttribute="centerY" secondItem="day-vo-sb5" secondAttribute="centerY" id="sko-xd-b0p"/>
                     </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="dhh-Oi-FG2"/>
+                        </mask>
+                    </variation>
                 </view>
             </subviews>
             <color key="backgroundColor" systemColor="systemBackgroundColor"/>

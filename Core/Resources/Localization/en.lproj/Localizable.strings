@@ -287,6 +287,7 @@ Terms of use, Privacy Policy and EULA";
 "email_address_or_username" = "Email or Username";
 "app_version_profile" = "App Version %s (%s)\nSportsbook® All Rights Reserved";
 "daily" = "Daily";
+"weekly" = "Weekly";
 "monthly" = "Monthly";
 "anual" = "Anual";
 "active" = "Active";
@@ -354,3 +355,16 @@ Terms of use, Privacy Policy and EULA";
 "betting_notifications" = "Betting notifications";
 "notify_bets_final_result" = "Notify me about my Bets final results";
 "notify_bets_options_results" = "Notify me about my Bets options results";
+"remove_limit" = "Remove Limit";
+"remove_limit_warning" = "Are you sure you want to remove this limit?";
+
+"deposit_limit" = "Deposit Limit";
+"betting_limit" = "Betting Limit";
+"loss_limit" = "Loss Limit";
+"deposit_limit_set" = "Deposit limit set for your account.";
+"betting_limit_set" = "Betting limit set for your account.";
+"loss_limit_set" = "Loss limit set for your account.";
+"deposit_limit_locked" = "Deposit limit set for your account is locked. You can update this limit again after: %s";
+"betting_limit_locked" = "Betting limit set for your account is locked. You can update this limit again after: %s";
+"loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: %s";
+

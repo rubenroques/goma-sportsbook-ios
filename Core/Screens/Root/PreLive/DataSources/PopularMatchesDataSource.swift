@@ -19,7 +19,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
 
     init(matches: [Match], outrightCompetitions: [Competition]? = nil) {
@@ -148,8 +148,8 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
                 cell.setupWithMatch(match, store: store)
 
-                cell.tappedMatchLineAction = { image in
-                    self.didSelectMatchAction?(match, image)
+                cell.tappedMatchLineAction = {
+                    self.didSelectMatchAction?(match)
                 }
                 return cell
             }

@@ -91,7 +91,7 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
@@ -185,14 +185,14 @@ class PreLiveEventsViewModel: NSObject {
 
         // Did Select a Match
         //
-        self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
-        self.todayMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.todayMatchesDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
-        self.competitionsDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.competitionsDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
 
         self.popularMatchesDataSource.didSelectCompetitionAction = { [weak self] competition in

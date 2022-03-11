@@ -673,6 +673,12 @@
 		A90BC90C27C3F65D00667616 /* BettingNotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90A27C3F65D00667616 /* BettingNotificationViewModel.swift */; };
 		A90BC90F27C3FF1000667616 /* AppearanceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90E27C3FF1000667616 /* AppearanceViewModel.swift */; };
 		A90BC91027C3FF1000667616 /* AppearanceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC90E27C3FF1000667616 /* AppearanceViewModel.swift */; };
+		A90BC91327C54D6000667616 /* LimitsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91227C54D6000667616 /* LimitsResponse.swift */; };
+		A90BC91427C54D6000667616 /* LimitsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91227C54D6000667616 /* LimitsResponse.swift */; };
+		A90BC91627C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */; };
+		A90BC91727C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */; };
+		A90BC91A27CCE0B300667616 /* SharedGameCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91927CCE0B300667616 /* SharedGameCardView.swift */; };
+		A90BC91B27CCE0B300667616 /* SharedGameCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90BC91927CCE0B300667616 /* SharedGameCardView.swift */; };
 		A90D8AF5277200C400DF88EB /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */; };
 		A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */; };
 		A90D8AF7277200C400DF88EB /* WithdrawViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */; };
@@ -1386,6 +1392,9 @@
 		A90BC90727C3B99500667616 /* GamesNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesNotificationViewModel.swift; sourceTree = "<group>"; };
 		A90BC90A27C3F65D00667616 /* BettingNotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingNotificationViewModel.swift; sourceTree = "<group>"; };
 		A90BC90E27C3FF1000667616 /* AppearanceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppearanceViewModel.swift; sourceTree = "<group>"; };
+		A90BC91227C54D6000667616 /* LimitsResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LimitsResponse.swift; sourceTree = "<group>"; };
+		A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewModel.swift; sourceTree = "<group>"; };
+		A90BC91927CCE0B300667616 /* SharedGameCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedGameCardView.swift; sourceTree = "<group>"; };
 		A90D8AF3277200C400DF88EB /* WithdrawViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewController.swift; sourceTree = "<group>"; };
 		A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = WithdrawViewController.xib; sourceTree = "<group>"; };
 		A90D8AF9277223DC00DF88EB /* WithdrawWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawWebViewController.swift; sourceTree = "<group>"; };
@@ -2452,6 +2461,7 @@
 			isa = PBXGroup;
 			children = (
 				A9E7C6AE27BD63A100F784C9 /* SettingsViews */,
+				A90BC91827CCE08A00667616 /* SharedGameCard */,
 				F498349F27AC513A0091BEA1 /* DropDownSelectionView */,
 				A96B618227A03BEF005DC376 /* SearchViews */,
 				45A642D227985A15008EFD5B /* CardStatsViews */,
@@ -2840,6 +2850,22 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		A90BC91127C54D4F00667616 /* Limits */ = {
+			isa = PBXGroup;
+			children = (
+				A90BC91227C54D6000667616 /* LimitsResponse.swift */,
+			);
+			path = Limits;
+			sourceTree = "<group>";
+		};
+		A90BC91827CCE08A00667616 /* SharedGameCard */ = {
+			isa = PBXGroup;
+			children = (
+				A90BC91927CCE0B300667616 /* SharedGameCardView.swift */,
+			);
+			path = SharedGameCard;
+			sourceTree = "<group>";
+		};
 		A90D8AF2277200A300DF88EB /* Withdraw */ = {
 			isa = PBXGroup;
 			children = (
@@ -3056,6 +3082,7 @@
 			children = (
 				A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */,
 				A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */,
+				A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */,
 			);
 			path = LimitsManagement;
 			sourceTree = "<group>";
@@ -3159,6 +3186,7 @@
 			isa = PBXGroup;
 			children = (
 				F4F8C9E227BEB6890082CC08 /* Transactions */,
+				A90BC91127C54D4F00667616 /* Limits */,
 				A995C19C279AD50100151462 /* Search */,
 				A90D8AFF277228A300DF88EB /* Withdraws */,
 				A987579F276CDB860099990D /* Deposits */,
@@ -4064,6 +4092,7 @@
 				F48CB9A027628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */,
 				454E0ACC2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE026BD9D9000EC572D /* Throttler.swift in Sources */,
+				A90BC91327C54D6000667616 /* LimitsResponse.swift in Sources */,
 				458F4C962712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A626DE831400269B05 /* RequestLocationAccessViewController.swift in Sources */,
@@ -4264,6 +4293,7 @@
 				454F0A8027C4E95A003123DF /* OutrightMarketDetailsViewModel.swift in Sources */,
 				45B0BD34271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9BCF45627554E88006DD528 /* CashoutSubmission.swift in Sources */,
+				A90BC91627C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -4293,6 +4323,7 @@
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
+				A90BC91A27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
@@ -4449,6 +4480,7 @@
 				F48CB9A127628C280070052B /* BetSuggestedCollectionViewCell.swift in Sources */,
 				454E0ACD2734386A00794E0C /* MultipleBettingTicketTableViewCell.swift in Sources */,
 				455A0CE126BD9D9000EC572D /* Throttler.swift in Sources */,
+				A90BC91427C54D6000667616 /* LimitsResponse.swift in Sources */,
 				458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				A9B840A926DE86BE00269B05 /* RequestLocationAccessViewController.swift in Sources */,
@@ -4649,6 +4681,7 @@
 				454F0A8127C4E95A003123DF /* OutrightMarketDetailsViewModel.swift in Sources */,
 				45B0BD35271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9BCF45727554E88006DD528 /* CashoutSubmission.swift in Sources */,
+				A90BC91727C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -4678,6 +4711,7 @@
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
+				A90BC91B27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,

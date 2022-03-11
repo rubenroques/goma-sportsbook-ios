@@ -16,7 +16,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
     var userFavoritesBySportsArray: [FavoriteSportMatches] = []
     var matchesBySportList: [String: [Match]] = [:]
 
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -108,8 +108,8 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                 }
 
                 cell.setupFavoriteMatchInfoPublisher(match: match)
-                cell.tappedMatchLineAction = {[weak self] image in
-                    self?.didSelectMatchAction?(match, image)
+                cell.tappedMatchLineAction = { [weak self] in
+                    self?.didSelectMatchAction?(match)
                 }
                 cell.matchWentLive = {
                     DispatchQueue.main.async { [weak self] in
