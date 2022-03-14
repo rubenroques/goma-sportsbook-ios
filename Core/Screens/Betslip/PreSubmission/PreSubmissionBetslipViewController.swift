@@ -1201,6 +1201,14 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.emptyStateLabel.text = localized("empty_no_login")
             self.emptyStateSecondaryLabel.text = localized("second_empty_no_login_to_bet")
             self.emptyStateButton.setTitle("Login", for: .normal)
+           /* UIView.transition(with: self.emptyStateBaseView,
+                                     duration: 0.5,
+                              options: [.beginFromCurrentState],
+                                     animations: {
+                                       
+                                       self.emptyStateBaseView.isHidden = true
+                   },
+                                     completion: nil)*/
             self.emptyStateBaseView.isHidden = false
             self.loadingBaseView.isHidden = true
             self.emptyBetsBaseView.isHidden = true
