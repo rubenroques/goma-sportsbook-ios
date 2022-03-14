@@ -691,19 +691,9 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     }
     
-   
     func setUserSettings() {
         UserDefaults.standard.set(self.selectedBetslipSetting, forKey: "user_betslip_settings")
     }
-
-//    override func viewDidDisappear(_ animated: Bool) {
-//        super.viewDidDisappear(animated)
-//        for cachedBetSuggestedViewModel in self.cachedBetSuggestedCollectionViewCellViewModels.values {
-//
-//            cachedBetSuggestedViewModel.unregisterSuggestedBets()
-//        }
-//        cachedBetSuggestedCollectionViewCellViewModels = [:]
-//    }
 
     func checkForbiddenCombinationErrors(multipleBetslipState: BetslipSelectionState) {
 
