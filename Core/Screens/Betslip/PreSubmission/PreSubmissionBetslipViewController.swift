@@ -801,7 +801,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
         
-        self.emptyBetsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateLabel.font =  AppFont.with(type: .bold, size: 22)
@@ -965,10 +965,12 @@ class PreSubmissionBetslipViewController: UIViewController {
         StyleHelper.styleButton(button: self.placeBetButton)
         StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
         StyleHelper.styleButton(button: self.settingsPickerButton)
+        StyleHelper.styleButton(button: self.emptyStateButton)
 
         self.settingsButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.clearButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         
+        self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.emptyBetsBaseView.isHidden = true
         
     }
@@ -1194,20 +1196,20 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
         }
         else {
+            self.isLoading = false
             self.emptyStateImage.image = UIImage(named: "no_internet_icon")
             self.emptyStateLabel.text = localized("empty_no_login")
             self.emptyStateSecondaryLabel.text = localized("second_empty_no_login_to_bet")
             self.emptyStateButton.setTitle("Login", for: .normal)
-            StyleHelper.styleButton(button: self.emptyStateButton)
+            self.emptyStateBaseView.isHidden = false
             self.loadingBaseView.isHidden = true
             self.emptyBetsBaseView.isHidden = true
             self.placeBetBaseView.isHidden = true
             self.tableView.isHidden = true
             self.clearBaseView.isHidden = true
             self.betTypeSegmentControlBaseView.isHidden = true
-            self.view.bringSubviewToFront(self.emptyBetsBaseView)
-        
-            self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            
+           // self.view.bringSubviewToFront(self.emptyBetsBaseView)
             
         }
     }
