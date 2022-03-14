@@ -254,7 +254,7 @@ class PreLiveEventsViewController: UIViewController {
         sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
+        
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -514,7 +514,7 @@ class PreLiveEventsViewController: UIViewController {
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
+        self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         
