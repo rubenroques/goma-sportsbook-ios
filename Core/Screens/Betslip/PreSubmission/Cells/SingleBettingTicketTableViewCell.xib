@@ -44,28 +44,36 @@
                                         <rect key="frame" x="0.0" y="0.0" width="397" height="45"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Uxt-tt-rUj">
-                                                <rect key="frame" x="12" y="15" width="38.5" height="15"/>
+                                                <rect key="frame" x="12" y="15" width="281" height="15"/>
                                                 <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="15"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNx-OA-6Xp">
+                                            <stackView opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceRightToLeft" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="6Kw-Kz-p3O">
                                                 <rect key="frame" x="311" y="10" width="52" height="25"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DUb-Mw-uFF">
-                                                        <rect key="frame" x="8" y="6.5" width="36" height="14"/>
-                                                        <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="14"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gNx-OA-6Xp">
+                                                        <rect key="frame" x="0.0" y="0.0" width="52" height="25"/>
+                                                        <subviews>
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DUb-Mw-uFF">
+                                                                <rect key="frame" x="8" y="6.5" width="36" height="14"/>
+                                                                <fontDescription key="fontDescription" name="Gilroy-ExtraBold" family="Gilroy" pointSize="14"/>
+                                                                <nil key="textColor"/>
+                                                                <nil key="highlightedColor"/>
+                                                            </label>
+                                                        </subviews>
+                                                        <constraints>
+                                                            <constraint firstAttribute="trailing" secondItem="DUb-Mw-uFF" secondAttribute="trailing" constant="8" id="HMr-6v-8iU"/>
+                                                            <constraint firstItem="DUb-Mw-uFF" firstAttribute="centerY" secondItem="gNx-OA-6Xp" secondAttribute="centerY" constant="1" id="XQJ-Ut-xTL"/>
+                                                            <constraint firstItem="DUb-Mw-uFF" firstAttribute="centerX" secondItem="gNx-OA-6Xp" secondAttribute="centerX" id="d25-c3-u0Q"/>
+                                                            <constraint firstAttribute="height" constant="25" id="i0X-Z4-akJ"/>
+                                                        </constraints>
+                                                    </view>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstAttribute="trailing" secondItem="DUb-Mw-uFF" secondAttribute="trailing" constant="8" id="HMr-6v-8iU"/>
-                                                    <constraint firstItem="DUb-Mw-uFF" firstAttribute="centerY" secondItem="gNx-OA-6Xp" secondAttribute="centerY" constant="1" id="XQJ-Ut-xTL"/>
-                                                    <constraint firstItem="DUb-Mw-uFF" firstAttribute="centerX" secondItem="gNx-OA-6Xp" secondAttribute="centerX" id="d25-c3-u0Q"/>
-                                                    <constraint firstAttribute="height" constant="25" id="i0X-Z4-akJ"/>
+                                                    <constraint firstAttribute="height" constant="25" id="l3D-Rw-XDb"/>
                                                 </constraints>
-                                            </view>
+                                            </stackView>
                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="odd_up_icon" translatesAutoresizingMaskIntoConstraints="NO" id="lKa-Xq-fYv">
                                                 <rect key="frame" x="295" y="17.5" width="11" height="9"/>
                                                 <constraints>
@@ -95,15 +103,16 @@
                                         </subviews>
                                         <constraints>
                                             <constraint firstItem="Uxt-tt-rUj" firstAttribute="centerY" secondItem="8Yy-Nx-FGg" secondAttribute="centerY" id="3uf-8Q-uTV"/>
-                                            <constraint firstItem="4mZ-5D-Iql" firstAttribute="top" secondItem="gNx-OA-6Xp" secondAttribute="centerY" constant="-2" id="5d0-K5-XOW"/>
+                                            <constraint firstItem="lKa-Xq-fYv" firstAttribute="bottom" secondItem="6Kw-Kz-p3O" secondAttribute="centerY" constant="4" id="7qR-62-F3P"/>
                                             <constraint firstAttribute="height" constant="45" id="Btg-PL-KxL"/>
                                             <constraint firstAttribute="trailing" secondItem="uot-Mq-Rlv" secondAttribute="trailing" constant="3" id="HLP-hv-AGq"/>
+                                            <constraint firstItem="6Kw-Kz-p3O" firstAttribute="leading" secondItem="4mZ-5D-Iql" secondAttribute="trailing" constant="5" id="HcH-qH-26j"/>
                                             <constraint firstItem="uot-Mq-Rlv" firstAttribute="centerY" secondItem="8Yy-Nx-FGg" secondAttribute="centerY" id="MMi-5L-nMo"/>
-                                            <constraint firstItem="gNx-OA-6Xp" firstAttribute="leading" secondItem="lKa-Xq-fYv" secondAttribute="trailing" constant="5" id="NA5-iS-gvo"/>
-                                            <constraint firstItem="gNx-OA-6Xp" firstAttribute="leading" secondItem="4mZ-5D-Iql" secondAttribute="trailing" constant="5" id="Vje-Qr-Rue"/>
-                                            <constraint firstItem="lKa-Xq-fYv" firstAttribute="bottom" secondItem="gNx-OA-6Xp" secondAttribute="centerY" constant="4" id="jrg-UL-1WT"/>
-                                            <constraint firstItem="gNx-OA-6Xp" firstAttribute="centerY" secondItem="8Yy-Nx-FGg" secondAttribute="centerY" id="r55-kh-a3T"/>
-                                            <constraint firstItem="uot-Mq-Rlv" firstAttribute="leading" secondItem="gNx-OA-6Xp" secondAttribute="trailing" constant="1" id="tUp-SV-i2c"/>
+                                            <constraint firstItem="uot-Mq-Rlv" firstAttribute="leading" secondItem="6Kw-Kz-p3O" secondAttribute="trailing" constant="1" id="X1H-ec-7r3"/>
+                                            <constraint firstItem="6Kw-Kz-p3O" firstAttribute="leading" secondItem="lKa-Xq-fYv" secondAttribute="trailing" constant="5" id="a8j-zo-wkP"/>
+                                            <constraint firstItem="6Kw-Kz-p3O" firstAttribute="centerY" secondItem="8Yy-Nx-FGg" secondAttribute="centerY" id="qpK-hB-ACF"/>
+                                            <constraint firstItem="Uxt-tt-rUj" firstAttribute="trailing" secondItem="6Kw-Kz-p3O" secondAttribute="trailing" constant="-70" id="ttf-qL-6lQ"/>
+                                            <constraint firstItem="4mZ-5D-Iql" firstAttribute="top" secondItem="6Kw-Kz-p3O" secondAttribute="centerY" constant="-2" id="v8v-B3-qKv"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Dfa-yT-hf6">
@@ -316,6 +325,7 @@
                 <outlet property="maxValueButtonView" destination="cqd-rd-M5u" id="AeP-Rs-tL9"/>
                 <outlet property="oddBaseView" destination="gNx-OA-6Xp" id="CR3-z4-2XS"/>
                 <outlet property="oddValueLabel" destination="DUb-Mw-uFF" id="zur-qa-pqc"/>
+                <outlet property="oddsStackView" destination="6Kw-Kz-p3O" id="Wwd-dI-DDe"/>
                 <outlet property="outcomeNameLabel" destination="Uxt-tt-rUj" id="Mz1-o4-FvL"/>
                 <outlet property="plusFiveButtonView" destination="kWq-DN-1RN" id="Dnq-NG-7YG"/>
                 <outlet property="plusOneButtonView" destination="M5L-bv-nfL" id="ckK-uv-WMc"/>

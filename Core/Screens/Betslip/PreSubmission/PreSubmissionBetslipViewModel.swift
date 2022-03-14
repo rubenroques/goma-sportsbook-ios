@@ -33,7 +33,6 @@ class PreSubmissionBetslipViewModel: NSObject {
                 case .finished:
                     ()                }
             }, receiveValue: { [weak self] bonusResponse in
-                print("GRANTED BONUS: \(bonusResponse)")
 
                 if let bonuses = bonusResponse.bonuses {
                     self?.processGrantedBonus(bonuses: bonuses)

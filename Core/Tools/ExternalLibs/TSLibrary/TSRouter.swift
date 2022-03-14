@@ -31,7 +31,7 @@ enum TSRouter {
     case postUserMetadata(favoriteEvents: [String])
     case getProfileStatus
     case getUserBalance
-    case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection])
+    case getBetslipSelectionInfo(language: String, stakeAmount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsBoostPercentage: Double?)
     case placeBet(language: String, amount: Double, betType: EveryMatrix.BetslipSubmitionType, tickets: [EveryMatrix.BetslipTicketSelection], oddsValidationType: String, freeBet: Bool, ubsWalletId: String)
     case getOpenBets(language: String, records: Int, page: Int)
     case cashoutBet(language: String, betId: String)
@@ -448,7 +448,7 @@ enum TSRouter {
             return ["expectBalance": true,
                     "expectBonus": true]
             
-        case .getBetslipSelectionInfo(let language, let stakeAmount, let betType, let tickets):
+        case .getBetslipSelectionInfo(let language, let stakeAmount, let betType, let tickets, let oddsBoostPercentage):
             var selection: [Any] = []
             for ticket in tickets {
                 selection.append([
@@ -456,12 +456,24 @@ enum TSRouter {
                     "priceValue": ticket.currentOdd
                 ])
             }
-            let params: [String: Any] = ["lang": language,
+
+            var params: [String: Any] = ["lang": language,
                     "terminalType": "MOBILE",
                     "stakeAmount": stakeAmount,
                     "eachWay": false,
                     "type": betType.typeKeyword,
-                          "selections": selection]
+                    "selections": selection]
+
+            if let oddsBoostPercentage = oddsBoostPercentage {
+                params = ["lang": language,
+                        "terminalType": "MOBILE",
+                        "stakeAmount": stakeAmount,
+                        "eachWay": false,
+                        "type": betType.typeKeyword,
+                        "selections": selection,
+                        "oddsBoostPercentage": oddsBoostPercentage]
+            }
+
             return params
 
         case .placeBet(let language, let amount, let betType, let tickets, let oddsValidationType, let freeBet, let ubsWalletId):

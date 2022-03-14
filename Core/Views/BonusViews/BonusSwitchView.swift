@@ -73,23 +73,28 @@ class BonusSwitchView: UIView {
 
     }
 
-    func setupBonusInfo(bonus: BetslipFreebet, bonusType: GrantedBonusType) {
+    func setupBonusInfo(freeBet: BetslipFreebet?, oddsBoost: BetslipOddsBoost?, bonusType: GrantedBonusType) {
 
         if bonusType == .freeBet {
             self.iconImageView.image = UIImage(named: "bonus_gift_icon")
 
-            let bonusAmount = "\(bonus.currency) \(bonus.freeBetAmount)"
-            let bonusTitle = localized("use_freebet").replacingOccurrences(of: "%s", with: bonusAmount)
-            self.titleLabel.text = bonusTitle
+            if let freeBet = freeBet {
+                let freeBetAmount = "\(freeBet.currency) \(freeBet.freeBetAmount)"
+                let freeBetTitle = localized("use_freebet").replacingOccurrences(of: "%s", with: freeBetAmount)
+                self.titleLabel.text = freeBetTitle
+            }
         }
         else if bonusType == .oddsBoost {
             self.iconImageView.image = UIImage(named: "bonus_lightning_icon")
-
-            let oddsBoost = "\(bonus.freeBetAmount)%"
-            let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "%s", with: oddsBoost)
-            self.titleLabel.text = oddsTitle
+            if let oddsBoost = oddsBoost {
+                let oddsBoostConverted = oddsBoost.oddsBoostPercent * 100
+                let oddsBoost = "\(oddsBoostConverted)%"
+                let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "%s", with: oddsBoost)
+                self.titleLabel.text = oddsTitle
+            }
         }
     }
+
 }
 
 //

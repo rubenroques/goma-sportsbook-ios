@@ -51,9 +51,15 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     @IBOutlet private weak var errorLateralTopView: UIView!
     @IBOutlet private weak var errorLateralBottomView: UIView!
 
+    @IBOutlet private weak var oddsStackView: UIStackView!
+
+    private lazy var oldOddLabel: UILabel = Self.createOldOddLabel()
+
     private lazy var bonusStackView: UIStackView = Self.createBonusStackView()
 
     private lazy var freeBetView: BonusSwitchView = Self.createFreeBetView()
+
+    private lazy var oddsBoostView: BonusSwitchView = Self.createOddsBoostView()
 
     var showBonusInfo: Bool = false {
         didSet {
@@ -66,7 +72,30 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         }
     }
 
+    var showFreeBetInfo: Bool = false {
+        didSet {
+            if showFreeBetInfo {
+                self.freeBetView.isHidden = false
+            }
+            else {
+                self.freeBetView.isHidden = true
+            }
+        }
+    }
+
+    var showOddsBoostInfo: Bool = false {
+        didSet {
+            if showOddsBoostInfo {
+                self.oddsBoostView.isHidden = false
+            }
+            else {
+                self.oddsBoostView.isHidden = true
+            }
+        }
+    }
+
     var isFreeBetSelected: ((Bool) -> Void)?
+    var isOddsBoostSelected: ((Bool) -> Void)?
 
     var currentOddValue: Double?
     var bettingTicket: BettingTicket?
@@ -113,6 +142,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.errorView.isHidden = true
 
         self.showBonusInfo = false
+
+        self.oddsBoostView.isHidden = true
 
         self.setupSubviews()
 
@@ -177,6 +208,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.userBalance = 0
 
         self.freeBetView.isSwitchOn = false
+        self.oddsBoostView.isSwitchOn = false
     }
 
     func setupWithTheme() {
@@ -237,6 +269,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
         self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundCards
+
+        self.oldOddLabel.textColor = UIColor.App.textPrimary
     }
 
     func addDoneAccessoryView() {
@@ -377,7 +411,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
     }
 
     func setupFreeBetInfo(freeBet: BetslipFreebet, isSwitchOn: Bool = false) {
-        self.freeBetView.setupBonusInfo(bonus: freeBet, bonusType: .freeBet)
+        self.freeBetView.setupBonusInfo(freeBet: freeBet, oddsBoost: nil, bonusType: .freeBet)
 
         if isSwitchOn {
             self.freeBetView.isSwitchOn = true
@@ -399,6 +433,50 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 self.isFreeBetSelected?(false)
             }
         }
+
+        self.freeBetView.isHidden = false
+    }
+
+    func setupOddsBoostInfo(oddsBoost: BetslipOddsBoost ,isSwitchOn: Bool = false) {
+        self.oddsBoostView.setupBonusInfo(freeBet: nil, oddsBoost: oddsBoost, bonusType: .oddsBoost)
+
+        self.oldOddLabel.isHidden = true
+
+        if isSwitchOn {
+            self.oddsBoostView.isSwitchOn = true
+            self.oldOddLabel.isHidden = false
+
+            if let currentOddValue = self.currentOddValue {
+                let oldValueConverted = OddConverter.stringForValue(currentOddValue, format: UserDefaults.standard.userOddsFormat)
+                let boostedValue = currentOddValue + (currentOddValue * oddsBoost.oddsBoostPercent)
+
+                let boostedValueConverted = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
+
+                let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: oldValueConverted)
+                    attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSRange(location: 0, length: attributeString.length))
+
+                self.oldOddLabel.attributedText = attributeString
+                self.oddValueLabel.text = boostedValueConverted
+            }
+
+        }
+
+        self.oddsBoostView.didTappedSwitch = {
+            if self.oddsBoostView.isSwitchOn {
+                //self.changedFreebetSelectionState?(freeBet)
+
+                self.isOddsBoostSelected?(true)
+                // Strikethrough string
+            }
+            else {                //self.changedFreebetSelectionState?(nil)
+
+                self.isOddsBoostSelected?(false)
+                self.oldOddLabel.isHidden = true
+
+            }
+        }
+
+        self.oddsBoostView.isHidden = false
     }
 
     @IBAction private func didTapDeleteButton() {
@@ -511,10 +589,27 @@ extension SingleBettingTicketTableViewCell {
         return bonusSwitchView
     }
 
+    private static func createOddsBoostView() -> BonusSwitchView {
+        let bonusSwitchView = BonusSwitchView()
+        bonusSwitchView.translatesAutoresizingMaskIntoConstraints = false
+        return bonusSwitchView
+    }
+
+    private static func createOldOddLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "1.0"
+        label.font = AppFont.with(type: .bold, size: 11)
+        return label
+    }
+
     private func setupSubviews() {
         self.stackView.addArrangedSubview(self.bonusStackView)
 
         self.bonusStackView.addArrangedSubview(self.freeBetView)
+        self.bonusStackView.addArrangedSubview(self.oddsBoostView)
+
+        self.oddsStackView.addArrangedSubview(self.oldOddLabel)
 
         self.initConstraints()
     }
