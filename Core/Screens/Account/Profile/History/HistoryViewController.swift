@@ -80,7 +80,7 @@ class HistoryViewController: UIViewController {
         self.filterBaseView.isUserInteractionEnabled = true
         self.filterBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        let tapBackGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(imageTapped(tapGestureRecognizer:)))
+        let tapBackGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapBackButton))
         self.backImage.isUserInteractionEnabled = true
         self.backImage.addGestureRecognizer(tapBackGestureRecognizer)
         
@@ -397,9 +397,8 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
 //
 extension HistoryViewController {
   
-    @objc func imageTapped(tapGestureRecognizer: UITapGestureRecognizer) {
-        self.dismiss(animated: true, completion: nil)
-        // Your action
+    @objc func didTapBackButton() {
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
