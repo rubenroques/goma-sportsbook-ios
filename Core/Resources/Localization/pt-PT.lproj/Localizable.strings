@@ -211,6 +211,8 @@ Terms of use, Privacy Policy and EULA";
 "empty_no_login" = "You aren't logged in!";
 "second_empty_no_login" = "You need to be logged in to be able to see your tickets.";
 
+"second_empty_no_login_to_bet" = "You need to be logged in to be able to bet.";
+
 "empty_list" = "There are no results for this selection.";
 "second_empty_list" = "Please try something else!";
 
