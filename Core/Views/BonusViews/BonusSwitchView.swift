@@ -15,11 +15,11 @@ class BonusSwitchView: UIView {
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var bonusSwitch: UISwitch = Self.createBonusSwitch()
-    private lazy var closeButton: UIButton = Self.createCloseButton()
+    // private lazy var closeButton: UIButton = Self.createCloseButton()
 
     // MARK: Public Properties
     var bonusType: GrantedBonusType = .standard
-    var didTapCloseButtonAction: (() -> Void)?
+    // var didTapCloseButtonAction: (() -> Void)?
     var didTappedSwitch: (() -> Void)?
 
     var isSwitchOn: Bool = false {
@@ -53,7 +53,7 @@ class BonusSwitchView: UIView {
     func commonInit() {
         self.alpha = 1
 
-        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        // self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
 
         self.bonusSwitch.addTarget(self, action: #selector(switchChanged), for: UIControl.Event.valueChanged)
     }
@@ -61,7 +61,7 @@ class BonusSwitchView: UIView {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.containerView.backgroundColor = UIColor.App.backgroundPrimary
+        self.containerView.backgroundColor = UIColor.App.backgroundDarker
 
         self.iconImageView.backgroundColor = .clear
 
@@ -69,7 +69,7 @@ class BonusSwitchView: UIView {
 
         self.bonusSwitch.onTintColor = UIColor.App.highlightSecondary
 
-        self.closeButton.backgroundColor = .clear
+        // self.closeButton.backgroundColor = .clear
 
     }
 
@@ -101,9 +101,9 @@ class BonusSwitchView: UIView {
 // MARK: - Actions
 //
 extension BonusSwitchView {
-    @objc private func didTapCloseButton() {
-        self.didTapCloseButtonAction?()
-    }
+//    @objc private func didTapCloseButton() {
+//        self.didTapCloseButtonAction?()
+//    }
 
     @objc func switchChanged(settingSwitch: UISwitch) {
 
@@ -150,13 +150,13 @@ extension BonusSwitchView {
         return bonusSwitch
     }
 
-    private static func createCloseButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
-        return button
-    }
+//    private static func createCloseButton() -> UIButton {
+//        let button = UIButton()
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setTitle("", for: .normal)
+//        button.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
+//        return button
+//    }
 
     private func setupSubviews() {
         self.addSubview(self.containerView)
@@ -164,7 +164,7 @@ extension BonusSwitchView {
         self.containerView.addSubview(self.iconImageView)
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.bonusSwitch)
-        self.containerView.addSubview(self.closeButton)
+        // self.containerView.addSubview(self.closeButton)
 
         self.initConstraints()
     }
@@ -189,12 +189,13 @@ extension BonusSwitchView {
 
             self.bonusSwitch.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 15),
             self.bonusSwitch.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.bonusSwitch.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16)
 
-            self.closeButton.leadingAnchor.constraint(equalTo: self.bonusSwitch.trailingAnchor, constant: 15),
-            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
-            self.closeButton.widthAnchor.constraint(equalToConstant: 13),
-            self.closeButton.heightAnchor.constraint(equalToConstant: 13),
-            self.closeButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor)
+//            self.closeButton.leadingAnchor.constraint(equalTo: self.bonusSwitch.trailingAnchor, constant: 15),
+//            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
+//            self.closeButton.widthAnchor.constraint(equalToConstant: 13),
+//            self.closeButton.heightAnchor.constraint(equalToConstant: 13),
+//            self.closeButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor)
 
         ])
 

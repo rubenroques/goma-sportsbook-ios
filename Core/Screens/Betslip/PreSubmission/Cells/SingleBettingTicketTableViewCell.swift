@@ -61,6 +61,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
     private lazy var oddsBoostView: BonusSwitchView = Self.createOddsBoostView()
 
+    private var currentBoostedOddPercentage: Double = 0
+
     var showBonusInfo: Bool = false {
         didSet {
             if showBonusInfo {
@@ -159,7 +161,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.maxValueButtonView.layer.cornerRadius = CornerRadius.view
         self.maxValueButtonView.clipsToBounds = true
 
-        // self.baseView.layer.cornerRadius = CornerRadius.view
+        self.baseView.layer.cornerRadius = CornerRadius.view
         self.oddBaseView.layer.cornerRadius = 3
         self.amountBaseView.layer.cornerRadius = CornerRadius.view
 
@@ -209,6 +211,9 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.freeBetView.isSwitchOn = false
         self.oddsBoostView.isSwitchOn = false
+
+        self.oldOddLabel.text = ""
+        self.currentBoostedOddPercentage = 0
     }
 
     func setupWithTheme() {
@@ -270,6 +275,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.errorLateralTopView.backgroundColor = UIColor.App.backgroundSecondary
         self.errorLateralBottomView.backgroundColor = UIColor.App.backgroundCards
 
+        self.bonusStackView.backgroundColor = .clear
+
         self.oldOddLabel.textColor = UIColor.App.textPrimary
     }
 
@@ -316,7 +323,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.bettingTicket = bettingTicket
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
-        //self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
+        // self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
         let newOddValue = Double(floor(bettingTicket.value * 100)/100)
         self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         self.marketNameLabel.text = bettingTicket.marketDescription
@@ -348,8 +355,17 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 }
                 
                 self?.currentOddValue = newOddValue
-                //self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
-                self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                // self?.oddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
+
+                if let currentBoostedOddPercentage = self?.currentBoostedOddPercentage, currentBoostedOddPercentage != 0 {
+                    let boostedValue = newOddValue + (newOddValue * currentBoostedOddPercentage)
+
+                    self?.oddValueLabel.text = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
+                }
+                else {
+                    self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                }
+
             })
         
         if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),
@@ -420,13 +436,12 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.freeBetView.didTappedSwitch = {
             if self.freeBetView.isSwitchOn {
-                //self.changedFreebetSelectionState?(freeBet)
                 self.currentValue = Int(freeBet.freeBetAmount * 100.0)
                 self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: freeBet.freeBetAmount))
                 self.buttonsBaseView.isUserInteractionEnabled = false
                 self.isFreeBetSelected?(true)
             }
-            else {                //self.changedFreebetSelectionState?(nil)
+            else {
                 self.currentValue = 0
                 self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: 0))
                 self.buttonsBaseView.isUserInteractionEnabled = true
@@ -437,23 +452,34 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.freeBetView.isHidden = false
     }
 
-    func setupOddsBoostInfo(oddsBoost: BetslipOddsBoost ,isSwitchOn: Bool = false) {
+    func setupOddsBoostInfo(oddsBoost: BetslipOddsBoost , isSwitchOn: Bool = false) {
         self.oddsBoostView.setupBonusInfo(freeBet: nil, oddsBoost: oddsBoost, bonusType: .oddsBoost)
 
         self.oldOddLabel.isHidden = true
+
+        self.currentBoostedOddPercentage = 0
 
         if isSwitchOn {
             self.oddsBoostView.isSwitchOn = true
             self.oldOddLabel.isHidden = false
 
             if let currentOddValue = self.currentOddValue {
+
+                // Update current odd boost percentage
+                self.currentBoostedOddPercentage = oddsBoost.oddsBoostPercent
+
+                // Sets old odd value
                 let oldValueConverted = OddConverter.stringForValue(currentOddValue, format: UserDefaults.standard.userOddsFormat)
+
+                let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: oldValueConverted)
+                    attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle,
+                                                 value: 2,
+                                                 range: NSRange(location: 0, length: attributeString.length))
+
+                // Updates current odd value
                 let boostedValue = currentOddValue + (currentOddValue * oddsBoost.oddsBoostPercent)
 
                 let boostedValueConverted = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
-
-                let attributeString: NSMutableAttributedString = NSMutableAttributedString(string: oldValueConverted)
-                    attributeString.addAttribute(NSAttributedString.Key.strikethroughStyle, value: 2, range: NSRange(location: 0, length: attributeString.length))
 
                 self.oldOddLabel.attributedText = attributeString
                 self.oddValueLabel.text = boostedValueConverted
@@ -463,16 +489,13 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.oddsBoostView.didTappedSwitch = {
             if self.oddsBoostView.isSwitchOn {
-                //self.changedFreebetSelectionState?(freeBet)
 
                 self.isOddsBoostSelected?(true)
-                // Strikethrough string
             }
-            else {                //self.changedFreebetSelectionState?(nil)
+            else {
 
                 self.isOddsBoostSelected?(false)
                 self.oldOddLabel.isHidden = true
-
             }
         }
 
@@ -579,7 +602,7 @@ extension SingleBettingTicketTableViewCell {
         let stackView = UIStackView()
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.axis = .vertical
-        stackView.spacing = 0
+        stackView.spacing = 4
         return stackView
     }
 
@@ -618,9 +641,8 @@ extension SingleBettingTicketTableViewCell {
 
         // Bonus stack view
         NSLayoutConstraint.activate([
-            self.bonusStackView.leadingAnchor.constraint(equalTo: self.stackView.leadingAnchor, constant: 0),
-            self.bonusStackView.trailingAnchor.constraint(equalTo: self.stackView.trailingAnchor, constant: 0),
-
+            self.bonusStackView.leadingAnchor.constraint(equalTo: self.stackView.leadingAnchor),
+            self.bonusStackView.trailingAnchor.constraint(equalTo: self.stackView.trailingAnchor)
         ])
 
     }

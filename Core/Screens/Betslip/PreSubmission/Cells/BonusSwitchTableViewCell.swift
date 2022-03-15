@@ -14,11 +14,11 @@ class BonusSwitchTableViewCell: UITableViewCell {
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var bonusSwitch: UISwitch = Self.createBonusSwitch()
-    private lazy var closeButton: UIButton = Self.createCloseButton()
+    // private lazy var closeButton: UIButton = Self.createCloseButton()
 
     // MARK: Public Properties
     var bonusType: GrantedBonusType = .standard
-    var didTapCloseButtonAction: (() -> Void)?
+    // var didTapCloseButtonAction: (() -> Void)?
     var didTappedSwitch: (() -> Void)?
 
     var isSwitchOn: Bool = false {
@@ -39,7 +39,7 @@ class BonusSwitchTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
+        // self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .touchUpInside)
 
         self.bonusSwitch.addTarget(self, action: #selector(switchChanged), for: UIControl.Event.valueChanged)
     }
@@ -58,7 +58,7 @@ class BonusSwitchTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.containerView.backgroundColor = .black
+        self.containerView.backgroundColor = UIColor.App.backgroundDarker
 
         self.iconImageView.backgroundColor = .clear
 
@@ -66,25 +66,29 @@ class BonusSwitchTableViewCell: UITableViewCell {
 
         self.bonusSwitch.onTintColor = UIColor.App.highlightSecondary
 
-        self.closeButton.backgroundColor = .clear
+        // self.closeButton.backgroundColor = .clear
 
     }
 
-    func setupBonusInfo(bonus: BetslipFreebet, bonusType: GrantedBonusType) {
+    func setupBonusInfo(freeBet: BetslipFreebet?, oddsBoost: BetslipOddsBoost?, bonusType: GrantedBonusType) {
 
         if bonusType == .freeBet {
             self.iconImageView.image = UIImage(named: "bonus_gift_icon")
 
-            let bonusAmount = "\(bonus.currency) \(bonus.freeBetAmount)"
-            let bonusTitle = localized("use_freebet").replacingOccurrences(of: "%s", with: bonusAmount)
-            self.titleLabel.text = bonusTitle
+            if let freeBet = freeBet {
+                let bonusAmount = "\(freeBet.currency) \(freeBet.freeBetAmount)"
+                let bonusTitle = localized("use_freebet").replacingOccurrences(of: "%s", with: bonusAmount)
+                self.titleLabel.text = bonusTitle
+            }
         }
         else if bonusType == .oddsBoost {
             self.iconImageView.image = UIImage(named: "bonus_lightning_icon")
-
-            let oddsBoost = "\(bonus.freeBetAmount)%"
-            let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "%s", with: oddsBoost)
-            self.titleLabel.text = oddsTitle
+            if let oddsBoost = oddsBoost {
+                let oddsBoostConverted = oddsBoost.oddsBoostPercent * 100
+                let oddsBoost = "\(oddsBoostConverted)%"
+                let oddsTitle = localized("use_boosted_odds").replacingOccurrences(of: "%s", with: oddsBoost)
+                self.titleLabel.text = oddsTitle
+            }
         }
     }
 }
@@ -93,9 +97,9 @@ class BonusSwitchTableViewCell: UITableViewCell {
 // MARK: - Actions
 //
 extension BonusSwitchTableViewCell {
-    @objc private func didTapCloseButton() {
-        self.didTapCloseButtonAction?()
-    }
+//    @objc private func didTapCloseButton() {
+//        self.didTapCloseButtonAction?()
+//    }
 
     @objc func switchChanged(settingSwitch: UISwitch) {
 
@@ -142,13 +146,13 @@ extension BonusSwitchTableViewCell {
         return bonusSwitch
     }
 
-    private static func createCloseButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
-        return button
-    }
+//    private static func createCloseButton() -> UIButton {
+//        let button = UIButton()
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setTitle("", for: .normal)
+//        button.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
+//        return button
+//    }
 
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
@@ -156,7 +160,7 @@ extension BonusSwitchTableViewCell {
         self.containerView.addSubview(self.iconImageView)
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.bonusSwitch)
-        self.containerView.addSubview(self.closeButton)
+        // self.containerView.addSubview(self.closeButton)
 
         self.initConstraints()
     }
@@ -165,8 +169,8 @@ extension BonusSwitchTableViewCell {
 
         // Container view
         NSLayoutConstraint.activate([
-            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 8),
-            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -8),
+            self.containerView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 12),
+            self.containerView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -12),
             self.containerView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 4),
             self.containerView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -4),
             self.containerView.heightAnchor.constraint(equalToConstant: 50),
@@ -181,12 +185,13 @@ extension BonusSwitchTableViewCell {
 
             self.bonusSwitch.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 15),
             self.bonusSwitch.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor),
+            self.bonusSwitch.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16)
 
-            self.closeButton.leadingAnchor.constraint(equalTo: self.bonusSwitch.trailingAnchor, constant: 15),
-            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
-            self.closeButton.widthAnchor.constraint(equalToConstant: 13),
-            self.closeButton.heightAnchor.constraint(equalToConstant: 13),
-            self.closeButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor)
+//            self.closeButton.leadingAnchor.constraint(equalTo: self.bonusSwitch.trailingAnchor, constant: 15),
+//            self.closeButton.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -16),
+//            self.closeButton.widthAnchor.constraint(equalToConstant: 13),
+//            self.closeButton.heightAnchor.constraint(equalToConstant: 13),
+//            self.closeButton.centerYAnchor.constraint(equalTo: self.containerView.centerYAnchor)
 
         ])
 
