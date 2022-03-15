@@ -91,13 +91,13 @@ class BonusViewModel: NSObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    print("APPLICABLE BONUS ERROR: \(error)")
+                    // print("APPLICABLE BONUS ERROR: \(error)")
+                    ()
                 case .finished:
                     ()
                 }
                 self.isBonusApplicableLoading.send(false)
             }, receiveValue: { [weak self] bonusResponse in
-                print("APPLICABLE BONUS: \(bonusResponse)")
                 if let bonusList = bonusResponse.bonuses {
                     for bonus in bonusList {
                         let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
@@ -115,13 +115,13 @@ class BonusViewModel: NSObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    print("CLAIMABLE BONUS ERROR: \(error)")
+                    // print("CLAIMABLE BONUS ERROR: \(error)")
+                    ()
                 case .finished:
                     ()
                     self.isBonusClaimableLoading.send(false)
                 }
             }, receiveValue: { [weak self] bonusResponse in
-                print("CLAIMABLE BONUS: \(bonusResponse)")
                 for bonus in bonusResponse.locallyInjectedKey {
                     let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .claimable)
                     self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)

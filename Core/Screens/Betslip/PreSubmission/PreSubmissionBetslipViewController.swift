@@ -116,22 +116,9 @@ class PreSubmissionBetslipViewController: UIViewController {
     
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
 
-    private lazy var bonusBaseStackView: UIStackView = Self.createBonusBaseStackView()
-
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
     private var systemBettingTicketDataSource = SystemBettingTicketDataSource(bettingTickets: [])
-
-    private var isBonusBetslipShowing: Bool = false {
-        didSet {
-            if isBonusBetslipShowing {
-                self.bonusBaseStackView.isHidden = false
-            }
-            else {
-                self.bonusBaseStackView.isHidden = true
-            }
-        }
-    }
 
     private var freeBetSelected: BetslipFreebet?
     private var oddsBoostSelected: BetslipOddsBoost?
@@ -277,8 +264,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         super.viewDidLoad()
         self.commonInit()
 
-        self.setupSubviews()
-        
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
         self.settingsPickerBaseView.alpha = 0.0
@@ -463,10 +448,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 if isEmpty {
                     self?.getSuggestedBets()
-                    self?.isBonusBetslipShowing = false
-                }
-                else {
-                    self?.isBonusBetslipShowing = true
                 }
 
             })
@@ -683,6 +664,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if let multipleBetslipState = betslipState {
                     self?.checkForbiddenCombinationErrors(multipleBetslipState: multipleBetslipState)
 
+                    self?.multipleBettingTicketDataSource.bonusMultiple = []
+
                     if multipleBetslipState.freeBets.isNotEmpty {
 
                         for freeBet in multipleBetslipState.freeBets {
@@ -710,8 +693,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Env.betslipManager.simpleBetslipSelectionStateList
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] simpleBetsList in
-                print("SIMPLE BETS STATE: \(simpleBetsList)")
+            .sink(receiveValue: { [weak self] _ in
                 self?.tableView.reloadData()
             })
             .store(in: &cancellables)
@@ -856,28 +838,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
     }
-
-//    private func setupBonusStackView(bonusBetslipArray: [BonusBetslip]) {
-//
-//        let bonusView = BonusSwitchView()
-//        bonusView.translatesAutoresizingMaskIntoConstraints = false
-//
-//        for bonus in bonusBetslipArray {
-//            if bonus.bonusType == .freeBet {
-//                bonusView.setupBonusInfo(bonus: bonus.bonus)
-//                self.bonusBaseStackView.addArrangedSubview(bonusView)
-//            }
-//        }
-//
-//        bonusView.didTapCloseButtonAction = {
-//
-//            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseOut, animations: {
-//                bonusView.alpha = 0
-//            }, completion: { _ in
-//                bonusView.removeFromSuperview()
-//            })
-//        }
-//    }
 
     func showErrorView(errorMessage: String?) {
 
@@ -1302,7 +1262,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         }
         else if self.listTypePublisher.value == .multiple {
-            Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue, freeBet: self.freeBetSelected)
+            Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue, freeBet: self.freeBetSelected, oddsBoost: self.oddsBoostSelected)
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] _ in
                     self?.isLoading = false
@@ -1673,7 +1633,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
                         cell.showFreeBetInfo = true
                     }
                     else {
-                        if let currentTicketFreeBetSelected = self.currentTicketFreeBetSelected, currentTicketFreeBetSelected.bettingId == bettingTicket.bettingId {
+                        if let currentTicketFreeBetSelected = self.currentTicketFreeBetSelected,
+                           currentTicketFreeBetSelected.bettingId == bettingTicket.bettingId {
                             cell.setupFreeBetInfo(freeBet: freeBet, isSwitchOn: true)
                             cell.showFreeBetInfo = true
                         }
@@ -1710,7 +1671,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
                         cell.showOddsBoostInfo = true
                     }
                     else {
-                        if let currentTicketOddsBoostSelected = self.currentTicketOddsBoostSelected, currentTicketOddsBoostSelected.bettingId == bettingTicket.bettingId {
+                        if let currentTicketOddsBoostSelected = self.currentTicketOddsBoostSelected,
+                           currentTicketOddsBoostSelected.bettingId == bettingTicket.bettingId {
                             cell.setupOddsBoostInfo(oddsBoost: oddsBoost, isSwitchOn: true)
                             cell.showOddsBoostInfo = true
                         }
@@ -1795,11 +1757,6 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
             if let freeBet = bonusMultiple.freeBet {
                 cell.setupBonusInfo(freeBet: freeBet, oddsBoost: nil, bonusType: .freeBet)
 
-//                cell.didTapCloseButtonAction = {
-//                    self.freeBets.remove(at: (indexPath.row - self.bettingTickets.count))
-//                    tableView.reloadData()
-//                }
-
                 cell.didTappedSwitch = {
                     if cell.isSwitchOn {
                         self.changedFreebetSelectionState?(freeBet)
@@ -1808,16 +1765,9 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
                         self.changedFreebetSelectionState?(nil)
                     }
                 }
-                //return cell
             }
             else if let oddsBoost = bonusMultiple.oddsBoost {
-                //cell.setupBonusInfo(bonus: , bonusType: .freeBet)
                 cell.setupBonusInfo(freeBet: nil, oddsBoost: oddsBoost, bonusType: .oddsBoost)
-
-//                cell.didTapCloseButtonAction = {
-//                    self.freeBets.remove(at: (indexPath.row - self.bettingTickets.count))
-//                    tableView.reloadData()
-//                }
 
                 cell.didTappedSwitch = {
                     if cell.isSwitchOn {
@@ -1833,12 +1783,6 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
         else {
             fatalError()
         }
-//        guard
-//            let cell = tableView.dequeueCellType(MultipleBettingTicketTableViewCell.self),
-//            let bettingTicket = self.bettingTickets[safe: indexPath.row]
-//        else {
-//            fatalError()
-//        }
 
     }
 
@@ -1896,35 +1840,6 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         return 99
     }
     
-}
-
-extension PreSubmissionBetslipViewController {
-
-    private static func createBonusBaseStackView() -> UIStackView {
-        let stackView = UIStackView()
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        stackView.axis = .vertical
-        stackView.spacing = 0
-        stackView.distribution = .fillEqually
-        return stackView
-    }
-
-    private func setupSubviews() {
-
-        self.view.addSubview(self.bonusBaseStackView)
-        self.bonusBaseStackView.isHidden = true
-
-        self.initConstraints()
-    }
-
-    private func initConstraints() {
-
-        NSLayoutConstraint.activate([
-            self.bonusBaseStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.bonusBaseStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.bonusBaseStackView.bottomAnchor.constraint(equalTo: self.placeBetBaseView.topAnchor, constant: -10)
-        ])
-    }
 }
 
 struct SingleBetslipFreebet {
