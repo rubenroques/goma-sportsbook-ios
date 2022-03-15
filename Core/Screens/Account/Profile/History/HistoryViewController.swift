@@ -399,7 +399,6 @@ extension HistoryViewController {
   
     @objc func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
-        // Your action
     }
     
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
