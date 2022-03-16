@@ -190,6 +190,8 @@ class MyTicketsViewController: UIViewController {
 
         self.myBetsSegmentedControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.myBetsSegmentedControl.backgroundColor = UIColor.App.backgroundTertiary
+        
+        StyleHelper.styleButton(button: self.noBetsButton)
 
     }
 
