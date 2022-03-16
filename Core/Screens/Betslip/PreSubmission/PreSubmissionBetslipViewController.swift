@@ -965,11 +965,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapSettingsButton() {
         self.showingSettingsSelector = true
     }
-    
-    @IBAction private func didTapLoginButton() {
-        let loginViewController = Router.navigationController(with: LoginViewController())
-        self.present(loginViewController, animated: true, completion: nil)
-    }
 
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
@@ -1134,6 +1129,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.isLoading = true
         if UserSessionStore.isUserLogged() {
+            
             if self.listTypePublisher.value == .simple {
 
                 Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
