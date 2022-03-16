@@ -141,12 +141,7 @@ class CompetitionDetailsViewController: UIViewController {
 
     // MARK: - Actions
     @objc func didTapBackButton() {
-        if self.isModal {
-            self.presentingViewController?.dismiss(animated: true, completion: nil)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        self.navigationController?.popViewController(animated: true)
     }
 
     @objc func didTapBetslipView() {

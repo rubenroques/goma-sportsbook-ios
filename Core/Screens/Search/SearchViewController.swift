@@ -31,7 +31,7 @@ class SearchViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
 
     var didSelectMatchAction: ((Match) -> Void)?
-    var didSelectCompetitionAction: ((String) -> Void)?
+    var didSelectCompetitionAction: ((EveryMatrix.Tournament) -> Void)?
 
     var showSearchResultsTableView: Bool = false {
         didSet {
@@ -88,6 +88,9 @@ class SearchViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        self.searchBarView.becomeFirstResponder()
+
     }
 
     override func viewDidLayoutSubviews() {
@@ -236,13 +239,22 @@ class SearchViewController: UIViewController {
             if self.viewModel.matchesInfoForMatch[match.id] != nil {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
 
-                self.present(matchDetailsViewController, animated: true, completion: nil)
+                self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
             else {
                 let matchDetailsViewController = MatchDetailsViewController(match: match)
 
-                self.present(matchDetailsViewController, animated: true, completion: nil)
+                self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+
             }
+        }
+
+        self.didSelectCompetitionAction = { competition in
+            let sport = Sport(id: competition.sportId ?? "")
+            let competitionId = competition.id
+            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
+            let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
         }
 
         self.searchTextPublisher
@@ -417,7 +429,8 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                         let location = self.viewModel.location(forId: cellVenueId)
                         cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "", flagId: location?.id ?? "")
                         cell.tappedCompetitionCellAction = {
-                            self.didSelectCompetitionAction?(competition.id)
+                            self.didSelectCompetitionAction?(competition)
+
                         }
                     }
                     return cell

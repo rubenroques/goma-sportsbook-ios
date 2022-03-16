@@ -17,6 +17,11 @@ extension UIViewController {
         return presentingIsModal || presentingIsNavigation || presentingIsTabBar
     }
 
+    var isRootModal: Bool {
+        let presentingIsModal = presentingViewController != nil
+        return presentingIsModal
+    }
+
     func showAlert(type: EditAlertView.AlertState, errorText: String = "") {
 
         let popup = EditAlertView()
