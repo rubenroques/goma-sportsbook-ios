@@ -54,7 +54,6 @@ class CompetitionDetailsViewModel {
                 self?.fetchCompetitions()
             }
             .store(in: &cancellables)
-
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {

@@ -198,6 +198,9 @@ class PreLiveEventsViewModel: NSObject {
         self.popularMatchesDataSource.didSelectCompetitionAction = { [weak self] competition in
             self?.didSelectCompetitionAction?(competition)
         }
+        self.competitionsDataSource.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectCompetitionAction?(competition)
+        }
 
         self.setupPublishers()
     }
@@ -512,12 +515,12 @@ class PreLiveEventsViewModel: NSObject {
         self.popularTournamentsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    print("popularTournamentsPublisher Error retrieving data!")
                 case .finished:
-                    print("Data retrieved!")
+                    print("popularTournamentsPublisher Data retrieved!")
                 }
             }, receiveValue: { [weak self] state in
                 switch state {
@@ -533,9 +536,7 @@ class PreLiveEventsViewModel: NSObject {
             })
     }
 
-
     //
-
     private func fetchTodayMatchesNextPage() {
         if !todayMatchesHasNextPage {
             return

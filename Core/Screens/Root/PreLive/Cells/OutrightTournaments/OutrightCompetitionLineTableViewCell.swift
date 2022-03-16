@@ -163,6 +163,10 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
                 if numberTotalOfMarkets == 0 {
                     cell.hideSubtitle()
                 }
+
+                cell.tappedAction = { [weak self] in
+                    self?.didTapSeeAll()
+                }
             }
 
             return cell
@@ -170,7 +174,7 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
         else if let cell = collectionView.dequeueCellType(OutrightCompetitionWidgetCollectionViewCell.self, indexPath: indexPath) {
             let cellViewModel = viewModel.outrightCompetitionWidgetViewModel()
             cell.configure(withViewModel: cellViewModel)
-            cell.tappedLineAction = { [weak self] competition in
+            cell.tappedLineAction = { [weak self] _ in
                 self?.didTapSeeAll()
             }
             return cell

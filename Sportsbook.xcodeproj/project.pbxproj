@@ -283,6 +283,8 @@
 		455A0D2526BDE88D00EC572D /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455A0D2326BDE88D00EC572D /* Router.swift */; };
 		455A0D2726BDF51A00EC572D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 455A0D2626BDF51A00EC572D /* GoogleService-Info.plist */; };
 		455A0D3726BDF73F00EC572D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 455A0D3626BDF73F00EC572D /* GoogleService-Info.plist */; };
+		455C676C27DF635300AAB2A5 /* PopularDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C676B27DF635200AAB2A5 /* PopularDetailsViewController.swift */; };
+		455C676E27DFB12600AAB2A5 /* LiveDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C676D27DFB12600AAB2A5 /* LiveDetailsViewController.swift */; };
 		455C960626FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C960426FCA85F00456F30 /* PhonePrefixSelectorViewController.swift */; };
 		455C960726FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C960426FCA85F00456F30 /* PhonePrefixSelectorViewController.swift */; };
 		455C960826FCA85F00456F30 /* PhonePrefixSelectorViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 455C960526FCA85F00456F30 /* PhonePrefixSelectorViewController.xib */; };
@@ -1201,6 +1203,8 @@
 		455A0D2326BDE88D00EC572D /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		455A0D2626BDF51A00EC572D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		455A0D3626BDF73F00EC572D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		455C676B27DF635200AAB2A5 /* PopularDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopularDetailsViewController.swift; sourceTree = "<group>"; };
+		455C676D27DFB12600AAB2A5 /* LiveDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveDetailsViewController.swift; sourceTree = "<group>"; };
 		455C960426FCA85F00456F30 /* PhonePrefixSelectorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhonePrefixSelectorViewController.swift; sourceTree = "<group>"; };
 		455C960526FCA85F00456F30 /* PhonePrefixSelectorViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PhonePrefixSelectorViewController.xib; sourceTree = "<group>"; };
 		455C960A26FCDDE700456F30 /* CountrySelectorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountrySelectorTableViewCell.swift; sourceTree = "<group>"; };
@@ -2192,6 +2196,22 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		455C676927DF5C8D00AAB2A5 /* PopularDetails */ = {
+			isa = PBXGroup;
+			children = (
+				455C676B27DF635200AAB2A5 /* PopularDetailsViewController.swift */,
+			);
+			path = PopularDetails;
+			sourceTree = "<group>";
+		};
+		455C676A27DF5C9900AAB2A5 /* LiveDetails */ = {
+			isa = PBXGroup;
+			children = (
+				455C676D27DFB12600AAB2A5 /* LiveDetailsViewController.swift */,
+			);
+			path = LiveDetails;
+			sourceTree = "<group>";
+		};
 		455C962526FE11B300456F30 /* Root */ = {
 			isa = PBXGroup;
 			children = (
@@ -2390,6 +2410,8 @@
 				455C962526FE11B300456F30 /* Root */,
 				A995C1922799917100151462 /* Search */,
 				A9BCF438274FB558006DD528 /* MatchDetails */,
+				455C676A27DF5C9900AAB2A5 /* LiveDetails */,
+				455C676927DF5C8D00AAB2A5 /* PopularDetails */,
 				4503E79827D0E85D00077CD2 /* CompetitionDetails */,
 				454F0A7B27C4146F003123DF /* OutrightMarketDetails */,
 				454E0A932732BF4600794E0C /* Betslip */,
@@ -4024,8 +4046,10 @@
 				45C26DD127976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */,
 				A9E7C6A527BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */,
 				45166CF126F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
+				455C676C27DF635300AAB2A5 /* PopularDetailsViewController.swift in Sources */,
 				455A0D2426BDE88D00EC572D /* Router.swift in Sources */,
 				45D3DE332714889200717124 /* Date+Extension.swift in Sources */,
+				455C676E27DFB12600AAB2A5 /* LiveDetailsViewController.swift in Sources */,
 				454A7A5F26D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				457BD61727BBAF6100E5612E /* ContainerViewController.swift in Sources */,
 				45166D1326F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
@@ -4894,7 +4918,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00403;
+				CURRENT_PROJECT_VERSION = 00404;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -4920,7 +4944,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00403;
+				CURRENT_PROJECT_VERSION = 00404;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
