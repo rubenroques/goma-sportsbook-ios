@@ -73,6 +73,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
+    var tappedFavoriteAction: ((Match) -> Void)?
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -562,7 +563,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if UserDefaults.standard.userSession != nil {
+        self.tappedFavoriteAction?((self.viewModel?.match)!)
+       /* if UserDefaults.standard.userSession != nil {
 
             if self.isFavorite {
                 if let matchId = self.viewModel?.match?.id {
@@ -576,7 +578,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
                 }
                 self.isFavorite = true
             }
-        }
+        }*/
+        
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {

@@ -801,6 +801,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         default:
             ()
         }
+        
 
         if filterSelectedOption == indexPath.row {
             cell.setSelectedType(true)

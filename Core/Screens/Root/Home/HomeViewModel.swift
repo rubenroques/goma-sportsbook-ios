@@ -182,6 +182,22 @@ class HomeViewModel {
         self.bannersInfoPublisher?.cancel()
         self.bannersInfoPublisher = nil
     }
+    func markAsFavorite(match : Match){
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+            
+        }
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: "event")
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: "event")
+        }
+        
+       
+             
+    }
 
     func fetchBanners() {
 
