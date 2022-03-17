@@ -20,6 +20,10 @@ class MyFavoritesViewController: UIViewController {
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
+    private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
+    private lazy var emptyStateTitleLabel: UILabel = Self.createEmptyStateTitleLabel()
+    private lazy var emptyStateLoginButton: UIButton = Self.createEmptyStateLoginButton()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
@@ -35,6 +39,19 @@ class MyFavoritesViewController: UIViewController {
             else {
                 self.loadingScreenBaseView.isHidden = true
                 self.tableView.isHidden = false
+            }
+        }
+    }
+
+    var isEmptyState: Bool = false {
+        didSet {
+            if isEmptyState {
+                self.tableView.isHidden = true
+                self.emptyStateView.isHidden = false
+            }
+            else {
+                self.tableView.isHidden = false
+                self.emptyStateView.isHidden = true
             }
         }
     }
@@ -58,6 +75,7 @@ class MyFavoritesViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
 
         self.isLoading = true
+        self.isEmptyState = false
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
 
@@ -65,6 +83,50 @@ class MyFavoritesViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+    }
+
+    private func setupEmptyStateView(emptyStateType: EmptyStateType, hasLogin: Bool = false) {
+
+        switch emptyStateType {
+        case .noLogin:
+            self.emptyStateTitleLabel.text = localized("need_login_favorites")
+            self.isEmptyState = true
+        case .noGames:
+            self.emptyStateTitleLabel.text = localized("empty_my_games")
+            if self.viewModel.favoriteListTypePublisher.value == .favoriteGames {
+                self.isEmptyState = true
+            }
+            else {
+                self.isEmptyState = false
+            }
+        case .noCompetitions:
+            self.emptyStateTitleLabel.text = localized("empty_my_competitions")
+            if self.viewModel.favoriteListTypePublisher.value == .favoriteCompetitions {
+                self.isEmptyState = true
+            }
+            else {
+                self.isEmptyState = false
+            }
+        case .noFavorites:
+            if self.viewModel.favoriteListTypePublisher.value == .favoriteGames {
+                self.emptyStateTitleLabel.text = localized("empty_my_games")
+                self.isEmptyState = true
+            }
+            else if self.viewModel.favoriteListTypePublisher.value == .favoriteCompetitions {
+                self.emptyStateTitleLabel.text = localized("empty_my_competitions")
+                self.isEmptyState = true
+            }
+        case .none:
+            self.isEmptyState = false
+        }
+
+        if hasLogin {
+            self.emptyStateLoginButton.isHidden = false
+        }
+        else {
+            self.emptyStateLoginButton.isHidden = true
+        }
     }
 
     // MARK: Layout and Theme
@@ -126,6 +188,36 @@ class MyFavoritesViewController: UIViewController {
             }
 
         }
+
+//        viewModel.emptyStateStatusPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { emptyStateType in
+//                print("EMPTY STATE: \(emptyStateType)")
+//            })
+//            .store(in: &cancellables)
+
+        Publishers.CombineLatest(viewModel.emptyStateStatusPublisher, viewModel.favoriteListTypePublisher)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] emptyStateType, favoriteListType in
+
+                switch emptyStateType {
+                case .noLogin:
+                    //self?.emptyStateStatus = .noLogin
+                    self?.setupEmptyStateView(emptyStateType: emptyStateType, hasLogin: true)
+                case .noGames:
+                    //self?.emptyStateStatus = .noGames
+                    self?.setupEmptyStateView(emptyStateType: emptyStateType)
+                case .noCompetitions:
+                    //self?.emptyStateStatus = .noCompetition
+                    self?.setupEmptyStateView(emptyStateType: emptyStateType)
+                case .noFavorites:
+                    //self?.emptyStateStatus = .noFavorites
+                    self?.setupEmptyStateView(emptyStateType: emptyStateType)
+                case .none:
+                    ()
+                }
+            })
+            .store(in: &cancellables)
 
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
@@ -273,6 +365,8 @@ extension MyFavoritesViewController {
     @objc private func didTapBackButton() {
         self.viewModel.unregisterEndpoints()
 
+        Env.favoritesManager.favoriteTypeCheckPublisher.value = .none
+
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
         }
@@ -385,6 +479,38 @@ extension MyFavoritesViewController {
         return betslipCountLabel
     }
 
+    private static func createEmptyStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyStateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "no_content_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createEmptyStateTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("empty_my_games")
+        label.font = AppFont.with(type: .semibold, size: 20)
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createEmptyStateLoginButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("login"), for: .normal)
+        StyleHelper.styleButton(button: button)
+        return button
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.topView)
@@ -419,6 +545,12 @@ extension MyFavoritesViewController {
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
+
+        self.view.addSubview(self.emptyStateView)
+
+        self.emptyStateView.addSubview(self.emptyStateImageView)
+        self.emptyStateView.addSubview(self.emptyStateTitleLabel)
+        self.emptyStateView.addSubview(self.emptyStateLoginButton)
 
         self.initConstraints()
     }
@@ -482,6 +614,37 @@ extension MyFavoritesViewController {
             self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
             self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
         ])
+
+        // Empty state view
+        NSLayoutConstraint.activate([
+            self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 160),
+            self.emptyStateImageView.heightAnchor.constraint(equalToConstant: 160),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 30),
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
+
+            self.emptyStateTitleLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 30),
+            self.emptyStateTitleLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -30),
+            self.emptyStateTitleLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 30),
+
+            self.emptyStateLoginButton.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 30),
+            self.emptyStateLoginButton.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -30),
+            self.emptyStateLoginButton.topAnchor.constraint(equalTo: self.emptyStateTitleLabel.bottomAnchor, constant: 30),
+            self.emptyStateLoginButton.heightAnchor.constraint(equalToConstant: 50)
+
+        ])
     }
 
+}
+
+enum EmptyStateType {
+    case noLogin
+    case noGames
+    case noCompetitions
+    case noFavorites
+    case none
 }

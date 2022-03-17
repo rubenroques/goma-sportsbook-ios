@@ -113,13 +113,13 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
             if self.isFavorite {
                 if let competitionId = self.competition?.id {
-                    Env.favoritesManager.removeFavorite(eventId: competitionId, favoriteType: "competition")
+                    Env.favoritesManager.removeFavorite(eventId: competitionId, favoriteType: .competition)
                 }
                 self.isFavorite = false
             }
             else {
                 if let competitionId = self.competition?.id {
-                    Env.favoritesManager.addFavorite(eventId: competitionId, favoriteType: "competition")
+                    Env.favoritesManager.addFavorite(eventId: competitionId, favoriteType: .competition)
                 }
                 self.isFavorite = true
 
