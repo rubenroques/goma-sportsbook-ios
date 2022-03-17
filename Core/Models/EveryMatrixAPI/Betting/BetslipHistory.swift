@@ -70,6 +70,7 @@ struct BetHistoryEntrySelection: Codable {
     let tournamentId: String?
     let tournamentName: String?
     let eventId: String?
+    let eventStatusId: String?
     let eventName: String?
     let eventResult: String?
     let eventDate: Date?
@@ -97,6 +98,7 @@ struct BetHistoryEntrySelection: Codable {
         case eventId = "eventId"
         case eventName = "eventName"
         case eventResult = "eventResult"
+        case eventStatusId = "eventStatusId"
         case eventDate = "eventDate"
         case bettingTypeId = "bettingTypeId"
         case bettingTypeName = "bettingTypeName"

@@ -170,7 +170,7 @@ extension CompetitionWidgetCollectionViewCell {
         let seeAllLabel = UILabel()
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
         seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "Open Competition"
+        seeAllLabel.text = "Open Competition Details"
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
         seeAllLabel.textAlignment = .center
         return seeAllLabel

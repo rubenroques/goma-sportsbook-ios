@@ -62,9 +62,7 @@ enum TSRouter {
     case bettingOfferPublisher(operatorId: String, language: String, bettingOfferId: String)
     case liveMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
     case popularMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
-    case popularTournamentsPublisher(operatorId: String, language: String, sportId: String, tournamentsCount: Int)
     case todayMatchesPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int)
-
     case todayMatchesFilterPublisher(operatorId: String, language: String, sportId: String, matchesCount: Int, timeRange: String)
     case competitionsMatchesPublisher(operatorId: String, language: String, sportId: String, events: [String])
     case bannersInfoPublisher(operatorId: String, language: String)
@@ -74,6 +72,9 @@ enum TSRouter {
     case cashoutPublisher(operatorId: String, language: String, betId: String)
     case matchDetailsAggregatorPublisher(operatorId: String, language: String, matchId: String)
     case matchMarketOdds(operatorId: String, language: String, matchId: String, bettingType: String, eventPartId: String)
+
+    case popularTournamentsPublisher(operatorId: String, language: String, sportId: String, tournamentsCount: Int)
+    case upcomingTournamentsPublisher(operatorId: String, language: String, sportId: String)
 
     case eventPartScoresPublisher(operatorId: String, language: String, matchId: String)
     case sportsListPublisher(operatorId: String, language: String)
@@ -99,7 +100,7 @@ enum TSRouter {
     case applyBonusCode(bonusCode: String)
     case forfeitBonus(bonusID: String)
     case getLimits
-    case removeLimit(type: String)
+    case removeLimit(type: String, period: String)
     case setLimit(type: String, period: String, amount: String, currency: String)
     case realityCheckGetCfg
     case realityCheckGet
@@ -233,12 +234,9 @@ enum TSRouter {
         case .liveMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/live-matches-aggregator-main/\(sportId)/all-locations/default-event-info/\(matchesCount)/\(marketsCount)"
-
         case .popularMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
             return "/sports/\(operatorId)/\(language)/popular-matches-aggregator-main/\(sportId)/\(matchesCount)/\(marketsCount)"
-        case .popularTournamentsPublisher(let operatorId, let language, let sportId, let tournamentsCount):
-            return "/sports/\(operatorId)/\(language)/popular-tournaments/\(sportId)/\(tournamentsCount)"
 
         case .todayMatchesPublisher(let operatorId, let language, let sportId, let matchesCount):
             let marketsCount = 5
@@ -264,6 +262,11 @@ enum TSRouter {
             return "/sports/\(operatorId)/\(language)/cashout/\(betId)"
         case .matchMarketOdds(let operatorId, let language, let matchId, let bettingType, let eventPartId):
             return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/\(bettingType)/\(eventPartId)"
+
+        case .popularTournamentsPublisher(let operatorId, let language, let sportId, let tournamentsCount):
+            return "/sports/\(operatorId)/\(language)/popular-tournaments/\(sportId)/\(tournamentsCount)"
+        case .upcomingTournamentsPublisher(let operatorId, let language, let sportId):
+            return "/sports/\(operatorId)/\(language)/tournaments/\(sportId)"
 
         case .eventPartScoresPublisher(let operatorId, let language, let matchId):
             return "/sports/\(operatorId)/\(language)/\(matchId)/eventPartScores/small"
@@ -341,7 +344,7 @@ enum TSRouter {
             return "/user/bonus#forfeit"
         case .getLimits:
             return "/user/limit#getLimits"
-        case .removeLimit(let type):
+        case .removeLimit(let type, _):
             return "/user/limit#remove\(type)Limit"
         case .setLimit(let type, _, _, _):
             return "/user/limit#set\(type)Limit"
@@ -662,10 +665,13 @@ enum TSRouter {
             return ["bonusID": bID]
 
         // swiftlint:disable identifier_name
-        case .setLimit(type: _, period: let p, amount: let a, currency: let c):
-            return ["period": p,
-                    "amount": a,
-                    "currency": c]
+        case .setLimit(_, let period, let amount, let currency):
+            return ["period": period,
+                    "amount": amount,
+                    "currency": currency]
+            
+        case .removeLimit(_, let period):
+            return ["period": period]
 
         case .realityCheckSet(value: let val):
             return ["value": val]

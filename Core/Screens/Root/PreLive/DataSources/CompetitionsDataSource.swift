@@ -14,9 +14,11 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             self.collapsedCompetitionsSections = []
         }
     }
+
     var collapsedCompetitionsSections: Set<Int> = []
 
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectCompetitionAction: ((Competition) -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -30,31 +32,69 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let competition = competitions[safe: section] {
-            return competition.matches.count
+            if competition.outrightMarkets > 0 {
+                return competition.matches.count + 1
+            }
+            else {
+                return competition.matches.count
+            }
         }
         return 0
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard
-            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
-            let competition = self.competitions[safe: indexPath.section],
-            let match = competition.matches[safe: indexPath.row]
+            let competition = self.competitions[safe: indexPath.section]
         else {
             fatalError()
         }
-        if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
-            cell.matchStatsViewModel = matchStatsViewModel
-        }
-        let store = Env.everyMatrixStorage as AggregatorStore
 
-        cell.setupWithMatch(match, store: store)
-        cell.shouldShowCountryFlag(false)
-        cell.tappedMatchLineAction = { image in
-            self.didSelectMatchAction?(match, image)
-        }
+        if competition.outrightMarkets > 0 {
+            if indexPath.row == 0 {
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+                        as? OutrightCompetitionLineTableViewCell
+                else {
+                    fatalError()
+                }
+                cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+                cell.didSelectCompetitionAction = { [weak self] competition in
+                    self?.didSelectCompetitionAction?(competition)
+                }
+                return cell
+            }
+            else if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+                    let match = competition.matches[safe: indexPath.row - 1] {
 
-        return cell
+                if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                    cell.matchStatsViewModel = matchStatsViewModel
+                }
+                let store = Env.everyMatrixStorage as AggregatorStore
+
+                cell.setupWithMatch(match, store: store)
+                cell.shouldShowCountryFlag(false)
+                cell.tappedMatchLineAction = {
+                    self.didSelectMatchAction?(match)
+                }
+                return cell
+            }
+        }
+        else if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
+                let match = competition.matches[safe: indexPath.row] {
+
+            if let matchStatsViewModel = self.matchStatsViewModelForMatch?(match) {
+                cell.matchStatsViewModel = matchStatsViewModel
+            }
+            let store = Env.everyMatrixStorage as AggregatorStore
+
+            cell.setupWithMatch(match, store: store)
+            cell.shouldShowCountryFlag(false)
+            cell.tappedMatchLineAction = {
+                self.didSelectMatchAction?(match)
+            }
+            return cell
+        }
+        fatalError()
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -106,14 +146,35 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return 0
         }
-        return UITableView.automaticDimension
+        if self.collapsedCompetitionsSections.contains(indexPath.section) {
+            return 0
+        }
+
+        if let competition = competitions[safe: indexPath.section] {
+            if competition.outrightMarkets > 0 && indexPath.row == 0 {
+                return 142
+            }
+            else {
+                return MatchWidgetCollectionViewCell.cellHeight + 20
+            }
+        }
+        return .leastNonzeroMagnitude
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
             return 0
         }
-        return MatchWidgetCollectionViewCell.cellHeight + 20
+
+        if let competition = competitions[safe: indexPath.section] {
+            if competition.outrightMarkets > 0 && indexPath.row == 0 {
+                return 142
+            }
+            else {
+                return MatchWidgetCollectionViewCell.cellHeight + 20
+            }
+        }
+        return .leastNonzeroMagnitude
     }
 
     func needReloadSection(_ section: Int, tableView: UITableView) {

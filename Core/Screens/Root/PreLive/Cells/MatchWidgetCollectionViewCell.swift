@@ -58,8 +58,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     static var cellHeight: CGFloat = 156
 
-    var snapshot: UIImage?
-
     var isFavorite: Bool = false {
         didSet {
             if isFavorite {
@@ -176,8 +174,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-
-        self.snapshot = nil
 
         self.leftOutcome = nil
         self.middleOutcome = nil
@@ -306,9 +302,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 0] {
 
-                self.homeOddTitleLabel.text = outcome.typeName
+                self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+                self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
 
                 self.leftOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -346,7 +343,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                 }
                             }
                             weakSelf.currentHomeOddValue = newOddValue
-                            //weakSelf.homeOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                             weakSelf.homeOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
@@ -355,9 +351,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 1] {
 
-                self.drawOddTitleLabel.text = outcome.typeName
+                self.drawOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+                self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
 
                 self.middleOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -395,7 +392,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                                 }
                             }
                             weakSelf.currentDrawOddValue = newOddValue
-                            //weakSelf.drawOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                             weakSelf.drawOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
@@ -403,9 +399,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 2] {
 
-                self.awayOddTitleLabel.text = outcome.typeName
+                self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
+                self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
 
                 self.rightOddButtonSubscriber = viewModel.store
                     .bettingOfferPublisher(withId: outcome.bettingOffer.id)?
@@ -444,7 +441,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
                             }
 
                             weakSelf.currentAwayOddValue = newOddValue
-                            //weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                             weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                         }
                     })
@@ -514,11 +510,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
-        let renderer = UIGraphicsImageRenderer(size: self.contentView.bounds.size)
-        let image = renderer.image { _ in
-            self.contentView.drawHierarchy(in: self.contentView.bounds, afterScreenUpdates: true)
-        }
-        self.snapshot = image
 
         self.tappedMatchWidgetAction?()
     }

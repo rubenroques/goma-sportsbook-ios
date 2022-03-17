@@ -43,6 +43,9 @@ class OutrightCompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAll))
+        self.contentView.addGestureRecognizer(tapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -79,6 +82,12 @@ class OutrightCompetitionWidgetCollectionViewCell: UICollectionViewCell {
         self.viewModel = viewModel
 
         self.titleLabel.text = viewModel.name
+    }
+
+    @objc func didTapSeeAll() {
+        if let viewModel = viewModel {
+            self.tappedLineAction?(viewModel.competition)
+        }
     }
 
 }
@@ -138,7 +147,7 @@ extension OutrightCompetitionWidgetCollectionViewCell {
         let seeAllLabel = UILabel()
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
         seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "Open Competition"
+        seeAllLabel.text = "View Competition Markets"
         seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
         seeAllLabel.textAlignment = .center
         return seeAllLabel
@@ -165,7 +174,7 @@ extension OutrightCompetitionWidgetCollectionViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.contentView.heightAnchor.constraint(equalToConstant: 120),
+            self.contentView.heightAnchor.constraint(equalToConstant: 124),
 
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
@@ -193,4 +202,3 @@ extension OutrightCompetitionWidgetCollectionViewCell {
         ])
     }
 }
-

@@ -10,6 +10,11 @@ import Combine
 
 class BetslipViewController: UIViewController {
 
+    enum StartScreen {
+        case bets
+        case myTickets(MyTicketsType, String) // Ticket id
+    }
+
     @IBOutlet private weak var topSafeAreaView: UIView!
     @IBOutlet private weak var navigationBarView: UIView!
 
@@ -34,14 +39,33 @@ class BetslipViewController: UIViewController {
 
     var willDismissAction: (() -> Void)?
 
-    init() {
-        preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
+    var startScreen: StartScreen
 
-        myTicketsViewController = MyTicketsViewController()
-        viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
+    init(startScreen: StartScreen = .bets) {
 
-        viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
-        tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
+        self.startScreen = startScreen
+
+        self.preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
+
+        switch startScreen {
+        case .myTickets(let type, let value):
+            self.myTicketsViewController = MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: type, highlightTicket: value))
+        default:
+            self.myTicketsViewController = MyTicketsViewController()
+        }
+
+        self.viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
+
+        self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
+
+        switch startScreen {
+        case .bets:
+            self.viewControllerTabDataSource.initialPage = 0
+        case .myTickets:
+            self.viewControllerTabDataSource.initialPage = 1
+        }
+
+        self.tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
         super.init(nibName: "BetslipViewController", bundle: nil)
     }

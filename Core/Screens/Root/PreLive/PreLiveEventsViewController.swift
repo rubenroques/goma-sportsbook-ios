@@ -175,15 +175,13 @@ class PreLiveEventsViewController: UIViewController {
             }
         }
 
-        self.viewModel.didSelectMatchAction = { match, image in
+        self.viewModel.didSelectMatchAction = { match in
             if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
             else {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
         }
@@ -256,7 +254,7 @@ class PreLiveEventsViewController: UIViewController {
         sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -451,7 +449,7 @@ class PreLiveEventsViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                self?.competitionsFiltersView.competitions = competitions
+                self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
             }
             .store(in: &cancellables)
 
@@ -516,7 +514,7 @@ class PreLiveEventsViewController: UIViewController {
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
+        self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         

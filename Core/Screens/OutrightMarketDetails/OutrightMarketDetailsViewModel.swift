@@ -40,7 +40,7 @@ class OutrightMarketDetailsViewModel {
         return 1
     }
 
-    func numberOfRows(forSection section: Int) -> Int  {
+    func numberOfRows(forSection section: Int) -> Int {
         return marketGroupOrganizers.count
     }
 
@@ -65,7 +65,7 @@ class OutrightMarketDetailsViewModel {
 
         self.competitionMarketPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
@@ -98,6 +98,5 @@ class OutrightMarketDetailsViewModel {
     private func updateWithAggregator(_ aggregator: EveryMatrix.Aggregator) {
         self.store.updateMarketGroupDetails(fromAggregator: aggregator)
     }
-
 
 }

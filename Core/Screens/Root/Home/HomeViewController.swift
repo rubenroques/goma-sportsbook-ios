@@ -14,10 +14,6 @@ class HomeViewController: UIViewController {
     var didTapBetslipButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
-    var didSelectSeeAllPopular: ((Sport) -> Void)?
-    var didSelectSeeAllLive: ((Sport) -> Void)?
-    var didSelectSeeAllCompetition: ((Sport, String) -> Void)?
-
     // MARK: - Private Properties
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
@@ -124,9 +120,34 @@ class HomeViewController: UIViewController {
 
     }
 
+    private func openCompetitionDetails(competitionId: String, sport: Sport) {
+        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
+        let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+        self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+    }
+
+    private func openOutrightCompetition(competition: Competition) {
+        let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
+        let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
+    }
+
     private func openMatchDetails(match: Match) {
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
+        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
+        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+    }
+
+    private func openPopularDetails(_ sport: Sport) {
+        let viewModel =  PopularDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let popularDetailsViewController = PopularDetailsViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(popularDetailsViewController, animated: true)
+    }
+
+    private func openLiveDetails(_ sport: Sport) {
+        let viewModel =  LiveDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let liveDetailsViewController = LiveDetailsViewController(viewModel: viewModel)
+        self.navigationController?.pushViewController(liveDetailsViewController, animated: true)
     }
 
     @objc private func didTapOpenFavorites() {
@@ -184,7 +205,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
             cell.setupWithMatch(match, store: self.viewModel.store)
             cell.setupFavoriteMatchInfoPublisher(match: match)
-            cell.tappedMatchLineAction = { [weak self] image in // TODO: Code Review - UIImage ?!
+            cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
             return cell
@@ -236,10 +257,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openMatchDetails(match: match)
                 }
                 cell.didSelectSeeAllLive = { [weak self] sport in
-                    self?.didSelectSeeAllLive?(sport)
+                    self?.openLiveDetails(sport)
                 }
                 cell.didSelectSeeAllPopular = { [weak self] sport in
-                    self?.didSelectSeeAllPopular?(sport)
+                    self?.openPopularDetails(sport)
+                }
+                cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
+                    self?.openOutrightCompetition(competition: competition)
                 }
                 return cell
 
@@ -258,10 +282,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openMatchDetails(match: match)
                 }
                 cell.didSelectSeeAllLive = { [weak self] sport in
-                    self?.didSelectSeeAllLive?(sport)
+                    self?.openLiveDetails(sport)
                 }
                 cell.didSelectSeeAllPopular = { [weak self] sport in
-                    self?.didSelectSeeAllPopular?(sport)
+                    self?.openPopularDetails(sport)
                 }
                 return cell
                 
@@ -274,7 +298,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.didSelectSeeAllCompetitionAction = { [weak self] sport, competition in
-                    self?.didSelectSeeAllCompetition?(sport, competition.id)
+                    self?.openCompetitionDetails(competitionId: competition.id, sport: sport)
                 }
                 return cell
             }

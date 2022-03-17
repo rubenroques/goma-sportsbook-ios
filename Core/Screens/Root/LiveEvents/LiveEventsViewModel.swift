@@ -60,7 +60,7 @@ class LiveEventsViewModel: NSObject {
         }
     }
     var dataDidChangedAction: (() -> Void)?
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
     
     private var cancellables = Set<AnyCancellable>()
     private var sportsCancellables = Set<AnyCancellable>()
@@ -85,8 +85,8 @@ class LiveEventsViewModel: NSObject {
             self?.fetchAllMatchesNextPage()
         }
 
-        self.allMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.allMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
         self.allMatchesViewModelDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
@@ -413,7 +413,7 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
 
     var matches: [Match] = []
     var requestNextPage: (() -> Void)?
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -460,8 +460,8 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
                 let store = Env.everyMatrixStorage as AggregatorStore
 
                 cell.setupWithMatch(match, liveMatch: true, store: store)
-                cell.tappedMatchLineAction = { image in
-                    self.didSelectMatchAction?(match, image)
+                cell.tappedMatchLineAction = {
+                    self.didSelectMatchAction?(match)
                 }
 
                 return cell

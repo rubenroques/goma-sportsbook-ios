@@ -79,6 +79,7 @@ class LiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
+    private let refreshControl = UIRefreshControl()
 
     var cancellables = Set<AnyCancellable>()
 
@@ -116,9 +117,8 @@ class LiveEventsViewController: UIViewController {
         self.connectPublishers()
         self.viewModel.fetchData()
 
-        self.viewModel.didSelectMatchAction = { match, image in
+        self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-            matchDetailsViewController.viewModel.gameSnapshot = image
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
@@ -183,11 +183,10 @@ class LiveEventsViewController: UIViewController {
         rightGradientMaskLayer.endPoint = CGPoint(x: 1.0, y: 0.5)
         self.rightGradientBaseView.layer.mask = rightGradientMaskLayer
         
-      
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
-        filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
+        
 
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -205,6 +204,10 @@ class LiveEventsViewController: UIViewController {
         filtersCountLabel.isHidden = true
         liveEventsCountView.isHidden = true
        
+
+        refreshControl.tintColor = UIColor.lightGray
+        refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+        tableView.addSubview(self.refreshControl)
 
         tableView.separatorStyle = .none
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
@@ -254,8 +257,12 @@ class LiveEventsViewController: UIViewController {
 
         self.viewModel.isLoading
             .receive(on: DispatchQueue.main)
-            .sink { isLoading in
-                self.loadingBaseView.isHidden = !isLoading
+            .sink { [weak self] isLoading in
+                self?.loadingBaseView.isHidden = !isLoading
+
+                if !isLoading {
+                    self?.refreshControl.endRefreshing()
+                }
             }
             .store(in: &cancellables)
 
@@ -280,18 +287,14 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.screenStatePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState in
-              
-            
                 switch screenState {
                 case .noEmptyNoFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
-          
                 case .emptyNoFilter:
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    
                 case .noEmptyAndFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
@@ -299,7 +302,6 @@ class LiveEventsViewController: UIViewController {
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-            
                 }
             })
             .store(in: &cancellables)
@@ -307,14 +309,8 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-        
-   
-        
-        self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
+    
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        
-        self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        filtersCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
@@ -335,6 +331,7 @@ class LiveEventsViewController: UIViewController {
 
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
@@ -351,6 +348,7 @@ class LiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
         self.liveEventsCountLabel.textColor = UIColor.App.buttonTextPrimary
+        
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
@@ -375,6 +373,10 @@ class LiveEventsViewController: UIViewController {
                                                             sportsRepository: self.viewModel.sportsRepository)
         sportSelectionViewController.selectionDelegate = self
         self.present(sportSelectionViewController, animated: true, completion: nil)
+    }
+
+    @objc func refreshControllPulled() {
+        self.viewModel.fetchData()
     }
 
     @objc func didTapBetslipView() {

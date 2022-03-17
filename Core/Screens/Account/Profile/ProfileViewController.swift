@@ -410,6 +410,8 @@ class ProfileViewController: UIViewController {
         supportIconImageView.backgroundColor = .clear
         supportLabel.textColor =  UIColor.App.textPrimary
 
+        infoLabel.textColor = UIColor.App.textPrimary
+        
         logoutBaseView.backgroundColor = .clear
         infoBaseView.backgroundColor = .clear
     }
