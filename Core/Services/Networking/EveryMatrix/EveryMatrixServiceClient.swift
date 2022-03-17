@@ -308,6 +308,8 @@ class EveryMatrixServiceClient: ObservableObject {
 
     func removeLimit(limitType: String, period: String) -> AnyPublisher<EveryMatrix.LimitSetResponse, EveryMatrix.APIError> {
         return self.manager.getModel(router: .removeLimit(type: limitType, period: period), decodingType: EveryMatrix.LimitSetResponse.self)
+    }
+
     func getApplicableBonus(type: String, gamingAccountId: String)
     -> AnyPublisher<EveryMatrix.ApplicableBonusResponse, EveryMatrix.APIError> {
         return self.manager.getModel(router: .getApplicableBonuses(type: type, gamingAccountID: gamingAccountId),
@@ -335,7 +337,5 @@ class EveryMatrixServiceClient: ObservableObject {
                                      decodingType: EveryMatrix.ApplyBonusResponse.self)
             .eraseToAnyPublisher()
     }
-
-    
 
 }
