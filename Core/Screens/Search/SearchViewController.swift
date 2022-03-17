@@ -31,6 +31,7 @@ class SearchViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((String) -> Void)?
 
     var showSearchResultsTableView: Bool = false {
@@ -195,6 +196,10 @@ class SearchViewController: UIViewController {
         self.activityIndicatorBaseView.isHidden = true
 
     }
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
+    }
 
     func setupPublishers() {
 
@@ -242,6 +247,16 @@ class SearchViewController: UIViewController {
                 let matchDetailsViewController = MatchDetailsViewController(match: match)
 
                 self.present(matchDetailsViewController, animated: true, completion: nil)
+            }
+        }
+        
+        self.didTapFavoriteMatchAction = { match in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
             }
         }
 
@@ -404,6 +419,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
                     cell.tappedMatchLineAction = {
                         self.didSelectMatchAction?(match)
+                    }
+                    
+                    cell.didTapFavoriteMatchAction = { [weak self] match in
+                        self?.didTapFavoriteMatchAction?(match)
                     }
 
                     return cell

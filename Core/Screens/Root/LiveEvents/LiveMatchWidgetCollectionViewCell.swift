@@ -73,7 +73,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
-    var tappedFavoriteAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -537,7 +537,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-
     //
     //
     private func showMarketButtons() {
@@ -563,23 +562,9 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        self.tappedFavoriteAction?((self.viewModel?.match)!)
-       /* if UserDefaults.standard.userSession != nil {
-
-            if self.isFavorite {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: "event")
-                }
-                self.isFavorite = false
-            }
-            else {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: "event")
-                }
-                self.isFavorite = true
-            }
-        }*/
-        
+        if let match = self.viewModel?.match {
+            self.didTapFavoriteMatchAction?(match)
+        }
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
@@ -629,7 +614,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         view.layer.add(animation, forKey: "borderColor")
         view.layer.borderColor = color.cgColor
     }
-
 
     //
     // Odd buttons interaction

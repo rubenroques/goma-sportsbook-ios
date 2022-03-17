@@ -19,6 +19,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     @IBOutlet private weak var collapseBaseView: UIView!
     @IBOutlet weak var collapseImageView: UIImageView! // swiftlint:disable:this private_outlet
 
+    
     var sectionIndex: Int?
     var competition: Competition? {
         didSet {
@@ -38,7 +39,8 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     var didToggleHeaderViewAction: ((Int) -> Void)?
-
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
+    
     override func awakeFromNib() {
         super.awakeFromNib()
 
@@ -109,22 +111,11 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     @objc func didTapFavoriteImageView() {
-        if UserDefaults.standard.userSession != nil {
-
-            if self.isFavorite {
-                if let competitionId = self.competition?.id {
-                    Env.favoritesManager.removeFavorite(eventId: competitionId, favoriteType: "competition")
-                }
-                self.isFavorite = false
-            }
-            else {
-                if let competitionId = self.competition?.id {
-                    Env.favoritesManager.addFavorite(eventId: competitionId, favoriteType: "competition")
-                }
-                self.isFavorite = true
-
-            }
-
+        if let competition = competition {
+            self.didTapFavoriteCompetitionAction?(competition)
         }
     }
+    
+  
+       
 }

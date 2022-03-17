@@ -185,6 +185,16 @@ class PreLiveEventsViewController: UIViewController {
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
         }
+        
+        self.viewModel.didTapFavoriteMatchAction = { match in
+            if !UserSessionStore.isUserLogged(){
+                self.presentLoginViewController()
+            }
+            else{
+                self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
+            }
+        }
 
         self.viewModel.didSelectCompetitionAction = { competition in
             let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
@@ -194,7 +204,15 @@ class PreLiveEventsViewController: UIViewController {
 
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
-    
+        
+        self.viewModel.isUserLoggedPublisher.receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLogged in
+                if !isLogged {
+                    let loginViewController = Router.navigationController(with: LoginViewController())
+                    self?.present(loginViewController, animated: true, completion: nil)
+                }
+            })
+            .store(in: &self.cancellables)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -254,7 +272,6 @@ class PreLiveEventsViewController: UIViewController {
         sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -364,6 +381,13 @@ class PreLiveEventsViewController: UIViewController {
         self.view.layoutIfNeeded()
     }
 
+   
+
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
+    }
+    
     func connectPublishers() {
 
         self.viewModel.isLoading
@@ -651,7 +675,7 @@ class PreLiveEventsViewController: UIViewController {
         self.didTapBetslipButtonAction?()
     }
     
-    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool) {
+    func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {
     
         if isUserLoggedIn {
             self.emptyStateImage.image = UIImage(named: "no_content_icon")
@@ -786,7 +810,7 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         else {
             fatalError()
         }
-
+        
         switch indexPath.row {
         case 0:
             cell.setupWithTitle(localized("popular"))
@@ -802,7 +826,6 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
             ()
         }
         
-
         if filterSelectedOption == indexPath.row {
             cell.setSelectedType(true)
         }
@@ -859,7 +882,6 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
     }
 
 }
-
 
 extension PreLiveEventsViewController: SportTypeSelectionViewDelegate {
     func selectedSport(_ sport: Sport) {

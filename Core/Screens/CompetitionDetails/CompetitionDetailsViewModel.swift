@@ -78,6 +78,23 @@ class CompetitionDetailsViewModel {
 
     }
 
+    func markCompetitionAsFavorite(competition: Competition){
+        
+        var isFavorite = false
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
+            isFavorite = true
+        }
+        
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: "competition")
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: "competition")
+        }
+   
+    }
+    
+    
     func fetchCompetitions() {
 
         let language = "en"

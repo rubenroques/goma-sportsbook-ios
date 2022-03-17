@@ -14,6 +14,7 @@ class LiveEventsViewModel: NSObject {
     private var allMatches: [Match] = []
 
     var matchListTypePublisher: CurrentValueSubject<MatchListType, Never> = .init(.allMatches)
+   
     enum MatchListType {
         case allMatches
     }
@@ -34,12 +35,14 @@ class LiveEventsViewModel: NSObject {
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     var isLoading: AnyPublisher<Bool, Never>
+    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
     var sportsRepository: SportsAggregatorRepository = SportsAggregatorRepository()
     var selectedSportNumberofLiveEvents: Int = 0
     var liveSportsPublisher: AnyCancellable?
     var liveSportsRegister: EndpointPublisherIdentifiable?
     var updateNumberOfLiveEventsAction: (() -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var currentLiveSportsPublisher: AnyCancellable?
 
     var didChangeSportType = false
@@ -88,10 +91,19 @@ class LiveEventsViewModel: NSObject {
         self.allMatchesViewModelDataSource.didSelectMatchAction = { [weak self] match in
             self?.didSelectMatchAction?(match)
         }
+        
+        self.allMatchesViewModelDataSource.didTapFavoriteAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
         self.allMatchesViewModelDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
         }
 
+        self.allMatchesViewModelDataSource.isUserLoggedPublisher.receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLogged in
+                self?.isUserLoggedPublisher.send(isLogged)
+            })
+            .store(in: &self.cancellables)
         self.getSportsLive()
     }
 
@@ -169,6 +181,20 @@ class LiveEventsViewModel: NSObject {
         sportsRepository.processContentUpdateSportsAggregator(aggregator)
 
     }
+    
+    func markAsFavorite(match: Match) {
+        
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: "event")
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: "event")
+        }
+    }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
@@ -180,7 +206,7 @@ class LiveEventsViewModel: NSObject {
             return viewModel
         }
     }
-
+    
     func filterAllMatches(with filtersOptions: HomeFilterOptions?, matches: [Match]) -> [Match] {
         guard let filterOptionsValue = filtersOptions else {
             return matches
@@ -414,9 +440,12 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
     var matches: [Match] = []
     var requestNextPage: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteAction: ((Match) -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
+    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
+    
     var shouldShowLoadingCell = true
 
     init(matches: [Match]) {
@@ -463,7 +492,11 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }
-
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteAction?(match)
+                }
+                
                 return cell
             }
         case 3:
@@ -528,5 +561,4 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
             self.requestNextPage?()
         }
     }
-
 }

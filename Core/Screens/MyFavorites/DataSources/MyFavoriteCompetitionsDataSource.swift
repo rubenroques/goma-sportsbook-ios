@@ -18,6 +18,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -62,8 +63,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             else {
                 cell.setupWithMatch(match, store: self.store)
             }
-
-
+            
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)
@@ -71,7 +71,11 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             cell.matchWentLive = {
                 self.matchWentLiveAction?()
             }
-
+            
+            if let competition = self.competitions[safe: indexPath.section] {
+                self.didTapFavoriteCompetitionAction?(competition)
+            }
+            
             return cell
         }
         else {

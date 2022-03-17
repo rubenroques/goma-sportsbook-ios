@@ -30,7 +30,7 @@ class MatchLineTableViewCell: UITableViewCell {
 
     var tappedMatchLineAction: (() -> Void)?
     var matchWentLive: (() -> Void)?
-    var tappedFavoriteAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -262,8 +262,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         self.tappedMatchLineAction?()
                     }
                   
-                    cell.tappedFavoriteAction = { [weak self] match in
-                        self?.tappedFavoriteAction?(match)
+                    cell.didTapFavoriteMatchAction = { [weak self] match in
+                        self?.didTapFavoriteMatchAction?(match)
                     }
                     
                 }
@@ -289,8 +289,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                    
                 }
                 
-                cell.tappedFavoriteAction = { [weak self] match in
-                    self?.tappedFavoriteAction?(match)
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
                 }
                 
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)

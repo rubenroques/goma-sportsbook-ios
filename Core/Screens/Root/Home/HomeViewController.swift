@@ -208,7 +208,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
-            cell.tappedFavoriteAction = { [weak self] match in
+            cell.didTapFavoriteMatchAction = { [weak self] match in
                 self?.viewModel.markAsFavorite(match: match)
             }
            
@@ -271,7 +271,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openOutrightCompetition(competition: competition)
                 }
                 
-                cell.tappedFavoriteAction = { [weak self] match in
+                cell.didTapFavoriteMatchAction = { [weak self] match in
                     if UserSessionStore.isUserLogged() {
                         self?.viewModel.markAsFavorite(match: match)
                     }
@@ -305,7 +305,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openPopularDetails(sport)
                 }
                 
-                cell.tappedFavoriteAction = { [weak self] match in
+                cell.didTapFavoriteMatchAction = { [weak self] match in
                     if UserSessionStore.isUserLogged() {
                         self?.viewModel.markAsFavorite(match: match)
                     }

@@ -71,7 +71,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
-    var tappedFavoriteAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     
 
     private var leftOddButtonSubscriber: AnyCancellable?
@@ -495,26 +495,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if let match = self.viewModel?.match{
-            self.tappedFavoriteAction?(match)
+        if let match = self.viewModel?.match {
+            self.didTapFavoriteMatchAction?(match)
         }
-       
-      /*  if UserDefaults.standard.userSession != nil {
-
-            if self.isFavorite {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: "event")
-                }
-                self.isFavorite = false
-            }
-            else {
-                
-                /*if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: "event")
-                }
-                self.isFavorite = true*/
-            }
-        }*/
+    
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
