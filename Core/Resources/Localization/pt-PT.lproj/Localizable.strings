@@ -361,6 +361,23 @@ Terms of use, Privacy Policy and EULA";
 "notify_bets_final_result" = "Notify me about my Bets final results";
 "notify_bets_options_results" = "Notify me about my Bets options results";
 
+"add_promo_code" = "Add promotional code";
+"bonus_code" = "Bonus Code";
+
+"more_info" = "More Info";
+"get_bonus" = "Get Bonus";
+
+"available" = "Available";
+"no_bonus" = "No bonus here!";
+
+"expire_date" = "Expire Date";
+"start_date" = "Start Date";
+"add" = "Add";
+"invalid_bonus_code" = "Invalid bonus code.";
+"error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
+"permanent" = "Permanent";
+"terms_conditions" = "Terms and conditions";
+
 "deposit_limit" = "Deposit Limit";
 "betting_limit" = "Betting Limit";
 "loss_limit" = "Loss Limit";
