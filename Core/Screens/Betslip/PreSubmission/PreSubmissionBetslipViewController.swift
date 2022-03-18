@@ -110,12 +110,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
-    
-    @IBOutlet private weak var emptyStateBaseView: UIView!
-    @IBOutlet private weak var emptyStateImage: UIImageView!
-    @IBOutlet private weak var emptyStateLabel: UILabel!
-    @IBOutlet private weak var emptyStateSecondaryLabel: UILabel!
-    @IBOutlet private weak var emptyStateButton: UIButton!
 
     @IBOutlet private weak var betSuggestedCollectionView: UICollectionView!
     @IBOutlet private weak var suggestedBetsActivityIndicator: UIActivityIndicatorView!
@@ -482,7 +476,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 
                 if userInfo != nil {
                     self?.emptyBetsBaseView.isHidden = true
-                    self?.emptyStateBaseView.isHidden = true
                     self?.placeBetBaseView.isHidden = false
                     self?.tableView.isHidden = false
                     self?.clearBaseView.isHidden = false
@@ -931,15 +924,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
         
-        self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        
-        self.emptyStateLabel.textColor = UIColor.App.textPrimary
-        self.emptyStateLabel.font =  AppFont.with(type: .bold, size: 22)
-        
-        self.emptyStateSecondaryLabel.textColor = UIColor.App.textPrimary
-        self.emptyStateSecondaryLabel.font =  AppFont.with(type: .bold, size: 16)
-        self.emptyStateSecondaryLabel.numberOfLines = 3
-
         self.secondaryPlaceBetButtonsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.systemBetTypePickerView.backgroundColor = UIColor.App.backgroundPrimary
@@ -1095,12 +1079,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         StyleHelper.styleButton(button: self.placeBetButton)
         StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
         StyleHelper.styleButton(button: self.settingsPickerButton)
-        StyleHelper.styleButton(button: self.emptyStateButton)
 
         self.settingsButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.clearButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         
-        self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.emptyBetsBaseView.isHidden = true
         
     }
@@ -1112,11 +1094,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     @IBAction private func didTapSettingsButton() {
         self.showingSettingsSelector = true
-    }
-    
-    @IBAction private func didTapLoginButton() {
-        let loginViewController = Router.navigationController(with: LoginViewController())
-        self.present(loginViewController, animated: true, completion: nil)
     }
 
     @IBAction private func didTapClearButton() {
@@ -1282,6 +1259,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.isLoading = true
         if UserSessionStore.isUserLogged() {
+            
             if self.listTypePublisher.value == .simple {
 
                 Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
@@ -1326,27 +1304,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
         }
         else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.present(loginViewController, animated: true, completion: nil)
             self.isLoading = false
-            self.emptyStateImage.image = UIImage(named: "no_internet_icon")
-            self.emptyStateLabel.text = localized("empty_no_login")
-            self.emptyStateSecondaryLabel.text = localized("second_empty_no_login_to_bet")
-            self.emptyStateButton.setTitle("Login", for: .normal)
-           /* UIView.transition(with: self.emptyStateBaseView,
-                                     duration: 0.5,
-                              options: [.beginFromCurrentState],
-                                     animations: {
-                                       
-                                       self.emptyStateBaseView.isHidden = true
-                   },
-                                     completion: nil)*/
-            self.emptyStateBaseView.isHidden = false
-            self.loadingBaseView.isHidden = true
-            self.emptyBetsBaseView.isHidden = true
-            self.placeBetBaseView.isHidden = true
-            self.tableView.isHidden = true
-            self.clearBaseView.isHidden = true
-            self.betTypeSegmentControlBaseView.isHidden = true
-            
            // self.view.bringSubviewToFront(self.emptyBetsBaseView)
             
         }
