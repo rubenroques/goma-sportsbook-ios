@@ -17,7 +17,8 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     var viewModel: BannerLineCellViewModel?
     var tappedBannerMatchAction: ((Match) -> Void)?
-    var carouselCounter: Int = 0
+    private var carouselCounter: Int = 0
+    private weak var timer: Timer?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -48,6 +49,9 @@ class BannerScrollTableViewCell: UITableViewCell {
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 
         self.setupWithTheme()
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressedResetTimerAction))
+        self.collectionView.addGestureRecognizer(longPressGestureRecognizer)
 
         self.startCollectionViewTimer()
 
@@ -80,7 +84,7 @@ class BannerScrollTableViewCell: UITableViewCell {
     }
 
     func startCollectionViewTimer() {
-        Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
     }
 
     @objc func autoScrollCollectionView(_ timer1: Timer) {
@@ -94,6 +98,16 @@ class BannerScrollTableViewCell: UITableViewCell {
                 self.carouselCounter = 0
                 self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
             }
+        }
+    }
+
+    @objc func longPressedResetTimerAction(sender: UILongPressGestureRecognizer) {
+        print("longpressed")
+        if sender.state == .began {
+            self.timer?.invalidate()
+        }
+        else if sender.state == .ended {
+            self.startCollectionViewTimer()
         }
     }
 }
