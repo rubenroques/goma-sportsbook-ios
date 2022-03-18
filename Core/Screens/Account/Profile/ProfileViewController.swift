@@ -489,7 +489,8 @@ extension ProfileViewController {
     }
 
     @objc func bonusViewTapped() {
-
+        let bonusViewController = BonusViewController()
+        self.navigationController?.pushViewController(bonusViewController, animated: true)
     }
 
     @objc func historyViewTapped() {

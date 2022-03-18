@@ -717,7 +717,6 @@ class MatchDetailsViewController: UIViewController {
 
     @IBAction private func didTapBackAction() {
         self.navigationController?.popViewController(animated: true)
-        self.dismiss(animated: true, completion: nil)
     }
 
     @IBAction private func didTapShareButton() {
