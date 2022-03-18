@@ -234,27 +234,12 @@ class SearchViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        self.didSelectMatchAction = { match in
-
-            if self.viewModel.matchesInfoForMatch[match.id] != nil {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-
-                self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-            }
-            else {
-                let matchDetailsViewController = MatchDetailsViewController(match: match)
-
-                self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-
-            }
+        self.didSelectMatchAction = { [weak self] match in
+            self?.openMatchDetailsScreen(match: match)
         }
 
-        self.didSelectCompetitionAction = { competition in
-            let sport = Sport(id: competition.sportId ?? "")
-            let competitionId = competition.id
-            let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
-            let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
-            self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+        self.didSelectCompetitionAction = { [weak self] competition in
+            self?.openCompetitionDetailsScreen(competition: competition)
         }
 
         self.searchTextPublisher
@@ -312,6 +297,28 @@ class SearchViewController: UIViewController {
         }
 
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
+    private func openMatchDetailsScreen(match: Match) {
+
+        if self.viewModel.matchesInfoForMatch[match.id] != nil {
+            let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+        else {
+            let matchDetailsViewController = MatchDetailsViewController(match: match)
+
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+    }
+
+    private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {
+        let sport = Sport(id: competition.sportId ?? "")
+        let competitionId = competition.id
+        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
+        let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+        self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
     }
 
     @IBAction private func didTapCancelButton() {
