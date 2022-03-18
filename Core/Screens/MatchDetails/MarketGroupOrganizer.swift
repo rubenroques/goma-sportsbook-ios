@@ -7,15 +7,23 @@
 
 import Foundation
 
-struct MergedMarketGroup {
+protocol MarketGroupOrganizer {
 
-    var id: String
-    var typeId: String
-    var name: String
-    var index: Int
-    var numberOfMarkets: Int
-    var outcomes: [String: [Outcome] ]
+    var marketId: String { get }
+    var marketName: String { get }
+    var numberOfColumns: Int { get }
+    var numberOfLines: Int { get }
 
+    func outcomeFor(column: Int, line: Int) -> Outcome?
+
+}
+
+struct MarketGroup: Codable {
+    let id: String
+    let type: String
+    let groupKey: String?
+    let translatedName: String?
+    let isDefault: Bool?
 }
 
 struct ColumnListedMarketGroupOrganizer: MarketGroupOrganizer {
@@ -343,15 +351,4 @@ struct SequentialMarketGroupOrganizer: MarketGroupOrganizer {
         }
         return nil
     }
-}
-
-protocol MarketGroupOrganizer {
-
-    var marketId: String { get }
-    var marketName: String { get }
-    var numberOfColumns: Int { get }
-    var numberOfLines: Int { get }
-
-    func outcomeFor(column: Int, line: Int) -> Outcome?
-
 }

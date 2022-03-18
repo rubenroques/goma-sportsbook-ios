@@ -375,6 +375,8 @@ extension Router {
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.navigationBar.isTranslucent = false
+        navigationController.interactivePopGestureRecognizer?.delegate = nil
+        navigationController.interactivePopGestureRecognizer?.isEnabled = true
         return navigationController
     }
 

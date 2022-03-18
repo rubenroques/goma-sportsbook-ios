@@ -138,7 +138,7 @@ class RootViewController: UIViewController {
                             }
 
                             if self?.preLiveViewControllerLoaded ?? false {
-                                self?.preLiveViewController.reloadTableViewData()
+                                self?.preLiveViewController.reloadData()
                             }                        }
                         .store(in: &self.cancellables)
                 }
@@ -146,7 +146,7 @@ class RootViewController: UIViewController {
                     self.screenState = .anonymous
 
                     if self.preLiveViewControllerLoaded {
-                        self.preLiveViewController.reloadTableViewData()
+                        self.preLiveViewController.reloadData()
                     }
                 }
             }
@@ -354,7 +354,6 @@ class RootViewController: UIViewController {
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadChildViewControllersData()
         }
-
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
@@ -364,6 +363,9 @@ class RootViewController: UIViewController {
         }
         if liveEventsViewControllerLoaded {
             self.liveEventsViewController.reloadData()
+        }
+        if homeViewControllerLoaded {
+            self.homeViewController.reloadData()
         }
     }
 

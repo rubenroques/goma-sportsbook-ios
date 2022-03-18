@@ -8,25 +8,25 @@
 import Foundation
 
 extension EveryMatrix {
-struct MarketGroup: Codable {
+    struct MarketGroup: Codable {
 
-    let type: String
-    let id: String
-    let groupKey: String?
-    let translatedName: String?
-    let position: Int?
-    let isDefault: Bool?
-    let numberOfMarkets: Int?
+        let type: String
+        let id: String
+        let groupKey: String?
+        let translatedName: String?
+        let position: Int?
+        let isDefault: Bool?
+        let numberOfMarkets: Int?
 
-    enum CodingKeys: String, CodingKey {
-        case type = "_type"
-        case id = "id"
-        case groupKey = "groupKey"
-        case translatedName = "translatedName"
-        case position = "position"
-        case isDefault = "isDefault"
-        case numberOfMarkets = "numberOfMarkets"
+        enum CodingKeys: String, CodingKey {
+            case type = "_type"
+            case id = "id"
+            case groupKey = "groupKey"
+            case translatedName = "translatedName"
+            case position = "position"
+            case isDefault = "isDefault"
+            case numberOfMarkets = "numberOfMarkets"
+        }
+
     }
-
-}
 }
