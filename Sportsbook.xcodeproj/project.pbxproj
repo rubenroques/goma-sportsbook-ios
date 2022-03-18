@@ -788,6 +788,8 @@
 		A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A96B70B82739891200FEF07D /* FirebaseMessaging */; };
 		A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
 		A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
+		A978EBE827E4A1A400322F49 /* PopularDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C676B27DF635200AAB2A5 /* PopularDetailsViewController.swift */; };
+		A978EBE927E4A1AC00322F49 /* LiveDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C676D27DFB12600AAB2A5 /* LiveDetailsViewController.swift */; };
 		A979CA53275E6C0B00230E93 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		A979CA562762247900230E93 /* SuggestedBetSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA552762247900230E93 /* SuggestedBetSummary.swift */; };
@@ -4436,8 +4438,10 @@
 				45C26DD227976ADF00513D41 /* TodayMatchesDataSource.swift in Sources */,
 				A9E7C6A627BA779200F784C9 /* AggregatorRepositoryType.swift in Sources */,
 				45166CF226F3548D00E69D65 /* UnsubscribeSSWampMessage.swift in Sources */,
+				A978EBE827E4A1A400322F49 /* PopularDetailsViewController.swift in Sources */,
 				455A0D2526BDE88D00EC572D /* Router.swift in Sources */,
 				45D3DE342714889200717124 /* Date+Extension.swift in Sources */,
+				A978EBE927E4A1AC00322F49 /* LiveDetailsViewController.swift in Sources */,
 				454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */,
 				457BD61827BBAF6100E5612E /* ContainerViewController.swift in Sources */,
 				45166D1426F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
