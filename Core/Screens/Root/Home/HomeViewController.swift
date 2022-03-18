@@ -66,6 +66,16 @@ class HomeViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.showLoading()
+
+        executeDelayed(1.45) {
+            self.hideLoading()
+        }
+    }
+
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -86,7 +96,7 @@ class HomeViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingActivityIndicatorView.tintColor = UIColor.gray
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
@@ -100,7 +110,7 @@ class HomeViewController: UIViewController {
         viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.tableView.reloadData()
+                self?.reloadData()
             })
             .store(in: &self.cancellables)
 
@@ -120,6 +130,22 @@ class HomeViewController: UIViewController {
 
     }
 
+    // MARK: - Convenience
+    func reloadData() {
+        self.tableView.reloadData()
+    }
+
+    private func showLoading() {
+        self.loadingBaseView.isHidden = false
+        self.loadingActivityIndicatorView.startAnimating()
+    }
+
+    private func hideLoading() {
+        self.loadingBaseView.isHidden = true
+        self.loadingActivityIndicatorView.stopAnimating()
+    }
+
+    // MARK: - Actions
     private func openCompetitionDetails(competitionId: String, sport: Sport) {
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
@@ -139,13 +165,13 @@ class HomeViewController: UIViewController {
     }
 
     private func openPopularDetails(_ sport: Sport) {
-        let viewModel =  PopularDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let viewModel = PopularDetailsViewModel(sport: sport, store: AggregatorsRepository())
         let popularDetailsViewController = PopularDetailsViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(popularDetailsViewController, animated: true)
     }
 
     private func openLiveDetails(_ sport: Sport) {
-        let viewModel =  LiveDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let viewModel = LiveDetailsViewModel(sport: sport, store: AggregatorsRepository())
         let liveDetailsViewController = LiveDetailsViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(liveDetailsViewController, animated: true)
     }
