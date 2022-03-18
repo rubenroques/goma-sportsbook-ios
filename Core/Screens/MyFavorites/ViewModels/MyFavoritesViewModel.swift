@@ -23,7 +23,6 @@ class MyFavoritesViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
     var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
     var didSelectMatchAction: ((Match) -> Void)?
-    var dataNeedsReload: CurrentValueSubject<Bool, Never> = .init(true)
 
     var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
 
@@ -109,7 +108,6 @@ class MyFavoritesViewModel: NSObject {
 
     func setFavoriteListType(_ favoriteListType: FavoriteListType) {
         self.favoriteListTypePublisher.send(favoriteListType)
-        self.dataNeedsReload.send(true)
         self.updateContentList()
     }
 
@@ -128,11 +126,9 @@ class MyFavoritesViewModel: NSObject {
                         self?.fetchFavoriteMatches()
                     }
                     else if favoriteType == .match && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
-                        self?.dataNeedsReload.send(false)
                         self?.fetchFavoriteMatches()
                     }
                     else if favoriteType == .competition && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
-                        self?.dataNeedsReload.send(true)
                         self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
                     }
                 }
@@ -305,9 +301,7 @@ class MyFavoritesViewModel: NSObject {
 
         self.myFavoriteCompetitionsDataSource.competitions = self.favoriteCompetitions
 
-        if self.dataNeedsReload.value == true {
-            self.dataChangedPublisher.send()
-        }
+        self.dataChangedPublisher.send()
 
         if UserSessionStore.isUserLogged() {
             if self.favoriteMatches.isEmpty && self.favoriteCompetitions.isEmpty {

@@ -14,6 +14,7 @@ class MyFavoritesViewController: UIViewController {
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var topView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var topSliderCollectionView: UICollectionView = Self.createTopSliderCollectionView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var loadingScreenBaseView: UIView = Self.createLoadingScreenBaseView()
@@ -84,6 +85,8 @@ class MyFavoritesViewController: UIViewController {
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
+        self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
+
     }
 
     private func setupEmptyStateView(emptyStateType: EmptyStateType, hasLogin: Bool = false) {
@@ -148,9 +151,11 @@ class MyFavoritesViewController: UIViewController {
 
         self.topSafeAreaView.backgroundColor = .clear
 
-        self.topView.backgroundColor = UIColor.App.backgroundSecondary
+        self.topView.backgroundColor = .clear
 
         self.backButton.tintColor = UIColor.App.textHeadlinePrimary
+
+        self.topTitleLabel.textColor = UIColor.App.textPrimary
 
         self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -189,29 +194,18 @@ class MyFavoritesViewController: UIViewController {
 
         }
 
-//        viewModel.emptyStateStatusPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { emptyStateType in
-//                print("EMPTY STATE: \(emptyStateType)")
-//            })
-//            .store(in: &cancellables)
-
-        Publishers.CombineLatest(viewModel.emptyStateStatusPublisher, viewModel.favoriteListTypePublisher)
+        viewModel.emptyStateStatusPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] emptyStateType, favoriteListType in
+            .sink(receiveValue: { [weak self] emptyStateType in
 
                 switch emptyStateType {
                 case .noLogin:
-                    //self?.emptyStateStatus = .noLogin
                     self?.setupEmptyStateView(emptyStateType: emptyStateType, hasLogin: true)
                 case .noGames:
-                    //self?.emptyStateStatus = .noGames
                     self?.setupEmptyStateView(emptyStateType: emptyStateType)
                 case .noCompetitions:
-                    //self?.emptyStateStatus = .noCompetition
                     self?.setupEmptyStateView(emptyStateType: emptyStateType)
                 case .noFavorites:
-                    //self?.emptyStateStatus = .noFavorites
                     self?.setupEmptyStateView(emptyStateType: emptyStateType)
                 case .none:
                     ()
@@ -378,6 +372,14 @@ extension MyFavoritesViewController {
     @objc func didTapBetslipView() {
         self.openBetslipModal()
     }
+
+    @objc func didTapLoginButton() {
+        let loginViewController = LoginViewController()
+
+        self.present(loginViewController, animated: true, completion: nil)
+
+        self.navigationController?.popViewController(animated: true)
+    }
 }
 
 //
@@ -405,6 +407,15 @@ extension MyFavoritesViewController {
         return button
     }
 
+    private static func createTopTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("my_favorites")
+        label.font = AppFont.with(type: .bold, size: 17)
+        label.textAlignment = .center
+        return label
+    }
+
     private static func createTopSliderCollectionView() -> UICollectionView {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -412,7 +423,7 @@ extension MyFavoritesViewController {
 
         let collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: flowLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 35, bottom: 0, right: 35)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceHorizontal = true
@@ -516,8 +527,11 @@ extension MyFavoritesViewController {
         self.view.addSubview(self.topView)
 
         self.topView.addSubview(self.backButton)
-        self.topView.addSubview(self.topSliderCollectionView)
-        self.topView.bringSubviewToFront(self.backButton)
+        self.topView.addSubview(self.topTitleLabel)
+
+        self.topView.bringSubviewToFront(self.topTitleLabel)
+
+        self.view.addSubview(self.topSliderCollectionView)
 
         self.view.addSubview(self.tableView)
         self.view.addSubview(self.loadingScreenBaseView)
@@ -572,21 +586,27 @@ extension MyFavoritesViewController {
             self.topView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 70),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 16),
             self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
             self.backButton.heightAnchor.constraint(equalToConstant: 20),
             self.backButton.widthAnchor.constraint(equalToConstant: 15),
 
-            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor),
-            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor),
-            self.topSliderCollectionView.topAnchor.constraint(equalTo: self.topView.topAnchor),
-            self.topSliderCollectionView.bottomAnchor.constraint(equalTo: self.topView.bottomAnchor)
+            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 30),
+            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -30),
+            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
 
+        ])
+
+        NSLayoutConstraint.activate([
+            self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSliderCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSliderCollectionView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8),
+            self.topSliderCollectionView.heightAnchor.constraint(equalToConstant: 50)
         ])
 
         // TableView
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.topSliderCollectionView.bottomAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
@@ -619,7 +639,7 @@ extension MyFavoritesViewController {
         NSLayoutConstraint.activate([
             self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.emptyStateView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.topSliderCollectionView.bottomAnchor),
             self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 160),

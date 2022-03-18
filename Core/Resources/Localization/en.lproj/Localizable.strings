@@ -371,3 +371,5 @@ Terms of use, Privacy Policy and EULA";
 "loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: %s";
 
 "need_login_favorites" = "You need to be logged in to see your favorites.";
+
+"my_favorites" = "My Favorites";
