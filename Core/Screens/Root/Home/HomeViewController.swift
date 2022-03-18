@@ -192,6 +192,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 fatalError()
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
+
+            cell.tappedBannerMatchAction = { [weak self] match in
+                self?.openMatchDetails(match: match)
+            }
+            
             return cell
 
         case .userFavorites:

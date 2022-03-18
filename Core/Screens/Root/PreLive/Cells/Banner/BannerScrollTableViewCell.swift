@@ -17,6 +17,8 @@ class BannerScrollTableViewCell: UITableViewCell {
 
     var viewModel: BannerLineCellViewModel?
     var tappedBannerMatchAction: ((Match) -> Void)?
+    private var carouselCounter: Int = 0
+    private weak var timer: Timer?
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -47,6 +49,12 @@ class BannerScrollTableViewCell: UITableViewCell {
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 
         self.setupWithTheme()
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(longPressedResetTimerAction))
+        self.collectionView.addGestureRecognizer(longPressGestureRecognizer)
+
+        self.startCollectionViewTimer()
+
     }
 
     override func prepareForReuse() {
@@ -75,6 +83,33 @@ class BannerScrollTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
+    func startCollectionViewTimer() {
+        self.timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
+    }
+
+    @objc func autoScrollCollectionView(_ timer1: Timer) {
+        if let banners = self.viewModel?.banners {
+            if self.carouselCounter < (banners.count - 1) {
+                self.carouselCounter += 1
+                let indexPath = IndexPath(item: self.carouselCounter, section: 0)
+                self.collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            }
+            else {
+                self.carouselCounter = 0
+                self.collectionView.scrollToItem(at: IndexPath(item: 0, section: 0), at: .centeredHorizontally, animated: true)
+            }
+        }
+    }
+
+    @objc func longPressedResetTimerAction(sender: UILongPressGestureRecognizer) {
+        print("longpressed")
+        if sender.state == .began {
+            self.timer?.invalidate()
+        }
+        else if sender.state == .ended {
+            self.startCollectionViewTimer()
+        }
+    }
 }
 
 extension BannerScrollTableViewCell: UIScrollViewDelegate {
@@ -84,6 +119,7 @@ extension BannerScrollTableViewCell: UIScrollViewDelegate {
         let index = scrollView.contentOffset.x / witdh
         let roundedIndex = round(index)
         self.pageControl?.currentPage = Int(roundedIndex)
+        self.carouselCounter = Int(roundedIndex)
     }
 }
 
