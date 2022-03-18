@@ -49,7 +49,6 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = ""
 
         self.reloadCollections()
     }
@@ -199,7 +198,9 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
             fatalError()
         }
 
-        guard let viewModel = self.viewModel else { fatalError() }
+        guard let viewModel = self.viewModel else {
+            fatalError()
+        }
 
         if indexPath.section == 1 {
             guard
@@ -207,6 +208,7 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
             else {
                 fatalError()
             }
+
             if let numberTotalOfMarkets = self.viewModel?.numberOfMatchMarket(forLine: collectionLineIndex) {
                 let marketsRawString = localized("number_of_markets")
                 let singularMarketRawString = localized("number_of_market_singular")
@@ -222,8 +224,13 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 if numberTotalOfMarkets == 0 {
                     cell.hideSubtitle()
                 }
-            }
 
+                if let match = viewModel.match() {
+                    cell.tappedAction = { [weak self] in
+                        self?.tappedMatchLineAction?(match)
+                    }
+                }
+            }
             return cell
         }
         else if self.viewModel?.isOutrightCompetitionLine() ?? false,
@@ -249,8 +256,8 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?(match)
+                cell.tappedMatchWidgetAction = { [weak self] in
+                    self?.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -266,8 +273,8 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?(match)
+                cell.tappedMatchWidgetAction = { [weak self] in
+                    self?.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell

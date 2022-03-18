@@ -437,17 +437,6 @@ extension RootViewController {
             self.homeViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
             }
-
-            self.homeViewController.didSelectSeeAllPopular = { [weak self] sport in
-                self?.didSelectSeeAllPopular(sport: sport)
-            }
-            self.homeViewController.didSelectSeeAllLive = { [weak self] sport in
-                self?.didSelectSeeAllLive(sport: sport)
-            }
-            self.homeViewController.didSelectSeeAllCompetition = { [weak self] sport, competitionId in
-                self?.didSelectSeeAllCompetition(sport: sport, competitionId: competitionId)
-            }
-
             homeViewControllerLoaded = true
         }
 

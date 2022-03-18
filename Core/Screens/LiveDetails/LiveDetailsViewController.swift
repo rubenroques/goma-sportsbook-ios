@@ -1,15 +1,180 @@
 //
-//  OutrightMarketDetailsViewController.swift
-//  Sportsbook
+//  LiveDetailsViewController.swift
+//  ShowcaseProd
 //
-//  Created by Ruben Roques on 21/02/2022.
+//  Created by Ruben Roques on 14/03/2022.
 //
 
 import UIKit
 import Combine
 import OrderedCollections
 
-class OutrightMarketDetailsViewController: UIViewController {
+class LiveDetailsViewModel {
+
+    var store: AggregatorsRepository
+
+    var refreshPublisher = PassthroughSubject<Void, Never>.init()
+    var isLoading: CurrentValueSubject<Bool, Never> = .init(true)
+    var titlePublisher: CurrentValueSubject<String, Never>
+
+    private var matchesPublisher: AnyCancellable?
+    private var matchesRegister: EndpointPublisherIdentifiable?
+
+    private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
+
+    private var sport: Sport
+    private var matches: [Match] = []
+
+    private var matchesCount = 10
+    private var matchesPage = 1
+    private var matchesHasNextPage = true
+
+    private var cancellables: Set<AnyCancellable> = []
+
+    init(sport: Sport, store: AggregatorsRepository) {
+        self.store = store
+        self.sport = sport
+
+        self.titlePublisher = .init("\(self.sport.name) - Live Matches")
+
+        self.refresh()
+    }
+
+    func refresh() {
+        self.resetPageCount()
+        self.isLoading.send(true)
+
+        self.fetchLocations()
+            .sink { [weak self] locations in
+                self?.store.storeLocations(locations: locations)
+                self?.fetchMatches()
+            }
+            .store(in: &cancellables)
+    }
+
+    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
+
+        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .map(\.records)
+            .compactMap({$0})
+            .replaceError(with: [EveryMatrix.Location]())
+            .eraseToAnyPublisher()
+
+    }
+
+    private func resetPageCount() {
+        self.matchesCount = 10
+        self.matchesPage = 1
+        self.matchesHasNextPage = true
+    }
+
+    private func fetchPopularMatchesNextPage() {
+        if !matchesHasNextPage {
+            return
+        }
+        self.matchesPage += 1
+        self.fetchMatches()
+    }
+
+    private func fetchMatches() {
+
+        if let matchesRegister = matchesRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchesRegister)
+        }
+
+        let matchesCount = self.matchesCount * self.matchesPage
+
+        let endpoint = TSRouter.liveMatchesPublisher(operatorId: Env.appSession.operatorId,
+                                                        language: "en",
+                                                        sportId: self.sport.id,
+                                                        matchesCount: matchesCount)
+        self.matchesPublisher?.cancel()
+        self.matchesPublisher = nil
+
+        self.matchesPublisher = Env.everyMatrixClient.manager
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+                self?.isLoading.send(false)
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    self?.matchesRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    self?.storeAggregatorProcessor(aggregator)
+                case .updatedContent(let aggregatorUpdates):
+                    self?.updateWithAggregatorProcessor(aggregatorUpdates)
+                case .disconnect:
+                    ()
+                }
+            })
+    }
+
+    private func storeAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
+        self.store.processAggregator(aggregator, withListType: .popularEvents,
+                                                 shouldClear: true)
+
+        let matches = self.store.matchesForListType(.popularEvents)
+        if matches.count < self.matchesCount * self.matchesPage {
+            self.matchesHasNextPage = false
+        }
+
+        self.matches = matches
+
+        self.isLoading.send(false)
+
+        self.refreshPublisher.send()
+    }
+
+    private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
+        self.store.processContentUpdateAggregator(aggregator)
+    }
+
+}
+
+extension LiveDetailsViewModel {
+
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+        if let viewModel = cachedMatchStatsViewModels[match.id] {
+            return viewModel
+        }
+        else {
+            let viewModel = MatchStatsViewModel(match: match)
+            cachedMatchStatsViewModels[match.id] = viewModel
+            return viewModel
+        }
+    }
+
+    func isMatchLive(withMatchId matchId: String) -> Bool {
+        return self.store.hasMatchesInfoForMatch(withId: matchId)
+    }
+
+}
+
+extension LiveDetailsViewModel {
+
+    func numberOfSection() -> Int {
+        return 1
+    }
+
+    func numberOfItems(forSection section: Int) -> Int {
+        return self.matches.count
+    }
+
+    func match(forIndexPath indexPath: IndexPath) -> Match? {
+        return self.matches[safe: indexPath.row]
+    }
+
+}
+
+class LiveDetailsViewController: UIViewController {
 
     // MARK: - Public Properties
 
@@ -18,23 +183,20 @@ class OutrightMarketDetailsViewController: UIViewController {
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var backButton: UIButton = Self.createBackButton()
-    private lazy var headerView: UIView = Self.createHeaderView()
-    private lazy var separatorHeaderView: UIView = Self.createSeparatorHeaderView()
-    private lazy var outrightsLabel: UILabel = Self.createOutrightsLabel()
-    private lazy var marketsLabel: UILabel = Self.createMarketsLabel()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+    private let refreshControl = UIRefreshControl()
 
-    private var expandedMarketGroupIds: Set<String> = []
+    private var collapsedCompetitionsSections: Set<Int> = []
 
-    private var viewModel: OutrightMarketDetailsViewModel
+    private var viewModel: LiveDetailsViewModel
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: OutrightMarketDetailsViewModel) {
+    init(viewModel: LiveDetailsViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -50,20 +212,26 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.loadingBaseView.isHidden = true
         self.betslipCountLabel.isHidden = true
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(SimpleListMarketDetailTableViewCell.nib, forCellReuseIdentifier: SimpleListMarketDetailTableViewCell.identifier)
-        self.tableView.register(ThreeAwayMarketDetailTableViewCell.nib, forCellReuseIdentifier: ThreeAwayMarketDetailTableViewCell.identifier)
-        self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+        self.tableView.addSubview(self.refreshControl)
+
+        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        self.showLoading()
 
         self.bind(toViewModel: self.viewModel)
     }
@@ -80,8 +248,6 @@ class OutrightMarketDetailsViewController: UIViewController {
 
         self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
         self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
-        self.headerView.backgroundColor = UIColor.App.backgroundPrimary
-        self.separatorHeaderView.backgroundColor = UIColor.App.separatorLine
 
         self.titleLabel.backgroundColor = .clear
         self.titleLabel.textColor = UIColor.App.textPrimary
@@ -102,8 +268,7 @@ class OutrightMarketDetailsViewController: UIViewController {
     }
 
     // MARK: - Bindings
-    private func bind(toViewModel viewModel: OutrightMarketDetailsViewModel) {
-
+    private func bind(toViewModel viewModel: LiveDetailsViewModel) {
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
             .receive(on: DispatchQueue.main)
@@ -119,6 +284,20 @@ class OutrightMarketDetailsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+
+        self.viewModel.isLoading
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoading()
+                }
+                else {
+                    self?.hideLoading()
+                    self?.refreshControl.endRefreshing()
+                }
+            })
+            .store(in: &self.cancellables)
+
         self.viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
@@ -126,16 +305,27 @@ class OutrightMarketDetailsViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-        self.titleLabel.text = self.viewModel.competitionName()
-    }
+        self.viewModel.titlePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &self.cancellables)
 
-    private func reloadTableView() {
-        self.tableView.reloadData()
     }
 
     // MARK: - Actions
+    @objc func refreshControllPulled() {
+        self.viewModel.refresh()
+    }
+    
     @objc func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        if self.isModal {
+            self.presentingViewController?.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @objc func didTapBetslipView() {
@@ -143,7 +333,6 @@ class OutrightMarketDetailsViewController: UIViewController {
     }
 
     func openBetslipModal() {
-
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
             self?.tableView.reloadData()
@@ -151,104 +340,70 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    private func openMatchDetails(_ match: Match) {
+        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
+        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+    }
+
+    // MARK: - Convenience
+    private func reloadTableView() {
+        self.tableView.reloadData()
+    }
+
+    private func showLoading() {
+        self.loadingBaseView.isHidden = false
+        self.loadingActivityIndicatorView.startAnimating()
+    }
+
+    private func hideLoading() {
+        self.loadingBaseView.isHidden = true
+        self.loadingActivityIndicatorView.stopAnimating()
+    }
+
 }
 
 // MARK: - TableView Protocols
 //
-extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewDataSource {
+extension LiveDetailsViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.numberOfSections()
+        return self.viewModel.numberOfSection()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.numberOfRows(forSection: section)
+        self.viewModel.numberOfItems(forSection: section)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         guard
-            let marketGroupOrganizer = self.viewModel.marketGroupOrganizer(forIndex: indexPath.row)
+            let match = self.viewModel.match(forIndexPath: indexPath),
+            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self)
         else {
-            return UITableViewCell()
+            fatalError()
         }
 
-        if marketGroupOrganizer.numberOfColumns == 3 {
-            guard
-                let cell = tableView.dequeueCellType(ThreeAwayMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
-            }
-            cell.marketId = marketGroupOrganizer.marketId
-            cell.didExpandCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
-                self.reloadTableView()
-            }
-            cell.didColapseCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
-                self.reloadTableView()
-            }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
-            return cell
+        cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
+        cell.setupWithMatch(match, store: self.viewModel.store)
+        cell.shouldShowCountryFlag(false)
+        cell.tappedMatchLineAction = { [weak self] in
+            self?.openMatchDetails(match)
         }
-        else if marketGroupOrganizer.numberOfColumns == 2 {
-            guard
-                let cell = tableView.dequeueCellType(OverUnderMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
-            }
-            cell.marketId = marketGroupOrganizer.marketId
-            cell.didExpandCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
-                self.reloadTableView()
-            }
-            cell.didColapseCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
-                self.reloadTableView()
-            }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
-            return cell
-        }
-        else if marketGroupOrganizer.numberOfColumns == 1 {
-            guard
-                let cell = tableView.dequeueCellType(OverUnderMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
-            }
-            cell.marketId = marketGroupOrganizer.marketId
-            cell.didExpandCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
-                self.reloadTableView()
-            }
-            cell.didColapseCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
-                self.reloadTableView()
-            }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
-            return cell
-        }
-        else {
-            guard
-                let cell = tableView.dequeueCellType(SimpleListMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
-            }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
-            return cell
-        }
-
+        return cell
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+        return MatchWidgetCollectionViewCell.cellHeight + 20
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+        return MatchWidgetCollectionViewCell.cellHeight + 20
     }
+
 }
 
-extension OutrightMarketDetailsViewController {
+extension LiveDetailsViewController {
 
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
@@ -268,7 +423,7 @@ extension OutrightMarketDetailsViewController {
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
         titleLabel.textAlignment = .center
-        titleLabel.text = ""
+        titleLabel.text = "Live Matches"
         return titleLabel
     }
 
@@ -291,38 +446,11 @@ extension OutrightMarketDetailsViewController {
         return view
     }
 
-    private static func createOutrightsLabel() -> UILabel {
-        let outrightsLabel = UILabel()
-        outrightsLabel.translatesAutoresizingMaskIntoConstraints = false
-        outrightsLabel.textColor = UIColor.App.textPrimary
-        outrightsLabel.font = AppFont.with(type: .semibold, size: 12)
-        outrightsLabel.textAlignment = .center
-        outrightsLabel.numberOfLines = 1
-        outrightsLabel.text = "Outrights"
-        return outrightsLabel
-    }
-
-    private static func createMarketsLabel() -> UILabel {
-        let marketsLabel = UILabel()
-        marketsLabel.translatesAutoresizingMaskIntoConstraints = false
-        marketsLabel.textColor = UIColor.App.textPrimary
-        marketsLabel.font = AppFont.with(type: .bold, size: 17)
-        marketsLabel.textAlignment = .center
-        marketsLabel.numberOfLines = 1
-        marketsLabel.text = "Competition Markets"
-        return marketsLabel
-    }
-
     private static func createTableView() -> UITableView {
-        let tableView = UITableView.init(frame: .zero, style: .grouped)
+        let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
-        tableView.contentInset = UIEdgeInsets(top: -20, left: 0, bottom: 0, right: 0)
-        tableView.contentInsetAdjustmentBehavior = .never
-        if #available(iOS 15.0, *) {
-            tableView.sectionHeaderTopPadding = 0
-        }
         return tableView
     }
 
@@ -383,11 +511,6 @@ extension OutrightMarketDetailsViewController {
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.titleLabel)
 
-        self.view.addSubview(self.headerView)
-        self.headerView.addSubview(self.outrightsLabel)
-        self.headerView.addSubview(self.marketsLabel)
-        self.headerView.addSubview(self.separatorHeaderView)
-
         self.view.addSubview(self.tableView)
 
         self.betslipButtonView.addSubview(self.betslipCountLabel)
@@ -428,32 +551,25 @@ extension OutrightMarketDetailsViewController {
         ])
 
         NSLayoutConstraint.activate([
-            self.headerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.headerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.headerView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
-            self.headerView.heightAnchor.constraint(equalToConstant: 50),
-
-            self.outrightsLabel.centerXAnchor.constraint(equalTo: self.headerView.centerXAnchor),
-            self.outrightsLabel.leadingAnchor.constraint(equalTo: self.headerView.leadingAnchor, constant: 12),
-            self.outrightsLabel.topAnchor.constraint(equalTo: self.headerView.topAnchor, constant: 6),
-
-            self.marketsLabel.centerXAnchor.constraint(equalTo: self.headerView.centerXAnchor),
-            self.marketsLabel.leadingAnchor.constraint(equalTo: self.headerView.leadingAnchor, constant: 12),
-            self.marketsLabel.bottomAnchor.constraint(equalTo: self.headerView.bottomAnchor, constant: -9),
-
-            self.separatorHeaderView.leadingAnchor.constraint(equalTo: self.headerView.leadingAnchor),
-            self.separatorHeaderView.trailingAnchor.constraint(equalTo: self.headerView.trailingAnchor),
-            self.separatorHeaderView.bottomAnchor.constraint(equalTo: self.headerView.bottomAnchor),
-            self.separatorHeaderView.heightAnchor.constraint(equalToConstant: 1)
-        ])
-
-        NSLayoutConstraint.activate([
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
 
+        NSLayoutConstraint.activate([
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
+            self.view.topAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
+            self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
+        ])
+
+        // Betslip button
         NSLayoutConstraint.activate([
             self.betslipCountLabel.trailingAnchor.constraint(equalTo: self.betslipButtonView.trailingAnchor, constant: 2),
             self.betslipCountLabel.topAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -3),
@@ -464,5 +580,6 @@ extension OutrightMarketDetailsViewController {
             self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
             self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
         ])
+
     }
 }
