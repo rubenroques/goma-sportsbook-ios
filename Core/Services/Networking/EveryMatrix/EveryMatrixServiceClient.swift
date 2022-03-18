@@ -308,6 +308,33 @@ class EveryMatrixServiceClient: ObservableObject {
 
     func removeLimit(limitType: String, period: String) -> AnyPublisher<EveryMatrix.LimitSetResponse, EveryMatrix.APIError> {
         return self.manager.getModel(router: .removeLimit(type: limitType, period: period), decodingType: EveryMatrix.LimitSetResponse.self)
+    }
+
+    func getApplicableBonus(type: String, gamingAccountId: String)
+    -> AnyPublisher<EveryMatrix.ApplicableBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getApplicableBonuses(type: type, gamingAccountID: gamingAccountId),
+                                     decodingType: EveryMatrix.ApplicableBonusResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getClaimableBonus()
+    -> AnyPublisher<EveryMatrix.ClaimableBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getClaimableBonuses,
+                                     decodingType: EveryMatrix.ClaimableBonusResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func getGrantedBonus()
+    -> AnyPublisher<EveryMatrix.GrantedBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getGrantedBonuses,
+                                     decodingType: EveryMatrix.GrantedBonusResponse.self)
+            .eraseToAnyPublisher()
+    }
+
+    func applyBonus(bonusCode: String)
+    -> AnyPublisher<EveryMatrix.ApplyBonusResponse, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .applyBonusCode(bonusCode: bonusCode),
+                                     decodingType: EveryMatrix.ApplyBonusResponse.self)
             .eraseToAnyPublisher()
     }
 

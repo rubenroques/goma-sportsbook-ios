@@ -139,13 +139,13 @@ class HomeViewController: UIViewController {
     }
 
     private func openPopularDetails(_ sport: Sport) {
-        let viewModel =  PopularDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let viewModel = PopularDetailsViewModel(sport: sport, store: AggregatorsRepository())
         let popularDetailsViewController = PopularDetailsViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(popularDetailsViewController, animated: true)
     }
 
     private func openLiveDetails(_ sport: Sport) {
-        let viewModel =  LiveDetailsViewModel(sport: sport, store: AggregatorsRepository())
+        let viewModel = LiveDetailsViewModel(sport: sport, store: AggregatorsRepository())
         let liveDetailsViewController = LiveDetailsViewController(viewModel: viewModel)
         self.navigationController?.pushViewController(liveDetailsViewController, animated: true)
     }
