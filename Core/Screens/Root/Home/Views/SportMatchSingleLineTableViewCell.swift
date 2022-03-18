@@ -46,7 +46,6 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = ""
 
         self.reloadCollections()
     }
@@ -225,6 +224,12 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 if numberTotalOfMarkets == 0 {
                     cell.hideSubtitle()
                 }
+
+                if let match = viewModel.match() {
+                    cell.tappedAction = { [weak self] in
+                        self?.tappedMatchLineAction?(match)
+                    }
+                }
             }
 
             return cell
@@ -242,8 +247,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?(match)
+                cell.tappedMatchWidgetAction = { [weak self] in
+                    self?.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -258,8 +263,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?(match)
+                cell.tappedMatchWidgetAction = { [weak self] in
+                    self?.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -282,8 +287,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                                              teamsText: teamsText,
                                              countryIso: countryIso,
                                              store: viewModel.store)
-                        cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?(match)
+                        cell.tappedMatchWidgetAction = { [weak self] in
+                            self?.tappedMatchLineAction?(match)
                         }
                         return cell
                     }
@@ -299,8 +304,8 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                                              teamsText: teamsText,
                                              countryIso: countryIso,
                                              store: viewModel.store)
-                        cell.tappedMatchWidgetAction = {
-                            self.tappedMatchLineAction?(match)
+                        cell.tappedMatchWidgetAction = { [weak self] in
+                            self?.tappedMatchLineAction?(match)
                         }
                         return cell
                     }
