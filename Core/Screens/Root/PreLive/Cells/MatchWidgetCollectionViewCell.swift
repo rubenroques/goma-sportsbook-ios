@@ -496,13 +496,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if self.isFavorite {
                 if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: "event")
+                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: .match)
                 }
                 self.isFavorite = false
             }
             else {
                 if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: "event")
+                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: .match)
                 }
                 self.isFavorite = true
             }
