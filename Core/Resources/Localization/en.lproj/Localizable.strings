@@ -357,18 +357,23 @@ Terms of use, Privacy Policy and EULA";
 "betting_notifications" = "Betting notifications";
 "notify_bets_final_result" = "Notify me about my Bets final results";
 "notify_bets_options_results" = "Notify me about my Bets options results";
-"remove_limit" = "Remove Limit";
-"remove_limit_warning" = "Are you sure you want to remove this limit?";
 
-"deposit_limit" = "Deposit Limit";
-"betting_limit" = "Betting Limit";
-"loss_limit" = "Loss Limit";
-"deposit_limit_set" = "Deposit limit set for your account.";
-"betting_limit_set" = "Betting limit set for your account.";
-"loss_limit_set" = "Loss limit set for your account.";
-"deposit_limit_locked" = "Deposit limit set for your account is locked. You can update this limit again after: %s";
-"betting_limit_locked" = "Betting limit set for your account is locked. You can update this limit again after: %s";
-"loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: %s";
+"add_promo_code" = "Add promotional code";
+"bonus_code" = "Bonus Code";
+
+"more_info" = "More Info";
+"get_bonus" = "Get Bonus";
+
+"available" = "Available";
+"no_bonus" = "No bonus here!";
+
+"expire_date" = "Expire Date";
+"start_date" = "Start Date";
+"add" = "Add";
+"invalid_bonus_code" = "Invalid bonus code.";
+"error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
+"permanent" = "Permanent";
+"terms_conditions" = "Terms and conditions";
 
 "deposit_error" = "Deposit Error";
 "deposit_error_message" = "The deposit couldn't be processed at the moment. Please try again later.";
