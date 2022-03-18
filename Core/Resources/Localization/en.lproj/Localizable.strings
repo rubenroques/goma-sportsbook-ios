@@ -375,5 +375,5 @@ Terms of use, Privacy Policy and EULA";
 "permanent" = "Permanent";
 "terms_conditions" = "Terms and conditions";
 
-"use_freebet" = "Use %s of freebet.";
-"use_boosted_odds" = "Use boosted odds %s";
+"deposit_error" = "Deposit Error";
+"deposit_error_message" = "The deposit couldn't be processed at the moment. Please try again later.";
