@@ -174,7 +174,7 @@ extension OutrightCompetitionWidgetCollectionViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.contentView.heightAnchor.constraint(equalToConstant: 120),
+            self.contentView.heightAnchor.constraint(equalToConstant: 124),
 
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),

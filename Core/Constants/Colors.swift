@@ -72,6 +72,8 @@ extension UIColor {
         static let myTicketsWonFaded = UIColor(named: "myTicketsWonFaded")!
         
         static let myTicketsOther = UIColor(named: "myTicketsOther")!
+
+        static let backgroundDarker = UIColor(named: "backgroundDarker")!
     }
 
 }

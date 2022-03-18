@@ -11,7 +11,6 @@ import OrderedCollections
 
 class CompetitionDetailsViewController: UIViewController {
 
-
     // MARK: - Public Properties
 
     // MARK: - Private Properties
@@ -27,7 +26,6 @@ class CompetitionDetailsViewController: UIViewController {
 
     private var collapsedCompetitionsSections: Set<Int> = []
     private var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
-
 
     private var viewModel: CompetitionDetailsViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -129,7 +127,6 @@ class CompetitionDetailsViewController: UIViewController {
             })
             .store(in: &self.cancellables)
 
-
         self.viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
@@ -141,12 +138,7 @@ class CompetitionDetailsViewController: UIViewController {
 
     // MARK: - Actions
     @objc func didTapBackButton() {
-        if self.isModal {
-            self.presentingViewController?.dismiss(animated: true, completion: nil)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        self.navigationController?.popViewController(animated: true)
     }
 
     @objc func didTapBetslipView() {
@@ -435,7 +427,6 @@ extension CompetitionDetailsViewController {
         activityIndicatorView.stopAnimating()
         return activityIndicatorView
     }
-
 
     private func setupSubviews() {
 

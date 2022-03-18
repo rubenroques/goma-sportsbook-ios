@@ -67,6 +67,9 @@ class BetslipViewController: UIViewController {
 
         self.tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
+       
+        
+        
         super.init(nibName: "BetslipViewController", bundle: nil)
     }
 
@@ -84,6 +87,8 @@ class BetslipViewController: UIViewController {
 
         self.isModalInPresentation = true
 
+        self.accountInfoBaseView.isHidden = true
+        
         self.addChild(tabViewController)
         self.tabsBaseView.addSubview(tabViewController.view)
         self.tabViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -117,6 +122,7 @@ class BetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
                 self?.accountValueLabel.text = value
+                self?.accountInfoBaseView.isHidden = false
             }
             .store(in: &cancellables)
 

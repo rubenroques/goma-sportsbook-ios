@@ -79,6 +79,7 @@ class LiveEventsViewController: UIViewController {
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
+    private let refreshControl = UIRefreshControl()
 
     var cancellables = Set<AnyCancellable>()
 
@@ -204,6 +205,10 @@ class LiveEventsViewController: UIViewController {
         liveEventsCountView.isHidden = true
        
 
+        refreshControl.tintColor = UIColor.lightGray
+        refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+        tableView.addSubview(self.refreshControl)
+
         tableView.separatorStyle = .none
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
@@ -252,8 +257,12 @@ class LiveEventsViewController: UIViewController {
 
         self.viewModel.isLoading
             .receive(on: DispatchQueue.main)
-            .sink { isLoading in
-                self.loadingBaseView.isHidden = !isLoading
+            .sink { [weak self] isLoading in
+                self?.loadingBaseView.isHidden = !isLoading
+
+                if !isLoading {
+                    self?.refreshControl.endRefreshing()
+                }
             }
             .store(in: &cancellables)
 
@@ -278,17 +287,14 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.screenStatePublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] screenState in
-              
                 switch screenState {
                 case .noEmptyNoFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
-          
                 case .emptyNoFilter:
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"), secondLabelText: localized("second_empty_list"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    
                 case .noEmptyAndFilter:
                     self?.emptyBaseView.isHidden = true
                     self?.tableView.isHidden = false
@@ -296,7 +302,6 @@ class LiveEventsViewController: UIViewController {
                     self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"), secondLabelText: localized("second_empty_list_with_filters"), isUserLoggedIn: true)
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-            
                 }
             })
             .store(in: &cancellables)
@@ -368,6 +373,10 @@ class LiveEventsViewController: UIViewController {
                                                             sportsRepository: self.viewModel.sportsRepository)
         sportSelectionViewController.selectionDelegate = self
         self.present(sportSelectionViewController, animated: true, completion: nil)
+    }
+
+    @objc func refreshControllPulled() {
+        self.viewModel.fetchData()
     }
 
     @objc func didTapBetslipView() {

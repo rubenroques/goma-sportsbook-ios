@@ -313,7 +313,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 0] {
 
-                self.homeOddTitleLabel.text = outcome.typeName
+                self.homeOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.leftOutcome = outcome
                 self.isLeftOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.homeOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
@@ -362,7 +362,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 1] {
 
-                self.drawOddTitleLabel.text = outcome.typeName
+                self.drawOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.middleOutcome = outcome
                 self.isMiddleOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.drawOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
@@ -410,7 +410,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
             if let outcome = market.outcomes[safe: 2] {
 
-                self.awayOddTitleLabel.text = outcome.typeName
+                self.awayOddTitleLabel.text = market.nameDigit1 != nil ? (outcome.typeName + " \(market.nameDigit1!)") : outcome.typeName
                 self.rightOutcome = outcome
                 self.isRightOutcomeButtonSelected = Env.betslipManager.hasBettingTicket(withId: outcome.bettingOffer.id)
                 self.awayOddValueLabel.text = OddConverter.stringForValue(outcome.bettingOffer.value, format: UserDefaults.standard.userOddsFormat)
