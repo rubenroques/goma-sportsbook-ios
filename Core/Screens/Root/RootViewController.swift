@@ -388,13 +388,14 @@ class RootViewController: UIViewController {
     @IBAction private func didTapSearchButton() {
         let searchViewController = SearchViewController()
 
-        searchViewController.didSelectCompetitionAction = { [weak self] value in
-            searchViewController.dismiss(animated: true, completion: nil)
-            self?.preLiveViewController.selectedShortcutItem = 2
-            self?.preLiveViewController.applyCompetitionsFiltersWithIds([value])
-        }
+//        searchViewController.didSelectCompetitionAction = { [weak self] value in
+//            searchViewController.dismiss(animated: true, completion: nil)
+//            self?.preLiveViewController.selectedShortcutItem = 2
+//            self?.preLiveViewController.applyCompetitionsFiltersWithIds([value.id])
+//        }
 
-        self.present(searchViewController, animated: true, completion: nil)
+        let navigationViewController = Router.navigationController(with: searchViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 }
 
