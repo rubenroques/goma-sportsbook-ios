@@ -30,9 +30,6 @@ class SearchViewController: UIViewController {
     var viewModel: SearchViewModel
     var cancellables = Set<AnyCancellable>()
 
-    var didSelectMatchAction: ((Match) -> Void)?
-    var didSelectCompetitionAction: ((EveryMatrix.Tournament) -> Void)?
-
     var showSearchResultsTableView: Bool = false {
         didSet {
             if showSearchResultsTableView {
@@ -234,14 +231,6 @@ class SearchViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        self.didSelectMatchAction = { [weak self] match in
-            self?.openMatchDetailsScreen(match: match)
-        }
-
-        self.didSelectCompetitionAction = { [weak self] competition in
-            self?.openCompetitionDetailsScreen(competition: competition)
-        }
-
         self.searchTextPublisher
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .sink(receiveValue: { [weak self] value in
@@ -422,7 +411,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 //                    }
 
                     cell.tappedMatchLineAction = {
-                        self.didSelectMatchAction?(match)
+                        self.openMatchDetailsScreen(match: match)
                     }
 
                     return cell
@@ -436,8 +425,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                         let location = self.viewModel.location(forId: cellVenueId)
                         cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "", flagId: location?.id ?? "")
                         cell.tappedCompetitionCellAction = {
-                            self.didSelectCompetitionAction?(competition)
-
+                            self.openCompetitionDetailsScreen(competition: competition)
                         }
                     }
                     return cell
