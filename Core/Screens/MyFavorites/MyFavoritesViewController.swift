@@ -72,6 +72,7 @@ class MyFavoritesViewController: UIViewController {
             }
             else {
                 self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
             }
         }
         
@@ -81,10 +82,11 @@ class MyFavoritesViewController: UIViewController {
             }
             else {
                 self.viewModel.markCompetitionAsFavorite(competition: competition)
+                self.tableView.reloadData()
             }
         }
         
-        self.tableView.reloadData()
+        
 
     }
 
