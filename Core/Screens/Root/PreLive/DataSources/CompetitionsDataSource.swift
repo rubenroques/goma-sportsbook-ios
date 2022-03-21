@@ -196,4 +196,3 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
 }
-

@@ -61,7 +61,6 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
                 cell.setupWithMatch(match, store: self.store)
             }
 
-            
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)
@@ -69,8 +68,6 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             cell.matchWentLive = {
                 self.matchWentLiveAction?()
             }
-            
-            
             
             return cell
         }
