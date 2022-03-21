@@ -14,6 +14,7 @@ class HomeViewModel {
     /*
     userMessage
     bannerLine
+    userProfile
     userFavorites
     sport(Sport at index 0 - Football )
     suggestedBets
@@ -28,6 +29,7 @@ class HomeViewModel {
         case bannerLine
         case suggestedBets
         case sport(Sport)
+        case userProfile
 
         var identifier: String {
             switch self {
@@ -36,6 +38,7 @@ class HomeViewModel {
             case .bannerLine: return "bannerLine"
             case .suggestedBets: return "suggestedBets"
             case .sport(let sport): return "sport[\(sport)]"
+            case .userProfile: return "userProfile"
             }
         }
     }
@@ -48,7 +51,7 @@ class HomeViewModel {
     // Updatable Storage
     var store: HomeStore = HomeStore()
 
-    private let itemsBeforeSports = 5
+    private let itemsBeforeSports = 6
     private var userMessages: [String] = []
     
     //
@@ -113,6 +116,9 @@ class HomeViewModel {
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
     //
+    var alertsArray: [ActivationAlert] = []
+
+    //
     // EM Registers
     private var bannersInfoRegister: EndpointPublisherIdentifiable?
     private var favoriteMatchesRegister: EndpointPublisherIdentifiable?
@@ -149,6 +155,14 @@ class HomeViewModel {
             })
             .store(in: &self.cancellables)
 
+        Env.userSessionStore.isUserProfileIncomplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.fetchAlerts()
+                self?.refreshPublisher.send()
+            })
+            .store(in: &cancellables)
+
     }
 
     func refresh() {
@@ -156,6 +170,7 @@ class HomeViewModel {
         self.fetchBanners()
         self.fetchFavoriteMatches()
         self.fetchSuggestedBets()
+        self.fetchAlerts()
     }
 
     func requestSports() {
@@ -181,6 +196,30 @@ class HomeViewModel {
 
         self.bannersInfoPublisher?.cancel()
         self.bannersInfoPublisher = nil
+    }
+
+    func fetchAlerts() {
+        alertsArray = []
+        
+        if let userSession = UserSessionStore.loggedUserSession() {
+            if !userSession.isEmailVerified {
+
+                let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
+                                                               description: localized("app_full_potential"),
+                                                               linkLabel: localized("verify_my_account"), alertType: .email)
+
+                alertsArray.append(emailActivationAlertData)
+            }
+
+            if Env.userSessionStore.isUserProfileIncomplete.value {
+                let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
+                                                               description: localized("complete_profile_description"),
+                                                               linkLabel: localized("finish_up_profile"),
+                                                               alertType: .profile)
+
+                alertsArray.append(completeProfileAlertData)
+            }
+        }
     }
 
     func fetchBanners() {
@@ -335,9 +374,10 @@ extension HomeViewModel {
             else {
                 return 0
             }
-        case 2: return self.favoriteMatches.count
-        // case 3 is the first sport from the sports list
-        case 4: return self.suggestedBets.isEmpty ? 0 : 1
+        case 2: return self.alertsArray.isEmpty ? 0 : 1
+        case 3: return self.favoriteMatches.count
+        // case 4 is the first sport from the sports list
+        case 5: return self.suggestedBets.isEmpty ? 0 : 1
         default:
             if let sportGroupViewModel = self.sportGroupViewModel(forSection: section) {
                 return sportGroupViewModel.numberOfRows()
@@ -352,9 +392,10 @@ extension HomeViewModel {
         switch section {
         case 0: return nil
         case 1: return nil
-        case 2: return self.favoriteMatches.isNotEmpty ? "My Games" : nil
-        // case 3 is the first sport from the sports list
-        case 4: return self.suggestedBets.isNotEmpty ? "Suggested Bets" : nil
+        case 2: return nil
+        case 3: return self.favoriteMatches.isNotEmpty ? "My Games" : nil
+        // case 4 is the first sport from the sports list
+        case 5: return self.suggestedBets.isNotEmpty ? "Suggested Bets" : nil
         default:
             if let sportForSection = self.sportForSection(section) {
                 return sportForSection.name
@@ -367,7 +408,7 @@ extension HomeViewModel {
 
     func iconName(forSection section: Int) -> String? {
         switch section {
-        case 0, 1, 2, 4: return nil
+        case 0, 1, 2, 3, 5: return nil
         default:
             if let sportForSection = self.sportForSection(section) {
                 return sportForSection.id
@@ -382,9 +423,10 @@ extension HomeViewModel {
         switch section {
         case 0: return false
         case 1: return false
-        case 2: return self.favoriteMatches.isNotEmpty
-        // case 3 is the first sport from the sports list
-        case 4: return self.suggestedBets.isNotEmpty
+        case 2: return false
+        case 3: return self.favoriteMatches.isNotEmpty
+        // case 4 is the first sport from the sports list
+        case 5: return self.suggestedBets.isNotEmpty
         default:
             if self.sportForSection(section) != nil {
                 return true
@@ -399,9 +441,10 @@ extension HomeViewModel {
         switch section {
         case 0: return false
         case 1: return false
-        case 2: return self.favoriteMatches.isNotEmpty
-        // case 3 is the first sport from the sports list
-        case 4: return false
+        case 2: return false
+        case 3: return self.favoriteMatches.isNotEmpty
+        // case 4 is the first sport from the sports list
+        case 5: return false
         default:
             return false
         }
@@ -411,9 +454,10 @@ extension HomeViewModel {
         switch section {
         case 0: return HomeViewModel.Content.userMessage
         case 1: return HomeViewModel.Content.bannerLine
-        case 2: return HomeViewModel.Content.userFavorites
-        // case 3 is the first sport from the sports list
-        case 4: return HomeViewModel.Content.suggestedBets
+        case 2: return HomeViewModel.Content.userProfile
+        case 3: return HomeViewModel.Content.userFavorites
+        // case 4 is the first sport from the sports list
+        case 5: return HomeViewModel.Content.suggestedBets
         default:
             if let sportForSection = self.sportForSection(section) {
                 return HomeViewModel.Content.sport(sportForSection)
@@ -474,7 +518,6 @@ extension HomeViewModel {
         }
     }
 
-
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
         if let viewModel = cachedMatchStatsViewModels[match.id] {
             return viewModel
@@ -505,7 +548,7 @@ extension HomeViewModel {
 
     private func sportShiftedSection(fromSection section: Int) -> Int {
         var shiftedSection = section
-        if shiftedSection == 3 {
+        if shiftedSection == 4 {
             shiftedSection = 0
         }
         else {

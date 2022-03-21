@@ -279,10 +279,15 @@ class FullRegisterDocumentsViewController: UIViewController {
                     ()
                 }
             } receiveValue: { _ in
+                self.refreshUserProfileStatus()
                 self.showAlert(type: .success, text: localized("profile_updated_success"))
                 self.navigationController?.popToRootViewController(animated: true)
             }
             .store(in: &cancellables)
+    }
+
+    private func refreshUserProfileStatus() {
+        Env.userSessionStore.requestProfileStatus()
     }
 
     @objc func didTapBackground() {

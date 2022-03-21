@@ -340,6 +340,18 @@ extension UserSessionStore {
         }
     }
 
+    func requestProfileStatus() {
+        Env.everyMatrixClient.getProfileStatus()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+
+            } receiveValue: { status in
+                self.isUserProfileIncomplete.send(status.isProfileIncomplete)
+            }
+        .store(in: &cancellables)
+    }
+
 }
 
 extension UserSessionStore {
