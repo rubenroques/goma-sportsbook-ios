@@ -9,259 +9,6 @@ import UIKit
 import Combine
 import OrderedCollections
 
-class PopularDetailsViewModel {
-
-    var store: AggregatorsRepository
-
-    var refreshPublisher = PassthroughSubject<Void, Never>.init()
-
-    var isLoading: CurrentValueSubject<Bool, Never> = .init(true)
-
-    var titlePublisher: CurrentValueSubject<String, Never>
-
-    private var matchesPublisher: AnyCancellable?
-    private var matchesRegister: EndpointPublisherIdentifiable?
-
-    private var outrightCompetitionsPublisher: AnyCancellable?
-    private var outrightCompetitionsRegister: EndpointPublisherIdentifiable?
-
-    private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
-
-    private var sport: Sport
-    private var matches: [Match] = []
-    private var outrightCompetitions: [Competition]?
-
-    private var matchesCount = 10
-    private var matchesPage = 1
-    private var matchesHasNextPage = true
-
-    private var cancellables: Set<AnyCancellable> = []
-
-    init(sport: Sport, store: AggregatorsRepository) {
-        self.store = store
-        self.sport = sport
-
-        self.titlePublisher = .init("\(self.sport.name) - Popular Matches")
-
-        self.refresh()
-    }
-
-    func refresh() {
-        self.resetPageCount()
-
-        self.isLoading.send(true)
-
-        self.fetchLocations()
-            .sink { [weak self] locations in
-                self?.store.storeLocations(locations: locations)
-                self?.fetchMatches()
-            }
-            .store(in: &cancellables)
-    }
-
-    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
-
-        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .map(\.records)
-            .compactMap({$0})
-            .replaceError(with: [EveryMatrix.Location]())
-            .eraseToAnyPublisher()
-
-    }
-
-    private func resetPageCount() {
-        self.matchesCount = 10
-        self.matchesPage = 1
-        self.matchesHasNextPage = true
-    }
-
-    private func fetchPopularMatchesNextPage() {
-        if !matchesHasNextPage {
-            return
-        }
-        self.matchesPage += 1
-        self.fetchMatches()
-    }
-
-    private func fetchMatches() {
-
-        if let matchesRegister = matchesRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchesRegister)
-        }
-
-        let matchesCount = self.matchesCount * self.matchesPage
-
-        let endpoint = TSRouter.popularMatchesPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                        sportId: self.sport.id,
-                                                        matchesCount: matchesCount)
-        self.matchesPublisher?.cancel()
-        self.matchesPublisher = nil
-
-        self.matchesPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("matchesPublisher Error retrieving data!")
-                case .finished:
-                    print("matchesPublisher Data retrieved!")
-                }
-                self?.isLoading.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.matchesRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeAggregatorProcessor(aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    self?.updateWithAggregatorProcessor(aggregatorUpdates)
-                case .disconnect:
-                    ()
-                }
-            })
-    }
-
-    private func closeOutrightCompetitionsConnection() {
-        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
-        }
-
-        self.outrightCompetitionsPublisher?.cancel()
-        self.outrightCompetitionsPublisher = nil
-    }
-
-    private func fetchOutrightCompetitions() {
-
-        if let outrightCompetitionsRegister = outrightCompetitionsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: outrightCompetitionsRegister)
-        }
-
-        let sportId = self.sport.id
-
-        let endpoint = TSRouter.popularTournamentsPublisher(operatorId: Env.appSession.operatorId,
-                                                        language: "en",
-                                                        sportId: sportId,
-                                                        tournamentsCount: 20)
-        self.outrightCompetitionsPublisher?.cancel()
-        self.outrightCompetitionsPublisher = nil
-
-        self.outrightCompetitionsPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                switch completion {
-                case .failure:
-                    print("outrightCompetitionsPublisher Error retrieving data!")
-                case .finished:
-                    print("outrightCompetitionsPublisher Data retrieved!")
-                }
-                self?.isLoading.send(false)
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    self?.outrightCompetitionsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    self?.storeOutrightCompetitionsAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent: // (let aggregatorUpdates):
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
-    }
-
-    private func storeAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.processAggregator(aggregator, withListType: .popularEvents,
-                                                 shouldClear: true)
-
-        let matches = self.store.matchesForListType(.popularEvents)
-        if matches.count < self.matchesCount * self.matchesPage {
-            self.matchesHasNextPage = false
-        }
-
-        if matches.isNotEmpty {
-            self.matches = matches
-            self.isLoading.send(false)
-            self.refreshPublisher.send()
-        }
-        else {
-            self.fetchOutrightCompetitions()
-        }
-    }
-
-    private func updateWithAggregatorProcessor(_ aggregator: EveryMatrix.Aggregator) {
-        self.store.processContentUpdateAggregator(aggregator)
-    }
-
-    private func storeOutrightCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-        self.store.processOutrightTournamentsAggregator(aggregator)
-
-        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament in
-            Competition.init(id: rawTournament.id, name: rawTournament.name ?? "", outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
-        }
-
-        self.outrightCompetitions = localOutrightCompetitions
-        self.isLoading.send(false)
-        self.refreshPublisher.send()
-
-        self.closeOutrightCompetitionsConnection()
-    }
-
-}
-
-extension PopularDetailsViewModel {
-
-    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
-        if let viewModel = cachedMatchStatsViewModels[match.id] {
-            return viewModel
-        }
-        else {
-            let viewModel = MatchStatsViewModel(match: match)
-            cachedMatchStatsViewModels[match.id] = viewModel
-            return viewModel
-        }
-    }
-
-    func isMatchLive(withMatchId matchId: String) -> Bool {
-        return self.store.hasMatchesInfoForMatch(withId: matchId)
-    }
-
-}
-
-extension PopularDetailsViewModel {
-
-    func numberOfSection() -> Int {
-        return 2
-    }
-
-    func numberOfItems(forSection section: Int) -> Int {
-        switch section {
-        case 0:
-            return self.matches.count
-        case 1:
-            return self.outrightCompetitions?.count ?? 0
-        default:
-            return 0
-        }
-    }
-
-    func match(forRow row: Int) -> Match? {
-        return self.matches[safe: row]
-    }
-
-    func outrightCompetition(forRow row: Int) -> Competition? {
-        return self.outrightCompetitions?[safe: row]
-    }
-
-    func outrightCompetition(forIndexPath indexPath: IndexPath) -> Match? {
-        return self.matches[safe: indexPath.row]
-    }
-
-}
-
 class PopularDetailsViewController: UIViewController {
 
     // MARK: - Public Properties
@@ -323,6 +70,18 @@ class PopularDetailsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
 
     // MARK: - Layout and Theme
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -361,7 +120,6 @@ class PopularDetailsViewController: UIViewController {
             .map(\.count)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipValue in
-
                 if betslipValue == 0 {
                     self?.betslipCountLabel.isHidden = true
                 }
@@ -402,11 +160,11 @@ class PopularDetailsViewController: UIViewController {
     }
 
     // MARK: - Actions
-    @objc func refreshControllPulled() {
+    @objc private func refreshControllPulled() {
         self.viewModel.refresh()
     }
 
-    @objc func didTapBackButton() {
+    @objc private func didTapBackButton() {
         if self.isModal {
             self.presentingViewController?.dismiss(animated: true, completion: nil)
         }
@@ -415,14 +173,14 @@ class PopularDetailsViewController: UIViewController {
         }
     }
 
-    @objc func didTapBetslipView() {
+    @objc private func didTapBetslipView() {
         self.openBetslipModal()
     }
 
-    func openBetslipModal() {
+    private func openBetslipModal() {
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
-            self?.tableView.reloadData()
+            self?.reloadTableView()
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
@@ -546,6 +304,24 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
     }
 }
 
+extension PopularDetailsViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+}
+
+// MARK: - User Interface setup
+//
 extension PopularDetailsViewController {
 
     private static func createTopSafeAreaView() -> UIView {

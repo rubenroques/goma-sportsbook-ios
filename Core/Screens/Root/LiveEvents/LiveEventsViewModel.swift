@@ -189,10 +189,10 @@ class LiveEventsViewModel: NSObject {
             isFavorite = true
         }
         if isFavorite {
-            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: "event")
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
         }
         else {
-            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: "event")
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
         }
     }
 

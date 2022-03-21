@@ -218,7 +218,7 @@ class PreLiveEventsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.tableView.reloadData()
+        self.reloadData()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -402,7 +402,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
-                self?.tableView.reloadData()
+                self?.reloadData()
             })
             .store(in: &cancellables)
 
@@ -512,7 +512,7 @@ class PreLiveEventsViewController: UIViewController {
         Env.userSessionStore.isUserProfileIncomplete
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { _ in
-                self.tableView.reloadData()
+                self.reloadData()
             })
             .store(in: &cancellables)
 
@@ -520,10 +520,6 @@ class PreLiveEventsViewController: UIViewController {
 
     @objc func refreshControllPulled() {
         self.viewModel.fetchData()
-    }
-
-    func reloadTableViewData() {
-        self.tableView.reloadData()
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -584,6 +580,7 @@ class PreLiveEventsViewController: UIViewController {
         default:
             ()
         }
+        
         self.filtersCollectionView.reloadData()
         self.filtersCollectionView.layoutIfNeeded()
 

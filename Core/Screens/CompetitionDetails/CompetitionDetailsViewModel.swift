@@ -86,10 +86,10 @@ class CompetitionDetailsViewModel {
         }
         
         if isFavorite {
-            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: "competition")
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
         }
         else {
-            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: "competition")
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
         }
    
     }

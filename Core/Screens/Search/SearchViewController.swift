@@ -89,6 +89,9 @@ class SearchViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        self.searchBarView.becomeFirstResponder()
+
     }
 
     override func viewDidLayoutSubviews() {
@@ -317,6 +320,28 @@ class SearchViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    private func openMatchDetailsScreen(match: Match) {
+
+        if self.viewModel.matchesInfoForMatch[match.id] != nil {
+            let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+        else {
+            let matchDetailsViewController = MatchDetailsViewController(match: match)
+
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+    }
+
+    private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {
+        let sport = Sport(id: competition.sportId ?? "")
+        let competitionId = competition.id
+        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
+        let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
+        self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
+    }
+
     @IBAction private func didTapCancelButton() {
         self.dismiss(animated: true, completion: nil)
     }
@@ -418,7 +443,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 //                    }
 
                     cell.tappedMatchLineAction = {
-                        self.didSelectMatchAction?(match)
+                        self.openMatchDetailsScreen(match: match)
                     }
                     
                     cell.didTapFavoriteMatchAction = { [weak self] match in
@@ -436,7 +461,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                         let location = self.viewModel.location(forId: cellVenueId)
                         cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "", flagId: location?.id ?? "")
                         cell.tappedCompetitionCellAction = {
-                            self.didSelectCompetitionAction?(competition.id)
+                            self.openCompetitionDetailsScreen(competition: competition)
                         }
                     }
                     return cell

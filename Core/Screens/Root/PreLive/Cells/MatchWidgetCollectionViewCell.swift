@@ -233,9 +233,12 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
         self.suspendedBaseView.isHidden = true
+
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
+
         self.baseView.backgroundColor = UIColor.App.backgroundCards
         self.numberOfBetsLabels.textColor = UIColor.App.textPrimary
         self.eventNameLabel.textColor = UIColor.App.textSecondary
@@ -256,7 +259,39 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
-        
+
+        if isLeftOutcomeButtonSelected {
+            self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isMiddleOutcomeButtonSelected {
+            self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isRightOutcomeButtonSelected {
+            self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.textPrimary
+        }
     }
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {

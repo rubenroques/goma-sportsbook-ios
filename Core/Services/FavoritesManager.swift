@@ -15,6 +15,7 @@ class FavoritesManager {
     var requestGomaFavoritesEndpointsPublisher: CurrentValueSubject<Bool, Never>
     var cancellables = Set<AnyCancellable>()
     var favoriteIdToRemove: String = ""
+    var favoriteTypeCheckPublisher: CurrentValueSubject<FavoriteType, Never> = .init(.none)
 
     init(eventsId: [String] = []) {
         self.favoriteEventsIdPublisher = .init(eventsId)
@@ -72,12 +73,18 @@ class FavoritesManager {
             .store(in: &cancellables)
     }
 
-    private func postUserMetadata(favoriteEvents: [String]) {
+    private func postUserMetadata(favoriteEvents: [String], favoriteTypeChanged: FavoriteType) {
         Env.everyMatrixClient.postUserMetadata(favoriteEvents: favoriteEvents)
             .receive(on: DispatchQueue.main)
             .eraseToAnyPublisher()
             .sink { _ in
             } receiveValue: { _ in
+                if favoriteTypeChanged == .match {
+                    self.favoriteTypeCheckPublisher.send(.match)
+                }
+                else if favoriteTypeChanged == .competition {
+                    self.favoriteTypeCheckPublisher.send(.competition)
+                }
                 self.requestGomaFavoritesEndpointsPublisher.send(true)
             }
             .store(in: &cancellables)
@@ -131,7 +138,8 @@ class FavoritesManager {
         Env.gomaNetworkClient.addFavorites(deviceId: Env.deviceId, favorites: gomaFavorites)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
-            }, receiveValue: { _ in
+            }, receiveValue: { response in
+                print("ADD FAV GOMA: \(response)")
             })
             .store(in: &cancellables)
 
@@ -142,7 +150,8 @@ class FavoritesManager {
         Env.gomaNetworkClient.removeFavorite(deviceId: Env.deviceId, favorite: favorite)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
-            }, receiveValue: { _ in
+            }, receiveValue: { response in
+                print("DELETE FAV GOMA: \(response)")
             })
             .store(in: &cancellables)
     }
@@ -153,15 +162,16 @@ class FavoritesManager {
 
     // TODO: Code Review - Isto ficou por corrigir, o check faz tudo, e não pode, tem que haver um addFavorite, um removeFavorite e é isso. O postUserMetadata tem que ser private, não pode ser chamado fora do manager. UPDATE: Corrigido
 
-    func addFavorite(eventId: String, favoriteType: String) {
+    func addFavorite(eventId: String, favoriteType: FavoriteType) {
         var favoriteEventsId = self.favoriteEventsIdPublisher.value
         favoriteEventsId.append(eventId)
         self.favoriteEventsIdPublisher.send(favoriteEventsId)
 
-        self.postUserMetadata(favoriteEvents: favoriteEventsId)
+        self.postUserMetadata(favoriteEvents: favoriteEventsId, favoriteTypeChanged: favoriteType)
+
     }
 
-    func removeFavorite(eventId: String, favoriteType: String) {
+    func removeFavorite(eventId: String, favoriteType: FavoriteType) {
         var favoriteEventsId = self.favoriteEventsIdPublisher.value
         
         for favoriteEventId in favoriteEventsId where eventId == favoriteEventId {
@@ -173,8 +183,14 @@ class FavoritesManager {
 
         self.favoriteIdToRemove = eventId
 
-        self.postUserMetadata(favoriteEvents: favoriteEventsId)
+        self.postUserMetadata(favoriteEvents: favoriteEventsId, favoriteTypeChanged: favoriteType)
 
     }
 
+}
+
+enum FavoriteType {
+    case match
+    case competition
+    case none
 }

@@ -27,6 +27,8 @@ class MyFavoritesViewModel: NSObject {
     var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
     var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
 
+    var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
+
     enum FavoriteListType {
         case favoriteGames
         case favoriteCompetitions
@@ -125,10 +127,10 @@ class MyFavoritesViewModel: NSObject {
         }
         
         if isFavorite {
-            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: "event")
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
         }
         else {
-            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: "event")
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
         }
     }
     
@@ -140,20 +142,39 @@ class MyFavoritesViewModel: NSObject {
         }
         
         if isFavorite {
-            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: "competition")
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
         }
         else {
-            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: "competition")
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
         }
    
     }
     
     private func setupPublishers() {
-        Env.favoritesManager.favoriteEventsIdPublisher
+
+        Publishers.CombineLatest(Env.favoritesManager.favoriteEventsIdPublisher, Env.favoritesManager.favoriteTypeCheckPublisher)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] favoriteEvents in
-                self?.fetchFavoriteMatches()
-                self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
+            .sink(receiveValue: { [weak self] favoriteEvents, favoriteType in
+
+                if UserSessionStore.isUserLogged() {
+                    if favoriteType == .none && self?.favoriteListTypePublisher.value == .favoriteGames {
+                        self?.fetchFavoriteMatches()
+                        self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
+                    }
+                    else if favoriteType == .match && self?.favoriteListTypePublisher.value == .favoriteGames {
+                        self?.fetchFavoriteMatches()
+                    }
+                    else if favoriteType == .match && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
+                        self?.fetchFavoriteMatches()
+                    }
+                    else if favoriteType == .competition && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
+                        self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
+                    }
+                }
+                else {
+                    self?.dataChangedPublisher.send()
+                    self?.emptyStateStatusPublisher.send(.noLogin)
+                }
             })
             .store(in: &cancellables)
     }
@@ -176,11 +197,11 @@ class MyFavoritesViewModel: NSObject {
         self.favoriteMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving Favorite data!")
-
+                    self?.dataChangedPublisher.send()
                 case .finished:
                     print("Favorite Data retrieved!")
                 }
@@ -233,10 +254,11 @@ class MyFavoritesViewModel: NSObject {
         self.favoriteCompetitionsMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
+                    self?.dataChangedPublisher.send()
                 case .finished:
                     print("Data retrieved!")
                 }
@@ -307,8 +329,7 @@ class MyFavoritesViewModel: NSObject {
     }
 
     private func updateFavoriteCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-
-        // Env.favoritesStorage.processContentUpdateAggregator(aggregator)
+        
         self.store.processContentUpdateAggregator(aggregator)
 
     }
@@ -320,6 +341,24 @@ class MyFavoritesViewModel: NSObject {
         self.myFavoriteCompetitionsDataSource.competitions = self.favoriteCompetitions
 
         self.dataChangedPublisher.send()
+
+        if UserSessionStore.isUserLogged() {
+            if self.favoriteMatches.isEmpty && self.favoriteCompetitions.isEmpty {
+                self.emptyStateStatusPublisher.send(.noFavorites)
+            }
+            else if self.favoriteMatches.isEmpty {
+                self.emptyStateStatusPublisher.send(.noGames)
+            }
+            else if self.favoriteCompetitions.isEmpty {
+                self.emptyStateStatusPublisher.send(.noCompetitions)
+            }
+            else {
+                self.emptyStateStatusPublisher.send(.none)
+            }
+        }
+        else {
+            self.emptyStateStatusPublisher.send(.noLogin)
+        }
     }
 }
 

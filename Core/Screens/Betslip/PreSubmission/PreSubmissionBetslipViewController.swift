@@ -400,6 +400,14 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.selectedSegmentIndex = 1
                 }
 
+                if tickets.count >= 9 {
+                    if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
+                        self?.betTypeSegmentControl.selectedSegmentIndex = 1
+                    }
+
+                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+                }
+
                 if let segmentControl = self?.betTypeSegmentControl,
                    let newSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex,
                    newSegmentIndex != oldSegmentIndex {

@@ -10,7 +10,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DepositViewController" customModule="ShowcaseBeta" customModuleProvider="target">
             <connections>
-                <outlet property="activityIndicatorView" destination="D6U-Id-Np1" id="cqf-Fx-dmS"/>
                 <outlet property="amount100Button" destination="Jdh-zE-bjE" id="xpy-xi-Z4m"/>
                 <outlet property="amount10Button" destination="Bho-EI-4ya" id="n8M-7M-EMs"/>
                 <outlet property="amount20Button" destination="7O1-9G-yXH" id="mDV-Fd-ULD"/>
@@ -124,9 +123,6 @@
                             <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="D6U-Id-Np1">
-                            <rect key="frame" x="188.5" y="436" width="37" height="37"/>
-                        </activityIndicatorView>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="cjs-fx-QLC">
                             <rect key="frame" x="30" y="291" width="354" height="45"/>
                             <subviews>
@@ -175,7 +171,6 @@
                     <constraints>
                         <constraint firstAttribute="trailing" secondItem="5qH-bK-e05" secondAttribute="trailing" constant="30" id="1yx-hc-3ce"/>
                         <constraint firstItem="cey-8B-Vi3" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="50" id="22K-zf-eXo"/>
-                        <constraint firstItem="D6U-Id-Np1" firstAttribute="centerX" secondItem="cpr-u3-egP" secondAttribute="centerX" id="31o-kQ-1Rf"/>
                         <constraint firstAttribute="trailing" secondItem="cjs-fx-QLC" secondAttribute="trailing" constant="30" id="3hE-88-bjB"/>
                         <constraint firstItem="Ngw-aR-kDb" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="4zq-GP-feW"/>
                         <constraint firstItem="K8a-m3-CIw" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="51a-C4-534"/>
@@ -201,7 +196,6 @@
                         <constraint firstItem="A0t-8w-ZtH" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="crB-F3-GPB"/>
                         <constraint firstItem="puZ-O4-0OE" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" id="e0t-v2-Xq6"/>
                         <constraint firstItem="5qH-bK-e05" firstAttribute="top" secondItem="A0t-8w-ZtH" secondAttribute="bottom" constant="8" id="fRl-tQ-1Bo"/>
-                        <constraint firstItem="D6U-Id-Np1" firstAttribute="top" secondItem="K8a-m3-CIw" secondAttribute="bottom" constant="20" id="h1e-Hm-VLQ"/>
                         <constraint firstAttribute="trailing" secondItem="puZ-O4-0OE" secondAttribute="trailing" id="oRp-YM-YwH"/>
                         <constraint firstAttribute="trailing" secondItem="K8a-m3-CIw" secondAttribute="trailing" constant="30" id="qaE-DC-qJp"/>
                         <constraint firstItem="qx4-fc-HRP" firstAttribute="leading" secondItem="cpr-u3-egP" secondAttribute="leading" constant="30" id="y6A-KN-vfN"/>
