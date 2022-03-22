@@ -58,14 +58,6 @@ class MatchDetailsAggregatorRepository: NSObject {
         self.matchId = matchId
 
         super.init()
-
-        self.connectPublishers()
-    }
-
-    func connectPublishers() {
-        self.connectMarketGroupsPublisher()
-        // market groups details are called after the groups are processed (matchMarketGroupsPublisher initial dump)
-        self.getLocations()
     }
 
     func getLocations() {
@@ -144,6 +136,10 @@ class MatchDetailsAggregatorRepository: NSObject {
 
     func connectMarketGroupListDetailsPublisher() {
 
+        /*
+
+
+
         //
         // cancel old market groups observations
         self.marketGroupsDetailsCancellable.forEach({ $0.cancel() })
@@ -217,6 +213,7 @@ class MatchDetailsAggregatorRepository: NSObject {
                 .store(in: &marketGroupsDetailsCancellable)
 
         }
+*/
 
     }
 
@@ -239,6 +236,10 @@ class MatchDetailsAggregatorRepository: NSObject {
         self.marketGroupsPublisher.send(marketGroupsArray)
     }
 
+    func marketGroupsArray() -> [EveryMatrix.MarketGroup] {
+        return Array(marketGroups.values)
+    }
+
     func updateStoredMarketGroups(fromAggregator aggregator: EveryMatrix.Aggregator) {
 
 //        for content in aggregator.contentUpdates ?? [] {
@@ -253,7 +254,7 @@ class MatchDetailsAggregatorRepository: NSObject {
 //        }
 
     }
-
+/*
     func storeMarketGroupDetails(fromAggregator aggregator: EveryMatrix.Aggregator, onMarketGroup marketGroupKey: String) {
 
         for content in aggregator.content ?? [] {
@@ -343,136 +344,7 @@ class MatchDetailsAggregatorRepository: NSObject {
             }
         }
     }
-
-    func marketsForGroup(withGroupKey key: String) -> [MergedMarketGroup] {
-        guard let marketsIds = self.marketsForGroup[key] else { return [] }
-
-        var allMarkets: [Market] = []
-
-        var similarMarkets: [String: [Market]] = [:]
-        var similarMarketsNames: [String: String] = [:]
-        var similarMarketsOrdered: OrderedSet<String> = []
-
-        let rawMarketsList = marketsIds.map { id in
-            return self.marketsPublishers[id]?.value
-        }
-        .compactMap({$0})
-
-        for rawMarket  in rawMarketsList {
-
-            let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
-
-            let rawOutcomesList = rawOutcomeIds.map { id in
-                return self.betOutcomes[id]
-            }
-            .compactMap({$0})
-
-            var outcomes: [Outcome] = []
-            for rawOutcome in rawOutcomesList {
-
-                if let rawBettingOffer = self.bettingOffers[rawOutcome.id] {
-                    let bettingOffer = BettingOffer(id: rawBettingOffer.id,
-                                                    value: rawBettingOffer.oddsValue ?? 0.0,
-                                                    statusId: rawBettingOffer.statusId ?? "1",
-                                                    isLive: rawBettingOffer.isLive ?? false,
-                                                    isAvailable: rawBettingOffer.isAvailable ?? true)
-
-                    let outcome = Outcome(id: rawOutcome.id,
-                                          codeName: rawOutcome.headerNameKey ?? "",
-                                          typeName: rawOutcome.headerName ?? "Draw",
-                                          translatedName: rawOutcome.translatedName ?? "",
-                                          nameDigit1: rawOutcome.paramFloat1,
-                                          nameDigit2: rawOutcome.paramFloat2,
-                                          nameDigit3: rawOutcome.paramFloat3,
-                                          paramBoolean1: rawOutcome.paramBoolean1,
-                                          marketName: rawMarket.shortName ?? "",
-                                          marketId: rawMarket.id,
-                                          bettingOffer: bettingOffer)
-                    outcomes.append(outcome)
-                }
-            }
-
-            let sortedOutcomes = outcomes.sorted { out1, out2 in
-                let out1Value = OddOutcomesSortingHelper.sortValueForOutcome(out1.codeName)
-                let out2Value = OddOutcomesSortingHelper.sortValueForOutcome(out2.codeName)
-                return out1Value < out2Value
-            }
-
-            let similarMarketKey = "\(rawMarket.eventPartId ?? "000")-\(rawMarket.bettingTypeId ?? "000")-\(rawMarket.paramParticipantId1 ?? "x")-\(rawMarket.paramParticipantId2 ?? "x")"
-
-            let market = Market(id: rawMarket.id,
-                                typeId: rawMarket.bettingTypeId ?? "",
-                                name: rawMarket.displayShortName ?? "",
-                                nameDigit1: rawMarket.paramFloat1,
-                                nameDigit2: rawMarket.paramFloat2,
-                                nameDigit3: rawMarket.paramFloat3,
-                                eventPartId: rawMarket.eventPartId,
-                                bettingTypeId: rawMarket.bettingTypeId,
-                                outcomes: sortedOutcomes)
-            allMarkets.append(market)
-            similarMarketsOrdered.append(similarMarketKey)
-
-            if var similarMarketsList = similarMarkets[similarMarketKey] {
-                similarMarketsList.append(market)
-                similarMarkets[similarMarketKey] = similarMarketsList
-            }
-            else {
-                similarMarkets[similarMarketKey] = [market]
-            }
-
-            similarMarketsNames[similarMarketKey] = rawMarket.displayShortName ?? ""
-
-        }
-
-        var mergedMarketGroups: [MergedMarketGroup] = []
-
-        for marketKey in similarMarketsOrdered {
-
-            if let value = similarMarkets[marketKey] {
-
-                guard let firstMarket = value.first else { continue }
-
-                let allOutcomes = value.flatMap({ $0.outcomes })
-                var outcomesDictionary: [String: [Outcome]] = [:]
-
-                for outcomeIt in allOutcomes {
-                    let outcomeTypeName = outcomeIt.typeName
-                    if var outcomesList = outcomesDictionary[outcomeTypeName] {
-                        outcomesList.append(outcomeIt)
-                        outcomesDictionary[outcomeTypeName] = outcomesList
-                    }
-                    else {
-                        outcomesDictionary[outcomeTypeName] = [outcomeIt]
-                    }
-                }
-
-                let marketGroupName = similarMarketsNames[marketKey] ?? ""
-
-                if value.count == 1 {
-                    let mergedMarketGroup = MergedMarketGroup(id: firstMarket.id,
-                                                                typeId: firstMarket.typeId,
-                                                                name: marketGroupName,
-                                                                index: 0,
-                                                                numberOfMarkets: value.count,
-                                                                outcomes: outcomesDictionary)
-                    mergedMarketGroups.append(mergedMarketGroup)
-                }
-                else {
-                    let mergedMarketGroup = MergedMarketGroup(id: firstMarket.id,
-                                                                typeId: firstMarket.typeId,
-                                                                name: marketGroupName,
-                                                                index: 0,
-                                                                numberOfMarkets: value.count,
-                                                                outcomes: outcomesDictionary)
-                    mergedMarketGroups.append(mergedMarketGroup)
-                }
-
-            }
-        }
-
-        return mergedMarketGroups
-    }
-
+*/
     func marketGroupOrganizers(withGroupKey key: String) -> [MarketGroupOrganizer] {
         guard let marketsIds = self.marketsForGroup[key] else { return [] }
 

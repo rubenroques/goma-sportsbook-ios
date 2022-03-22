@@ -18,11 +18,17 @@ class MatchStatsViewModel {
 
     var statsTypePublisher: CurrentValueSubject<JSON?, Never> = .init(nil)
 
-    private var match: Match
+    private var matchId: String
     private var requestMatchStatsCancellable: AnyCancellable?
 
     init(match: Match) {
-        self.match = match
+        self.matchId = match.id
+
+        self.requestStats()
+    }
+
+    init(matchId: String) {
+        self.matchId = matchId
 
         self.requestStats()
     }
@@ -30,7 +36,7 @@ class MatchStatsViewModel {
     private func requestStats() {
 
         let deviceId = Env.deviceId
-        self.requestMatchStatsCancellable = Env.gomaNetworkClient.requestMatchStats(deviceId: deviceId, matchId: self.match.id)
+        self.requestMatchStatsCancellable = Env.gomaNetworkClient.requestMatchStats(deviceId: deviceId, matchId: matchId)
             .sink { completion in
                 print("RequestMatchStats completion ", completion)
             } receiveValue: { [weak self] json in

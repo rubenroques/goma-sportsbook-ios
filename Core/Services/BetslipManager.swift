@@ -253,7 +253,7 @@ class BetslipManager: NSObject {
 //
 extension BetslipManager {
 
-    func requestSimpleBetslipSelectionState() {
+    func requestSimpleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
 
         let ticketSelections = self.updatedBettingTicketsOdds()
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
@@ -263,7 +263,7 @@ extension BetslipManager {
             let route = TSRouter.getBetslipSelectionInfo(language: "en",
                                                          stakeAmount: 1,
                                                          betType: .single,
-                                                         tickets: [ticket])
+                                                         tickets: [ticket], oddsBoostPercentage: oddsBoostPercentage)
 
             Env.everyMatrixClient.manager
                 .getModel(router: route, decodingType: BetslipSelectionState.self)
@@ -286,7 +286,7 @@ extension BetslipManager {
 
     }
 
-    func requestMultipleBetslipSelectionState() {
+    func requestMultipleBetslipSelectionState(oddsBoostPercentage: Double? = nil) {
 
         let ticketSelections = self.updatedBettingTicketsOdds()
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
@@ -294,7 +294,7 @@ extension BetslipManager {
         let route = TSRouter.getBetslipSelectionInfo(language: "en",
                                                      stakeAmount: 1,
                                                      betType: .multiple,
-                                                     tickets: ticketSelections)
+                                                     tickets: ticketSelections, oddsBoostPercentage: oddsBoostPercentage)
 
         Env.everyMatrixClient.manager
             .getModel(router: route, decodingType: BetslipSelectionState.self)
@@ -331,10 +331,11 @@ extension BetslipManager {
 
     ///
     ///
-    func placeAllSingleBets(withSkateAmount amounts: [String: Double]) -> AnyPublisher<[BetPlacedDetails], EveryMatrix.APIError> {
+    func placeAllSingleBets(withSkateAmount amounts: [String: Double], singleFreeBet: SingleBetslipFreebet? = nil, singleOddsBoost: SingleBetslipOddsBoost? = nil) ->
+    AnyPublisher<[BetPlacedDetails], EveryMatrix.APIError> {
 
         let future = Future<[BetPlacedDetails], EveryMatrix.APIError>.init({ promise in
-            self.placeNextSingleBet(betPlacedDetailsList: [], amounts: amounts, completion: { result in
+            self.placeNextSingleBet(betPlacedDetailsList: [], amounts: amounts, singleFreeBet: singleFreeBet, singleOddsBoost: singleOddsBoost, completion: { result in
                 switch result {
                 case .success(let betPlacedDetailsList):
                     promise(.success(betPlacedDetailsList))
@@ -350,6 +351,8 @@ extension BetslipManager {
 
     private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails],
                                      amounts: [String: Double],
+                                     singleFreeBet: SingleBetslipFreebet?,
+                                     singleOddsBoost: SingleBetslipOddsBoost?,
                                      completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void) {
 
         let ticketSelections = self.updatedBettingTicketsOdds()
@@ -361,7 +364,7 @@ extension BetslipManager {
         }
 
         if let lastTicket = ticketSelections.first, let lastTicketAmount = amounts[lastTicket.id] {
-            placeSingleBet(betTicketId: lastTicket.id, amount: lastTicketAmount)
+            placeSingleBet(betTicketId: lastTicket.id, amount: lastTicketAmount, singleFreeBet: singleFreeBet, singleOddsBoost: singleOddsBoost)
                 .receive(on: DispatchQueue.main)
                 .sink(receiveCompletion: { (publisherCompletion: Subscribers.Completion<EveryMatrix.APIError>) -> Void in
                     switch publisherCompletion {
@@ -374,7 +377,7 @@ extension BetslipManager {
                             self.removeBettingTicket(withId: lastTicket.id)
                             var newList = betPlacedDetailsList
                             newList.append(betPlacedDetails)
-                        self.placeNextSingleBet(betPlacedDetailsList: newList, amounts: amounts, completion: completion)
+                        self.placeNextSingleBet(betPlacedDetailsList: newList, amounts: amounts, singleFreeBet: singleFreeBet, singleOddsBoost: singleOddsBoost, completion: completion)
                     }
                     else {
                         var newList = betPlacedDetailsList
@@ -387,16 +390,34 @@ extension BetslipManager {
         }
     }
     
-    private func placeSingleBet(betTicketId: String, amount: Double) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
+    private func placeSingleBet(betTicketId: String, amount: Double, singleFreeBet: SingleBetslipFreebet?, singleOddsBoost: SingleBetslipOddsBoost?) ->
+    AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
         let ticketSelections = updatedTicketSelections.filter({ bettingTicket in
             bettingTicket.id == betTicketId
         }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
         let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
+
+        var betAmount = amount
+        var isFreeBet = false
+        var ubsWalletId = ""
+
+        if let singleFreeBet = singleFreeBet, singleFreeBet.bettingId == betTicketId {
+            betAmount = singleFreeBet.freeBet.freeBetAmount
+            isFreeBet = true
+            ubsWalletId = singleFreeBet.freeBet.walletId
+        }
+
+        if let singleOddsBoost = singleOddsBoost, singleOddsBoost.bettingId == betTicketId {
+            ubsWalletId = singleOddsBoost.oddsBoost.walletId
+        }
+
         let route = TSRouter.placeBet(language: "en",
-                                      amount: amount,
+                                      amount: betAmount,
                                       betType: .single,
-                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY")
+                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY",
+                                      freeBet: isFreeBet,
+                                      ubsWalletId: ubsWalletId)
 
         Logger.log("BetslipManager - Submitting single bet: \(route)")
 
@@ -410,16 +431,33 @@ extension BetslipManager {
         
     }
 
-    func placeMultipleBet(withSkateAmount amount: Double) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
+    func placeMultipleBet(withSkateAmount amount: Double, freeBet: BetslipFreebet? = nil, oddsBoost: BetslipOddsBoost? = nil) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
 
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
         let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
+
+        var betAmount = amount
+        var isFreeBet = false
+        var ubsWalletId = ""
+
+        if let freeBet = freeBet {
+            betAmount = freeBet.freeBetAmount
+            isFreeBet = true
+            ubsWalletId = freeBet.walletId
+        }
+
+        if let oddsBoost = oddsBoost {
+            ubsWalletId = oddsBoost.walletId
+        }
+
         let route = TSRouter.placeBet(language: "en",
-                                      amount: amount,
+                                      amount: betAmount,
                                       betType: .multiple,
-                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY")
+                                      tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY",
+                                      freeBet: isFreeBet,
+                                      ubsWalletId: ubsWalletId)
 
         Logger.log("BetslipManager - Submitting multiple bet: \(route)")
 
@@ -435,17 +473,28 @@ extension BetslipManager {
             .eraseToAnyPublisher()
     }
 
-    func placeSystemBet(withSkateAmount amount: Double, systemBetType: SystemBetType) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
+    func placeSystemBet(withSkateAmount amount: Double, systemBetType: SystemBetType, freeBet: BetslipFreebet? = nil) -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
 
         let updatedTicketSelections = self.updatedBettingTicketsOdds()
         let ticketSelections = updatedTicketSelections
             .map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
         let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
 
+        var betAmount = amount
+        var isFreeBet = false
+        var ubsWalletId = ""
+        if let freeBet = freeBet {
+            betAmount = freeBet.freeBetAmount
+            isFreeBet = true
+            ubsWalletId = freeBet.walletId
+        }
+
         let route = TSRouter.placeSystemBet(language: "en",
-                                            amount: amount,
+                                            amount: betAmount,
                                             systemBetType: systemBetType,
-                                            tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY")
+                                            tickets: ticketSelections, oddsValidationType: userBetslipSetting ?? "ACCEPT_ANY",
+                                            freeBet: isFreeBet,
+                                            ubsWalletId: ubsWalletId)
 
         Logger.log("BetslipManager - Submitting system bet: \(route)")
         

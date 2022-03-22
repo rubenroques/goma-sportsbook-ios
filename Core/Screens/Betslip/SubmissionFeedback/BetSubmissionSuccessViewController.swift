@@ -38,11 +38,14 @@ class BetSubmissionSuccessViewController: UIViewController {
     var possibleEarningsValue: String
     var numberOfBets: Int
     var isChecked : Bool = true
+    private var betPlacedDetailsArray : [BetPlacedDetails]
 
     var willDismissAction: (() -> Void)?
 
     init(betPlacedDetailsArray: [BetPlacedDetails]) {
 
+        self.betPlacedDetailsArray = betPlacedDetailsArray
+        
         //
         // Possible Earnings
         var possibleEarningsDouble = betPlacedDetailsArray
@@ -54,10 +57,13 @@ class BetSubmissionSuccessViewController: UIViewController {
         possibleEarningsDouble = Double(floor(possibleEarningsDouble * 100)/100)
         self.possibleEarningsValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleEarningsDouble)) ?? "-.--€"
 
+        
+       
         //
         // Total Odd
         let totalOddDouble = betPlacedDetailsArray
             .map({ betPlacedDetails in
+                
                 betPlacedDetails.response.totalPriceValue ?? 1.0
             })
             .reduce(1.0, *)
@@ -81,7 +87,14 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.possibleEarningsValueLabel.text = possibleEarningsValue
         self.totalOddsValueLabel.text = totalOddsValue
         self.betsMadeValueLabel.text = String(numberOfBets)
-
+        
+        if let betType = betPlacedDetailsArray.first?.response.type {
+            if betType == "SYSTEM" {
+                self.totalOddsLabel.isHidden = true
+                self.totalOddsValueLabel.isHidden = true
+                
+            }
+        }
         self.setupWithTheme()
     
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
@@ -94,8 +107,6 @@ class BetSubmissionSuccessViewController: UIViewController {
 
         self.setupWithTheme()
     }
-
-    
 
     func setupWithTheme() {
 

@@ -410,6 +410,8 @@ class ProfileViewController: UIViewController {
         supportIconImageView.backgroundColor = .clear
         supportLabel.textColor =  UIColor.App.textPrimary
 
+        infoLabel.textColor = UIColor.App.textPrimary
+        
         logoutBaseView.backgroundColor = .clear
         infoBaseView.backgroundColor = .clear
     }
@@ -487,7 +489,8 @@ extension ProfileViewController {
     }
 
     @objc func bonusViewTapped() {
-
+        let bonusViewController = BonusViewController()
+        self.navigationController?.pushViewController(bonusViewController, animated: true)
     }
 
     @objc func historyViewTapped() {

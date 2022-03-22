@@ -12,7 +12,7 @@ enum EveryMatrix {
 }
 
 extension EveryMatrix {
-    
+
     struct OperatorInfo: Codable {
         var providerId: Int?
         var groupId: Int?

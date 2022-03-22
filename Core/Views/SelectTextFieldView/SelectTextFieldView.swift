@@ -17,8 +17,6 @@ class SelectTextFieldView: NibView {
     @IBOutlet private var textField: UITextField!
     @IBOutlet private var iconLabelImageView: UIImageView!
     // Constraints
-    @IBOutlet private var labelImageConstraint: NSLayoutConstraint!
-    @IBOutlet private var labelLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var textFieldLeadingConstraint: NSLayoutConstraint!
     @IBOutlet private var textFieldImageConstraint: NSLayoutConstraint!
 
@@ -31,6 +29,19 @@ class SelectTextFieldView: NibView {
 
     var textPublisher: AnyPublisher<String?, Never> {
         return self.textField.textPublisher
+    }
+
+    var isDisabled: Bool = false {
+        didSet {
+            if self.isDisabled {
+                self.isUserInteractionEnabled = false
+                self.containerView.alpha = 0.7
+            }
+            else {
+                self.isUserInteractionEnabled = true
+                self.containerView.alpha = 1
+            }
+        }
     }
 
     override init(frame: CGRect) {
@@ -74,7 +85,7 @@ class SelectTextFieldView: NibView {
         containerView.addGestureRecognizer(viewTapGesture)
     }
 
-    @objc func didTapView(){
+    @objc func didTapView() {
         textField.becomeFirstResponder()
     }
     
@@ -103,6 +114,8 @@ class SelectTextFieldView: NibView {
             iconLabelImageView.isHidden = false
             iconLabelImageView.image = iconArray[0]
             selectionIconArray = iconArray
+            textFieldLeadingConstraint.isActive = false
+            textFieldImageConstraint.isActive = true
         }
 
         selectionArray = array
@@ -114,6 +127,27 @@ class SelectTextFieldView: NibView {
         textField.text = selectionArray[0]
 
         dismissPickerView()
+    }
+
+    func setDefaultPickerOption(option: String, lowerCasedString: Bool = false) {
+
+        for (key, selection) in selectionArray.enumerated() {
+            var selectionString = selection
+            if lowerCasedString {
+                selectionString = selectionString.lowercased()
+            }
+            if option == selectionString {
+                pickerView.selectRow(key, inComponent: 0, animated: true)
+                textField.text = selection
+            }
+        }
+    }
+
+    func getPickerOption() -> String {
+        if let pickerOption = self.textField.text {
+            return pickerOption
+        }
+        return ""
     }
 
     func dismissPickerView() {

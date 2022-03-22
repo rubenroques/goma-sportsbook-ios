@@ -27,8 +27,22 @@ class DepositViewController: UIViewController {
     @IBOutlet private var paymentsLogosStackView: UIStackView!
     @IBOutlet private var responsibleGamingLabel: UILabel!
     @IBOutlet private var faqLabel: UILabel!
-    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var depositTipLabel: UILabel!
+
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+
+    private var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+            }
+        }
+    }
 
     // Variables
     var currentSelectedButton: UIButton?
@@ -37,6 +51,7 @@ class DepositViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
 
@@ -96,7 +111,7 @@ class DepositViewController: UIViewController {
 
         self.setupPublishers()
 
-        self.activityIndicatorView.isHidden = true
+        self.isLoading = false
     }
 
     func setupWithTheme() {
@@ -133,6 +148,8 @@ class DepositViewController: UIViewController {
         self.paymentsLabel.textColor = UIColor.App.textSecondary
 
         self.paymentsLogosStackView.backgroundColor = .clear
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
     }
 
     func setupPublishers() {
@@ -393,8 +410,8 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTapNextButton() {
-        self.activityIndicatorView.isHidden = false
-
+        self.isLoading = true
+    
         let amountText = self.depositHeaderTextFieldView.text
         let amount = amountText.replacingOccurrences(of: ",", with: ".")
         var currency = ""
@@ -404,22 +421,29 @@ class DepositViewController: UIViewController {
             currency = walletCurrency
         }
         else {
-            self.showErrorAlert()
-            self.activityIndicatorView.isHidden = true
+            self.showErrorAlert(errorType: .wallet)
+            self.isLoading = false
         }
 
         if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
             gamingAccountId = "\(walletGamingAccountId)"
         }
         else {
-            self.showErrorAlert()
-            self.activityIndicatorView.isHidden = true
+            self.showErrorAlert(errorType: .wallet)
+            self.isLoading = false
         }
 
         Env.everyMatrixClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                self.activityIndicatorView.isHidden = true
+            .sink(receiveCompletion: {completion in
+                switch completion {
+                case .failure(let error):
+                    print("DEPOSIT ERROR: \(error)")
+                    self.showErrorAlert(errorType: .deposit)
+                case .finished:
+                    ()
+                }
+                self.isLoading = false
 
             }, receiveValue: { value in
                 let depositWebViewController = DepositWebViewController(depositUrl: value.cashierUrl)
@@ -430,9 +454,21 @@ class DepositViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    func showErrorAlert() {
-        let alert = UIAlertController(title: localized("wallet_error"),
-                                      message: localized("wallet_error_message"),
+    func showErrorAlert(errorType: DepositErrorType) {
+
+        var errorTitle = ""
+        var errorMessage = ""
+
+        if errorType == .wallet {
+            errorTitle = localized("wallet_error")
+            errorMessage = localized("wallet_error_message")
+        }
+        else if errorType == .deposit {
+            errorTitle = localized("deposit_error")
+            errorMessage = localized("deposit_error_message")
+        }
+        let alert = UIAlertController(title: errorTitle,
+                                      message: errorMessage,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
@@ -467,4 +503,53 @@ class DepositViewController: UIViewController {
         self.currentSelectedButton = nil
     }
 
+}
+
+extension DepositViewController {
+
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
+    private func setupSubviews() {
+
+        self.containerView.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
+
+        self.initConstraints()
+
+        self.containerView.bringSubviewToFront(self.loadingBaseView)
+
+    }
+
+    private func initConstraints() {
+
+        // Loading View
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
+        ])
+    }
+
+}
+
+enum DepositErrorType {
+    case wallet
+    case deposit
 }

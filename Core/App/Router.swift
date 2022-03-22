@@ -9,6 +9,13 @@ import UIKit
 import Combine
 import SwiftUI
 
+enum Route {
+    case openBet(id: String)
+    case resolvedBet(id: String)
+    case event(id: String)
+    case none
+}
+
 class Router {
 
     var rootWindow: UIWindow
@@ -16,15 +23,13 @@ class Router {
         UIApplication.shared.windows.first?.rootViewController
     }
 
-    var sharedBetsRegisters: [EndpointPublisherIdentifiable] = []
-    var isSharedBet: Bool = false
-    var ticketPublisher: AnyCancellable?
-    var cancellables = Set<AnyCancellable>()
-
+    private var cancellables = Set<AnyCancellable>()
     private var showingDebugViewController: Bool = false
 
     var blockerViewController: UIViewController?
     var screenBlocker: ScreenBlocker = .none
+
+    var startingRoute: Route = .none
 
     enum ScreenBlocker {
         case maintenance
@@ -37,6 +42,15 @@ class Router {
 
     init(window: UIWindow) {
         self.rootWindow = window
+
+
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.didBecomeActiveNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
+                                               name: UIApplication.willEnterForegroundNotification,
+                                               object: nil)
+
     }
 
     func makeKeyAndVisible() {
@@ -49,10 +63,15 @@ class Router {
         self.rootWindow.makeKeyAndVisible()
     }
 
+    @objc func applicationDidBecomeActive(notification: NSNotification) {
+
+    }
+
     func showPostLoadingFlow() {
 
         self.subscribeToUserActionBlockers()
-        self.subscribeToUserActionRedirects()
+        self.subscribeToURLRedirects()
+        self.subscribeToNotificationsOpened()
 
         var bootRootViewController: UIViewController
         if UserSessionStore.isUserLogged() || UserSessionStore.didSkipLoginFlow() {
@@ -63,13 +82,6 @@ class Router {
         }
 
         self.rootWindow.rootViewController = bootRootViewController
-//        let viewModel =  OutrightMarketDetailsViewModel(competition:
-//                                                            Competition(id: "157127366340038656",
-//                                                                        name: "F1",
-//                                                                        outrightMarkets: 0),
-//                                                        store: OutrightMarketDetailsStore())
-//        self.rootWindow.rootViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
-        
     }
 
     func subscribeToUserActionBlockers() {
@@ -132,27 +144,63 @@ class Router {
             .store(in: &cancellables)
     }
 
-    func subscribeToUserActionRedirects() {
+    func subscribeToURLRedirects() {
         Publishers.CombineLatest(Env.urlSchemaManager.redirectPublisher, Env.everyMatrixClient.serviceStatusPublisher)
                     .receive(on: DispatchQueue.main)
                     .sink(receiveValue: { [weak self] urlSubject, serviceStatus in
-
                         if serviceStatus == .connected {
-
                             if Env.everyMatrixClient.manager.isConnected {
                                 if let urlSubject = urlSubject["gamedetail"] {
-
                                     self?.showMatchDetailScreen(matchId: urlSubject)
-
                                 }
                                 else if let urlSubject = urlSubject["bet"] {
 
-                                    self?.getBetslipTicketData(betToken: urlSubject)
+                                    self?.subscribeBetslipSharedTicketStatus(betToken: urlSubject)
                                 }
                             }
                         }
                     })
                     .store(in: &cancellables)
+    }
+
+    func subscribeToNotificationsOpened() {
+        Env.everyMatrixClient.serviceStatusPublisher
+                    .receive(on: DispatchQueue.main)
+                    .sink(receiveValue: { [weak self] serviceStatus in
+                        if let requestStartingRoute = self?.requestStartingRoute(),
+                           serviceStatus == .connected {
+                            self?.openRoute(requestStartingRoute)
+                        }
+                    })
+                    .store(in: &cancellables)
+    }
+
+    // Open from notifications
+    func configureStartingRoute(_ route: Route) {
+        self.startingRoute = route
+    }
+
+    func requestStartingRoute() -> Route {
+        let tempStartingRoute = self.startingRoute
+        self.startingRoute = .none
+        return tempStartingRoute
+    }
+
+    func openedNotificationRouteWhileActive(_ route: Route) {
+        self.openRoute(route)
+    }
+
+    func openRoute(_ route: Route) {
+        switch route {
+        case .openBet(let id):
+            self.showMyTickets(ticketType: MyTicketsType.opened, ticketId: id)
+        case .resolvedBet(let id):
+            self.showMyTickets(ticketType: MyTicketsType.resolved, ticketId: id)
+        case .event(let id):
+            self.showMatchDetailScreen(matchId: id)
+        case .none:
+            ()
+        }
     }
 
     // MaintenanceScreen
@@ -251,33 +299,15 @@ class Router {
         self.rootViewController?.present(matchDetailViewController, animated: true, completion: nil)
     }
 
-    func getBetslipTicketData(betToken: String) {
-        self.isSharedBet = true
+    func showMyTickets(ticketType: MyTicketsType, ticketId: String) {
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
 
-        let betDataRoute = TSRouter.getSharedBetData(betToken: betToken)
+        let betslipViewController = BetslipViewController.init(startScreen: .myTickets(ticketType, ticketId) )
+        betslipViewController.isModalInPresentation = true
 
-        Env.everyMatrixClient.manager.getModel(router: betDataRoute, decodingType: SharedBetDataResponse.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let apiError):
-                    switch apiError {
-                    case .requestError(let value):
-                        print("Bet token request error: \(value)")
-                    case .notConnected:
-                        ()
-                    default:
-                        ()
-                    }
-                case .finished:
-                    ()
-                }
-            },
-                  receiveValue: { [weak self] betDataResponse in
-                self?.addBetDataTickets(betData: betDataResponse.sharedBetData)
-
-            })
-            .store(in: &cancellables)
+        self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
     }
 
     func showBetslip() {
@@ -288,138 +318,24 @@ class Router {
         let betslipViewController = BetslipViewController()
         betslipViewController.isModalInPresentation = true
 
+        Env.urlSchemaManager.shouldShowBetslipPublisher.send(false)
+
         self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
 
     }
 
-    func unregisterSharedBets() {
-        for sharedBetRegister in self.sharedBetsRegisters {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: sharedBetRegister)
-        }
-    }
+    func subscribeBetslipSharedTicketStatus(betToken: String) {
 
-    func addBetDataTickets(betData: SharedBetData) {
-        self.ticketPublisher = nil
+        Env.urlSchemaManager.getBetslipTicketData(betToken: betToken)
 
-        self.ticketPublisher = Env.betslipManager.bettingTicketsPublisher
+        Env.urlSchemaManager.shouldShowBetslipPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] tickets in
-                if tickets.count == betData.selections.count && self?.isSharedBet == true {
-                    self?.isSharedBet = false
-                    self?.unregisterSharedBets()
+            .sink(receiveValue: { [weak self] showBetslip in
+                if showBetslip {
                     self?.showBetslip()
                 }
             })
-
-        for betSelection in betData.selections {
-            self.getBetMarketOdds(betSelection: betSelection)
-        }
-
-    }
-
-    func getBetMarketOdds(betSelection: SharedBet) {
-        let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId,
-                                                language: "en",
-                                                matchId: "\(betSelection.eventId)",
-                                                bettingType: "\(betSelection.bettingTypeId)",
-                                                eventPartId: "\(betSelection.bettingTypeEventPartId)")
-
-        Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .sink(receiveCompletion: { _ in
-
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print(publisherIdentifiable)
-                    self?.sharedBetsRegisters.append(publisherIdentifiable)
-                case .initialContent(let aggregator):
-                    print(aggregator)
-                    self?.processBetAggregator(aggregator: aggregator, betSelection: betSelection)
-                case .updatedContent:
-                    ()
-                case .disconnect:
-                    ()
-                }
-            })
             .store(in: &cancellables)
-    }
-
-    func processBetAggregator(aggregator: EveryMatrix.Aggregator, betSelection: SharedBet) {
-
-        var match: EveryMatrix.Match?
-        var markets: [EveryMatrix.Market] = []
-        var betOutcomes: [EveryMatrix.BetOutcome] = []
-        var marketOutcomeRelations: [EveryMatrix.MarketOutcomeRelation] = []
-        var bettingOffers: [EveryMatrix.BettingOffer] = []
-
-        var betSelectionBettingOfferId: String?
-        var marketId: String?
-
-        for content in aggregator.content ?? [] {
-            switch content {
-            case .tournament:
-                ()
-            case .match(let matchContent):
-                match = matchContent
-
-            case .matchInfo:
-                ()
-            case .market(let marketContent):
-
-                markets.append(marketContent)
-
-            case .betOutcome(let betOutcomeContent):
-                betOutcomes.append(betOutcomeContent)
-
-            case .bettingOffer(let bettingOfferContent):
-                bettingOffers.append(bettingOfferContent)
-                if bettingOfferContent.outcomeId == betSelection.outcomeId {
-                    betSelectionBettingOfferId = bettingOfferContent.id
-                }
-
-            case .mainMarket:
-                ()
-
-            case .marketOutcomeRelation(let marketOutcomeRelationContent):
-                marketOutcomeRelations.append(marketOutcomeRelationContent)
-            case .marketGroup:
-                ()
-
-            case .location:
-               ()
-            case .cashout:
-               ()
-            case .event:
-                ()
-            case .eventPartScore:
-                ()
-            case .unknown:
-                ()
-            }
-        }
-
-        // Add to tickets
-        if let bettingOfferId = betSelectionBettingOfferId {
-            let marketDescription = "\(betSelection.marketName), \(betSelection.bettingTypeEventPartName)"
-            let bettingTicket = BettingTicket(id: bettingOfferId,
-                                              outcomeId: betSelection.outcomeId,
-                                              marketId: markets.first?.id ?? "1",
-                                              matchId: betSelection.eventId,
-                                              value: betSelection.priceValue,
-                                              isAvailable: markets.first?.isAvailable ?? true,
-                                              matchDescription: betSelection.eventName,
-                                              marketDescription: marketDescription,
-                                              outcomeDescription: betSelection.betName)
-
-            if Env.betslipManager.hasBettingTicket(bettingTicket) {
-                Env.betslipManager.removeBettingTicket(bettingTicket)
-            }
-            else {
-                Env.betslipManager.addBettingTicket(bettingTicket)
-            }
-        }
-
     }
 
 }
@@ -459,6 +375,8 @@ extension Router {
         let navigationController = UINavigationController(rootViewController: viewController)
         navigationController.setNavigationBarHidden(true, animated: false)
         navigationController.navigationBar.isTranslucent = false
+        navigationController.interactivePopGestureRecognizer?.delegate = nil
+        navigationController.interactivePopGestureRecognizer?.isEnabled = true
         return navigationController
     }
 

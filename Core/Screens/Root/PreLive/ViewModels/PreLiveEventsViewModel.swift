@@ -37,7 +37,7 @@ class PreLiveEventsViewModel: NSObject {
 
     private var userFavoriteMatches: [Match] = []
     private var popularMatches: [Match] = []
-    private var outrightCompetitions: [Competition]? = nil
+    private var outrightCompetitions: [Competition]?
 
     private var todayMatches: [Match] = []
 
@@ -47,7 +47,7 @@ class PreLiveEventsViewModel: NSObject {
     private var favoriteMatches: [Match] = []
     private var favoriteCompetitions: [Competition] = []
 
-    private var popularMatchesDataSource = PopularMatchesDataSource(matches: [], outrightCompetitions: [])
+    private var popularMatchesDataSource = PopularMatchesDataSource(matches: [], outrightCompetitions: nil)
 
     private var todayMatchesDataSource = TodayMatchesDataSource(todayMatches: [])
     private var competitionsDataSource = CompetitionsDataSource(competitions: [])
@@ -91,12 +91,12 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
-    var didSelectMatchAction: ((Match, UIImage?) -> Void)?
+    var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
 
-    private var zip3Publisher: AnyCancellable?
+    private var competitionsFilterPublisher: AnyCancellable?
 
     private var tournamentsPublisher: AnyPublisher<[EveryMatrix.Tournament], EveryMatrix.APIError>?
     private var locationsPublisher: AnyPublisher<[EveryMatrix.Location], EveryMatrix.APIError>?
@@ -108,7 +108,7 @@ class PreLiveEventsViewModel: NSObject {
     private var bannersInfoPublisher: AnyCancellable?
 
     private var popularMatchesRegister: EndpointPublisherIdentifiable?
-    private var popularTournamentsRegister: EndpointPublisherIdentifiable?
+    private var outrightCompetitionsRegister: EndpointPublisherIdentifiable?
     private var todayMatchesRegister: EndpointPublisherIdentifiable?
     private var tournamentsRegister: EndpointPublisherIdentifiable?
     private var locationsRegister: EndpointPublisherIdentifiable?
@@ -185,17 +185,20 @@ class PreLiveEventsViewModel: NSObject {
 
         // Did Select a Match
         //
-        self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.popularMatchesDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
-        self.todayMatchesDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.todayMatchesDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
-        self.competitionsDataSource.didSelectMatchAction = { [weak self] match, image in
-            self?.didSelectMatchAction?(match, image)
+        self.competitionsDataSource.didSelectMatchAction = { [weak self] match in
+            self?.didSelectMatchAction?(match)
         }
 
         self.popularMatchesDataSource.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectCompetitionAction?(competition)
+        }
+        self.competitionsDataSource.didSelectCompetitionAction = { [weak self] competition in
             self?.didSelectCompetitionAction?(competition)
         }
 
@@ -226,9 +229,13 @@ class PreLiveEventsViewModel: NSObject {
         if didChangeSport {
             self.lastCompetitionsMatchesRequested = []
 
-            self.popularMatches = []
+            self.popularMatchesDataSource.outrightCompetitions = nil
             self.outrightCompetitions = nil
+            self.popularMatches = []
+
+            self.todayMatchesDataSource.todayMatches = []
             self.todayMatches = []
+
             self.dataChangedPublisher.send()
         }
 
@@ -237,7 +244,6 @@ class PreLiveEventsViewModel: NSObject {
             self.popularMatchesHasNextPage = true
             self.popularMatchesPage = 1
             self.fetchPopularMatches()
-
 
         // today:
             self.isLoadingTodayList.send(true)
@@ -267,11 +273,9 @@ class PreLiveEventsViewModel: NSObject {
         if self.popularMatches.isEmpty && self.outrightCompetitions == nil {
             self.fetchOutrightCompetitions()
         }
-        if let outrightCompetitions = self.outrightCompetitions {
-            self.popularMatchesDataSource.outrightCompetitions = outrightCompetitions
-        }
+        self.popularMatchesDataSource.outrightCompetitions = self.outrightCompetitions
 
-
+        //
         self.todayMatchesDataSource.todayMatches = filterTodayMatches(with: self.homeFilterOptions,
                                                                               matches: self.todayMatches)
 
@@ -495,7 +499,7 @@ class PreLiveEventsViewModel: NSObject {
 
     private func fetchOutrightCompetitions() {
 
-        if let popularTournamentsRegister = popularTournamentsRegister {
+        if let popularTournamentsRegister = outrightCompetitionsRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: popularTournamentsRegister)
         }
 
@@ -511,17 +515,17 @@ class PreLiveEventsViewModel: NSObject {
         self.popularTournamentsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
-                    print("Error retrieving data!")
+                    print("popularTournamentsPublisher Error retrieving data!")
                 case .finished:
-                    print("Data retrieved!")
+                    print("popularTournamentsPublisher Data retrieved!")
                 }
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-                    self?.popularTournamentsRegister = publisherIdentifiable
+                    self?.outrightCompetitionsRegister = publisherIdentifiable
                 case .initialContent(let aggregator):
                     self?.setupPopularTournamentsAggregatorProcessor(aggregator: aggregator)
                 case .updatedContent: // (let aggregatorUpdates):
@@ -532,9 +536,7 @@ class PreLiveEventsViewModel: NSObject {
             })
     }
 
-
     //
-
     private func fetchTodayMatchesNextPage() {
         if !todayMatchesHasNextPage {
             return
@@ -698,10 +700,10 @@ class PreLiveEventsViewModel: NSObject {
             return
         }
 
-        self.zip3Publisher?.cancel()
-        self.zip3Publisher = nil
+        self.competitionsFilterPublisher?.cancel()
+        self.competitionsFilterPublisher = nil
 
-        self.zip3Publisher = Publishers.Zip3(popularTournamentsPublisher, tournamentsPublisher, locationsPublisher)
+        self.competitionsFilterPublisher = Publishers.Zip3(popularTournamentsPublisher, tournamentsPublisher, locationsPublisher)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
@@ -713,8 +715,8 @@ class PreLiveEventsViewModel: NSObject {
 
                 self?.isLoadingCompetitionGroups.send(false)
 
-                self?.zip3Publisher?.cancel()
-                self?.zip3Publisher = nil
+                self?.competitionsFilterPublisher?.cancel()
+                self?.competitionsFilterPublisher = nil
 
                 if let locationsRegister = self?.locationsRegister {
                     Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: locationsRegister)
@@ -1037,8 +1039,9 @@ extension PreLiveEventsViewModel: UITableViewDataSource, UITableViewDelegate {
     func hasContentForSelectedListType() -> Bool {
        switch self.matchListTypePublisher.value {
        case .myGames:
-           if self.popularMatchesDataSource.matches.isEmpty {
-               return !self.popularMatchesDataSource.outrightCompetitions.isEmpty
+           if self.popularMatchesDataSource.matches.isEmpty,
+              let outrightCompetitions = self.popularMatchesDataSource.outrightCompetitions {
+               return outrightCompetitions.isNotEmpty
            }
            return self.popularMatchesDataSource.matches.isNotEmpty
        case .today:

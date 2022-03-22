@@ -309,7 +309,7 @@ extension OutrightMarketDetailsViewController {
         marketsLabel.font = AppFont.with(type: .bold, size: 17)
         marketsLabel.textAlignment = .center
         marketsLabel.numberOfLines = 1
-        marketsLabel.text = "Winner of the competition"
+        marketsLabel.text = "Competition Markets"
         return marketsLabel
     }
 

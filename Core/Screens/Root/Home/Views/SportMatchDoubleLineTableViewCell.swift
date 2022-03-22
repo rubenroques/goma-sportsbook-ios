@@ -13,6 +13,8 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
     var didSelectSeeAllPopular: ((Sport) -> Void)?
     var didSelectSeeAllLive: ((Sport) -> Void)?
 
+    var didSelectSeeAllCompetitionAction: ((Competition) -> Void)?
+
     var tappedMatchLineAction: ((Match) -> Void)?
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
@@ -47,7 +49,6 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
-        self.titleLabel.text = ""
 
         self.reloadCollections()
     }
@@ -197,7 +198,9 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
             fatalError()
         }
 
-        guard let viewModel = self.viewModel else { fatalError() }
+        guard let viewModel = self.viewModel else {
+            fatalError()
+        }
 
         if indexPath.section == 1 {
             guard
@@ -205,6 +208,7 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
             else {
                 fatalError()
             }
+
             if let numberTotalOfMarkets = self.viewModel?.numberOfMatchMarket(forLine: collectionLineIndex) {
                 let marketsRawString = localized("number_of_markets")
                 let singularMarketRawString = localized("number_of_market_singular")
@@ -220,8 +224,24 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 if numberTotalOfMarkets == 0 {
                     cell.hideSubtitle()
                 }
-            }
 
+                if let match = viewModel.match() {
+                    cell.tappedAction = { [weak self] in
+                        self?.tappedMatchLineAction?(match)
+                    }
+                }
+            }
+            return cell
+        }
+        else if self.viewModel?.isOutrightCompetitionLine() ?? false,
+                let competition = self.viewModel?.outrightCompetition(forLine: collectionLineIndex),
+                let cell = collectionView.dequeueCellType(OutrightCompetitionWidgetCollectionViewCell.self, indexPath: indexPath) {
+
+            let cellViewModel = OutrightCompetitionWidgetViewModel(competition: competition)
+            cell.configure(withViewModel: cellViewModel)
+            cell.tappedLineAction = { [weak self] competition in
+                self?.didSelectSeeAllCompetitionAction?(competition)
+            }
             return cell
         }
         else if indexPath.row == 0, let match = self.viewModel?.match(forLine: collectionLineIndex) {
@@ -236,8 +256,8 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?(match)
+                cell.tappedMatchWidgetAction = { [weak self] in
+                    self?.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -253,8 +273,8 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 let cellViewModel = MatchWidgetCellViewModel(match: match, store: viewModel.store)
 
                 cell.configure(withViewModel: cellViewModel)
-                cell.tappedMatchWidgetAction = {
-                    self.tappedMatchLineAction?(match)
+                cell.tappedMatchWidgetAction = { [weak self] in
+                    self?.tappedMatchLineAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -335,7 +355,7 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        var cellHeight = MatchWidgetCollectionViewCell.cellHeight
+        let cellHeight = MatchWidgetCollectionViewCell.cellHeight
         if indexPath.section == 1 {
             return CGSize(width: 99, height: cellHeight)
         }
@@ -349,7 +369,6 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
         }
     }
 }
-
 
 extension SportMatchDoubleLineTableViewCell {
 
@@ -443,6 +462,8 @@ extension SportMatchDoubleLineTableViewCell {
 
         self.topCollectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
 
+        self.topCollectionView.register(OutrightCompetitionWidgetCollectionViewCell.self,
+                                        forCellWithReuseIdentifier: OutrightCompetitionWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
@@ -450,6 +471,8 @@ extension SportMatchDoubleLineTableViewCell {
         self.topCollectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
         self.topCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
 
+        self.bottomCollectionView.register(OutrightCompetitionWidgetCollectionViewCell.self,
+                                           forCellWithReuseIdentifier: OutrightCompetitionWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)

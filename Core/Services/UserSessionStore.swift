@@ -217,6 +217,7 @@ extension UserSessionStore {
                 
             } receiveValue: { userBalance in
                 var realWallet: EveryMatrix.UserBalanceWallet?
+                // TODO: UBS WALLET
                 for wallet in userBalance.wallets where wallet.vendor == "CasinoWallet" {
                     realWallet = wallet
                     break

@@ -175,15 +175,13 @@ class PreLiveEventsViewController: UIViewController {
             }
         }
 
-        self.viewModel.didSelectMatchAction = { match, image in
+        self.viewModel.didSelectMatchAction = { match in
             if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
             else {
                 let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
-                matchDetailsViewController.viewModel.gameSnapshot = image
                 self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             }
         }
@@ -202,7 +200,7 @@ class PreLiveEventsViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.tableView.reloadData()
+        self.reloadData()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -256,7 +254,7 @@ class PreLiveEventsViewController: UIViewController {
         sportsSelectorButtonView.backgroundColor = UIColor.App.highlightPrimary
         sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
-        filtersButtonView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        
         filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
         let tapFilterGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapFilterAction))
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
@@ -380,7 +378,7 @@ class PreLiveEventsViewController: UIViewController {
 
         self.viewModel.dataChangedPublisher
             .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
-                self?.tableView.reloadData()
+                self?.reloadData()
             })
             .store(in: &cancellables)
 
@@ -451,7 +449,7 @@ class PreLiveEventsViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink { [weak self] competitions in
-                self?.competitionsFiltersView.competitions = competitions
+                self?.competitionsFiltersView.competitions = competitions.filter { $0.cells.isNotEmpty }
             }
             .store(in: &cancellables)
 
@@ -490,7 +488,7 @@ class PreLiveEventsViewController: UIViewController {
         Env.userSessionStore.isUserProfileIncomplete
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { _ in
-                self.tableView.reloadData()
+                self.reloadData()
             })
             .store(in: &cancellables)
 
@@ -498,10 +496,6 @@ class PreLiveEventsViewController: UIViewController {
 
     @objc func refreshControllPulled() {
         self.viewModel.fetchData()
-    }
-
-    func reloadTableViewData() {
-        self.tableView.reloadData()
     }
 
     @objc func handleSportsSelectionTap(_ sender: UITapGestureRecognizer? = nil) {
@@ -516,7 +510,7 @@ class PreLiveEventsViewController: UIViewController {
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
-        self.filtersButtonView.backgroundColor = UIColor.App.backgroundPrimary
+        self.filtersButtonView.backgroundColor = UIColor.App.backgroundTertiary
         self.filtersBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.filtersSeparatorLineView.backgroundColor = UIColor.App.separatorLine
         
@@ -562,6 +556,7 @@ class PreLiveEventsViewController: UIViewController {
         default:
             ()
         }
+        
         self.filtersCollectionView.reloadData()
         self.filtersCollectionView.layoutIfNeeded()
 

@@ -210,11 +210,14 @@ Terms of use, Privacy Policy and EULA";
 "empty_no_login" = "You aren't logged in!";
 "second_empty_no_login" = "You need to be logged in to be able to see your tickets.";
 
+"second_empty_no_login_to_bet" = "You need to be logged in to be able to bet.";
+
 "empty_list" = "There are no results for this selection.";
 "second_empty_list" = "Please try something else!";
 
 "empty_list_with_filters" = "There are no results for this filters.";
 "second_empty_list_with_filters" = "Please try something else!";
+
 
 "my_games" = "My Games";
 "my_competitions" = "My Competitions";
@@ -287,6 +290,7 @@ Terms of use, Privacy Policy and EULA";
 "email_address_or_username" = "Email or Username";
 "app_version_profile" = "App Version %s (%s)\nSportsbook® All Rights Reserved";
 "daily" = "Daily";
+"weekly" = "Weekly";
 "monthly" = "Monthly";
 "anual" = "Anual";
 "active" = "Active";
@@ -342,6 +346,7 @@ Terms of use, Privacy Policy and EULA";
 "eu_odd" = "EU (1.5)";
 "uk_odd" = "UK (1/2)";
 "us_odd" = "US (-200)";
+"odds_variation" = "Odds Variation";
 "allow_mygames_notifications" = "Allow notifications about My Games";
 "allow_mycompetitions_notifications" = "Allow notifications about all games in My Competitions";
 "notify_me_about" = "Notify me about:";
@@ -355,4 +360,37 @@ Terms of use, Privacy Policy and EULA";
 "notify_bets_final_result" = "Notify me about my Bets final results";
 "notify_bets_options_results" = "Notify me about my Bets options results";
 
+"add_promo_code" = "Add promotional code";
+"bonus_code" = "Bonus Code";
+
+"more_info" = "More Info";
+"get_bonus" = "Get Bonus";
+
+"available" = "Available";
+"no_bonus" = "No bonus here!";
+
+"expire_date" = "Expire Date";
+"start_date" = "Start Date";
+"add" = "Add";
+"invalid_bonus_code" = "Invalid bonus code.";
+"error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
+"permanent" = "Permanent";
+"terms_conditions" = "Terms and conditions";
+
+"deposit_limit" = "Deposit Limit";
+"betting_limit" = "Betting Limit";
+"loss_limit" = "Loss Limit";
+"deposit_limit_set" = "Deposit limit set for your account.";
+"betting_limit_set" = "Betting limit set for your account.";
+"loss_limit_set" = "Loss limit set for your account.";
+"deposit_limit_locked" = "Deposit limit set for your account is locked. You can update this limit again after: %s";
+"betting_limit_locked" = "Betting limit set for your account is locked. You can update this limit again after: %s";
+"loss_limit_locked" = "Loss limit set for your account is locked. You can update this limit again after: %s";
+
+"deposit_error" = "Deposit Error";
+"deposit_error_message" = "The deposit couldn't be processed at the moment. Please try again later.";
+
+"need_login_favorites" = "You need to be logged in to see your favorites.";
+
+"my_favorites" = "My Favorites";
 "keep_bet_checkbox" = "Keep this bet on betslip";
