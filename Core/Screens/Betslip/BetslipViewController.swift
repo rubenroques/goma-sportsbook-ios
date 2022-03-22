@@ -67,9 +67,6 @@ class BetslipViewController: UIViewController {
 
         self.tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
-       
-        
-        
         super.init(nibName: "BetslipViewController", bundle: nil)
     }
 
@@ -115,14 +112,47 @@ class BetslipViewController: UIViewController {
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
         }
        
+//        Env.userSessionStore.userBalanceWallet
+//            .compactMap({$0})
+//            .map(\.amount)
+//            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
+//            .receive(on: DispatchQueue.main)
+//            .sink { [weak self] value in
+//                self?.accountValueLabel.text = value
+//                self?.accountInfoBaseView.isHidden = false
+//            }
+//            .store(in: &cancellables)
+
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
-            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                self?.accountValueLabel.text = value
-                self?.accountInfoBaseView.isHidden = false
+                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+                    let accountValue = bonusWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                    self?.accountInfoBaseView.isHidden = false
+
+                }
+                else {
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                    self?.accountInfoBaseView.isHidden = false
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBonusBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+                    let accountValue = currentWallet.amount + value
+
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                    self?.accountInfoBaseView.isHidden = false
+                }
+
             }
             .store(in: &cancellables)
 

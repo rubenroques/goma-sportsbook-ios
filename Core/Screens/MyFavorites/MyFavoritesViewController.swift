@@ -361,12 +361,8 @@ extension MyFavoritesViewController {
 
         Env.favoritesManager.favoriteTypeCheckPublisher.value = .none
 
-        if self.isModal {
-            self.dismiss(animated: true, completion: nil)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        self.navigationController?.popViewController(animated: true)
+
     }
 
     @objc func didTapBetslipView() {
