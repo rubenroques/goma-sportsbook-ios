@@ -2618,6 +2618,7 @@
 			children = (
 				458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */,
 				458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */,
+				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
 				458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */,
 			);
 			path = Views;
@@ -3424,7 +3425,6 @@
 				453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */,
 				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				455C677227E24CCA00AAB2A5 /* MarketGroupDetails */,
-				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
 				4591358027602960009D1193 /* MarketGroupOrganizer.swift */,
 				A9BCF43A274FB589006DD528 /* Cells */,
 			);
@@ -4581,7 +4581,6 @@
 				457BD61827BBAF6100E5612E /* ContainerViewController.swift in Sources */,
 				A99F7A1727D256D0008BAF41 /* ActionTextFieldView.swift in Sources */,
 				45166D1426F3548D00E69D65 /* GoodbyeSSWampMessage.swift in Sources */,
-				A978EBE727E3D1E300322F49 /* LiveDetailsViewController.swift in Sources */,
 				454990D027163D3200D57CE2 /* CollapsibleGroupView.swift in Sources */,
 				A9B841B626E914FB00269B05 /* BetOutcome.swift in Sources */,
 				455A0CEF26BD9D9000EC572D /* UIImageView+Extensions.swift in Sources */,
@@ -4899,7 +4898,6 @@
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				454F0A8427C4EA69003123DF /* OutrightMarketDetailsStore.swift in Sources */,
 				A96B619827A0508E005DC376 /* RecentSearchTableViewCell.swift in Sources */,
-				A978EBE627E3D18600322F49 /* PopularDetailsViewController.swift in Sources */,
 				457BD61327BADEB200E5612E /* TestsViewController.swift in Sources */,
 				454E0AA32732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */,
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,

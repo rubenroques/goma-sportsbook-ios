@@ -48,6 +48,8 @@ class MyTicketTableViewCell: UITableViewCell {
     private var isLoadingCellDataSubscription: AnyCancellable?
 
     private var cashoutSubscription: AnyCancellable?
+    
+    private var selectedMatch: String = ""
 
     private var cashoutValue: Double?
     private var showCashoutButton: Bool = false {
@@ -63,6 +65,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
     var needsHeightRedraw: (() -> Void)?
     var tappedShareAction: (() -> Void)?
+    var tappedMatchDetail: ((String) -> Void)?
+    
+    var selectedIdPublisher: CurrentValueSubject<String, Never> = .init("")
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -78,7 +83,6 @@ class MyTicketTableViewCell: UITableViewCell {
         
         self.baseView.layer.masksToBounds = true
 
-       
         self.totalOddSubtitleLabel.text = "-"
         self.betAmountSubtitleLabel.text = "-"
         self.winningsSubtitleLabel.text = "-"
@@ -165,7 +169,6 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashoutButton.layer.masksToBounds = true
         self.cashoutButton.backgroundColor = .clear
 
-
         if let status = self.betHistoryEntry?.status?.uppercased() {
             switch status {
             case "WON", "HALF_WON":
@@ -230,7 +233,11 @@ class MyTicketTableViewCell: UITableViewCell {
             let myTicketBetLineView = MyTicketBetLineView(betHistoryEntrySelection: betHistoryEntrySelection,
                                                           countryCode: countryCodes[safe: index] ?? "",
                                                           viewModel: viewModel.selections[index])
-
+            myTicketBetLineView.tappedMatchDetail = { [weak self] matchId in
+                self?.tappedMatchDetail?(matchId)
+                
+            }
+           
             self.betCardsStackView.addArrangedSubview(myTicketBetLineView)
         }
 
@@ -250,7 +257,7 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-            //self.totalOddSubtitleLabel.text = "\(Double(floor(oddValue * 100)/100))"
+            // self.totalOddSubtitleLabel.text = "\(Double(floor(oddValue * 100)/100))"
             let newOddValue = Double(floor(oddValue * 100)/100)
             self.totalOddSubtitleLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         }
@@ -352,6 +359,9 @@ class MyTicketTableViewCell: UITableViewCell {
                 self.resetHighlightedCard()
             }
         }
+    }
+    class MyTapGesture: UITapGestureRecognizer {
+        var matchId = String()
     }
 
     @IBAction func didTapShareButton() {

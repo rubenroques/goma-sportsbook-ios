@@ -29,6 +29,7 @@ class MyTicketsViewModel: NSObject {
     
     var reloadTableViewAction: (() -> Void)?
     var redrawTableViewAction: (() -> Void)?
+    var tappedMatchDetail: ((String) -> Void)?
     var requestShareActivityView: ((UIImage, String, String) -> Void)?
 
     private var matchDetailsDictionary: [String: Match] = [:]
@@ -413,6 +414,14 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
         cell.tappedShareAction = { [weak self] in
             if let cellSnapshot = cell.snapshot, let ticketStatus = ticketValue.status {
                 self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
+            }
+        }
+       
+        
+        if ticket?.status == "OPEN"{
+            cell.tappedMatchDetail = { [weak self] matchId in
+                self?.tappedMatchDetail?(matchId)
+
             }
         }
 
