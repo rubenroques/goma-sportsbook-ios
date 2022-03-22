@@ -684,25 +684,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.leftOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -733,25 +721,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.middleOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -780,25 +756,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.rightOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)

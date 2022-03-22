@@ -69,13 +69,17 @@ class PopularDetailsViewModel {
 
     }
 
+    func requestNextPage() {
+        self.fetchNextPage()
+    }
+
     private func resetPageCount() {
         self.matchesCount = 10
         self.matchesPage = 1
         self.matchesHasNextPage = true
     }
 
-    private func fetchPopularMatchesNextPage() {
+    private func fetchNextPage() {
         if !matchesHasNextPage {
             return
         }
@@ -232,8 +236,12 @@ extension PopularDetailsViewModel {
 
 extension PopularDetailsViewModel {
 
+    func shouldShowLoadingCell() -> Bool {
+        return self.matches.isNotEmpty && matchesHasNextPage
+    }
+
     func numberOfSection() -> Int {
-        return 2
+        return 3
     }
 
     func numberOfItems(forSection section: Int) -> Int {
@@ -242,6 +250,8 @@ extension PopularDetailsViewModel {
             return self.matches.count
         case 1:
             return self.outrightCompetitions?.count ?? 0
+        case 2:
+            return self.shouldShowLoadingCell() ? 1 : 0
         default:
             return 0
         }

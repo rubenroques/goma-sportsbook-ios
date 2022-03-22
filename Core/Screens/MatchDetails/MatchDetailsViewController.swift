@@ -481,11 +481,15 @@ class MatchDetailsViewController: UIViewController {
 
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
 
+        guard let match = self.match else {
+            return
+        }
+
         self.marketGroupsViewControllers = []
 
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
-                let viewModel = MarketGroupDetailsViewModel(matchId: self.matchId, marketGroupId: groupKey)
+                let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
 
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
@@ -716,7 +720,12 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @IBAction private func didTapBackAction() {
-        self.navigationController?.popViewController(animated: true)
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @IBAction private func didTapShareButton() {

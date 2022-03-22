@@ -56,9 +56,9 @@ class PopularDetailsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
 
-        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -258,11 +258,14 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
                 self?.openCompetitionDetails(competition)
             }
             return cell
-
+        case 2:
+            guard let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) else {
+                fatalError()
+            }
+            return cell
         default:
             fatalError()
         }
-
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -271,6 +274,8 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
             return 142
+        case 2:
+            return 80
         default:
             return .leastNonzeroMagnitude
         }
@@ -282,6 +287,8 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
             return 142
+        case 2:
+            return 80
         default:
             return .leastNonzeroMagnitude
         }
@@ -302,6 +309,16 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return .leastNonzeroMagnitude
     }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 2, self.viewModel.shouldShowLoadingCell() {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPage()
+        }
+    }
+
 }
 
 extension PopularDetailsViewController: UIGestureRecognizerDelegate {

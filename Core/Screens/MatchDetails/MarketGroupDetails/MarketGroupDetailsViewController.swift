@@ -148,7 +148,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.marketId = marketGroupOrganizer.marketId
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
 
             cell.didExpandCellAction = { [weak self] marketGroupOrganizerId in
                 self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -168,7 +168,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.marketId = marketGroupOrganizer.marketId
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
 
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
                 self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -188,7 +188,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.marketId = marketGroupOrganizer.marketId
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
 
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
                 self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -207,7 +207,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             else {
                 return UITableViewCell()
             }
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
             return cell
         }

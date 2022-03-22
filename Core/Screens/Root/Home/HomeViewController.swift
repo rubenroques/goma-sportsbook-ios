@@ -64,16 +64,17 @@ class HomeViewController: UIViewController {
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
         self.bind(toViewModel: self.viewModel)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
 
         self.showLoading()
 
         executeDelayed(1.45) {
             self.hideLoading()
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
     }
 
     // MARK: - Layout and Theme
