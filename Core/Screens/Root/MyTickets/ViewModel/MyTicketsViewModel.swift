@@ -416,15 +416,11 @@ extension MyTicketsViewModel: UITableViewDelegate, UITableViewDataSource {
                 self?.requestShareActivityView?(cellSnapshot, ticketValue.betId, ticketStatus)
             }
         }
-       
-        
-        if ticket?.status == "OPEN"{
-            cell.tappedMatchDetail = { [weak self] matchId in
-                self?.tappedMatchDetail?(matchId)
+    
+        cell.tappedMatchDetail = { [weak self] matchId in
+            self?.tappedMatchDetail?(matchId)
 
-            }
         }
-
         return cell
     }
 
