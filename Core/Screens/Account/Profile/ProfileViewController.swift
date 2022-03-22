@@ -149,6 +149,20 @@ class ProfileViewController: UIViewController {
 
         Env.userSessionStore.forceWalletUpdate()
 
+        Env.userSessionStore.isUserProfileIncomplete
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.verifyUserActivationConditions()
+            })
+            .store(in: &cancellables)
+
+        Env.userSessionStore.isUserEmailVerified
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.verifyUserActivationConditions()
+            })
+            .store(in: &cancellables)
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -283,9 +297,10 @@ class ProfileViewController: UIViewController {
     func verifyUserActivationConditions() {
 
         var showActivationAlertScrollableView = false
+        self.alertsArray = []
 
         if let userEmailVerified = userSession?.isEmailVerified {
-            if !userEmailVerified {
+            if !userEmailVerified && !Env.userSessionStore.isUserEmailVerified.value {
                 let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
                                                                description: localized("app_full_potential"),
                                                                linkLabel: localized("verify_my_account"),

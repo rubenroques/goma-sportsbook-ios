@@ -43,7 +43,6 @@ class Router {
     init(window: UIWindow) {
         self.rootWindow = window
 
-
         NotificationCenter.default.addObserver(self, selector: #selector(applicationDidBecomeActive),
                                                name: UIApplication.didBecomeActiveNotification,
                                                object: nil)

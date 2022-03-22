@@ -257,8 +257,6 @@ class FullRegisterDocumentsViewController: UIViewController {
                                            phonePrefix: profile!.phonePrefix, personalID: registerForm.personalID, securityQuestion: registerForm.securityQuestion,
                                            securityAnswer: registerForm.securityAnswer)
         self.fullRegisterProfile(form: form)
-      
-  
 
     }
 

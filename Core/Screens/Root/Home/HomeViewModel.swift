@@ -163,6 +163,14 @@ class HomeViewModel {
             })
             .store(in: &cancellables)
 
+        Env.userSessionStore.isUserEmailVerified
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.fetchAlerts()
+                self?.refreshPublisher.send()
+            })
+            .store(in: &cancellables)
+
     }
 
     func refresh() {
@@ -202,7 +210,7 @@ class HomeViewModel {
         alertsArray = []
         
         if let userSession = UserSessionStore.loggedUserSession() {
-            if !userSession.isEmailVerified {
+            if !userSession.isEmailVerified && !Env.userSessionStore.isUserEmailVerified.value {
 
                 let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
                                                                description: localized("app_full_potential"),

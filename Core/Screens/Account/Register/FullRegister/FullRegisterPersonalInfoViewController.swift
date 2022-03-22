@@ -268,7 +268,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     func setupFullRegisterUserInfoForm() {
-        let titleText = titleHeaderTextFieldView.textField.text
+        let titleText = titleHeaderTextFieldView.textField.text ?? ""
         let firstNameText = firstNameHeaderTextFieldView.text
         let lastNameText = lastNameHeaderTextFieldView.text
         var countryText = ""
@@ -283,7 +283,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let address2Text = address2HeaderTextFieldView.text
         let cityText = cityHeaderTextFieldView.text
         let postalCodeText = postalCodeHeaderTextFieldView.text
-        fullRegisterUserInfo = FullRegisterUserInfo(title: "titleText",
+        fullRegisterUserInfo = FullRegisterUserInfo(title: titleText,
             firstName: firstNameText,
             lastName: lastNameText,
             country: countryText,

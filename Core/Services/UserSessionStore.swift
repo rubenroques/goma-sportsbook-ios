@@ -25,6 +25,7 @@ class UserSessionStore {
 
     var shouldRecordUserSession = true
     var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
+    var isUserEmailVerified = CurrentValueSubject<Bool, Never>(false)
 
     init() {
 
@@ -386,6 +387,7 @@ extension UserSessionStore {
                 self.isLoadingUserSessionPublisher.send(false)
             } receiveValue: { account in
                 Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
+                Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
             }
             .store(in: &cancellables)
     }
