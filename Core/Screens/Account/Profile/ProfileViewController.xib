@@ -250,7 +250,7 @@ Sportsbook® All Rights Reserved</string>
                                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4Kf-if-FqS">
                                                             <rect key="frame" x="8" y="10.5" width="34" height="34"/>
                                                             <subviews>
-                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="unselected_favorite_icon" translatesAutoresizingMaskIntoConstraints="NO" id="oUg-sD-qD9">
+                                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="favorite_profile_icon" translatesAutoresizingMaskIntoConstraints="NO" id="oUg-sD-qD9">
                                                                     <rect key="frame" x="8" y="8" width="18" height="18"/>
                                                                     <constraints>
                                                                         <constraint firstAttribute="height" constant="18" id="a6w-ie-GIm"/>
@@ -710,12 +710,12 @@ Sportsbook® All Rights Reserved</string>
         <image name="app_settings_profile_icon" width="21" height="20"/>
         <image name="bonus_profile_icon" width="22" height="17"/>
         <image name="empty_user_image" width="100" height="100"/>
+        <image name="favorite_profile_icon" width="20" height="19"/>
         <image name="history_profile_icon" width="19" height="19"/>
         <image name="logout_account_icon" width="20" height="20"/>
         <image name="my_account_profile_icon" width="19" height="19"/>
         <image name="nav_arrow_right_icon" width="9" height="15"/>
         <image name="support_profile_icon" width="19" height="21"/>
-        <image name="unselected_favorite_icon" width="16" height="15"/>
         <namedColor name="buttonBackgroundSecondary">
             <color red="0.5607843137254902" green="0.57647058823529407" blue="0.65098039215686276" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
