@@ -111,10 +111,8 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                 cell.tappedMatchLineAction = { [weak self] in
                     self?.didSelectMatchAction?(match)
                 }
-                cell.matchWentLive = {
-                    DispatchQueue.main.async { [weak self] in
-                        self?.matchWentLiveAction?()
-                    }
+                cell.matchWentLive = { [weak self] in
+                    self?.matchWentLiveAction?()
                 }
 
                 return cell

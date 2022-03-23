@@ -28,6 +28,8 @@ class MyFavoritesViewModel: NSObject {
 
     var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
 
+    private var favoriteEventsIds: [String] = []
+
     enum FavoriteListType {
         case favoriteGames
         case favoriteCompetitions
@@ -78,8 +80,13 @@ class MyFavoritesViewModel: NSObject {
         self.setupPublishers()
 
     }
+
+    deinit {
+        self.unregisterEndpoints()
+    }
     
     func unregisterEndpoints() {
+
         if let favoriteMatchesRegister = self.favoriteMatchesRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
         }
@@ -93,6 +100,7 @@ class MyFavoritesViewModel: NSObject {
 
         self.favoriteCompetitionsMatchesPublisher?.cancel()
         self.favoriteCompetitionsMatchesPublisher = nil
+
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
@@ -113,24 +121,13 @@ class MyFavoritesViewModel: NSObject {
 
     private func setupPublishers() {
 
-        Publishers.CombineLatest(Env.favoritesManager.favoriteEventsIdPublisher, Env.favoritesManager.favoriteTypeCheckPublisher)
+        Env.favoritesManager.favoriteEventsIdPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] favoriteEvents, favoriteType in
-
+            .sink(receiveValue: { [weak self] favoriteEvents in
                 if UserSessionStore.isUserLogged() {
-                    if favoriteType == .none && self?.favoriteListTypePublisher.value == .favoriteGames {
-                        self?.fetchFavoriteMatches()
-                        self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
-                    }
-                    else if favoriteType == .match && self?.favoriteListTypePublisher.value == .favoriteGames {
-                        self?.fetchFavoriteMatches()
-                    }
-                    else if favoriteType == .match && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
-                        self?.fetchFavoriteMatches()
-                    }
-                    else if favoriteType == .competition && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
-                        self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
-                    }
+                    self?.favoriteEventsIds = favoriteEvents
+                    self?.fetchFavoriteMatches()
+
                 }
                 else {
                     self?.dataChangedPublisher.send()
@@ -190,7 +187,14 @@ class MyFavoritesViewModel: NSObject {
 
         self.favoriteMatches = self.store.matchesForListType(.favoriteMatchEvents)
 
-        self.updateContentList()
+        if self.favoriteEventsIds.isNotEmpty {
+            self.fetchFavoriteCompetitionsMatchesWithIds(self.favoriteEventsIds)
+        }
+        else {
+            self.favoriteMatches = []
+            self.favoriteCompetitions = []
+            self.updateContentList()
+        }
     }
 
     private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
@@ -301,25 +305,29 @@ class MyFavoritesViewModel: NSObject {
 
         self.myFavoriteCompetitionsDataSource.competitions = self.favoriteCompetitions
 
-        self.dataChangedPublisher.send()
-
         if UserSessionStore.isUserLogged() {
             if self.favoriteMatches.isEmpty && self.favoriteCompetitions.isEmpty {
                 self.emptyStateStatusPublisher.send(.noFavorites)
             }
-            else if self.favoriteMatches.isEmpty {
-                self.emptyStateStatusPublisher.send(.noGames)
-            }
-            else if self.favoriteCompetitions.isEmpty {
-                self.emptyStateStatusPublisher.send(.noCompetitions)
-            }
-            else {
+            else if self.favoriteMatches.isNotEmpty && self.favoriteCompetitions.isNotEmpty {
                 self.emptyStateStatusPublisher.send(.none)
             }
+            else {
+                if self.favoriteMatches.isEmpty {
+                    self.emptyStateStatusPublisher.send(.noGames)
+                }
+                else if self.favoriteCompetitions.isEmpty {
+                    self.emptyStateStatusPublisher.send(.noCompetitions)
+                }
+            }
+
         }
         else {
             self.emptyStateStatusPublisher.send(.noLogin)
         }
+
+        self.dataChangedPublisher.send()
+
     }
 }
 
