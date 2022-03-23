@@ -294,9 +294,9 @@ class Router {
         if self.rootViewController?.presentedViewController?.isModal == true {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
-        let matchDetailViewController = MatchDetailsViewController(matchId: matchId)
-        matchDetailViewController.isModalInPresentation = true
-        self.rootViewController?.present(matchDetailViewController, animated: true, completion: nil)
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
+        matchDetailsViewController.isModalInPresentation = true
+        self.rootViewController?.present(matchDetailsViewController, animated: true, completion: nil)
     }
 
     func showMyTickets(ticketType: MyTicketsType, ticketId: String) {

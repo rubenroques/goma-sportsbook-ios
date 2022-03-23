@@ -112,6 +112,12 @@ class ProfileLimitsManagementViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
+    }
+
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 

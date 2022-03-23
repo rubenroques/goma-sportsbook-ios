@@ -56,6 +56,10 @@ class MarketGroupDetailsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
 
         self.viewModel.fetchMarketGroupDetails()
     }
@@ -95,7 +99,7 @@ class MarketGroupDetailsViewController: UIViewController {
 
         viewModel.marketGroupOrganizersPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] marketGroupOrganizers in
+            .sink(receiveValue: { [weak self] _ in
                 self?.reloadTableView()
             })
             .store(in: &cancellables)
