@@ -153,7 +153,6 @@ class PersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         titleHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
-        print(titleHeaderTextFieldView.text)
         firstNameHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         firstNameHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         firstNameHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
