@@ -493,19 +493,18 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-//        Env.userSessionStore.userSessionPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] userInfo in
-//
-//                if userInfo != nil {
-//                    self?.emptyBetsBaseView.isHidden = true
-//                    self?.placeBetBaseView.isHidden = false
-//                    self?.tableView.isHidden = false
-//                    self?.clearBaseView.isHidden = false
-//                    self?.betTypeSegmentControlBaseView.isHidden = false
-//
-//                }
-//            }).store(in: &cancellables)
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userInfo in
+                
+                if userInfo != nil {
+                    self?.placeBetBaseView.isHidden = false
+                    self?.tableView.isHidden = false
+                    self?.clearBaseView.isHidden = false
+                    self?.betTypeSegmentControlBaseView.isHidden = false
+                
+                }
+            }).store(in: &cancellables)
 
         self.listTypePublisher
             .receive(on: DispatchQueue.main)
@@ -696,7 +695,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.multipleBetslipSelectionState
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipState in
-                // print("MULTIPLE BET STATE: \(betslipState)")
                 self?.maxStakeMultiple = betslipState?.maxStake
                 if let multipleBetslipState = betslipState {
                     self?.checkForbiddenCombinationErrors(multipleBetslipState: multipleBetslipState)
@@ -1113,6 +1111,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.settingsButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.clearButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        
         
     }
 

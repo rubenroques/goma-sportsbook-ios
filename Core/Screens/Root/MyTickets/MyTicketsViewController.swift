@@ -131,6 +131,15 @@ class MyTicketsViewController: UIViewController {
             self?.viewModel.getSharedBetTokens()
         }
 
+        self.viewModel.tappedMatchDetail = { [weak self] matchId in
+           
+            let matchViewModel = MatchDetailsViewModel(matchId: matchId)
+           
+            let matchDetailsViewController = MatchDetailsViewController(matchId: matchViewModel.matchId)
+            self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+            
+        }
+        
         Env.betslipManager.newBetsPlacedPublisher
             .sink { [weak self] in
                 self?.viewModel.refresh()

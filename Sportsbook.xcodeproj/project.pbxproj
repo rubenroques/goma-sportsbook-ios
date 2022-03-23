@@ -2618,6 +2618,7 @@
 			children = (
 				458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */,
 				458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */,
+				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
 				458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */,
 			);
 			path = Views;
@@ -3424,7 +3425,6 @@
 				453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */,
 				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				455C677227E24CCA00AAB2A5 /* MarketGroupDetails */,
-				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
 				4591358027602960009D1193 /* MarketGroupOrganizer.swift */,
 				A9BCF43A274FB589006DD528 /* Cells */,
 			);
