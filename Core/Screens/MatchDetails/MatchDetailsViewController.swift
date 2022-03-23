@@ -127,67 +127,19 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    private var matchDetailsRegister: EndpointPublisherIdentifiable?
-    private var matchDetailsAggregatorPublisher: AnyCancellable?
 
     private var marketGroupsViewControllers = [UIViewController]()
-
     private var currentPageViewControllerIndex: Int = 0
+
+    private var viewModel: MatchDetailsViewModel
 
     private var cancellables = Set<AnyCancellable>()
 
-    enum MatchMode {
-        case preLive
-        case live
-    }
-
-    var matchMode: MatchMode {
-        didSet {
-            if matchMode == .preLive {
-                self.headerDetailLiveView.isHidden = true
-
-                self.headerDetailPreliveView.isHidden = false
-
-            }
-            else {
-                self.headerDetailPreliveView.isHidden = true
-
-                self.headerDetailLiveView.isHidden = false
-
-            }
-
-            self.view.setNeedsLayout()
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    var match: Match?
-    var matchId: String
-
-    var viewModel: MatchDetailsViewModel
-
-    var matchDetails: [Match] = []
 
     // MARK: - Lifetime and Cycle
-    init(matchMode: MatchMode = .preLive, match: Match) {
-        self.matchMode = matchMode
-        self.match = match
-        self.matchId = match.id
+    init(viewModel: MatchDetailsViewModel) {
 
-        self.viewModel = MatchDetailsViewModel(match: match)
-        self.marketGroupsPagedViewController = UIPageViewController(transitionStyle: .scroll,
-                                                          navigationOrientation: .horizontal,
-                                                          options: nil)
-
-        super.init(nibName: "MatchDetailsViewController", bundle: nil)
-    }
-
-    init(matchMode: MatchMode = .preLive, matchId: String) {
-        self.matchMode = matchMode
-        self.matchId = matchId
-
-        self.viewModel = MatchDetailsViewModel(matchId: matchId)
-        self.match = self.viewModel.match
+        self.viewModel = viewModel
 
         self.marketGroupsPagedViewController = UIPageViewController(transitionStyle: .scroll,
                                                           navigationOrientation: .horizontal,
@@ -261,14 +213,9 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
 
-        if self.matchMode == .preLive {
-            self.headerDetailLiveView.isHidden = true
-            self.headerDetailPreliveView.isHidden = false
-        }
-        else {
-            self.headerDetailPreliveView.isHidden = true
-            self.headerDetailLiveView.isHidden = false
-        }
+        // Default to Pre Live
+        self.headerDetailLiveView.isHidden = true
+        self.headerDetailPreliveView.isHidden = false
 
         // Market Types CollectionView
         let flowLayout = UICollectionViewFlowLayout()
@@ -309,6 +256,10 @@ class MatchDetailsViewController: UIViewController {
 
         self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
 
+        self.matchFieldBaseView.isHidden = true
+
+        //
+        //
         self.view.addSubview(self.sharedGameCardView)
 
         NSLayoutConstraint.activate([
@@ -325,19 +276,6 @@ class MatchDetailsViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        // Hide match field if the sport doesn't support it
-        self.matchFieldBaseView.isHidden = true
-
-        let validSportType = self.match?.sportType == "1" || self.match?.sportType == "3"
-        if self.matchMode == .live && validSportType {
-            self.shouldShowWebView = true
-        }
-
-        if shouldShowWebView, let match = self.match {
-            let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
-            self.matchFieldWebView.load(request)
-        }
-
         self.marketTypesCollectionView.reloadData()
         self.tableView.reloadData()
 
@@ -352,7 +290,9 @@ class MatchDetailsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-        self.setupMatchDetailPublisher()
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
@@ -361,12 +301,6 @@ class MatchDetailsViewController: UIViewController {
         super.viewWillDisappear(animated)
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
-    }
-
-    deinit {
-        if let matchDetailsRegister = matchDetailsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
-        }
     }
 
     // MARK: - Layout and Theme
@@ -477,15 +411,53 @@ class MatchDetailsViewController: UIViewController {
             }
             .store(in: &cancellables)
 
+        self.viewModel.matchPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] loadableMatch in
+                switch loadableMatch {
+                case .idle, .loading:
+                    ()
+                case .loaded:
+                    self?.setupHeaderDetails()
+                    self?.setupMatchField()
+                case .failed:
+                    self?.showMatchNotAvailableView()
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.matchModePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] matchMode in
+
+                if matchMode == .preLive {
+                    self?.headerDetailLiveView.isHidden = true
+                    self?.headerDetailPreliveView.isHidden = false
+                }
+                else {
+                    self?.headerDetailPreliveView.isHidden = true
+                    self?.headerDetailLiveView.isHidden = false
+                }
+
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
+
+                self?.updateHeaderDetails()
+            })
+            .store(in: &cancellables)
     }
 
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
+
+        guard let match = self.viewModel.match else {
+            return
+        }
 
         self.marketGroupsViewControllers = []
 
         for marketGroup in marketGroups {
             if let groupKey = marketGroup.groupKey {
-                let viewModel = MarketGroupDetailsViewModel(matchId: self.matchId, marketGroupId: groupKey)
+                let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
 
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
@@ -533,134 +505,92 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
     }
 
-    func setupMatchDetailPublisher() {
-        if let matchDetailsRegister = matchDetailsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+    func setupMatchField() {
+
+        // Hide match field if the sport doesn't support it
+        self.matchFieldBaseView.isHidden = true
+
+        guard let match = self.viewModel.match else {
+            return
         }
 
-        var matchIdSecured = self.matchId
-        if let matchId = self.match?.id {
-            matchIdSecured = matchId
+        let validSportType = match.sportType == "1" || match.sportType == "3"
+        if self.viewModel.matchModePublisher.value == .live && validSportType {
+            self.shouldShowWebView = true
         }
 
-        let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
-                                                                language: "en",
-                                                                matchId: matchIdSecured)
-
-        self.matchDetailsAggregatorPublisher?.cancel()
-        self.matchDetailsAggregatorPublisher = nil
-
-        self.matchDetailsAggregatorPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving match detail data!")
-                case .finished:
-                    print("Data retrieved!")
-                }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher connect")
-                    self?.matchDetailsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher initialContent")
-                    self?.setupMatchDetailAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher updatedContent")
-                    self?.updateMatchDetailAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher disconnect")
-                }
-            })
-    }
-
-    private func setupMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-
-        self.viewModel.store.processAggregatorForMatchDetail(aggregator)
-
-        if let match = self.viewModel.store.match {
-            self.viewModel.match = match
-            self.match = match
-
-            if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
-                self.matchMode = .live
-            }
-
-            self.setupHeaderDetails()
-        }
-        else {
-            self.showMatchNotAvailableView()
+        if shouldShowWebView {
+            let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
+            self.matchFieldWebView.load(request)
         }
 
-    }
-
-    private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
-
-        self.viewModel.store.processContentUpdateAggregatorForMatchDetail(aggregator)
-
-        if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
-            self.matchMode = .live
-        }
-        self.updateHeaderDetails()
     }
 
     func setupHeaderDetails() {
-        if let match = self.match {
-            let viewModel = MatchWidgetCellViewModel(match: match)
-
-            // self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-
-            if viewModel.countryISOCode != "" {
-                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-            }
-            else {
-                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
-            }
-
-            self.headerCompetitionLabel.text = viewModel.competitionName
-            self.headerDetailHomeLabel.text = viewModel.homeTeamName
-            self.headerDetailAwayLabel.text = viewModel.awayTeamName
-
-            if matchMode == .preLive {
-                self.headerDetailPreliveTopLabel.text = viewModel.startDateString
-                self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
-            }
-            else {
-                updateHeaderDetails()
-            }
-
-            self.sharedGameCardView.setupSharedCardInfo(viewModel: self.viewModel)
-
+        guard
+            let match = self.viewModel.match
+        else {
+            return
         }
+
+        let viewModel = MatchWidgetCellViewModel(match: match)
+
+        // self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+
+        if viewModel.countryISOCode != "" {
+            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        }
+        else {
+            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+        }
+
+        self.headerCompetitionLabel.text = viewModel.competitionName
+        self.headerDetailHomeLabel.text = viewModel.homeTeamName
+        self.headerDetailAwayLabel.text = viewModel.awayTeamName
+
+        if self.viewModel.matchModePublisher.value == .preLive {
+            self.headerDetailPreliveTopLabel.text = viewModel.startDateString
+            self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
+        }
+        else {
+            self.updateHeaderDetails()
+        }
+
+        self.sharedGameCardView.setupSharedCardInfo(viewModel: self.viewModel)
+
     }
 
     func updateHeaderDetails() {
+
+        guard let match = self.viewModel.match else {
+            return
+        }
+
+        let matchId = self.viewModel.matchId
+
         var homeGoals = ""
         var awayGoals = ""
         var minutes = ""
         var matchPart = ""
 
-        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[match?.id ?? ""] {
+        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[matchId] {
             for matchInfoId in matchInfoArray {
                 if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match?.rootPartId {
+                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == match.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
+                            if match.homeParticipant.id == matchInfo.paramParticipantId1 {
                                 homeGoals = "\(homeGoalsFloat)"
                             }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
+                            else if match.awayParticipant.id == matchInfo.paramParticipantId1 {
                                 awayGoals = "\(homeGoalsFloat)"
                             }
                         }
                         if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
+                            if match.homeParticipant.id == matchInfo.paramParticipantId2 {
                                 homeGoals = "\(awayGoalsFloat)"
                             }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
+                            else if match.awayParticipant.id == matchInfo.paramParticipantId2 {
                                 awayGoals = "\(awayGoalsFloat)"
                             }
                         }
@@ -716,10 +646,20 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @IBAction private func didTapBackAction() {
-        self.navigationController?.popViewController(animated: true)
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @IBAction private func didTapShareButton() {
+
+        guard let matchId = self.viewModel.match?.id else {
+            return
+        }
+
         self.sharedGameCardView.isHidden = false
 
         let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
@@ -730,7 +670,7 @@ class MatchDetailsViewController: UIViewController {
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
 
-        if let matchId = self.match?.id, let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
 
             let imageProvider = NSItemProvider(object: snapshot)
             metadata.imageProvider = imageProvider

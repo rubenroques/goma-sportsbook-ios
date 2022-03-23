@@ -257,7 +257,6 @@ class MyTicketTableViewCell: UITableViewCell {
         }
 
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-            // self.totalOddSubtitleLabel.text = "\(Double(floor(oddValue * 100)/100))"
             let newOddValue = Double(floor(oddValue * 100)/100)
             self.totalOddSubtitleLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         }

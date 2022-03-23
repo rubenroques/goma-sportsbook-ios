@@ -17,6 +17,8 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -65,6 +67,11 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)
             }
+            
+            cell.didTapFavoriteMatchAction = { [weak self] match in
+                self?.didTapFavoriteMatchAction?(match)
+            }
+            
             cell.matchWentLive = {
                 self.matchWentLiveAction?()
             }

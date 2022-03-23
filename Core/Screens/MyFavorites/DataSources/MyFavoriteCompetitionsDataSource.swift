@@ -15,6 +15,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -67,7 +68,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             cell.matchWentLive = {
                 self.matchWentLiveAction?()
             }
-
+            
             return cell
         }
         else {
@@ -121,6 +122,13 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
         else {
             headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
         }
+        
+        headerView.didTapFavoriteCompetitionAction = {[weak self] competition in
+            self?.didTapFavoriteCompetitionAction?(competition)
+        }
+        /*if let competition = self.competitions[safe: indexPath.section] {
+            self.didTapFavoriteCompetitionAction?(competition)
+        }*/
 
         return headerView
     }

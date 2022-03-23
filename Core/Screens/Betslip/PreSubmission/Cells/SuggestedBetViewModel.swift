@@ -214,19 +214,7 @@ class SuggestedBetViewModel: NSObject {
     }
 
     func addOutcomeToTicketArray(match: Match, market: Market, outcome: Outcome) {
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = market.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: market.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
         self.betslipTickets.append(bettingTicket)
     }
 
