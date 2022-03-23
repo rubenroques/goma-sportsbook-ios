@@ -176,14 +176,8 @@ class PreLiveEventsViewController: UIViewController {
         }
 
         self.viewModel.didSelectMatchAction = { match in
-            if let matchInfo = Env.everyMatrixStorage.matchesInfoForMatch[match.id] {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-                self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-            }
-            else {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
-                self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-            }
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
         self.viewModel.didSelectCompetitionAction = { competition in

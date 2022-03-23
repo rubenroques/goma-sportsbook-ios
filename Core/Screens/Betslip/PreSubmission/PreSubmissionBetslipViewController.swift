@@ -374,6 +374,10 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.systemBetOptions = []
                 self?.selectedSystemBet = nil
 
+                if tickets.count >= 3 {
+                    self?.requestSystemBetsTypes()
+                }
+
                 self?.systemBetTypePickerView.reloadAllComponents()
 
                 self?.tableView.reloadData()
@@ -398,7 +402,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
                 else {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
-                    self?.requestSystemBetsTypes()
                 }
 
                 if ticketsCount == 1 {
