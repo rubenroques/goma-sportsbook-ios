@@ -227,7 +227,8 @@ class HeaderTextFieldView: NibView {
 
         self.centerBottomConstraint.isActive = false
         self.centerTopConstraint.isActive = true
-
+        self.setNeedsLayout()
+        
         UIView.animate(withDuration: animated ? 0.2 : 0, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
 
@@ -249,6 +250,7 @@ class HeaderTextFieldView: NibView {
 
         self.centerBottomConstraint.isActive = true
         self.centerTopConstraint.isActive = false
+        self.setNeedsLayout()
 
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()

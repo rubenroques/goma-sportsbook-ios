@@ -362,6 +362,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.bettingTicketsPublisher
             .receive(on: DispatchQueue.main)
             .map(Array.init)
+            .removeDuplicates(by: { previous, current in
+                let result = previous.map(\.id).elementsEqual(current.map(\.id))
+                return result
+            })
             .sink { [weak self] tickets in
                 self?.singleBettingTicketDataSource.bettingTickets = tickets
                 self?.multipleBettingTicketDataSource.bettingTickets = tickets
@@ -370,11 +374,26 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.systemBetOptions = []
                 self?.selectedSystemBet = nil
 
+                if tickets.count >= 3 {
+                    self?.requestSystemBetsTypes()
+                }
+
                 self?.systemBetTypePickerView.reloadAllComponents()
+
+                self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+
+        Env.betslipManager.bettingTicketsPublisher
+            .receive(on: DispatchQueue.main)
+            .map(Array.init)
+            .map(\.count)
+            .removeDuplicates()
+            .sink { [weak self] ticketsCount in
 
                 let oldSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex ?? 0
 
-                if tickets.count < 3 {
+                if ticketsCount < 3 {
                     if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
                         self?.betTypeSegmentControl.selectedSegmentIndex = 1
                     }
@@ -383,10 +402,9 @@ class PreSubmissionBetslipViewController: UIViewController {
                 }
                 else {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
-                    self?.requestSystemBetsTypes()
                 }
 
-                if tickets.count == 1 {
+                if ticketsCount == 1 {
                     if self?.betTypeSegmentControl.selectedSegmentIndex == 1 {
                         self?.betTypeSegmentControl.selectedSegmentIndex = 0
                     }
@@ -396,11 +414,11 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
                 }
 
-                if tickets.count > 1 && self?.isSuggestedMultiple == true {
+                if ticketsCount > 1 && self?.isSuggestedMultiple == true {
                     self?.betTypeSegmentControl.selectedSegmentIndex = 1
                 }
 
-                if tickets.count >= 9 {
+                if ticketsCount >= 9 {
                     if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
                         self?.betTypeSegmentControl.selectedSegmentIndex = 1
                     }
@@ -413,8 +431,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                    newSegmentIndex != oldSegmentIndex {
                     self?.didChangeSegmentValue(segmentControl)
                 }
-
-                self?.tableView.reloadData()
             }
             .store(in: &cancellables)
 
@@ -457,7 +473,6 @@ class PreSubmissionBetslipViewController: UIViewController {
                 if isEmpty {
                     self?.getSuggestedBets()
                 }
-
             })
             .store(in: &cancellables)
 
@@ -478,19 +493,19 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.userSessionPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] userInfo in
-                
-                if userInfo != nil {
-                    self?.emptyBetsBaseView.isHidden = true
-                    self?.placeBetBaseView.isHidden = false
-                    self?.tableView.isHidden = false
-                    self?.clearBaseView.isHidden = false
-                    self?.betTypeSegmentControlBaseView.isHidden = false
-                
-                }
-            }).store(in: &cancellables)
+//        Env.userSessionStore.userSessionPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] userInfo in
+//
+//                if userInfo != nil {
+//                    self?.emptyBetsBaseView.isHidden = true
+//                    self?.placeBetBaseView.isHidden = false
+//                    self?.tableView.isHidden = false
+//                    self?.clearBaseView.isHidden = false
+//                    self?.betTypeSegmentControlBaseView.isHidden = false
+//
+//                }
+//            }).store(in: &cancellables)
 
         self.listTypePublisher
             .receive(on: DispatchQueue.main)
@@ -681,7 +696,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         Env.betslipManager.multipleBetslipSelectionState
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] betslipState in
-                //print("MULTIPLE BET STATE: \(betslipState)")
+                // print("MULTIPLE BET STATE: \(betslipState)")
                 self?.maxStakeMultiple = betslipState?.maxStake
                 if let multipleBetslipState = betslipState {
                     self?.checkForbiddenCombinationErrors(multipleBetslipState: multipleBetslipState)
@@ -724,6 +739,14 @@ class PreSubmissionBetslipViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] wallet in
                 self?.userBalance = wallet?.amount
+            })
+            .store(in: &cancellables)
+
+        Env.everyMatrixClient.serviceStatusPublisher
+            .filter({ $0 == .connected })
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.tableView.reloadData()
             })
             .store(in: &cancellables)
 
@@ -1090,8 +1113,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.settingsButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
         self.clearButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        
-        self.emptyBetsBaseView.isHidden = true
         
     }
 

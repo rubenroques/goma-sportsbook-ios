@@ -118,7 +118,7 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.fetchData()
 
         self.viewModel.didSelectMatchAction = { match in
-            let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 

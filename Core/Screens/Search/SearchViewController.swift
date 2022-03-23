@@ -321,17 +321,8 @@ class SearchViewController: UIViewController {
     }
 
     private func openMatchDetailsScreen(match: Match) {
-
-        if self.viewModel.matchesInfoForMatch[match.id] != nil {
-            let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-
-            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-        }
-        else {
-            let matchDetailsViewController = MatchDetailsViewController(match: match)
-
-            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-        }
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+        self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
     private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {

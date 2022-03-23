@@ -116,6 +116,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
         self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
         self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
+
         StyleHelper.styleButton(button: self.continueButton)
     }
 
