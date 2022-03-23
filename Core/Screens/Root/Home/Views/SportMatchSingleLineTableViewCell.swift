@@ -15,6 +15,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
     var tappedMatchLineAction: ((Match) -> Void)?
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+    
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
@@ -288,6 +290,10 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.tappedMatchWidgetAction = { [weak self] in
                     self?.tappedMatchLineAction?(match)
                 }
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
+                }
+                
                 cell.shouldShowCountryFlag(true)
                 return cell
             }
@@ -303,6 +309,9 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.configure(withViewModel: cellViewModel)
                 cell.tappedMatchWidgetAction = { [weak self] in
                     self?.tappedMatchLineAction?(match)
+                }
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -328,6 +337,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
+                        
                         return cell
                     }
                 }

@@ -21,6 +21,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+   
+    
 
     init(matches: [Match], outrightCompetitions: [Competition]? = nil) {
         self.matches = matches
@@ -150,6 +153,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
+                }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
                 }
                 return cell
             }

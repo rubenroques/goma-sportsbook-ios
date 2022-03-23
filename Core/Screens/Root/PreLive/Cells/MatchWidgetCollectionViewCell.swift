@@ -55,6 +55,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var suspendedLabel: UILabel!
 
     var viewModel: MatchWidgetCellViewModel?
+    
 
     static var cellHeight: CGFloat = 156
 
@@ -70,6 +71,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -527,21 +530,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if UserDefaults.standard.userSession != nil {
-
-            if self.isFavorite {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: .match)
-                }
-                self.isFavorite = false
-            }
-            else {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: .match)
-                }
-                self.isFavorite = true
-            }
+        if let match = self.viewModel?.match {
+            self.didTapFavoriteMatchAction?(match)
         }
+    
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {

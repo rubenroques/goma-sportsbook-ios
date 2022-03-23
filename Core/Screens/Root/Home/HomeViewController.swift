@@ -240,6 +240,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
+            cell.didTapFavoriteMatchAction = { [weak self] match in
+                self?.viewModel.markAsFavorite(match: match)
+            }
+           
             return cell
 
         case .suggestedBets:
@@ -266,6 +270,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             switch sportMatchLineViewModel.loadingPublisher.value {
             case .loading, .empty:
                 let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+                
                 return cell
             case.loaded:
                 ()
@@ -297,6 +302,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
                 }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                    
+                }
+                
                 return cell
 
             case .singleLine:
@@ -319,6 +336,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllPopular = { [weak self] sport in
                     self?.openPopularDetails(sport)
                 }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                }
+                
                 return cell
                 
             case .competition:

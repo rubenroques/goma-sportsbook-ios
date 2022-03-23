@@ -84,6 +84,29 @@ class MyFavoritesViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+        
+        self.viewModel.didTapFavoriteMatchAction = { match in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
+            }
+        }
+        
+       self.viewModel.didTapFavoriteCompetitionAction = { competition in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markCompetitionAsFavorite(competition: competition)
+                self.tableView.reloadData()
+            }
+        }
+        
+        
+
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -226,6 +249,11 @@ class MyFavoritesViewController: UIViewController {
         }
 
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+    
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
     }
 
 }
