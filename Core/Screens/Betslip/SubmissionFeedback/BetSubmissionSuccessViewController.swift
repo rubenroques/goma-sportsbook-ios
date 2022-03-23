@@ -132,6 +132,7 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.totalOddsLabel.font = AppFont.with(type: .semibold, size: 16)
         
         self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
+
         self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
         self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
         self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)

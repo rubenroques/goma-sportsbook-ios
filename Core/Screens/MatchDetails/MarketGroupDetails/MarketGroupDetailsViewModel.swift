@@ -10,7 +10,7 @@ import Combine
 
 class MarketGroupDetailsViewModel {
 
-    var matchId: String
+    var match: Match
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(true)
     var marketGroupOrganizersPublisher: CurrentValueSubject<[MarketGroupOrganizer], Never>  = .init([])
 
@@ -21,8 +21,8 @@ class MarketGroupDetailsViewModel {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    init(matchId: String, marketGroupId: String, store: MarketGroupDetailsStore = MarketGroupDetailsStore()) {
-        self.matchId = matchId
+    init(match: Match, marketGroupId: String, store: MarketGroupDetailsStore = MarketGroupDetailsStore()) {
+        self.match = match
         self.marketGroupId = marketGroupId
         self.store = store
     }
@@ -36,7 +36,7 @@ class MarketGroupDetailsViewModel {
         let language = "en"
         let endpoint = TSRouter.matchMarketGroupDetailsPublisher(operatorId: Env.appSession.operatorId,
                                                                  language: language,
-                                                                 matchId: self.matchId,
+                                                                 matchId: self.match.id,
                                                                  marketGroupName: marketGroupId)
 
         Env.everyMatrixClient.manager

@@ -55,6 +55,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBOutlet private weak var suspendedLabel: UILabel!
 
     var viewModel: MatchWidgetCellViewModel?
+    
 
     static var cellHeight: CGFloat = 156
 
@@ -70,6 +71,8 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -527,21 +530,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if UserDefaults.standard.userSession != nil {
-
-            if self.isFavorite {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: .match)
-                }
-                self.isFavorite = false
-            }
-            else {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: .match)
-                }
-                self.isFavorite = true
-            }
+        if let match = self.viewModel?.match {
+            self.didTapFavoriteMatchAction?(match)
         }
+    
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
@@ -606,25 +598,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.leftOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
         
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -653,25 +633,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @objc func didTapMiddleOddButton() {
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.middleOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -699,25 +667,13 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @objc func didTapRightOddButton() {
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.rightOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
         
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)

@@ -30,6 +30,10 @@ class SearchViewController: UIViewController {
     var viewModel: SearchViewModel
     var cancellables = Set<AnyCancellable>()
 
+    var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    var didSelectCompetitionAction: ((String) -> Void)?
+
     var showSearchResultsTableView: Bool = false {
         didSet {
             if showSearchResultsTableView {
@@ -195,6 +199,10 @@ class SearchViewController: UIViewController {
         self.activityIndicatorBaseView.isHidden = true
 
     }
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
+    }
 
     func setupPublishers() {
 
@@ -230,6 +238,30 @@ class SearchViewController: UIViewController {
 
             })
             .store(in: &cancellables)
+
+        self.didSelectMatchAction = { match in
+
+            if self.viewModel.matchesInfoForMatch[match.id] != nil {
+                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+
+                self.present(matchDetailsViewController, animated: true, completion: nil)
+            }
+            else {
+                let matchDetailsViewController = MatchDetailsViewController(match: match)
+
+                self.present(matchDetailsViewController, animated: true, completion: nil)
+            }
+        }
+        
+        self.didTapFavoriteMatchAction = { match in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
+            }
+        }
 
         self.searchTextPublisher
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
@@ -289,17 +321,8 @@ class SearchViewController: UIViewController {
     }
 
     private func openMatchDetailsScreen(match: Match) {
-
-        if self.viewModel.matchesInfoForMatch[match.id] != nil {
-            let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-
-            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-        }
-        else {
-            let matchDetailsViewController = MatchDetailsViewController(match: match)
-
-            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-        }
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+        self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
     private func openCompetitionDetailsScreen(competition: EveryMatrix.Tournament) {
@@ -412,6 +435,10 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
 
                     cell.tappedMatchLineAction = {
                         self.openMatchDetailsScreen(match: match)
+                    }
+                    
+                    cell.didTapFavoriteMatchAction = { [weak self] match in
+                        self?.didTapFavoriteMatchAction?(match)
                     }
 
                     return cell
