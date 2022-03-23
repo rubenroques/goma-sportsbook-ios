@@ -346,9 +346,7 @@ extension BetslipManager {
 
         let future = Future<[BetPlacedDetails], EveryMatrix.APIError>.init({ promise in
 
-
             var betPlacedDetailsList: [BetPlacedDetails] = []
-
             let ticketSelections = self.bettingTicketsPublisher.value
 
             let requests = ticketSelections.map { ticketSelection -> AnyPublisher<BetPlacedDetails, EveryMatrix.APIError>? in
@@ -380,53 +378,14 @@ extension BetslipManager {
         return future
     }
 
-    private func placeNextSingleBet( betPlacedDetailsList: [BetPlacedDetails],
-                                     amounts: [String: Double],
-                                     singleFreeBet: SingleBetslipFreebet?,
-                                     singleOddsBoost: SingleBetslipOddsBoost?,
-                                     completion: @escaping ( Result<[BetPlacedDetails], EveryMatrix.APIError> ) -> Void) {
-
-        let ticketSelections = self.bettingTicketsPublisher.value
-
-        if ticketSelections.isEmpty {
-            completion(.success(betPlacedDetailsList))
-            self.newBetsPlacedPublisher.send()
-            return
-        }
-
-        if let lastTicket = ticketSelections.first, let lastTicketAmount = amounts[lastTicket.id] {
-            placeSingleBet(betTicketId: lastTicket.id, amount: lastTicketAmount, singleFreeBet: singleFreeBet, singleOddsBoost: singleOddsBoost)
-                .receive(on: DispatchQueue.main)
-                .sink(receiveCompletion: { (publisherCompletion: Subscribers.Completion<EveryMatrix.APIError>) -> Void in
-                    switch publisherCompletion {
-                    case .failure(let error):
-                        completion( .failure(error) )
-                    default: ()
-                    }
-                }, receiveValue: { (betPlacedDetails: BetPlacedDetails) -> Void in
-                    if let response = betPlacedDetails.response.betSucceed, response == true {
-                            self.removeBettingTicket(withId: lastTicket.id)
-                            var newList = betPlacedDetailsList
-                            newList.append(betPlacedDetails)
-                        self.placeNextSingleBet(betPlacedDetailsList: newList, amounts: amounts, singleFreeBet: singleFreeBet, singleOddsBoost: singleOddsBoost, completion: completion)
-                    }
-                    else {
-                        var newList = betPlacedDetailsList
-                        newList.append(betPlacedDetails)
-                        completion( .success(newList) )
-                        self.newBetsPlacedPublisher.send()
-                    }
-                })
-                .store(in: &cancellables)
-        }
-    }
-    
     private func placeSingleBet(betTicketId: String, amount: Double, singleFreeBet: SingleBetslipFreebet?, singleOddsBoost: SingleBetslipOddsBoost?) ->
     AnyPublisher<BetPlacedDetails, EveryMatrix.APIError> {
+
         let updatedTicketSelections = self.bettingTicketsPublisher.value
         let ticketSelections = updatedTicketSelections.filter({ bettingTicket in
             bettingTicket.id == betTicketId
         }).map({ EveryMatrix.BetslipTicketSelection(id: $0.id, currentOdd: $0.value) })
+
         let userBetslipSetting = UserDefaults.standard.string(forKey: "user_betslip_settings")
 
         var betAmount = amount
