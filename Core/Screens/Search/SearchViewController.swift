@@ -240,17 +240,9 @@ class SearchViewController: UIViewController {
             .store(in: &cancellables)
 
         self.didSelectMatchAction = { match in
-
-            if self.viewModel.matchesInfoForMatch[match.id] != nil {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-
-                self.present(matchDetailsViewController, animated: true, completion: nil)
-            }
-            else {
-                let matchDetailsViewController = MatchDetailsViewController(match: match)
-
-                self.present(matchDetailsViewController, animated: true, completion: nil)
-            }
+            let matchViewModel = MatchDetailsViewModel(match: match)
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: matchViewModel)
+            self.present(matchDetailsViewController, animated: true, completion: nil)
         }
         
         self.didTapFavoriteMatchAction = { match in
@@ -342,7 +334,7 @@ class SearchViewController: UIViewController {
     }
 
     @objc func didTapBetslipView() {
-        //self.didTapBetslipButtonAction?()
+        // self.didTapBetslipButtonAction?()
         self.openBetslipModal()
     }
 
@@ -448,7 +440,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                 if let cell = tableView.dequeueCellType(CompetitionSearchTableViewCell.self) {
 
                     if let cellCompetition = competition.name, let cellVenueId = competition.venueId {
-                        //cell.setTitle(title: "\(cellCompetition)")
+                        // cell.setTitle(title: "\(cellCompetition)")
                         let location = self.viewModel.location(forId: cellVenueId)
                         cell.setCellValues(title: cellCompetition, flagCode: location?.code ?? "", flagId: location?.id ?? "")
                         cell.tappedCompetitionCellAction = {

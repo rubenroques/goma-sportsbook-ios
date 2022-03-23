@@ -135,7 +135,7 @@ class MyTicketsViewController: UIViewController {
            
             let matchViewModel = MatchDetailsViewModel(matchId: matchId)
            
-            let matchDetailsViewController = MatchDetailsViewController(matchId: matchViewModel.matchId)
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: matchViewModel)
             self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
             
         }
