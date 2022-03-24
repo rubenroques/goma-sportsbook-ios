@@ -2625,6 +2625,7 @@
 			children = (
 				458BAC732770ACAE006C4BC7 /* MyTicketTableViewCell.swift */,
 				458BAC742770ACAE006C4BC7 /* MyTicketTableViewCell.xib */,
+				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
 				458BAC802770EF53006C4BC7 /* MyTicketBetLineView.xib */,
 			);
 			path = Views;
@@ -3431,7 +3432,6 @@
 				453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */,
 				45A0B2FE274F9D5000211A85 /* MatchDetailsAggregatorRepository.swift */,
 				455C677227E24CCA00AAB2A5 /* MarketGroupDetails */,
-				458BAC7F2770EF53006C4BC7 /* MyTicketBetLineView.swift */,
 				4591358027602960009D1193 /* MarketGroupOrganizer.swift */,
 				A9BCF43A274FB589006DD528 /* Cells */,
 			);
@@ -3583,10 +3583,10 @@
 		A9E7C6AA27BD573000F784C9 /* AppSettings */ = {
 			isa = PBXGroup;
 			children = (
+				A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */,
 				A91F4B3727BFCA0B008C7510 /* Odds */,
 				A91F4B3027BFB8E9008C7510 /* Appearance */,
 				A91F4B2C27BEAEED008C7510 /* Notifications */,
-				A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */,
 			);
 			path = AppSettings;
 			sourceTree = "<group>";
@@ -5100,7 +5100,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00404;
+				CURRENT_PROJECT_VERSION = 00413;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5126,7 +5126,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00404;
+				CURRENT_PROJECT_VERSION = 00413;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5150,7 +5150,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				DEVELOPMENT_TEAM = TKH4GU3DG3;
 				INFOPLIST_FILE = Core/Tests/CoreTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5172,7 +5172,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				DEVELOPMENT_TEAM = TKH4GU3DG3;
 				INFOPLIST_FILE = Core/Tests/CoreTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5197,7 +5197,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00200;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				DEVELOPMENT_TEAM = TKH4GU3DG3;
 				INFOPLIST_FILE = "Clients/Showcase/Beta/ShowcaseBeta-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5223,7 +5223,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00200;
-				DEVELOPMENT_TEAM = 422GNXXZJR;
+				DEVELOPMENT_TEAM = TKH4GU3DG3;
 				INFOPLIST_FILE = "Clients/Showcase/Beta/ShowcaseBeta-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (

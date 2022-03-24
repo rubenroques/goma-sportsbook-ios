@@ -167,9 +167,6 @@ class RootViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-
-        // TODO: Code Review 14/02 - Remove this after the option is added to the correct place
-        self.testNewFavorites()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -387,18 +384,6 @@ class RootViewController: UIViewController {
         if homeViewControllerLoaded {
             self.homeViewController.reloadData()
         }
-    }
-
-    //
-    func testNewFavorites() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
-        self.topBarView.addGestureRecognizer(tap)
-    }
-
-    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        let favoritesVC = MyFavoritesViewController()
-        // self.present(favoritesVC, animated: true, completion: nil)
-        self.navigationController?.pushViewController(favoritesVC, animated: true)
     }
 
     //

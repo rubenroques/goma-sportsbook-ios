@@ -165,6 +165,11 @@ class CompetitionDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
+    }
+    
     private func openCompetitionDetails(_ competition: Competition) {
         let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
         let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
@@ -172,8 +177,7 @@ class CompetitionDetailsViewController: UIViewController {
     }
 
     private func openMatchDetails(_ match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -272,6 +276,18 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
             headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
         }
 
+        headerView.didTapFavoriteCompetitionAction = { [weak self] competition in
+            
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markCompetitionAsFavorite(competition: competition)
+                tableView.reloadData()
+            }
+            
+        }
+    
         return headerView
     }
 

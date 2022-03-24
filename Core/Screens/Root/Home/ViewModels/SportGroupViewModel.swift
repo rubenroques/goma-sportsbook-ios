@@ -43,13 +43,9 @@ class SportGroupViewModel {
     func sportMatchLineViewModel(forType type: SportMatchLineViewModel.MatchesType) -> SportMatchLineViewModel {
 
         if let sportMatchLineViewModel = cachedViewModels[type] {
-            print("HomeDebug cached - \(self.sport.name);\(type)")
             return sportMatchLineViewModel
         }
         else {
-
-            print("HomeDebug create - \(self.sport.name);\(type)")
-
             let sportMatchLineViewModel = SportMatchLineViewModel(sport: self.sport, matchesType: type, store: self.store)
 
             sportMatchLineViewModel.loadingPublisher

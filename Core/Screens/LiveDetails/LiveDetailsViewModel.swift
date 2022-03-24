@@ -62,13 +62,17 @@ class LiveDetailsViewModel {
 
     }
 
+    func requestNextPage() {
+        self.fetchNextPage()
+    }
+
     private func resetPageCount() {
         self.matchesCount = 10
         self.matchesPage = 1
         self.matchesHasNextPage = true
     }
 
-    private func fetchPopularMatchesNextPage() {
+    private func fetchNextPage() {
         if !matchesHasNextPage {
             return
         }
@@ -159,12 +163,23 @@ extension LiveDetailsViewModel {
 
 extension LiveDetailsViewModel {
 
+    func shouldShowLoadingCell() -> Bool {
+        return self.matches.isNotEmpty && matchesHasNextPage
+    }
+
     func numberOfSection() -> Int {
-        return 1
+        return 2
     }
 
     func numberOfItems(forSection section: Int) -> Int {
-        return self.matches.count
+        switch section {
+        case 0:
+            return self.matches.count
+        case 1:
+            return self.shouldShowLoadingCell() ? 1 : 0
+        default:
+            return 0
+        }
     }
 
     func match(forIndexPath indexPath: IndexPath) -> Match? {
