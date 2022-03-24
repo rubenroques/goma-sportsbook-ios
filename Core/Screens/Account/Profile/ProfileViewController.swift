@@ -331,7 +331,7 @@ class ProfileViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        closeButton.setTitleColor( UIColor.App.textPrimary, for: .normal)
+        closeButton.setTitleColor( UIColor.App.highlightPrimary, for: .normal)
         closeButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
         closeButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.4), for: .disabled)
 
@@ -422,7 +422,10 @@ class ProfileViewController: UIViewController {
 
             let depositViewController = DepositViewController()
 
-            self.navigationController?.pushViewController(depositViewController, animated: true)
+            let navigationViewController = Router.navigationController(with: depositViewController)
+            self.present(navigationViewController, animated: true, completion: nil)
+
+            //self.navigationController?.pushViewController(depositViewController, animated: true)
         }
         else {
             let alert = UIAlertController(title: localized("profile_incomplete"),
@@ -439,7 +442,9 @@ class ProfileViewController: UIViewController {
 
             let withDrawViewController = WithdrawViewController()
 
-            self.navigationController?.pushViewController(withDrawViewController, animated: true)
+            //self.navigationController?.pushViewController(withDrawViewController, animated: true)
+            let navigationViewController = Router.navigationController(with: withDrawViewController)
+            self.present(navigationViewController, animated: true, completion: nil)
         }
         else {
             let alert = UIAlertController(title: localized("profile_incomplete"),

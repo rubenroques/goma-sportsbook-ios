@@ -31,36 +31,35 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="D7B-QQ-aP4">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mzd-jV-Gwm">
-                                    <rect key="frame" x="186.5" y="15" width="41.5" height="20.5"/>
+                                    <rect key="frame" x="186.5" y="12" width="41.5" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KTL-Fy-J5h">
-                                    <rect key="frame" x="8" y="10" width="30" height="30"/>
+                                    <rect key="frame" x="350" y="0.0" width="56" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="68x-SK-Rrn"/>
-                                        <constraint firstAttribute="width" constant="30" id="FLK-lk-R9d"/>
+                                        <constraint firstAttribute="height" constant="44" id="68x-SK-Rrn"/>
                                     </constraints>
-                                    <state key="normal" image="arrow_close_icon"/>
+                                    <state key="normal" title="Cancel"/>
                                     <connections>
                                         <action selector="didTapCloseButton" destination="-1" eventType="touchUpInside" id="5RH-Bj-Gnz"/>
                                     </connections>
                                 </button>
                             </subviews>
                             <constraints>
-                                <constraint firstItem="KTL-Fy-J5h" firstAttribute="leading" secondItem="D7B-QQ-aP4" secondAttribute="leading" constant="8" id="727-Bc-FBy"/>
-                                <constraint firstAttribute="height" constant="50" id="F4a-wJ-oaC"/>
+                                <constraint firstAttribute="height" constant="44" id="F4a-wJ-oaC"/>
+                                <constraint firstAttribute="trailing" secondItem="KTL-Fy-J5h" secondAttribute="trailing" constant="8" id="MsP-wq-8Zf"/>
                                 <constraint firstItem="Mzd-jV-Gwm" firstAttribute="centerY" secondItem="D7B-QQ-aP4" secondAttribute="centerY" id="Pwg-2v-qHp"/>
                                 <constraint firstItem="KTL-Fy-J5h" firstAttribute="centerY" secondItem="D7B-QQ-aP4" secondAttribute="centerY" id="dXy-X7-BEr"/>
                                 <constraint firstItem="Mzd-jV-Gwm" firstAttribute="centerX" secondItem="D7B-QQ-aP4" secondAttribute="centerX" id="ybN-ih-ruY"/>
                             </constraints>
                         </view>
                         <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="82L-qe-8BB">
-                            <rect key="frame" x="0.0" y="50" width="414" height="768"/>
+                            <rect key="frame" x="0.0" y="44" width="414" height="774"/>
                             <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <wkWebViewConfiguration key="configuration">
                                 <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
@@ -93,7 +92,4 @@
             <point key="canvasLocation" x="68" y="66"/>
         </view>
     </objects>
-    <resources>
-        <image name="arrow_close_icon" width="19" height="20"/>
-    </resources>
 </document>

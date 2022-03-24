@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -43,54 +44,55 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="818"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="puZ-O4-0OE">
-                            <rect key="frame" x="0.0" y="0.0" width="414" height="50"/>
+                            <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p3M-Lq-Kqx">
-                                    <rect key="frame" x="186.5" y="15" width="41.5" height="20.5"/>
+                                    <rect key="frame" x="186.5" y="12" width="41.5" height="20.5"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xFA-Gb-EU8">
-                                    <rect key="frame" x="8" y="10" width="30" height="30"/>
+                                    <rect key="frame" x="360" y="0.0" width="46" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="30" id="Kbm-xf-pXW"/>
-                                        <constraint firstAttribute="height" constant="30" id="tN2-jN-Lgv"/>
+                                        <constraint firstAttribute="height" constant="44" id="tN2-jN-Lgv"/>
                                     </constraints>
-                                    <state key="normal" image="thin_close_cross_icon"/>
+                                    <state key="normal" title="Close">
+                                        <color key="titleColor" name="highlightPrimary"/>
+                                    </state>
                                     <connections>
                                         <action selector="didTapCloseButton" destination="-1" eventType="touchUpInside" id="oPe-Lw-uVP"/>
                                     </connections>
                                 </button>
                             </subviews>
                             <constraints>
+                                <constraint firstAttribute="trailing" secondItem="xFA-Gb-EU8" secondAttribute="trailing" constant="8" id="E09-tH-atU"/>
                                 <constraint firstItem="xFA-Gb-EU8" firstAttribute="centerY" secondItem="puZ-O4-0OE" secondAttribute="centerY" id="T3m-l6-ztZ"/>
-                                <constraint firstItem="xFA-Gb-EU8" firstAttribute="leading" secondItem="puZ-O4-0OE" secondAttribute="leading" constant="8" id="ekM-mR-YUn"/>
                                 <constraint firstItem="p3M-Lq-Kqx" firstAttribute="centerY" secondItem="puZ-O4-0OE" secondAttribute="centerY" id="gHx-iy-XCk"/>
                                 <constraint firstItem="p3M-Lq-Kqx" firstAttribute="centerX" secondItem="puZ-O4-0OE" secondAttribute="centerX" id="iAK-9b-JNN"/>
-                                <constraint firstAttribute="height" constant="50" id="vkv-Gq-IYM"/>
+                                <constraint firstAttribute="height" constant="44" id="vkv-Gq-IYM"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cey-8B-Vi3">
-                            <rect key="frame" x="50" y="95" width="314" height="20.5"/>
+                            <rect key="frame" x="50" y="89" width="314" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qx4-fc-HRP" customClass="HeaderTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
-                            <rect key="frame" x="30" y="165.5" width="354" height="80"/>
+                            <rect key="frame" x="30" y="159.5" width="354" height="80"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="80" id="6ez-wS-4xW"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ict-ra-DoK">
-                            <rect key="frame" x="30" y="240.5" width="354" height="20.5"/>
+                            <rect key="frame" x="30" y="234.5" width="354" height="20.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" red="0.1137254902" green="0.1215686275" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K8a-m3-CIw">
-                            <rect key="frame" x="30" y="366" width="354" height="50"/>
+                            <rect key="frame" x="30" y="360" width="354" height="50"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="50" id="Ye8-Sk-aqW"/>
                             </constraints>
@@ -124,7 +126,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="11" translatesAutoresizingMaskIntoConstraints="NO" id="cjs-fx-QLC">
-                            <rect key="frame" x="30" y="291" width="354" height="45"/>
+                            <rect key="frame" x="30" y="285" width="354" height="45"/>
                             <subviews>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bho-EI-4ya">
                                     <rect key="frame" x="0.0" y="0.0" width="80.5" height="45"/>
@@ -218,6 +220,8 @@
         </view>
     </objects>
     <resources>
-        <image name="thin_close_cross_icon" width="13" height="13"/>
+        <namedColor name="highlightPrimary">
+            <color red="0.18823529411764706" green="0.36078431372549019" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>

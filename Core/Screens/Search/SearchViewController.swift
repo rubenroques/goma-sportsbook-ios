@@ -112,7 +112,8 @@ class SearchViewController: UIViewController {
         self.searchView.backgroundColor = .clear
 
         self.cancelButton.backgroundColor = .clear
-        self.cancelButton.tintColor = UIColor.App.textPrimary
+        self.cancelButton.tintColor = UIColor.App.highlightPrimary
+        self.cancelButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.emptySearchLabel.textColor = UIColor.App.textSecondary
 
