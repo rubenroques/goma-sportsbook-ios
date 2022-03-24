@@ -111,17 +111,6 @@ class BetslipViewController: UIViewController {
         preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
         }
-       
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                self?.accountValueLabel.text = value
-//                self?.accountInfoBaseView.isHidden = false
-//            }
-//            .store(in: &cancellables)
 
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})

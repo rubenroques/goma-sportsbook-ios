@@ -175,16 +175,6 @@ class RootViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-//        Env.userSessionStore.userBalanceWallet
-//            .compactMap({$0})
-//            .map(\.amount)
-//            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] value in
-//                self?.accountValueLabel.text = value
-//            }
-//            .store(in: &cancellables)
-
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
