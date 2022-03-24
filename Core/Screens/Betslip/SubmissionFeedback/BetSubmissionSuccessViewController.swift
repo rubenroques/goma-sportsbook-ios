@@ -9,6 +9,7 @@ import UIKit
 
 class BetSubmissionSuccessViewController: UIViewController {
 
+    @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
     @IBOutlet private weak var topView: UIView!
     @IBOutlet private weak var checkmarkImageView: UIImageView!
@@ -32,8 +33,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var checkboxImage: UIImageView!
     
     @IBOutlet private weak var checkboxLabel: UILabel!
-    
-    
+
     var totalOddsValue: String
     var possibleEarningsValue: String
     var numberOfBets: Int
@@ -57,8 +57,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         possibleEarningsDouble = Double(floor(possibleEarningsDouble * 100)/100)
         self.possibleEarningsValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleEarningsDouble)) ?? "-.--€"
 
-        
-       
         //
         // Total Odd
         let totalOddDouble = betPlacedDetailsArray
@@ -115,6 +113,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.bottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
         self.messageSubtitleLabel.textColor = UIColor.App.textPrimary

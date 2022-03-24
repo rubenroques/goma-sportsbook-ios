@@ -356,7 +356,8 @@ Terms of use, Privacy Policy and EULA";
 "second_half_time" = "Second half time";
 "full_time" = "Full time";
 "red_cards" = "Red cards";
-"betting_notifications" = "Betting notifications";
+"games_notifications" = "Games Notifications";
+"betting_notifications" = "Betting Notifications";
 "notify_bets_final_result" = "Notify me about my Bets final results";
 "notify_bets_options_results" = "Notify me about my Bets options results";
 

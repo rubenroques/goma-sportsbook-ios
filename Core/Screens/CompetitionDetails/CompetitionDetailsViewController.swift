@@ -508,16 +508,16 @@ extension CompetitionDetailsViewController {
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 40),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
-            self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
+            self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
         ])
 
         NSLayoutConstraint.activate([

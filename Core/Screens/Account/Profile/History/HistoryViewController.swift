@@ -15,7 +15,7 @@ class HistoryViewController: UIViewController {
     // MARK: - Private Properties
     // Sub Views
     private lazy var navigationBaseView: UIView = Self.createNavigationView()
-    private lazy var backImage: UIImageView = Self.createImageView()
+    private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var optionSegmentControlBaseView: UIView = Self.createSimpleView()
     private lazy var optionSegmentControl: UISegmentedControl = Self.createSegmentedControl()
     private lazy var topLabel: UILabel = Self.createTopLabel()
@@ -79,9 +79,8 @@ class HistoryViewController: UIViewController {
         self.filterBaseView.addGestureRecognizer(tapFilterGesture)
         self.filterBaseView.isUserInteractionEnabled = true
         self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        let tapBackGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapBackButton))
-        self.backImage.isUserInteractionEnabled = true
-        self.backImage.addGestureRecognizer(tapBackGestureRecognizer)
+
+        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
         
         let tapDepositGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapMakeDeposit))
         self.emptyStateButton.isUserInteractionEnabled = true
@@ -130,23 +129,18 @@ class HistoryViewController: UIViewController {
         
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         
-        
-        
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         
         self.navigationBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.topSliderSeparatorView.backgroundColor = UIColor.App.separatorLine
-        
-        self.backImage.image = UIImage(named: "arrow_back_icon")
-        
+                
         self.topSliderCollectionView.backgroundView?.backgroundColor = .clear
         self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundSecondary
         
         self.topLabel.textColor = UIColor.App.textPrimary
         
         self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        
         
         self.optionSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
@@ -476,6 +470,14 @@ extension HistoryViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
+
+    private static func createBackButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+        return button
+    }
     
     private static func createTopSliderCollectionView() -> UICollectionView {
         let collectionLayout = UICollectionViewFlowLayout()
@@ -560,7 +562,7 @@ extension HistoryViewController {
         
         // Add subviews to self.view or each other
         self.navigationBaseView.addSubview(self.topLabel)
-        self.navigationBaseView.addSubview(self.backImage)
+        self.navigationBaseView.addSubview(self.backButton)
         
         self.view.addSubview(self.navigationBaseView)
         
@@ -594,16 +596,15 @@ extension HistoryViewController {
             self.navigationBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.navigationBaseView.heightAnchor.constraint(equalToConstant: 50),
-            
-            self.topLabel.heightAnchor.constraint(equalToConstant: 20),
+            self.navigationBaseView.heightAnchor.constraint(equalToConstant: 44),
+
             self.topLabel.centerXAnchor.constraint(equalTo: self.navigationBaseView.centerXAnchor),
-            self.topLabel.topAnchor.constraint(equalTo: self.navigationBaseView.topAnchor, constant: 30),
+            self.topLabel.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
             
-            self.backImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16 ),
-            self.backImage.heightAnchor.constraint(equalToConstant: 20),
-            self.backImage.centerYAnchor.constraint(equalTo: self.topLabel.centerYAnchor),
-            self.backImage.topAnchor.constraint(equalTo: self.navigationBaseView.topAnchor, constant: 30),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationBaseView.leadingAnchor, constant: 0),
+            self.backButton.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
+            self.backButton.heightAnchor.constraint(equalToConstant: 44),
+            self.backButton.widthAnchor.constraint(equalToConstant: 40),
             
         ])
         

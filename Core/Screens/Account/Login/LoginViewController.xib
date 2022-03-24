@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19455" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19454"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -189,12 +189,11 @@
                                     </connections>
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JLC-0J-PHb">
-                                    <rect key="frame" x="1" y="-1" width="46" height="46"/>
+                                    <rect key="frame" x="360" y="0.0" width="46" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="46" id="Y01-Tk-CEB"/>
-                                        <constraint firstAttribute="width" constant="46" id="vnz-PP-7f3"/>
+                                        <constraint firstAttribute="height" constant="44" id="Y01-Tk-CEB"/>
                                     </constraints>
-                                    <state key="normal" image="arrow_close_icon"/>
+                                    <state key="normal" title="Close"/>
                                     <connections>
                                         <action selector="didTapDismissButton" destination="-1" eventType="primaryActionTriggered" id="4Sn-hL-jXO"/>
                                     </connections>
@@ -204,7 +203,7 @@
                             <constraints>
                                 <constraint firstItem="JLC-0J-PHb" firstAttribute="centerY" secondItem="ryS-WN-4K9" secondAttribute="centerY" id="9Nu-iT-j1q"/>
                                 <constraint firstItem="Avo-w1-rIz" firstAttribute="height" secondItem="ryS-WN-4K9" secondAttribute="height" id="Ggf-XS-zMi"/>
-                                <constraint firstItem="JLC-0J-PHb" firstAttribute="leading" secondItem="ryS-WN-4K9" secondAttribute="leading" constant="1" id="Z91-lg-3A6"/>
+                                <constraint firstAttribute="trailing" secondItem="JLC-0J-PHb" secondAttribute="trailing" constant="8" id="dLX-dK-UtQ"/>
                                 <constraint firstAttribute="height" constant="44" id="o92-Hy-VAN"/>
                                 <constraint firstAttribute="trailing" secondItem="Avo-w1-rIz" secondAttribute="trailing" constant="8" id="rtb-RT-lWb"/>
                                 <constraint firstItem="Avo-w1-rIz" firstAttribute="centerY" secondItem="ryS-WN-4K9" secondAttribute="centerY" id="tas-Xd-SFU"/>
@@ -272,7 +271,6 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_close_icon" width="20" height="19"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
