@@ -27,10 +27,8 @@ class DropDownSelectionView: UIView {
     
     var didSelectPickerIndex: ((Int) -> Void)?
     var shouldBeginEditing: (() -> Bool)?
-
+    
     var textPublisher: CurrentValueSubject<String, Never> = .init("")
-
-    var showingTipLabel: Bool = false
     
     // Variables
     let datePicker = UIDatePicker()
@@ -38,9 +36,8 @@ class DropDownSelectionView: UIView {
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
     var isCurrency: Bool = false
-    var isTipPermanent: Bool = false
     var isSlidedUp: Bool = false
-
+    var showingTipLabel: Bool = false
     var text: String {
         return self.textLabel.text ?? ""
     }
@@ -73,14 +70,14 @@ class DropDownSelectionView: UIView {
         didSet {
             switch self.fieldState {
             case .ok:
-                tipImageView.isHidden = false
-                tipImageView.image = UIImage(named: "Active")
+                self.tipImageView.isHidden = false
+                self.tipImageView.image = UIImage(named: "Active")
             case .error:
-                tipImageView.isHidden = false
-                tipImageView.image = UIImage(named: "error_input_icon")
+                self.tipImageView.isHidden = false
+                self.tipImageView.image = UIImage(named: "error_input_icon")
             case .hidden:
-                tipImageView.isHidden = true
-                tipImageView.image = nil
+                self.tipImageView.isHidden = true
+                self.tipImageView.image = nil
             }
         }
     }
@@ -125,46 +122,8 @@ class DropDownSelectionView: UIView {
         super.layoutSubviews()
     }
     
-    func setDatePickerMode() {
-        if text.isEmpty {
-            slideUp()
-        }
-        datePicker.datePickerMode = .date
-        if #available(iOS 13.4, *) {
-            datePicker.preferredDatePickerStyle = .wheels
-        }
-        datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
-
-        let doneButton = UIBarButtonItem.init(title: localized("done"), style: .done, target: self, action: #selector(self.datePickerDone))
-
-        let toolBar = UIToolbar()
-        toolBar.sizeToFit()
-        toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
-
-        textField.inputAccessoryView = toolBar
-        textField.inputView = datePicker
-        slideUp()
-        
-    }
-
-    @objc func datePickerDone() {
-        
-        textField.resignFirstResponder()
-    }
-
-    @objc func dateChanged() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let selectedDate = dateFormatter.string(from: datePicker.date)
-        textLabel.text = "\(selectedDate)"
-    }
-    
-    @objc func showPicker() {
-      
-        textField.becomeFirstResponder()
-        
-    }
-    
+    // MARK: - Slide Up and Down
+    //
     func slideUp(animated: Bool = true) {
 
         if textLabel.text?.isEmpty ?? true {
@@ -174,12 +133,9 @@ class DropDownSelectionView: UIView {
             return
         }
         
-        // TODO: Fazer a conta de forma dinâmica
-        // let placeholderYPosition = self.headerPlaceholderLabel.center.y
-        // let headerYPosition = self.headerLabel.center.y
         NSLayoutConstraint.activate([
             self.headerLabel.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor, constant: -15),
-        ])// -(headerYPosition - placeholderYPosition)
+        ])
 
         UIView.animate(withDuration: animated ? 0.2 : 0, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
@@ -215,53 +171,80 @@ class DropDownSelectionView: UIView {
             self.isSlidedUp = false
         }
     }
-    
-    func setPickerArray(_ array: [String]) {
-        selectionArray = array
-        pickerView.selectRow(0, inComponent: 0, animated: true)
-        textField.text = selectionArray[0]
-    }
-
-    func setSelectedPickerOption(option: Int) {
-        pickerView.selectRow(option, inComponent: 0, animated: true)
-        textLabel.text = selectionArray[option]
-    }
-
-    func setSelectionPicker(_ array: [String], headerVisible: Bool = false, defaultValue: Int = 0) {
-        selectionArray = array
-
-        pickerView.delegate = self
-        
-        if !headerVisible {
-            headerLabel.isHidden = true
-        }
-        
-        textField.inputView = pickerView
-        textField.text = selectionArray[defaultValue]
-        textLabel.text = selectionArray[defaultValue]
-        if textLabel.text != "" {
-            self.slideUp(animated: true)
-        }
-        
-        let arrowDropdownImageView = UIImageView()
-        arrowDropdownImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        let arrowImageView = UIImageView(image: UIImage(named: "arrow_dropdown_icon"))
-        arrowImageView.frame = CGRect(x: -20, y: -4, width: 10, height: 10)
-        arrowImageView.contentMode = .scaleAspectFit
-        arrowDropdownImageView.addSubview(arrowImageView)
-        textField.rightView = arrowDropdownImageView
-        textField.rightViewMode = .always
-
-        dismissPickerView()
-    }
-    
     func shouldSlideDown() -> Bool {
-        if let text = textField.text, !text.isEmpty {
+        if let text = self.textField.text, !text.isEmpty {
             return false
         }
         return true
     }
 
+    
+    // MARK: - Date Picker
+    //
+    func setDatePickerMode() {
+        if text.isEmpty {
+            slideUp()
+        }
+        self.datePicker.datePickerMode = .date
+        if #available(iOS 13.4, *) {
+            datePicker.preferredDatePickerStyle = .wheels
+        }
+        self.datePicker.addTarget(self, action: #selector(self.dateChanged), for: .allEvents)
+
+        let doneButton = UIBarButtonItem.init(title: localized("done"), style: .done, target: self, action: #selector(self.datePickerDone))
+
+        let toolBar = UIToolbar()
+        toolBar.sizeToFit()
+        toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), doneButton], animated: true)
+
+        self.textField.inputAccessoryView = toolBar
+        self.textField.inputView = self.datePicker
+        slideUp()
+        
+    }
+   
+    // MARK: - Config Picker
+    //
+    func setPickerArray(_ array: [String]) {
+        self.selectionArray = array
+        self.pickerView.selectRow(0, inComponent: 0, animated: true)
+        self.textField.text = selectionArray[0]
+    }
+
+    func setSelectedPickerOption(option: Int) {
+        self.pickerView.selectRow(option, inComponent: 0, animated: true)
+        self.textLabel.text = selectionArray[option]
+    }
+
+    func setSelectionPicker(_ array: [String], headerVisible: Bool = false, defaultValue: Int = 0) {
+        self.selectionArray = array
+
+        self.pickerView.delegate = self
+        
+        if !headerVisible {
+            self.headerLabel.isHidden = true
+        }
+        
+        self.textField.inputView = pickerView
+        self.textField.text = self.selectionArray[defaultValue]
+        self.textLabel.text = self.selectionArray[defaultValue]
+        if self.textLabel.text != "" {
+            self.slideUp(animated: true)
+        }
+        
+       /* // let arrowDropdownImageView = UIImageView()
+        arrowDropdownImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
+        let arrowImageView = UIImageView(image: UIImage(named: "arrow_dropdown_icon"))
+        arrowImageView.frame = CGRect(x: -20, y: -4, width: 10, height: 10)
+        arrowImageView.contentMode = .scaleAspectFit
+        arrowDropdownImageView.addSubview(arrowImageView)
+        self.textField.rightView = arrowDropdownImageView */
+        self.textField.rightViewMode = .always
+
+        dismissPickerView()
+    }
+    
+   
     func dismissPickerView() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -269,10 +252,73 @@ class DropDownSelectionView: UIView {
 
         toolBar.setItems([UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: nil, action: nil), button], animated: true)
         toolBar.isUserInteractionEnabled = true
-        textField.inputAccessoryView = toolBar
+        self.textField.inputAccessoryView = toolBar
        
     }
     
+    // MARK: - Errors and Tips
+    //
+    func showErrorOnField(text: String, color: UIColor = .systemRed) {
+
+        self.tipLabel.text = text
+        self.tipLabel.textColor = color
+
+        self.fieldState = .error
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 1.0
+        }
+
+        self.containerView.layer.borderColor = color.cgColor
+
+        self.showingTipLabel = true
+    }
+
+    func showTip(text: String, color: UIColor = .systemRed) {
+
+        self.tipLabel.text = text
+        self.tipLabel.textColor = color
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 1.0
+        }
+
+        self.showingTipLabel = true
+    }
+
+    func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
+
+        self.tipLabel.text = text
+        self.tipLabel.textColor = color
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 1.0
+        }
+
+        self.tipImageView.isHidden = true
+
+        self.showingTipLabel = true
+    }
+
+    func hideTipAndError() {
+
+        if !self.showingTipLabel {
+            return
+        }
+
+        showingTipLabel = false
+        self.tipLabel.text = ""
+        self.tipLabel.textColor = .black
+        self.containerView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+        fieldState = .hidden
+
+        UIView.animate(withDuration: 0.1) {
+            self.tipLabel.alpha = 0.0
+        }
+    }
+    
+    // MARK: - Layout setters
+    //
     func setHeaderLabelColor(_ color: UIColor) {
         self.headerLabel.textColor = color
     }
@@ -295,7 +341,6 @@ class DropDownSelectionView: UIView {
     
     func setPlaceholderText(_ placeholder: String) {
         self.headerLabel.text = placeholder
-
     }
     
     func setTextFieldFont(_ font: UIFont) {
@@ -315,83 +360,34 @@ class DropDownSelectionView: UIView {
   
     func setPlaceholderTextColor(_ color: UIColor) {
         self.headerLabel.textColor = color
-       
     }
     
     func setImageTextField(_ image: UIImage, size: CGFloat = 30) {
         self.selectImage.image = image
     }
     
+    // MARK: - Actions
+    //
     @objc func pickerAction() {
-        
-       /* self.didSelectPickerIndex = { [weak self ] index in
-            if let selectedValue = self?.selectionArray[index] {
-                self?.textLabel.text = selectedValue
-            }
-        }*/
-        self.textPublisher.send(self.text)
+        self.textPublisher.send(text)
         self.endEditing(true)
     }
-
-    func showErrorOnField(text: String, color: UIColor = .systemRed) {
-
-        self.tipLabel.text = text
-        self.tipLabel.textColor = color
-
-        self.fieldState = .error
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        self.containerView.layer.borderColor = color.cgColor
-
-        self.showingTipLabel = true
+    
+    @objc func datePickerDone() {
+        self.textField.resignFirstResponder()
     }
 
-    func showTip(text: String, color: UIColor = .systemRed) {
-
-        tipLabel.text = text
-        tipLabel.textColor = color
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        self.showingTipLabel = true
+    @objc func dateChanged() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let selectedDate = dateFormatter.string(from: datePicker.date)
+        self.textLabel.text = "\(selectedDate)"
     }
-
-    func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
-
-        tipLabel.text = text
-        tipLabel.textColor = color
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        tipImageView.isHidden = true
-
-        self.showingTipLabel = true
+    
+    @objc func showPicker() {
+        self.textField.becomeFirstResponder()
     }
-
-    func hideTipAndError() {
-
-        if !self.showingTipLabel {
-            return
-        }
-
-        showingTipLabel = false
-
-        tipLabel.text = ""
-        tipLabel.textColor = .black
-        containerView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        fieldState = .hidden
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 0.0
-        }
-    }
+    
 }
 
 //
@@ -471,8 +467,6 @@ extension DropDownSelectionView {
     
     private func setupSubviews() {
 
-        // Add subviews to self.view or each other
-        //self.containerView.addSubview(self.textField)
         self.containerView.addSubview(self.bottomStackView)
         
         self.baseView.addSubview(self.textField)
@@ -528,8 +522,6 @@ extension DropDownSelectionView {
             self.bottomStackView.topAnchor.constraint(equalTo: self.baseView.bottomAnchor),
             self.bottomStackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
             
-
-            
         ])
     }
     
@@ -553,7 +545,6 @@ extension DropDownSelectionView: UITextFieldDelegate {
         }
     }
 
-
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if self.isCurrency {
@@ -569,7 +560,6 @@ extension DropDownSelectionView: UITextFieldDelegate {
         return true
     }
 }
-
 
 extension DropDownSelectionView: UIPickerViewDelegate, UIPickerViewDataSource {
     // PickerView override methods
@@ -587,11 +577,7 @@ extension DropDownSelectionView: UIPickerViewDelegate, UIPickerViewDataSource {
     }
 
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-     
-            slideUp()
-        
-        
         let selectedItem = selectionArray[row]
-        textLabel.text = selectedItem
+        self.textLabel.text = selectedItem
     }
 }
