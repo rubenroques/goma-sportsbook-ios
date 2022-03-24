@@ -183,7 +183,7 @@ class DropDownSelectionView: UIView {
     //
     func setDatePickerMode() {
         if text.isEmpty {
-            slideUp()
+            self.slideUp()
         }
         self.datePicker.datePickerMode = .date
         if #available(iOS 13.4, *) {
@@ -199,7 +199,7 @@ class DropDownSelectionView: UIView {
 
         self.textField.inputAccessoryView = toolBar
         self.textField.inputView = self.datePicker
-        slideUp()
+        self.slideUp()
         
     }
    
@@ -231,20 +231,10 @@ class DropDownSelectionView: UIView {
         if self.textLabel.text != "" {
             self.slideUp(animated: true)
         }
-        
-       /* // let arrowDropdownImageView = UIImageView()
-        arrowDropdownImageView.frame = CGRect(x: 0, y: 0, width: 20, height: 20)
-        let arrowImageView = UIImageView(image: UIImage(named: "arrow_dropdown_icon"))
-        arrowImageView.frame = CGRect(x: -20, y: -4, width: 10, height: 10)
-        arrowImageView.contentMode = .scaleAspectFit
-        arrowDropdownImageView.addSubview(arrowImageView)
-        self.textField.rightView = arrowDropdownImageView */
-        self.textField.rightViewMode = .always
 
-        dismissPickerView()
+        self.dismissPickerView()
     }
     
-   
     func dismissPickerView() {
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
@@ -274,49 +264,6 @@ class DropDownSelectionView: UIView {
         self.showingTipLabel = true
     }
 
-    func showTip(text: String, color: UIColor = .systemRed) {
-
-        self.tipLabel.text = text
-        self.tipLabel.textColor = color
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        self.showingTipLabel = true
-    }
-
-    func showTipWithoutIcon(text: String, color: UIColor = .systemRed) {
-
-        self.tipLabel.text = text
-        self.tipLabel.textColor = color
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 1.0
-        }
-
-        self.tipImageView.isHidden = true
-
-        self.showingTipLabel = true
-    }
-
-    func hideTipAndError() {
-
-        if !self.showingTipLabel {
-            return
-        }
-
-        showingTipLabel = false
-        self.tipLabel.text = ""
-        self.tipLabel.textColor = .black
-        self.containerView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        fieldState = .hidden
-
-        UIView.animate(withDuration: 0.1) {
-            self.tipLabel.alpha = 0.0
-        }
-    }
-    
     // MARK: - Layout setters
     //
     func setHeaderLabelColor(_ color: UIColor) {
