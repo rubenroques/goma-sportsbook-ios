@@ -272,7 +272,7 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
         case 0:
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
-            return 142
+            return 105
         case 2:
             return 80
         default:
@@ -285,7 +285,7 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
         case 0:
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
-            return 142
+            return 105
         case 2:
             return 80
         default:

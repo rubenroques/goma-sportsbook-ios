@@ -47,17 +47,19 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         self.seeAllView.addGestureRecognizer(tapGestureRecognizer)
         
         self.firstBackView.layer.cornerRadius = 6
-        self.firstBackView.isHidden = true
+        self.firstBackView.alpha = 0.0
         
         let backFirstSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapFirstBackSliderButton))
         self.firstBackView.addGestureRecognizer(backFirstSliderTapGesture)
         
         self.secondBackView.layer.cornerRadius = 6
-        self.secondBackView.isHidden = true
+        self.secondBackView.alpha = 0.0
         
         let backSecondSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapSecondBackSliderButton))
         self.secondBackView.addGestureRecognizer(backSecondSliderTapGesture)
 
+        self.contentView.bringSubviewToFront(self.firstBackView)
+        self.contentView.bringSubviewToFront(self.secondBackView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -68,6 +70,9 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
+
+        self.topCollectionView.setContentOffset(.zero, animated: false)
+        self.bottomCollectionView.setContentOffset(.zero, animated: false)
 
         self.reloadCollections()
     }
@@ -171,8 +176,6 @@ extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
                     self.showingFirstBackSliderView = true
                     UIView.animate(withDuration: 0.2) {
                         self.firstBackView.alpha = 1.0
-                        self.firstBackView.isHidden = false
-                        self.bringSubviewToFront(self.firstBackView)
                     }
                 }
             }
@@ -181,11 +184,9 @@ extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
                     self.showingFirstBackSliderView = false
                     UIView.animate(withDuration: 0.2) {
                         self.firstBackView.alpha = 0.0
-                        self.bringSubviewToFront(self.firstBackView)
                     }
                 }
             }
-        
         }
         else if scrollView == self.bottomCollectionView, let secondMatch = self.viewModel?.match(forLine: 1) {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -206,8 +207,7 @@ extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
                     self.showingSecondBackSliderView = true
                     UIView.animate(withDuration: 0.2) {
                         self.secondBackView.alpha = 1.0
-                        self.secondBackView.isHidden = false
-                        self.bringSubviewToFront(self.secondBackView)
+
                     }
                 }
             }
@@ -216,7 +216,6 @@ extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
                     self.showingSecondBackSliderView = false
                     UIView.animate(withDuration: 0.2) {
                         self.secondBackView.alpha = 0.0
-                        self.bringSubviewToFront(self.secondBackView)
                     }
                 }
             }
@@ -305,9 +304,9 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
         }
         else if self.viewModel?.isOutrightCompetitionLine() ?? false,
                 let competition = self.viewModel?.outrightCompetition(forLine: collectionLineIndex),
-                let cell = collectionView.dequeueCellType(OutrightCompetitionWidgetCollectionViewCell.self, indexPath: indexPath) {
+                let cell = collectionView.dequeueCellType(OutrightCompetitionLargeWidgetCollectionViewCell.self, indexPath: indexPath) {
 
-            let cellViewModel = OutrightCompetitionWidgetViewModel(competition: competition)
+            let cellViewModel = OutrightCompetitionLargeWidgetViewModel(competition: competition)
             cell.configure(withViewModel: cellViewModel)
             cell.tappedLineAction = { [weak self] competition in
                 self?.didSelectSeeAllCompetitionAction?(competition)
@@ -548,7 +547,6 @@ extension SportMatchDoubleLineTableViewCell {
         self.contentView.addSubview(self.linesStackView)
         self.contentView.addSubview(self.seeAllView)
 
-
         self.seeAllView.addSubview(self.seeAllLabel)
 
         self.topCollectionView.delegate = self
@@ -559,8 +557,8 @@ extension SportMatchDoubleLineTableViewCell {
 
         self.topCollectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
 
-        self.topCollectionView.register(OutrightCompetitionWidgetCollectionViewCell.self,
-                                        forCellWithReuseIdentifier: OutrightCompetitionWidgetCollectionViewCell.identifier)
+        self.topCollectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
+                                        forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
         self.topCollectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)
@@ -568,8 +566,8 @@ extension SportMatchDoubleLineTableViewCell {
         self.topCollectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
         self.topCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
 
-        self.bottomCollectionView.register(OutrightCompetitionWidgetCollectionViewCell.self,
-                                           forCellWithReuseIdentifier: OutrightCompetitionWidgetCollectionViewCell.identifier)
+        self.bottomCollectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
+                                           forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
         self.bottomCollectionView.register(OddDoubleCollectionViewCell.nib, forCellWithReuseIdentifier: OddDoubleCollectionViewCell.identifier)

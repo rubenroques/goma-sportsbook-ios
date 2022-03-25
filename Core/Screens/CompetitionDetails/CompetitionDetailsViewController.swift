@@ -307,7 +307,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return 146
+                return 105
             case .match:
                 return MatchWidgetCollectionViewCell.cellHeight + 20
             }
@@ -324,7 +324,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return 146
+                return 105
             case .match:
                 return MatchWidgetCollectionViewCell.cellHeight + 20
             }

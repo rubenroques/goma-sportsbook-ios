@@ -159,7 +159,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         if let competition = competitions[safe: indexPath.section] {
             if competition.outrightMarkets > 0 && indexPath.row == 0 {
-                return 142
+                return 105
             }
             else {
                 return MatchWidgetCollectionViewCell.cellHeight + 20
@@ -175,7 +175,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         if let competition = competitions[safe: indexPath.section] {
             if competition.outrightMarkets > 0 && indexPath.row == 0 {
-                return 142
+                return 105
             }
             else {
                 return MatchWidgetCollectionViewCell.cellHeight + 20

@@ -213,7 +213,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 0:
             return 132 // Banner
         case 1:
-            return 140
+            return 105
         case 3:
             return 70 // Loading cell
         default:
@@ -226,7 +226,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 0:
             return 140 // Banner
         case 1:
-            return 130
+            return 105
         case 3:
             return 70 // Loading cell
         default:

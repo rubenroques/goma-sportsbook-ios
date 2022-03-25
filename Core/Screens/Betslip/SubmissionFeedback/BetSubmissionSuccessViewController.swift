@@ -34,11 +34,11 @@ class BetSubmissionSuccessViewController: UIViewController {
     
     @IBOutlet private weak var checkboxLabel: UILabel!
 
-    var totalOddsValue: String
-    var possibleEarningsValue: String
-    var numberOfBets: Int
-    var isChecked : Bool = true
-    private var betPlacedDetailsArray : [BetPlacedDetails]
+    private var totalOddsValue: String
+    private var possibleEarningsValue: String
+    private var numberOfBets: Int
+    private var isChecked: Bool = true
+    private var betPlacedDetailsArray: [BetPlacedDetails]
 
     var willDismissAction: (() -> Void)?
 
@@ -61,7 +61,6 @@ class BetSubmissionSuccessViewController: UIViewController {
         // Total Odd
         let totalOddDouble = betPlacedDetailsArray
             .map({ betPlacedDetails in
-                
                 betPlacedDetails.response.totalPriceValue ?? 1.0
             })
             .reduce(1.0, *)
@@ -90,9 +89,9 @@ class BetSubmissionSuccessViewController: UIViewController {
             if betType == "SYSTEM" {
                 self.totalOddsLabel.isHidden = true
                 self.totalOddsValueLabel.isHidden = true
-                
             }
         }
+
         self.setupWithTheme()
     
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
@@ -147,8 +146,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     @IBAction private func didTapContinueButton() {
-       
-        
+
         if !isChecked {
             Env.betslipManager.clearAllBettingTickets()
         }
@@ -162,19 +160,15 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBAction private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
-    
-  
-    
+
     @IBAction private func didTapCheckbox() {
-       
-        if self.isChecked{
+        if self.isChecked {
             self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
-           
-        }else{
+        }
+        else {
             self.checkboxImage.image = UIImage(named: "checkbox_selected_icon")
-           
         }
         self.isChecked = !isChecked
-
     }
+
 }

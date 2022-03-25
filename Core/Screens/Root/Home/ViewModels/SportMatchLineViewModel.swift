@@ -377,9 +377,17 @@ extension SportMatchLineViewModel {
 
         self.store.storeOutrightTournaments(aggregator)
 
-        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament in
-            Competition.init(id: rawTournament.id,
+        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament -> Competition in
+            var location: Location?
+            if let rawLocation = self.store.location(forId: rawTournament.venueId ?? "") {
+                location = Location(id: rawLocation.id,
+                                    name: rawLocation.name ?? "",
+                                    isoCode: rawLocation.code ?? "")
+            }
+
+            return Competition.init(id: rawTournament.id,
                              name: rawTournament.name ?? "",
+                             venue: location,
                              outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
         }
 

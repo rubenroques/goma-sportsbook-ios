@@ -476,6 +476,12 @@ class MatchDetailsViewController: UIViewController {
 
     }
 
+    func reloadMarketGroupDetailsContent() {
+        for marketGroupsViewController in marketGroupsViewControllers {
+            (marketGroupsViewController as? MarketGroupDetailsViewController)?.reloadContent()
+        }
+    }
+
     func reloadCollectionView() {
         self.marketTypesCollectionView.reloadData()
     }
@@ -640,6 +646,7 @@ class MatchDetailsViewController: UIViewController {
         betslipViewController.willDismissAction = { [weak self] in
             self?.marketTypesCollectionView.reloadData()
             self?.tableView.reloadData()
+            self?.reloadMarketGroupDetailsContent()
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
