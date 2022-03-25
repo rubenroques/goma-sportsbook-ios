@@ -95,6 +95,7 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
+        self.collectionView.setContentOffset(.zero, animated: false)
         self.collectionView.reloadData()
     }
 
