@@ -31,7 +31,7 @@ extension EveryMatrix {
         let description: String
         let url: String
         let html: String
-        // let minAmount: CurrencyBonus?
+        let assets: String
 
         enum CodingKeys: String, CodingKey {
             case code = "code"
@@ -39,7 +39,7 @@ extension EveryMatrix {
             case description = "description"
             case url = "url"
             case html = "html"
-            // case minAmount = "minAmount"
+            case assets = "assets"
         }
 
     }
@@ -65,10 +65,12 @@ extension EveryMatrix {
 
         let code: String?
         let name: String?
+        let assets: String?
 
         enum CodingKeys: String, CodingKey {
             case code = "code"
             case name = "name"
+            case assets = "assets"
         }
 
     }
