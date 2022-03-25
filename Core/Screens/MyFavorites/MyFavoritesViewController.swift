@@ -378,12 +378,8 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 extension MyFavoritesViewController {
     @objc private func didTapBackButton() {
 
-        if self.isModal {
-            self.dismiss(animated: true, completion: nil)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        self.navigationController?.popViewController(animated: true)
+
     }
 
     @objc func didTapBetslipView() {

@@ -21,9 +21,17 @@ class ProfileViewController: UIViewController {
     @IBOutlet private weak var userIdLabel: UILabel!
     @IBOutlet private weak var shadowView: UIView!
 
+    @IBOutlet private weak var totalBalanceView: UIView!
+    @IBOutlet private weak var totalBalanceTitleLabel: UILabel!
+    @IBOutlet private weak var totalBalanceLabel: UILabel!
+
+    @IBOutlet private weak var currentBalanceView: UIView!
     @IBOutlet private weak var currentBalanceTitleLabel: UILabel!
-    @IBOutlet private weak var currentBalanceBaseView: UIView!
     @IBOutlet private weak var currentBalanceLabel: UILabel!
+
+    @IBOutlet private weak var bonusBalanceBaseView: UIView!
+    @IBOutlet private weak var bonusBalanceTitleLabel: UILabel!
+    @IBOutlet private weak var bonusBalanceLabel: UILabel!
 
     @IBOutlet private weak var depositButton: UIButton!
     @IBOutlet private weak var withdrawButton: UIButton!
@@ -34,50 +42,37 @@ class ProfileViewController: UIViewController {
     @IBOutlet private var activationStackView: UIStackView!
     @IBOutlet private var activationAlertScrollableView: ActivationAlertScrollableView!
 
-    @IBOutlet private weak var personalInfoBaseView: UIView!
-    @IBOutlet private weak var personalInfoIconBaseView: UIView!
-    @IBOutlet private weak var personalInfoIconImageView: UIImageView!
-    @IBOutlet private weak var personalInfoLabel: UILabel!
+    @IBOutlet private weak var stackView: UIStackView!
 
-    @IBOutlet private weak var passwordUpdateBaseView: UIView!
-    @IBOutlet private weak var passwordUpdateIconBaseView: UIView!
-    @IBOutlet private weak var passwordUpdateIconImageView: UIImageView!
-    @IBOutlet private weak var passwordUpdateLabel: UILabel!
-
-    @IBOutlet private weak var walletBaseView: UIView!
-    @IBOutlet private weak var walletIconBaseView: UIView!
-    @IBOutlet private weak var walletIconImageView: UIImageView!
-    @IBOutlet private weak var walletLabel: UILabel!
-
-    @IBOutlet private weak var documentsBaseView: UIView!
-    @IBOutlet private weak var documentsIconBaseView: UIView!
-    @IBOutlet private weak var documentsIconImageView: UIImageView!
-    @IBOutlet private weak var documentsLabel: UILabel!
-
-    @IBOutlet private weak var bonusBaseView: UIView!
-    @IBOutlet private weak var bonusIconBaseView: UIView!
-    @IBOutlet private weak var bonusIconImageView: UIImageView!
-    @IBOutlet private weak var bonusLabel: UILabel!
-
-    @IBOutlet private weak var historyBaseView: UIView!
-    @IBOutlet private weak var historyIconBaseView: UIView!
-    @IBOutlet private weak var historyIconImageView: UIImageView!
-    @IBOutlet private weak var historyLabel: UILabel!
-
-    @IBOutlet private weak var limitsBaseView: UIView!
-    @IBOutlet private weak var limitsIconBaseView: UIView!
-    @IBOutlet private weak var limitsIconImageView: UIImageView!
-    @IBOutlet private weak var limitsLabel: UILabel!
-
-    @IBOutlet private weak var appSettingsBaseView: UIView!
-    @IBOutlet private weak var appSettingsIconBaseView: UIView!
-    @IBOutlet private weak var appSettingsIconImageView: UIImageView!
-    @IBOutlet private weak var appSettingsLabel: UILabel!
-
-    @IBOutlet private weak var supportBaseView: UIView!
-    @IBOutlet private weak var supportIconBaseView: UIView!
-    @IBOutlet private weak var supportIconImageView: UIImageView!
-    @IBOutlet private weak var supportLabel: UILabel!
+//    @IBOutlet private weak var personalInfoBaseView: UIView!
+//    @IBOutlet private weak var personalInfoIconBaseView: UIView!
+//    @IBOutlet private weak var personalInfoIconImageView: UIImageView!
+//    @IBOutlet private weak var personalInfoLabel: UILabel!
+//
+//    @IBOutlet private weak var favoritesBaseView: UIView!
+//    @IBOutlet private weak var favoritesIconBaseView: UIView!
+//    @IBOutlet private weak var favoritesIconImageView: UIImageView!
+//    @IBOutlet private weak var favoritesLabel: UILabel!
+//
+//    @IBOutlet private weak var historyBaseView: UIView!
+//    @IBOutlet private weak var historyIconBaseView: UIView!
+//    @IBOutlet private weak var historyIconImageView: UIImageView!
+//    @IBOutlet private weak var historyLabel: UILabel!
+//
+//    @IBOutlet private weak var bonusBaseView: UIView!
+//    @IBOutlet private weak var bonusIconBaseView: UIView!
+//    @IBOutlet private weak var bonusIconImageView: UIImageView!
+//    @IBOutlet private weak var bonusLabel: UILabel!
+//
+//    @IBOutlet private weak var appSettingsBaseView: UIView!
+//    @IBOutlet private weak var appSettingsIconBaseView: UIView!
+//    @IBOutlet private weak var appSettingsIconImageView: UIImageView!
+//    @IBOutlet private weak var appSettingsLabel: UILabel!
+//
+//    @IBOutlet private weak var supportBaseView: UIView!
+//    @IBOutlet private weak var supportIconBaseView: UIView!
+//    @IBOutlet private weak var supportIconImageView: UIImageView!
+//    @IBOutlet private weak var supportLabel: UILabel!
 
     @IBOutlet private weak var logoutBaseView: UIView!
     @IBOutlet private weak var logoutButton: UIButton!
@@ -140,10 +135,31 @@ class ProfileViewController: UIViewController {
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
-            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                self?.currentBalanceLabel.text = value
+                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+                    let accountValue = bonusWallet.amount + value
+                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+
+                }
+                else {
+                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                }
+                self?.currentBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBonusBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+                    let accountValue = currentWallet.amount + value
+
+                    self?.totalBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                }
+                self?.bonusBalanceLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
             }
             .store(in: &cancellables)
 
@@ -175,7 +191,22 @@ class ProfileViewController: UIViewController {
         closeButton.setTitle(localized("close"), for: .normal)
         closeButton.backgroundColor = .clear
 
-        currentBalanceBaseView.layer.cornerRadius = CornerRadius.view
+        bonusBalanceBaseView.layer.cornerRadius = CornerRadius.view
+
+        totalBalanceTitleLabel.text = localized("total")
+        totalBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
+
+        totalBalanceLabel.font = AppFont.with(type: .bold, size: 16)
+
+        currentBalanceTitleLabel.text = localized("available_balance")
+        currentBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
+
+        currentBalanceLabel.font = AppFont.with(type: .bold, size: 16)
+
+        bonusBalanceTitleLabel.text = localized("bonus")
+        bonusBalanceTitleLabel.font = AppFont.with(type: .bold, size: 14)
+
+        bonusBalanceLabel.font = AppFont.with(type: .bold, size: 16)
 
         depositButton.layer.cornerRadius = CornerRadius.button
         withdrawButton.layer.cornerRadius = CornerRadius.button
@@ -197,73 +228,50 @@ class ProfileViewController: UIViewController {
         logoutButton.layer.borderWidth = 2
         logoutButton.setTitle(localized("logout"), for: .normal)
 
-        personalInfoBaseView.layer.cornerRadius = CornerRadius.view
-        personalInfoIconBaseView.layer.cornerRadius = CornerRadius.view
-        personalInfoIconImageView.backgroundColor = UIColor.App.backgroundTertiary
-        let personalInfoTapGesture = UITapGestureRecognizer(target: self, action: #selector(personalInfoViewTapped))
-        personalInfoBaseView.addGestureRecognizer(personalInfoTapGesture)
-
-        passwordUpdateBaseView.layer.cornerRadius = CornerRadius.view
-        passwordUpdateIconBaseView.layer.cornerRadius = CornerRadius.view
-        passwordUpdateIconImageView.backgroundColor = .clear
-        let passwordUpdateTapGesture = UITapGestureRecognizer(target: self, action: #selector(passwordUpdateViewTapped))
-        passwordUpdateBaseView.addGestureRecognizer(passwordUpdateTapGesture)
-        passwordUpdateBaseView.backgroundColor = UIColor.App.backgroundSecondary
-
-        walletBaseView.layer.cornerRadius = CornerRadius.view
-        walletIconBaseView.layer.cornerRadius = CornerRadius.view
-        walletIconImageView.backgroundColor = .clear
-        let walletTapGesture = UITapGestureRecognizer(target: self, action: #selector(walletViewTapped))
-        walletBaseView.addGestureRecognizer(walletTapGesture)
-
-        documentsBaseView.layer.cornerRadius = CornerRadius.view
-        documentsIconBaseView.layer.cornerRadius = CornerRadius.view
-        documentsIconImageView.backgroundColor = .clear
-        let documentsTapGesture = UITapGestureRecognizer(target: self, action: #selector(documentsViewTapped))
-        documentsBaseView.addGestureRecognizer(documentsTapGesture)
-
-        bonusBaseView.layer.cornerRadius = CornerRadius.view
-        bonusIconBaseView.layer.cornerRadius = CornerRadius.view
-        bonusIconImageView.backgroundColor = .clear
-        let bonusTapGesture = UITapGestureRecognizer(target: self, action: #selector(bonusViewTapped))
-        bonusBaseView.addGestureRecognizer(bonusTapGesture)
-
-        historyBaseView.layer.cornerRadius = CornerRadius.view
-        historyIconBaseView.layer.cornerRadius = CornerRadius.view
-        historyIconImageView.backgroundColor = .clear
-        let historyTapGesture = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped))
-        historyBaseView.addGestureRecognizer(historyTapGesture)
-
-        limitsBaseView.layer.cornerRadius = CornerRadius.view
-        limitsIconBaseView.layer.cornerRadius = CornerRadius.view
-        limitsIconImageView.backgroundColor = .clear
-        let limitsTapGesture = UITapGestureRecognizer(target: self, action: #selector(limitsViewTapped))
-        limitsBaseView.addGestureRecognizer(limitsTapGesture)
-
-        appSettingsBaseView.layer.cornerRadius = CornerRadius.view
-        appSettingsIconBaseView.layer.cornerRadius = CornerRadius.view
-        appSettingsIconImageView.backgroundColor = .clear
-        let appSettingsTapGesture = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped))
-        appSettingsBaseView.addGestureRecognizer(appSettingsTapGesture)
-
-        supportBaseView.layer.cornerRadius = CornerRadius.view
-        supportIconBaseView.layer.cornerRadius = CornerRadius.view
-        supportIconImageView.backgroundColor = .clear
-        let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
-        supportBaseView.addGestureRecognizer(supportTapGesture)
+//        personalInfoBaseView.layer.cornerRadius = CornerRadius.view
+//        personalInfoIconBaseView.layer.cornerRadius = CornerRadius.view
+//        personalInfoIconImageView.backgroundColor = UIColor.App.backgroundTertiary
+//        let personalInfoTapGesture = UITapGestureRecognizer(target: self, action: #selector(myAccountViewTapped(sender:)))
+//        personalInfoBaseView.addGestureRecognizer(personalInfoTapGesture)
+//
+//        favoritesBaseView.layer.cornerRadius = CornerRadius.view
+//        favoritesIconBaseView.layer.cornerRadius = CornerRadius.view
+//        let favoritesTapGesture = UITapGestureRecognizer(target: self, action: #selector(favoritesViewTapped))
+//        favoritesBaseView.addGestureRecognizer(favoritesTapGesture)
+//
+//        historyBaseView.layer.cornerRadius = CornerRadius.view
+//        historyIconBaseView.layer.cornerRadius = CornerRadius.view
+//        historyIconImageView.backgroundColor = .clear
+//        let historyTapGesture = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped))
+//        historyBaseView.addGestureRecognizer(historyTapGesture)
+//
+//        bonusBaseView.layer.cornerRadius = CornerRadius.view
+//        bonusIconBaseView.layer.cornerRadius = CornerRadius.view
+//        bonusIconImageView.backgroundColor = .clear
+//        let bonusTapGesture = UITapGestureRecognizer(target: self, action: #selector(bonusViewTapped))
+//        bonusBaseView.addGestureRecognizer(bonusTapGesture)
+//
+//        appSettingsBaseView.layer.cornerRadius = CornerRadius.view
+//        appSettingsIconBaseView.layer.cornerRadius = CornerRadius.view
+//        appSettingsIconImageView.backgroundColor = .clear
+//        let appSettingsTapGesture = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped))
+//        appSettingsBaseView.addGestureRecognizer(appSettingsTapGesture)
+//
+//        supportBaseView.layer.cornerRadius = CornerRadius.view
+//        supportIconBaseView.layer.cornerRadius = CornerRadius.view
+//        supportIconImageView.backgroundColor = .clear
+//        let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
+//        supportBaseView.addGestureRecognizer(supportTapGesture)
 
         currentBalanceLabel.text = localized("loading")
 
         //
-        personalInfoLabel.text = localized("personal_info")
-        passwordUpdateLabel.text = localized("update_password")
-        walletLabel.text = localized("wallet")
-        documentsLabel.text = localized("documents")
-        bonusLabel.text = localized("bonus")
-        historyLabel.text = localized("history")
-        limitsLabel.text = localized("limits_management")
-        appSettingsLabel.text = localized("app_settings")
-        supportLabel.text = localized("support")
+//        personalInfoLabel.text = localized("my_account")
+//        favoritesLabel.text = localized("my_favorites")
+//        historyLabel.text = localized("history")
+//        bonusLabel.text = localized("bonus")
+//        appSettingsLabel.text = localized("app_settings")
+//        supportLabel.text = localized("support")
 
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
@@ -277,6 +285,8 @@ class ProfileViewController: UIViewController {
         activationAlertScrollableView.layer.masksToBounds = true
 
         self.verifyUserActivationConditions()
+
+        self.setupStackView()
 
     }
 
@@ -331,21 +341,34 @@ class ProfileViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        closeButton.setTitleColor( UIColor.App.textPrimary, for: .normal)
-        closeButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
-        closeButton.setTitleColor( UIColor.App.textPrimary.withAlphaComponent(0.4), for: .disabled)
+        closeButton.setTitleColor( UIColor.App.highlightPrimary, for: .normal)
+        closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
+        closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
 
         safeAreaTopView.backgroundColor = UIColor.App.backgroundPrimary
         profileBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
-        currentBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        profilePictureBaseView.backgroundColor = UIColor.App.highlightSecondary
+        bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
         scrollBaseView.backgroundColor = UIColor.App.backgroundPrimary
         profilePictureImageView.backgroundColor = .clear
 
+        totalBalanceView.backgroundColor = UIColor.App.backgroundPrimary
+
+        currentBalanceView.backgroundColor = UIColor.App.backgroundPrimary
+
+        bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
         usernameLabel.textColor = UIColor.App.textPrimary
         userIdLabel.textColor = UIColor.App.textSecondary
+
+        totalBalanceTitleLabel.textColor =  UIColor.App.textPrimary
+        totalBalanceLabel.textColor =  UIColor.App.textPrimary
+
         currentBalanceTitleLabel.textColor =  UIColor.App.textPrimary
         currentBalanceLabel.textColor =  UIColor.App.textPrimary
+
+        bonusBalanceTitleLabel.textColor = UIColor.App.textPrimary
+        bonusBalanceLabel.textColor = UIColor.App.textPrimary
 
         //
         depositButton.setTitleColor( UIColor.App.buttonTextPrimary, for: .normal)
@@ -365,55 +388,80 @@ class ProfileViewController: UIViewController {
         logoutButton.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
 
         //
-        personalInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        personalInfoIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        personalInfoIconImageView.backgroundColor = .clear
-        personalInfoLabel.textColor =  UIColor.App.textPrimary
-        
-        passwordUpdateBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        passwordUpdateIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        passwordUpdateIconImageView.backgroundColor = .clear
-        passwordUpdateLabel.textColor =  UIColor.App.textPrimary
-
-        walletBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        walletIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        walletIconImageView.backgroundColor = .clear
-        walletLabel.textColor =  UIColor.App.textPrimary
-
-        documentsBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        documentsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        documentsIconImageView.backgroundColor = .clear
-        documentsLabel.textColor =  UIColor.App.textPrimary
-
-        bonusBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        bonusIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        bonusIconImageView.backgroundColor = .clear
-        bonusLabel.textColor =  UIColor.App.textPrimary
-
-        historyBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        historyIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        historyIconImageView.backgroundColor = .clear
-        historyLabel.textColor =  UIColor.App.textPrimary
-
-        limitsBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        limitsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        limitsIconImageView.backgroundColor = .clear
-        limitsLabel.textColor =  UIColor.App.textPrimary
-
-        appSettingsBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        appSettingsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        appSettingsIconImageView.backgroundColor = .clear
-        appSettingsLabel.textColor =  UIColor.App.textPrimary
-
-        supportBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        supportIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        supportIconImageView.backgroundColor = .clear
-        supportLabel.textColor =  UIColor.App.textPrimary
+//        personalInfoBaseView.backgroundColor = UIColor.App.backgroundSecondary
+//        personalInfoIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+//        personalInfoIconImageView.backgroundColor = .clear
+//        personalInfoLabel.textColor =  UIColor.App.textPrimary
+//
+//        favoritesBaseView.backgroundColor = UIColor.App.backgroundSecondary
+//        favoritesIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+//        favoritesIconImageView.backgroundColor = .clear
+//        favoritesLabel.textColor =  UIColor.App.textPrimary
+//
+//        historyBaseView.backgroundColor = UIColor.App.backgroundSecondary
+//        historyIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+//        historyIconImageView.backgroundColor = .clear
+//        historyLabel.textColor =  UIColor.App.textPrimary
+//
+//        bonusBaseView.backgroundColor = UIColor.App.backgroundSecondary
+//        bonusIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+//        bonusIconImageView.backgroundColor = .clear
+//        bonusLabel.textColor =  UIColor.App.textPrimary
+//
+//        appSettingsBaseView.backgroundColor = UIColor.App.backgroundSecondary
+//        appSettingsIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+//        appSettingsIconImageView.backgroundColor = .clear
+//        appSettingsLabel.textColor =  UIColor.App.textPrimary
+//
+//        supportBaseView.backgroundColor = UIColor.App.backgroundSecondary
+//        supportIconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+//        supportIconImageView.backgroundColor = .clear
+//        supportLabel.textColor =  UIColor.App.textPrimary
 
         infoLabel.textColor = UIColor.App.textPrimary
         
         logoutBaseView.backgroundColor = .clear
         infoBaseView.backgroundColor = .clear
+    }
+
+    private func setupStackView() {
+        let myAccountView = NavigationCardView()
+        myAccountView.setupView(title: localized("my_account"), iconTitle: "my_account_profile_icon")
+        let myAccountTap = UITapGestureRecognizer(target: self, action: #selector(myAccountViewTapped(sender:)))
+        myAccountView.addGestureRecognizer(myAccountTap)
+
+        let myFavoritesView = NavigationCardView()
+        myFavoritesView.setupView(title: localized("my_favorites"), iconTitle: "favorite_profile_icon")
+        let myFavoritesTap = UITapGestureRecognizer(target: self, action: #selector(favoritesViewTapped(sender:)))
+        myFavoritesView.addGestureRecognizer(myFavoritesTap)
+
+        let bonusView = NavigationCardView()
+        bonusView.setupView(title: localized("bonus"), iconTitle: "bonus_profile_icon")
+        let bonusTap = UITapGestureRecognizer(target: self, action: #selector(bonusViewTapped(sender:)))
+        bonusView.addGestureRecognizer(bonusTap)
+
+        let historyView = NavigationCardView()
+        historyView.setupView(title: localized("history"), iconTitle: "history_profile_icon")
+        let historyTap = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped(sender:)))
+        historyView.addGestureRecognizer(historyTap)
+
+        let settingsView = NavigationCardView()
+        settingsView.setupView(title: localized("app_settings"), iconTitle: "app_settings_profile_icon")
+        let settingsTap = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped(sender:)))
+        settingsView.addGestureRecognizer(settingsTap)
+
+        let supportView = NavigationCardView()
+        supportView.setupView(title: localized("support"), iconTitle: "support_profile_icon")
+        let supportTap = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped(sender:)))
+        supportView.addGestureRecognizer(supportTap)
+
+        self.stackView.addArrangedSubview(myAccountView)
+        self.stackView.addArrangedSubview(myFavoritesView)
+        self.stackView.addArrangedSubview(bonusView)
+        self.stackView.addArrangedSubview(historyView)
+        self.stackView.addArrangedSubview(settingsView)
+        self.stackView.addArrangedSubview(supportView)
+
     }
 
     @IBAction private func didTapDepositButton() {
@@ -470,45 +518,38 @@ extension ProfileViewController {
 
 extension ProfileViewController {
 
-    @objc func personalInfoViewTapped() {
-        let personalInfoViewController = PersonalInfoViewController(userSession: self.userSession)
-        self.navigationController?.pushViewController(personalInfoViewController, animated: true)
+    @objc private func myAccountViewTapped(sender: UITapGestureRecognizer) {
+        let myAccountViewController = MyAccountViewController()
+        self.navigationController?.pushViewController(myAccountViewController, animated: true)
     }
 
-    @objc func passwordUpdateViewTapped() {
-        let passwordUpdateViewController = PasswordUpdateViewController()
-        self.navigationController?.pushViewController(passwordUpdateViewController, animated: true)
-    }
-
-    @objc func walletViewTapped() {
+    @objc func favoritesViewTapped(sender: UITapGestureRecognizer) {
+        let favoritesViewController = MyFavoritesViewController()
+        self.navigationController?.pushViewController(favoritesViewController, animated: true)
 
     }
 
-    @objc func documentsViewTapped() {
-
-    }
-
-    @objc func bonusViewTapped() {
+    @objc func bonusViewTapped(sender: UITapGestureRecognizer) {
         let bonusViewController = BonusViewController()
         self.navigationController?.pushViewController(bonusViewController, animated: true)
     }
 
-    @objc func historyViewTapped() {
+    @objc func historyViewTapped(sender: UITapGestureRecognizer) {
         let historyViewController = HistoryViewController()
         self.navigationController?.pushViewController(historyViewController, animated: true)
     }
+//
+//    @objc func limitsViewTapped() {
+//        let profileLimitsManagementViewController = ProfileLimitsManagementViewController()
+//        self.navigationController?.pushViewController(profileLimitsManagementViewController, animated: true)
+//    }
 
-    @objc func limitsViewTapped() {
-        let profileLimitsManagementViewController = ProfileLimitsManagementViewController()
-        self.navigationController?.pushViewController(profileLimitsManagementViewController, animated: true)
-    }
-
-    @objc func appSettingsViewTapped() {
+    @objc func appSettingsViewTapped(sender: UITapGestureRecognizer) {
         let appSettingsViewController = AppSettingsViewController()
         self.navigationController?.pushViewController(appSettingsViewController, animated: true)
     }
 
-    @objc func supportViewTapped() {
+    @objc func supportViewTapped(sender: UITapGestureRecognizer) {
 
     }
 

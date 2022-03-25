@@ -1038,6 +1038,10 @@
 		A9E7C6AD27BD574F00F784C9 /* AppSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */; };
 		A9E7C6B027BD63EE00F784C9 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */; };
 		A9E7C6B127BD63EE00F784C9 /* SettingsRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */; };
+		A9FAD39F27EA20200041F3E7 /* MyAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FAD39E27EA20200041F3E7 /* MyAccountViewController.swift */; };
+		A9FAD3A027EA20200041F3E7 /* MyAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FAD39E27EA20200041F3E7 /* MyAccountViewController.swift */; };
+		A9FAD3A327EA244B0041F3E7 /* NavigationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FAD3A227EA244B0041F3E7 /* NavigationCardView.swift */; };
+		A9FAD3A427EA244B0041F3E7 /* NavigationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FAD3A227EA244B0041F3E7 /* NavigationCardView.swift */; };
 		F410E62927BC4FAB005C1964 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		F410E62A27BC4FAC005C1964 /* TransactionsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */; };
 		F410E62C27BD183A005C1964 /* BettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F410E62B27BD183A005C1964 /* BettingsTableViewCell.swift */; };
@@ -1616,6 +1620,8 @@
 		A9E7C6A727BBC41800F784C9 /* AggregatorRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AggregatorRepository.swift; sourceTree = "<group>"; };
 		A9E7C6AB27BD574F00F784C9 /* AppSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsViewController.swift; sourceTree = "<group>"; };
 		A9E7C6AF27BD63EE00F784C9 /* SettingsRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsRowView.swift; sourceTree = "<group>"; };
+		A9FAD39E27EA20200041F3E7 /* MyAccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyAccountViewController.swift; sourceTree = "<group>"; };
+		A9FAD3A227EA244B0041F3E7 /* NavigationCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCardView.swift; sourceTree = "<group>"; };
 		F410E62827BC4FAB005C1964 /* TransactionsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionsTableViewCell.swift; sourceTree = "<group>"; };
 		F410E62B27BD183A005C1964 /* BettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BettingsTableViewCell.swift; sourceTree = "<group>"; };
 		F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DropDownSelectionView.swift; sourceTree = "<group>"; };
@@ -2570,6 +2576,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A9FAD3A127EA242A0041F3E7 /* NavigationCardViews */,
 				A99F7A1B27DA1139008BAF41 /* BonusViews */,
 				A9E7C6AE27BD63A100F784C9 /* SettingsViews */,
 				A90BC91827CCE08A00667616 /* SharedGameCard */,
@@ -3508,6 +3515,7 @@
 		A9C82FB226F3AB3400059DCD /* Profile */ = {
 			isa = PBXGroup;
 			children = (
+				A9FAD39D27EA1FF30041F3E7 /* MyAccount */,
 				F48D33B527BBD55E006E04CB /* History */,
 				A96279F02743D36A0001E1D5 /* EmailVerification */,
 				455C961F26FDD66300456F30 /* ProfileViewController.swift */,
@@ -3610,6 +3618,22 @@
 				A91F4B3427BFBF46008C7510 /* SettingsRadioRowView.swift */,
 			);
 			path = SettingsViews;
+			sourceTree = "<group>";
+		};
+		A9FAD39D27EA1FF30041F3E7 /* MyAccount */ = {
+			isa = PBXGroup;
+			children = (
+				A9FAD39E27EA20200041F3E7 /* MyAccountViewController.swift */,
+			);
+			path = MyAccount;
+			sourceTree = "<group>";
+		};
+		A9FAD3A127EA242A0041F3E7 /* NavigationCardViews */ = {
+			isa = PBXGroup;
+			children = (
+				A9FAD3A227EA244B0041F3E7 /* NavigationCardView.swift */,
+			);
+			path = NavigationCardViews;
 			sourceTree = "<group>";
 		};
 		F410E62727BC4F78005C1964 /* Cells */ = {
@@ -4471,6 +4495,7 @@
 				A90BC91627C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */,
 				A9C602352716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41C26BF0355005DF543 /* Delayed.swift in Sources */,
+				A9FAD39F27EA20200041F3E7 /* MyAccountViewController.swift in Sources */,
 				A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
 				455C677027E230BF00AAB2A5 /* MarketGroupDetailsViewController.swift in Sources */,
 				45166D2526F3548D00E69D65 /* TSManager.swift in Sources */,
@@ -4497,6 +4522,7 @@
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				454E090B27EC7A0300391560 /* ConversationsViewController.swift in Sources */,
 				A90D8B01277228B600DF88EB /* WithdrawResponse.swift in Sources */,
+				A9FAD3A327EA244B0041F3E7 /* NavigationCardView.swift in Sources */,
 				A99F79FB27CFC949008BAF41 /* BonusViewModel.swift in Sources */,
 				45166D1526F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				A9E7C6B027BD63EE00F784C9 /* SettingsRowView.swift in Sources */,
@@ -4882,6 +4908,7 @@
 				45B0BD35271EEE58009C41FA /* CompetitionFilterHeaderView.swift in Sources */,
 				A9BCF45727554E88006DD528 /* CashoutSubmission.swift in Sources */,
 				A90BC91727C5543600667616 /* ProfileLimitsManagementViewModel.swift in Sources */,
+				A9FAD3A027EA20200041F3E7 /* MyAccountViewController.swift in Sources */,
 				A9C602362716F7BE00992E11 /* FilterCollapseView.swift in Sources */,
 				4589F41D26BF0355005DF543 /* Delayed.swift in Sources */,
 				A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */,
@@ -4908,6 +4935,7 @@
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				454E090C27EC7A0300391560 /* ConversationsViewController.swift in Sources */,
 				A90D8B02277228B600DF88EB /* WithdrawResponse.swift in Sources */,
+				A9FAD3A427EA244B0041F3E7 /* NavigationCardView.swift in Sources */,
 				A99F79FC27CFC949008BAF41 /* BonusViewModel.swift in Sources */,
 				45166D1626F3548D00E69D65 /* WebSocketSSWampTransport.swift in Sources */,
 				A9E7C6B127BD63EE00F784C9 /* SettingsRowView.swift in Sources */,
@@ -5195,7 +5223,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00200;
-				DEVELOPMENT_TEAM = TKH4GU3DG3;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Beta/ShowcaseBeta-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -5221,7 +5249,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 00200;
-				DEVELOPMENT_TEAM = TKH4GU3DG3;
+				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Beta/ShowcaseBeta-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
