@@ -40,6 +40,7 @@ class ActivationAlertScrollableTableViewCell: UITableViewCell {
     func setupWithTheme() {
         self.backgroundColor = UIColor.clear
         self.collectionView.backgroundColor = UIColor.clear
+        self.pageControl.tintColor = UIColor.gray
     }
 
     func setAlertArrayData(arrayData: [ActivationAlert]) {

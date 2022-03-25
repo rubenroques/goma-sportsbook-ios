@@ -15,11 +15,11 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var scrollView: UIScrollView!
     
-    @IBOutlet private weak var titleHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private weak var titleHeaderTextFieldView: DropDownSelectionView!
  
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var countryHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var countryHeaderTextFieldView: DropDownSelectionView!
     @IBOutlet private var address1HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var address2HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var cityStackView: UIStackView!
@@ -186,7 +186,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
 
     private func checkUserInputs() {
 
-        let titleText = titleHeaderTextFieldView.textField.text == "" ? false : true
+        let titleText = titleHeaderTextFieldView.text == "" ? false : true
         let firstNameText = firstNameHeaderTextFieldView.text == "" ? false : true
         let lastNameText = lastNameHeaderTextFieldView.text == "" ? false : true
         let address1Text = address1HeaderTextFieldView.text == "" ? false : true
@@ -268,7 +268,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     }
 
     func setupFullRegisterUserInfoForm() {
-        let titleText = titleHeaderTextFieldView.textField.text
+        let titleText = titleHeaderTextFieldView.text
         let firstNameText = firstNameHeaderTextFieldView.text
         let lastNameText = lastNameHeaderTextFieldView.text
         var countryText = ""

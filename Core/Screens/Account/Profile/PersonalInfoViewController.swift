@@ -17,11 +17,11 @@ class PersonalInfoViewController: UIViewController {
     @IBOutlet private var headerLabel: UILabel!
     @IBOutlet private var editButton: UIButton!
 
-    @IBOutlet private var titleHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var titleHeaderTextFieldView: DropDownSelectionView!
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var countryHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var birthDateHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var countryHeaderTextFieldView: DropDownSelectionView!
+    @IBOutlet private var birthDateHeaderTextFieldView: DropDownSelectionView!
     @IBOutlet private var adress1HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var adress2HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var cityHeaderTextFieldView: HeaderTextFieldView!
@@ -66,8 +66,6 @@ class PersonalInfoViewController: UIViewController {
 
     }
 
-    
-
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.setupWithTheme()
@@ -85,6 +83,8 @@ class PersonalInfoViewController: UIViewController {
         titleHeaderTextFieldView.setSelectionPicker(UserTitles.titles, headerVisible: true)
         titleHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         titleHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        titleHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
+        titleHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
 
         firstNameHeaderTextFieldView.setPlaceholderText(localized("first_name"))
         firstNameHeaderTextFieldView.showTipWithoutIcon(text: localized("names_match_id"),
@@ -96,11 +96,16 @@ class PersonalInfoViewController: UIViewController {
         countryHeaderTextFieldView.setSelectionPicker(["-----"], headerVisible: true)
         countryHeaderTextFieldView.setImageTextField(UIImage(named: "arrow_dropdown_icon")!)
         countryHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        countryHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
+        countryHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
         countryHeaderTextFieldView.shouldBeginEditing = { return false }
 
         birthDateHeaderTextFieldView.setPlaceholderText(localized("birth_date"))
         birthDateHeaderTextFieldView.setImageTextField(UIImage(named: "calendar_regular_icon")!)
-        birthDateHeaderTextFieldView.setDatePickerMode()
+        birthDateHeaderTextFieldView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        birthDateHeaderTextFieldView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
+        birthDateHeaderTextFieldView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
+        birthDateHeaderTextFieldView.shouldBeginEditing = { return false }
 
         adress1HeaderTextFieldView.setPlaceholderText(localized("address_1"))
 
@@ -166,10 +171,12 @@ class PersonalInfoViewController: UIViewController {
         countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         countryHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
-        birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
-        birthDateHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        
         birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
-
+        birthDateHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        birthDateHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+        birthDateHeaderTextFieldView.isDisabled = true
+        
         adress1HeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         adress1HeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         adress1HeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
@@ -228,6 +235,7 @@ class PersonalInfoViewController: UIViewController {
 
             } receiveValue: { profile in
                 self.setupProfile(profile: profile)
+                
             }
         .store(in: &cancellables)
 
@@ -476,6 +484,12 @@ extension PersonalInfoViewController {
         if !profile.isBirthDateUpdatable {
             self.birthDateHeaderTextFieldView.isDisabled = true
         }
+        
+        let title = profile.fields.title
+        if let indexOfTitle = UserTitles.titles.firstIndex(of: title){
+            self.titleHeaderTextFieldView.setSelectedPickerOption(option: indexOfTitle)
+        }
+        
         self.birthDateHeaderTextFieldView.setText(profile.fields.birthDate)
 
         self.adress1HeaderTextFieldView.setText(profile.fields.address1)

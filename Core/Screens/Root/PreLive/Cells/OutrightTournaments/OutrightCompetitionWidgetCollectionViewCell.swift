@@ -174,8 +174,6 @@ extension OutrightCompetitionWidgetCollectionViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-            self.contentView.heightAnchor.constraint(equalToConstant: 124),
-
             self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
@@ -183,8 +181,8 @@ extension OutrightCompetitionWidgetCollectionViewCell {
 
             self.baseStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.baseStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
-            self.baseStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 16),
-            self.baseStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -10),
+            self.baseStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 15),
+            self.baseStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -15),
 
             self.titleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
             self.titleLabel.centerXAnchor.constraint(equalTo: self.topView.centerXAnchor),
@@ -197,8 +195,8 @@ extension OutrightCompetitionWidgetCollectionViewCell {
 
             self.seeAllView.centerYAnchor.constraint(equalTo: self.bottomView.centerYAnchor),
             self.seeAllView.centerXAnchor.constraint(equalTo: self.bottomView.centerXAnchor),
-            self.seeAllView.topAnchor.constraint(equalTo: self.bottomView.topAnchor, constant: 2),
-            self.seeAllView.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 16),
+            self.seeAllView.heightAnchor.constraint(equalToConstant: 24),
+            self.seeAllView.leadingAnchor.constraint(equalTo: self.bottomView.leadingAnchor, constant: 24),
         ])
     }
 }

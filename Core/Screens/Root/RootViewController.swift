@@ -179,10 +179,30 @@ class RootViewController: UIViewController {
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
-            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                self?.accountValueLabel.text = value
+                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+                    let accountValue = bonusWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+
+                }
+                else {
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBonusBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+                    let accountValue = currentWallet.amount + value
+
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                }
+
             }
             .store(in: &cancellables)
 

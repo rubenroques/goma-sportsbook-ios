@@ -7,11 +7,11 @@
 
 import UIKit
 
-class ChatViewModel {
+class PreviewChatViewModel {
 
 }
 
-class ChatTableViewCell: UITableViewCell {
+class PreviewChatTableViewCell: UITableViewCell {
 
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var photoImageView: UIImageView = Self.createPhotoImageView()
@@ -22,7 +22,7 @@ class ChatTableViewCell: UITableViewCell {
     private lazy var dateLabel: UILabel = Self.createDateLabel()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
-    private var viewModel: ChatViewModel?
+    private var viewModel: PreviewChatViewModel?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -66,13 +66,13 @@ class ChatTableViewCell: UITableViewCell {
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
-    func configure(withViewModel viewModel: ChatViewModel) {
+    func configure(withViewModel viewModel: PreviewChatViewModel) {
         self.viewModel = viewModel
     }
 
 }
 
-extension ChatTableViewCell {
+extension PreviewChatTableViewCell {
 
     private static func createBaseView() -> UIView {
         let baseView = UIView()
@@ -243,8 +243,8 @@ class ConversationsViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(ChatTableViewCell.self,
-                                forCellReuseIdentifier: ChatTableViewCell.identifier)
+        self.tableView.register(PreviewChatTableViewCell.self,
+                                forCellReuseIdentifier: PreviewChatTableViewCell.identifier)
 
     }
 
@@ -330,7 +330,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard
-            let cell = tableView.dequeueCellType(ChatTableViewCell.self)
+            let cell = tableView.dequeueCellType(PreviewChatTableViewCell.self)
         else {
             fatalError()
         }

@@ -709,7 +709,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                             if freeBet.validForSelectionOdds {
                                 let bonusMultiple = BonusMultipleBetslip(freeBet: freeBet, oddsBoost: nil)
                                 self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
-
+                                // Only one freeBet to use at a time
+                                break
                             }
                         }
                     }
@@ -719,6 +720,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                             if oddsBoost.validForSelectionOdds {
                                 let bonusMultiple = BonusMultipleBetslip(freeBet: nil, oddsBoost: oddsBoost)
                                 self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
+                                // Only one oddsBoost to use at a time
+                                break
                             }
                         }
                     }
@@ -1292,7 +1295,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             
             if self.listTypePublisher.value == .simple {
 
-                Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
+                Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value,
+                                                      singleFreeBet: self.singleBettingTicketDataSource.currentTicketFreeBetSelected,
+                                                      singleOddsBoost: self.singleBettingTicketDataSource.currentTicketOddsBoostSelected)
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                         switch completion {
@@ -1310,7 +1315,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             }
             else if self.listTypePublisher.value == .multiple {
-                Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue)
+                Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue, freeBet: self.freeBetSelected, oddsBoost: self.oddsBoostSelected)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] _ in
                         self?.isLoading = false
@@ -1715,6 +1720,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
                         self?.tableNeedsDebouncedReload?()
                     }
+                    // Only one to use each time
+                    break
                 }
             }
 
@@ -1757,6 +1764,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
                         self?.tableNeedsDebouncedReload?()
                     }
+                    // Only one to use each time
+                    break
                 }
             }
         }
@@ -1809,6 +1818,7 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
             return cell
         }
         else if let cell = tableView.dequeueCellType(BonusSwitchTableViewCell.self), let bonusMultiple = self.bonusMultiple[safe: (indexPath.row - self.bettingTickets.count)] {
+
             if let freeBet = bonusMultiple.freeBet {
                 cell.setupBonusInfo(freeBet: freeBet, oddsBoost: nil, bonusType: .freeBet)
 
