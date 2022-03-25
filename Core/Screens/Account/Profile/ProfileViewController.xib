@@ -122,7 +122,7 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="545"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VDW-H2-PFU">
-                                    <rect key="frame" x="0.0" y="288" width="414" height="30"/>
+                                    <rect key="frame" x="0.0" y="324" width="414" height="30"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="30" id="K1M-c2-O3M"/>
                                     </constraints>
@@ -190,7 +190,7 @@ Sportsbook® All Rights Reserved</string>
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lFI-1X-kZb">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="318"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="354"/>
                                     <subviews>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4us-C6-c7y">
                                             <rect key="frame" x="50" y="8" width="314" height="30"/>
@@ -323,7 +323,7 @@ Sportsbook® All Rights Reserved</string>
                                         <constraint firstItem="4us-C6-c7y" firstAttribute="top" secondItem="lFI-1X-kZb" secondAttribute="top" constant="8" id="VpU-ZU-auJ"/>
                                         <constraint firstAttribute="trailing" secondItem="JUz-Fz-k5E" secondAttribute="trailing" constant="50" id="ZMf-8C-tUV"/>
                                         <constraint firstItem="YKL-xJ-gdA" firstAttribute="top" secondItem="4us-C6-c7y" secondAttribute="bottom" constant="4" id="aLv-3a-l4C"/>
-                                        <constraint firstAttribute="bottom" secondItem="1bn-gy-5Xw" secondAttribute="bottom" constant="-28" id="aed-gp-qgZ"/>
+                                        <constraint firstAttribute="bottom" secondItem="1bn-gy-5Xw" secondAttribute="bottom" constant="8" id="aed-gp-qgZ"/>
                                         <constraint firstItem="YKL-xJ-gdA" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="50" id="mTO-DS-Re8"/>
                                         <constraint firstItem="JUz-Fz-k5E" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="50" id="n1L-d4-gci"/>
                                         <constraint firstItem="GcN-zo-c6s" firstAttribute="leading" secondItem="lFI-1X-kZb" secondAttribute="leading" constant="50" id="x9G-dO-zeK"/>
