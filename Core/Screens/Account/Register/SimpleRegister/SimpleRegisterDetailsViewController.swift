@@ -17,7 +17,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var registerTitleLabel: UILabel!
     @IBOutlet private var topSignUpView: UIView!
     @IBOutlet private var usernameHeaderTextView: HeaderTextFieldView!
-    @IBOutlet private var dateHeaderTextView: HeaderTextFieldView!
+    @IBOutlet private var dateHeaderTextView: DropDownSelectionView!
     @IBOutlet private var phoneView: UIView!
     @IBOutlet private var indicativeHeaderTextView: HeaderTextFieldView!
     @IBOutlet private var phoneHeaderTextView: HeaderTextFieldView!
@@ -125,8 +125,13 @@ class SimpleRegisterDetailsViewController: UIViewController {
         usernameHeaderTextView.setSecureField(false)
 
         dateHeaderTextView.backgroundColor = UIColor.App.backgroundPrimary
-        dateHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         dateHeaderTextView.setTextFieldColor(UIColor.App.inputText)
+        dateHeaderTextView.setViewColor(UIColor.App.backgroundPrimary)
+        dateHeaderTextView.setViewBorderColor(UIColor.App.inputTextTitle)
+        dateHeaderTextView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        dateHeaderTextView.setTextFieldFont(AppFont.with(type: .regular, size: 16))
+        dateHeaderTextView.setHeaderLabelFont(AppFont.with(type: .regular, size: 15))
+        dateHeaderTextView.setPlaceholderTextColor(UIColor.App.inputTextTitle)
 
         phoneView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -319,7 +324,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         self.resignFirstResponder()
 
         self.usernameHeaderTextView.resignFirstResponder()
-        self.dateHeaderTextView.resignFirstResponder()
+        //self.dateHeaderTextView.resignFirstResponder()
         self.indicativeHeaderTextView.resignFirstResponder()
         self.phoneHeaderTextView.resignFirstResponder()
         self.passwordHeaderTextView.resignFirstResponder()

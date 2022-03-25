@@ -192,7 +192,6 @@ class BonusViewController: UIViewController {
 
         viewModel.requestBonusDetail = { [weak self] bonus in
             self?.showBonusDetail(bonus: bonus)
-            //self?.viewModel.updateDataSources()
         }
 
         viewModel.requestApplyBonus = { [weak self] bonus in
@@ -208,25 +207,31 @@ class BonusViewController: UIViewController {
     }
 
     private func applyBonus(bonusCode: String) {
+        self.isLoading = true
+
         Env.everyMatrixClient.applyBonus(bonusCode: bonusCode)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     print("APPLY BONUS ERROR: \(error)")
                     let errorString = "\(error)"
                     if errorString.lowercased().contains("invalid") {
-                        self.showAlert(type: .error, text: localized("invalid_bonus_code"))
+                        self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
                     }
                     else {
-                        self.showAlert(type: .error, text: localized("error_bonus_code"))
+                        self?.showAlert(type: .error, text: localized("error_bonus_code"))
                     }
 
                 case .finished:
                     ()
                 }
+
+                self?.isLoading = false
+
             }, receiveValue: { [weak self] bonusResponse in
                 print("APPLY BONUS: \(bonusResponse)")
+                self?.showAlert(type: .success, text: localized("bonus_applied_success"))
                 self?.viewModel.updateDataSources()
             })
             .store(in: &cancellables)
@@ -278,10 +283,6 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
         return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
     }
 
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
-//    }
-
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
     }
@@ -289,22 +290,6 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
     }
-
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
-//    }
-//
-//    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-//        return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
-//    }
-
-//    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-//        return 0.01
-//    }
-//
-//    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-//        return 0.01
-//    }
 
 }
 

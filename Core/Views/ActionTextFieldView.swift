@@ -38,7 +38,15 @@ class ActionTextFieldView: UIView {
             }
             else {
                 self.actionButton.isEnabled = true
-                self.actionButton.layer.borderColor = UIColor.App.textPrimary.cgColor
+
+                // NOTA: Sem verificar o tema, a cor da border fica sempre com a cor do dark mode, não sei porquê
+                if self.traitCollection.userInterfaceStyle == .light {
+                    self.actionButton.layer.borderColor = UIColor.App.backgroundDarker.cgColor
+
+                }
+                else {
+                    self.actionButton.layer.borderColor = UIColor.App.textPrimary.cgColor
+                }
             }
         }
     }
@@ -71,6 +79,14 @@ class ActionTextFieldView: UIView {
         self.textField.delegate = self
 
         self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .touchUpInside)
+
+        self.isActionDisabled = true
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
@@ -82,6 +98,8 @@ class ActionTextFieldView: UIView {
         self.headerLabel.textColor = UIColor.App.textSecondary
 
         self.textField.backgroundColor = .clear
+
+        self.actionButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
     }
 

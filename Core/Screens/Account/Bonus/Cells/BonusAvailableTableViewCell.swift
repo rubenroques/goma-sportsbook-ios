@@ -19,6 +19,9 @@ class BonusAvailableTableViewCell: UITableViewCell {
     private lazy var moreInfoButton: UIButton = Self.createMoreInfoButton()
     private lazy var getBonusButton: UIButton = Self.createGetBonusButton()
 
+    private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createbannerImageViewFixedHeightConstraint()
+    private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createbannerImageViewDynamicHeightConstraint()
+
     // MARK: Public Properties
     var hasBannerImage: Bool = false {
         didSet {
@@ -41,6 +44,8 @@ class BonusAvailableTableViewCell: UITableViewCell {
             }
         }
     }
+
+    var aspectRatio: CGFloat = 1.0
 
     var didTapMoreInfoAction: (() -> Void)?
     var didTapGetBonusAction: (() -> Void)?
@@ -85,22 +90,44 @@ class BonusAvailableTableViewCell: UITableViewCell {
         self.subtitleLabel.textColor = UIColor.App.textSecondary
 
         self.bottomStackView.backgroundColor = .clear
+
+        self.moreInfoButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+
+        self.getBonusButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
     }
 
-    func setupBonus(bonus: EveryMatrix.ApplicableBonus) {
+    func setupBonus(bonus: EveryMatrix.ApplicableBonus, bonusBanner: UIImage? = nil) {
 
         self.titleLabel.text = bonus.name
 
         self.subtitleLabel.text = bonus.description
 
-        // Testing image banner
-//        if bonus.url != "" {
-//            self.hasBannerImage = true
-//        }
-//        else {
-//            self.hasBannerImage = false
-//        }
-        self.hasBannerImage = false
+        if let bonusBanner = bonusBanner {
+            self.bannerImageView.image = bonusBanner
+            self.resizeBannerImageView(bonusBanner: bonusBanner)
+            self.hasBannerImage = true
+        }
+        else {
+            self.hasBannerImage = false
+        }
+
+    }
+
+    private func resizeBannerImageView(bonusBanner: UIImage) {
+        self.aspectRatio = bonusBanner.size.width/bonusBanner.size.height
+
+        self.bannerImageViewFixedHeightConstraint.isActive = false
+
+        self.bannerImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.bannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.bannerImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+
+        self.bannerImageViewDynamicHeightConstraint.isActive = true
     }
 
 }
@@ -110,12 +137,10 @@ class BonusAvailableTableViewCell: UITableViewCell {
 //
 extension BonusAvailableTableViewCell {
     @objc private func didTapMoreInfoButton() {
-        print("More Info")
         self.didTapMoreInfoAction?()
     }
 
     @objc private func didTapGetBonusButton() {
-        print("Get Bonus")
         self.didTapGetBonusAction?()
     }
 
@@ -197,6 +222,16 @@ extension BonusAvailableTableViewCell {
         return button
     }
 
+    private static func createbannerImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createbannerImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
 
@@ -233,7 +268,7 @@ extension BonusAvailableTableViewCell {
 
             self.bannerImageView.leadingAnchor.constraint(equalTo: self.topStackView.leadingAnchor),
             self.bannerImageView.trailingAnchor.constraint(equalTo: self.topStackView.trailingAnchor),
-            self.bannerImageView.heightAnchor.constraint(equalToConstant: 75),
+            //self.bannerImageView.heightAnchor.constraint(equalToConstant: 150),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.topStackView.leadingAnchor),
             self.titleLabel.trailingAnchor.constraint(equalTo: self.topStackView.trailingAnchor),
@@ -255,6 +290,26 @@ extension BonusAvailableTableViewCell {
 
             self.getBonusButton.centerYAnchor.constraint(equalTo: self.bottomStackView.centerYAnchor)
         ])
+
+        self.bannerImageViewFixedHeightConstraint =
+        NSLayoutConstraint(item: self.bannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 150)
+        self.bannerImageViewFixedHeightConstraint.isActive = true
+
+        self.bannerImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.bannerImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.bannerImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+        self.bannerImageViewDynamicHeightConstraint.isActive = false
 
     }
 
