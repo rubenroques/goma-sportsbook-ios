@@ -320,7 +320,8 @@ class Router {
 
         Env.urlSchemaManager.shouldShowBetslipPublisher.send(false)
 
-        self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
+        let navigationViewController = Router.navigationController(with: betslipViewController)
+        self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
 
     }
 

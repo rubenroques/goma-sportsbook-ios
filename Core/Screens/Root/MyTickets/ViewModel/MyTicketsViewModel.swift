@@ -21,7 +21,6 @@ class MyTicketsViewModel: NSObject {
     var myTicketsTypePublisher: CurrentValueSubject<MyTicketsType, Never> = .init(.opened)
     var isTicketsEmptyPublisher: AnyPublisher<Bool, Never>
 
-
     var clickedCellSnapshot: UIImage?
     var clickedBetId: String?
     var clickedBetStatus: String?
