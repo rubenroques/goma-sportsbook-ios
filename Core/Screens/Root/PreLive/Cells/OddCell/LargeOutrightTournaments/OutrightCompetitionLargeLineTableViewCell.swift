@@ -1,5 +1,5 @@
 //
-//  OutrightCompetitionLineTableViewCell.swift
+//  OutrightCompetitionLargeLineTableViewCell.swift
 //  Sportsbook
 //
 //  Created by Ruben Roques on 21/02/2022.
@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class OutrightCompetitionLineViewModel {
+class OutrightCompetitionLargeLineViewModel {
 
     var competition: Competition
     var numberOfMarkets: Int
@@ -29,12 +29,12 @@ class OutrightCompetitionLineViewModel {
         return 1
     }
 
-    func outrightCompetitionWidgetViewModel() -> OutrightCompetitionWidgetViewModel {
-        return OutrightCompetitionWidgetViewModel(competition: self.competition)
+    func outrightCompetitionLargeWidgetViewModel() -> OutrightCompetitionLargeWidgetViewModel {
+        return OutrightCompetitionLargeWidgetViewModel(competition: self.competition)
     }
 }
 
-class OutrightCompetitionLineTableViewCell: UITableViewCell {
+class OutrightCompetitionLargeLineTableViewCell: UITableViewCell {
 
     var didSelectCompetitionAction: ((Competition) -> Void)?
 
@@ -43,7 +43,7 @@ class OutrightCompetitionLineTableViewCell: UITableViewCell {
 
     private var showingBackSliderView: Bool = false
 
-    private var viewModel: OutrightCompetitionLineViewModel?
+    private var viewModel: OutrightCompetitionLargeLineViewModel?
     private var cancellables: Set<AnyCancellable> = []
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -83,7 +83,7 @@ class OutrightCompetitionLineTableViewCell: UITableViewCell {
         self.collectionView.backgroundColor = UIColor.App.backgroundPrimary
    }
 
-    func configure(withViewModel viewModel: OutrightCompetitionLineViewModel) {
+    func configure(withViewModel viewModel: OutrightCompetitionLargeLineViewModel) {
 
         self.viewModel = viewModel
 
@@ -103,7 +103,7 @@ class OutrightCompetitionLineTableViewCell: UITableViewCell {
     }
 }
 
-extension OutrightCompetitionLineTableViewCell: UIScrollViewDelegate {
+extension OutrightCompetitionLargeLineTableViewCell: UIScrollViewDelegate {
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
@@ -125,7 +125,7 @@ extension OutrightCompetitionLineTableViewCell: UIScrollViewDelegate {
 
 }
 
-extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension OutrightCompetitionLargeLineTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         guard let viewModel = self.viewModel else { return 0 }
@@ -171,8 +171,8 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
 
             return cell
         }
-        else if let cell = collectionView.dequeueCellType(OutrightCompetitionWidgetCollectionViewCell.self, indexPath: indexPath) {
-            let cellViewModel = viewModel.outrightCompetitionWidgetViewModel()
+        else if let cell = collectionView.dequeueCellType(OutrightCompetitionLargeWidgetCollectionViewCell.self, indexPath: indexPath) {
+            let cellViewModel = viewModel.outrightCompetitionLargeWidgetViewModel()
             cell.configure(withViewModel: cellViewModel)
             cell.tappedLineAction = { [weak self] _ in
                 self?.didTapSeeAll()
@@ -210,7 +210,7 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: 88)
+            return CGSize(width: 99, height: 124)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -218,12 +218,12 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
             if width > 390 {
                 width = 390
             }
-            return CGSize(width: width, height: 88)
+            return CGSize(width: width, height: 124)
         }
     }
 }
 
-extension OutrightCompetitionLineTableViewCell {
+extension OutrightCompetitionLargeLineTableViewCell {
 
     private static func createLinesStackView() -> UIStackView {
         let linesStackView = UIStackView()
@@ -258,9 +258,12 @@ extension OutrightCompetitionLineTableViewCell {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
-        self.collectionView.register(OutrightCompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: OutrightCompetitionWidgetCollectionViewCell.identifier)
-        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib, forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
-        self.collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: UICollectionViewCell.identifier)
+        self.collectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
+                                     forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
+        self.collectionView.register(SeeMoreMarketsCollectionViewCell.nib,
+                                     forCellWithReuseIdentifier: SeeMoreMarketsCollectionViewCell.identifier)
+        self.collectionView.register(UICollectionViewCell.self,
+                                     forCellWithReuseIdentifier: UICollectionViewCell.identifier)
 
         // Initialize constraints
         self.initConstraints()

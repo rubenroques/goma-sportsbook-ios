@@ -41,11 +41,12 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         self.seeAllView.addGestureRecognizer(tapGestureRecognizer)
         
         self.backView.layer.cornerRadius = 6
-        self.backView.isHidden = true
+        self.backView.alpha = 0.0
         
         let backFirstSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
         self.backView.addGestureRecognizer(backFirstSliderTapGesture)
 
+        self.contentView.bringSubviewToFront(self.backView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -56,6 +57,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
+
+        self.collectionView.setContentOffset(.zero, animated: false)
 
         self.reloadCollections()
     }
@@ -151,8 +154,6 @@ extension SportMatchSingleLineTableViewCell: UIScrollViewDelegate {
                     self.showingBackSliderView = true
                     UIView.animate(withDuration: 0.2) {
                         self.backView.alpha = 1.0
-                        self.backView.isHidden = false
-                        self.bringSubviewToFront(self.backView)
                     }
                 }
             }
@@ -161,7 +162,6 @@ extension SportMatchSingleLineTableViewCell: UIScrollViewDelegate {
                     self.showingBackSliderView = false
                     UIView.animate(withDuration: 0.2) {
                         self.backView.alpha = 0.0
-                        self.bringSubviewToFront(self.backView)
                     }
                 }
             }
@@ -452,8 +452,8 @@ extension SportMatchSingleLineTableViewCell {
 
         self.backView.addSubview(self.backImage)
 
-        self.contentView.addSubview(self.linesStackView)
         self.contentView.addSubview(self.backView)
+        self.contentView.addSubview(self.linesStackView)
         self.contentView.addSubview(self.seeAllView)
 
         self.seeAllView.addSubview(self.seeAllLabel)

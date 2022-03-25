@@ -109,6 +109,10 @@ class MarketGroupDetailsViewController: UIViewController {
     // MARK: - Actions
 
     // MARK: - Convenience
+    func reloadContent() {
+        self.reloadTableView()
+    }
+
     private func reloadTableView() {
         self.tableView.reloadData()
     }

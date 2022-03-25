@@ -144,6 +144,10 @@
 		454E090C27EC7A0300391560 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090A27EC7A0300391560 /* ConversationsViewController.swift */; };
 		454E090E27EC7C1100391560 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090D27EC7C1100391560 /* FriendsListViewController.swift */; };
 		454E090F27EC7C1100391560 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090D27EC7C1100391560 /* FriendsListViewController.swift */; };
+		454E091327EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
+		454E091427EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
+		454E091527EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091127EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift */; };
+		454E091627EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091127EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift */; };
 		454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
 		454E0A8F2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
 		454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A902732A78A00794E0C /* BetslipManager.swift */; };
@@ -1166,6 +1170,8 @@
 		454E090727EB831600391560 /* SocialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialViewController.swift; sourceTree = "<group>"; };
 		454E090A27EC7A0300391560 /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
 		454E090D27EC7C1100391560 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
+		454E091127EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightCompetitionLargeLineTableViewCell.swift; sourceTree = "<group>"; };
+		454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightCompetitionLargeWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
 		454E0A8D2731B01F00794E0C /* FailableDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableDecodable.swift; sourceTree = "<group>"; };
 		454E0A902732A78A00794E0C /* BetslipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipManager.swift; sourceTree = "<group>"; };
 		454E0A942732C01B00794E0C /* BetslipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipViewController.swift; sourceTree = "<group>"; };
@@ -1961,6 +1967,16 @@
 				454E090D27EC7C1100391560 /* FriendsListViewController.swift */,
 			);
 			path = Social;
+			sourceTree = "<group>";
+		};
+		454E091027EDF45200391560 /* LargeOutrightTournaments */ = {
+			isa = PBXGroup;
+			children = (
+				454E091127EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift */,
+				454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */,
+			);
+			name = LargeOutrightTournaments;
+			path = OddCell/LargeOutrightTournaments;
 			sourceTree = "<group>";
 		};
 		454E0A932732BF4600794E0C /* Betslip */ = {
@@ -2873,6 +2889,7 @@
 				4503E79F27D6606100077CD2 /* HeadersCellViews */,
 				45CD7B492716F5CB003044C5 /* OddCell */,
 				454F0A7427C40BCD003123DF /* OutrightTournaments */,
+				454E091027EDF45200391560 /* LargeOutrightTournaments */,
 				45CD7B5C27173D81003044C5 /* Banner */,
 				45CD7B56271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.swift */,
 				45CD7B57271738C7003044C5 /* SeeMoreMarketsCollectionViewCell.xib */,
@@ -4173,6 +4190,7 @@
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB0270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */,
+				454E091427EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				45B0BD31271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */,
 				A9B841AE26E674AA00269B05 /* Match.swift in Sources */,
 				A96B618427A03C20005DC376 /* RecentSearchRowView.swift in Sources */,
@@ -4413,6 +4431,7 @@
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				A99622A9278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				A90D8AF5277200C400DF88EB /* WithdrawViewController.swift in Sources */,
+				454E091627EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				A9B841A626E6557000269B05 /* Location.swift in Sources */,
 				45166D1726F3548D00E69D65 /* SSWampTransport.swift in Sources */,
 				A90D8AFB277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */,
@@ -4584,6 +4603,7 @@
 				A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45B7DAE026F92CE40032C1C3 /* UserSession.swift in Sources */,
+				454E091327EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				45936CB1270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543C270C664100D1E13E /* CollapsibleView.swift in Sources */,
 				45B0BD32271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */,
@@ -4824,6 +4844,7 @@
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
 				45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D2026F3548D00E69D65 /* SSWampSession.swift in Sources */,
+				454E091527EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */,
 				A99622AA278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
 				A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
