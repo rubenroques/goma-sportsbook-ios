@@ -184,6 +184,13 @@ class HomeStore {
         }
     }
 
+    func storeLocations(locations: [EveryMatrix.Location]) {
+        self.locations = [:]
+        for location in locations {
+            self.locations[location.id] = location
+        }
+    }
+    
     func location(forId id: String) -> EveryMatrix.Location? {
         return self.locations[id]
     }

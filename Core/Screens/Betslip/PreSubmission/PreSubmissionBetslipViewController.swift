@@ -112,9 +112,11 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     @IBOutlet private weak var betSuggestedCollectionView: UICollectionView!
-    @IBOutlet private weak var suggestedBetsActivityIndicator: UIActivityIndicatorView!
     
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
+
+    private lazy var suggestedBetsLoadingBaseView: UIView = Self.createSuggestedBetsLoadingBaseView()
+    private lazy var suggestedBetsActivityIndicatorView: UIActivityIndicatorView = Self.createSuggestedBetsActivityIndicatorView()
 
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -215,7 +217,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     var suggestedCancellables = Set<AnyCancellable>()
     var isSuggestedBetsLoading: Bool = false {
         didSet {
-            self.suggestedBetsActivityIndicator.isHidden = !isSuggestedBetsLoading
+            self.suggestedBetsLoadingBaseView.isHidden = !isSuggestedBetsLoading
         }
     }
     var cachedSuggestedBetViewModels: [Int: SuggestedBetViewModel] = [:]
@@ -264,11 +266,11 @@ class PreSubmissionBetslipViewController: UIViewController {
         super.viewDidLoad()
         self.commonInit()
 
+        self.setupSubviews()
+
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
         self.settingsPickerBaseView.alpha = 0.0
-
-        self.suggestedBetsActivityIndicator.isHidden = true
 
         self.view.bringSubviewToFront(systemBetTypeSelectorBaseView)
         self.view.bringSubviewToFront(emptyBetsBaseView)
@@ -865,6 +867,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         }
 
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
             },
             receiveValue: { [weak self] gomaBetsArray in
@@ -872,10 +875,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 guard let betsArray = gomaBetsArray else {return}
 
                 self?.gomaSuggestedBetsResponse = betsArray
-                // TODO: Code review - Mais um DispatchQueue.main.async
-                DispatchQueue.main.async {
-                    self?.betSuggestedCollectionView.reloadData()
-                }
+                self?.betSuggestedCollectionView.reloadData()
+
             })
             .store(in: &cancellables)
 
@@ -961,9 +962,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.systemBetTypeLabel.textColor = UIColor.App.textPrimary
         self.systemBetTypeTitleLabel.textColor = UIColor.App.textSecondary
-        self.systemBetTypeSelectorBaseView.backgroundColor = .clear
+        self.systemBetTypeSelectorBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         self.systemBetTypeSelectorContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.settingsPickerBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
             NSAttributedString.Key.foregroundColor: UIColor.white
@@ -992,11 +995,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         ])
         self.amountBaseView.backgroundColor = UIColor.App.inputBackground
 
-        self.clearButton.titleLabel?.textColor = UIColor.App.textPrimary
-        self.clearButton.tintColor = UIColor.App.backgroundOdds
+        self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.settingsButton.titleLabel?.textColor = UIColor.App.textPrimary
-        self.settingsButton.tintColor = UIColor.App.backgroundOdds
+        self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App.textPrimary
@@ -1109,9 +1110,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
         StyleHelper.styleButton(button: self.settingsPickerButton)
 
-        self.settingsButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        self.clearButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         
+        self.suggestedBetsLoadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
         
     }
 
@@ -1893,6 +1895,46 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
         return 99
     }
     
+}
+
+extension PreSubmissionBetslipViewController {
+
+    private static func createSuggestedBetsLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createSuggestedBetsActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
+    private func setupSubviews() {
+        self.emptyBetsBaseView.addSubview(self.suggestedBetsLoadingBaseView)
+
+        self.suggestedBetsLoadingBaseView.addSubview(self.suggestedBetsActivityIndicatorView)
+
+        self.emptyBetsBaseView.bringSubviewToFront(self.suggestedBetsLoadingBaseView)
+
+        self.initConstraints()
+    }
+
+    private func initConstraints() {
+
+        NSLayoutConstraint.activate([
+            self.suggestedBetsLoadingBaseView.leadingAnchor.constraint(equalTo: self.emptyBetsBaseView.leadingAnchor),
+            self.suggestedBetsLoadingBaseView.trailingAnchor.constraint(equalTo: self.emptyBetsBaseView.trailingAnchor),
+            self.suggestedBetsLoadingBaseView.topAnchor.constraint(equalTo: self.betSuggestedCollectionView.topAnchor),
+            self.suggestedBetsLoadingBaseView.bottomAnchor.constraint(equalTo: self.betSuggestedCollectionView.bottomAnchor),
+
+            self.suggestedBetsActivityIndicatorView.centerXAnchor.constraint(equalTo: self.suggestedBetsLoadingBaseView.centerXAnchor),
+            self.suggestedBetsActivityIndicatorView.centerYAnchor.constraint(equalTo: self.suggestedBetsLoadingBaseView.centerYAnchor)
+        ])
+    }
 }
 
 struct SingleBetslipFreebet {

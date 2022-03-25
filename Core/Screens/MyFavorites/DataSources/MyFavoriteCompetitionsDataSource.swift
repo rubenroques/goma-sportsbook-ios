@@ -62,11 +62,11 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             }
 
             cell.shouldShowCountryFlag(false)
-            cell.tappedMatchLineAction = {
-                self.didSelectMatchAction?(match)
+            cell.tappedMatchLineAction = { [weak self] in
+                self?.didSelectMatchAction?(match)
             }
-            cell.matchWentLive = {
-                self.matchWentLiveAction?()
+            cell.matchWentLive = { [weak self] in
+                self?.matchWentLiveAction?()
             }
             
             return cell

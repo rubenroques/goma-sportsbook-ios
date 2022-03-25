@@ -138,6 +138,12 @@
 		454A7A6026D873B500E6E74E /* GomaGamingServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */; };
 		454A7A6326DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
 		454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 454A7A6226DA300900E6E74E /* .swiftlint.yml */; };
+		454E090827EB831600391560 /* SocialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090727EB831600391560 /* SocialViewController.swift */; };
+		454E090927EB831600391560 /* SocialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090727EB831600391560 /* SocialViewController.swift */; };
+		454E090B27EC7A0300391560 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090A27EC7A0300391560 /* ConversationsViewController.swift */; };
+		454E090C27EC7A0300391560 /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090A27EC7A0300391560 /* ConversationsViewController.swift */; };
+		454E090E27EC7C1100391560 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090D27EC7C1100391560 /* FriendsListViewController.swift */; };
+		454E090F27EC7C1100391560 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E090D27EC7C1100391560 /* FriendsListViewController.swift */; };
 		454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
 		454E0A8F2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
 		454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A902732A78A00794E0C /* BetslipManager.swift */; };
@@ -1161,6 +1167,9 @@
 		454990CE27163D3200D57CE2 /* CollapsibleGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapsibleGroupView.swift; sourceTree = "<group>"; };
 		454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingServiceClient.swift; sourceTree = "<group>"; };
 		454A7A6226DA300900E6E74E /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = SOURCE_ROOT; };
+		454E090727EB831600391560 /* SocialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialViewController.swift; sourceTree = "<group>"; };
+		454E090A27EC7A0300391560 /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
+		454E090D27EC7C1100391560 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
 		454E0A8D2731B01F00794E0C /* FailableDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableDecodable.swift; sourceTree = "<group>"; };
 		454E0A902732A78A00794E0C /* BetslipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipManager.swift; sourceTree = "<group>"; };
 		454E0A942732C01B00794E0C /* BetslipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipViewController.swift; sourceTree = "<group>"; };
@@ -1950,6 +1959,16 @@
 			path = Misc;
 			sourceTree = "<group>";
 		};
+		454E090627EB82F200391560 /* Social */ = {
+			isa = PBXGroup;
+			children = (
+				454E090727EB831600391560 /* SocialViewController.swift */,
+				454E090A27EC7A0300391560 /* ConversationsViewController.swift */,
+				454E090D27EC7C1100391560 /* FriendsListViewController.swift */,
+			);
+			path = Social;
+			sourceTree = "<group>";
+		};
 		454E0A932732BF4600794E0C /* Betslip */ = {
 			isa = PBXGroup;
 			children = (
@@ -2488,6 +2507,7 @@
 				4503E79827D0E85D00077CD2 /* CompetitionDetails */,
 				454F0A7B27C4146F003123DF /* OutrightMarketDetails */,
 				454E0A932732BF4600794E0C /* Betslip */,
+				454E090627EB82F200391560 /* Social */,
 				4589F3EA26BF017A005DF543 /* Account */,
 				A9E7C68A27B526C500F784C9 /* MyFavorites */,
 				452047BE27036D4600B277B5 /* Splash */,
@@ -4383,6 +4403,7 @@
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				A9E7C6A227B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */,
+				454E090E27EC7C1100391560 /* FriendsListViewController.swift in Sources */,
 				455A0D1226BD9D9000EC572D /* Observable.swift in Sources */,
 				A91F4B2A27BE918C008C7510 /* LinkPresentationItemSource.swift in Sources */,
 				A91F4B4227C002FA008C7510 /* OddsFormat.swift in Sources */,
@@ -4410,6 +4431,7 @@
 				A9E7C69827B582DC00F784C9 /* SportSectionHeaderView.swift in Sources */,
 				45C3D2BA2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
 				A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */,
+				454E090827EB831600391560 /* SocialViewController.swift in Sources */,
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
 				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
@@ -4498,6 +4520,7 @@
 				A9627A11274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				454E090B27EC7A0300391560 /* ConversationsViewController.swift in Sources */,
 				A90D8B01277228B600DF88EB /* WithdrawResponse.swift in Sources */,
 				A9FAD3A327EA244B0041F3E7 /* NavigationCardView.swift in Sources */,
 				A99F79FB27CFC949008BAF41 /* BonusViewModel.swift in Sources */,
@@ -4793,6 +4816,7 @@
 				45C26DCC27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */,
 				458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				45C3E8CB27B190A1007A1A0F /* HomeViewController.swift in Sources */,
+				454E090F27EC7C1100391560 /* FriendsListViewController.swift in Sources */,
 				A9B840C526E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B52773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				A9E7C6A327B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */,
@@ -4820,6 +4844,7 @@
 				45C26DC927976A3900513D41 /* FavoriteCompetitionsDataSource.swift in Sources */,
 				454E0AAF2732C58D00794E0C /* TabularBarDataSource.swift in Sources */,
 				A9E7C69927B582DC00F784C9 /* SportSectionHeaderView.swift in Sources */,
+				454E090927EB831600391560 /* SocialViewController.swift in Sources */,
 				45C3D2BB2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
 				A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
@@ -4908,6 +4933,7 @@
 				A9627A12274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
+				454E090C27EC7A0300391560 /* ConversationsViewController.swift in Sources */,
 				A90D8B02277228B600DF88EB /* WithdrawResponse.swift in Sources */,
 				A9FAD3A427EA244B0041F3E7 /* NavigationCardView.swift in Sources */,
 				A99F79FC27CFC949008BAF41 /* BonusViewModel.swift in Sources */,
