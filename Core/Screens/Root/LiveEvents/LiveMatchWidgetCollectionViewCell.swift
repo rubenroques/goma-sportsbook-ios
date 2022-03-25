@@ -73,6 +73,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     var tappedMatchWidgetAction: (() -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
 
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
@@ -240,6 +241,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.middleOutcomeDisabled = false
         self.rightOutcomeDisabled = false
         self.suspendedBaseView.isHidden = true
+
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
@@ -264,6 +267,39 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         self.suspendedBaseView.backgroundColor = UIColor.App.backgroundDisabledOdds
         self.suspendedLabel.textColor = UIColor.App.textDisablePrimary
+
+        if isLeftOutcomeButtonSelected {
+            self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isMiddleOutcomeButtonSelected {
+            self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isRightOutcomeButtonSelected {
+            self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.textPrimary
+        }
     }
 
     func configure(withViewModel viewModel: MatchWidgetCellViewModel) {
@@ -536,7 +572,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-
     //
     //
     private func showMarketButtons() {
@@ -562,20 +597,8 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if UserDefaults.standard.userSession != nil {
-
-            if self.isFavorite {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.removeFavorite(eventId: matchId, favoriteType: .match)
-                }
-                self.isFavorite = false
-            }
-            else {
-                if let matchId = self.viewModel?.match?.id {
-                    Env.favoritesManager.addFavorite(eventId: matchId, favoriteType: .match)
-                }
-                self.isFavorite = true
-            }
+        if let match = self.viewModel?.match {
+            self.didTapFavoriteMatchAction?(match)
         }
     }
 
@@ -627,7 +650,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         view.layer.borderColor = color.cgColor
     }
 
-
     //
     // Odd buttons interaction
     //
@@ -649,25 +671,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.leftOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -698,25 +708,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.middleOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -745,25 +743,13 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         guard
             let match = self.viewModel?.match,
-            let firstMarket = match.markets.first,
+            let market = match.markets.first,
             let outcome = self.rightOutcome
         else {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = firstMarket.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: firstMarket.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value,
-                                          isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)

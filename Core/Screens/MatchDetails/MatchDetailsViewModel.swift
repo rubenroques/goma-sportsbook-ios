@@ -11,46 +11,76 @@ import Combine
 
 class MatchDetailsViewModel: NSObject {
 
-    var marketGroupsTypesDataChanged: (() -> Void)?
-    var marketGroupDataChanged: (() -> Void)?
+    enum MatchMode {
+        case preLive
+        case live
+    }
 
-    var isLoadingData: CurrentValueSubject<Bool, Never> = .init(true)
+    var matchId: String
 
-    var match: Match?
     var store: MatchDetailsAggregatorRepository
 
-    private var marketTypeSelectedOptionIndex: Int?
+    var isLoadingMarketGroups: CurrentValueSubject<Bool, Never> = .init(true)
 
-    private var expandedMarketGroupIds: Set<String> = []
+    var matchModePublisher: CurrentValueSubject<MatchMode, Never> = .init(.preLive)
+    var matchPublisher: CurrentValueSubject<LoadableContent<Match>, Never> = .init(.idle)
 
-    private var marketGroupOrganizers: [MarketGroupOrganizer] = [] {
-        didSet {
-            self.isLoadingData.send(marketGroupOrganizers.isEmpty)
+    var marketGroupsPublisher: CurrentValueSubject<[MarketGroup], Never> = .init([])
+    var selectedMarketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
+
+    var match: Match? {
+        switch matchPublisher.value {
+        case .loaded(let match):
+            return match
+        default:
+            return nil
         }
     }
 
+    private var matchMarketGroupsPublisher: AnyCancellable?
+    private var matchMarketGroupsRegister: EndpointPublisherIdentifiable?
+
+    private var matchDetailsRegister: EndpointPublisherIdentifiable?
+    private var matchDetailsAggregatorPublisher: AnyCancellable?
+
     private var cancellables = Set<AnyCancellable>()
 
-    init(match: Match) {
-        self.match = match
+    init(matchMode: MatchMode = .preLive, match: Match) {
+
+        self.matchId = match.id
+
         self.store = MatchDetailsAggregatorRepository(matchId: match.id)
+        self.matchPublisher.send(.loaded(match))
+
+        self.matchModePublisher.send(matchMode)
 
         super.init()
 
-        self.connectPublisher()
+        self.connectPublishers()
+        self.fetchMarketGroupsPublisher()
     }
 
-    init(matchId: String) {
+    init(matchMode: MatchMode = .preLive, matchId: String) {
+        self.matchId = matchId
+
+        self.matchModePublisher.send(matchMode)
+
         self.store = MatchDetailsAggregatorRepository(matchId: matchId)
 
         super.init()
 
-        self.connectPublisher()
+        self.connectPublishers()
     }
 
-    func connectPublisher() {
+    deinit {
+        if let matchDetailsRegister = matchDetailsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+        }
+    }
 
-        self.store.marketGroupsPublisher
+    func connectPublishers() {
+
+        self.marketGroupsPublisher
             .receive(on: DispatchQueue.main)
             .map { marketGroups -> Int in
                 var index = 0
@@ -65,137 +95,151 @@ class MatchDetailsViewModel: NSObject {
                 return defaultFound ? index : 0
             }
             .sink { [weak self] defaultSelectedIndex in
-                self?.marketTypeSelectedOptionIndex = defaultSelectedIndex
-                self?.reloadCollectionViewContent()
-                self?.reloadTableViewContent()
+                self?.selectedMarketTypeIndexPublisher.send(defaultSelectedIndex)
             }
             .store(in: &cancellables)
 
-        self.store.totalMarketsPublisher
-            .debounce(for: 0.7, scheduler: DispatchQueue.main)
+        Env.everyMatrixClient.serviceStatusPublisher
+            .filter({ $0 == .connected })
+            .sink(receiveValue: { _ in
+                self.fetchMatchDetailsPublisher()
+                self.fetchMarketGroupsPublisher()
+            })
+            .store(in: &cancellables)
+    }
+
+
+    func fetchMatchDetailsPublisher() {
+        if let matchDetailsRegister = matchDetailsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
+        }
+
+        let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
+                                                                language: "en",
+                                                                matchId: self.matchId)
+
+        self.matchDetailsAggregatorPublisher?.cancel()
+        self.matchDetailsAggregatorPublisher = nil
+
+        self.matchDetailsAggregatorPublisher = Env.everyMatrixClient.manager
+            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.reloadTableViewContent()
-            }
-            .store(in: &cancellables)
-
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving match detail data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher connect")
+                    self?.matchDetailsRegister = publisherIdentifiable
+                case .initialContent(let aggregator):
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher initialContent")
+                    self?.setupMatchDetailAggregatorProcessor(aggregator: aggregator)
+                case .updatedContent(let aggregatorUpdates):
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher updatedContent")
+                    self?.updateMatchDetailAggregatorProcessor(aggregator: aggregatorUpdates)
+                case .disconnect:
+                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher disconnect")
+                }
+            })
     }
 
-    func reloadCollectionViewContent() {
-        self.marketGroupsTypesDataChanged?()
-    }
+    private func setupMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
 
-    func reloadTableViewContent() {
-        guard
-            let selectedMarketGroupIndex = self.marketTypeSelectedOptionIndex,
-            let selectedMarketGroup = self.store.marketGroupsPublisher.value[safe: selectedMarketGroupIndex],
-            let groupKey = selectedMarketGroup.groupKey
-        else {
-            return
-        }
+        self.store.processAggregatorForMatchDetail(aggregator)
 
-        self.marketGroupOrganizers = store.marketGroupOrganizers(withGroupKey: groupKey)
-
-        self.marketGroupDataChanged?()
-    }
-
-}
-
-extension MatchDetailsViewModel: UITableViewDataSource, UITableViewDelegate {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.marketGroupOrganizers.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        guard
-            let marketGroupOrganizer = self.marketGroupOrganizers[safe: indexPath.row]
-        else {
-            return UITableViewCell()
-        }
-
-        if marketGroupOrganizer.numberOfColumns == 3 {
-            guard
-                let cell = tableView.dequeueCellType(ThreeAwayMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
+        if let match = self.store.match {
+            if !self.store.matchesInfoForMatch.isEmpty {
+                self.matchModePublisher.send(.live)
             }
-            cell.marketId = marketGroupOrganizer.marketId
-            cell.match = self.match
-            cell.didExpandCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
-                self.marketGroupDataChanged?()
-            }
-            cell.didColapseCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
-                self.marketGroupDataChanged?()
-            }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
-            return cell
-        }
-        else if marketGroupOrganizer.numberOfColumns == 2 {
-            guard
-                let cell = tableView.dequeueCellType(OverUnderMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
-            }
-            cell.marketId = marketGroupOrganizer.marketId
-            cell.match = self.match
-            cell.didExpandCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
-                self.marketGroupDataChanged?()
-            }
-            cell.didColapseCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
-                self.marketGroupDataChanged?()
-            }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
-            return cell
-        }
-        else if marketGroupOrganizer.numberOfColumns == 1 {
-            guard
-                let cell = tableView.dequeueCellType(OverUnderMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
-            }
-            cell.marketId = marketGroupOrganizer.marketId
-            cell.match = self.match
-            cell.didExpandCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
-                self.marketGroupDataChanged?()
-            }
-            cell.didColapseCellAction = { marketGroupOrganizerId in
-                self.expandedMarketGroupIds.remove(marketGroupOrganizerId)
-                self.marketGroupDataChanged?()
-            }
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer, isExpanded: self.expandedMarketGroupIds.contains(marketGroupOrganizer.marketId))
-            return cell
+            self.matchPublisher.send(.loaded(match))
         }
         else {
-            guard
-                let cell = tableView.dequeueCellType(SimpleListMarketDetailTableViewCell.self)
-            else {
-                return UITableViewCell()
-            }
-            cell.match = self.match
-            cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
-            return cell
+            self.matchPublisher.send(.failed)
         }
 
     }
 
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+    private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+        self.store.processContentUpdateAggregatorForMatchDetail(aggregator)
+        if !self.store.matchesInfoForMatch.isEmpty {
+            self.matchModePublisher.send(.live)
+        }
     }
 
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
+    //
+    //
+    //
+    private func fetchMarketGroupsPublisher() {
+
+        self.isLoadingMarketGroups.send(true)
+
+        let language = "en"
+        let mainMarketsEndpoint = TSRouter.matchMarketGroupsPublisher(operatorId: Env.appSession.operatorId,
+                                                                   language: language,
+                                                                      matchId: self.matchId)
+
+        if let matchMarketGroupsRegister = self.matchMarketGroupsRegister {
+            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchMarketGroupsRegister)
+        }
+
+        self.matchMarketGroupsPublisher?.cancel()
+        self.matchMarketGroupsPublisher = nil
+
+        self.matchMarketGroupsPublisher = Env.everyMatrixClient.manager
+            .registerOnEndpoint(mainMarketsEndpoint, decodingType: EveryMatrix.Aggregator.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    print("Error retrieving data!")
+                case .finished:
+                    print("Data retrieved!")
+                }
+                self?.isLoadingMarketGroups.send(false)
+
+            }, receiveValue: { [weak self] state in
+                switch state {
+                case .connect(let publisherIdentifiable):
+                    print("MatchDetailsViewModel competitionsMatchesPublisher connect")
+                    self?.matchMarketGroupsRegister = publisherIdentifiable
+
+                case .initialContent(let aggregator):
+                    print("MatchDetailsViewModel competitionsMatchesPublisher initialContent")
+                    self?.storeMarketGroups(fromAggregator: aggregator)
+
+                case .updatedContent:
+                    print("MatchDetailsViewModel competitionsMatchesPublisher updatedContent")
+
+                case .disconnect:
+                    print("MatchDetailsViewModel competitionsMatchesPublisher disconnect")
+                }
+            })
     }
+
+    func storeMarketGroups(fromAggregator aggregator: EveryMatrix.Aggregator) {
+        self.store.storeMarketGroups(fromAggregator: aggregator)
+
+        let marketGroups = self.store.marketGroupsArray().map { rawMarketGroup in
+            MarketGroup(id: rawMarketGroup.id,
+                        type: rawMarketGroup.type,
+                        groupKey: rawMarketGroup.groupKey,
+                        translatedName: rawMarketGroup.translatedName,
+                        isDefault: rawMarketGroup.isDefault)
+        }
+
+        self.isLoadingMarketGroups.send(false)
+
+        self.marketGroupsPublisher.send(marketGroups)
+    }
+
+    func selectMarketType(atIndex index: Int) {
+        self.selectedMarketTypeIndexPublisher.send(index)
+    }
+
 }
 
 extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDelegate {
@@ -218,7 +262,7 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
 
         cell.setupWithTitle(item.translatedName ?? localized("market"))
 
-        if marketTypeSelectedOptionIndex == indexPath.row {
+        if let index = self.selectedMarketTypeIndexPublisher.value, index == indexPath.row {
             cell.setSelectedType(true)
         }
         else {
@@ -230,13 +274,10 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        let previousSelectionValue = self.marketTypeSelectedOptionIndex
+        let previousSelectionValue = self.selectedMarketTypeIndexPublisher.value ?? -1
+
         if indexPath.row != previousSelectionValue {
-            self.marketTypeSelectedOptionIndex = indexPath.row
-
-            self.reloadCollectionViewContent()
-            self.reloadTableViewContent()
-
+            self.selectedMarketTypeIndexPublisher.send(indexPath.row)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
     }

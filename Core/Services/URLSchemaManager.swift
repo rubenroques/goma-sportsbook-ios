@@ -160,21 +160,23 @@ class URLSchemaManager {
 
         // Add to tickets
         if let bettingOfferId = betSelectionBettingOfferId {
-            let marketDescription = "\(betSelection.marketName), \(betSelection.bettingTypeEventPartName)"
-            let bettingTicket = BettingTicket(id: bettingOfferId,
-                                              outcomeId: betSelection.outcomeId,
-                                              marketId: markets.first?.id ?? "1",
-                                              matchId: betSelection.eventId,
-                                              value: betSelection.priceValue,
-                                              isAvailable: markets.first?.isAvailable ?? true,
-                                              matchDescription: betSelection.eventName,
-                                              marketDescription: marketDescription,
-                                              outcomeDescription: betSelection.betName)
 
-            if Env.betslipManager.hasBettingTicket(bettingTicket) {
-                Env.betslipManager.removeBettingTicket(bettingTicket)
+            if Env.betslipManager.hasBettingTicket(withId: bettingOfferId){
+                Env.betslipManager.removeBettingTicket(withId: bettingOfferId)
             }
             else {
+                let marketDescription = "\(betSelection.marketName), \(betSelection.bettingTypeEventPartName)"
+                let bettingTicket = BettingTicket(id: bettingOfferId,
+                                                  outcomeId: betSelection.outcomeId,
+                                                  marketId: markets.first?.id ?? "1",
+                                                  matchId: betSelection.eventId,
+                                                  value: betSelection.priceValue,
+                                                  isAvailable: markets.first?.isAvailable ?? true,
+                                                  statusId: "1",
+                                                  matchDescription: betSelection.eventName,
+                                                  marketDescription: marketDescription,
+                                                  outcomeDescription: betSelection.betName)
+                
                 Env.betslipManager.addBettingTicket(bettingTicket)
             }
         }

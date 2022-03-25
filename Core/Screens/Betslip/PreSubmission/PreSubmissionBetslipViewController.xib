@@ -841,8 +841,8 @@
                     <rect key="frame" x="0.0" y="94" width="757" height="32"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1NK-ag-RHY">
-                            <rect key="frame" x="700" y="8" width="47" height="24"/>
-                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="12"/>
+                            <rect key="frame" x="694" y="5" width="51" height="25"/>
+                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="13"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Clear all"/>
                             <connections>
@@ -850,8 +850,8 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Koe-cc-PIx">
-                            <rect key="frame" x="10" y="6" width="54" height="26"/>
-                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
+                            <rect key="frame" x="12" y="5" width="50" height="25"/>
+                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="13"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Settings"/>
                             <connections>
@@ -860,11 +860,11 @@
                         </button>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="1NK-ag-RHY" firstAttribute="bottom" secondItem="cEh-jz-3Se" secondAttribute="bottom" id="0si-7Y-Uoi"/>
-                        <constraint firstItem="Koe-cc-PIx" firstAttribute="leading" secondItem="cEh-jz-3Se" secondAttribute="leading" constant="10" id="6vt-LX-TIq"/>
+                        <constraint firstItem="1NK-ag-RHY" firstAttribute="bottom" secondItem="cEh-jz-3Se" secondAttribute="bottom" constant="-2" id="0si-7Y-Uoi"/>
+                        <constraint firstItem="Koe-cc-PIx" firstAttribute="leading" secondItem="cEh-jz-3Se" secondAttribute="leading" constant="12" id="6vt-LX-TIq"/>
                         <constraint firstAttribute="height" constant="32" id="OXj-Ss-sGH"/>
-                        <constraint firstAttribute="trailing" secondItem="1NK-ag-RHY" secondAttribute="trailing" constant="10" id="fVa-PV-f9N"/>
-                        <constraint firstItem="Koe-cc-PIx" firstAttribute="bottom" secondItem="cEh-jz-3Se" secondAttribute="bottom" id="kVe-Mc-DZ6"/>
+                        <constraint firstAttribute="trailing" secondItem="1NK-ag-RHY" secondAttribute="trailing" constant="12" id="fVa-PV-f9N"/>
+                        <constraint firstItem="Koe-cc-PIx" firstAttribute="bottom" secondItem="cEh-jz-3Se" secondAttribute="bottom" constant="-2" id="kVe-Mc-DZ6"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="aLF-yD-t2E">

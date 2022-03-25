@@ -127,7 +127,13 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler(.alert)
+
+        if #available(iOS 14.0, *) {
+            completionHandler([.banner])
+        }
+        else {
+            completionHandler([.alert])
+        }
     }
 
     func userNotificationCenter(_ center: UNUserNotificationCenter,
@@ -165,7 +171,12 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
                 self.bootstrap.router.openedNotificationRouteWhileActive(routeValue)
             }
             if application.applicationState == .inactive {
-                self.bootstrap.router.configureStartingRoute(routeValue)
+                if Env.everyMatrixClient.serviceStatusPublisher.value == .connected {
+                    self.bootstrap.router.openedNotificationRouteWhileActive(routeValue)
+                }
+                else {
+                    self.bootstrap.router.configureStartingRoute(routeValue)
+                }
             }
             if application.applicationState == .background {
                 self.bootstrap.router.configureStartingRoute(routeValue)

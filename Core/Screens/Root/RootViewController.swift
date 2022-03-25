@@ -138,7 +138,7 @@ class RootViewController: UIViewController {
                             }
 
                             if self?.preLiveViewControllerLoaded ?? false {
-                                self?.preLiveViewController.reloadTableViewData()
+                                self?.preLiveViewController.reloadData()
                             }                        }
                         .store(in: &self.cancellables)
                 }
@@ -146,7 +146,7 @@ class RootViewController: UIViewController {
                     self.screenState = .anonymous
 
                     if self.preLiveViewControllerLoaded {
-                        self.preLiveViewController.reloadTableViewData()
+                        self.preLiveViewController.reloadData()
                     }
                 }
             }
@@ -168,8 +168,9 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        // TODO: Code Review 14/02 - Remove this after the option is added to the correct place
-        self.testNewFavorites()
+        let debugTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLogoImageView))
+        logoImageView.addGestureRecognizer(debugTapGesture)
+        logoImageView.isUserInteractionEnabled = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -354,8 +355,12 @@ class RootViewController: UIViewController {
         betslipViewController.willDismissAction = { [weak self] in
             self?.reloadChildViewControllersData()
         }
-
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
+    func openChatModal() {
+        let socialViewController = SocialViewController()
+        self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
     }
 
     func reloadChildViewControllersData() {
@@ -365,18 +370,9 @@ class RootViewController: UIViewController {
         if liveEventsViewControllerLoaded {
             self.liveEventsViewController.reloadData()
         }
-    }
-
-    //
-    func testNewFavorites() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
-        self.topBarView.addGestureRecognizer(tap)
-    }
-
-    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        let favoritesVC = MyFavoritesViewController()
-        // self.present(favoritesVC, animated: true, completion: nil)
-        self.navigationController?.pushViewController(favoritesVC, animated: true)
+        if homeViewControllerLoaded {
+            self.homeViewController.reloadData()
+        }
     }
 
     //
@@ -387,15 +383,14 @@ class RootViewController: UIViewController {
 
     @IBAction private func didTapSearchButton() {
         let searchViewController = SearchViewController()
-
-//        searchViewController.didSelectCompetitionAction = { [weak self] value in
-//            searchViewController.dismiss(animated: true, completion: nil)
-//            self?.preLiveViewController.selectedShortcutItem = 2
-//            self?.preLiveViewController.applyCompetitionsFiltersWithIds([value.id])
-//        }
-
         let navigationViewController = Router.navigationController(with: searchViewController)
         self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    @objc func didTapLogoImageView() {
+        let socialViewController = SocialViewController(viewModel: SocialViewModel())
+        self.present(Router.navigationController(with: socialViewController),
+                     animated: true, completion: nil)
     }
 }
 
@@ -436,6 +431,9 @@ extension RootViewController {
             self.addChildViewController(self.homeViewController, toView: self.homeBaseView)
             self.homeViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
+            }
+            self.homeViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
             }
             homeViewControllerLoaded = true
         }

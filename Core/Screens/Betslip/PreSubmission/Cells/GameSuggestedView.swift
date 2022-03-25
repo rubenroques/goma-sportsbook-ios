@@ -30,6 +30,7 @@ class GameSuggestedView: NibView {
         super.init(frame: frame)
 
         self.commonInit()
+        
         self.setNeedsLayout()
         self.layoutIfNeeded()
     }

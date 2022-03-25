@@ -43,9 +43,9 @@ class HeaderTextFieldView: NibView {
     let pickerView = UIPickerView()
     var selectionArray: [String] = []
     var shouldScalePlaceholder = true
-    var isSelect: Bool = false
     var isCurrency: Bool = false
     var isTipPermanent: Bool = false
+    var isSlidedUp: Bool = false
 
     var showingTipLabel: Bool = false
 
@@ -156,12 +156,8 @@ class HeaderTextFieldView: NibView {
 
         self.setupWithTheme()
     }
-
+    
     func setupWithTheme() {
-
-        if textField.text != "" {
-            self.slideUp()
-        }        
 
         containerView.backgroundColor = UIColor.App.backgroundSecondary
         containerView.layer.cornerRadius = CornerRadius.headerInput
@@ -224,20 +220,26 @@ class HeaderTextFieldView: NibView {
         if headerLabel.text?.isEmpty ?? true {
             return
         }
-
-        self.centerBottomConstraint.isActive = false
-        self.centerTopConstraint.isActive = true
+        if self.isSlidedUp {
+            return
+        }
+        
+        // TODO: Fazer a conta de forma dinâmica
+        // let placeholderYPosition = self.headerPlaceholderLabel.center.y
+        // let headerYPosition = self.headerLabel.center.y
+        self.centerBottomConstraint.constant = -15 // -(headerYPosition - placeholderYPosition)
 
         UIView.animate(withDuration: animated ? 0.2 : 0, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
 
             if self.shouldScalePlaceholder {
+                
                 let movingWidthDiff = (self.headerLabel.frame.size.width - (self.headerLabel.frame.size.width * 0.8)) / 2
                 self.headerLabel.transform = CGAffineTransform(scaleX: 0.8, y: 0.8).concatenating(CGAffineTransform(translationX: -movingWidthDiff, y: 0))
             }
             self.shouldScalePlaceholder = false
         } completion: { _ in
-
+            self.isSlidedUp = true
         }
     }
 
@@ -246,16 +248,18 @@ class HeaderTextFieldView: NibView {
         if headerLabel.text?.isEmpty ?? true {
             return
         }
+        if !self.isSlidedUp {
+            return
+        }
 
-        self.centerBottomConstraint.isActive = true
-        self.centerTopConstraint.isActive = false
-
+        self.centerBottomConstraint.constant = 0
+        
         UIView.animate(withDuration: 0.2, delay: 0.0, options: .curveEaseOut) {
             self.layoutIfNeeded()
             self.headerLabel.transform = CGAffineTransform.identity
             self.shouldScalePlaceholder = true
         } completion: { _ in
-
+            self.isSlidedUp = false
         }
     }
 
@@ -282,7 +286,6 @@ class HeaderTextFieldView: NibView {
         self.headerLabel.text = placeholder
     }
   
-
     func setPlaceholderColor(_ color: UIColor) {
         self.headerLabel.textColor = color
     }
@@ -347,10 +350,8 @@ class HeaderTextFieldView: NibView {
     }
 
     @objc func didTapRemoveImageView(_ sender: AnyObject) {
-
         didTapRemoveIcon?()
     }
-
 
     func setTextFieldDefaultValue(_ value: String) {
         self.textField.text = value

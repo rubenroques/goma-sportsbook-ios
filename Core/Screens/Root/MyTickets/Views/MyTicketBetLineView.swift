@@ -43,7 +43,8 @@ class MyTicketBetLineView: NibView {
     var countryCode: String = ""
 
     var viewModel: MyTicketBetLineViewModel?
-
+    var tappedMatchDetail: ((String) -> Void)?
+    
     private var homeResultSubscription: AnyCancellable?
     private var awayResultSubscription: AnyCancellable?
     
@@ -115,14 +116,20 @@ class MyTicketBetLineView: NibView {
                 self.dateLabel.isHidden = true
                 self.liveIconImage.isHidden = false
               
-            }else{
+            }
+            else {
                 if let date = self.betHistoryEntrySelection.eventDate {
                     self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
                     self.liveIconImage.isHidden = true
                     self.dateLabel.isHidden = false
                 }
             }
-        }else{
+            
+            let baseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
+            baseView.addGestureRecognizer(baseViewTapGesture)
+            
+        }
+        else {
             if let date = self.betHistoryEntrySelection.eventDate {
                 self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
                 self.liveIconImage.isHidden = true
@@ -147,6 +154,10 @@ class MyTicketBetLineView: NibView {
             .sink(receiveValue: { [weak self] awayGoals in
             self?.awayTeamScoreLabel.text = awayGoals ?? ""
         })
+        
+        
+       
+        
 
         self.configureFromStatus()
         self.setupWithTheme()
@@ -212,6 +223,13 @@ class MyTicketBetLineView: NibView {
 
             }
         }
+    }
+    
+    @IBAction private func didTapBaseView() {
+        if let matchId = self.betHistoryEntrySelection.eventId {
+            self.tappedMatchDetail?(matchId)
+        }
+       
     }
 
 }

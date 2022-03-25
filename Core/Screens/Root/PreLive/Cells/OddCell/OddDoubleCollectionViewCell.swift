@@ -215,6 +215,28 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
 
         self.homeCircleCaptionView.backgroundColor = UIColor(hex: 0xD99F00)
         self.awayCircleCaptionView.backgroundColor = UIColor(hex: 0x46C1A7)
+
+        if isLeftOutcomeButtonSelected {
+            self.leftBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.leftOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.leftOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.leftBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.leftOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.leftOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isRightOutcomeButtonSelected {
+            self.rightBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.rightOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.rightOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.rightBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.rightOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.rightOddValueLabel.textColor = UIColor.App.textPrimary
+        }
     }
 
     func setupWithMarket(_ market: Market, match: Match, teamsText: String, countryIso: String, store: AggregatorStore) {
@@ -429,18 +451,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = market.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: market.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)
@@ -472,18 +483,7 @@ class OddDoubleCollectionViewCell: UICollectionViewCell {
             return
         }
 
-        let matchDescription = "\(match.homeParticipant.name) x \(match.awayParticipant.name)"
-        let marketDescription = market.name
-        let outcomeDescription = outcome.translatedName
-
-        let bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                          outcomeId: outcome.id,
-                                          marketId: market.id,
-                                          matchId: match.id,
-                                          value: outcome.bettingOffer.value, isAvailable: outcome.bettingOffer.isAvailable,
-                                          matchDescription: matchDescription,
-                                          marketDescription: marketDescription,
-                                          outcomeDescription: outcomeDescription)
+        let bettingTicket = BettingTicket(match: match, market: market, outcome: outcome)
         
         if Env.betslipManager.hasBettingTicket(bettingTicket) {
             Env.betslipManager.removeBettingTicket(bettingTicket)

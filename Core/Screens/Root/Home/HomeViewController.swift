@@ -12,12 +12,14 @@ class HomeViewController: UIViewController {
 
     // MARK: - Public Properties
     var didTapBetslipButtonAction: (() -> Void)?
+    var didTapChatButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
     // MARK: - Private Properties
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
+    private lazy var chatButtonView: UIView = Self.createChatButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -61,9 +63,23 @@ class HomeViewController: UIViewController {
         self.betslipCountLabel.isHidden = true
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
+        self.chatButtonView.addGestureRecognizer(tapChatView)
 
         self.bind(toViewModel: self.viewModel)
+
+        self.showLoading()
+
+        executeDelayed(1.45) {
+            self.hideLoading()
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
     }
 
     // MARK: - Layout and Theme
@@ -72,6 +88,8 @@ class HomeViewController: UIViewController {
 
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+
+        self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -86,12 +104,14 @@ class HomeViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingActivityIndicatorView.tintColor = UIColor.gray
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
     }
 
     // MARK: - Bindings
@@ -100,7 +120,7 @@ class HomeViewController: UIViewController {
         viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.tableView.reloadData()
+                self?.reloadData()
             })
             .store(in: &self.cancellables)
 
@@ -120,6 +140,22 @@ class HomeViewController: UIViewController {
 
     }
 
+    // MARK: - Convenience
+    func reloadData() {
+        self.tableView.reloadData()
+    }
+
+    private func showLoading() {
+        self.loadingBaseView.isHidden = false
+        self.loadingActivityIndicatorView.startAnimating()
+    }
+
+    private func hideLoading() {
+        self.loadingBaseView.isHidden = true
+        self.loadingActivityIndicatorView.stopAnimating()
+    }
+
+    // MARK: - Actions
     private func openCompetitionDetails(competitionId: String, sport: Sport) {
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
@@ -133,8 +169,8 @@ class HomeViewController: UIViewController {
     }
 
     private func openMatchDetails(match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchMode: MatchDetailsViewModel.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchMode: matchMode, match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -213,6 +249,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
+            cell.didTapFavoriteMatchAction = { [weak self] match in
+                self?.viewModel.markAsFavorite(match: match)
+            }
+           
             return cell
 
         case .suggestedBets:
@@ -239,6 +279,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             switch sportMatchLineViewModel.loadingPublisher.value {
             case .loading, .empty:
                 let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+                
                 return cell
             case.loaded:
                 ()
@@ -270,6 +311,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
                 }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                    
+                }
+                
                 return cell
 
             case .singleLine:
@@ -292,6 +345,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllPopular = { [weak self] sport in
                     self?.openPopularDetails(sport)
                 }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                }
+                
                 return cell
                 
             case .competition:
@@ -342,8 +406,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 437
-                case .singleLine: return 277
+                case .doubleLine: return 400
+                case .singleLine: return 226
                 case .competition: return 200
                 }
             }
@@ -383,8 +447,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 437
-                case .singleLine: return 277
+                case .doubleLine: return 400
+                case .singleLine: return 226
                 case .competition: return 200
                 }
             }
@@ -539,6 +603,10 @@ extension HomeViewController {
         self.didTapBetslipButtonAction?()
     }
 
+    @objc func didTapChatView() {
+        self.didTapChatButtonAction?()
+    }
+
 }
 
 //
@@ -581,6 +649,30 @@ extension HomeViewController {
         return betslipButtonView
     }
 
+    private static func createChatButtonView() -> UIView {
+        let betslipButtonView = UIView()
+        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "chat_float_icon")
+        betslipButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            betslipButtonView.widthAnchor.constraint(equalToConstant: 46),
+            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 22),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
+        ])
+
+        return betslipButtonView
+    }
+
+
     private static func createBetslipCountLabel() -> UILabel {
         let betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -618,6 +710,7 @@ extension HomeViewController {
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
+        self.view.addSubview(self.chatButtonView)
 
         // Initialize constraints
         self.initConstraints()
@@ -655,6 +748,11 @@ extension HomeViewController {
 
             self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
             self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
+            self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
         ])
 
     }
