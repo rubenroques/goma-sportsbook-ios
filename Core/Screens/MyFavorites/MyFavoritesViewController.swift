@@ -186,6 +186,8 @@ class MyFavoritesViewController: UIViewController {
 
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
 
@@ -210,7 +212,6 @@ class MyFavoritesViewController: UIViewController {
         viewModel.emptyStateStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] emptyStateType in
-
                 switch emptyStateType {
                 case .noLogin:
                     self?.setupEmptyStateView(emptyStateType: emptyStateType, hasLogin: true)
@@ -239,6 +240,7 @@ class MyFavoritesViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -375,9 +377,6 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 //
 extension MyFavoritesViewController {
     @objc private func didTapBackButton() {
-        self.viewModel.unregisterEndpoints()
-
-        Env.favoritesManager.favoriteTypeCheckPublisher.value = .none
 
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
