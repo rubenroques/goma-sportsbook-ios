@@ -98,6 +98,18 @@ class CompetitionDetailsViewController: UIViewController {
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
+
     // MARK: - Bindings
     private func bind(toViewModel viewModel: CompetitionDetailsViewModel) {
         Env.betslipManager.bettingTicketsPublisher
@@ -138,12 +150,7 @@ class CompetitionDetailsViewController: UIViewController {
 
     // MARK: - Actions
     @objc func didTapBackButton() {
-        if self.isModal {
-            self.presentingViewController?.dismiss(animated: true, completion: nil)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        self.navigationController?.popViewController(animated: true)
     }
 
     @objc func didTapBetslipView() {
@@ -158,6 +165,11 @@ class CompetitionDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
+    }
+    
     private func openCompetitionDetails(_ competition: Competition) {
         let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
         let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
@@ -165,8 +177,7 @@ class CompetitionDetailsViewController: UIViewController {
     }
 
     private func openMatchDetails(_ match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -265,6 +276,18 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
             headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
         }
 
+        headerView.didTapFavoriteCompetitionAction = { [weak self] competition in
+            
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markCompetitionAsFavorite(competition: competition)
+                tableView.reloadData()
+            }
+            
+        }
+    
         return headerView
     }
 
@@ -327,6 +350,24 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
 
 }
 
+extension CompetitionDetailsViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+}
+
+// MARK: - User Interface setup
+//
 extension CompetitionDetailsViewController {
 
     private static func createTopSafeAreaView() -> UIView {

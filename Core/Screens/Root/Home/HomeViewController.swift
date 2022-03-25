@@ -64,6 +64,17 @@ class HomeViewController: UIViewController {
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
         self.bind(toViewModel: self.viewModel)
+
+        self.showLoading()
+
+        executeDelayed(1.45) {
+            self.hideLoading()
+        }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
     }
 
     // MARK: - Layout and Theme
@@ -86,7 +97,7 @@ class HomeViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.loadingBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.7)
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.loadingActivityIndicatorView.tintColor = UIColor.gray
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
@@ -100,7 +111,7 @@ class HomeViewController: UIViewController {
         viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.tableView.reloadData()
+                self?.reloadData()
             })
             .store(in: &self.cancellables)
 
@@ -120,6 +131,22 @@ class HomeViewController: UIViewController {
 
     }
 
+    // MARK: - Convenience
+    func reloadData() {
+        self.tableView.reloadData()
+    }
+
+    private func showLoading() {
+        self.loadingBaseView.isHidden = false
+        self.loadingActivityIndicatorView.startAnimating()
+    }
+
+    private func hideLoading() {
+        self.loadingBaseView.isHidden = true
+        self.loadingActivityIndicatorView.stopAnimating()
+    }
+
+    // MARK: - Actions
     private func openCompetitionDetails(competitionId: String, sport: Sport) {
         let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
@@ -133,8 +160,8 @@ class HomeViewController: UIViewController {
     }
 
     private func openMatchDetails(match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchMode: MatchDetailsViewModel.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchMode: matchMode, match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -192,6 +219,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 fatalError()
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
+
+            cell.tappedBannerMatchAction = { [weak self] match in
+                self?.openMatchDetails(match: match)
+            }
+            
             return cell
 
         case .userFavorites:
@@ -208,6 +240,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
+            cell.didTapFavoriteMatchAction = { [weak self] match in
+                self?.viewModel.markAsFavorite(match: match)
+            }
+           
             return cell
 
         case .suggestedBets:
@@ -234,6 +270,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             switch sportMatchLineViewModel.loadingPublisher.value {
             case .loading, .empty:
                 let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+                
                 return cell
             case.loaded:
                 ()
@@ -265,6 +302,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
                 }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                    
+                }
+                
                 return cell
 
             case .singleLine:
@@ -287,6 +336,17 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllPopular = { [weak self] sport in
                     self?.openPopularDetails(sport)
                 }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                }
+                
                 return cell
                 
             case .competition:

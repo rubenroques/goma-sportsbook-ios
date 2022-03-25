@@ -12,6 +12,8 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
     var userFavoriteMatches: [Match] = []
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -62,6 +64,11 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                     cell.tappedMatchLineAction = {
                         self.didSelectMatchAction?(match)
                     }
+                    
+                    cell.didTapFavoriteMatchAction = { [weak self] match in
+                        self?.didTapFavoriteMatchAction?(match)
+                    }
+                    
                     cell.matchWentLive = {
                         DispatchQueue.main.async {
                             self.matchWentLiveAction?()

@@ -10,14 +10,12 @@ import UIKit
 
 class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
 
-    var competitions: [Competition] = [] {
-        didSet {
-            self.collapsedCompetitionsSections = []
-        }
-    }
+    var competitions: [Competition] = []
+
     var collapsedCompetitionsSections: Set<Int> = []
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -63,7 +61,6 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
                 cell.setupWithMatch(match, store: self.store)
             }
 
-
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)
@@ -71,20 +68,11 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             cell.matchWentLive = {
                 self.matchWentLiveAction?()
             }
-
+            
             return cell
         }
         else {
-            guard
-                let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self)
-                else {
-                    fatalError()
-                }
-            cell.setDescription(primaryText: localized("empty_my_competitions"),
-                                secondaryText: localized("empty_my_competitions"),
-                                userIsLoggedIn: UserSessionStore.isUserLogged() )
-
-            return cell
+            return UITableViewCell()
         }
     }
 
@@ -118,6 +106,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             else {
                 weakSelf.collapsedCompetitionsSections.insert(section)
             }
+
             weakSelf.needReloadSection(section, tableView: weakTableView)
 
             if weakSelf.collapsedCompetitionsSections.contains(section) {
@@ -133,6 +122,13 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
         else {
             headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
         }
+        
+        headerView.didTapFavoriteCompetitionAction = {[weak self] competition in
+            self?.didTapFavoriteCompetitionAction?(competition)
+        }
+        /*if let competition = self.competitions[safe: indexPath.section] {
+            self.didTapFavoriteCompetitionAction?(competition)
+        }*/
 
         return headerView
     }

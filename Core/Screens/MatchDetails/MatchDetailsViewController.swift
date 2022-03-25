@@ -51,7 +51,13 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
 
+    @IBOutlet private var marketGroupsPagedBaseView: UIView!
+    private var marketGroupsPagedViewController: UIPageViewController
+
     @IBOutlet private var loadingView: UIActivityIndicatorView!
+
+    @IBOutlet private var matchNotAvailableView: UIView!
+    @IBOutlet private var matchNotAvailableLabel: UILabel!
 
     private lazy var betslipButtonView: UIView = {
         var betslipButtonView = UIView()
@@ -100,34 +106,6 @@ class MatchDetailsViewController: UIViewController {
 
         return gameCard
     }()
-    
-    enum MatchMode {
-        case preLive
-        case live
-    }
-
-    var matchMode: MatchMode {
-        didSet {
-            if matchMode == .preLive {
-                self.headerDetailLiveView.isHidden = true
-
-                self.headerDetailPreliveView.isHidden = false
-
-            }
-            else {
-                self.headerDetailPreliveView.isHidden = true
-
-                self.headerDetailLiveView.isHidden = false
-
-            }
-
-            self.view.setNeedsLayout()
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    var match: Match?
-    var matchId: String?
 
     private var shouldShowWebView = false
     private var matchFielHeight: CGFloat = 0
@@ -149,28 +127,23 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    var viewModel: MatchDetailsViewModel
 
-    var matchDetails: [Match] = []
+    private var marketGroupsViewControllers = [UIViewController]()
+    private var currentPageViewControllerIndex: Int = 0
 
-    private var matchDetailsRegister: EndpointPublisherIdentifiable?
-    private var matchDetailsAggregatorPublisher: AnyCancellable?
+    private var viewModel: MatchDetailsViewModel
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(matchMode: MatchMode = .preLive, match: Match) {
-        self.matchMode = matchMode
-        self.match = match
-        self.viewModel = MatchDetailsViewModel(match: match)
 
-        super.init(nibName: "MatchDetailsViewController", bundle: nil)
-    }
+    // MARK: - Lifetime and Cycle
+    init(viewModel: MatchDetailsViewModel) {
 
-    init(matchMode: MatchMode = .preLive, matchId: String) {
-        self.matchMode = matchMode
-        self.matchId = matchId
-        self.viewModel = MatchDetailsViewModel(matchId: matchId)
-        self.match = self.viewModel.match
+        self.viewModel = viewModel
+
+        self.marketGroupsPagedViewController = UIPageViewController(transitionStyle: .scroll,
+                                                          navigationOrientation: .horizontal,
+                                                          options: nil)
 
         super.init(nibName: "MatchDetailsViewController", bundle: nil)
     }
@@ -183,91 +156,27 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.addChild(marketGroupsPagedViewController)
+        self.marketGroupsPagedBaseView.addSubview(marketGroupsPagedViewController.view)
+        self.marketGroupsPagedViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        marketGroupsPagedBaseView.addSubview(self.marketGroupsPagedViewController.view)
+
+        NSLayoutConstraint.activate([
+            marketGroupsPagedBaseView.leadingAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.leadingAnchor),
+            marketGroupsPagedBaseView.trailingAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.trailingAnchor),
+            marketGroupsPagedBaseView.topAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.topAnchor),
+            marketGroupsPagedBaseView.bottomAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.bottomAnchor),
+        ])
+
+        self.marketGroupsPagedViewController.didMove(toParent: self)
+
+        //
         self.matchFieldWebViewHeight.constant = 0
 
-        self.commonInit()
-        self.setupWithTheme()
+        //
+        self.matchNotAvailableView.isHidden = true
 
-        self.viewModel.marketGroupsTypesDataChanged = { [weak self] in
-            self?.marketTypesCollectionView.reloadData()
-        }
-
-        self.viewModel.marketGroupDataChanged = {[weak self] in
-            self?.tableView.reloadData()
-        }
-
-        self.viewModel.isLoadingData
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                if isLoading {
-                    self?.loadingView.startAnimating()
-                }
-                else {
-                    self?.loadingView.stopAnimating()
-                }
-            }
-            .store(in: &cancellables)
-
-        Env.betslipManager.bettingTicketsPublisher
-            .map(\.count)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] betslipValue in
-
-                if betslipValue == 0 {
-                    self?.betslipCountLabel.isHidden = true
-                }
-                else {
-                    self?.betslipCountLabel.text = "\(betslipValue)"
-                    self?.betslipCountLabel.isHidden = false
-                }
-            })
-            .store(in: &cancellables)
-
-        // Hide match field if the sport doesn't support it
-        self.matchFieldBaseView.isHidden = true
-
-        let validSportType = self.match?.sportType == "1" || self.match?.sportType == "3"
-        if self.matchMode == .live && validSportType {
-            self.shouldShowWebView = true
-        }
-
-        if shouldShowWebView, let match = self.match {
-            let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
-            self.matchFieldWebView.load(request)
-        }
-
-        self.marketTypesCollectionView.reloadData()
-        self.tableView.reloadData()
-
-        // Shared Game
-        self.view.sendSubviewToBack(self.sharedGameCardView)
-
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
-    deinit {
-        if let matchDetailsRegister = matchDetailsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
-        }
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        self.setupWithTheme()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
-        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
-    }
-
-    func commonInit() {
-
+        //
         self.loadingView.hidesWhenStopped = true
         self.loadingView.stopAnimating()
 
@@ -304,16 +213,9 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveBottomLabel.font = AppFont.with(type: .semibold, size: 12)
         self.headerDetailLiveBottomLabel.numberOfLines = 0
 
-        if self.matchMode == .preLive {
-            self.headerDetailLiveView.isHidden = true
-            self.headerDetailPreliveView.isHidden = false
-        }
-        else {
-            self.headerDetailPreliveView.isHidden = true
-            self.headerDetailLiveView.isHidden = false
-        }
-
-        setupMatchDetailPublisher()
+        // Default to Pre Live
+        self.headerDetailLiveView.isHidden = true
+        self.headerDetailPreliveView.isHidden = false
 
         // Market Types CollectionView
         let flowLayout = UICollectionViewFlowLayout()
@@ -329,17 +231,8 @@ class MatchDetailsViewController: UIViewController {
         self.marketTypesCollectionView.delegate = self.viewModel
         self.marketTypesCollectionView.dataSource = self.viewModel
 
-        // TableView
-        self.tableView.backgroundColor = .clear
-        self.tableView.backgroundView?.backgroundColor = .clear
-
-        self.tableView.separatorStyle = .none
-        self.tableView.register(SimpleListMarketDetailTableViewCell.nib, forCellReuseIdentifier: SimpleListMarketDetailTableViewCell.identifier)
-        self.tableView.register(ThreeAwayMarketDetailTableViewCell.nib, forCellReuseIdentifier: ThreeAwayMarketDetailTableViewCell.identifier)
-        self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
-
-        self.tableView.delegate = self.viewModel
-        self.tableView.dataSource = self.viewModel
+        self.marketGroupsPagedViewController.delegate = self
+        self.marketGroupsPagedViewController.dataSource = self
 
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
@@ -362,7 +255,11 @@ class MatchDetailsViewController: UIViewController {
         self.matchFieldWebView.navigationDelegate = self
 
         self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
-        
+
+        self.matchFieldBaseView.isHidden = true
+
+        //
+        //
         self.view.addSubview(self.sharedGameCardView)
 
         NSLayoutConstraint.activate([
@@ -375,6 +272,48 @@ class MatchDetailsViewController: UIViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
 
+        self.setupWithTheme()
+
+        self.bind(toViewModel: self.viewModel)
+
+        self.marketTypesCollectionView.reloadData()
+        self.tableView.reloadData()
+
+        // Shared Game
+        self.view.sendSubviewToBack(self.sharedGameCardView)
+
+        //
+        self.view.bringSubviewToFront(self.matchNotAvailableView)
+
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if self.isRootModal {
+            self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
+        }
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
+    }
+
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
+        self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
@@ -384,33 +323,22 @@ class MatchDetailsViewController: UIViewController {
         
         self.topView.backgroundColor = UIColor.App.backgroundPrimary
         self.headerDetailView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.headerDetailTopView.backgroundColor = .clear
-
         self.backButton.tintColor = UIColor.App.textPrimary
 
         self.headerCompetitionDetailView.backgroundColor = .clear
-
         self.headerCompetitionLabel.textColor = UIColor.App.textPrimary
-
         self.headerDetailStackView.backgroundColor = .clear
-
         self.headerDetailHomeView.backgroundColor = .clear
         self.headerDetailHomeLabel.textColor = UIColor.App.textPrimary
-
         self.headerDetailAwayView.backgroundColor = .clear
         self.headerDetailAwayLabel.textColor = UIColor.App.textPrimary
-
         self.headerDetailMiddleView.backgroundColor = .clear
-
         self.headerDetailMiddleStackView.backgroundColor = .clear
-
         self.headerDetailPreliveView.backgroundColor = .clear
         self.headerDetailPreliveTopLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
         self.headerDetailPreliveBottomLabel.textColor = UIColor.App.textPrimary
-
         self.headerDetailLiveView.backgroundColor = .clear
-        
         self.headerDetailLiveTopLabel.textColor = UIColor.App.textPrimary
         self.headerDetailLiveBottomLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
 
@@ -428,135 +356,241 @@ class MatchDetailsViewController: UIViewController {
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.matchFieldTitleLabel.textColor = UIColor.App.textPrimary
+
+        self.matchNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.matchNotAvailableLabel.textColor = UIColor.App.textPrimary
     }
 
-    func setupMatchDetailPublisher() {
-        if let matchDetailsRegister = matchDetailsRegister {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: matchDetailsRegister)
-        }
+    // MARK: - Bindings
+    private func bind(toViewModel viewModel: MatchDetailsViewModel) {
 
-        var matchIdSecured = ""
-        if let matchId = self.match?.id {
-            matchIdSecured = matchId
-        }
-        else if let matchId = self.matchId {
-            matchIdSecured = matchId
-        }
-
-        let endpoint = TSRouter.matchDetailsAggregatorPublisher(operatorId: Env.appSession.operatorId,
-                                                                language: "en", matchId: self.match?.id ?? matchIdSecured)
-
-        self.matchDetailsAggregatorPublisher?.cancel()
-        self.matchDetailsAggregatorPublisher = nil
-
-        self.matchDetailsAggregatorPublisher = Env.everyMatrixClient.manager
-            .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
+        self.viewModel.isLoadingMarketGroups
+            .removeDuplicates()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure:
-                    print("Error retrieving match detail data!")
-                case .finished:
-                    print("Data retrieved!")
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.loadingView.startAnimating()
                 }
-            }, receiveValue: { [weak self] state in
-                switch state {
-                case .connect(let publisherIdentifiable):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher connect")
-                    self?.matchDetailsRegister = publisherIdentifiable
-                case .initialContent(let aggregator):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher initialContent")
-                    self?.setupMatchDetailAggregatorProcessor(aggregator: aggregator)
-                case .updatedContent(let aggregatorUpdates):
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher updatedContent")
-                    self?.updateMatchDetailAggregatorProcessor(aggregator: aggregatorUpdates)
-                case .disconnect:
-                    print("MatchDetailsAggregator matchDetailsAggregatorPublisher disconnect")
+                else {
+                    self?.loadingView.stopAnimating()
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.betslipManager.bettingTicketsPublisher
+            .map(\.count)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] betslipValue in
+
+                if betslipValue == 0 {
+                    self?.betslipCountLabel.isHidden = true
+                }
+                else {
+                    self?.betslipCountLabel.text = "\(betslipValue)"
+                    self?.betslipCountLabel.isHidden = false
                 }
             })
+            .store(in: &cancellables)
+
+        self.viewModel.marketGroupsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] marketGroups in
+                self?.reloadMarketGroupDetails(marketGroups)
+                self?.reloadCollectionView()
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.selectedMarketTypeIndexPublisher
+            .removeDuplicates()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] newIndex in
+                self?.reloadCollectionView()
+                if let newIndex = newIndex {
+                    self?.scrollToMarketDetailViewController(atIndex: newIndex)
+                }
+            }
+            .store(in: &cancellables)
+
+        self.viewModel.matchPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] loadableMatch in
+                switch loadableMatch {
+                case .idle, .loading:
+                    ()
+                case .loaded:
+                    self?.setupHeaderDetails()
+                    self?.setupMatchField()
+                case .failed:
+                    self?.showMatchNotAvailableView()
+                }
+            })
+            .store(in: &cancellables)
+
+        self.viewModel.matchModePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] matchMode in
+
+                if matchMode == .preLive {
+                    self?.headerDetailLiveView.isHidden = true
+                    self?.headerDetailPreliveView.isHidden = false
+                }
+                else {
+                    self?.headerDetailPreliveView.isHidden = true
+                    self?.headerDetailLiveView.isHidden = false
+                }
+
+                self?.view.setNeedsLayout()
+                self?.view.layoutIfNeeded()
+
+                self?.updateHeaderDetails()
+            })
+            .store(in: &cancellables)
     }
 
-    private func setupMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+    func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
 
-        self.viewModel.store.processAggregatorForMatchDetail(aggregator)
-
-        if self.match == nil {
-            self.viewModel.match = self.viewModel.store.match
-            self.match = self.viewModel.match
+        guard let match = self.viewModel.match else {
+            return
         }
 
-        if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
-            self.matchMode = .live
+        self.marketGroupsViewControllers = []
+
+        for marketGroup in marketGroups {
+            if let groupKey = marketGroup.groupKey {
+                let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
+                let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
+
+                self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
+            }
         }
 
-        setupHeaderDetails()
+        if let firstViewController = self.marketGroupsViewControllers.first {
+            self.marketGroupsPagedViewController.setViewControllers([firstViewController],
+                                                                    direction: .forward,
+                                                                    animated: false,
+                                                                    completion: nil)
+        }
+
     }
 
-    private func updateMatchDetailAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
+    func reloadCollectionView() {
+        self.marketTypesCollectionView.reloadData()
+    }
 
-        self.viewModel.store.processContentUpdateAggregatorForMatchDetail(aggregator)
+    func scrollToMarketDetailViewController(atIndex index: Int) {
 
-        if !self.viewModel.store.matchesInfoForMatch.isEmpty && self.matchMode == .preLive {
-            self.matchMode = .live
+        let previousIndex = self.currentPageViewControllerIndex
+        if index > previousIndex {
+            if let selectedViewController = self.marketGroupsViewControllers[safe: index] {
+                self.marketGroupsPagedViewController.setViewControllers([selectedViewController],
+                                                                        direction: .forward,
+                                                                        animated: true,
+                                                                        completion: nil)
+            }
         }
-        self.updateHeaderDetails()
+        else {
+            if let selectedViewController = self.marketGroupsViewControllers[safe: index] {
+                self.marketGroupsPagedViewController.setViewControllers([selectedViewController],
+                                                                        direction: .reverse,
+                                                                        animated: true,
+                                                                        completion: nil)
+            }
+        }
+
+        self.currentPageViewControllerIndex = index
+    }
+
+    func selectMarketType(atIndex index: Int) {
+        self.viewModel.selectMarketType(atIndex: index)
+        self.marketTypesCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
+    }
+
+    func setupMatchField() {
+
+        // Hide match field if the sport doesn't support it
+        self.matchFieldBaseView.isHidden = true
+
+        guard let match = self.viewModel.match else {
+            return
+        }
+
+        let validSportType = match.sportType == "1" || match.sportType == "3"
+        if self.viewModel.matchModePublisher.value == .live && validSportType {
+            self.shouldShowWebView = true
+        }
+
+        if shouldShowWebView {
+            let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
+            self.matchFieldWebView.load(request)
+        }
 
     }
 
     func setupHeaderDetails() {
-        if let match = self.match {
-            let viewModel = MatchWidgetCellViewModel(match: match)
-
-            // self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-
-            if viewModel.countryISOCode != "" {
-                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
-            }
-            else {
-                self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
-            }
-
-            self.headerCompetitionLabel.text = viewModel.competitionName
-            self.headerDetailHomeLabel.text = viewModel.homeTeamName
-            self.headerDetailAwayLabel.text = viewModel.awayTeamName
-
-            if matchMode == .preLive {
-                self.headerDetailPreliveTopLabel.text = viewModel.startDateString
-                self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
-            }
-            else {
-                updateHeaderDetails()
-            }
-
-            self.sharedGameCardView.setupSharedCardInfo(viewModel: self.viewModel)
-
+        guard
+            let match = self.viewModel.match
+        else {
+            return
         }
+
+        let viewModel = MatchWidgetCellViewModel(match: match)
+
+        // self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+
+        if viewModel.countryISOCode != "" {
+            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
+        }
+        else {
+            self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryId))
+        }
+
+        self.headerCompetitionLabel.text = viewModel.competitionName
+        self.headerDetailHomeLabel.text = viewModel.homeTeamName
+        self.headerDetailAwayLabel.text = viewModel.awayTeamName
+
+        if self.viewModel.matchModePublisher.value == .preLive {
+            self.headerDetailPreliveTopLabel.text = viewModel.startDateString
+            self.headerDetailPreliveBottomLabel.text = viewModel.startTimeString
+        }
+        else {
+            self.updateHeaderDetails()
+        }
+
+        self.sharedGameCardView.setupSharedCardInfo(viewModel: self.viewModel)
+
     }
 
     func updateHeaderDetails() {
+
+        guard let match = self.viewModel.match else {
+            return
+        }
+
+        let matchId = self.viewModel.matchId
+
         var homeGoals = ""
         var awayGoals = ""
         var minutes = ""
         var matchPart = ""
 
-        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[match?.id ?? ""] {
+        if let matchInfoArray = self.viewModel.store.matchesInfoForMatch[matchId] {
             for matchInfoId in matchInfoArray {
                 if let matchInfo = self.viewModel.store.matchesInfo[matchInfoId] {
-                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == self.match?.rootPartId {
+                    if (matchInfo.typeId ?? "") == "1" && (matchInfo.eventPartId ?? "") == match.rootPartId {
                         // Goals
                         if let homeGoalsFloat = matchInfo.paramFloat1 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId1 {
+                            if match.homeParticipant.id == matchInfo.paramParticipantId1 {
                                 homeGoals = "\(homeGoalsFloat)"
                             }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId1 {
+                            else if match.awayParticipant.id == matchInfo.paramParticipantId1 {
                                 awayGoals = "\(homeGoalsFloat)"
                             }
                         }
                         if let awayGoalsFloat = matchInfo.paramFloat2 {
-                            if self.match?.homeParticipant.id == matchInfo.paramParticipantId2 {
+                            if match.homeParticipant.id == matchInfo.paramParticipantId2 {
                                 homeGoals = "\(awayGoalsFloat)"
                             }
-                            else if self.match?.awayParticipant.id == matchInfo.paramParticipantId2 {
+                            else if match.awayParticipant.id == matchInfo.paramParticipantId2 {
                                 awayGoals = "\(awayGoalsFloat)"
                             }
                         }
@@ -588,22 +622,23 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
+    func showMatchNotAvailableView() {
+        self.shareButton.isHidden = true
+
+        self.matchNotAvailableView.isHidden = false
+    }
+
     @objc func didTapBetslipView() {
         self.openBetslipModal()
     }
 
     func openBetslipModal() {
-
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
             self?.marketTypesCollectionView.reloadData()
             self?.tableView.reloadData()
         }
-
-        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: {
-
-        })
-
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
     @IBAction private func didTapFieldToogleView() {
@@ -611,18 +646,20 @@ class MatchDetailsViewController: UIViewController {
     }
 
     @IBAction private func didTapBackAction() {
-        self.navigationController?.popViewController(animated: true)
-        self.dismiss(animated: true, completion: nil)
-    }
-
-    @IBAction private func didTapMatchStatsButton() {
-        if let match = self.match {
-            let matchFieldWebViewController = MatchFieldWebViewController(match: match)
-            self.present(matchFieldWebViewController, animated: true, completion: nil)
+        if self.isRootModal {
+            self.presentingViewController?.dismiss(animated: true)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
         }
     }
 
     @IBAction private func didTapShareButton() {
+
+        guard let matchId = self.viewModel.match?.id else {
+            return
+        }
+
         self.sharedGameCardView.isHidden = false
 
         let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
@@ -633,7 +670,7 @@ class MatchDetailsViewController: UIViewController {
         let metadata = LPLinkMetadata()
         let urlMobile = Env.urlMobileShares
 
-        if let matchId = self.match?.id, let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
 
             let imageProvider = NSItemProvider(object: snapshot)
             metadata.imageProvider = imageProvider
@@ -646,11 +683,52 @@ class MatchDetailsViewController: UIViewController {
 
         let share = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
 
-        share.completionWithItemsHandler = { [weak self] _, success, _, _ in
+        share.completionWithItemsHandler = { [weak self] _, _, _, _ in
             self?.sharedGameCardView.isHidden = true
         }
 
         present(share, animated: true, completion: nil)
+    }
+
+
+}
+
+extension MatchDetailsViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        if let index = marketGroupsViewControllers.firstIndex(of: viewController) {
+            if index > 0 {
+                return marketGroupsViewControllers[index - 1]
+            }
+        }
+        return nil
+    }
+
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        if let index = marketGroupsViewControllers.firstIndex(of: viewController) {
+            if index < marketGroupsViewControllers.count - 1 {
+                return marketGroupsViewControllers[index + 1]
+            }
+        }
+        return nil
+    }
+
+    func pageViewController(_ pageViewController: UIPageViewController,
+                            didFinishAnimating finished: Bool,
+                            previousViewControllers: [UIViewController],
+                            transitionCompleted completed: Bool) {
+
+        if !completed {
+            return
+        }
+
+        if let currentViewController = pageViewController.viewControllers?.first,
+           let index = marketGroupsViewControllers.firstIndex(of: currentViewController) {
+            self.selectMarketType(atIndex: index)
+        }
+        else {
+            self.selectMarketType(atIndex: 0)
+        }
     }
 
 }
@@ -692,4 +770,21 @@ extension MatchDetailsViewController: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
 
     }
+
+}
+
+extension MatchDetailsViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
 }

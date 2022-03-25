@@ -17,6 +17,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
     var matchesBySportList: [String: [Match]] = [:]
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -117,20 +118,19 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                     }
                 }
 
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
+                }
+                
                 return cell
             }
         }
         else {
-            if let cell = tableView.dequeueCellType(EmptyCardTableViewCell.self) {
-                cell.setDescription(primaryText: localized("empty_my_games"),
-                                    secondaryText: localized("second_empty_my_games"),
-                                    userIsLoggedIn: UserSessionStore.isUserLogged() )
-                return cell
-            }
-
+            return UITableViewCell()
         }
 
         fatalError()
+
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
