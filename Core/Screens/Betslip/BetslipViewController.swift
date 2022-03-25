@@ -67,9 +67,6 @@ class BetslipViewController: UIViewController {
 
         self.tabViewController = TabularViewController(dataSource: viewControllerTabDataSource)
 
-       
-        
-        
         super.init(nibName: "BetslipViewController", bundle: nil)
     }
 
