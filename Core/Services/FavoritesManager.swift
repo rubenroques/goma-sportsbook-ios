@@ -15,7 +15,7 @@ class FavoritesManager {
     var requestGomaFavoritesEndpointsPublisher: CurrentValueSubject<Bool, Never>
     var cancellables = Set<AnyCancellable>()
     var favoriteIdToRemove: String = ""
-    var favoriteTypeCheckPublisher: CurrentValueSubject<FavoriteType, Never> = .init(.none)
+   // var favoriteTypeCheckPublisher: CurrentValueSubject<FavoriteType, Never> = .init(.none)
 
     init(eventsId: [String] = []) {
         self.favoriteEventsIdPublisher = .init(eventsId)
@@ -79,12 +79,12 @@ class FavoritesManager {
             .eraseToAnyPublisher()
             .sink { _ in
             } receiveValue: { _ in
-                if favoriteTypeChanged == .match {
-                    self.favoriteTypeCheckPublisher.send(.match)
-                }
-                else if favoriteTypeChanged == .competition {
-                    self.favoriteTypeCheckPublisher.send(.competition)
-                }
+//                if favoriteTypeChanged == .match {
+//                    self.favoriteTypeCheckPublisher.send(.match)
+//                }
+//                else if favoriteTypeChanged == .competition {
+//                    self.favoriteTypeCheckPublisher.send(.competition)
+//                }
                 self.requestGomaFavoritesEndpointsPublisher.send(true)
             }
             .store(in: &cancellables)
