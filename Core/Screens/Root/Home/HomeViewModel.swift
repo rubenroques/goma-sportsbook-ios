@@ -152,10 +152,18 @@ class HomeViewModel {
     }
 
     func refresh() {
-        self.requestSports()
-        self.fetchBanners()
-        self.fetchFavoriteMatches()
-        self.fetchSuggestedBets()
+
+        self.fetchLocations()
+            .sink { [weak self] locations in
+                self?.store.storeLocations(locations: locations)
+
+                self?.requestSports()
+                self?.fetchBanners()
+                self?.fetchFavoriteMatches()
+                self?.fetchSuggestedBets()
+            }
+            .store(in: &cancellables)
+
     }
 
     func requestSports() {
@@ -171,6 +179,16 @@ class HomeViewModel {
                 self.refreshPublisher.send()
             })
             .store(in: &cancellables)
+    }
+
+    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
+
+        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .map(\.records)
+            .compactMap({$0})
+            .replaceError(with: [EveryMatrix.Location]())
+            .eraseToAnyPublisher()
     }
 
     // Banners

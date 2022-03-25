@@ -12,12 +12,14 @@ class HomeViewController: UIViewController {
 
     // MARK: - Public Properties
     var didTapBetslipButtonAction: (() -> Void)?
+    var didTapChatButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
 
     // MARK: - Private Properties
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
+    private lazy var chatButtonView: UIView = Self.createChatButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -61,7 +63,10 @@ class HomeViewController: UIViewController {
         self.betslipCountLabel.isHidden = true
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
+        self.chatButtonView.addGestureRecognizer(tapChatView)
 
         self.bind(toViewModel: self.viewModel)
 
@@ -83,6 +88,8 @@ class HomeViewController: UIViewController {
 
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+
+        self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -103,6 +110,8 @@ class HomeViewController: UIViewController {
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
     }
 
     // MARK: - Bindings
@@ -369,8 +378,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 437
-                case .singleLine: return 277
+                case .doubleLine: return 400
+                case .singleLine: return 226
                 case .competition: return 200
                 }
             }
@@ -410,8 +419,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 437
-                case .singleLine: return 277
+                case .doubleLine: return 400
+                case .singleLine: return 226
                 case .competition: return 200
                 }
             }
@@ -566,6 +575,10 @@ extension HomeViewController {
         self.didTapBetslipButtonAction?()
     }
 
+    @objc func didTapChatView() {
+        self.didTapChatButtonAction?()
+    }
+
 }
 
 //
@@ -608,6 +621,30 @@ extension HomeViewController {
         return betslipButtonView
     }
 
+    private static func createChatButtonView() -> UIView {
+        let betslipButtonView = UIView()
+        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "chat_float_icon")
+        betslipButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            betslipButtonView.widthAnchor.constraint(equalToConstant: 46),
+            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 22),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
+        ])
+
+        return betslipButtonView
+    }
+
+
     private static func createBetslipCountLabel() -> UILabel {
         let betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -645,6 +682,7 @@ extension HomeViewController {
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
+        self.view.addSubview(self.chatButtonView)
 
         // Initialize constraints
         self.initConstraints()
@@ -682,6 +720,11 @@ extension HomeViewController {
 
             self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
             self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
+            self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
         ])
 
     }

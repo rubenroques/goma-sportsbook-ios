@@ -22,7 +22,6 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
     private lazy var topCollectionView: UICollectionView = Self.createTopCollectionView()
     private lazy var bottomCollectionView: UICollectionView = Self.createBottomCollectionView()
-    private lazy var seeAllBaseView: UIView = Self.createSeeAllBaseView()
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
 
@@ -38,7 +37,7 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         self.setupWithTheme()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAllView))
-        self.seeAllBaseView.addGestureRecognizer(tapGestureRecognizer)
+        self.seeAllView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -73,9 +72,8 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         self.bottomCollectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomCollectionView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundTertiary
-        self.seeAllView.layer.borderColor = UIColor.App.separatorLine.cgColor
-        self.seeAllLabel.textColor = UIColor.App.textPrimary
+        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
+        self.seeAllLabel.textColor = UIColor.App.highlightPrimary
     }
 
     func configure(withViewModel viewModel: SportMatchLineViewModel) {
@@ -96,10 +94,7 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
             })
             .store(in: &cancellables)
 
-        self.seeAllLabel.text = "Go to Popular"
-        if self.viewModel?.isMatchLineLive() ?? false {
-            self.seeAllLabel.text = "Go to Live"
-        }
+        self.seeAllLabel.text = "See All"
 
         self.reloadCollections()
     }
@@ -447,11 +442,10 @@ extension SportMatchDoubleLineTableViewCell {
         
         self.linesStackView.addArrangedSubview(self.topCollectionView)
         self.linesStackView.addArrangedSubview(self.bottomCollectionView)
-        self.linesStackView.addArrangedSubview(self.seeAllBaseView)
 
         self.contentView.addSubview(self.linesStackView)
+        self.contentView.addSubview(self.seeAllView)
 
-        self.seeAllBaseView.addSubview(self.seeAllView)
         self.seeAllView.addSubview(self.seeAllLabel)
 
         self.topCollectionView.delegate = self
@@ -502,15 +496,11 @@ extension SportMatchDoubleLineTableViewCell {
 
             self.seeAllLabel.centerXAnchor.constraint(equalTo: self.seeAllView.centerXAnchor),
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),
-            self.seeAllLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.seeAllView.trailingAnchor, constant: 8),
+            self.seeAllLabel.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor),
 
             self.seeAllView.heightAnchor.constraint(equalToConstant: 34),
-
-            self.seeAllBaseView.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor, constant: -16),
-            self.seeAllBaseView.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor, constant: 16),
-
-            self.seeAllBaseView.topAnchor.constraint(equalTo: self.seeAllView.topAnchor),
-            self.seeAllBaseView.bottomAnchor.constraint(equalTo: self.seeAllView.bottomAnchor),
+            self.seeAllView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.seeAllView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -22),
      ])
     }
 }
