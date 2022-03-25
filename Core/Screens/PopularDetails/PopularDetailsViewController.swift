@@ -192,8 +192,7 @@ class PopularDetailsViewController: UIViewController {
     }
 
     private func openMatchDetails(_ match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 

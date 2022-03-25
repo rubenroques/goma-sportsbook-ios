@@ -23,7 +23,8 @@ class MyFavoritesViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
     var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
     var didSelectMatchAction: ((Match) -> Void)?
-
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
     var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
 
     var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
@@ -77,6 +78,14 @@ class MyFavoritesViewModel: NSObject {
             self?.dataChangedPublisher.send()
         }
 
+        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
+        
+        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
+            self?.didTapFavoriteCompetitionAction?(competition)
+        }
+        
         self.setupPublishers()
 
     }
@@ -119,6 +128,36 @@ class MyFavoritesViewModel: NSObject {
         self.updateContentList()
     }
 
+    func markAsFavorite(match : Match){
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+        
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+        }
+    }
+    
+    func markCompetitionAsFavorite(competition: Competition){
+        
+        var isFavorite = false
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
+            isFavorite = true
+        }
+        
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
+        }
+   
+    }
+    
     private func setupPublishers() {
 
         Env.favoritesManager.favoriteEventsIdPublisher

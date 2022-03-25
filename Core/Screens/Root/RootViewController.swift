@@ -167,6 +167,10 @@ class RootViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
+
+        let debugTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLogoImageView))
+        logoImageView.addGestureRecognizer(debugTapGesture)
+        logoImageView.isUserInteractionEnabled = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -354,6 +358,11 @@ class RootViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    func openChatModal() {
+        let socialViewController = SocialViewController()
+        self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+    }
+
     func reloadChildViewControllersData() {
         if preLiveViewControllerLoaded {
             self.preLiveViewController.reloadData()
@@ -374,15 +383,14 @@ class RootViewController: UIViewController {
 
     @IBAction private func didTapSearchButton() {
         let searchViewController = SearchViewController()
-
-//        searchViewController.didSelectCompetitionAction = { [weak self] value in
-//            searchViewController.dismiss(animated: true, completion: nil)
-//            self?.preLiveViewController.selectedShortcutItem = 2
-//            self?.preLiveViewController.applyCompetitionsFiltersWithIds([value.id])
-//        }
-
         let navigationViewController = Router.navigationController(with: searchViewController)
         self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    @objc func didTapLogoImageView() {
+        let socialViewController = SocialViewController(viewModel: SocialViewModel())
+        self.present(Router.navigationController(with: socialViewController),
+                     animated: true, completion: nil)
     }
 }
 
@@ -423,6 +431,9 @@ extension RootViewController {
             self.addChildViewController(self.homeViewController, toView: self.homeBaseView)
             self.homeViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
+            }
+            self.homeViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
             }
             homeViewControllerLoaded = true
         }

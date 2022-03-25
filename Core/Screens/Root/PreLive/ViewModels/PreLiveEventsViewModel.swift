@@ -92,6 +92,7 @@ class PreLiveEventsViewModel: NSObject {
 
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
@@ -129,7 +130,7 @@ class PreLiveEventsViewModel: NSObject {
         }
     }
     
-    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
     init(selectedSport: Sport) {
         self.selectedSport = selectedSport
@@ -166,6 +167,7 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
         }
+       
 
         // NextPage
         //
@@ -182,6 +184,7 @@ class PreLiveEventsViewModel: NSObject {
         self.todayMatchesDataSource.requestNextPageAction = { [weak self] in
             self?.fetchTodayMatchesNextPage()
         }
+        
 
         // Did Select a Match
         //
@@ -201,6 +204,18 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsDataSource.didSelectCompetitionAction = { [weak self] competition in
             self?.didSelectCompetitionAction?(competition)
         }
+        
+        //Did select fav match
+        //
+        self.competitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
+        self.todayMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
+        self.popularMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
 
         self.setupPublishers()
     }
@@ -211,14 +226,6 @@ class PreLiveEventsViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { _ in
                 self.popularMatchesDataSource.refetchAlerts()
-            })
-            .store(in: &cancellables)
-
-        Env.userSessionStore.userSessionPublisher
-            .receive(on: DispatchQueue.main)
-            .map({ $0 != nil })
-            .sink(receiveValue: { [weak self] isUserLoggedIn in
-                self?.isUserLoggedPublisher.send(isUserLoggedIn)
             })
             .store(in: &cancellables)
 
@@ -258,7 +265,22 @@ class PreLiveEventsViewModel: NSObject {
             }
 
     }
-
+    
+    func markAsFavorite(match: Match) {
+        
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+        }
+       
+    }
+    
     func setMatchListType(_ matchListType: MatchListType) {
         self.matchListTypePublisher.send(matchListType)
         self.updateContentList()
@@ -322,6 +344,10 @@ class PreLiveEventsViewModel: NSObject {
             return viewModel
         }
     }
+    
+  
+    
+    
 
     //
     // MARK: - Filters

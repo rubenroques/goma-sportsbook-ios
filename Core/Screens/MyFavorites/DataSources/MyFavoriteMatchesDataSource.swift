@@ -17,6 +17,7 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
     var matchesBySportList: [String: [Match]] = [:]
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -115,6 +116,10 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                     self?.matchWentLiveAction?()
                 }
 
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
+                }
+                
                 return cell
             }
         }

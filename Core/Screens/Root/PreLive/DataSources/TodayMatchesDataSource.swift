@@ -16,7 +16,8 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
-
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    
     init(todayMatches: [Match]) {
         self.todayMatches = todayMatches
     }
@@ -56,6 +57,10 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
+                }
+
                 return cell
             }
         case 1:

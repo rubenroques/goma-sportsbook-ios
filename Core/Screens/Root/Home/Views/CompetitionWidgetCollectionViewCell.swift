@@ -54,6 +54,9 @@ class CompetitionWidgetCollectionViewCell: UICollectionViewCell {
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapOpenCompetition))
         self.contentView.addGestureRecognizer(tapGestureRecognizer)
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     required init?(coder aDecoder: NSCoder) {

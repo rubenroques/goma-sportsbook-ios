@@ -84,6 +84,29 @@ class MyFavoritesViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+        
+        self.viewModel.didTapFavoriteMatchAction = { match in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
+            }
+        }
+        
+       self.viewModel.didTapFavoriteCompetitionAction = { competition in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markCompetitionAsFavorite(competition: competition)
+                self.tableView.reloadData()
+            }
+        }
+        
+        
+
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -181,19 +204,9 @@ class MyFavoritesViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.didSelectMatchAction = { [weak self] match in
-            if let store = self?.viewModel.store, store.hasMatchesInfoForMatch(withId: match.id) {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-                // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-                self?.present(matchDetailsViewController, animated: true, completion: nil)
-            }
-            else {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
-                // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-                self?.present(matchDetailsViewController, animated: true, completion: nil)
-
-            }
-
+        viewModel.didSelectMatchAction = { match in
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+            self.present(matchDetailsViewController, animated: true, completion: nil)
         }
 
         viewModel.emptyStateStatusPublisher
@@ -238,6 +251,11 @@ class MyFavoritesViewController: UIViewController {
         }
 
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+    
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
     }
 
 }

@@ -84,7 +84,7 @@ class BannerScrollTableViewCell: UITableViewCell {
     }
 
     func startCollectionViewTimer() {
-        self.timer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
+        self.timer = Timer.scheduledTimer(timeInterval: 8.0, target: self, selector: #selector(self.autoScrollCollectionView), userInfo: nil, repeats: true)
     }
 
     @objc func autoScrollCollectionView(_ timer1: Timer) {
