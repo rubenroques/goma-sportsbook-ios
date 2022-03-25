@@ -1284,7 +1284,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         if UserSessionStore.isUserLogged() {
             if self.listTypePublisher.value == .simple {
 
-                Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value)
+                Env.betslipManager.placeAllSingleBets(withSkateAmount: self.simpleBetsBettingValues.value,
+                                                      singleFreeBet: self.singleBettingTicketDataSource.currentTicketFreeBetSelected,
+                                                      singleOddsBoost: self.singleBettingTicketDataSource.currentTicketOddsBoostSelected)
                     .receive(on: DispatchQueue.main)
                     .sink { completion in
                         switch completion {
@@ -1302,7 +1304,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
             }
             else if self.listTypePublisher.value == .multiple {
-                Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue)
+                Env.betslipManager.placeMultipleBet(withSkateAmount: self.realBetValue, freeBet: self.freeBetSelected, oddsBoost: self.oddsBoostSelected)
                     .receive(on: DispatchQueue.main)
                     .sink { [weak self] _ in
                         self?.isLoading = false
@@ -1725,6 +1727,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
                         self?.tableNeedsDebouncedReload?()
                     }
+                    // Only one to use each time
+                    break
                 }
             }
 
@@ -1767,6 +1771,8 @@ class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
 
                         self?.tableNeedsDebouncedReload?()
                     }
+                    // Only one to use each time
+                    break
                 }
             }
         }

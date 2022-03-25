@@ -85,6 +85,10 @@ class BonusAvailableTableViewCell: UITableViewCell {
         self.subtitleLabel.textColor = UIColor.App.textSecondary
 
         self.bottomStackView.backgroundColor = .clear
+
+        self.moreInfoButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+
+        self.getBonusButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
     }
 
     func setupBonus(bonus: EveryMatrix.ApplicableBonus) {

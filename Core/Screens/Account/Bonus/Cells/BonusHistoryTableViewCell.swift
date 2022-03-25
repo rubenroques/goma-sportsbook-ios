@@ -222,7 +222,7 @@ extension BonusHistoryTableViewCell {
             self.bonusStatusView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
             self.bonusStatusView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
             self.bonusStatusView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 10),
-            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 70),
+            self.bonusStatusView.widthAnchor.constraint(greaterThanOrEqualToConstant: 80),
             self.bonusStatusView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30),
 
             self.bonusStatusLabel.leadingAnchor.constraint(equalTo: self.bonusStatusView.leadingAnchor, constant: 8),

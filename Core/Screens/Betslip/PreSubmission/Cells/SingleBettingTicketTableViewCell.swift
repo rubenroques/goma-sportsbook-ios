@@ -143,6 +143,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.errorView.isHidden = true
 
+        self.showFreeBetInfo = false
         self.showBonusInfo = false
 
         self.oddsBoostView.isHidden = true
@@ -214,6 +215,9 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.oldOddLabel.text = ""
         self.currentBoostedOddPercentage = 0
+
+        self.buttonsBaseView.isUserInteractionEnabled = true
+
     }
 
     func setupWithTheme() {
