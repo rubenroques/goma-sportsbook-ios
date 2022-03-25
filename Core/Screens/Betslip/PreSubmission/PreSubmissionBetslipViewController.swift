@@ -964,9 +964,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.systemBetTypeLabel.textColor = UIColor.App.textPrimary
         self.systemBetTypeTitleLabel.textColor = UIColor.App.textSecondary
-        self.systemBetTypeSelectorBaseView.backgroundColor = .clear
+        self.systemBetTypeSelectorBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
         self.systemBetTypeSelectorContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.settingsPickerBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
             NSAttributedString.Key.foregroundColor: UIColor.white
@@ -995,11 +997,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         ])
         self.amountBaseView.backgroundColor = UIColor.App.inputBackground
 
-        self.clearButton.titleLabel?.textColor = UIColor.App.textPrimary
-        self.clearButton.tintColor = UIColor.App.backgroundOdds
+        self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.settingsButton.titleLabel?.textColor = UIColor.App.textPrimary
-        self.settingsButton.tintColor = UIColor.App.backgroundOdds
+        self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.secondaryAmountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.secondaryAmountTextfield.textColor = UIColor.App.textPrimary
@@ -1112,8 +1112,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         StyleHelper.styleButton(button: self.secondaryPlaceBetButton)
         StyleHelper.styleButton(button: self.settingsPickerButton)
 
-        self.settingsButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        self.clearButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         
         
     }
