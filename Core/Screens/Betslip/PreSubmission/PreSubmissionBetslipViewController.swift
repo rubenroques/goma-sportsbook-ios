@@ -707,7 +707,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                             if freeBet.validForSelectionOdds {
                                 let bonusMultiple = BonusMultipleBetslip(freeBet: freeBet, oddsBoost: nil)
                                 self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
-
+                                // Only one freeBet to use at a time
+                                break
                             }
                         }
                     }
@@ -717,6 +718,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                             if oddsBoost.validForSelectionOdds {
                                 let bonusMultiple = BonusMultipleBetslip(freeBet: nil, oddsBoost: oddsBoost)
                                 self?.multipleBettingTicketDataSource.bonusMultiple.append(bonusMultiple)
+                                // Only one oddsBoost to use at a time
+                                break
                             }
                         }
                     }
@@ -1813,6 +1816,7 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
             return cell
         }
         else if let cell = tableView.dequeueCellType(BonusSwitchTableViewCell.self), let bonusMultiple = self.bonusMultiple[safe: (indexPath.row - self.bettingTickets.count)] {
+
             if let freeBet = bonusMultiple.freeBet {
                 cell.setupBonusInfo(freeBet: freeBet, oddsBoost: nil, bonusType: .freeBet)
 
