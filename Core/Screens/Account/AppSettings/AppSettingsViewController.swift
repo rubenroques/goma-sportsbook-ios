@@ -202,11 +202,11 @@ extension AppSettingsViewController {
             self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topView.heightAnchor.constraint(equalToConstant: 70),
+            self.topView.heightAnchor.constraint(equalToConstant: 44),
 
             self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 0),
             self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.backButton.heightAnchor.constraint(equalToConstant: 40),
+            self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
 
             self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 20),

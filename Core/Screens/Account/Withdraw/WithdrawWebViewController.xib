@@ -40,23 +40,22 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Ul-FW-SIw">
-                                    <rect key="frame" x="8" y="10" width="30" height="30"/>
+                                    <rect key="frame" x="350" y="3" width="56" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="30" id="jpm-eu-yAa"/>
-                                        <constraint firstAttribute="height" constant="30" id="kuw-Vh-Edo"/>
+                                        <constraint firstAttribute="height" constant="44" id="kuw-Vh-Edo"/>
                                     </constraints>
-                                    <state key="normal" image="arrow_close_icon"/>
+                                    <state key="normal" title="Cancel"/>
                                     <connections>
                                         <action selector="didTapCloseButton" destination="-1" eventType="touchUpInside" id="yRS-e6-nXb"/>
                                     </connections>
                                 </button>
                             </subviews>
                             <constraints>
-                                <constraint firstItem="9Ul-FW-SIw" firstAttribute="leading" secondItem="ROn-Ox-02z" secondAttribute="leading" constant="8" id="8A0-8R-41x"/>
                                 <constraint firstItem="9Ul-FW-SIw" firstAttribute="centerY" secondItem="ROn-Ox-02z" secondAttribute="centerY" id="AuU-dp-wdV"/>
                                 <constraint firstAttribute="height" constant="50" id="JHr-Ry-bx9"/>
                                 <constraint firstItem="exu-cL-fsU" firstAttribute="centerY" secondItem="ROn-Ox-02z" secondAttribute="centerY" id="Xi8-4U-yuk"/>
                                 <constraint firstItem="exu-cL-fsU" firstAttribute="centerX" secondItem="ROn-Ox-02z" secondAttribute="centerX" id="bdj-SF-x76"/>
+                                <constraint firstAttribute="trailing" secondItem="9Ul-FW-SIw" secondAttribute="trailing" constant="8" id="uri-bB-cvV"/>
                             </constraints>
                         </view>
                         <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="256-D9-kVl">
@@ -93,7 +92,4 @@
             <point key="canvasLocation" x="68" y="66"/>
         </view>
     </objects>
-    <resources>
-        <image name="arrow_close_icon" width="19" height="20"/>
-    </resources>
 </document>

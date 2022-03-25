@@ -190,7 +190,8 @@ class BetslipViewController: UIViewController {
 
             let depositViewController = DepositViewController()
 
-            self.navigationController?.pushViewController(depositViewController, animated: true)
+            let navigationViewController = Router.navigationController(with: depositViewController)
+            self.present(navigationViewController, animated: true, completion: nil)
         }
         else {
             let alert = UIAlertController(title: localized("profile_incomplete"),

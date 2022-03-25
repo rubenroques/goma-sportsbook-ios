@@ -499,7 +499,9 @@ extension RootViewController {
 
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
-        self.navigationController?.pushViewController(depositViewController, animated: true)
+        //self.navigationController?.pushViewController(depositViewController, animated: true)
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
     private func pushProfileViewController() {

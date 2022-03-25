@@ -43,13 +43,13 @@
                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                             <subviews>
                                 <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="NBz-vD-V4I">
-                                    <rect key="frame" x="4" y="4.5" width="344" height="51"/>
+                                    <rect key="frame" x="4" y="4.5" width="348" height="51"/>
                                     <textInputTraits key="textInputTraits"/>
                                 </searchBar>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fe8-ok-HJs">
-                                    <rect key="frame" x="356" y="15" width="50" height="30"/>
+                                    <rect key="frame" x="360" y="8" width="46" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="width" constant="50" id="TIp-zQ-SnF"/>
+                                        <constraint firstAttribute="height" constant="44" id="r7m-4n-bSo"/>
                                     </constraints>
                                     <state key="normal" title="Button"/>
                                     <connections>

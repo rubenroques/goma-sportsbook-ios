@@ -48,12 +48,11 @@
                                     <nil key="highlightedColor"/>
                                 </label>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SRl-17-6NY">
-                                    <rect key="frame" x="8" y="10" width="30" height="30"/>
+                                    <rect key="frame" x="350" y="3" width="56" height="44"/>
                                     <constraints>
-                                        <constraint firstAttribute="height" constant="30" id="hCQ-eA-bz7"/>
-                                        <constraint firstAttribute="width" constant="30" id="tc6-ZZ-ePI"/>
+                                        <constraint firstAttribute="height" constant="44" id="hCQ-eA-bz7"/>
                                     </constraints>
-                                    <state key="normal" image="arrow_close_icon"/>
+                                    <state key="normal" title="Cancel"/>
                                     <connections>
                                         <action selector="didTapCloseButton" destination="-1" eventType="touchUpInside" id="uxU-nn-xp7"/>
                                     </connections>
@@ -62,9 +61,9 @@
                             <constraints>
                                 <constraint firstItem="SRl-17-6NY" firstAttribute="centerY" secondItem="7uy-s5-c6s" secondAttribute="centerY" id="6SH-tO-7uf"/>
                                 <constraint firstItem="Yuk-qR-s2u" firstAttribute="centerY" secondItem="7uy-s5-c6s" secondAttribute="centerY" id="8Mu-nP-23F"/>
-                                <constraint firstItem="SRl-17-6NY" firstAttribute="leading" secondItem="7uy-s5-c6s" secondAttribute="leading" constant="8" id="SLq-TK-Ssl"/>
                                 <constraint firstAttribute="height" constant="50" id="Xd8-6o-l2J"/>
                                 <constraint firstItem="Yuk-qR-s2u" firstAttribute="centerX" secondItem="7uy-s5-c6s" secondAttribute="centerX" id="spF-ua-eaA"/>
+                                <constraint firstAttribute="trailing" secondItem="SRl-17-6NY" secondAttribute="trailing" constant="8" id="u8q-9j-G3e"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7h-13-FF0">
@@ -173,7 +172,4 @@
             <point key="canvasLocation" x="24.637681159420293" y="65.625"/>
         </view>
     </objects>
-    <resources>
-        <image name="arrow_close_icon" width="19" height="20"/>
-    </resources>
 </document>

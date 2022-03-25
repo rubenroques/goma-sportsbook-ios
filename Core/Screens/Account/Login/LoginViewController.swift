@@ -137,6 +137,9 @@ class LoginViewController: UIViewController {
         registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
         registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
 
+        self.dismissButton.setTitle(localized("close"), for: .normal)
+        self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+
         checkPolicyLinks()
 
         if self.isModal {
@@ -161,7 +164,7 @@ class LoginViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
         skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         skipButton.backgroundColor = .clear
 
         loginLabel.textColor = UIColor.App.textHeadlinePrimary

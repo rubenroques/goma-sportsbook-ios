@@ -9,6 +9,7 @@ import UIKit
 
 class BetSubmissionSuccessViewController: UIViewController {
 
+    @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
     @IBOutlet private weak var topView: UIView!
     @IBOutlet private weak var checkmarkImageView: UIImageView!
@@ -111,6 +112,8 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.bottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
         self.messageSubtitleLabel.textColor = UIColor.App.textPrimary

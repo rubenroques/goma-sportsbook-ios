@@ -46,8 +46,8 @@ class WithdrawViewController: UIViewController {
         self.navigationLabel.text = localized("withdraw")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
-        self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
-        self.navigationButton.contentMode = .scaleAspectFit
+        self.navigationButton.setTitle(localized("cancel"), for: .normal)
+        self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.titleLabel.text = localized("how_much_withdraw")
         self.titleLabel.font = AppFont.with(type: .bold, size: 20)
@@ -262,7 +262,12 @@ class WithdrawViewController: UIViewController {
     }
 
     @IBAction private func didTapCloseButton() {
-        self.navigationController?.popViewController(animated: true)
+        if presentingViewController != nil {
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @IBAction private func didTapNextButton() {
