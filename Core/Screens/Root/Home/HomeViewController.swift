@@ -14,6 +14,7 @@ class HomeViewController: UIViewController {
     var didTapBetslipButtonAction: (() -> Void)?
     var didTapChatButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
     // MARK: - Private Properties
     // Sub Views
@@ -57,6 +58,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
 
         self.loadingBaseView.isHidden = true
 
@@ -69,6 +71,17 @@ class HomeViewController: UIViewController {
         self.chatButtonView.addGestureRecognizer(tapChatView)
 
         self.bind(toViewModel: self.viewModel)
+
+        self.didSelectActivationAlertAction = { alertType in
+            if alertType == ActivationAlertType.email {
+                let emailVerificationViewController = EmailVerificationViewController()
+                self.present(emailVerificationViewController, animated: true, completion: nil)
+            }
+            else if alertType == ActivationAlertType.profile {
+                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
+                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
+            }
+        }
 
         self.showLoading()
 
@@ -198,7 +211,7 @@ class HomeViewController: UIViewController {
 
     private func openFavorites() {
         let myFavoritesViewController = MyFavoritesViewController()
-        self.present(Router.navigationController(with: myFavoritesViewController), animated: true, completion: nil)
+        self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
     }
 }
 
@@ -355,7 +368,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllPopular = { [weak self] sport in
                     self?.openPopularDetails(sport)
                 }
-                
+                cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
+                    self?.openOutrightCompetition(competition: competition)
+                }
+
                 cell.didTapFavoriteMatchAction = { [weak self] match in
                     if UserSessionStore.isUserLogged() {
                         self?.viewModel.markAsFavorite(match: match)
@@ -380,7 +396,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openCompetitionDetails(competitionId: competition.id, sport: sport)
                 }
                 return cell
+
             }
+
+        case .userProfile:
+            guard let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self)
+            else {
+                fatalError()
+            }
+            cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+                self.didSelectActivationAlertAction?(alertType)
+            }
+            cell.setAlertArrayData(arrayData: self.viewModel.alertsArray)
+
+            return cell
+
         }
     }
 
@@ -421,6 +451,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .competition: return 200
                 }
             }
+        case .userProfile:
+            return 140
         }
 
     }
@@ -462,6 +494,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .competition: return 200
                 }
             }
+        case .userProfile:
+            return 140
         }
     }
 
@@ -485,7 +519,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = AppFont.with(type: .bold, size: 17)
 
+        let seeAllLabel = UILabel()
+        seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
+        seeAllLabel.font = AppFont.with(type: .bold, size: 13)
+        seeAllLabel.textColor = UIColor.App.highlightPrimary
+        seeAllLabel.text = "See All"
+        seeAllLabel.isUserInteractionEnabled = true
+
         titleView.addSubview(titleStackView)
+        titleView.addSubview(seeAllLabel)
+
         titleStackView.addArrangedSubview(sportImageView)
         titleStackView.addArrangedSubview(titleLabel)
 
@@ -494,20 +537,30 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             sportImageView.widthAnchor.constraint(equalToConstant: 17),
 
             titleStackView.leadingAnchor.constraint(equalTo: titleView.leadingAnchor, constant: 18),
-            titleStackView.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: 18),
-
             titleStackView.topAnchor.constraint(equalTo: titleView.topAnchor),
             titleStackView.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
+
+            seeAllLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -18),
+            seeAllLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
+            seeAllLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
         ])
 
         if let title = self.viewModel.title(forSection: section) {
             titleLabel.text = title
         }
+
         if let imageName = self.viewModel.iconName(forSection: section) {
             sportImageView.image = UIImage(named: "sport_type_icon_\(imageName)")
         }
         else {
             sportImageView.isHidden = true
+        }
+
+        if case .userFavorites = self.viewModel.contentType(forSection: section) {
+            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
+        }
+        else {
+            seeAllLabel.isHidden = true
         }
 
         return titleView
@@ -522,49 +575,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard
-            self.viewModel.shouldShowFooter(forSection: section)
-        else {
-            return UIView()
-        }
-
-        let baseView = UIView()
-        baseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        let seeAllView = UIView()
-        seeAllView.translatesAutoresizingMaskIntoConstraints = false
-        seeAllView.layer.borderColor = UIColor.gray.cgColor
-        seeAllView.layer.borderWidth = 0
-        seeAllView.layer.cornerRadius = 6
-
-        let seeAllLabel = UILabel()
-        seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
-        seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "Open Favorites"
-        seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
-        seeAllLabel.textAlignment = .center
-
-        seeAllView.addSubview(seeAllLabel)
-        baseView.addSubview(seeAllView)
-
-        NSLayoutConstraint.activate([
-            seeAllLabel.centerYAnchor.constraint(equalTo: seeAllView.centerYAnchor),
-            seeAllLabel.centerXAnchor.constraint(equalTo: seeAllView.centerXAnchor),
-            seeAllLabel.leadingAnchor.constraint(equalTo: seeAllView.leadingAnchor),
-
-            seeAllView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor),
-            seeAllView.centerXAnchor.constraint(equalTo: baseView.centerXAnchor),
-            seeAllView.topAnchor.constraint(equalTo: baseView.topAnchor, constant: 2),
-            seeAllView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 16),
-        ])
-
-        seeAllView.backgroundColor = UIColor.App.backgroundTertiary
-        seeAllLabel.textColor = UIColor.App.textPrimary
-
-        seeAllView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
-
-        return baseView
-
+        return nil
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
@@ -599,6 +610,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
                 _ = self.viewModel.getSuggestedBetLineViewModel()
             case .sport:
                 _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
+            case .userProfile:
+                ()
             }
         }
     }

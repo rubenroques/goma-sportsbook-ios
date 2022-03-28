@@ -13,6 +13,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     var didSelectSeeAllPopular: ((Sport) -> Void)?
     var didSelectSeeAllLive: ((Sport) -> Void)?
 
+    var didSelectSeeAllCompetitionAction: ((Competition) -> Void)?
+
     var tappedMatchLineAction: ((Match) -> Void)?
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
     
@@ -60,6 +62,9 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
         self.collectionView.setContentOffset(.zero, animated: false)
 
+        self.showingBackSliderView = false
+        self.backView.alpha = 0.0
+
         self.reloadCollections()
     }
 
@@ -80,10 +85,11 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.collectionView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
-        self.seeAllLabel.textColor = UIColor.App.textPrimary
-        
         self.backView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+
+        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
+        self.seeAllLabel.textColor = UIColor.App.highlightPrimary
+
     }
 
     func configure(withViewModel viewModel: SportMatchLineViewModel) {
@@ -111,6 +117,7 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
     func reloadCollections() {
         self.collectionView.reloadData()
+
     }
 
     @objc func didTapSeeAllView() {
@@ -127,7 +134,8 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     }
     
     @objc func didTapBackSliderButton() {
-        self.collectionView.setContentOffset(CGPoint(x: -self.collectionView.contentInset.left, y: 1), animated: true)
+        let resetPoint = CGPoint(x: -self.collectionView.contentInset.left, y: 0)
+        self.collectionView.setContentOffset(resetPoint, animated: true)
     }
 }
 
@@ -227,7 +235,13 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                     cell.hideSubtitle()
                 }
 
-                if let match = viewModel.match() {
+                if self.viewModel?.isOutrightCompetitionLine() ?? false {
+                    if let competition = self.viewModel?.outrightCompetition(forLine: 0) {
+                        cell.tappedAction = { [weak self] in
+                            self?.didSelectSeeAllCompetitionAction?(competition)
+                        }
+                    }
+                } else if let match = viewModel.match() {
                     cell.tappedAction = { [weak self] in
                         self?.tappedMatchLineAction?(match)
                     }
@@ -236,8 +250,19 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
             return cell
         }
+        else if self.viewModel?.isOutrightCompetitionLine() ?? false,
+                let competition = self.viewModel?.outrightCompetition(forLine: 0),
+                let cell = collectionView.dequeueCellType(OutrightCompetitionLargeWidgetCollectionViewCell.self, indexPath: indexPath) {
 
-        if indexPath.row == 0, let match = viewModel.match() {
+            let cellViewModel = OutrightCompetitionLargeWidgetViewModel(competition: competition)
+            cell.configure(withViewModel: cellViewModel)
+            cell.tappedLineAction = { [weak self] competition in
+                self?.didSelectSeeAllCompetitionAction?(competition)
+            }
+            return cell
+        }
+
+        else if indexPath.row == 0, let match = viewModel.match() {
 
             if viewModel.isMatchLineLive() {
                 guard
@@ -462,6 +487,9 @@ extension SportMatchSingleLineTableViewCell {
         self.collectionView.dataSource = self
 
         self.collectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
+
+        self.collectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
+                                           forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
 
         self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)

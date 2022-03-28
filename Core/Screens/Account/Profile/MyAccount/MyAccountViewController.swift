@@ -171,7 +171,7 @@ extension MyAccountViewController {
             self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 20),
+            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor),
             self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
             self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),

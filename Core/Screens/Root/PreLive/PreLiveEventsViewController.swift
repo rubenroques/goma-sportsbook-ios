@@ -164,16 +164,16 @@ class PreLiveEventsViewController: UIViewController {
         self.connectPublishers()
         self.viewModel.fetchData()
 
-        self.viewModel.didSelectActivationAlertAction = { alertType in
-            if alertType == ActivationAlertType.email {
-                let emailVerificationViewController = EmailVerificationViewController()
-                self.present(emailVerificationViewController, animated: true, completion: nil)
-            }
-            else if alertType == ActivationAlertType.profile {
-                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
-                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
-            }
-        }
+//        self.viewModel.didSelectActivationAlertAction = { alertType in
+//            if alertType == ActivationAlertType.email {
+//                let emailVerificationViewController = EmailVerificationViewController()
+//                self.present(emailVerificationViewController, animated: true, completion: nil)
+//            }
+//            else if alertType == ActivationAlertType.profile {
+//                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
+//                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
+//            }
+//        }
 
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
@@ -294,12 +294,14 @@ class PreLiveEventsViewController: UIViewController {
         tableView.separatorStyle = .none
 
         tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+
         tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         tableView.register(BannerScrollTableViewCell.nib, forCellReuseIdentifier: BannerScrollTableViewCell.identifier)
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
-        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
+//        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
         tableView.delegate = self
@@ -502,12 +504,12 @@ class PreLiveEventsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Env.userSessionStore.isUserProfileIncomplete
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { _ in
-                self.reloadData()
-            })
-            .store(in: &cancellables)
+//        Env.userSessionStore.isUserProfileIncomplete
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { _ in
+//                self.reloadData()
+//            })
+//            .store(in: &cancellables)
 
     }
 

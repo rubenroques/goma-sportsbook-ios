@@ -26,6 +26,7 @@ class UserSessionStore {
 
     var shouldRecordUserSession = true
     var isUserProfileIncomplete = CurrentValueSubject<Bool, Never>(true)
+    var isUserEmailVerified = CurrentValueSubject<Bool, Never>(false)
 
     init() {
 
@@ -347,6 +348,18 @@ extension UserSessionStore {
         }
     }
 
+    func requestProfileStatus() {
+        Env.everyMatrixClient.getProfileStatus()
+            .receive(on: DispatchQueue.main)
+            .eraseToAnyPublisher()
+            .sink { _ in
+
+            } receiveValue: { status in
+                self.isUserProfileIncomplete.send(status.isProfileIncomplete)
+            }
+        .store(in: &cancellables)
+    }
+
 }
 
 extension UserSessionStore {
@@ -381,6 +394,7 @@ extension UserSessionStore {
                 self.isLoadingUserSessionPublisher.send(false)
             } receiveValue: { account in
                 Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
+                Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
             }
             .store(in: &cancellables)
     }

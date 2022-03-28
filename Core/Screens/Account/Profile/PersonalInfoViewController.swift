@@ -212,7 +212,6 @@ class PersonalInfoViewController: UIViewController {
         bankIdHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         bankIdHeaderTextFieldView.isDisabled = true
 
-        
     }
 
     private func setupPublishers() {
@@ -455,6 +454,7 @@ extension PersonalInfoViewController {
         if !profile.isFirstnameUpdatable {
             self.firstNameHeaderTextFieldView.isDisabled = true
         }
+
         self.firstNameHeaderTextFieldView.setText(profile.fields.firstname)
         self.firstNameHeaderTextFieldView.textPublisher
             .receive(on: DispatchQueue.main)

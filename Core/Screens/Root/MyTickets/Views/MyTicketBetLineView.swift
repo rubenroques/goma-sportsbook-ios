@@ -84,7 +84,12 @@ class MyTicketBetLineView: NibView {
         self.locationImageView.clipsToBounds = true
         self.locationImageView.layer.masksToBounds = true
 
-        self.tournamentNameLabel.text = self.betHistoryEntrySelection.tournamentName ?? ""
+        if (self.betHistoryEntrySelection.tournamentName ?? "").isEmpty {
+            self.tournamentNameLabel.text = self.betHistoryEntrySelection.eventName ?? ""
+        }
+        else {
+            self.tournamentNameLabel.text = self.betHistoryEntrySelection.tournamentName ?? ""
+        }
 
         self.homeTeamNameLabel.text = self.betHistoryEntrySelection.homeParticipantName ?? ""
         self.awayTeamNameLabel.text = self.betHistoryEntrySelection.awayParticipantName ?? ""
@@ -112,30 +117,24 @@ class MyTicketBetLineView: NibView {
 
         self.dateLabel.text = ""
         if let statusId = self.betHistoryEntrySelection.eventStatusId {
+
             if statusId == "2" {
                 self.dateLabel.isHidden = true
                 self.liveIconImage.isHidden = false
-              
             }
-            else {
-                if let date = self.betHistoryEntrySelection.eventDate {
-                    self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
-                    self.liveIconImage.isHidden = true
-                    self.dateLabel.isHidden = false
-                }
+            else if let date = self.betHistoryEntrySelection.eventDate {
+                self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
+                self.liveIconImage.isHidden = true
+                self.dateLabel.isHidden = false
             }
             
             let baseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
             baseView.addGestureRecognizer(baseViewTapGesture)
-            
         }
-        else {
-            if let date = self.betHistoryEntrySelection.eventDate {
-                self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
-                self.liveIconImage.isHidden = true
-                self.dateLabel.isHidden = false
-                
-            }
+        else if let date = self.betHistoryEntrySelection.eventDate {
+            self.dateLabel.text = MyTicketBetLineView.dateFormatter.string(from: date)
+            self.liveIconImage.isHidden = true
+            self.dateLabel.isHidden = false
         }
               
         self.homeTeamScoreLabel.text = ""
@@ -154,10 +153,6 @@ class MyTicketBetLineView: NibView {
             .sink(receiveValue: { [weak self] awayGoals in
             self?.awayTeamScoreLabel.text = awayGoals ?? ""
         })
-        
-        
-       
-        
 
         self.configureFromStatus()
         self.setupWithTheme()

@@ -317,7 +317,6 @@ class SearchViewController: UIViewController {
 
     private func openMatchDetailsScreen(match: Match) {
         let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
-        matchDetailsViewController.rootModalNeedsNavigation = true
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 

@@ -95,7 +95,6 @@ class MatchLineTableViewCell: UITableViewCell {
         self.matchInfoPublisher?.cancel()
         self.matchInfoPublisher = nil
 
-        self.collectionView.setContentOffset(.zero, animated: false)
         self.collectionView.reloadData()
     }
 
@@ -247,7 +246,14 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                 store = storeValue
             }
 
-            if !liveMatch {
+            if let match = self.match, store.hasMatchesInfoForMatch(withId: match.id) {
+                self.liveMatch = true
+            }
+            else {
+                self.liveMatch = false
+            }
+
+            if !self.liveMatch {
                 guard
                     let cell = collectionView.dequeueCellType(MatchWidgetCollectionViewCell.self, indexPath: indexPath)
 

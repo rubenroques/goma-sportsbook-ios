@@ -60,6 +60,9 @@ class LiveDetailsViewController: UIViewController {
 
         self.tableView.register(OutrightCompetitionLineTableViewCell.self,
                                 forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self,
+                                forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 

@@ -12,13 +12,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var outrightCompetitions: [Competition]? = []
     var matches: [Match] = []
 
-    var alertsArray: [ActivationAlert] = []
-
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
     var canRequestNextPageAction: (() -> Bool)?
     var requestNextPageAction: (() -> Void)?
-    var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
@@ -29,52 +26,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         self.matches = matches
         self.outrightCompetitions = outrightCompetitions
 
-        if let userSession = UserSessionStore.loggedUserSession() {
-            if !userSession.isEmailVerified {
-
-                let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
-                                                               description: localized("app_full_potential"),
-                                                               linkLabel: localized("verify_my_account"), alertType: .email)
-
-                alertsArray.append(emailActivationAlertData)
-            }
-
-            if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
-                                                               description: localized("complete_profile_description"),
-                                                               linkLabel: localized("finish_up_profile"),
-                                                               alertType: .profile)
-
-                alertsArray.append(completeProfileAlertData)
-            }
-        }
-
         super.init()
-    }
-
-    func refetchAlerts() {
-        alertsArray = []
-
-        if let userSession = UserSessionStore.loggedUserSession() {
-            if !userSession.isEmailVerified {
-
-                let emailActivationAlertData = ActivationAlert(title: localized("verify_email"),
-                                                               description: localized("app_full_potential"),
-                                                               linkLabel: localized("verify_my_account"),
-                                                               alertType: .email)
-
-                alertsArray.append(emailActivationAlertData)
-            }
-
-            if Env.userSessionStore.isUserProfileIncomplete.value {
-                let completeProfileAlertData = ActivationAlert(title: localized("complete_your_profile"),
-                                                               description: localized("complete_profile_description"),
-                                                               linkLabel: localized("finish_up_profile"),
-                                                               alertType: .profile)
-
-                alertsArray.append(completeProfileAlertData)
-            }
-        }
     }
 
     func shouldShowOutrightMarkets() -> Bool {
@@ -82,29 +34,19 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 4
+        return 3
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
         case 0:
-            if UserSessionStore.isUserLogged(), let loggedUser = UserSessionStore.loggedUserSession() {
-                if !loggedUser.isEmailVerified {
-                    return 1
-                }
-                else if Env.userSessionStore.isUserProfileIncomplete.value {
-                    return 1
-                }
-            }
-            return 0
-        case 1:
             if self.shouldShowOutrightMarkets(), let count = self.outrightCompetitions?.count {
                 return count
             }
             return 0
-        case 2:
+        case 1:
             return self.matches.count
-        case 3:
+        case 2:
             if self.canRequestNextPageAction?() ?? true {
                 return 1
             }
@@ -119,28 +61,20 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self) {
-                cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
-                    self.didSelectActivationAlertAction?(alertType)
-                }
-                cell.setAlertArrayData(arrayData: alertsArray)
-                return cell
-            }
-        case 1:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
-                    as? OutrightCompetitionLineTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                    as? OutrightCompetitionLargeLineTableViewCell,
                 let competition = self.outrightCompetitions?[safe: indexPath.row]
             else {
                 fatalError()
             }
-            cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+            cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
             cell.didSelectCompetitionAction = { [weak self] competition in
                 self?.didSelectCompetitionAction?(competition)
             }
             return cell
 
-        case 2:
+        case 1:
             if let cell = tableView.dequeueCellType(MatchLineTableViewCell.self),
                let match = self.matches[safe: indexPath.row] {
 
@@ -160,7 +94,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                 }
                 return cell
             }
-        case 3:
+        case 2:
             if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
                 return cell
             }
@@ -191,7 +125,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             return .leastNonzeroMagnitude
         }
 
-        if section == 2 {
+        if section == 1 {
             return 54
         }
         return .leastNonzeroMagnitude
@@ -202,7 +136,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             return .leastNonzeroMagnitude
         }
 
-        if section == 2 {
+        if section == 1 {
             return 54
         }
         return .leastNonzeroMagnitude
@@ -213,7 +147,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 0:
             return 132 // Banner
         case 1:
-            return 105
+            return 145
         case 3:
             return 70 // Loading cell
         default:
@@ -226,7 +160,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 0:
             return 140 // Banner
         case 1:
-            return 105
+            return 145
         case 3:
             return 70 // Loading cell
         default:
@@ -235,7 +169,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.section == 3, self.matches.isNotEmpty {
+        if indexPath.section == 2, self.matches.isNotEmpty {
             if let typedCell = cell as? LoadingMoreTableViewCell {
                 typedCell.startAnimating()
             }
