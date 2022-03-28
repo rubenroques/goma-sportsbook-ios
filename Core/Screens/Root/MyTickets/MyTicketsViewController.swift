@@ -33,6 +33,17 @@ class MyTicketsViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
+    private var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+            }
+        }
+    }
+
     init(viewModel: MyTicketsViewModel = MyTicketsViewModel() ) {
         self.viewModel = viewModel
         
@@ -53,7 +64,6 @@ class MyTicketsViewController: UIViewController {
 
         self.myBetsSegmentedControlBaseView.isHidden = false
         self.myBetsSegmentedControlBaseView.backgroundColor = .systemPink
-        self.loadingBaseView.isHidden = true
         self.emptyBaseView.isHidden = true
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -125,12 +135,22 @@ class MyTicketsViewController: UIViewController {
         }
 
         self.viewModel.requestShareActivityView = { [weak self] image, betId, betStatus in
+            self?.isLoading = true
             self?.viewModel.clickedCellSnapshot = image
             self?.viewModel.clickedBetId = betId
             self?.viewModel.clickedBetStatus = betStatus
             self?.viewModel.getSharedBetTokens()
         }
 
+        self.viewModel.tappedMatchDetail = { [weak self] matchId in
+           
+            let matchViewModel = MatchDetailsViewModel(matchId: matchId)
+           
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: matchViewModel)
+            self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+            
+        }
+        
         Env.betslipManager.newBetsPlacedPublisher
             .sink { [weak self] in
                 self?.viewModel.refresh()
@@ -143,8 +163,11 @@ class MyTicketsViewController: UIViewController {
                 if token != "" {
                     self?.shareBet()
                 }
+                self?.isLoading = false
             })
             .store(in: &cancellables)
+
+        self.isLoading = false
 
         self.setupWithTheme()
         
@@ -193,6 +216,8 @@ class MyTicketsViewController: UIViewController {
         
         StyleHelper.styleButton(button: self.noBetsButton)
 
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
     }
 
     @objc func refresh() {
@@ -229,6 +254,8 @@ class MyTicketsViewController: UIViewController {
               let share = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot], applicationActivities: nil)
               present(share, animated: true, completion: nil)
           }
+
+          self.isLoading = false
 
     }
 

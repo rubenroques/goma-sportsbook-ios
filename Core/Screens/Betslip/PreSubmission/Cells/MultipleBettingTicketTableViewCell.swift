@@ -141,7 +141,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertSuccess, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
-        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: .curveEaseIn, animations: {
             self.upChangeOddValueImage.alpha = 0.0
             self.animateBorderColor(view: self.oddBaseView, color: UIColor.clear, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
@@ -158,7 +158,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
             self.animateBorderColor(view: self.oddBaseView, color: UIColor.App.alertError, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
 
-        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: [.curveEaseIn, .allowUserInteraction], animations: {
+        UIView.animate(withDuration: animated ? 0.4 : 0.0, delay: 3.0, options: .curveEaseIn, animations: {
             self.downChangeOddValueImage.alpha = 0.0
             self.animateBorderColor(view: self.oddBaseView, color: UIColor.clear, duration: animated ? 0.4 : 0.0)
         }, completion: nil)
@@ -169,7 +169,7 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
         self.bettingTicket = bettingTicket
 
         self.outcomeNameLabel.text = bettingTicket.outcomeDescription
-        //self.oddValueLabel.text = "\(Double(floor(bettingTicket.value * 100)/100))"
+
         let newOddValue = Double(floor(bettingTicket.value * 100)/100)
         self.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
         self.marketNameLabel.text = bettingTicket.marketDescription
@@ -177,23 +177,22 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
 
         self.currentOddValue = bettingTicket.value
 
-        if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),
+        if let bettingOfferPublisher = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id),
            let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
             
             self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
                 .receive(on: DispatchQueue.main)
                 .eraseToAnyPublisher()
                 .map({ bettingOffer, market in
-                    return (bettingOffer.isOpen, market.isAvailable ?? true)
+                    return bettingOffer.isOpen && (market.isAvailable ?? true)
                 })
-                .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
-                    self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable
+                .sink(receiveValue: { [weak self] isBetAvailable in
+                    self?.suspendedBettingOfferView.isHidden = isBetAvailable
                 })
         }
         
-        self.oddSubscriber = Env.everyMatrixStorage
-            .oddPublisherForBettingOfferId(bettingTicket.id)?
-            .map(\.oddsValue)
+        self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+            .map(\.value)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] newOddValue in
@@ -201,9 +200,11 @@ class MultipleBettingTicketTableViewCell: UITableViewCell {
                 if let currentOddValue = self?.currentOddValue {
                     if newOddValue > currentOddValue {
                         self?.highlightOddChangeUp()
+                        Logger.log("highlightOddChange Up \(newOddValue) > \(currentOddValue) ")
                     }
                     else if newOddValue < currentOddValue {
                         self?.highlightOddChangeDown()
+                        Logger.log("highlightOddChange Down \(newOddValue) < \(currentOddValue) ")
                     }
                 }
 

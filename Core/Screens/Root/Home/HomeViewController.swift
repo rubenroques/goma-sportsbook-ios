@@ -12,6 +12,7 @@ class HomeViewController: UIViewController {
 
     // MARK: - Public Properties
     var didTapBetslipButtonAction: (() -> Void)?
+    var didTapChatButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
@@ -19,6 +20,7 @@ class HomeViewController: UIViewController {
     // Sub Views
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
+    private lazy var chatButtonView: UIView = Self.createChatButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
@@ -63,7 +65,10 @@ class HomeViewController: UIViewController {
         self.betslipCountLabel.isHidden = true
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        let tapChatView = UITapGestureRecognizer(target: self, action: #selector(didTapChatView))
+        self.chatButtonView.addGestureRecognizer(tapChatView)
 
         self.bind(toViewModel: self.viewModel)
 
@@ -77,10 +82,6 @@ class HomeViewController: UIViewController {
                 self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
             }
         }
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
 
         self.showLoading()
 
@@ -89,12 +90,19 @@ class HomeViewController: UIViewController {
         }
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+    }
+
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+
+        self.chatButtonView.layer.cornerRadius = self.chatButtonView.frame.height / 2
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -115,6 +123,8 @@ class HomeViewController: UIViewController {
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+
+        self.chatButtonView.backgroundColor = UIColor.App.buttonActiveHoverSecondary
     }
 
     // MARK: - Bindings
@@ -172,8 +182,8 @@ class HomeViewController: UIViewController {
     }
 
     private func openMatchDetails(match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchMode: MatchDetailsViewModel.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchMode: matchMode, match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -195,7 +205,7 @@ class HomeViewController: UIViewController {
 
     private func openFavorites() {
         let myFavoritesViewController = MyFavoritesViewController()
-        self.present(Router.navigationController(with: myFavoritesViewController), animated: true, completion: nil)
+        self.navigationController?.pushViewController(myFavoritesViewController, animated: true)
     }
 }
 
@@ -252,6 +262,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
+            cell.didTapFavoriteMatchAction = { [weak self] match in
+                self?.viewModel.markAsFavorite(match: match)
+            }
+           
             return cell
 
         case .suggestedBets:
@@ -278,6 +292,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             switch sportMatchLineViewModel.loadingPublisher.value {
             case .loading, .empty:
                 let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
+                
                 return cell
             case.loaded:
                 ()
@@ -309,6 +324,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
                 }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                    
+                }
+                
                 return cell
 
             case .singleLine:
@@ -331,6 +358,20 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllPopular = { [weak self] sport in
                     self?.openPopularDetails(sport)
                 }
+                cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
+                    self?.openOutrightCompetition(competition: competition)
+                }
+
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    if UserSessionStore.isUserLogged() {
+                        self?.viewModel.markAsFavorite(match: match)
+                    }
+                    else {
+                        let loginViewController = Router.navigationController(with: LoginViewController())
+                        self?.present(loginViewController, animated: true, completion: nil)
+                    }
+                }
+                
                 return cell
                 
             case .competition:
@@ -395,8 +436,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 437
-                case .singleLine: return 277
+                case .doubleLine: return 400
+                case .singleLine: return 226
                 case .competition: return 200
                 }
             }
@@ -438,8 +479,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             else {
                 switch sportMatchLineViewModel.layoutTypePublisher.value {
-                case .doubleLine: return 437
-                case .singleLine: return 277
+                case .doubleLine: return 400
+                case .singleLine: return 226
                 case .competition: return 200
                 }
             }
@@ -468,7 +509,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.font = AppFont.with(type: .bold, size: 17)
 
+        let seeAllLabel = UILabel()
+        seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
+        seeAllLabel.font = AppFont.with(type: .bold, size: 13)
+        seeAllLabel.textColor = UIColor.App.highlightPrimary
+        seeAllLabel.text = "See All"
+        seeAllLabel.isUserInteractionEnabled = true
+
         titleView.addSubview(titleStackView)
+        titleView.addSubview(seeAllLabel)
+
         titleStackView.addArrangedSubview(sportImageView)
         titleStackView.addArrangedSubview(titleLabel)
 
@@ -477,20 +527,30 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             sportImageView.widthAnchor.constraint(equalToConstant: 17),
 
             titleStackView.leadingAnchor.constraint(equalTo: titleView.leadingAnchor, constant: 18),
-            titleStackView.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: 18),
-
             titleStackView.topAnchor.constraint(equalTo: titleView.topAnchor),
             titleStackView.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
+
+            seeAllLabel.trailingAnchor.constraint(equalTo: titleView.trailingAnchor, constant: -18),
+            seeAllLabel.topAnchor.constraint(equalTo: titleView.topAnchor),
+            seeAllLabel.bottomAnchor.constraint(equalTo: titleView.bottomAnchor),
         ])
 
         if let title = self.viewModel.title(forSection: section) {
             titleLabel.text = title
         }
+
         if let imageName = self.viewModel.iconName(forSection: section) {
             sportImageView.image = UIImage(named: "sport_type_icon_\(imageName)")
         }
         else {
             sportImageView.isHidden = true
+        }
+
+        if case .userFavorites = self.viewModel.contentType(forSection: section) {
+            seeAllLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
+        }
+        else {
+            seeAllLabel.isHidden = true
         }
 
         return titleView
@@ -505,49 +565,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        guard
-            self.viewModel.shouldShowFooter(forSection: section)
-        else {
-            return UIView()
-        }
-
-        let baseView = UIView()
-        baseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        let seeAllView = UIView()
-        seeAllView.translatesAutoresizingMaskIntoConstraints = false
-        seeAllView.layer.borderColor = UIColor.gray.cgColor
-        seeAllView.layer.borderWidth = 0
-        seeAllView.layer.cornerRadius = 6
-
-        let seeAllLabel = UILabel()
-        seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
-        seeAllLabel.numberOfLines = 1
-        seeAllLabel.text = "Open Favorites"
-        seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
-        seeAllLabel.textAlignment = .center
-
-        seeAllView.addSubview(seeAllLabel)
-        baseView.addSubview(seeAllView)
-
-        NSLayoutConstraint.activate([
-            seeAllLabel.centerYAnchor.constraint(equalTo: seeAllView.centerYAnchor),
-            seeAllLabel.centerXAnchor.constraint(equalTo: seeAllView.centerXAnchor),
-            seeAllLabel.leadingAnchor.constraint(equalTo: seeAllView.leadingAnchor),
-
-            seeAllView.centerYAnchor.constraint(equalTo: baseView.centerYAnchor),
-            seeAllView.centerXAnchor.constraint(equalTo: baseView.centerXAnchor),
-            seeAllView.topAnchor.constraint(equalTo: baseView.topAnchor, constant: 2),
-            seeAllView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: 16),
-        ])
-
-        seeAllView.backgroundColor = UIColor.App.backgroundTertiary
-        seeAllLabel.textColor = UIColor.App.textPrimary
-
-        seeAllView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapOpenFavorites)))
-
-        return baseView
-
+        return nil
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
@@ -598,6 +616,10 @@ extension HomeViewController {
         self.didTapBetslipButtonAction?()
     }
 
+    @objc func didTapChatView() {
+        self.didTapChatButtonAction?()
+    }
+
 }
 
 //
@@ -640,6 +662,30 @@ extension HomeViewController {
         return betslipButtonView
     }
 
+    private static func createChatButtonView() -> UIView {
+        let betslipButtonView = UIView()
+        betslipButtonView.translatesAutoresizingMaskIntoConstraints = false
+
+        let iconImageView = UIImageView()
+        iconImageView.translatesAutoresizingMaskIntoConstraints = false
+        iconImageView.contentMode = .scaleAspectFit
+        iconImageView.image = UIImage(named: "chat_float_icon")
+        betslipButtonView.addSubview(iconImageView)
+
+        NSLayoutConstraint.activate([
+            betslipButtonView.widthAnchor.constraint(equalToConstant: 46),
+            betslipButtonView.widthAnchor.constraint(equalTo: betslipButtonView.heightAnchor),
+
+            iconImageView.widthAnchor.constraint(equalToConstant: 22),
+            iconImageView.widthAnchor.constraint(equalTo: iconImageView.heightAnchor),
+            iconImageView.centerXAnchor.constraint(equalTo: betslipButtonView.centerXAnchor),
+            iconImageView.centerYAnchor.constraint(equalTo: betslipButtonView.centerYAnchor),
+        ])
+
+        return betslipButtonView
+    }
+
+
     private static func createBetslipCountLabel() -> UILabel {
         let betslipCountLabel = UILabel()
         betslipCountLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -677,6 +723,7 @@ extension HomeViewController {
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
+        self.view.addSubview(self.chatButtonView)
 
         // Initialize constraints
         self.initConstraints()
@@ -714,6 +761,11 @@ extension HomeViewController {
 
             self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
             self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.chatButtonView.centerXAnchor.constraint(equalTo: self.betslipButtonView.centerXAnchor),
+            self.chatButtonView.bottomAnchor.constraint(equalTo: self.betslipButtonView.topAnchor, constant: -10),
         ])
 
     }

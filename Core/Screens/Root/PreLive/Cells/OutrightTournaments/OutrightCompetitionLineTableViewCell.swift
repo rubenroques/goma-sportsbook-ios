@@ -13,16 +13,13 @@ class OutrightCompetitionLineViewModel {
     var competition: Competition
     var numberOfMarkets: Int
 
-    private var shouldShowSeeAllOption: Bool
-
-    init(competition: Competition, shouldShowSeeAllOption: Bool = true) {
+    init(competition: Competition) {
         self.competition = competition
         self.numberOfMarkets = competition.outrightMarkets
-        self.shouldShowSeeAllOption = shouldShowSeeAllOption
     }
 
     func numberOfSection() -> Int {
-        return shouldShowSeeAllOption ? 2 : 1
+        return 2
     }
 
     func numberOfItems(forSection section: Int) -> Int {
@@ -210,7 +207,7 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
         if indexPath.section == 1 {
-            return CGSize(width: 99, height: 124)
+            return CGSize(width: 99, height: 88)
         }
         else {
             let screenWidth = UIScreen.main.bounds.size.width
@@ -218,7 +215,7 @@ extension OutrightCompetitionLineTableViewCell: UICollectionViewDelegate, UIColl
             if width > 390 {
                 width = 390
             }
-            return CGSize(width: width, height: 124)
+            return CGSize(width: width, height: 88)
         }
     }
 }
@@ -268,13 +265,10 @@ extension OutrightCompetitionLineTableViewCell {
 
     private func initConstraints() {
         NSLayoutConstraint.activate([
-
             self.linesStackView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.linesStackView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
             self.linesStackView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 8),
             self.linesStackView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -8),
-
-            self.collectionView.heightAnchor.constraint(equalToConstant: 160),
      ])
     }
 }

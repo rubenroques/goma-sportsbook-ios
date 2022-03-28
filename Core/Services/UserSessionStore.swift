@@ -20,6 +20,7 @@ class UserSessionStore {
     var isLoadingUserSessionPublisher = CurrentValueSubject<Bool, Never>(true)
     var userSessionPublisher = CurrentValueSubject<UserSession?, Never>(nil)
     var userBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
+    var userBonusBalanceWallet = CurrentValueSubject<EveryMatrix.UserBalanceWallet?, Never>(nil)
     var userWalletPublisher: AnyCancellable?
     var userWalletRegister: EndpointPublisherIdentifiable?
 
@@ -218,12 +219,18 @@ extension UserSessionStore {
                 
             } receiveValue: { userBalance in
                 var realWallet: EveryMatrix.UserBalanceWallet?
-                // TODO: UBS WALLET
-                for wallet in userBalance.wallets where wallet.vendor == "CasinoWallet" {
-                    realWallet = wallet
-                    break
+                var bonusWallet: EveryMatrix.UserBalanceWallet?
+                
+                for wallet in userBalance.wallets {
+                    if wallet.vendor == "CasinoWallet" {
+                        realWallet = wallet
+                        self.userBalanceWallet.send(realWallet)
+                    }
+                    else if wallet.vendor == "UBS" {
+                        bonusWallet = wallet
+                        self.userBonusBalanceWallet.send(bonusWallet)
+                    }
                 }
-                self.userBalanceWallet.send(realWallet)
             }
             .store(in: &cancellables)
     }

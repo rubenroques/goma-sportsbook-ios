@@ -174,11 +174,19 @@ class HomeViewModel {
     }
 
     func refresh() {
-        self.requestSports()
-        self.fetchBanners()
-        self.fetchFavoriteMatches()
-        self.fetchSuggestedBets()
-        self.fetchAlerts()
+
+        self.fetchLocations()
+            .sink { [weak self] locations in
+                self?.store.storeLocations(locations: locations)
+
+                self?.requestSports()
+                self?.fetchBanners()
+                self?.fetchFavoriteMatches()
+                self?.fetchSuggestedBets()
+                self?.fetchAlerts()
+            }
+            .store(in: &cancellables)
+
     }
 
     func requestSports() {
@@ -196,6 +204,16 @@ class HomeViewModel {
             .store(in: &cancellables)
     }
 
+    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
+
+        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .map(\.records)
+            .compactMap({$0})
+            .replaceError(with: [EveryMatrix.Location]())
+            .eraseToAnyPublisher()
+    }
+
     // Banners
     func stopBannerUpdates() {
         if let bannersInfoRegister = bannersInfoRegister {
@@ -204,6 +222,20 @@ class HomeViewModel {
 
         self.bannersInfoPublisher?.cancel()
         self.bannersInfoPublisher = nil
+    }
+    
+    func markAsFavorite(match : Match){
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+        
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+        }
     }
 
     func fetchAlerts() {

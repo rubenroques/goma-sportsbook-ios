@@ -52,9 +52,11 @@ class CompetitionDetailsViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+
         self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -165,6 +167,11 @@ class CompetitionDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
+    }
+    
     private func openCompetitionDetails(_ competition: Competition) {
         let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())
         let outrightMarketDetailsViewController = OutrightMarketDetailsViewController(viewModel: viewModel)
@@ -172,8 +179,7 @@ class CompetitionDetailsViewController: UIViewController {
     }
 
     private func openMatchDetails(_ match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -216,10 +222,10 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
 
         switch contentType {
         case .outrightMarket(let competition):
-            if let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
-                as? OutrightCompetitionLineTableViewCell {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                as? OutrightCompetitionLargeLineTableViewCell {
 
-                cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition, shouldShowSeeAllOption: false))
+                cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
                 cell.didSelectCompetitionAction = { [weak self] competition in
                     self?.openCompetitionDetails(competition)
                 }
@@ -272,6 +278,18 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
             headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
         }
 
+        headerView.didTapFavoriteCompetitionAction = { [weak self] competition in
+            
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markCompetitionAsFavorite(competition: competition)
+                tableView.reloadData()
+            }
+            
+        }
+    
         return headerView
     }
 
@@ -291,7 +309,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return 146
+                return 145
             case .match:
                 return MatchWidgetCollectionViewCell.cellHeight + 20
             }
@@ -308,7 +326,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return 146
+                return 145
             case .match:
                 return MatchWidgetCollectionViewCell.cellHeight + 20
             }
@@ -492,16 +510,16 @@ extension CompetitionDetailsViewController {
             self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 40),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
 
-            self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
+            self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
         ])
 
         NSLayoutConstraint.activate([

@@ -326,7 +326,7 @@
                                 </constraints>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <connections>
-                                    <action selector="didTapFavoritesButton:" destination="gTV-IL-0wX" eventType="touchUpInside" id="MfW-V3-a8E"/>
+                                    <action selector="didTapFavoritesButton:" destination="gTV-IL-0wX" eventType="primaryActionTriggered" id="10e-fz-yea"/>
                                 </connections>
                             </button>
                         </subviews>

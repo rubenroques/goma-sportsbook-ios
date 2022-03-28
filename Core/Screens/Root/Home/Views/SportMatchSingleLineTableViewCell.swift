@@ -13,16 +13,21 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
     var didSelectSeeAllPopular: ((Sport) -> Void)?
     var didSelectSeeAllLive: ((Sport) -> Void)?
 
+    var didSelectSeeAllCompetitionAction: ((Competition) -> Void)?
+
     var tappedMatchLineAction: ((Match) -> Void)?
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
+    
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
-    private lazy var seeAllBaseView: UIView = Self.createSeeAllBaseView()
     private lazy var seeAllView: UIView = Self.createSeeAllView()
     private lazy var seeAllLabel: UILabel = Self.createSeeAllLabel()
-
+    private lazy var backView: UIView = Self.createBackView()
+    private lazy var backImage: UIImageView = Self.createBackImage()
+    
     private var showingBackSliderView: Bool = false
 
     private var viewModel: SportMatchLineViewModel?
@@ -35,7 +40,15 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         self.setupWithTheme()
 
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapSeeAllView))
-        self.seeAllBaseView.addGestureRecognizer(tapGestureRecognizer)
+        self.seeAllView.addGestureRecognizer(tapGestureRecognizer)
+        
+        self.backView.layer.cornerRadius = 6
+        self.backView.alpha = 0.0
+        
+        let backFirstSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
+        self.backView.addGestureRecognizer(backFirstSliderTapGesture)
+
+        self.contentView.bringSubviewToFront(self.backView)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -46,6 +59,11 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         super.prepareForReuse()
 
         self.viewModel = nil
+
+        self.collectionView.setContentOffset(.zero, animated: false)
+
+        self.showingBackSliderView = false
+        self.backView.alpha = 0.0
 
         self.reloadCollections()
     }
@@ -67,8 +85,11 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
         self.collectionView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.collectionView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.seeAllView.backgroundColor = UIColor.App.backgroundTertiary
-        self.seeAllLabel.textColor = UIColor.App.textPrimary
+        self.backView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+
+        self.seeAllView.backgroundColor = UIColor.App.backgroundPrimary
+        self.seeAllLabel.textColor = UIColor.App.highlightPrimary
+
     }
 
     func configure(withViewModel viewModel: SportMatchLineViewModel) {
@@ -82,45 +103,6 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
             })
             .store(in: &cancellables)
 
-//        Publishers.CombineLatest(viewModel.layoutTypePublisher, viewModel.loadingPublisher)
-//            //.removeDuplicates()
-//            .receive(on: DispatchQueue.main)
-//            .sink { [weak self] layoutType, loadingState in
-//                
-//                self?.titleLabel.text = "\(layoutType) \(loadingState)"
-//
-//                if loadingState == .loading {
-//                }
-//                else if loadingState == .empty {
-//                    self?.collectionView.isHidden = true
-//                    self?.seeAllBaseView.isHidden = true
-//                }
-//                else if loadingState == .loaded {
-//                    
-//                    switch layoutType {
-//                    case .doubleLine:
-//                        self?.collectionView.isHidden = false
-//                        self?.seeAllBaseView.isHidden = false
-//                    case .singleLine:
-//                        self?.collectionView.isHidden = false
-//                        self?.seeAllBaseView.isHidden = false
-//                    case .competition:
-//                        self?.collectionView.isHidden = false
-//                        self?.seeAllBaseView.isHidden = true
-//                    }
-//                }
-//            }
-//            .store(in: &cancellables)
-
-//        self.viewModel?.layoutTypePublisher
-//            .removeDuplicates()
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] layoutType in
-//                // self?.reloadCollections()
-//                self?.titleLabel.text = "\(layoutType)"
-//            })
-//            .store(in: &cancellables)
-
         self.viewModel?.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
@@ -128,11 +110,14 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
             })
             .store(in: &cancellables)
 
+        self.seeAllLabel.text = "See All"
+
         self.reloadCollections()
     }
 
     func reloadCollections() {
         self.collectionView.reloadData()
+
     }
 
     @objc func didTapSeeAllView() {
@@ -146,6 +131,11 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
             self.didSelectSeeAllPopular?(viewModel.sport)
         }
 
+    }
+    
+    @objc func didTapBackSliderButton() {
+        let resetPoint = CGPoint(x: -self.collectionView.contentInset.left, y: 0)
+        self.collectionView.setContentOffset(resetPoint, animated: true)
     }
 }
 
@@ -164,6 +154,26 @@ extension SportMatchSingleLineTableViewCell: UIScrollViewDelegate {
                     return
                 }
             }
+       
+            let width = screenWidth*0.6
+
+            if scrollView.contentOffset.x > width {
+                if !self.showingBackSliderView {
+                    self.showingBackSliderView = true
+                    UIView.animate(withDuration: 0.2) {
+                        self.backView.alpha = 1.0
+                    }
+                }
+            }
+            else {
+                if self.showingBackSliderView {
+                    self.showingBackSliderView = false
+                    UIView.animate(withDuration: 0.2) {
+                        self.backView.alpha = 0.0
+                    }
+                }
+            }
+        
         }
 
 //        let width = screenWidth*0.6
@@ -225,7 +235,13 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                     cell.hideSubtitle()
                 }
 
-                if let match = viewModel.match() {
+                if self.viewModel?.isOutrightCompetitionLine() ?? false {
+                    if let competition = self.viewModel?.outrightCompetition(forLine: 0) {
+                        cell.tappedAction = { [weak self] in
+                            self?.didSelectSeeAllCompetitionAction?(competition)
+                        }
+                    }
+                } else if let match = viewModel.match() {
                     cell.tappedAction = { [weak self] in
                         self?.tappedMatchLineAction?(match)
                     }
@@ -234,8 +250,19 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
 
             return cell
         }
+        else if self.viewModel?.isOutrightCompetitionLine() ?? false,
+                let competition = self.viewModel?.outrightCompetition(forLine: 0),
+                let cell = collectionView.dequeueCellType(OutrightCompetitionLargeWidgetCollectionViewCell.self, indexPath: indexPath) {
 
-        if indexPath.row == 0, let match = viewModel.match() {
+            let cellViewModel = OutrightCompetitionLargeWidgetViewModel(competition: competition)
+            cell.configure(withViewModel: cellViewModel)
+            cell.tappedLineAction = { [weak self] competition in
+                self?.didSelectSeeAllCompetitionAction?(competition)
+            }
+            return cell
+        }
+
+        else if indexPath.row == 0, let match = viewModel.match() {
 
             if viewModel.isMatchLineLive() {
                 guard
@@ -250,6 +277,10 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.tappedMatchWidgetAction = { [weak self] in
                     self?.tappedMatchLineAction?(match)
                 }
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
+                }
+                
                 cell.shouldShowCountryFlag(true)
                 return cell
             }
@@ -265,6 +296,9 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.configure(withViewModel: cellViewModel)
                 cell.tappedMatchWidgetAction = { [weak self] in
                     self?.tappedMatchLineAction?(match)
+                }
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
                 }
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -290,6 +324,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         cell.tappedMatchWidgetAction = { [weak self] in
                             self?.tappedMatchLineAction?(match)
                         }
+                        
                         return cell
                     }
                 }
@@ -347,7 +382,7 @@ extension SportMatchSingleLineTableViewCell: UICollectionViewDelegate, UICollect
                         layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        var cellHeight = MatchWidgetCollectionViewCell.cellHeight
+        let cellHeight = MatchWidgetCollectionViewCell.cellHeight
         if indexPath.section == 1 {
             return CGSize(width: 99, height: cellHeight)
         }
@@ -381,6 +416,19 @@ extension SportMatchSingleLineTableViewCell {
         linesStackView.spacing = 8
         linesStackView.translatesAutoresizingMaskIntoConstraints = false
         return linesStackView
+    }
+    
+    private static func createBackView() -> UIView {
+        let backView = UIView()
+        backView.translatesAutoresizingMaskIntoConstraints = false
+        return backView
+    }
+    
+    private static func createBackImage() -> UIImageView {
+        let backImage = UIImageView()
+        backImage.translatesAutoresizingMaskIntoConstraints = false
+        backImage.image = UIImage(named: "arrow_circle_left_icon")
+        return backImage
     }
 
     private static func createCollectionView() -> UICollectionView {
@@ -426,17 +474,22 @@ extension SportMatchSingleLineTableViewCell {
         self.contentView.clipsToBounds = true
 
         self.linesStackView.addArrangedSubview(self.collectionView)
-        self.linesStackView.addArrangedSubview(self.seeAllBaseView)
 
+        self.backView.addSubview(self.backImage)
+
+        self.contentView.addSubview(self.backView)
         self.contentView.addSubview(self.linesStackView)
+        self.contentView.addSubview(self.seeAllView)
 
-        self.seeAllBaseView.addSubview(self.seeAllView)
         self.seeAllView.addSubview(self.seeAllLabel)
 
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
 
         self.collectionView.register(CompetitionWidgetCollectionViewCell.self, forCellWithReuseIdentifier: CompetitionWidgetCollectionViewCell.identifier)
+
+        self.collectionView.register(OutrightCompetitionLargeWidgetCollectionViewCell.self,
+                                           forCellWithReuseIdentifier: OutrightCompetitionLargeWidgetCollectionViewCell.identifier)
 
         self.collectionView.register(MatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: MatchWidgetCollectionViewCell.identifier)
         self.collectionView.register(LiveMatchWidgetCollectionViewCell.nib, forCellWithReuseIdentifier: LiveMatchWidgetCollectionViewCell.identifier)
@@ -466,15 +519,22 @@ extension SportMatchSingleLineTableViewCell {
 
             self.seeAllLabel.centerXAnchor.constraint(equalTo: self.seeAllView.centerXAnchor),
             self.seeAllLabel.centerYAnchor.constraint(equalTo: self.seeAllView.centerYAnchor),
-            self.seeAllLabel.trailingAnchor.constraint(greaterThanOrEqualTo: self.seeAllView.trailingAnchor, constant: 8),
+            self.seeAllLabel.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor),
 
             self.seeAllView.heightAnchor.constraint(equalToConstant: 34),
+            self.seeAllView.centerYAnchor.constraint(equalTo: self.titleLabel.centerYAnchor),
+            self.seeAllView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -22),
 
-            self.seeAllBaseView.leadingAnchor.constraint(equalTo: self.seeAllView.leadingAnchor, constant: -16),
-            self.seeAllBaseView.trailingAnchor.constraint(equalTo: self.seeAllView.trailingAnchor, constant: 16),
+            self.backView.centerYAnchor.constraint(equalTo: self.collectionView.centerYAnchor),
+            self.backView.leadingAnchor.constraint(equalTo: self.collectionView.leadingAnchor, constant: -36),
+            self.backView.heightAnchor.constraint(equalToConstant: 38),
+            self.backView.widthAnchor.constraint(equalToConstant: 78),
+            
+            self.backImage.centerYAnchor.constraint(equalTo: self.backView.centerYAnchor),
+            self.backImage.trailingAnchor.constraint(equalTo: self.backView.trailingAnchor, constant: -7),
+            self.backImage.heightAnchor.constraint(equalToConstant: 24),
+            self.backImage.widthAnchor.constraint(equalToConstant: 24),
 
-            self.seeAllBaseView.topAnchor.constraint(equalTo: self.seeAllView.topAnchor),
-            self.seeAllBaseView.bottomAnchor.constraint(equalTo: self.seeAllView.bottomAnchor),
-     ])
+        ])
     }
 }

@@ -49,8 +49,8 @@ class WithdrawWebViewController: UIViewController {
         self.navigationLabel.text = localized("withdraw")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
-        self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
-        self.navigationButton.contentMode = .scaleAspectFit
+        self.navigationButton.setTitle(localized("cancel"), for: .normal)
+        self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.setupWebView()
     }

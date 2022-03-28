@@ -56,10 +56,16 @@ class LiveDetailsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
 
-        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
-        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+
+        self.tableView.register(OutrightCompetitionLineTableViewCell.self,
+                                forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self,
+                                forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
+
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
@@ -187,8 +193,7 @@ class LiveDetailsViewController: UIViewController {
     }
 
     private func openMatchDetails(_ match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -218,33 +223,66 @@ extension LiveDetailsViewController: UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        self.viewModel.numberOfItems(forSection: section)
+        return self.viewModel.numberOfItems(forSection: section)
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard
-            let match = self.viewModel.match(forIndexPath: indexPath),
-            let cell = tableView.dequeueCellType(MatchLineTableViewCell.self)
-        else {
+        switch indexPath.section {
+        case 0:
+            guard
+                let match = self.viewModel.match(forIndexPath: indexPath),
+                let cell = tableView.dequeueCellType(MatchLineTableViewCell.self)
+            else {
+                fatalError()
+            }
+
+            cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
+            cell.setupWithMatch(match, liveMatch: true, store: self.viewModel.store)
+            cell.shouldShowCountryFlag(false)
+            cell.tappedMatchLineAction = { [weak self] in
+                self?.openMatchDetails(match)
+            }
+            return cell
+        case 1:
+            if let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) {
+                return cell
+            }
+        default:
             fatalError()
         }
-
-        cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
-        cell.setupWithMatch(match, store: self.viewModel.store)
-        cell.shouldShowCountryFlag(false)
-        cell.tappedMatchLineAction = { [weak self] in
-            self?.openMatchDetails(match)
-        }
-        return cell
+        fatalError()
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return MatchWidgetCollectionViewCell.cellHeight + 20
+        switch indexPath.section {
+        case 0:
+            return MatchWidgetCollectionViewCell.cellHeight + 20
+        case 1:
+            return 80
+        default:
+            return .leastNonzeroMagnitude
+        }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return MatchWidgetCollectionViewCell.cellHeight + 20
+        switch indexPath.section {
+        case 0:
+            return MatchWidgetCollectionViewCell.cellHeight + 20
+        case 1:
+            return 80
+        default:
+            return .leastNonzeroMagnitude
+        }
+    }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 1, self.viewModel.shouldShowLoadingCell() {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPage()
+        }
     }
 
 }

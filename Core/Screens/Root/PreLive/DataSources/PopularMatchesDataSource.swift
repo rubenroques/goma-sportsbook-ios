@@ -18,6 +18,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var requestNextPageAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+   
+    
 
     init(matches: [Match], outrightCompetitions: [Competition]? = nil) {
         self.matches = matches
@@ -59,13 +62,13 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         switch indexPath.section {
         case 0:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
-                    as? OutrightCompetitionLineTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                    as? OutrightCompetitionLargeLineTableViewCell,
                 let competition = self.outrightCompetitions?[safe: indexPath.row]
             else {
                 fatalError()
             }
-            cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+            cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
             cell.didSelectCompetitionAction = { [weak self] competition in
                 self?.didSelectCompetitionAction?(competition)
             }
@@ -84,6 +87,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
+                }
+                
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
                 }
                 return cell
             }
@@ -138,8 +145,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 140 // Banner
-        case 2:
+            return 132 // Banner
+        case 1:
+            return 145
+        case 3:
             return 70 // Loading cell
         default:
             return UITableView.automaticDimension
@@ -150,7 +159,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         switch indexPath.section {
         case 0:
             return 140 // Banner
-        case 2:
+        case 1:
+            return 145
+        case 3:
             return 70 // Loading cell
         default:
             return MatchWidgetCollectionViewCell.cellHeight + 20

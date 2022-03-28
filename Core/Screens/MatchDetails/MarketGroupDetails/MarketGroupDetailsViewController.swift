@@ -56,6 +56,10 @@ class MarketGroupDetailsViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
 
         self.viewModel.fetchMarketGroupDetails()
     }
@@ -95,7 +99,7 @@ class MarketGroupDetailsViewController: UIViewController {
 
         viewModel.marketGroupOrganizersPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] marketGroupOrganizers in
+            .sink(receiveValue: { [weak self] _ in
                 self?.reloadTableView()
             })
             .store(in: &cancellables)
@@ -105,6 +109,10 @@ class MarketGroupDetailsViewController: UIViewController {
     // MARK: - Actions
 
     // MARK: - Convenience
+    func reloadContent() {
+        self.reloadTableView()
+    }
+
     private func reloadTableView() {
         self.tableView.reloadData()
     }
@@ -148,7 +156,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.marketId = marketGroupOrganizer.marketId
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
 
             cell.didExpandCellAction = { [weak self] marketGroupOrganizerId in
                 self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -168,7 +176,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.marketId = marketGroupOrganizer.marketId
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
 
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
                 self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -188,7 +196,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
                 return UITableViewCell()
             }
             cell.marketId = marketGroupOrganizer.marketId
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
 
             cell.didExpandCellAction = {  [weak self] marketGroupOrganizerId in
                 self?.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -207,7 +215,7 @@ extension MarketGroupDetailsViewController: UITableViewDataSource, UITableViewDe
             else {
                 return UITableViewCell()
             }
-            // cell.match = self.viewModel.match
+            cell.match = self.viewModel.match
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
             return cell
         }

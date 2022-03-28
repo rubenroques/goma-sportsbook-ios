@@ -143,12 +143,12 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.errorView.isHidden = true
 
+        self.showFreeBetInfo = false
         self.showBonusInfo = false
 
         self.oddsBoostView.isHidden = true
 
         self.setupSubviews()
-
     }
 
     override func layoutSubviews() {
@@ -214,6 +214,9 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
         self.oldOddLabel.text = ""
         self.currentBoostedOddPercentage = 0
+
+        self.buttonsBaseView.isUserInteractionEnabled = true
+
     }
 
     func setupWithTheme() {
@@ -338,9 +341,22 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
             self.addAmountValue(previousBettingAmount)
         }
 
-        self.oddSubscriber = Env.everyMatrixStorage
-            .oddPublisherForBettingOfferId(bettingTicket.id)?
-            .map(\.oddsValue)
+        if let bettingOfferPublisher = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id),
+           let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
+
+            self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
+                .receive(on: DispatchQueue.main)
+                .eraseToAnyPublisher()
+                .map({ bettingOffer, market in
+                    return bettingOffer.isOpen && (market.isAvailable ?? true)
+                })
+                .sink(receiveValue: { [weak self] isBetAvailable in
+                    self?.suspendedBettingOfferView.isHidden = isBetAvailable
+                })
+        }
+
+        self.oddSubscriber = Env.betslipManager.bettingTicketPublisher(withId: bettingTicket.id)?
+            .map(\.value)
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] newOddValue in
@@ -368,19 +384,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
             })
         
-        if let bettingOfferPublisher = Env.everyMatrixStorage.oddPublisherForBettingOfferId(bettingTicket.id),
-           let marketPublisher = Env.everyMatrixStorage.marketsPublishers[bettingTicket.marketId] {
-            
-            self.oddAvailabilitySubscriber = Publishers.CombineLatest(bettingOfferPublisher, marketPublisher)
-                .receive(on: DispatchQueue.main)
-                .eraseToAnyPublisher()
-                .map({ bettingOffer, market in
-                    return (bettingOffer.isOpen, market.isAvailable ?? true)
-                })
-                .sink(receiveValue: { [weak self] bettingOfferIsAvailable, marketIsAvailable in
-                    self?.suspendedBettingOfferView.isHidden =  bettingOfferIsAvailable && marketIsAvailable
-                })
-        }
+
         
         if let errorBetting = errorBetting {
             self.errorLabel.text = errorBetting
@@ -621,7 +625,7 @@ extension SingleBettingTicketTableViewCell {
     private static func createOldOddLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "1.0"
+        label.text = ""
         label.font = AppFont.with(type: .bold, size: 11)
         return label
     }

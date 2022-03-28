@@ -51,7 +51,7 @@ class LoginViewController: UIViewController {
         self.title = "SplashViewController"
 
         commonInit()
-        setupWithTheme()
+        self.setupWithTheme()
 
         // Default value
         Env.userSessionStore.shouldRecordUserSession = true
@@ -68,7 +68,7 @@ class LoginViewController: UIViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     
@@ -137,6 +137,9 @@ class LoginViewController: UIViewController {
         registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
         registerLabel.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(didTapCreateAccount)))
 
+        self.dismissButton.setTitle(localized("close"), for: .normal)
+        self.dismissButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+
         checkPolicyLinks()
 
         if self.isModal {
@@ -161,7 +164,7 @@ class LoginViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
         skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         skipButton.backgroundColor = .clear
 
         loginLabel.textColor = UIColor.App.textHeadlinePrimary
@@ -174,6 +177,7 @@ class LoginViewController: UIViewController {
 
         rememberView.backgroundColor = .clear
         rememberLabel.textColor = UIColor.App.textPrimary
+
         if self.shouldRememberUser {
             rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
@@ -181,7 +185,7 @@ class LoginViewController: UIViewController {
             rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
 
-        forgotButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        forgotButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
@@ -192,6 +196,7 @@ class LoginViewController: UIViewController {
         loginButton.layer.cornerRadius = CornerRadius.button
         loginButton.layer.masksToBounds = true
 
+        registerLabel.highlightTextLabel(fullString: localized("new_create_account"), highlightString: localized("create_account"))
     }
 
     func checkPolicyLinks() {
@@ -379,4 +384,24 @@ extension LoginViewController {
         }
     }
 
+}
+
+extension UILabel {
+
+    func highlightTextLabel(fullString: String, highlightString: String) {
+        let accountText = fullString
+
+        self.text = accountText
+        self.font = AppFont.with(type: .semibold, size: 14.0)
+
+        self.textColor =  UIColor.App.textPrimary
+
+        let highlightAttriString = NSMutableAttributedString(string: accountText)
+        let range1 = (accountText as NSString).range(of: highlightString)
+        highlightAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .semibold, size: 14), range: range1)
+        highlightAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.highlightPrimary, range: range1)
+
+        self.attributedText = highlightAttriString
+        self.isUserInteractionEnabled = true
+    }
 }

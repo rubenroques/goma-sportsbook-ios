@@ -23,10 +23,13 @@ class MyFavoritesViewModel: NSObject {
     private var cancellables = Set<AnyCancellable>()
     var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
     var didSelectMatchAction: ((Match) -> Void)?
-
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
     var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
 
     var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
+
+    private var favoriteEventsIds: [String] = []
 
     enum FavoriteListType {
         case favoriteGames
@@ -75,11 +78,24 @@ class MyFavoritesViewModel: NSObject {
             self?.dataChangedPublisher.send()
         }
 
+        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
+        
+        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
+            self?.didTapFavoriteCompetitionAction?(competition)
+        }
+        
         self.setupPublishers()
 
     }
+
+    deinit {
+        self.unregisterEndpoints()
+    }
     
     func unregisterEndpoints() {
+
         if let favoriteMatchesRegister = self.favoriteMatchesRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
         }
@@ -93,6 +109,7 @@ class MyFavoritesViewModel: NSObject {
 
         self.favoriteCompetitionsMatchesPublisher?.cancel()
         self.favoriteCompetitionsMatchesPublisher = nil
+
     }
 
     func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
@@ -111,26 +128,45 @@ class MyFavoritesViewModel: NSObject {
         self.updateContentList()
     }
 
+    func markAsFavorite(match : Match){
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+        
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+        }
+    }
+    
+    func markCompetitionAsFavorite(competition: Competition){
+        
+        var isFavorite = false
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
+            isFavorite = true
+        }
+        
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
+        }
+   
+    }
+    
     private func setupPublishers() {
 
-        Publishers.CombineLatest(Env.favoritesManager.favoriteEventsIdPublisher, Env.favoritesManager.favoriteTypeCheckPublisher)
+        Env.favoritesManager.favoriteEventsIdPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] favoriteEvents, favoriteType in
-
+            .sink(receiveValue: { [weak self] favoriteEvents in
                 if UserSessionStore.isUserLogged() {
-                    if favoriteType == .none && self?.favoriteListTypePublisher.value == .favoriteGames {
-                        self?.fetchFavoriteMatches()
-                        self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
-                    }
-                    else if favoriteType == .match && self?.favoriteListTypePublisher.value == .favoriteGames {
-                        self?.fetchFavoriteMatches()
-                    }
-                    else if favoriteType == .match && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
-                        self?.fetchFavoriteMatches()
-                    }
-                    else if favoriteType == .competition && self?.favoriteListTypePublisher.value == .favoriteCompetitions {
-                        self?.fetchFavoriteCompetitionsMatchesWithIds(favoriteEvents)
-                    }
+                    self?.favoriteEventsIds = favoriteEvents
+                    self?.fetchFavoriteMatches()
+
                 }
                 else {
                     self?.dataChangedPublisher.send()
@@ -190,7 +226,14 @@ class MyFavoritesViewModel: NSObject {
 
         self.favoriteMatches = self.store.matchesForListType(.favoriteMatchEvents)
 
-        self.updateContentList()
+        if self.favoriteEventsIds.isNotEmpty {
+            self.fetchFavoriteCompetitionsMatchesWithIds(self.favoriteEventsIds)
+        }
+        else {
+            self.favoriteMatches = []
+            self.favoriteCompetitions = []
+            self.updateContentList()
+        }
     }
 
     private func updateFavoriteMatchesAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
@@ -301,25 +344,29 @@ class MyFavoritesViewModel: NSObject {
 
         self.myFavoriteCompetitionsDataSource.competitions = self.favoriteCompetitions
 
-        self.dataChangedPublisher.send()
-
         if UserSessionStore.isUserLogged() {
             if self.favoriteMatches.isEmpty && self.favoriteCompetitions.isEmpty {
                 self.emptyStateStatusPublisher.send(.noFavorites)
             }
-            else if self.favoriteMatches.isEmpty {
-                self.emptyStateStatusPublisher.send(.noGames)
-            }
-            else if self.favoriteCompetitions.isEmpty {
-                self.emptyStateStatusPublisher.send(.noCompetitions)
-            }
-            else {
+            else if self.favoriteMatches.isNotEmpty && self.favoriteCompetitions.isNotEmpty {
                 self.emptyStateStatusPublisher.send(.none)
             }
+            else {
+                if self.favoriteMatches.isEmpty {
+                    self.emptyStateStatusPublisher.send(.noGames)
+                }
+                else if self.favoriteCompetitions.isEmpty {
+                    self.emptyStateStatusPublisher.send(.noCompetitions)
+                }
+            }
+
         }
         else {
             self.emptyStateStatusPublisher.send(.noLogin)
         }
+
+        self.dataChangedPublisher.send()
+
     }
 }
 

@@ -84,7 +84,7 @@ class LiveEventsViewController: UIViewController {
     var cancellables = Set<AnyCancellable>()
 
     var viewModel: LiveEventsViewModel
-
+    
     var filterSelectedOption: Int = 0
     var selectedSport: Sport {
         didSet {
@@ -118,7 +118,7 @@ class LiveEventsViewController: UIViewController {
         self.viewModel.fetchData()
 
         self.viewModel.didSelectMatchAction = { match in
-            let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
@@ -135,12 +135,21 @@ class LiveEventsViewController: UIViewController {
         
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
+        
+        self.viewModel.didTapFavoriteMatchAction = { match in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
+            }
+        }
+        
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-
-        self.tableView.reloadData()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -187,7 +196,6 @@ class LiveEventsViewController: UIViewController {
         filtersButtonView.addGestureRecognizer(tapFilterGesture)
         filtersButtonView.isUserInteractionEnabled = true
         
-
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         flowLayout.scrollDirection = .horizontal
@@ -204,7 +212,6 @@ class LiveEventsViewController: UIViewController {
         filtersCountLabel.isHidden = true
         liveEventsCountView.isHidden = true
        
-
         refreshControl.tintColor = UIColor.lightGray
         refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         tableView.addSubview(self.refreshControl)
@@ -247,10 +254,11 @@ class LiveEventsViewController: UIViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
 
-        // TODO: Code Review - Este HomeFilterViewController com o nome (errado) homeFilterVC não está a ser
-        // utilizado em lado nenhum e é desalocado logo a seguir
-        let homeFilterVC = HomeFilterViewController(liveEventsViewModel: self.viewModel)
-        homeFilterVC.delegate = self
+    }
+    
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
     }
 
     func connectPublishers() {
@@ -383,14 +391,15 @@ class LiveEventsViewController: UIViewController {
         self.didTapBetslipButtonAction?()
     }
     
-    func setEmptyStateBaseView(firstLabelText : String, secondLabelText : String, isUserLoggedIn : Bool){
+    func setEmptyStateBaseView(firstLabelText: String, secondLabelText: String, isUserLoggedIn: Bool) {
     
         if isUserLoggedIn {
             self.emptyStateImage.image = UIImage(named: "no_content_icon")
             self.firstTextFieldEmptyStateLabel.text = firstLabelText
             self.secondTextFieldEmptyStateLabel.text = secondLabelText
             self.emptyStateButton.isHidden = isUserLoggedIn
-        }else{
+        }
+        else {
             self.emptyStateImage.image = UIImage(named: "no_internet_icon")
             self.firstTextFieldEmptyStateLabel.text = localized("empty_no_login")
             self.secondTextFieldEmptyStateLabel.text = localized("second_empty_no_login")
@@ -399,7 +408,6 @@ class LiveEventsViewController: UIViewController {
         }
         
     }
-
 
 }
 
@@ -414,6 +422,7 @@ extension LiveEventsViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
         return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
     }
 

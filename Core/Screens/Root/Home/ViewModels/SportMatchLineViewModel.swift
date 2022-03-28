@@ -116,7 +116,7 @@ extension SportMatchLineViewModel {
             return 0
         }
         else if self.isOutrightCompetitionLine() {
-            return 1
+            return 2
         }
         else if let lineMatchId = matchesIds[safe: lineIndex],
             self.store.matchWithId(id: lineMatchId) != nil {
@@ -173,7 +173,6 @@ extension SportMatchLineViewModel {
         return 0
     }
 
-
     func match(forLine lineIndex: Int = 0) -> Match? {
         if let lineMatchId = matchesIds[safe: lineIndex],
            let lineMatch = self.store.matchWithId(id: lineMatchId) {
@@ -188,7 +187,6 @@ extension SportMatchLineViewModel {
         }
         return nil
     }
-
 
     func isOutrightCompetitionLine() -> Bool {
         return outrightCompetitions.isNotEmpty
@@ -377,9 +375,17 @@ extension SportMatchLineViewModel {
 
         self.store.storeOutrightTournaments(aggregator)
 
-        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament in
-            Competition.init(id: rawTournament.id,
+        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament -> Competition in
+            var location: Location?
+            if let rawLocation = self.store.location(forId: rawTournament.venueId ?? "") {
+                location = Location(id: rawLocation.id,
+                                    name: rawLocation.name ?? "",
+                                    isoCode: rawLocation.code ?? "")
+            }
+
+            return Competition.init(id: rawTournament.id,
                              name: rawTournament.name ?? "",
+                             venue: location,
                              outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
         }
 

@@ -29,7 +29,7 @@ class LoadingMoreTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
-        self.activityIndicatorView.stopAnimating()
+        self.stopAnimating()
     }
 
     func setupWithTheme() {

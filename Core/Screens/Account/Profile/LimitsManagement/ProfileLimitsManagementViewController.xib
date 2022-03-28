@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -44,26 +44,29 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vdJ-he-o2z">
-                    <rect key="frame" x="0.0" y="44" width="414" height="56"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hhA-V0-VE1">
-                            <rect key="frame" x="59" y="17.5" width="296" height="21"/>
+                            <rect key="frame" x="59" y="11.5" width="296" height="21"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8eU-k9-fvt">
-                            <rect key="frame" x="360" y="13" width="46" height="30"/>
+                            <rect key="frame" x="360" y="0.0" width="46" height="44"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="44" id="Brr-gX-ZY1"/>
+                            </constraints>
                             <state key="normal" title="Button"/>
                             <connections>
                                 <action selector="editAction" destination="-1" eventType="touchUpInside" id="hI1-dh-kKO"/>
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nd4-8H-Igy">
-                            <rect key="frame" x="0.0" y="5" width="46" height="46"/>
+                            <rect key="frame" x="0.0" y="0.0" width="40" height="44"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="46" id="3K2-zq-RCa"/>
-                                <constraint firstAttribute="width" constant="46" id="ASK-re-rqx"/>
+                                <constraint firstAttribute="height" constant="44" id="3K2-zq-RCa"/>
+                                <constraint firstAttribute="width" constant="40" id="ASK-re-rqx"/>
                             </constraints>
                             <state key="normal" image="arrow_back_icon"/>
                             <connections>
@@ -73,7 +76,7 @@
                     </subviews>
                     <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="56" id="7Ye-hU-YBo"/>
+                        <constraint firstAttribute="height" constant="44" id="7Ye-hU-YBo"/>
                         <constraint firstAttribute="trailing" secondItem="8eU-k9-fvt" secondAttribute="trailing" constant="8" id="Jda-rc-S8M"/>
                         <constraint firstItem="Nd4-8H-Igy" firstAttribute="centerY" secondItem="vdJ-he-o2z" secondAttribute="centerY" id="NXU-bi-phI"/>
                         <constraint firstItem="Nd4-8H-Igy" firstAttribute="leading" secondItem="vdJ-he-o2z" secondAttribute="leading" id="ULW-Pb-2Yv"/>
@@ -84,7 +87,7 @@
                     </constraints>
                 </view>
                 <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3uj-Qe-j3L">
-                    <rect key="frame" x="0.0" y="130" width="414" height="862"/>
+                    <rect key="frame" x="0.0" y="118" width="414" height="874"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NOI-aO-DNs">
                             <rect key="frame" x="0.0" y="0.0" width="414" height="809"/>
@@ -307,7 +310,7 @@
         </view>
     </objects>
     <resources>
-        <image name="arrow_back_icon" width="14" height="23"/>
+        <image name="arrow_back_icon" width="12" height="21"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

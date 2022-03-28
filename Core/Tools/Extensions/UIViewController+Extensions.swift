@@ -18,8 +18,13 @@ extension UIViewController {
     }
 
     var isRootModal: Bool {
-        let presentingIsModal = presentingViewController != nil
-        return presentingIsModal
+        if let index = navigationController?.viewControllers.firstIndex(of: self), index > 0 {
+            return false
+        }
+        else {
+            let presentingIsModal = presentingViewController != nil
+            return presentingIsModal
+        }
     }
 
     func showAlert(type: EditAlertView.AlertState, errorText: String = "") {

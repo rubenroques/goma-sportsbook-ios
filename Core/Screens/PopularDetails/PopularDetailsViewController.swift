@@ -56,9 +56,13 @@ class PopularDetailsViewController: UIViewController {
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
         self.tableView.addSubview(self.refreshControl)
 
-        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+
         self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self,
+                                forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+
+        self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -192,8 +196,7 @@ class PopularDetailsViewController: UIViewController {
     }
 
     private func openMatchDetails(_ match: Match) {
-        let matchMode: MatchDetailsViewController.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(matchMode: matchMode, match: match)
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -247,22 +250,25 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
 
         case 1:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
-                    as? OutrightCompetitionLineTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                    as? OutrightCompetitionLargeLineTableViewCell,
                 let competition = self.viewModel.outrightCompetition(forRow: indexPath.row)
             else {
                 fatalError()
             }
-            cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+            cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
             cell.didSelectCompetitionAction = { [weak self] competition in
                 self?.openCompetitionDetails(competition)
             }
             return cell
-
+        case 2:
+            guard let cell = tableView.dequeueCellType(LoadingMoreTableViewCell.self) else {
+                fatalError()
+            }
+            return cell
         default:
             fatalError()
         }
-
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -270,7 +276,9 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
         case 0:
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
-            return 142
+            return 145 // outrightMarket lines
+        case 2:
+            return 80
         default:
             return .leastNonzeroMagnitude
         }
@@ -281,7 +289,9 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
         case 0:
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
-            return 142
+            return 145 // outrightMarket lines
+        case 2:
+            return 80
         default:
             return .leastNonzeroMagnitude
         }
@@ -302,6 +312,16 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
         return .leastNonzeroMagnitude
     }
+
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.section == 2, self.viewModel.shouldShowLoadingCell() {
+            if let typedCell = cell as? LoadingMoreTableViewCell {
+                typedCell.startAnimating()
+            }
+            self.viewModel.requestNextPage()
+        }
+    }
+
 }
 
 extension PopularDetailsViewController: UIGestureRecognizerDelegate {

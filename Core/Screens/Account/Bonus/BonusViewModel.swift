@@ -27,6 +27,8 @@ class BonusViewModel: NSObject {
     var isBonusApplicableLoading: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusClaimableLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
+    var bonusBanners: [String: UIImage] = [:]
+
     var requestBonusDetail: ((EveryMatrix.ApplicableBonus) -> Void)?
     var requestApplyBonus: ((EveryMatrix.ApplicableBonus) -> Void)?
 
@@ -102,6 +104,9 @@ class BonusViewModel: NSObject {
                     for bonus in bonusList {
                         let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
                         self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)
+                        if let url = URL(string: "https:\(bonus.assets)") {
+                            self?.getBonusBanner(url: url, bonusCode: bonus.code)
+                        }
 
                     }
                 }
@@ -134,6 +139,22 @@ class BonusViewModel: NSObject {
             self.isBonusAvailableEmptyPublisher.send(true)
         }
 
+    }
+
+    private func getBonusBanner(url: URL, bonusCode: String) {
+        print("Download Started")
+        self.getData(from: url) { data, response, error in
+            guard let data = data, error == nil else { return }
+            print(response?.suggestedFilename ?? url.lastPathComponent)
+            print("Download Finished")
+            self.bonusBanners[bonusCode] = UIImage(data: data)
+            self.bonusAvailableDataSource.bonusBanners = self.bonusBanners
+            self.shouldReloadData.send()
+        }
+    }
+
+    private func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
 
     private func getGrantedBonus() {

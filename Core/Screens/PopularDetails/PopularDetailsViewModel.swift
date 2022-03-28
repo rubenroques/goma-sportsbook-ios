@@ -40,7 +40,7 @@ class PopularDetailsViewModel {
         self.store = store
         self.sport = sport
 
-        self.titlePublisher = .init("\(self.sport.name) - Popular Matches")
+        self.titlePublisher = .init(self.sport.name)
 
         self.refresh()
     }
@@ -69,13 +69,17 @@ class PopularDetailsViewModel {
 
     }
 
+    func requestNextPage() {
+        self.fetchNextPage()
+    }
+
     private func resetPageCount() {
         self.matchesCount = 10
         self.matchesPage = 1
         self.matchesHasNextPage = true
     }
 
-    private func fetchPopularMatchesNextPage() {
+    private func fetchNextPage() {
         if !matchesHasNextPage {
             return
         }
@@ -183,6 +187,9 @@ class PopularDetailsViewModel {
 
         if matches.isNotEmpty {
             self.matches = matches
+
+            self.titlePublisher = .init("\(self.sport.name) - Popular Matches")
+            
             self.isLoading.send(false)
             self.refreshPublisher.send()
         }
@@ -198,9 +205,23 @@ class PopularDetailsViewModel {
     private func storeOutrightCompetitionsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         self.store.processOutrightTournamentsAggregator(aggregator)
 
-        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawTournament in
-            Competition.init(id: rawTournament.id, name: rawTournament.name ?? "", outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
+        let localOutrightCompetitions = self.store.outrightTournaments.values.map { rawCompetition -> Competition in
+
+            var location: Location?
+            if let rawLocation = self.store.location(forId: rawCompetition.venueId ?? "") {
+                location = Location(id: rawLocation.id,
+                                name: rawLocation.name ?? "",
+                                isoCode: rawLocation.code ?? "")
+            }
+
+            let competition = Competition(id: rawCompetition.id,
+                                               name: rawCompetition.name ?? "",
+                                               venue: location,
+                                               outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+            return competition
         }
+
+        self.titlePublisher.send("\(self.sport.name) - Markets")
 
         self.outrightCompetitions = localOutrightCompetitions
         self.isLoading.send(false)
@@ -232,8 +253,12 @@ extension PopularDetailsViewModel {
 
 extension PopularDetailsViewModel {
 
+    func shouldShowLoadingCell() -> Bool {
+        return self.matches.isNotEmpty && matchesHasNextPage
+    }
+
     func numberOfSection() -> Int {
-        return 2
+        return 3
     }
 
     func numberOfItems(forSection section: Int) -> Int {
@@ -242,6 +267,8 @@ extension PopularDetailsViewModel {
             return self.matches.count
         case 1:
             return self.outrightCompetitions?.count ?? 0
+        case 2:
+            return self.shouldShowLoadingCell() ? 1 : 0
         default:
             return 0
         }

@@ -84,6 +84,29 @@ class MyFavoritesViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
+        
+        self.viewModel.didTapFavoriteMatchAction = { match in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markAsFavorite(match: match)
+                self.tableView.reloadData()
+            }
+        }
+        
+       self.viewModel.didTapFavoriteCompetitionAction = { competition in
+            if !UserSessionStore.isUserLogged() {
+                self.presentLoginViewController()
+            }
+            else {
+                self.viewModel.markCompetitionAsFavorite(competition: competition)
+                self.tableView.reloadData()
+            }
+        }
+        
+        
+
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -163,6 +186,8 @@ class MyFavoritesViewController: UIViewController {
 
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
 
@@ -180,24 +205,13 @@ class MyFavoritesViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.didSelectMatchAction = { match in
-            if viewModel.store.hasMatchesInfoForMatch(withId: match.id) {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .live, match: match)
-                // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-                self.present(matchDetailsViewController, animated: true, completion: nil)
-            }
-            else {
-                let matchDetailsViewController = MatchDetailsViewController(matchMode: .preLive, match: match)
-                // self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-                self.present(matchDetailsViewController, animated: true, completion: nil)
-
-            }
-
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+            self.present(matchDetailsViewController, animated: true, completion: nil)
         }
 
         viewModel.emptyStateStatusPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] emptyStateType in
-
                 switch emptyStateType {
                 case .noLogin:
                     self?.setupEmptyStateView(emptyStateType: emptyStateType, hasLogin: true)
@@ -226,6 +240,7 @@ class MyFavoritesViewController: UIViewController {
                 }
             })
             .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -236,6 +251,11 @@ class MyFavoritesViewController: UIViewController {
         }
 
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+    
+    func presentLoginViewController() {
+      let loginViewController = Router.navigationController(with: LoginViewController())
+      self.present(loginViewController, animated: true, completion: nil)
     }
 
 }
@@ -357,16 +377,9 @@ extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate 
 //
 extension MyFavoritesViewController {
     @objc private func didTapBackButton() {
-        self.viewModel.unregisterEndpoints()
 
-        Env.favoritesManager.favoriteTypeCheckPublisher.value = .none
+        self.navigationController?.popViewController(animated: true)
 
-        if self.isModal {
-            self.dismiss(animated: true, completion: nil)
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
     }
 
     @objc func didTapBetslipView() {
@@ -584,12 +597,12 @@ extension MyFavoritesViewController {
             self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.topView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.topView.heightAnchor.constraint(equalToConstant: 70),
+            self.topView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 16),
+            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 0),
             self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.backButton.heightAnchor.constraint(equalToConstant: 20),
-            self.backButton.widthAnchor.constraint(equalToConstant: 15),
+            self.backButton.heightAnchor.constraint(equalToConstant: 44),
+            self.backButton.widthAnchor.constraint(equalToConstant: 40),
 
             self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 30),
             self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -30),

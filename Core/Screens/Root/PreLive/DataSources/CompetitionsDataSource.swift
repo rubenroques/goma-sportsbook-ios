@@ -19,7 +19,8 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
-
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
+    
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
 
     init(competitions: [Competition]) {
@@ -76,6 +77,9 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
+                }
                 return cell
             }
         }
@@ -91,6 +95,9 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             cell.shouldShowCountryFlag(false)
             cell.tappedMatchLineAction = {
                 self.didSelectMatchAction?(match)
+            }
+            cell.didTapFavoriteMatchAction = { [weak self] match in
+                self?.didTapFavoriteMatchAction?(match)
             }
             return cell
         }
@@ -152,7 +159,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         if let competition = competitions[safe: indexPath.section] {
             if competition.outrightMarkets > 0 && indexPath.row == 0 {
-                return 142
+                return 105
             }
             else {
                 return MatchWidgetCollectionViewCell.cellHeight + 20
@@ -168,7 +175,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
         if let competition = competitions[safe: indexPath.section] {
             if competition.outrightMarkets > 0 && indexPath.row == 0 {
-                return 142
+                return 105
             }
             else {
                 return MatchWidgetCollectionViewCell.cellHeight + 20
@@ -189,4 +196,3 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
 }
-

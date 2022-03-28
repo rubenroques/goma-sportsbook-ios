@@ -9,6 +9,7 @@ import UIKit
 
 class BetSubmissionSuccessViewController: UIViewController {
 
+    @IBOutlet private weak var navigationView: UIView!
     @IBOutlet private weak var backButton: UIButton!
     @IBOutlet private weak var topView: UIView!
     @IBOutlet private weak var checkmarkImageView: UIImageView!
@@ -29,10 +30,15 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var possibleEarningsLabel: UILabel!
     @IBOutlet private weak var betsMadeLabel: UILabel!
     
-    var totalOddsValue: String
-    var possibleEarningsValue: String
-    var numberOfBets: Int
-    private var betPlacedDetailsArray : [BetPlacedDetails]
+    @IBOutlet private weak var checkboxImage: UIImageView!
+    
+    @IBOutlet private weak var checkboxLabel: UILabel!
+
+    private var totalOddsValue: String
+    private var possibleEarningsValue: String
+    private var numberOfBets: Int
+    private var isChecked: Bool = false
+    private var betPlacedDetailsArray: [BetPlacedDetails]
 
     var willDismissAction: (() -> Void)?
 
@@ -51,25 +57,19 @@ class BetSubmissionSuccessViewController: UIViewController {
         possibleEarningsDouble = Double(floor(possibleEarningsDouble * 100)/100)
         self.possibleEarningsValue = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleEarningsDouble)) ?? "-.--€"
 
-        
-       
         //
         // Total Odd
         let totalOddDouble = betPlacedDetailsArray
             .map({ betPlacedDetails in
-                
                 betPlacedDetails.response.totalPriceValue ?? 1.0
             })
             .reduce(1.0, *)
-
-        // self.totalOddsValue = OddFormatter.formatOdd(withValue: totalOddDouble)
         self.totalOddsValue = OddConverter.stringForValue(totalOddDouble, format: UserDefaults.standard.userOddsFormat)
 
         //
         // Number Of Bets
         self.numberOfBets = betPlacedDetailsArray.count
 
-        //
          super.init(nibName: "BetSubmissionSuccessViewController", bundle: nil)
     }
 
@@ -89,9 +89,26 @@ class BetSubmissionSuccessViewController: UIViewController {
             if betType == "SYSTEM" {
                 self.totalOddsLabel.isHidden = true
                 self.totalOddsValueLabel.isHidden = true
-                
             }
         }
+
+        self.messageTitleLabel.font = AppFont.with(type: .bold, size: 32)
+        self.messageSubtitleLabel.font = AppFont.with(type: .semibold, size: 24)
+        self.betsMadeLabel.font = AppFont.with(type: .semibold, size: 16)
+        self.betsMadeValueLabel.font = AppFont.with(type: .bold, size: 23)
+        self.totalOddsValueLabel.font = AppFont.with(type: .bold, size: 23)
+        self.totalOddsLabel.font = AppFont.with(type: .semibold, size: 16)
+        self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
+        self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)
+
+        self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
+        StyleHelper.styleButton(button: self.continueButton)
+        self.checkboxLabel.text = localized("keep_bet_checkbox")
+        self.checkboxLabel.font = AppFont.with(type: .semibold, size: 14)
+
+        let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
+        checkboxImage.addGestureRecognizer(checkboxTap)
+
         self.setupWithTheme()
     }
 
@@ -108,18 +125,32 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.bottomView.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.safeAreaBottomView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+        
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
         self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
+        
         self.betsMadeLabel.textColor = UIColor.App.textPrimary
-        self.totalOddsLabel.textColor = UIColor.App.textPrimary
-        self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
         self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
+        
         self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
+        self.totalOddsLabel.textColor = UIColor.App.textPrimary
+        
         self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
-        StyleHelper.styleButton(button: self.continueButton)
+
+        self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
+       
+        self.checkboxLabel.backgroundColor = .clear
+        self.checkboxLabel.textColor = UIColor.App.textSecondary
     }
 
     @IBAction private func didTapContinueButton() {
+
+        if !isChecked {
+            Env.betslipManager.clearAllBettingTickets()
+        }
+        
         if self.isModal {
             self.willDismissAction?()
             self.dismiss(animated: true, completion: nil)
@@ -127,7 +158,22 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     @IBAction private func didTapBackButton() {
+
+        if !isChecked {
+            Env.betslipManager.clearAllBettingTickets()
+        }
+        
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction private func didTapCheckbox() {
+        if self.isChecked {
+            self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
+        }
+        else {
+            self.checkboxImage.image = UIImage(named: "checkbox_selected_icon")
+        }
+        self.isChecked = !isChecked
     }
 
 }

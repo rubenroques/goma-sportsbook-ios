@@ -168,8 +168,9 @@ class RootViewController: UIViewController {
             }
             .store(in: &cancellables)
 
-        // TODO: Code Review 14/02 - Remove this after the option is added to the correct place
-        self.testNewFavorites()
+        let debugTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapLogoImageView))
+        logoImageView.addGestureRecognizer(debugTapGesture)
+        logoImageView.isUserInteractionEnabled = true
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -178,10 +179,30 @@ class RootViewController: UIViewController {
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
             .map(\.amount)
-            .map({ CurrencyFormater.defaultFormat.string(from: NSNumber(value: $0)) ?? "-.--€"})
             .receive(on: DispatchQueue.main)
             .sink { [weak self] value in
-                self?.accountValueLabel.text = value
+                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+                    let accountValue = bonusWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+
+                }
+                else {
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBonusBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+                    let accountValue = currentWallet.amount + value
+
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                }
+
             }
             .store(in: &cancellables)
 
@@ -357,6 +378,11 @@ class RootViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    func openChatModal() {
+        let socialViewController = SocialViewController()
+        self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
+    }
+
     func reloadChildViewControllersData() {
         if preLiveViewControllerLoaded {
             self.preLiveViewController.reloadData()
@@ -370,18 +396,6 @@ class RootViewController: UIViewController {
     }
 
     //
-    func testNewFavorites() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(_:)))
-        self.topBarView.addGestureRecognizer(tap)
-    }
-
-    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        let favoritesVC = MyFavoritesViewController()
-        // self.present(favoritesVC, animated: true, completion: nil)
-        self.navigationController?.pushViewController(favoritesVC, animated: true)
-    }
-
-    //
     @IBAction private func didTapLogin() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
@@ -389,15 +403,14 @@ class RootViewController: UIViewController {
 
     @IBAction private func didTapSearchButton() {
         let searchViewController = SearchViewController()
-
-//        searchViewController.didSelectCompetitionAction = { [weak self] value in
-//            searchViewController.dismiss(animated: true, completion: nil)
-//            self?.preLiveViewController.selectedShortcutItem = 2
-//            self?.preLiveViewController.applyCompetitionsFiltersWithIds([value.id])
-//        }
-
         let navigationViewController = Router.navigationController(with: searchViewController)
         self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    @objc func didTapLogoImageView() {
+        let socialViewController = SocialViewController(viewModel: SocialViewModel())
+        self.present(Router.navigationController(with: socialViewController),
+                     animated: true, completion: nil)
     }
 }
 
@@ -438,6 +451,9 @@ extension RootViewController {
             self.addChildViewController(self.homeViewController, toView: self.homeBaseView)
             self.homeViewController.didTapBetslipButtonAction = { [weak self] in
                 self?.openBetslipModal()
+            }
+            self.homeViewController.didTapChatButtonAction = { [weak self] in
+                self?.openChatModal()
             }
             homeViewControllerLoaded = true
         }
@@ -483,7 +499,9 @@ extension RootViewController {
 
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
-        self.navigationController?.pushViewController(depositViewController, animated: true)
+        //self.navigationController?.pushViewController(depositViewController, animated: true)
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
     private func pushProfileViewController() {

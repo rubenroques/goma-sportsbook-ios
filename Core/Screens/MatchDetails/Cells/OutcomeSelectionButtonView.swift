@@ -228,14 +228,15 @@ class OutcomeSelectionButtonView: NibView {
             let outcomeDescription = outcome.translatedName
 
             bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                              outcomeId: outcome.id,
-                                              marketId: marketId,
-                                              matchId: match.id,
-                                              value: outcome.bettingOffer.value,
-                                              isAvailable: outcome.bettingOffer.isAvailable,
-                                              matchDescription: matchDescription,
-                                              marketDescription: marketDescription,
-                                              outcomeDescription: outcomeDescription)
+                                          outcomeId: outcome.id,
+                                          marketId: marketId,
+                                          matchId: match.id,
+                                          value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
+                                          statusId: "1",
+                                          matchDescription: matchDescription,
+                                          marketDescription: marketDescription,
+                                          outcomeDescription: outcomeDescription)
         }
         else {
             let marketName = outcome.marketName ?? ""
@@ -244,14 +245,15 @@ class OutcomeSelectionButtonView: NibView {
             let outcomeDescription = outcome.translatedName
 
             bettingTicket = BettingTicket(id: outcome.bettingOffer.id,
-                                              outcomeId: outcome.id,
-                                              marketId: marketId,
-                                              matchId: "",
-                                              value: outcome.bettingOffer.value,
-                                              isAvailable: outcome.bettingOffer.isAvailable,
-                                              matchDescription: matchDescription,
-                                              marketDescription: marketDescription,
-                                              outcomeDescription: outcomeDescription)
+                                          outcomeId: outcome.id,
+                                          marketId: marketId,
+                                          matchId: "",
+                                          value: outcome.bettingOffer.value,
+                                          isAvailable: outcome.bettingOffer.isAvailable,
+                                          statusId: "1",
+                                          matchDescription: matchDescription,
+                                          marketDescription: marketDescription,
+                                          outcomeDescription: outcomeDescription)
         }
 
         if Env.betslipManager.hasBettingTicket(bettingTicket) {

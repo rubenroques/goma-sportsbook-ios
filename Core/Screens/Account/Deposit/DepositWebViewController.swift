@@ -48,8 +48,8 @@ class DepositWebViewController: UIViewController {
         self.navigationLabel.text = localized("deposit")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
-        self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
-        self.navigationButton.contentMode = .scaleAspectFit
+        self.navigationButton.setTitle(localized("cancel"), for: .normal)
+        self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.setupWebView()
     }
@@ -77,15 +77,10 @@ class DepositWebViewController: UIViewController {
     }
 
     @IBAction private func didTapCloseButton() {
-//        if presentingViewController != nil {
-//            // foi presented porque tem um presentingViewController
-//            self.navigationController?.dismiss(animated: true, completion: nil)
-//        }
-//        else {
-//            // foi pushed
-//            self.navigationController?.popViewController(animated: true)
-//        }
-        self.navigationController?.popToRootViewController(animated: true)
+        //self.navigationController?.popToRootViewController(animated: true)
+        self.dismiss(animated: true, completion: {
+            self.presentingViewController?.dismiss(animated: true, completion: nil)
+        })
 
     }
 

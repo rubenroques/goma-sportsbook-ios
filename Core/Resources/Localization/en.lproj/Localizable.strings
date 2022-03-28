@@ -356,7 +356,8 @@ Terms of use, Privacy Policy and EULA";
 "second_half_time" = "Second half time";
 "full_time" = "Full time";
 "red_cards" = "Red cards";
-"betting_notifications" = "Betting notifications";
+"games_notifications" = "Games Notifications";
+"betting_notifications" = "Betting Notifications";
 "notify_bets_final_result" = "Notify me about my Bets final results";
 "notify_bets_options_results" = "Notify me about my Bets options results";
 
@@ -369,6 +370,8 @@ Terms of use, Privacy Policy and EULA";
 "available" = "Available";
 "no_bonus" = "No bonus here!";
 
+"bonus_applied_success" = "Bonus applied with success!";
+
 "expire_date" = "Expire Date";
 "start_date" = "Start Date";
 "add" = "Add";
@@ -376,6 +379,9 @@ Terms of use, Privacy Policy and EULA";
 "error_bonus_code" = "Your code couldn't be applied. Please contact our support.";
 "permanent" = "Permanent";
 "terms_conditions" = "Terms and conditions";
+
+"use_freebet" = "Use %s of freebet.";
+"use_boosted_odds" = "Use boosted odds %s";
 
 "deposit_limit" = "Deposit Limit";
 "betting_limit" = "Betting Limit";
@@ -393,3 +399,9 @@ Terms of use, Privacy Policy and EULA";
 "need_login_favorites" = "You need to be logged in to see your favorites.";
 
 "my_favorites" = "My Favorites";
+
+"keep_bet_checkbox" = "Keep this bet on betslip";
+
+"available_balance" = "Available balance";
+"my_account" = "My Account";
+"total" = "Total";

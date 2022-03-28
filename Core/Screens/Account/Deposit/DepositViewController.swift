@@ -75,8 +75,8 @@ class DepositViewController: UIViewController {
         self.navigationLabel.text = localized("deposit")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
-        self.navigationButton.setImage(UIImage(named: "thin_close_cross_icon"), for: .normal)
-        self.navigationButton.contentMode = .scaleAspectFit
+        self.navigationButton.setTitle(localized("cancel"), for: .normal)
+        self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.titleLabel.text = localized("how_much_deposit")
         self.titleLabel.font = AppFont.with(type: .bold, size: 20)
@@ -126,7 +126,7 @@ class DepositViewController: UIViewController {
         self.navigationLabel.textColor = UIColor.App.textPrimary
 
         self.navigationButton.backgroundColor = .clear
-        self.navigationButton.tintColor = UIColor.App.textPrimary
+        self.navigationButton.tintColor = UIColor.App.highlightPrimary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -476,13 +476,11 @@ class DepositViewController: UIViewController {
 
     @IBAction private func didTapCloseButton() {
         if presentingViewController != nil {
-                  // foi presented porque tem um presentingViewController
-                self.navigationController?.dismiss(animated: true, completion: nil)
-              }
-              else {
-                  // foi pushed
-                  self.navigationController?.popViewController(animated: true)
-              }
+            self.navigationController?.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
         
     }
 

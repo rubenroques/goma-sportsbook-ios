@@ -91,6 +91,7 @@ class PreLiveEventsViewModel: NSObject {
     }
 
     var didSelectMatchAction: ((Match) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
 
     private var cancellables = Set<AnyCancellable>()
@@ -128,7 +129,7 @@ class PreLiveEventsViewModel: NSObject {
         }
     }
     
-    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isUserLoggedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
 
     init(selectedSport: Sport) {
         self.selectedSport = selectedSport
@@ -159,6 +160,7 @@ class PreLiveEventsViewModel: NSObject {
         self.competitionsDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
         }
+       
 
         // NextPage
         //
@@ -175,6 +177,7 @@ class PreLiveEventsViewModel: NSObject {
         self.todayMatchesDataSource.requestNextPageAction = { [weak self] in
             self?.fetchTodayMatchesNextPage()
         }
+        
 
         // Did Select a Match
         //
@@ -193,6 +196,18 @@ class PreLiveEventsViewModel: NSObject {
         }
         self.competitionsDataSource.didSelectCompetitionAction = { [weak self] competition in
             self?.didSelectCompetitionAction?(competition)
+        }
+        
+        //Did select fav match
+        //
+        self.competitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
+        self.todayMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
+        }
+        self.popularMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            self?.didTapFavoriteMatchAction?(match)
         }
 
         self.setupPublishers()
@@ -244,7 +259,22 @@ class PreLiveEventsViewModel: NSObject {
             }
 
     }
-
+    
+    func markAsFavorite(match: Match) {
+        
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+        }
+       
+    }
+    
     func setMatchListType(_ matchListType: MatchListType) {
         self.matchListTypePublisher.send(matchListType)
         self.updateContentList()
@@ -308,6 +338,10 @@ class PreLiveEventsViewModel: NSObject {
             return viewModel
         }
     }
+    
+  
+    
+    
 
     //
     // MARK: - Filters
@@ -804,8 +838,20 @@ class PreLiveEventsViewModel: NSObject {
     private func setupPopularTournamentsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processOutrightTournamentsAggregator(aggregator)
 
-        let localOutrightCompetitions = Env.everyMatrixStorage.outrightTournaments.values.map { rawTournament in
-            Competition.init(id: rawTournament.id, name: rawTournament.name ?? "", outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
+        let localOutrightCompetitions = Env.everyMatrixStorage.outrightTournaments.values.map { rawCompetition -> Competition in
+
+            var location: Location?
+            if let rawLocation = Env.everyMatrixStorage.location(forId: rawCompetition.venueId ?? "") {
+                location = Location(id: rawLocation.id,
+                                name: rawLocation.name ?? "",
+                                isoCode: rawLocation.code ?? "")
+            }
+
+            let competition = Competition(id: rawCompetition.id,
+                                               name: rawCompetition.name ?? "",
+                                               venue: location,
+                                               outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+            return competition
         }
 
         self.outrightCompetitions = localOutrightCompetitions
