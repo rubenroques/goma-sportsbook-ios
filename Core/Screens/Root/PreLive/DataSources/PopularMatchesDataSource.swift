@@ -145,10 +145,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 132 // Banner
+            return 145 // Banner
         case 1:
-            return 145
-        case 3:
+            return UITableView.automaticDimension
+        case 2:
             return 70 // Loading cell
         default:
             return UITableView.automaticDimension
@@ -158,10 +158,10 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 140 // Banner
+            return 145 // Banner
         case 1:
-            return 145
-        case 3:
+            return MatchWidgetCollectionViewCell.cellHeight + 20
+        case 2:
             return 70 // Loading cell
         default:
             return MatchWidgetCollectionViewCell.cellHeight + 20

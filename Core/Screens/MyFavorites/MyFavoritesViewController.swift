@@ -104,9 +104,6 @@ class MyFavoritesViewController: UIViewController {
                 self.tableView.reloadData()
             }
         }
-        
-        
-
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -206,7 +203,8 @@ class MyFavoritesViewController: UIViewController {
 
         viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
-            self.present(matchDetailsViewController, animated: true, completion: nil)
+            //self.present(matchDetailsViewController, animated: true, completion: nil)
+            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
 
         viewModel.emptyStateStatusPublisher

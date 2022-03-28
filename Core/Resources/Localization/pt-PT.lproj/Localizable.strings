@@ -405,3 +405,7 @@ Terms of use, Privacy Policy and EULA";
 "available_balance" = "Available balance";
 "my_account" = "My Account";
 "total" = "Total";
+
+"quit" = "Quit";
+"quit_register" = "Quit Register";
+"quit_register_message" = "Do you want to quit your initial register? All changes will be lost.";
