@@ -19,21 +19,22 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var depositView: UIView!
     @IBOutlet private var depositLabel: UILabel!
     @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var depositFrequencySelectTextFieldView: SelectTextFieldView!
+    @IBOutlet private var depositFrequencySelectTextFieldView: DropDownSelectionView!
     @IBOutlet private var depositLineView: UIView!
     @IBOutlet private var bettingView: UIView!
     @IBOutlet private var bettingLabel: UILabel!
     @IBOutlet private var bettingHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var bettingFrequencySelectTextFieldView: SelectTextFieldView!
+    @IBOutlet private var bettingFrequencySelectTextFieldView: DropDownSelectionView!
     @IBOutlet private var bettingLineView: UIView!
     @IBOutlet private var lossView: UIView!
     @IBOutlet private var lossLabel: UILabel!
     @IBOutlet private var lossHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var lossFrequencySelectHeaderTextFieldView: SelectTextFieldView!
+    @IBOutlet private var lossFrequencySelectHeaderTextFieldView: DropDownSelectionView!
     @IBOutlet private var lossLineView: UIView!
     @IBOutlet private var exclusionView: UIView!
     @IBOutlet private var exclusionLabel: UILabel!
-    @IBOutlet private var exclusionSelectTextFieldView: SelectTextFieldView!
+    @IBOutlet private var exclusionSelectTextFieldView: DropDownSelectionView!
+
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
@@ -176,6 +177,26 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         exclusionLabel.textColor = UIColor.App.textPrimary
 
+        depositFrequencySelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        depositFrequencySelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        depositFrequencySelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        depositFrequencySelectTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+
+        bettingFrequencySelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        bettingFrequencySelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        bettingFrequencySelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        bettingFrequencySelectTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+
+        lossFrequencySelectHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        lossFrequencySelectHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        lossFrequencySelectHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        lossFrequencySelectHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+
+        exclusionSelectTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        exclusionSelectTextFieldView.setTextFieldColor(UIColor.App.inputText)
+        exclusionSelectTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
+        exclusionSelectTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
+
     }
 
     func commonInit() {
@@ -187,6 +208,8 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         editButton.underlineButtonTitleLabel(title: localized("save"))
 
+        //
+        //
         depositLabel.text = localized("deposit_limit")
         depositLabel.font = AppFont.with(type: .semibold, size: 17)
 
@@ -201,14 +224,15 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         }
         depositHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
-            if let period = self?.depositFrequencySelectTextFieldView.getPickerOption() {
+            if let period = self?.depositFrequencySelectTextFieldView.text {
                 self?.showRemoveAlert(limitType: LimitType.deposit.identifier, period: period)
             }
-
         }
 
         depositFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
+        //
+        //
         bettingLabel.text = localized("betting_limit")
         bettingLabel.font = AppFont.with(type: .semibold, size: 17)
 
@@ -223,14 +247,15 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
 
         bettingHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
-            if let period = self?.bettingFrequencySelectTextFieldView.getPickerOption() {
+            if let period = self?.bettingFrequencySelectTextFieldView.text {
                 self?.showRemoveAlert(limitType: LimitType.wagering.identifier, period: period)
             }
 
         }
-
         bettingFrequencySelectTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
+        //
+        //
         lossLabel.text = localized("loss_limit")
         lossLabel.font = AppFont.with(type: .semibold, size: 17)
 
@@ -245,22 +270,18 @@ class ProfileLimitsManagementViewController: UIViewController {
         }
 
         lossHeaderTextFieldView.didTapRemoveIcon = { [weak self] in
-            if let period = self?.lossFrequencySelectHeaderTextFieldView.getPickerOption() {
+            if let period = self?.lossFrequencySelectHeaderTextFieldView.text {
                 self?.showRemoveAlert(limitType: LimitType.loss.identifier, period: period)
             }
-
         }
-
         lossFrequencySelectHeaderTextFieldView.setSelectionPicker([localized("daily"), localized("weekly"), localized("monthly")])
 
+        //
+        //
         exclusionLabel.text = localized("auto_exclusion")
         exclusionLabel.font = AppFont.with(type: .semibold, size: 17)
 
-        exclusionSelectTextFieldView.isIconArray = true
-        exclusionSelectTextFieldView.setSelectionPicker([localized("active"), localized("limited"), localized("permanent")],
-                                                        iconArray: [UIImage(named: "icon_active")!,
-                                                                    UIImage(named: "icon_limited")!,
-                                                                    UIImage(named: "icon_excluded")!])
+        exclusionSelectTextFieldView.setSelectionPicker([localized("active"), localized("limited"), localized("permanent")])
         exclusionSelectTextFieldView.isDisabled = true
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
@@ -337,7 +358,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
 
             if let limitPeriod = depositLimit.current?.period {
-                self.depositFrequencySelectTextFieldView.setDefaultPickerOption(option: limitPeriod, lowerCasedString: true)
+                self.depositFrequencySelectTextFieldView.setText(limitPeriod.lowercased())
             }
 
             if depositLimit.updatable {
@@ -357,7 +378,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
 
             if let wageringPeriod = wageringLimit.current?.period {
-                self.bettingFrequencySelectTextFieldView.setDefaultPickerOption(option: wageringPeriod, lowerCasedString: true)
+                self.bettingFrequencySelectTextFieldView.setText(wageringPeriod.lowercased())
             }
 
             if wageringLimit.updatable {
@@ -376,7 +397,7 @@ class ProfileLimitsManagementViewController: UIViewController {
             }
 
             if let lossPeriod = lossLimit.current?.period {
-                self.lossFrequencySelectHeaderTextFieldView.setDefaultPickerOption(option: lossPeriod, lowerCasedString: true)
+                self.lossFrequencySelectHeaderTextFieldView.setText(lossPeriod.lowercased())
             }
 
             if lossLimit.updatable {
@@ -443,7 +464,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         let acceptedInputs = Set("0123456789.,")
 
         if self.viewModel.canUpdateDeposit {
-            let period = self.depositFrequencySelectTextFieldView.getPickerOption()
+            let period = self.depositFrequencySelectTextFieldView.text
             let amountString = self.depositHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
@@ -454,7 +475,7 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         }
         else if self.viewModel.canUpdateWagering {
-            let period = self.bettingFrequencySelectTextFieldView.getPickerOption()
+            let period = self.bettingFrequencySelectTextFieldView.text
             let amountString = self.bettingHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
@@ -465,7 +486,7 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         }
         else if self.viewModel.canUpdateLoss {
-            let period = self.lossFrequencySelectHeaderTextFieldView.getPickerOption()
+            let period = self.lossFrequencySelectHeaderTextFieldView.text
             let amountString = self.lossHeaderTextFieldView.text
             let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
@@ -493,17 +514,17 @@ class ProfileLimitsManagementViewController: UIViewController {
 
         self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.deposit.identifier.lowercased(),
                                                  limitAmount: self.depositHeaderTextFieldView.text,
-                                                 limitPeriod: self.depositFrequencySelectTextFieldView.getPickerOption(),
+                                                 limitPeriod: self.depositFrequencySelectTextFieldView.text,
                                                  isLimitUpdatable: isDepositUpdatable)
 
         self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.wagering.identifier.lowercased(),
                                                  limitAmount: self.bettingHeaderTextFieldView.text,
-                                                 limitPeriod: self.bettingFrequencySelectTextFieldView.getPickerOption(),
+                                                 limitPeriod: self.bettingFrequencySelectTextFieldView.text,
                                                  isLimitUpdatable: isWageringUpdatable)
 
         self.viewModel.checkLimitUpdatableStatus(limitType: LimitType.loss.identifier.lowercased(),
                                                  limitAmount: self.lossHeaderTextFieldView.text,
-                                                 limitPeriod: self.lossFrequencySelectHeaderTextFieldView.getPickerOption(),
+                                                 limitPeriod: self.lossFrequencySelectHeaderTextFieldView.text,
                                                  isLimitUpdatable: isLossUpdatable)
 
         self.saveLimitsOptions()

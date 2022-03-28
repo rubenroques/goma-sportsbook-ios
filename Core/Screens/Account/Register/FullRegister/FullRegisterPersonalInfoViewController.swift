@@ -14,12 +14,10 @@ class FullRegisterPersonalInfoViewController: UIViewController {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var titleLabel: UILabel!
     @IBOutlet private var scrollView: UIScrollView!
-    
-    @IBOutlet private weak var titleHeaderTextFieldView: DropDownSelectionView!
- 
+    @IBOutlet private var titleHeaderTextFieldView: HeaderDropDownSelectionView!
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var countryHeaderTextFieldView: DropDownSelectionView!
+    @IBOutlet private var countryHeaderTextFieldView: HeaderDropDownSelectionView!
     @IBOutlet private var address1HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var address2HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var cityStackView: UIStackView!

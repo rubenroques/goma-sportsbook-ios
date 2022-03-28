@@ -87,6 +87,7 @@ class CompetitionDetailsViewController: UIViewController {
 
         self.tableView.backgroundColor = .clear
 
+        self.betslipCountLabel.textColor = UIColor.App.textPrimary
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
 

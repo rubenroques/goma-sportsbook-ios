@@ -102,7 +102,7 @@
                                             <rect key="frame" x="350" y="29" width="20" height="20"/>
                                             <color key="color" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </activityIndicatorView>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujG-ac-Ti5" customClass="DropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ujG-ac-Ti5" customClass="HeaderDropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="96" width="382" height="80"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <accessibility key="accessibilityConfiguration">
