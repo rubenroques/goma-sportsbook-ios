@@ -14,6 +14,7 @@ class HomeViewController: UIViewController {
     var didTapBetslipButtonAction: (() -> Void)?
     var didTapChatButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
+    var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
 
     // MARK: - Private Properties
     // Sub Views
@@ -57,6 +58,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
+        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
 
         self.loadingBaseView.isHidden = true
 
@@ -69,6 +71,17 @@ class HomeViewController: UIViewController {
         self.chatButtonView.addGestureRecognizer(tapChatView)
 
         self.bind(toViewModel: self.viewModel)
+
+        self.didSelectActivationAlertAction = { alertType in
+            if alertType == ActivationAlertType.email {
+                let emailVerificationViewController = EmailVerificationViewController()
+                self.present(emailVerificationViewController, animated: true, completion: nil)
+            }
+            else if alertType == ActivationAlertType.profile {
+                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
+                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
+            }
+        }
 
         self.showLoading()
 
@@ -373,7 +386,21 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openCompetitionDetails(competitionId: competition.id, sport: sport)
                 }
                 return cell
+
             }
+
+        case .userProfile:
+            guard let cell = tableView.dequeueCellType(ActivationAlertScrollableTableViewCell.self)
+            else {
+                fatalError()
+            }
+            cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
+                self.didSelectActivationAlertAction?(alertType)
+            }
+            cell.setAlertArrayData(arrayData: self.viewModel.alertsArray)
+
+            return cell
+
         }
     }
 
@@ -414,6 +441,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .competition: return 200
                 }
             }
+        case .userProfile:
+            return 140
         }
 
     }
@@ -455,6 +484,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .competition: return 200
                 }
             }
+        case .userProfile:
+            return 140
         }
     }
 
@@ -569,6 +600,8 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
                 _ = self.viewModel.getSuggestedBetLineViewModel()
             case .sport:
                 _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
+            case .userProfile:
+                ()
             }
         }
     }

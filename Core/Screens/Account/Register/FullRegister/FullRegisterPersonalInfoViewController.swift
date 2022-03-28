@@ -283,7 +283,7 @@ class FullRegisterPersonalInfoViewController: UIViewController {
         let address2Text = address2HeaderTextFieldView.text
         let cityText = cityHeaderTextFieldView.text
         let postalCodeText = postalCodeHeaderTextFieldView.text
-        fullRegisterUserInfo = FullRegisterUserInfo(title: "titleText",
+        fullRegisterUserInfo = FullRegisterUserInfo(title: titleText,
             firstName: firstNameText,
             lastName: lastNameText,
             country: countryText,

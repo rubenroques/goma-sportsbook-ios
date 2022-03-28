@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetPresenter {
 
@@ -20,6 +21,7 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
     @IBOutlet private var checkEmailButton: RoundButton!
     // Variables
     var chooseEmailActionSheet: UIAlertController?
+    private var cancellables = Set<AnyCancellable>()
 
     init() {
         super.init(nibName: "EmailVerificationViewController", bundle: nil)
@@ -86,7 +88,15 @@ class EmailVerificationViewController: UIViewController, ChooseEmailActionSheetP
     }
 
     @IBAction private func closeAction() {
-        self.dismiss(animated: true, completion: nil)
+        Env.everyMatrixClient.getSessionInfo()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] _ in
+                self?.dismiss(animated: true, completion: nil)
+            }, receiveValue: { userSession in
+                Env.userSessionStore.isUserEmailVerified.send(userSession.isEmailVerified)
+            })
+            .store(in: &cancellables)
+
     }
     @IBAction private func activateAccountAction() {
         chooseEmailActionSheet = setupChooseEmailActionSheet()

@@ -90,7 +90,6 @@ class PreLiveEventsViewModel: NSObject {
         }
     }
 
-    var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
@@ -150,12 +149,6 @@ class PreLiveEventsViewModel: NSObject {
             .eraseToAnyPublisher()
 
         super.init()
-
-        // ActivationAlertAction
-        //
-        self.popularMatchesDataSource.didSelectActivationAlertAction = { [weak self] alertType in
-            self?.didSelectActivationAlertAction?(alertType)
-        }
 
         // Match Stats ViewModel for Match
         self.popularMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
@@ -222,10 +215,11 @@ class PreLiveEventsViewModel: NSObject {
 
     func setupPublishers() {
 
-        Env.userSessionStore.isUserProfileIncomplete
+        Env.userSessionStore.userSessionPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { _ in
-                self.popularMatchesDataSource.refetchAlerts()
+            .map({ $0 != nil })
+            .sink(receiveValue: { [weak self] isUserLoggedIn in
+                self?.isUserLoggedPublisher.send(isUserLoggedIn)
             })
             .store(in: &cancellables)
 
