@@ -9,7 +9,8 @@ import UIKit
 
 class BonusDetailViewController: UIViewController {
     // MARK: Private Properties
-    private lazy var topView: UIView = Self.createTopView()
+    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    private lazy var navigationView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var containerView: UIView = Self.createContainerView()
@@ -17,11 +18,29 @@ class BonusDetailViewController: UIViewController {
     private lazy var descriptionLabel: UILabel = Self.createDescriptionLabel()
     private lazy var termsTitleLabel: UILabel = Self.createTermsTitleLabel()
     private lazy var termsLinkLabel: UILabel = Self.createTermsLinkLabel()
+    private lazy var bonusImageView: UIImageView = Self.createBonusImageView()
+    private lazy var bonusImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createbonusImageViewFixedHeightConstraint()
+    private lazy var bonusImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createbonusImageViewDynamicHeightConstraint()
+    private lazy var bonusStackView: UIStackView = Self.createBonusStackView()
     private var bonus: EveryMatrix.ApplicableBonus
+    private var bonusBanner: UIImage?
+    private var aspectRatio: CGFloat = 1.0
+
+    private var hasBonusImage: Bool = false {
+        didSet {
+            if hasBonusImage {
+                self.bonusImageView.isHidden = false
+            }
+            else {
+                self.bonusImageView.isHidden = true
+            }
+        }
+    }
 
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.ApplicableBonus) {
+    init(bonus: EveryMatrix.ApplicableBonus, bonusBanner: UIImage? = nil) {
         self.bonus = bonus
+        self.bonusBanner = bonusBanner
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -56,7 +75,9 @@ class BonusDetailViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
@@ -74,7 +95,34 @@ class BonusDetailViewController: UIViewController {
 
         self.termsTitleLabel.text = localized("terms_conditions")
 
-        self.termsLinkLabel.text = "https://sportsbook.gomagaming.com/terms/bonus"
+        self.termsLinkLabel.text = self.bonus.url
+
+        if let bonusBanner = self.bonusBanner {
+            self.bonusImageView.image = bonusBanner
+            self.resizeBonusImageView(bonusBanner: bonusBanner)
+            self.hasBonusImage = true
+        }
+        else {
+            self.hasBonusImage = false
+        }
+
+    }
+
+    private func resizeBonusImageView(bonusBanner: UIImage) {
+        self.aspectRatio = bonusBanner.size.width/bonusBanner.size.height
+
+        self.bonusImageViewFixedHeightConstraint.isActive = false
+
+        self.bonusImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.bonusImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.bonusImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+
+        self.bonusImageViewDynamicHeightConstraint.isActive = true
     }
 
 }
@@ -99,6 +147,12 @@ extension BonusDetailViewController {
 // MARK: Subviews initialization and setup
 //
 extension BonusDetailViewController {
+
+    private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
     private static func createTopView() -> UIView {
         let view = UIView()
@@ -169,15 +223,49 @@ extension BonusDetailViewController {
         return label
     }
 
-    private func setupSubviews() {
-        self.view.addSubview(self.topView)
+    private static func createBonusImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFill
+        imageView.image = UIImage(named: "logo_horizontal_large")
+        imageView.isHidden = true
+        return imageView
+    }
 
-        self.topView.addSubview(self.backButton)
-        self.topView.addSubview(self.topTitleLabel)
+    private static func createBonusStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .equalSpacing
+        stackView.axis = .vertical
+        stackView.spacing = 16
+        return stackView
+    }
+
+    private static func createbonusImageViewFixedHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createbonusImageViewDynamicHeightConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private func setupSubviews() {
+        self.view.addSubview(self.topSafeAreaView)
+
+        self.view.addSubview(self.navigationView)
+
+        self.navigationView.addSubview(self.backButton)
+        self.navigationView.addSubview(self.topTitleLabel)
 
         self.view.addSubview(self.containerView)
 
-        self.containerView.addSubview(self.titleLabel)
+        self.containerView.addSubview(self.bonusStackView)
+
+        self.bonusStackView.addArrangedSubview(self.bonusImageView)
+        self.bonusStackView.addArrangedSubview(self.titleLabel)
+
         self.containerView.addSubview(self.descriptionLabel)
         self.containerView.addSubview(self.termsTitleLabel)
         self.containerView.addSubview(self.termsLinkLabel)
@@ -187,21 +275,29 @@ extension BonusDetailViewController {
 
     private func initConstraints() {
 
-        // Top bar
+        // Top safe area view
         NSLayoutConstraint.activate([
-            self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topView.heightAnchor.constraint(equalToConstant: 70),
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
+        ])
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 30),
-            self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
-            self.backButton.heightAnchor.constraint(equalToConstant: 20),
-            self.backButton.widthAnchor.constraint(equalToConstant: 15),
+        // Navigation view
+        NSLayoutConstraint.activate([
+            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 40),
-            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -40),
-            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor)
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor),
+            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.backButton.heightAnchor.constraint(equalToConstant: 44),
+            self.backButton.widthAnchor.constraint(equalToConstant: 40),
+
+            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 40),
+            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -40),
+            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor)
 
         ])
 
@@ -209,16 +305,24 @@ extension BonusDetailViewController {
         NSLayoutConstraint.activate([
             self.containerView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.containerView.topAnchor.constraint(equalTo: self.topView.bottomAnchor),
+            self.containerView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.titleLabel.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 30),
+            self.bonusStackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
+            self.bonusStackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
+            self.bonusStackView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
+
+//            self.bonusImageView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
+//            self.bonusImageView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
+//            self.bonusImageView.topAnchor.constraint(equalTo: self.containerView.topAnchor, constant: 8),
+//
+//            self.titleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
+//            self.titleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
+//            self.titleLabel.topAnchor.constraint(equalTo: self.bonusImageView.bottomAnchor, constant: 15),
 
             self.descriptionLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
             self.descriptionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
-            self.descriptionLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 20),
+            self.descriptionLabel.topAnchor.constraint(equalTo: self.bonusStackView.bottomAnchor, constant: 20),
 
             self.termsTitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 35),
             self.termsTitleLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
@@ -228,6 +332,26 @@ extension BonusDetailViewController {
             self.termsLinkLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -35),
             self.termsLinkLabel.topAnchor.constraint(equalTo: self.termsTitleLabel.bottomAnchor, constant: 20),
         ])
+
+        self.bonusImageViewFixedHeightConstraint =
+        NSLayoutConstraint(item: self.bonusImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: nil,
+                           attribute: .notAnAttribute,
+                           multiplier: 1,
+                           constant: 150)
+        self.bonusImageViewFixedHeightConstraint.isActive = true
+
+        self.bonusImageViewDynamicHeightConstraint =
+        NSLayoutConstraint(item: self.bonusImageView,
+                           attribute: .height,
+                           relatedBy: .equal,
+                           toItem: self.bonusImageView,
+                           attribute: .width,
+                           multiplier: 1/self.aspectRatio,
+                           constant: 0)
+        self.bonusImageViewDynamicHeightConstraint.isActive = false
     }
 
 }

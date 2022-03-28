@@ -93,7 +93,6 @@ class BonusViewModel: NSObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    // print("APPLICABLE BONUS ERROR: \(error)")
                     ()
                 case .finished:
                     ()
@@ -102,6 +101,7 @@ class BonusViewModel: NSObject {
             }, receiveValue: { [weak self] bonusResponse in
                 if let bonusList = bonusResponse.bonuses {
                     for bonus in bonusList {
+
                         let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
                         self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)
                         if let url = URL(string: "https:\(bonus.assets)") {
@@ -120,17 +120,21 @@ class BonusViewModel: NSObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    // print("CLAIMABLE BONUS ERROR: \(error)")
                     ()
                 case .finished:
                     ()
-                    self.isBonusClaimableLoading.send(false)
                 }
+                self.isBonusClaimableLoading.send(false)
             }, receiveValue: { [weak self] bonusResponse in
                 for bonus in bonusResponse.locallyInjectedKey {
                     let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .claimable)
+                    
                     self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)
+                    if let url = URL(string: "https:\(bonus.assets)") {
+                        self?.getBonusBanner(url: url, bonusCode: bonus.code)
                     }
+
+                }
 
             })
             .store(in: &cancellables)
@@ -142,18 +146,16 @@ class BonusViewModel: NSObject {
     }
 
     private func getBonusBanner(url: URL, bonusCode: String) {
-        print("Download Started")
         self.getData(from: url) { data, response, error in
             guard let data = data, error == nil else { return }
-            print(response?.suggestedFilename ?? url.lastPathComponent)
-            print("Download Finished")
+
             self.bonusBanners[bonusCode] = UIImage(data: data)
             self.bonusAvailableDataSource.bonusBanners = self.bonusBanners
             self.shouldReloadData.send()
         }
     }
 
-    private func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+    private func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
 
@@ -164,7 +166,7 @@ class BonusViewModel: NSObject {
             .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure(let error):
-                    print("GRANTED BONUS ERROR: \(error)")
+                    ()
                 case .finished:
                     ()                }
             }, receiveValue: { [weak self] bonusResponse in

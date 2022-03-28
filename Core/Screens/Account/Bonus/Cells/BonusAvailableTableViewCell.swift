@@ -22,6 +22,8 @@ class BonusAvailableTableViewCell: UITableViewCell {
     private lazy var bannerImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createbannerImageViewFixedHeightConstraint()
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createbannerImageViewDynamicHeightConstraint()
 
+    private var aspectRatio: CGFloat = 1.0
+
     // MARK: Public Properties
     var hasBannerImage: Bool = false {
         didSet {
@@ -45,8 +47,6 @@ class BonusAvailableTableViewCell: UITableViewCell {
         }
     }
 
-    var aspectRatio: CGFloat = 1.0
-
     var didTapMoreInfoAction: (() -> Void)?
     var didTapGetBonusAction: (() -> Void)?
 
@@ -66,6 +66,18 @@ class BonusAvailableTableViewCell: UITableViewCell {
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        self.titleLabel.text = ""
+
+        self.subtitleLabel.text = ""
+
+        self.bannerImageView.image = nil
+
+        self.hasBannerImage = false
     }
 
     // MARK: Layout and Theme
@@ -191,7 +203,7 @@ extension BonusAvailableTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Subtitle here"
-        label.numberOfLines = 0
+        label.numberOfLines = 3
         label.font = AppFont.with(type: .semibold, size: 11)
         label.textAlignment = .left
         return label

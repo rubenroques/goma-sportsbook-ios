@@ -67,6 +67,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     var completeMatch: Match?
     var tappedMatchBaseViewAction: ((Match) -> Void)?
+    var tappedBonusBaseViewAction: (() -> Void)?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -128,6 +129,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         let tapMatchBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchBaseView))
         self.matchBaseView.addGestureRecognizer(tapMatchBaseView)
+
+        let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerBaseView))
+        self.imageBaseView.addGestureRecognizer(tapBannerBaseView)
 
         self.setupWithTheme()
     }
@@ -193,8 +197,6 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         self.baseView.backgroundColor = UIColor(hex: 0x2E333F)
         
-        
-
         self.homeParticipantNameLabel.textColor = .white
         self.awayParticipantNameLabel.textColor = .white
         self.dateLabel.textColor = .white
@@ -509,5 +511,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.tappedMatchBaseViewAction?(completeMatch)
 
     }
-}
 
+    @objc func didTapBannerBaseView() {
+        self.tappedBonusBaseViewAction?()
+    }
+}

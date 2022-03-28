@@ -186,6 +186,12 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(liveDetailsViewController, animated: true)
     }
 
+    private func openBonusView() {
+
+        let bonusDetailsViewController = BonusViewController()
+        self.navigationController?.pushViewController(bonusDetailsViewController, animated: true)
+    }
+
     @objc private func didTapOpenFavorites() {
         self.openFavorites()
     }
@@ -231,6 +237,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
             cell.tappedBannerMatchAction = { [weak self] match in
                 self?.openMatchDetails(match: match)
+            }
+
+            cell.tappedBannerBonusAction = { [weak self] in
+                self?.openBonusView()
             }
             
             return cell
