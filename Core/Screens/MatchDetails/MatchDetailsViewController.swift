@@ -348,7 +348,8 @@ class MatchDetailsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-
+        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldToggleView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldWebView.backgroundColor = UIColor.App.backgroundTertiary

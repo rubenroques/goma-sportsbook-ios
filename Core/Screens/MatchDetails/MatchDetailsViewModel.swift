@@ -102,12 +102,31 @@ class MatchDetailsViewModel: NSObject {
         Env.everyMatrixClient.serviceStatusPublisher
             .filter({ $0 == .connected })
             .sink(receiveValue: { _ in
-                self.fetchMatchDetailsPublisher()
-                self.fetchMarketGroupsPublisher()
+                self.fetchMatchData()
             })
             .store(in: &cancellables)
     }
 
+    func fetchMatchData() {
+        self.fetchLocations()
+            .sink { [weak self] locations in
+                self?.store.storeLocations(locations: locations)
+
+                self?.fetchMatchDetailsPublisher()
+                self?.fetchMarketGroupsPublisher()
+            }
+            .store(in: &cancellables)
+    }
+    
+    func fetchLocations() -> AnyPublisher<[EveryMatrix.Location], Never> {
+        let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .map(\.records)
+            .compactMap({$0})
+            .replaceError(with: [EveryMatrix.Location]())
+            .eraseToAnyPublisher()
+
+    }
 
     func fetchMatchDetailsPublisher() {
         if let matchDetailsRegister = matchDetailsRegister {

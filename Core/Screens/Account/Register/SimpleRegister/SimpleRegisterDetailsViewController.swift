@@ -17,7 +17,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var registerTitleLabel: UILabel!
     @IBOutlet private var topSignUpView: UIView!
     @IBOutlet private var usernameHeaderTextView: HeaderTextFieldView!
-    @IBOutlet private var dateHeaderTextView: DropDownSelectionView!
+    @IBOutlet private var dateHeaderTextView: HeaderDropDownSelectionView!
     @IBOutlet private var phoneView: UIView!
     @IBOutlet private var indicativeHeaderTextView: HeaderTextFieldView!
     @IBOutlet private var phoneHeaderTextView: HeaderTextFieldView!
@@ -291,14 +291,14 @@ class SimpleRegisterDetailsViewController: UIViewController {
     private func checkDateBirth() -> Bool {
 
         if dateHeaderTextView.text.isEmpty {
-            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
+            // dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             return false
         }
         else {
 
             let textDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
             if textDate > dateHeaderTextView.datePicker.date {
-                dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
+                // dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
                 return false
             }
         }
@@ -498,7 +498,7 @@ extension SimpleRegisterDetailsViewController {
         // let fieldDate = dateHeaderTextView.datePicker.date
         let fieldDate = getDateFromTextFieldString(string: dateHeaderTextView.text)
         if fieldDate > maxDate {
-            dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
+            // dateHeaderTextView.showErrorOnField(text: localized("invalid_birthDate"), color: UIColor.App.alertError)
             dateHeaderTextView.datePicker.maximumDate = maxDate
         }
     }

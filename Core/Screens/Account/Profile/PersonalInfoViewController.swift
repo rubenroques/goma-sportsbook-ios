@@ -17,11 +17,11 @@ class PersonalInfoViewController: UIViewController {
     @IBOutlet private var headerLabel: UILabel!
     @IBOutlet private var editButton: UIButton!
 
-    @IBOutlet private var titleHeaderTextFieldView: DropDownSelectionView!
+    @IBOutlet private var titleHeaderTextFieldView: HeaderDropDownSelectionView!
     @IBOutlet private var firstNameHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lastNameHeaderTextFieldView: HeaderTextFieldView!
-    @IBOutlet private var countryHeaderTextFieldView: DropDownSelectionView!
-    @IBOutlet private var birthDateHeaderTextFieldView: DropDownSelectionView!
+    @IBOutlet private var countryHeaderTextFieldView: HeaderDropDownSelectionView!
+    @IBOutlet private var birthDateHeaderTextFieldView: HeaderDropDownSelectionView!
     @IBOutlet private var adress1HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var adress2HeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var cityHeaderTextFieldView: HeaderTextFieldView!
@@ -171,7 +171,7 @@ class PersonalInfoViewController: UIViewController {
         countryHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         countryHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)
 
-        
+        birthDateHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         birthDateHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
         birthDateHeaderTextFieldView.setViewColor(UIColor.App.backgroundPrimary)
         birthDateHeaderTextFieldView.setViewBorderColor(UIColor.App.inputTextTitle)

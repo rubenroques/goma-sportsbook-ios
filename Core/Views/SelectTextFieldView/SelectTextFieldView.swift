@@ -15,6 +15,7 @@ class SelectTextFieldView: NibView {
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var selectImageView: UIImageView!
     @IBOutlet private var textField: UITextField!
+    @IBOutlet private var selectedLabel: UITextField!
     @IBOutlet private var iconLabelImageView: UIImageView!
     // Constraints
     @IBOutlet private var textFieldLeadingConstraint: NSLayoutConstraint!

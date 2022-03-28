@@ -108,7 +108,7 @@
                                                 <constraint firstAttribute="height" constant="80" id="gLN-hv-FAS"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ueC-zl-out" customClass="SelectTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ueC-zl-out" customClass="DropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="125" width="382" height="60"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
@@ -156,7 +156,7 @@
                                                 <constraint firstAttribute="height" constant="80" id="Afq-Jn-UpC"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeO-nV-Ihm" customClass="SelectTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZeO-nV-Ihm" customClass="DropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="125" width="382" height="60"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
@@ -204,7 +204,7 @@
                                                 <constraint firstAttribute="height" constant="80" id="TH3-co-WC5"/>
                                             </constraints>
                                         </view>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jka-6d-va1" customClass="SelectTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jka-6d-va1" customClass="DropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="125" width="382" height="60"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>
@@ -245,7 +245,7 @@
                                             <nil key="textColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pCb-On-vjj" customClass="SelectTextFieldView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pCb-On-vjj" customClass="DropDownSelectionView" customModule="ShowcaseBeta" customModuleProvider="target">
                                             <rect key="frame" x="0.0" y="37" width="382" height="60"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                             <constraints>

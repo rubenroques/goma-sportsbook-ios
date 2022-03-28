@@ -275,8 +275,10 @@ class HeaderTextFieldView: NibView {
     }
 
     func setText(_ text: String, slideUp: Bool = true) {
+
         self.textField.text = text
-        if slideUp {
+
+        if text.isNotEmpty && slideUp {
             self.slideUp(animated: false)
         }
     }

@@ -148,6 +148,8 @@
 		454E091427EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */; };
 		454E091527EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091127EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift */; };
 		454E091627EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091127EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift */; };
+		454E091827F223DB00391560 /* HeaderDropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091727F223DB00391560 /* HeaderDropDownSelectionView.swift */; };
+		454E091927F223DB00391560 /* HeaderDropDownSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E091727F223DB00391560 /* HeaderDropDownSelectionView.swift */; };
 		454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
 		454E0A8F2731B01F00794E0C /* FailableDecodable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A8D2731B01F00794E0C /* FailableDecodable.swift */; };
 		454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454E0A902732A78A00794E0C /* BetslipManager.swift */; };
@@ -1176,6 +1178,7 @@
 		454E090D27EC7C1100391560 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
 		454E091127EDF45300391560 /* OutrightCompetitionLargeLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightCompetitionLargeLineTableViewCell.swift; sourceTree = "<group>"; };
 		454E091227EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightCompetitionLargeWidgetCollectionViewCell.swift; sourceTree = "<group>"; };
+		454E091727F223DB00391560 /* HeaderDropDownSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderDropDownSelectionView.swift; sourceTree = "<group>"; };
 		454E0A8D2731B01F00794E0C /* FailableDecodable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FailableDecodable.swift; sourceTree = "<group>"; };
 		454E0A902732A78A00794E0C /* BetslipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipManager.swift; sourceTree = "<group>"; };
 		454E0A942732C01B00794E0C /* BetslipViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetslipViewController.swift; sourceTree = "<group>"; };
@@ -3677,6 +3680,7 @@
 			isa = PBXGroup;
 			children = (
 				F47BB79E27B2D0EF003FA2BC /* DropDownSelectionView.swift */,
+				454E091727F223DB00391560 /* HeaderDropDownSelectionView.swift */,
 			);
 			path = DropDownSelectionView;
 			sourceTree = "<group>";
@@ -4167,6 +4171,7 @@
 				A995C195279991A100151462 /* SearchViewController.swift in Sources */,
 				457F4972273804810047169D /* BetslipHistory.swift in Sources */,
 				45D9CBE1270F3C8400B8C321 /* AppSession.swift in Sources */,
+				454E091827F223DB00391560 /* HeaderDropDownSelectionView.swift in Sources */,
 				454E0AB62732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				457EDABF2791C44400DDCD83 /* SwiftyJSON.swift in Sources */,
 				4589F40E26BF0203005DF543 /* RoundButton.swift in Sources */,
@@ -4582,6 +4587,7 @@
 				A995C196279991A100151462 /* SearchViewController.swift in Sources */,
 				457F4973273804810047169D /* BetslipHistory.swift in Sources */,
 				45D9CBE2270F3C8400B8C321 /* AppSession.swift in Sources */,
+				454E091927F223DB00391560 /* HeaderDropDownSelectionView.swift in Sources */,
 				454E0AB72732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
 				457EDAC02791C44400DDCD83 /* SwiftyJSON.swift in Sources */,
 				4589F40F26BF0203005DF543 /* RoundButton.swift in Sources */,
@@ -5147,7 +5153,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00414;
+				CURRENT_PROJECT_VERSION = 00415;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5173,7 +5179,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00414;
+				CURRENT_PROJECT_VERSION = 00415;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
