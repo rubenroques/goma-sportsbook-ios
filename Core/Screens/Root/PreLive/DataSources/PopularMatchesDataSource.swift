@@ -128,13 +128,13 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
             }
         case 1:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
-                    as? OutrightCompetitionLineTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                    as? OutrightCompetitionLargeLineTableViewCell,
                 let competition = self.outrightCompetitions?[safe: indexPath.row]
             else {
                 fatalError()
             }
-            cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+            cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
             cell.didSelectCompetitionAction = { [weak self] competition in
                 self?.didSelectCompetitionAction?(competition)
             }
@@ -213,7 +213,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 0:
             return 132 // Banner
         case 1:
-            return 105
+            return 145
         case 3:
             return 70 // Loading cell
         default:
@@ -226,7 +226,7 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
         case 0:
             return 140 // Banner
         case 1:
-            return 105
+            return 145
         case 3:
             return 70 // Loading cell
         default:

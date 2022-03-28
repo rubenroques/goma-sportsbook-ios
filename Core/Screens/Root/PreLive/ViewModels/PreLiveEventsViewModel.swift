@@ -844,8 +844,20 @@ class PreLiveEventsViewModel: NSObject {
     private func setupPopularTournamentsAggregatorProcessor(aggregator: EveryMatrix.Aggregator) {
         Env.everyMatrixStorage.processOutrightTournamentsAggregator(aggregator)
 
-        let localOutrightCompetitions = Env.everyMatrixStorage.outrightTournaments.values.map { rawTournament in
-            Competition.init(id: rawTournament.id, name: rawTournament.name ?? "", outrightMarkets: rawTournament.numberOfOutrightMarkets ?? 0)
+        let localOutrightCompetitions = Env.everyMatrixStorage.outrightTournaments.values.map { rawCompetition -> Competition in
+
+            var location: Location?
+            if let rawLocation = Env.everyMatrixStorage.location(forId: rawCompetition.venueId ?? "") {
+                location = Location(id: rawLocation.id,
+                                name: rawLocation.name ?? "",
+                                isoCode: rawLocation.code ?? "")
+            }
+
+            let competition = Competition(id: rawCompetition.id,
+                                               name: rawCompetition.name ?? "",
+                                               venue: location,
+                                               outrightMarkets: rawCompetition.numberOfOutrightMarkets ?? 0)
+            return competition
         }
 
         self.outrightCompetitions = localOutrightCompetitions

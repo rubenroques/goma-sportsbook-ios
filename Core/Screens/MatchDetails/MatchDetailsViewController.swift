@@ -134,9 +134,6 @@ class MatchDetailsViewController: UIViewController {
 
     private var cancellables = Set<AnyCancellable>()
 
-    // MARK: Public Properties
-    var rootModalNeedsNavigation: Bool = false
-
     // MARK: - Lifetime and Cycle
     init(viewModel: MatchDetailsViewModel) {
 
@@ -292,9 +289,7 @@ class MatchDetailsViewController: UIViewController {
         super.viewWillAppear(animated)
 
         if self.isRootModal {
-            if !self.rootModalNeedsNavigation {
             self.backButton.setImage(UIImage(named: "arrow_close_icon"), for: .normal)
-            }
         }
 
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
@@ -657,13 +652,11 @@ class MatchDetailsViewController: UIViewController {
 
     @IBAction private func didTapBackAction() {
         if self.isRootModal {
-            if !self.rootModalNeedsNavigation {
-                self.presentingViewController?.dismiss(animated: true)
-            }
+            self.presentingViewController?.dismiss(animated: true)
         }
-
-        self.navigationController?.popViewController(animated: true)
-
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
     @IBAction private func didTapShareButton() {

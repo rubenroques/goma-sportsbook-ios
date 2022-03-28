@@ -13,16 +13,13 @@ class OutrightCompetitionLineViewModel {
     var competition: Competition
     var numberOfMarkets: Int
 
-    private var shouldShowSeeAllOption: Bool
-
-    init(competition: Competition, shouldShowSeeAllOption: Bool = true) {
+    init(competition: Competition) {
         self.competition = competition
         self.numberOfMarkets = competition.outrightMarkets
-        self.shouldShowSeeAllOption = shouldShowSeeAllOption
     }
 
     func numberOfSection() -> Int {
-        return shouldShowSeeAllOption ? 2 : 1
+        return 2
     }
 
     func numberOfItems(forSection section: Int) -> Int {

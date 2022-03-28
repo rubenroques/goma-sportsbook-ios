@@ -52,9 +52,11 @@ class CompetitionDetailsViewController: UIViewController {
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
-        self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+
         self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -220,10 +222,10 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
 
         switch contentType {
         case .outrightMarket(let competition):
-            if let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
-                as? OutrightCompetitionLineTableViewCell {
+            if let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                as? OutrightCompetitionLargeLineTableViewCell {
 
-                cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition, shouldShowSeeAllOption: false))
+                cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
                 cell.didSelectCompetitionAction = { [weak self] competition in
                     self?.openCompetitionDetails(competition)
                 }
@@ -307,7 +309,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return 105
+                return 145
             case .match:
                 return MatchWidgetCollectionViewCell.cellHeight + 20
             }
@@ -324,7 +326,7 @@ extension CompetitionDetailsViewController: UITableViewDelegate, UITableViewData
         if let contentType = self.viewModel.contentType(forIndexPath: indexPath) {
             switch contentType {
             case .outrightMarket:
-                return 105
+                return 145
             case .match:
                 return MatchWidgetCollectionViewCell.cellHeight + 20
             }

@@ -14,7 +14,7 @@ class DropDownSelectionView: UIView {
     // MARK: - Private Properties
     // Sub Views
     private lazy var containerView: UIView = Self.createDropdownView()
-    private lazy var baseView: UIView = Self.createSimpleView()
+    private lazy var baseView: UIView = Self.createBaseView()
     private lazy var textLabel: UILabel = Self.createTextLabel()
     private lazy var headerLabel: UILabel = Self.createHeaderLabel()
     private lazy var placeholderLabel: UILabel = Self.createPlaceholderLabel()
@@ -103,18 +103,13 @@ class DropDownSelectionView: UIView {
 
     func commonInit() {
         self.slideDown()
-        self.baseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.baseView.layer.cornerRadius = CornerRadius.headerInput
-        self.baseView.layer.borderWidth = 1
-        
-        self.baseView.layer.cornerRadius = CornerRadius.headerInput
-        self.baseView.layer.borderWidth = 1
-      
-        self.bottomStackView.addArrangedSubview(self.tipImageView)
-        self.bottomStackView.addArrangedSubview(self.tipLabel)
-        
-        self.fieldState = .hidden
+
         self.setupSubviews()
+
+        self.fieldState = .hidden
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(makeTextfieldFirstResponder))
+        self.addGestureRecognizer(tapGesture)
 
     }
 
@@ -228,6 +223,7 @@ class DropDownSelectionView: UIView {
         self.textField.inputView = pickerView
         self.textField.text = self.selectionArray[defaultValue]
         self.textLabel.text = self.selectionArray[defaultValue]
+
         if self.textLabel.text != "" {
             self.slideUp(animated: true)
         }
@@ -331,7 +327,7 @@ class DropDownSelectionView: UIView {
         self.textLabel.text = "\(selectedDate)"
     }
     
-    @objc func showPicker() {
+    @objc func makeTextfieldFirstResponder() {
         self.textField.becomeFirstResponder()
     }
     
@@ -342,10 +338,13 @@ class DropDownSelectionView: UIView {
 //
 extension DropDownSelectionView {
 
-    private static func createSimpleView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private static func createBaseView() -> UIView {
+        let baseView = UIView()
+        baseView.translatesAutoresizingMaskIntoConstraints = false
+        baseView.backgroundColor = UIColor.App.backgroundSecondary
+        baseView.layer.cornerRadius = CornerRadius.headerInput
+        baseView.layer.borderWidth = 1
+        return baseView
     }
     
     private static func createDropdownView() -> UIView {
@@ -415,17 +414,21 @@ extension DropDownSelectionView {
     private func setupSubviews() {
 
         self.containerView.addSubview(self.bottomStackView)
-        
-        self.baseView.addSubview(self.textField)
+
+        self.bottomStackView.addArrangedSubview(self.tipImageView)
+        self.bottomStackView.addArrangedSubview(self.tipLabel)
+
+        self.containerView.addSubview(self.textField)
+        self.containerView.addSubview(self.baseView)
+
         self.baseView.addSubview(self.textLabel)
         self.baseView.addSubview(self.placeholderLabel)
         self.baseView.addSubview(self.headerLabel)
         self.baseView.addSubview(self.selectImage)
-        
-        self.containerView.addSubview(self.baseView)
-        
+
+
         self.addSubview(self.containerView)
-        
+
         self.initConstraints()
     }
 
@@ -474,42 +477,8 @@ extension DropDownSelectionView {
     
 }
 
-extension DropDownSelectionView: UITextFieldDelegate {
-
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        let shouldBeginEditing = self.shouldBeginEditing?() ?? true
-        self.isActive = shouldBeginEditing
-        return shouldBeginEditing
-    }
-   
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        self.slideUp()
-    }
-
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if self.shouldSlideDown() {
-            self.slideDown()
-        }
-    }
-
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        if self.isCurrency {
-            let decimals = CharacterSet(charactersIn: "0123456789.")
-            if range.length>0  && range.location == 0 {
-                return false
-
-            }
-            else if string.rangeOfCharacter(from: decimals) == nil && string != "" {
-                    return false
-            }
-        }
-        return true
-    }
-}
-
 extension DropDownSelectionView: UIPickerViewDelegate, UIPickerViewDataSource {
-    // PickerView override methods
+
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }

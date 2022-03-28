@@ -37,7 +37,7 @@ class BetSubmissionSuccessViewController: UIViewController {
     private var totalOddsValue: String
     private var possibleEarningsValue: String
     private var numberOfBets: Int
-    private var isChecked: Bool = true
+    private var isChecked: Bool = false
     private var betPlacedDetailsArray: [BetPlacedDetails]
 
     var willDismissAction: (() -> Void)?
@@ -92,11 +92,24 @@ class BetSubmissionSuccessViewController: UIViewController {
             }
         }
 
-        self.setupWithTheme()
-    
+        self.messageTitleLabel.font = AppFont.with(type: .bold, size: 32)
+        self.messageSubtitleLabel.font = AppFont.with(type: .semibold, size: 24)
+        self.betsMadeLabel.font = AppFont.with(type: .semibold, size: 16)
+        self.betsMadeValueLabel.font = AppFont.with(type: .bold, size: 23)
+        self.totalOddsValueLabel.font = AppFont.with(type: .bold, size: 23)
+        self.totalOddsLabel.font = AppFont.with(type: .semibold, size: 16)
+        self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
+        self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)
+
+        self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
+        StyleHelper.styleButton(button: self.continueButton)
+        self.checkboxLabel.text = localized("keep_bet_checkbox")
+        self.checkboxLabel.font = AppFont.with(type: .semibold, size: 14)
+
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
         checkboxImage.addGestureRecognizer(checkboxTap)
-        
+
+        self.setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -117,32 +130,19 @@ class BetSubmissionSuccessViewController: UIViewController {
         
         self.messageTitleLabel.textColor = UIColor.App.textPrimary
         self.messageSubtitleLabel.textColor = UIColor.App.textPrimary
-        self.messageTitleLabel.font = AppFont.with(type: .bold, size: 32)
-        self.messageSubtitleLabel.font = AppFont.with(type: .semibold, size: 24)
         
         self.betsMadeLabel.textColor = UIColor.App.textPrimary
         self.betsMadeValueLabel.textColor = UIColor.App.textPrimary
-        self.betsMadeLabel.font = AppFont.with(type: .semibold, size: 16)
-        self.betsMadeValueLabel.font = AppFont.with(type: .bold, size: 23)
         
         self.totalOddsValueLabel.textColor = UIColor.App.textPrimary
         self.totalOddsLabel.textColor = UIColor.App.textPrimary
-        self.totalOddsValueLabel.font = AppFont.with(type: .bold, size: 23)
-        self.totalOddsLabel.font = AppFont.with(type: .semibold, size: 16)
         
         self.possibleEarningsValueLabel.textColor = UIColor.App.textPrimary
 
         self.possibleEarningsLabel.textColor = UIColor.App.textPrimary
-        self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
-        self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)
        
-        self.checkboxImage.image = UIImage(named: "checkbox_selected_icon")
-        StyleHelper.styleButton(button: self.continueButton)
         self.checkboxLabel.backgroundColor = .clear
         self.checkboxLabel.textColor = UIColor.App.textSecondary
-        self.checkboxLabel.text = localized("keep_bet_checkbox")
-        self.checkboxLabel.font = AppFont.with(type: .semibold, size: 14)
-
     }
 
     @IBAction private func didTapContinueButton() {
@@ -158,6 +158,11 @@ class BetSubmissionSuccessViewController: UIViewController {
     }
 
     @IBAction private func didTapBackButton() {
+
+        if !isChecked {
+            Env.betslipManager.clearAllBettingTickets()
+        }
+        
         self.navigationController?.popViewController(animated: true)
     }
 

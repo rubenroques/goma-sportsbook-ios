@@ -57,7 +57,11 @@ class PopularDetailsViewController: UIViewController {
         self.tableView.addSubview(self.refreshControl)
 
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
+
         self.tableView.register(OutrightCompetitionLineTableViewCell.self, forCellReuseIdentifier: OutrightCompetitionLineTableViewCell.identifier)
+        self.tableView.register(OutrightCompetitionLargeLineTableViewCell.self,
+                                forCellReuseIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+
         self.tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         self.tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
 
@@ -246,13 +250,13 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
 
         case 1:
             guard
-                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLineTableViewCell.identifier)
-                    as? OutrightCompetitionLineTableViewCell,
+                let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                    as? OutrightCompetitionLargeLineTableViewCell,
                 let competition = self.viewModel.outrightCompetition(forRow: indexPath.row)
             else {
                 fatalError()
             }
-            cell.configure(withViewModel: OutrightCompetitionLineViewModel(competition: competition))
+            cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
             cell.didSelectCompetitionAction = { [weak self] competition in
                 self?.openCompetitionDetails(competition)
             }
@@ -272,7 +276,7 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
         case 0:
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
-            return 105
+            return 145 // outrightMarket lines
         case 2:
             return 80
         default:
@@ -285,7 +289,7 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
         case 0:
             return MatchWidgetCollectionViewCell.cellHeight + 20
         case 1:
-            return 105
+            return 145 // outrightMarket lines
         case 2:
             return 80
         default:

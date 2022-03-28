@@ -19,7 +19,9 @@ struct NetworkManager {
         let gomaGamingLoggedAuthEndpoint = URL(string: TargetVariables.gomaGamingLoggedAuthEndpoint)!
 
         self.session = session
-        self.authenticator = Authenticator(session: session, anonymousAuthEndpointURL: anonymousAuthEndpoint, loggedUserAuthEndpointURL: gomaGamingLoggedAuthEndpoint)
+        self.authenticator = Authenticator(session: session,
+                                           anonymousAuthEndpointURL: anonymousAuthEndpoint,
+                                           loggedUserAuthEndpointURL: gomaGamingLoggedAuthEndpoint)
     }
 
     func refreshAuthToken(token: AuthToken) {
@@ -35,7 +37,7 @@ struct NetworkManager {
             return AnyPublisher(Fail<T, NetworkError>(error: error))
         }
 
-        var userLoginForm: UserLoginForm? = nil
+        var userLoginForm: UserLoginForm?
         if let user = UserSessionStore.loggedUserSession() {
             userLoginForm = UserLoginForm(username: user.username, password: user.userId, deviceToken: Env.deviceFCMToken)
         }
@@ -83,7 +85,7 @@ struct NetworkManager {
             return AnyPublisher(Fail<T?, NetworkError>(error: error))
         }
 
-        var userLoginForm: UserLoginForm? = nil
+        var userLoginForm: UserLoginForm?
         if let user = UserSessionStore.loggedUserSession() {
             userLoginForm = UserLoginForm(username: user.username, password: user.userId, deviceToken: Env.deviceFCMToken)
         }
@@ -115,30 +117,3 @@ struct NetworkManager {
             .eraseToAnyPublisher()
     }
 }
-
-/*
- class NetworkManagerDelegate: NSObject, URLSessionDelegate {
-
- private let logger = NetworkLogger()
-
- func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
- logger.logDataTask(dataTask, didReceive: response)
- // ... make sure to call a completionHandler
- }
-
- func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
- logger.logTask(task, didCompleteWithError: error)
- // ...
- }
-
- func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
- logger.logDataTask(dataTask, didReceive: data)
- // ...
- }
-
- func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
- logger.logTask(task, didFinishCollecting: metrics)
- // ...
- }
- }
- */

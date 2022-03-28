@@ -74,6 +74,12 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
         self.topCollectionView.setContentOffset(.zero, animated: false)
         self.bottomCollectionView.setContentOffset(.zero, animated: false)
 
+        self.showingFirstBackSliderView = false
+        self.firstBackView.alpha = 0.0
+
+        self.showingSecondBackSliderView = false
+        self.secondBackView.alpha = 0.0
+
         self.reloadCollections()
     }
 
@@ -128,8 +134,10 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
     }
 
     func reloadCollections() {
+
         self.topCollectionView.reloadData()
         self.bottomCollectionView.reloadData()
+
     }
 
     @objc func didTapSeeAllView() {
@@ -146,10 +154,13 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
     }
     
     @objc func didTapFirstBackSliderButton() {
-        self.topCollectionView.setContentOffset(CGPoint(x: -self.topCollectionView.contentInset.left, y: 1), animated: true)
+        let resetPoint = CGPoint(x: -self.topCollectionView.contentInset.left, y: 1)
+        self.topCollectionView.setContentOffset(resetPoint, animated: true)
+
     }
     @objc func didTapSecondBackSliderButton() {
-        self.bottomCollectionView.setContentOffset(CGPoint(x: -self.bottomCollectionView.contentInset.left, y: 1), animated: true)
+        let resetPoint = CGPoint(x: -self.bottomCollectionView.contentInset.left, y: 1)
+        self.bottomCollectionView.setContentOffset(resetPoint, animated: true)
     }
 }
 
@@ -294,7 +305,13 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                     cell.hideSubtitle()
                 }
 
-                if let match = viewModel.match() {
+                if self.viewModel?.isOutrightCompetitionLine() ?? false {
+                    if let competition = self.viewModel?.outrightCompetition(forLine: collectionLineIndex) {
+                        cell.tappedAction = { [weak self] in
+                            self?.didSelectSeeAllCompetitionAction?(competition)
+                        }
+                    }
+                } else if let match = viewModel.match() {
                     cell.tappedAction = { [weak self] in
                         self?.tappedMatchLineAction?(match)
                     }
