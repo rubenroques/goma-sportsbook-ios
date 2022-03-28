@@ -27,7 +27,7 @@ class BonusViewModel: NSObject {
     var isBonusApplicableLoading: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusClaimableLoading: CurrentValueSubject<Bool, Never> = .init(false)
 
-    var bonusBanners: [String: UIImage] = [:]
+    var bonusBannersUrlPublisher: CurrentValueSubject<[String: URL], Never> = .init([:])
 
     var requestBonusDetail: ((EveryMatrix.ApplicableBonus) -> Void)?
     var requestApplyBonus: ((EveryMatrix.ApplicableBonus) -> Void)?
@@ -105,7 +105,7 @@ class BonusViewModel: NSObject {
                         let bonusTypeData = BonusTypeData(bonus: bonus, bonusType: .applicable)
                         self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)
                         if let url = URL(string: "https:\(bonus.assets)") {
-                            self?.getBonusBanner(url: url, bonusCode: bonus.code)
+                            self?.storeBonusBanner(url: url, bonusCode: bonus.code)
                         }
 
                     }
@@ -131,7 +131,7 @@ class BonusViewModel: NSObject {
                     
                     self?.bonusAvailableDataSource.bonusAvailable.append(bonusTypeData)
                     if let url = URL(string: "https:\(bonus.assets)") {
-                        self?.getBonusBanner(url: url, bonusCode: bonus.code)
+                        self?.storeBonusBanner(url: url, bonusCode: bonus.code)
                     }
 
                 }
@@ -145,18 +145,11 @@ class BonusViewModel: NSObject {
 
     }
 
-    private func getBonusBanner(url: URL, bonusCode: String) {
-        self.getData(from: url) { data, response, error in
-            guard let data = data, error == nil else { return }
+    private func storeBonusBanner(url: URL, bonusCode: String) {
 
-            self.bonusBanners[bonusCode] = UIImage(data: data)
-            self.bonusAvailableDataSource.bonusBanners = self.bonusBanners
-            self.shouldReloadData.send()
-        }
-    }
-
-    private func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> Void) {
-        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+        self.bonusBannersUrlPublisher.value[bonusCode] = url
+        self.bonusAvailableDataSource.bonusBannersUrl = self.bonusBannersUrlPublisher.value
+        self.shouldReloadData.send()
     }
 
     private func getGrantedBonus() {

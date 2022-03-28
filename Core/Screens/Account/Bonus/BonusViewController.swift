@@ -194,8 +194,8 @@ class BonusViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.requestBonusDetail = { [weak self] bonus in
-            if let bonusBanner = self?.viewModel.bonusBanners[bonus.code] {
-                self?.showBonusDetail(bonus: bonus, bonusBanner: bonusBanner)
+            if let bonusBannerUrl = self?.viewModel.bonusBannersUrlPublisher.value[bonus.code] {
+                self?.showBonusDetail(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
             }
             else {
                 self?.showBonusDetail(bonus: bonus)
@@ -209,9 +209,9 @@ class BonusViewController: UIViewController {
 
     }
 
-    private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus, bonusBanner: UIImage? = nil) {
-        if let bonusBanner = bonusBanner {
-            let bonusDetailViewController = BonusDetailViewController(bonus: bonus, bonusBanner: bonusBanner)
+    private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+        if let bonusBannerUrl = bonusBannerUrl {
+            let bonusDetailViewController = BonusDetailViewController(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
             self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
         }
         else {

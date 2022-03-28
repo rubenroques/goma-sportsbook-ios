@@ -108,15 +108,18 @@ class BonusAvailableTableViewCell: UITableViewCell {
         self.getBonusButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
     }
 
-    func setupBonus(bonus: EveryMatrix.ApplicableBonus, bonusBanner: UIImage? = nil) {
+    func setupBonus(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
 
         self.titleLabel.text = bonus.name
 
         self.subtitleLabel.text = bonus.description
 
-        if let bonusBanner = bonusBanner {
-            self.bannerImageView.image = bonusBanner
-            self.resizeBannerImageView(bonusBanner: bonusBanner)
+        if let bonusBannerUrl = bonusBannerUrl {
+            self.bannerImageView.kf.setImage(with: bonusBannerUrl)
+            if let bonusBannerImage = self.bannerImageView.image {
+                self.resizeBannerImageView(bonusBanner: bonusBannerImage)
+            }
+
             self.hasBannerImage = true
         }
         else {

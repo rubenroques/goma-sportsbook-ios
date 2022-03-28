@@ -23,7 +23,8 @@ class BonusDetailViewController: UIViewController {
     private lazy var bonusImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createbonusImageViewDynamicHeightConstraint()
     private lazy var bonusStackView: UIStackView = Self.createBonusStackView()
     private var bonus: EveryMatrix.ApplicableBonus
-    private var bonusBanner: UIImage?
+    //private var bonusBanner: UIImage?
+    private var bonusBannerUrl: URL?
     private var aspectRatio: CGFloat = 1.0
 
     private var hasBonusImage: Bool = false {
@@ -38,9 +39,9 @@ class BonusDetailViewController: UIViewController {
     }
 
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.ApplicableBonus, bonusBanner: UIImage? = nil) {
+    init(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
         self.bonus = bonus
-        self.bonusBanner = bonusBanner
+        self.bonusBannerUrl = bonusBannerUrl
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -97,9 +98,12 @@ class BonusDetailViewController: UIViewController {
 
         self.termsLinkLabel.text = self.bonus.url
 
-        if let bonusBanner = self.bonusBanner {
-            self.bonusImageView.image = bonusBanner
-            self.resizeBonusImageView(bonusBanner: bonusBanner)
+        if let bonusBannerUrl = self.bonusBannerUrl {
+            self.bonusImageView.kf.setImage(with: bonusBannerUrl)
+
+            if let bonusBannerImage = self.bonusImageView.image {
+                self.resizeBonusImageView(bonusBanner: bonusBannerImage)
+            }
             self.hasBonusImage = true
         }
         else {
@@ -136,7 +140,7 @@ extension BonusDetailViewController {
     }
 
     @objc private func didTapTermsLinkLabel() {
-        if let url = URL(string: "https://sportsbook.gomagaming.com/terms/bonus") {
+        if let url = URL(string: bonus.url) {
             UIApplication.shared.open(url)
         }
     }
