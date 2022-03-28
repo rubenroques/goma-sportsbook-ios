@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -24,6 +24,7 @@
                 <outlet property="phoneHeaderTextView" destination="0vx-bq-BHE" id="VnG-dL-QKf"/>
                 <outlet property="phoneView" destination="n4c-hX-yA0" id="zzM-PN-nIg"/>
                 <outlet property="policyLinkView" destination="blR-iN-0su" id="TGe-Sl-X0w"/>
+                <outlet property="quitButton" destination="jSl-FK-ly0" id="lbx-bV-nnb"/>
                 <outlet property="registerTitleLabel" destination="RIb-7y-hMw" id="scD-9O-gnq"/>
                 <outlet property="scrollView" destination="hZi-PR-TBW" id="4m2-v6-x2r"/>
                 <outlet property="signUpButton" destination="xF5-zT-3gC" id="RUd-X7-PJU"/>
@@ -57,11 +58,24 @@
                                                 <action selector="didTapBackButton" destination="-1" eventType="primaryActionTriggered" id="kHd-Ko-r1v"/>
                                             </connections>
                                         </button>
+                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jSl-FK-ly0">
+                                            <rect key="frame" x="355" y="0.0" width="51" height="44"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="44" id="kWa-v0-zMV"/>
+                                            </constraints>
+                                            <state key="normal" title="Button"/>
+                                            <buttonConfiguration key="configuration" style="plain" title="Quit"/>
+                                            <connections>
+                                                <action selector="didTapQuitButton" destination="-1" eventType="touchUpInside" id="C9P-FR-DYF"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemGray4Color"/>
                                     <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="jSl-FK-ly0" secondAttribute="trailing" constant="8" id="Dij-oU-h1N"/>
                                         <constraint firstItem="8dW-VF-FcY" firstAttribute="centerY" secondItem="dDi-JT-QK6" secondAttribute="centerY" id="fhL-rk-TAZ"/>
                                         <constraint firstAttribute="height" constant="44" id="lsW-aO-zB6"/>
+                                        <constraint firstItem="jSl-FK-ly0" firstAttribute="centerY" secondItem="dDi-JT-QK6" secondAttribute="centerY" id="mZe-E2-QfG"/>
                                         <constraint firstItem="8dW-VF-FcY" firstAttribute="leading" secondItem="dDi-JT-QK6" secondAttribute="leading" id="wPn-2B-cWQ"/>
                                     </constraints>
                                 </view>

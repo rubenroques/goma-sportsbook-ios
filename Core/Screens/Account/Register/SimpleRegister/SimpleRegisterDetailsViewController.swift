@@ -28,6 +28,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
     @IBOutlet private var signUpButton: UIButton!
     @IBOutlet private var policyLinkView: PolicyLinkView!
 
+    @IBOutlet private var quitButton: UIButton!
+
     @IBOutlet private var loadingUsernameValidityView: UIActivityIndicatorView!
     var spinnerViewController = SpinnerViewController()
 
@@ -67,8 +69,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         super.viewDidAppear(animated)
         self.setupPublishers()
     }
-
-    
 
     func commonInit() {
 
@@ -172,6 +172,9 @@ class SimpleRegisterDetailsViewController: UIViewController {
         signUpButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
         signUpButton.layer.cornerRadius = CornerRadius.button
         signUpButton.layer.masksToBounds = true
+
+        quitButton.backgroundColor = .clear
+        quitButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
 
     func checkPolicyLinks() {
@@ -243,6 +246,17 @@ class SimpleRegisterDetailsViewController: UIViewController {
 
     @IBAction private func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @IBAction private func didTapQuitButton() {
+        let submitCashoutAlert = UIAlertController(title: localized("quit_register"), message: localized("quit_register_message"), preferredStyle: UIAlertController.Style.alert)
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("quit"), style: .default, handler: { _ in
+            self.dismiss(animated: true, completion: nil)
+        }))
+
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+
+        self.present(submitCashoutAlert, animated: true, completion: nil)
     }
 
     @IBAction private func signUpAction() {
