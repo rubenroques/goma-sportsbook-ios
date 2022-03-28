@@ -19,7 +19,7 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var requestBonusDetail: ((Int) -> Void)?
     var requestApplyBonus: ((Int) -> Void)?
 
-    var bonusBanners: [String: UIImage] = [:]
+    var bonusBannersUrl: [String: URL] = [:]
 
     override init() {
         super.init()
@@ -40,8 +40,14 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             if let cell = tableView.dequeueCellType(BonusAvailableTableViewCell.self) {
-                if let availableBonus = self.bonusAvailable[safe: indexPath.row], let bonusBanner = self.bonusBanners[availableBonus.bonus.code] {
-                    cell.setupBonus(bonus: availableBonus.bonus, bonusBanner: bonusBanner)
+                if let availableBonus = self.bonusAvailable[safe: indexPath.row] {
+
+                    if let bonusBannerUrl = self.bonusBannersUrl[availableBonus.bonus.code] {
+                        cell.setupBonus(bonus: availableBonus.bonus, bonusBannerUrl: bonusBannerUrl)
+                    }
+                    else {
+                        cell.setupBonus(bonus: availableBonus.bonus)
+                    }
 
                     if availableBonus.bonusType == .claimable {
                         cell.isClaimableBonus = true

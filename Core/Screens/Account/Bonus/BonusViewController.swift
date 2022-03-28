@@ -11,7 +11,8 @@ import Combine
 class BonusViewController: UIViewController {
 
     // MARK: Private Properties
-    private lazy var topView: UIView = Self.createTopView()
+    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    private lazy var navigationView: UIView = Self.createTopView()
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var bonusSegmentedControlBaseView: UIView = Self.createBonusSegmentedBaseView()
@@ -120,7 +121,9 @@ class BonusViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.bonusSegmentedControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -182,7 +185,7 @@ class BonusViewController: UIViewController {
                 if isApplicableLoading && isClaimableLoading {
                     self.isLoading = true
                 }
-                else {
+                else if !isApplicableLoading && !isClaimableLoading {
                     self.isLoading = false
                     self.tableView.reloadData()
                 }
@@ -191,7 +194,12 @@ class BonusViewController: UIViewController {
             .store(in: &cancellables)
 
         viewModel.requestBonusDetail = { [weak self] bonus in
-            self?.showBonusDetail(bonus: bonus)
+            if let bonusBannerUrl = self?.viewModel.bonusBannersUrlPublisher.value[bonus.code] {
+                self?.showBonusDetail(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
+            }
+            else {
+                self?.showBonusDetail(bonus: bonus)
+            }
         }
 
         viewModel.requestApplyBonus = { [weak self] bonus in
@@ -201,9 +209,16 @@ class BonusViewController: UIViewController {
 
     }
 
-    private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus) {
-        let bonusDetailViewController = BonusDetailViewController(bonus: bonus)
-        self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
+    private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+        if let bonusBannerUrl = bonusBannerUrl {
+            let bonusDetailViewController = BonusDetailViewController(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
+            self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
+        }
+        else {
+            let bonusDetailViewController = BonusDetailViewController(bonus: bonus)
+            self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
+        }
+
     }
 
     private func applyBonus(bonusCode: String) {
@@ -214,7 +229,6 @@ class BonusViewController: UIViewController {
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
-                    print("APPLY BONUS ERROR: \(error)")
                     let errorString = "\(error)"
                     if errorString.lowercased().contains("invalid") {
                         self?.showAlert(type: .error, text: localized("invalid_bonus_code"))
@@ -230,7 +244,6 @@ class BonusViewController: UIViewController {
                 self?.isLoading = false
 
             }, receiveValue: { [weak self] bonusResponse in
-                print("APPLY BONUS: \(bonusResponse)")
                 self?.showAlert(type: .success, text: localized("bonus_applied_success"))
                 self?.viewModel.updateDataSources()
             })
@@ -324,6 +337,12 @@ extension BonusViewController {
 // MARK: Subviews initialization and setup
 //
 extension BonusViewController {
+
+    private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
 
     private static func createTopView() -> UIView {
         let view = UIView()
@@ -460,10 +479,12 @@ extension BonusViewController {
     }
 
     private func setupSubviews() {
-        self.view.addSubview(self.topView)
+        self.view.addSubview(self.topSafeAreaView)
+        
+        self.view.addSubview(self.navigationView)
 
-        self.topView.addSubview(self.backButton)
-        self.topView.addSubview(self.topTitleLabel)
+        self.navigationView.addSubview(self.backButton)
+        self.navigationView.addSubview(self.topTitleLabel)
 
         self.view.addSubview(self.bonusSegmentedControlBaseView)
         self.bonusSegmentedControlBaseView.addSubview(self.bonusSegmentedControl)
@@ -505,21 +526,29 @@ extension BonusViewController {
 
     private func initConstraints() {
 
-        // Top bar
+        // Top safe area view
         NSLayoutConstraint.activate([
-            self.topView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topView.heightAnchor.constraint(equalToConstant: 44),
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
+        ])
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 0),
-            self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
+        // Navigation view
+        NSLayoutConstraint.activate([
+            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
+
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
+            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
 
-            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 40),
-            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -40),
-            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor)
+            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 40),
+            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -40),
+            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor)
 
         ])
 
@@ -527,7 +556,7 @@ extension BonusViewController {
         NSLayoutConstraint.activate([
             self.bonusSegmentedControlBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.bonusSegmentedControlBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.bonusSegmentedControlBaseView.topAnchor.constraint(equalTo: self.topView.bottomAnchor, constant: 8),
+            self.bonusSegmentedControlBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
             self.bonusSegmentedControlBaseView.heightAnchor.constraint(equalToConstant: 40),
 
             self.bonusSegmentedControl.leadingAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.leadingAnchor, constant: 30),
