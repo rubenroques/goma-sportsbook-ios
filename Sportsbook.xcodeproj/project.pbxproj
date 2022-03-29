@@ -866,10 +866,6 @@
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
 		A99A970E26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
-		A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */; };
-		A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */; };
-		A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */; };
-		A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */; };
 		A99A971C26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */; };
 		A99A971D26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */; };
 		A99A971E26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */; };
@@ -1542,8 +1538,6 @@
 		A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutAggregator.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
-		A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectTextFieldView.swift; sourceTree = "<group>"; };
-		A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SelectTextFieldView.xib; sourceTree = "<group>"; };
 		A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterPersonalInfoViewController.swift; sourceTree = "<group>"; };
 		A99A971B26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FullRegisterPersonalInfoViewController.xib; sourceTree = "<group>"; };
 		A99A972026FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterAddressCountryViewController.swift; sourceTree = "<group>"; };
@@ -2616,7 +2610,6 @@
 				45936CB2270EF02200E8260E /* SearchTextField.swift */,
 				4589F41826BF0243005DF543 /* NibView.swift */,
 				4589F40826BF0203005DF543 /* RoundButton.swift */,
-				A99A970F26FB414600F8D163 /* SelectTextFieldView */,
 				A9C82FCC26F9E0DD00059DCD /* Popup */,
 				A9C82FB926F4E4D700059DCD /* EditAlertView */,
 				456B342926C18BB8009D7D27 /* TitleTextFieldView */,
@@ -3225,15 +3218,6 @@
 				A90BC91527C5543600667616 /* ProfileLimitsManagementViewModel.swift */,
 			);
 			path = LimitsManagement;
-			sourceTree = "<group>";
-		};
-		A99A970F26FB414600F8D163 /* SelectTextFieldView */ = {
-			isa = PBXGroup;
-			children = (
-				A99A971026FB41BB00F8D163 /* SelectTextFieldView.swift */,
-				A99A971326FB41CD00F8D163 /* SelectTextFieldView.xib */,
-			);
-			path = SelectTextFieldView;
 			sourceTree = "<group>";
 		};
 		A99A971926FDDEC100F8D163 /* FullRegister */ = {
@@ -3871,7 +3855,6 @@
 				4589F41226BF0203005DF543 /* HeaderTextFieldView.xib in Resources */,
 				454E0AC5273305E200794E0C /* SingleBettingTicketTableViewCell.xib in Resources */,
 				A9B840A026DE712500269B05 /* EnabledAccessViewController.xib in Resources */,
-				A99A971426FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */,
 				45D527DF2720535400744D34 /* CompetitionsFiltersView.xib in Resources */,
 				A9C602382716F7F900992E11 /* FilterCollapseView.xib in Resources */,
@@ -4018,7 +4001,6 @@
 				45CD7B5B271738C8003044C5 /* SeeMoreMarketsCollectionViewCell.xib in Resources */,
 				A9B840A226DE749900269B05 /* EnabledAccessViewController.xib in Resources */,
 				A995C198279991A100151462 /* SearchViewController.xib in Resources */,
-				A99A971526FB41CD00F8D163 /* SelectTextFieldView.xib in Resources */,
 				45C3E8D327B406D8007A1A0F /* README.md in Resources */,
 				A9B8407F26CAC0C700269B05 /* VersionUpdateViewController.xib in Resources */,
 				A92F5D842718388500884BDF /* FilterSliderCollapseView.xib in Resources */,
@@ -4182,7 +4164,6 @@
 				45628E7D27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */,
 				45D728D127158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
 				A92F5D802718384900884BDF /* FilterSliderCollapseView.swift in Sources */,
-				A99A971126FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				A9C82FCE26F9E0F900059DCD /* PopUpPromotionView.swift in Sources */,
 				45B0BD3F271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
@@ -4599,7 +4580,6 @@
 				45628E7E27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */,
 				45D728D227158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
 				A92F5D812718384900884BDF /* FilterSliderCollapseView.swift in Sources */,
-				A99A971226FB41BB00F8D163 /* SelectTextFieldView.swift in Sources */,
 				4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */,
 				45166D0226F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				45B0BD40271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
@@ -5153,7 +5133,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00415;
+				CURRENT_PROJECT_VERSION = 00500;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5161,7 +5141,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.4;
+				MARKETING_VERSION = 0.0.5;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -5179,7 +5159,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00415;
+				CURRENT_PROJECT_VERSION = 00500;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5187,7 +5167,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.4;
+				MARKETING_VERSION = 0.0.5;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.showcase;
 				PRODUCT_NAME = "$(TARGET_NAME)";

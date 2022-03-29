@@ -281,6 +281,7 @@ extension ActionTextFieldView {
         self.headerLabelCenterConstraint.isActive = true
 
         self.headerLabelCenterTopConstraint =
+
         NSLayoutConstraint(item: self.headerLabel,
                            attribute: .centerY,
                            relatedBy: .equal,

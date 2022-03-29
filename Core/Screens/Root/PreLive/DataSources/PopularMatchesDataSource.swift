@@ -19,8 +19,6 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectCompetitionAction: ((Competition) -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
-   
-    
 
     init(matches: [Match], outrightCompetitions: [Competition]? = nil) {
         self.matches = matches
@@ -145,9 +143,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 145 // Banner
+            return 145 // Outrights
         case 1:
-            return UITableView.automaticDimension
+            return UITableView.automaticDimension // Matches
         case 2:
             return 70 // Loading cell
         default:
@@ -158,9 +156,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section {
         case 0:
-            return 145 // Banner
+            return 145 // Outrights
         case 1:
-            return MatchWidgetCollectionViewCell.cellHeight + 20
+            return MatchWidgetCollectionViewCell.cellHeight + 20 // Matches
         case 2:
             return 70 // Loading cell
         default:

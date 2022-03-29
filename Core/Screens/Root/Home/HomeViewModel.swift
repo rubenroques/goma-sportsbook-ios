@@ -482,7 +482,7 @@ extension HomeViewModel {
         case 0: return false
         case 1: return false
         case 2: return false
-        case 3: return self.favoriteMatches.isNotEmpty
+        case 3: return false
         // case 4 is the first sport from the sports list
         case 5: return false
         default:
