@@ -18,12 +18,37 @@ class PasswordUpdateViewController: UIViewController {
     @IBOutlet private var oldPasswordHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var newPasswordHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var confirmPasswordHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var separatorLineView: UIView!
+    @IBOutlet private var securityQuestionLabel: UILabel!
+    @IBOutlet private var securityQuestionHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var securityAnswerHeaderTextFieldView: HeaderTextFieldView!
+    @IBOutlet private var loadingBaseView: UIView!
+    @IBOutlet private var loadingActivityIndicatorView: UIActivityIndicatorView!
+    @IBOutlet private var scrollView: UIScrollView!
+
+    private var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+            }
+        }
+    }
+
+    private var canSavePassword: Bool = false
+    private var canSaveSecurityInfo: Bool = false
 
     var cancellables = Set<AnyCancellable>()
     var passwordRegex: String = ""
     var passwordRegexMessage: String = ""
 
+    var viewModel: PasswordUpdateViewModel
+
     init() {
+        self.viewModel = PasswordUpdateViewModel()
+
         super.init(nibName: "PasswordUpdateViewController", bundle: nil)
     }
 
@@ -37,9 +62,9 @@ class PasswordUpdateViewController: UIViewController {
 
         commonInit()
         setupWithTheme()
-    }
 
-    
+        self.bind(toViewModel: self.viewModel)
+    }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
@@ -48,7 +73,7 @@ class PasswordUpdateViewController: UIViewController {
 
     func commonInit() {
         headerLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
-        headerLabel.text = localized("update_password")
+        headerLabel.text = localized("account_security")
 
         editButton.setTitle(localized("save"), for: .normal)
         editButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
@@ -59,9 +84,11 @@ class PasswordUpdateViewController: UIViewController {
 
         oldPasswordHeaderTextFieldView.setSecureField(true)
         oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
-        oldPasswordHeaderTextFieldView.isTipPermanent = true
-        
+        // oldPasswordHeaderTextFieldView.isTipPermanent = true
+
         newPasswordHeaderTextFieldView.setSecureField(true)
+        newPasswordHeaderTextFieldView.isTipPermanent = true
+
         confirmPasswordHeaderTextFieldView.setSecureField(true)
 
         let tapGestureRecognizer = UITapGestureRecognizer.init(target: self, action: #selector(didTapBackground))
@@ -69,40 +96,79 @@ class PasswordUpdateViewController: UIViewController {
 
         editButton.isEnabled = false
 
-        Env.everyMatrixClient.getPolicy()
-            .receive(on: DispatchQueue.main)
-            .eraseToAnyPublisher()
-            .sink { _ in
-            } receiveValue: { [weak self] policy in
-                self?.passwordRegex = policy.regularExpression
-                self?.passwordRegexMessage = policy.message
-                self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.inputTextTitle)
-            }
-            .store(in: &cancellables)
+        self.securityQuestionLabel.text = localized("security_question")
+        self.securityQuestionLabel.font = AppFont.with(type: .bold, size: 17)
+
+        self.securityQuestionHeaderTextFieldView.setPlaceholderText(localized("security_question"))
+
+        self.securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
 
         Publishers.CombineLatest3(self.oldPasswordHeaderTextFieldView.textPublisher,
                                   self.newPasswordHeaderTextFieldView.textPublisher,
                                   self.confirmPasswordHeaderTextFieldView.textPublisher)
             .map { oldPassword, new, confirm in
                 if self.passwordRegex == "" {
+
+                    self.canSavePassword = false
+
                     return false
                 }
                 if oldPassword == "" ||
                     new?.range(of: self.passwordRegex, options: .regularExpression) == nil ||
                     confirm?.range(of: self.passwordRegex, options: .regularExpression) == nil {
+
+                    self.canSavePassword = false
+
                     return false
                 }
                 if (new ?? "") != (confirm ?? "") {
                     self.confirmPasswordHeaderTextFieldView.showErrorOnField(text: localized("password_not_match"))
+
+                    self.canSavePassword = false
+
                     return false
                 }
 
                 self.newPasswordHeaderTextFieldView.hideTipAndError()
                 self.confirmPasswordHeaderTextFieldView.hideTipAndError()
+
+                self.canSavePassword = true
+
                 return true
             }
             .assign(to: \.isEnabled, on: self.editButton)
             .store(in: &self.cancellables)
+
+        Publishers.CombineLatest(self.securityQuestionHeaderTextFieldView.textPublisher, self.securityAnswerHeaderTextFieldView.textPublisher)
+            .map { [weak self] securityQuestion, securityAnswer in
+                if securityQuestion == "" || securityAnswer == "" {
+
+                    self?.canSaveSecurityInfo = false
+
+                    return false
+                }
+                if let userProfile = self?.viewModel.userProfilePublisher.value {
+                    if securityQuestion == userProfile.securityQuestion && securityAnswer == userProfile.securityAnswer {
+
+                        self?.canSaveSecurityInfo = false
+
+                        return false
+                    }
+                }
+
+                self?.canSaveSecurityInfo = true
+
+                return true
+            }
+            .assign(to: \.isEnabled, on: self.editButton)
+            .store(in: &self.cancellables)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
+                                               name: UIResponder.keyboardWillShowNotification,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
+                                               name: UIResponder.keyboardWillHideNotification,
+                                               object: nil)
 
     }
 
@@ -117,7 +183,7 @@ class PasswordUpdateViewController: UIViewController {
         editButton.backgroundColor = .clear
         editButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         editButton.setTitleColor(UIColor.App.highlightPrimary, for: .highlighted)
-        editButton.setTitleColor(UIColor.App.highlightPrimary, for: .disabled)
+        editButton.setTitleColor(UIColor.App.textDisablePrimary, for: .disabled)
 
         oldPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         oldPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
@@ -130,6 +196,79 @@ class PasswordUpdateViewController: UIViewController {
         confirmPasswordHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
         confirmPasswordHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
         confirmPasswordHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+
+        self.securityQuestionLabel.textColor = UIColor.App.textPrimary
+
+        self.securityQuestionHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        self.securityQuestionHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.securityQuestionHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+
+        self.securityAnswerHeaderTextFieldView.backgroundColor = UIColor.App.backgroundPrimary
+        self.securityAnswerHeaderTextFieldView.setHeaderLabelColor(UIColor.App.inputTextTitle)
+        self.securityAnswerHeaderTextFieldView.setTextFieldColor(UIColor.App.inputText)
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
+        self.scrollView.backgroundColor = UIColor.App.backgroundPrimary
+    }
+
+    private func bind(toViewModel viewModel: PasswordUpdateViewModel) {
+
+        viewModel.policyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] policy in
+                if let policy = policy {
+                    self?.passwordRegex = policy.regularExpression
+                    self?.passwordRegexMessage = policy.message
+                    //self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.inputTextTitle)
+                    self?.newPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.inputTextTitle)
+
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.userProfilePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] userProfile in
+
+                if let userProfile = userProfile {
+                    self?.setupProfileSecurity(profile: userProfile)
+                }
+
+            })
+            .store(in: &cancellables)
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                if isLoading {
+                    self?.isLoading = true
+                }
+                else {
+                    self?.isLoading = false
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.shouldShowAlertPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] alertInfo in
+                if let alertInfo = alertInfo {
+                    self?.showAlert(type: alertInfo.alertType, text: alertInfo.message)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    private func setupProfileSecurity(profile: EveryMatrix.UserProfile) {
+
+        self.securityQuestionHeaderTextFieldView.setText(profile.securityQuestion)
+
+        self.securityAnswerHeaderTextFieldView.setText(profile.securityAnswer)
+
+        self.isLoading = false
     }
 
     func showAlert(type: EditAlertView.AlertState, text: String = "") {
@@ -171,10 +310,24 @@ class PasswordUpdateViewController: UIViewController {
         self.oldPasswordHeaderTextFieldView.resignFirstResponder()
         self.newPasswordHeaderTextFieldView.resignFirstResponder()
         self.confirmPasswordHeaderTextFieldView.resignFirstResponder()
+        self.securityQuestionHeaderTextFieldView.resignFirstResponder()
+        self.securityAnswerHeaderTextFieldView.resignFirstResponder()
 
     }
 
     @IBAction private func editAction() {
+
+        if self.canSavePassword {
+            self.savePassword()
+        }
+
+        if self.canSaveSecurityInfo {
+            self.saveSecurityInfo()
+        }
+
+    }
+
+    private func savePassword() {
 
         var validFields = true
         // Clean warnings
@@ -192,49 +345,43 @@ class PasswordUpdateViewController: UIViewController {
         }
 
         if validFields {
-            Env.everyMatrixClient.changePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
-                                                 newPassword: newPasswordHeaderTextFieldView.text,
-                                                 captchaPublicKey: "",
-                                                 captchaChallenge: "",
-                                                 captchaResponse: "")
-                .receive(on: DispatchQueue.main)
-                .eraseToAnyPublisher()
-                .sink( receiveCompletion: { completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        var errorMessage = ""
-                        switch error {
-                        case .requestError(let value):
-                            errorMessage = value
-                        case .decodingError:
-                            errorMessage = "\(error)"
-                        case .httpError:
-                            errorMessage = "\(error)"
-                        case .unknown:
-                            errorMessage = "\(error)"
-                        case .missingTransportSessionID:
-                            errorMessage = "\(error)"
-                        case .notConnected:
-                            errorMessage = "\(error)"
-                        case .noResultsReceived:
-                            errorMessage = "\(error)"
-                        }
-                        self.showAlert(type: .error, text: "\(errorMessage)")
-
-                    }
-                }, receiveValue: { _ in
-                    self.showAlert(type: .success, text: localized("success_edit_password"))
-                    UserDefaults.standard.userSession?.password = self.newPasswordHeaderTextFieldView.text
-                }).store(in: &cancellables)
-
+            self.viewModel.savePassword(oldPassword: oldPasswordHeaderTextFieldView.text,
+                                        newPassword: newPasswordHeaderTextFieldView.text)
         }
+
+    }
+
+    private func saveSecurityInfo() {
+
+        self.viewModel.saveSecurityInfo(securityQuestion: self.securityQuestionHeaderTextFieldView.text,
+                                        securityAnswer: self.securityAnswerHeaderTextFieldView.text)
 
     }
 
     @IBAction private func backAction() {
         self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc func keyboardWillShow(notification: NSNotification) {
+
+        guard
+            let userInfo = notification.userInfo,
+            var keyboardFrame: CGRect = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        else {
+            return
+        }
+
+        keyboardFrame = self.view.convert(keyboardFrame, from: nil)
+
+        var contentInset: UIEdgeInsets = self.scrollView.contentInset
+        contentInset.bottom = keyboardFrame.size.height + 20
+        scrollView.contentInset = contentInset
+    }
+
+    @objc func keyboardWillHide(notification: NSNotification) {
+
+        let contentInset: UIEdgeInsets = UIEdgeInsets.zero
+        scrollView.contentInset = contentInset
     }
 
 }

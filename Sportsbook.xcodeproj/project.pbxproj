@@ -806,6 +806,8 @@
 		A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A96B70B82739891200FEF07D /* FirebaseMessaging */; };
 		A96B70BB273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
 		A96B70BC273A891F00FEF07D /* UserLoginForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96B70BA273A891F00FEF07D /* UserLoginForm.swift */; };
+		A96CA7B727F3578A00022DB2 /* PasswordUpdateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96CA7B627F3578A00022DB2 /* PasswordUpdateViewModel.swift */; };
+		A96CA7B827F3578A00022DB2 /* PasswordUpdateViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A96CA7B627F3578A00022DB2 /* PasswordUpdateViewModel.swift */; };
 		A978EBE827E4A1A400322F49 /* PopularDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C676B27DF635200AAB2A5 /* PopularDetailsViewController.swift */; };
 		A978EBE927E4A1AC00322F49 /* LiveDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455C676D27DFB12600AAB2A5 /* LiveDetailsViewController.swift */; };
 		A979CA53275E6C0B00230E93 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
@@ -1509,6 +1511,7 @@
 		A96B619B27A9A3D6005DC376 /* OddViewPosition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddViewPosition.swift; sourceTree = "<group>"; };
 		A96B619E27AC0642005DC376 /* URLSchemaManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSchemaManager.swift; sourceTree = "<group>"; };
 		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
+		A96CA7B627F3578A00022DB2 /* PasswordUpdateViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordUpdateViewModel.swift; sourceTree = "<group>"; };
 		A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchOddsContent.swift; sourceTree = "<group>"; };
 		A979CA552762247900230E93 /* SuggestedBetSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetSummary.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
@@ -3546,6 +3549,7 @@
 			children = (
 				A9C82FC126F89B4500059DCD /* PasswordUpdateViewController.swift */,
 				A9C82FC226F89B4500059DCD /* PasswordUpdateViewController.xib */,
+				A96CA7B627F3578A00022DB2 /* PasswordUpdateViewModel.swift */,
 			);
 			path = PasswordUpdate;
 			sourceTree = "<group>";
@@ -4266,6 +4270,7 @@
 				455C677427E255A300AAB2A5 /* MarketGroupDetailsStore.swift in Sources */,
 				454E0AC82733FBF200794E0C /* StyleHelpers.swift in Sources */,
 				454E0A962732C01B00794E0C /* BetslipViewController.swift in Sources */,
+				A96CA7B727F3578A00022DB2 /* PasswordUpdateViewModel.swift in Sources */,
 				4572633B272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				45A2897026C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
 				45F8B157274BFF710087652B /* SystemBetResponse.swift in Sources */,
@@ -4681,6 +4686,7 @@
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
 				45A0B303274FA3B800211A85 /* MarketGroup.swift in Sources */,
 				454E0AC92733FBF200794E0C /* StyleHelpers.swift in Sources */,
+				A96CA7B827F3578A00022DB2 /* PasswordUpdateViewModel.swift in Sources */,
 				454E0A972732C01B00794E0C /* BetslipViewController.swift in Sources */,
 				4572633A272C1A84002F2959 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
 				45A2897126C32E1C00BCD5DA /* NetworkManager.swift in Sources */,
