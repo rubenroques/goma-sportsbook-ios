@@ -140,7 +140,8 @@
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ie6-5o-AJy">
                             <rect key="frame" x="0.0" y="0.0" width="22" height="22"/>
                             <constraints>
-                                <constraint firstAttribute="width" secondItem="Ie6-5o-AJy" secondAttribute="height" multiplier="1:1" id="rtM-c3-8Dz"/>
+                                <constraint firstAttribute="height" constant="22" id="CBd-ZG-d94"/>
+                                <constraint firstAttribute="width" constant="22" id="PKS-O9-aGv"/>
                             </constraints>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="Message label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G5t-DZ-vnS">
@@ -151,14 +152,14 @@
                         </label>
                     </subviews>
                     <constraints>
-                        <constraint firstItem="Ie6-5o-AJy" firstAttribute="width" secondItem="cvn-c3-3xP" secondAttribute="height" multiplier="1:1" id="9vV-dv-Hjj"/>
                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="22" id="DOY-3j-WHU"/>
+                        <constraint firstItem="G5t-DZ-vnS" firstAttribute="top" secondItem="cvn-c3-3xP" secondAttribute="top" id="bnW-Wq-pgV"/>
+                        <constraint firstAttribute="bottom" secondItem="G5t-DZ-vnS" secondAttribute="bottom" id="nuc-FW-Hal"/>
                     </constraints>
                 </stackView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
-                <constraint firstAttribute="bottom" secondItem="HAe-LW-y8Z" secondAttribute="bottom" constant="22" id="Xrs-BN-46g"/>
                 <constraint firstItem="cvn-c3-3xP" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="Z8T-Rk-QHa"/>
                 <constraint firstAttribute="bottom" secondItem="cvn-c3-3xP" secondAttribute="bottom" id="dbS-JD-F8u"/>
                 <constraint firstItem="HAe-LW-y8Z" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" constant="1" id="f4I-F0-btX"/>

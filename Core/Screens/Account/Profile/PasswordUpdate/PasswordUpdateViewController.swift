@@ -25,6 +25,7 @@ class PasswordUpdateViewController: UIViewController {
     @IBOutlet private var loadingBaseView: UIView!
     @IBOutlet private var loadingActivityIndicatorView: UIActivityIndicatorView!
     @IBOutlet private var scrollView: UIScrollView!
+    @IBOutlet private var passwordPolicyLabel: UILabel!
 
     private var isLoading: Bool = false {
         didSet {
@@ -84,10 +85,9 @@ class PasswordUpdateViewController: UIViewController {
 
         oldPasswordHeaderTextFieldView.setSecureField(true)
         oldPasswordHeaderTextFieldView.showPasswordLabelVisible(visible: false)
-        // oldPasswordHeaderTextFieldView.isTipPermanent = true
 
         newPasswordHeaderTextFieldView.setSecureField(true)
-        newPasswordHeaderTextFieldView.isTipPermanent = true
+
 
         confirmPasswordHeaderTextFieldView.setSecureField(true)
 
@@ -102,6 +102,10 @@ class PasswordUpdateViewController: UIViewController {
         self.securityQuestionHeaderTextFieldView.setPlaceholderText(localized("security_question"))
 
         self.securityAnswerHeaderTextFieldView.setPlaceholderText(localized("security_answer"))
+
+        self.passwordPolicyLabel.text = ""
+        self.passwordPolicyLabel.font = AppFont.with(type: .semibold, size: 12)
+        self.passwordPolicyLabel.numberOfLines = 0
 
         Publishers.CombineLatest3(self.oldPasswordHeaderTextFieldView.textPublisher,
                                   self.newPasswordHeaderTextFieldView.textPublisher,
@@ -212,6 +216,8 @@ class PasswordUpdateViewController: UIViewController {
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
 
         self.scrollView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.passwordPolicyLabel.textColor = UIColor.App.inputTextTitle
     }
 
     private func bind(toViewModel viewModel: PasswordUpdateViewModel) {
@@ -220,10 +226,11 @@ class PasswordUpdateViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] policy in
                 if let policy = policy {
+
                     self?.passwordRegex = policy.regularExpression
                     self?.passwordRegexMessage = policy.message
-                    //self?.oldPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.inputTextTitle)
-                    self?.newPasswordHeaderTextFieldView.showTip(text: self?.passwordRegexMessage ?? "", color: UIColor.App.inputTextTitle)
+
+                    self?.passwordPolicyLabel.text = self?.passwordRegexMessage ?? ""
 
                 }
             })
