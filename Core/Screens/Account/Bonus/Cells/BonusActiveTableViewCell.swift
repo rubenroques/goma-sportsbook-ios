@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BonusActiveTableViewCell: UITableViewCell {
     // MARK: Private Properties
@@ -13,6 +14,8 @@ class BonusActiveTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var dateLabel: UILabel = Self.createDateLabel()
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -48,36 +51,19 @@ class BonusActiveTableViewCell: UITableViewCell {
 
     }
 
-    func setupBonus(bonus: EveryMatrix.GrantedBonus) {
-        
-        self.titleLabel.text = bonus.name
+    func configure(withViewModel viewModel: BonusActiveCellViewModel) {
 
-        let formattedDate = getDateFormatted(dateString: bonus.expiryDate ?? "")
+        viewModel.titlePublisher
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &cancellables)
 
-        if formattedDate != "" {
-            self.dateLabel.text = formattedDate
-        }
-        else {
-            self.dateLabel.text = localized("permanent")
-        }
-
-    }
-
-    func getDateFormatted(dateString: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
-
-        let date = dateString
-
-        if let formattedDate = dateFormatterGet.date(from: date) {
-
-            return dateFormatterPrint.string(from: formattedDate)
-        }
-
-        return ""
+        viewModel.dateStringPublisher
+            .sink(receiveValue: { [weak self] dateString in
+                self?.dateLabel.text = dateString
+            })
+            .store(in: &cancellables)
     }
 
 }
