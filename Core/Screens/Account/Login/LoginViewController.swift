@@ -71,8 +71,6 @@ class LoginViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    
-
     func commonInit() {
 
         usernameHeaderTextFieldView.setSecureField(false)
