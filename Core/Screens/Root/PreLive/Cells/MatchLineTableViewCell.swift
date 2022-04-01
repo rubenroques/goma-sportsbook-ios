@@ -270,6 +270,7 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     }
                   
                     cell.didTapFavoriteMatchAction = { [weak self] match in
+                        print("Tapped Favorite")
                         self?.didTapFavoriteMatchAction?(match)
                     }
                     

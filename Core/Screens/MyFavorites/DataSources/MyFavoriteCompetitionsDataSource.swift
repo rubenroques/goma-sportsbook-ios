@@ -16,6 +16,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
 
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -62,11 +63,16 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
             }
 
             cell.shouldShowCountryFlag(false)
+
             cell.tappedMatchLineAction = { [weak self] in
                 self?.didSelectMatchAction?(match)
             }
             cell.matchWentLive = { [weak self] in
                 self?.matchWentLiveAction?()
+            }
+
+            cell.didTapFavoriteMatchAction = { [weak self] match in
+                self?.didTapFavoriteMatchAction?(match)
             }
             
             return cell
