@@ -62,13 +62,6 @@ class SuggestedBetLineTableViewCell: UITableViewCell {
     func configure(withViewModel viewModel: SuggestedBetLineViewModel) {
 
         self.viewModel = viewModel
-
-        self.viewModel?.reloadCollectionViewPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.reloadCollections()
-            })
-            .store(in: &cancellables)
         
         self.reloadCollections()
     }
