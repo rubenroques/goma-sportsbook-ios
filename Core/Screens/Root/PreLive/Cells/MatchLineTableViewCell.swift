@@ -261,8 +261,8 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                     fatalError()
                 }
                 if let match = self.match {
+
                     let cellViewModel = MatchWidgetCellViewModel(match: match, store: store)
-                    
                     cell.configure(withViewModel: cellViewModel)
 
                     cell.tappedMatchWidgetAction = {
