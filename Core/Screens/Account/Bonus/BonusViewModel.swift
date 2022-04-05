@@ -99,6 +99,7 @@ class BonusViewModel: NSObject {
                 }
                 self.isBonusApplicableLoading.send(false)
             }, receiveValue: { [weak self] bonusResponse in
+                print("APPLICABLE BONUS: \(bonusResponse)")
                 if let bonusList = bonusResponse.bonuses {
                     for bonus in bonusList {
 
@@ -163,7 +164,6 @@ class BonusViewModel: NSObject {
                 case .finished:
                     ()                }
             }, receiveValue: { [weak self] bonusResponse in
-
                 if let bonuses = bonusResponse.bonuses {
                     self?.processGrantedBonus(bonuses: bonuses)
                 }

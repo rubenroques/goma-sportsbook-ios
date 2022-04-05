@@ -908,6 +908,8 @@
 		A99F7A2127DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */; };
 		A99F7A2327DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
 		A99F7A2427DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
+		A9A2E7EC27FC4FC700D35A9D /* BonusProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7EB27FC4FC700D35A9D /* BonusProgressView.swift */; };
+		A9A2E7ED27FC4FC700D35A9D /* BonusProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7EB27FC4FC700D35A9D /* BonusProgressView.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -1559,6 +1561,7 @@
 		A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchView.swift; sourceTree = "<group>"; };
 		A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreSubmissionBetslipViewModel.swift; sourceTree = "<group>"; };
 		A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		A9A2E7EB27FC4FC700D35A9D /* BonusProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusProgressView.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -3277,6 +3280,7 @@
 			isa = PBXGroup;
 			children = (
 				A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */,
+				A9A2E7EB27FC4FC700D35A9D /* BonusProgressView.swift */,
 			);
 			path = BonusViews;
 			sourceTree = "<group>";
@@ -4387,6 +4391,7 @@
 				457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
 				A9627A0C274548610001E1D5 /* ActivationAlertCollectionViewCell.swift in Sources */,
 				4589F41926BF0243005DF543 /* NibView.swift in Sources */,
+				A9A2E7EC27FC4FC700D35A9D /* BonusProgressView.swift in Sources */,
 				A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */,
 				45166D0926F3548D00E69D65 /* CallSSWampMessage.swift in Sources */,
 				457816A92706679400F66878 /* MatchLineTableViewCell.swift in Sources */,
@@ -4802,6 +4807,7 @@
 				A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */,
 				45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
+				A9A2E7ED27FC4FC700D35A9D /* BonusProgressView.swift in Sources */,
 				A9627A0D274548610001E1D5 /* ActivationAlertCollectionViewCell.swift in Sources */,
 				4589F41A26BF0243005DF543 /* NibView.swift in Sources */,
 				A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */,
