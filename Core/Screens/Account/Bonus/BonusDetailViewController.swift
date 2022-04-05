@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BonusDetailViewController: UIViewController {
     // MARK: Private Properties
@@ -22,10 +23,9 @@ class BonusDetailViewController: UIViewController {
     private lazy var bonusImageViewFixedHeightConstraint: NSLayoutConstraint = Self.createbonusImageViewFixedHeightConstraint()
     private lazy var bonusImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createbonusImageViewDynamicHeightConstraint()
     private lazy var bonusStackView: UIStackView = Self.createBonusStackView()
-    private var bonus: EveryMatrix.ApplicableBonus
-    //private var bonusBanner: UIImage?
-    private var bonusBannerUrl: URL?
+    
     private var aspectRatio: CGFloat = 1.0
+    private var cancellables = Set<AnyCancellable>()
 
     private var hasBonusImage: Bool = false {
         didSet {
@@ -38,10 +38,12 @@ class BonusDetailViewController: UIViewController {
         }
     }
 
+    private var viewModel: BonusDetailViewModel
+
     // MARK: Lifetime and Cycle
-    init(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
-        self.bonus = bonus
-        self.bonusBannerUrl = bonusBannerUrl
+    init(viewModel: BonusDetailViewModel) {
+        self.viewModel = viewModel
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -63,7 +65,7 @@ class BonusDetailViewController: UIViewController {
         self.termsLinkLabel.isUserInteractionEnabled = true
         self.termsLinkLabel.addGestureRecognizer(termsLinktap)
 
-        self.setupBonusDetails()
+        self.bind(toViewModel: self.viewModel)
     }
 
     // MARK: Layout and Theme
@@ -89,29 +91,51 @@ class BonusDetailViewController: UIViewController {
         self.termsLinkLabel.textColor = UIColor.App.textPrimary
     }
 
-    private func setupBonusDetails() {
-        self.titleLabel.text = self.bonus.name
+    // MARK: Binding
+    private func bind(toViewModel viewModel: BonusDetailViewModel) {
 
-        self.descriptionLabel.text = self.bonus.description
+        viewModel.titlePublisher
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &cancellables)
 
-        self.termsTitleLabel.text = localized("terms_conditions")
+        viewModel.descriptionPublisher
+            .sink(receiveValue: { [weak self] description in
+                self?.descriptionLabel.text = description
+            })
+            .store(in: &cancellables)
 
-        self.termsLinkLabel.text = self.bonus.url
+        viewModel.termsTitlePublisher
+            .sink(receiveValue: { [weak self] termsTitle in
+                self?.termsTitleLabel.text = termsTitle
+            })
+            .store(in: &cancellables)
 
-        if let bonusBannerUrl = self.bonusBannerUrl {
-            self.bonusImageView.kf.setImage(with: bonusBannerUrl)
+        viewModel.termsLinkStringPublisher
+            .sink(receiveValue: { [weak self] termsLinkString in
+                self?.termsLinkLabel.text = termsLinkString
+            })
+            .store(in: &cancellables)
 
-            if let bonusBannerImage = self.bonusImageView.image {
-                self.resizeBonusImageView(bonusBanner: bonusBannerImage)
-            }
-            self.hasBonusImage = true
-        }
-        else {
-            self.hasBonusImage = false
-        }
+        viewModel.bonusBannerPublisher
+            .sink(receiveValue: { [weak self] bonusBannerUrl in
+                if let bonusBannerUrl = bonusBannerUrl {
+                    self?.bonusImageView.kf.setImage(with: bonusBannerUrl)
 
+                    if let bonusBannerImage = self?.bonusImageView.image {
+                        self?.resizeBonusImageView(bonusBanner: bonusBannerImage)
+                    }
+                    self?.hasBonusImage = true
+                }
+                else {
+                    self?.hasBonusImage = false
+                }
+            })
+            .store(in: &cancellables)
     }
 
+    // MARK: Functions
     private func resizeBonusImageView(bonusBanner: UIImage) {
         self.aspectRatio = bonusBanner.size.width/bonusBanner.size.height
 
@@ -140,7 +164,7 @@ extension BonusDetailViewController {
     }
 
     @objc private func didTapTermsLinkLabel() {
-        if let url = URL(string: bonus.url) {
+        if let url = URL(string: self.viewModel.termsLinkStringPublisher.value) {
             UIApplication.shared.open(url)
         }
     }

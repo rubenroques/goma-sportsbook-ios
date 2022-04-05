@@ -16,13 +16,11 @@ class BonusProgressView: UIView {
     private lazy var progressInfoLabel: UILabel = Self.createProgressInfoLabel()
     private lazy var progressAmountLabel: UILabel = Self.createProgressAmountLabel()
 
-
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
 
         self.setupSubviews()
-        self.commonInit()
         self.setupWithTheme()
     }
 
@@ -30,11 +28,7 @@ class BonusProgressView: UIView {
         super.init(coder: aDecoder)
 
         self.setupSubviews()
-        self.commonInit()
         self.setupWithTheme()
-    }
-
-    private func commonInit() {
     }
 
     private func setupWithTheme() {
@@ -50,35 +44,23 @@ class BonusProgressView: UIView {
         self.progressAmountLabel.textColor = UIColor.App.textPrimary
     }
 
-    func setTitle(title: String) {
-        self.titleLabel.text = title
+    func configure(withViewModel viewModel: BonusProgressViewModel) {
+
+        self.titleLabel.text = viewModel.title
+
+        self.setupProgressInfo(viewModel: viewModel)
     }
 
-    func setupProgressInfo(bonus: EveryMatrix.GrantedBonus, progressType: ProgressType) {
+    func setupProgressInfo(viewModel: BonusProgressViewModel) {
 
         var bonusColor = UIColor.App.textPrimary
-        var remainingAmount = 0.0
-        var totalAmount = 0.0
-        var amountCurrency = CurrencySymbol.eur.identifier
 
-        switch progressType {
+        switch viewModel.progressType {
         case .bonus:
             bonusColor = UIColor(hex: 0x46C1A7)
             self.setupColoredLabel(label: self.progressInfoLabel, text: localized("remaining_total_bonus"), color: bonusColor)
 
             self.progressBarView.progressTintColor = bonusColor
-
-            if let bonusAmount = bonus.amount, let bonusRemainingAmount = bonus.remainingAmount {
-                remainingAmount = bonusRemainingAmount
-                totalAmount = bonusAmount
-            }
-
-            if let bonusCurrency = bonus.currency {
-
-                if let currencySymbolEnumCase = CurrencySymbol(rawValue: bonusCurrency) {
-                    amountCurrency = currencySymbolEnumCase.identifier
-                }
-            }
 
         case .wager:
             bonusColor = UIColor(hex: 0xD99F00)
@@ -86,17 +68,12 @@ class BonusProgressView: UIView {
 
             self.progressBarView.progressTintColor = bonusColor
 
-            if let wagerAmount = bonus.initialWagerRequirementAmount, let wagerRemainingAmount = bonus.remainingWagerRequirementAmount {
-                remainingAmount = wagerRemainingAmount
-                totalAmount = wagerAmount
-            }
         }
 
-        let progressBarAmount = Float(remainingAmount/totalAmount)
+        self.progressBarView.progress = viewModel.progressBarAmount
 
-        self.progressBarView.progress = progressBarAmount
+        let progressAmountString = viewModel.progressAmountString
 
-        let progressAmountString = "\(remainingAmount) / \(totalAmount) \(amountCurrency)"
         self.setupColoredLabel(label: self.progressAmountLabel, text: progressAmountString, color: bonusColor)
 
     }

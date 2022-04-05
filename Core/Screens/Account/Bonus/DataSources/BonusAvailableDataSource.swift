@@ -21,6 +21,8 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
     var bonusBannersUrl: [String: URL] = [:]
 
+    var bonusAvailableCellViewModels: [BonusAvailableCellViewModel] = []
+
     override init() {
         super.init()
 
@@ -42,11 +44,8 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
             if let cell = tableView.dequeueCellType(BonusAvailableTableViewCell.self) {
                 if let availableBonus = self.bonusAvailable[safe: indexPath.row] {
 
-                    if let bonusBannerUrl = self.bonusBannersUrl[availableBonus.bonus.code] {
-                        cell.setupBonus(bonus: availableBonus.bonus, bonusBannerUrl: bonusBannerUrl)
-                    }
-                    else {
-                        cell.setupBonus(bonus: availableBonus.bonus)
+                    if let cellViewModel = self.bonusAvailableCellViewModels[safe: indexPath.row] {
+                        cell.configure(withViewModel: cellViewModel)
                     }
 
                     if availableBonus.bonusType == .claimable {
@@ -81,12 +80,12 @@ class BonusAvailableDataSource: NSObject, UITableViewDataSource, UITableViewDele
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        return 0.01
+        return 0
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        return 0.01
+        return 0
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

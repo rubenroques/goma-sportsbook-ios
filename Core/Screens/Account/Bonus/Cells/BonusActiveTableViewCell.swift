@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BonusActiveTableViewCell: UITableViewCell {
     // MARK: Private Properties
@@ -21,6 +22,8 @@ class BonusActiveTableViewCell: UITableViewCell {
             self.stackView.isHidden = !hasBonusAmount
         }
     }
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -58,46 +61,50 @@ class BonusActiveTableViewCell: UITableViewCell {
 
     }
 
-    func setupBonus(bonus: EveryMatrix.GrantedBonus) {
-        
-        self.titleLabel.text = bonus.name
+    func configure(withViewModel viewModel: BonusActiveCellViewModel) {
 
-        let formattedDate = getDateFormatted(dateString: bonus.expiryDate ?? "")
+        viewModel.titlePublisher
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &cancellables)
 
-        if formattedDate != "" {
-            self.dateLabel.text = formattedDate
-        }
-        else {
-            self.dateLabel.text = localized("permanent")
-        }
+        viewModel.dateStringPublisher
+            .sink(receiveValue: { [weak self] dateString in
+                self?.dateLabel.text = dateString
+            })
+            .store(in: &cancellables)
 
-        if let bonusAmount = bonus.amount, let wagerAmount = bonus.initialWagerRequirementAmount {
-            if bonusAmount > 0 || wagerAmount > 0 {
-                self.hasBonusAmount = true
-            }
-        }
+        viewModel.hasBonusAmountPublisher
+            .sink(receiveValue: { [weak self] hasBonus in
+                if hasBonus {
+                    self?.stackView.removeAllArrangedSubviews()
 
-        if self.hasBonusAmount {
-            self.stackView.removeAllArrangedSubviews()
-            self.setupProgressBars(bonus: bonus)
-        }
+                    self?.setupProgressBars(bonus: viewModel.bonus)
 
+                }
+            })
+            .store(in: &cancellables)
     }
 
     private func setupProgressBars(bonus: EveryMatrix.GrantedBonus) {
 
         if let bonusAmount = bonus.amount, bonusAmount > 0 {
             let bonusProgressCardView = BonusProgressView()
-            bonusProgressCardView.setTitle(title: "Bonus Amount")
-            bonusProgressCardView.setupProgressInfo(bonus: bonus, progressType: .bonus)
+//            bonusProgressCardView.setTitle(title: localized("bonus_amount"))
+//            bonusProgressCardView.setupProgressInfo(bonus: bonus, progressType: .bonus)
+            let bonusProgressViewModel = BonusProgressViewModel(bonus: bonus, progressType: .bonus)
+            bonusProgressCardView.configure(withViewModel: bonusProgressViewModel)
             self.stackView.addArrangedSubview(bonusProgressCardView)
 
         }
 
         if let wagerAmount = bonus.initialWagerRequirementAmount, wagerAmount > 0 {
             let wagerProgressCardView = BonusProgressView()
-            wagerProgressCardView.setTitle(title: "Wager Amount")
-            wagerProgressCardView.setupProgressInfo(bonus: bonus, progressType: .wager)
+//            wagerProgressCardView.setTitle(title: localized("wager_amount"))
+//            wagerProgressCardView.setupProgressInfo(bonus: bonus, progressType: .wager)
+            let wagerProgressViewModel = BonusProgressViewModel(bonus: bonus, progressType: .wager)
+            wagerProgressCardView.configure(withViewModel: wagerProgressViewModel)
             self.stackView.addArrangedSubview(wagerProgressCardView)
 
         }
@@ -112,23 +119,6 @@ class BonusActiveTableViewCell: UITableViewCell {
 //        wagerProgressCardView.testSetupProgressInfo(bonus: bonus, progressType: .wager)
 //        self.stackView.addArrangedSubview(wagerProgressCardView)
 
-    }
-
-    func getDateFormatted(dateString: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
-
-        let date = dateString
-
-        if let formattedDate = dateFormatterGet.date(from: date) {
-
-            return dateFormatterPrint.string(from: formattedDate)
-        }
-
-        return ""
     }
 
 }

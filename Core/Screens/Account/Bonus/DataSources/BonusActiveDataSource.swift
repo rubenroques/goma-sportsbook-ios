@@ -14,6 +14,8 @@ class BonusActiveDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     // MARK: Public Properties
     var bonusActive: [EveryMatrix.GrantedBonus] = []
 
+    var bonusActiveCellViewModels: [BonusActiveCellViewModel] = []
+
     override init() {
         super.init()
     }
@@ -33,7 +35,9 @@ class BonusActiveDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             if let cell = tableView.dequeueCellType(BonusActiveTableViewCell.self) {
                 if let activeBonus = self.bonusActive[safe: indexPath.row] {
-                    cell.setupBonus(bonus: activeBonus)
+                    if let cellViewModel = self.bonusActiveCellViewModels[safe: indexPath.row] {
+                        cell.configure(withViewModel: cellViewModel)
+                    }
                 }
                 
                 cell.selectionStyle = .none
@@ -52,12 +56,12 @@ class BonusActiveDataSource: NSObject, UITableViewDataSource, UITableViewDelegat
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        return 0.01
+        return 0
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        return 0.01
+        return 0
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -412,3 +412,6 @@ Terms of use, Privacy Policy and EULA";
 
 "remaining_total_bonus" = "Remaining / Total Bonus";
 "remaining_total_wager" = "Remaining / Total Wager";
+
+"bonus_amount" = "Bonus Amount";
+"wager_amount" = "Wager Amount";
