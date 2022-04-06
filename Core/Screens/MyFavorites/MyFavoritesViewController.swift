@@ -181,6 +181,63 @@ class MyFavoritesViewController: UIViewController {
     // MARK: Binding
     private func bind(toViewModel viewModel: MyFavoritesViewModel) {
 
+        self.myFavoriteMatchesDataSource.store = viewModel.store
+
+        self.myFavoriteCompetitionsDataSource.store = viewModel.store
+
+        self.myFavoriteMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
+            return self?.viewModel.matchStatsViewModel(forMatch: match)
+        }
+
+        self.myFavoriteCompetitionsDataSource.matchStatsViewModelForMatch = { [weak self] match in
+            return self?.viewModel.matchStatsViewModel(forMatch: match)
+        }
+
+        self.myFavoriteMatchesDataSource.didSelectMatchAction = { [weak self] match in
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+            self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+
+        self.myFavoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+            self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+
+        self.myFavoriteMatchesDataSource.matchWentLiveAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+
+        self.myFavoriteCompetitionsDataSource.matchWentLiveAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+
+        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markAsFavorite(match: match)
+            }
+        }
+
+        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markCompetitionAsFavorite(competition: competition)
+            }
+        }
+
+        self.myFavoriteCompetitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markAsFavorite(match: match)
+            }
+        }
+
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
@@ -193,11 +250,6 @@ class MyFavoritesViewController: UIViewController {
                 self?.tableView.reloadData()
             })
             .store(in: &cancellables)
-
-        viewModel.didSelectMatchAction = { [weak self] match in
-            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
-            self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-        }
 
         viewModel.emptyStateStatusPublisher
             .receive(on: DispatchQueue.main)
@@ -217,35 +269,17 @@ class MyFavoritesViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.didTapFavoriteMatchAction = { [weak self] match in
-            if !UserSessionStore.isUserLogged() {
-                self?.presentLoginViewController()
-            }
-            else {
-                self?.viewModel.markAsFavorite(match: match)
-            }
-        }
-
-       viewModel.didTapFavoriteCompetitionAction = { [weak self] competition in
-            if !UserSessionStore.isUserLogged() {
-                self?.presentLoginViewController()
-            }
-            else {
-                self?.viewModel.markCompetitionAsFavorite(competition: competition)
-            }
-        }
-
-        viewModel.myFavoriteMatchesDataSourcePublisher
+        viewModel.favoriteMatchesDataPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] matchesDataSource in
-                self?.myFavoriteMatchesDataSource = matchesDataSource
+            .sink(receiveValue: { [weak self] matches in
+                self?.myFavoriteMatchesDataSource.setupMatchesBySport(favoriteMatches: matches)
             })
             .store(in: &cancellables)
 
-        viewModel.myFavoriteCompetitionsDataSourcePublisher
+        viewModel.favoriteCompetitionsDataPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] competitionsDataSource in
-                self?.myFavoriteCompetitionsDataSource = competitionsDataSource
+            .sink(receiveValue: { [weak self] competitions in
+                self?.myFavoriteCompetitionsDataSource.competitions = competitions
             })
             .store(in: &cancellables)
 

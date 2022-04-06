@@ -11,89 +11,42 @@ import OrderedCollections
 
 class MyFavoritesViewModel: NSObject {
 
-    private var favoriteMatches: [Match] = []
-    private var favoriteCompetitions: [Competition] = []
-
+    // MARK: Private Properties
     private var favoriteMatchesRegister: EndpointPublisherIdentifiable?
     private var favoriteCompetitionsMatchesRegister: EndpointPublisherIdentifiable?
+
     private var favoriteMatchesPublisher: AnyCancellable?
     private var favoriteCompetitionsMatchesPublisher: AnyCancellable?
 
-    private var cancellables = Set<AnyCancellable>()
-    var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
-    var didSelectMatchAction: ((Match) -> Void)?
-    var didTapFavoriteMatchAction: ((Match) -> Void)?
-    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
-    var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
-
-    var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
-
-    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-
     private var favoriteEventsIds: [String] = []
+
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
+    var favoriteMatchesDataPublisher: CurrentValueSubject<[Match], Never> = .init([])
+    var favoriteCompetitionsDataPublisher: CurrentValueSubject<[Competition], Never> = .init([])
+
+    var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
+    var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
+    var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     enum FavoriteListType {
         case favoriteGames
         case favoriteCompetitions
     }
 
-    // Caches
+    // MARK: Caches
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
-    // Data Sources
-    var myFavoriteMatchesDataSourcePublisher: CurrentValueSubject<MyFavoriteMatchesDataSource, Never> =
-        .init(MyFavoriteMatchesDataSource(userFavoriteMatches: [], store: FavoritesAggregatorsRepository()))
-    var myFavoriteCompetitionsDataSourcePublisher: CurrentValueSubject<MyFavoriteCompetitionsDataSource, Never> =
-        .init(MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], store: FavoritesAggregatorsRepository()))
-
+    // MARK: Store
     var store: FavoritesAggregatorsRepository = FavoritesAggregatorsRepository()
 
+    // MARK: Lifetime and Cycle
     override init() {
         super.init()
 
-        self.store.getLocations()
-
-        self.myFavoriteMatchesDataSourcePublisher.value.store = self.store
-
-        self.myFavoriteCompetitionsDataSourcePublisher.value.store = self.store
-
-        self.myFavoriteMatchesDataSourcePublisher.value.matchStatsViewModelForMatch = { [weak self] match in
-            return self?.matchStatsViewModel(forMatch: match)
-        }
-
-        self.myFavoriteCompetitionsDataSourcePublisher.value.matchStatsViewModelForMatch = { [weak self] match in
-            return self?.matchStatsViewModel(forMatch: match)
-        }
-
-        // Match Select
-        self.myFavoriteMatchesDataSourcePublisher.value.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
-        }
-        self.myFavoriteCompetitionsDataSourcePublisher.value.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
-        }
-
-        // Match went live
-        self.myFavoriteMatchesDataSourcePublisher.value.matchWentLiveAction = { [weak self] in
-            self?.dataChangedPublisher.send()
-        }
-        self.myFavoriteCompetitionsDataSourcePublisher.value.matchWentLiveAction = { [weak self] in
-            self?.dataChangedPublisher.send()
-        }
-
-        self.myFavoriteMatchesDataSourcePublisher.value.didTapFavoriteMatchAction = { [weak self] match in
-            self?.didTapFavoriteMatchAction?(match)
-        }
-        
-        self.myFavoriteCompetitionsDataSourcePublisher.value.didTapFavoriteCompetitionAction = { [weak self] competition in
-            self?.didTapFavoriteCompetitionAction?(competition)
-        }
-
-        self.myFavoriteCompetitionsDataSourcePublisher.value.didTapFavoriteMatchAction = { [weak self] match in
-            self?.didTapFavoriteMatchAction?(match)
-        }
-
-        self.setupPublishers()
+        self.initialSetup()
 
     }
 
@@ -101,8 +54,15 @@ class MyFavoritesViewModel: NSObject {
         print("VM DEINIT")
         self.unregisterEndpoints()
     }
+
+    // MARK: Functions
+    private func initialSetup() {
+
+        self.getLocations()
+
+    }
     
-    func unregisterEndpoints() {
+    private func unregisterEndpoints() {
 
         if let favoriteMatchesRegister = self.favoriteMatchesRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
@@ -142,7 +102,7 @@ class MyFavoritesViewModel: NSObject {
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             isFavorite = true
         }
-        
+
         if isFavorite {
             Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
         }
@@ -166,6 +126,33 @@ class MyFavoritesViewModel: NSObject {
         }
    
     }
+
+    private func getLocations() {
+        self.isLoadingPublisher.send(true)
+
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("LOCATIONS ERROR: \(error)")
+                    self?.isLoadingPublisher.send(false)
+                case .finished:
+                    ()
+                }
+            },
+                  receiveValue: { [weak self] response in
+
+                (response.records ?? []).forEach { location in
+
+                    self?.store.locations[location.id] = location
+                }
+
+                self?.setupPublishers()
+
+            })
+            .store(in: &cancellables)
+    }
     
     private func setupPublishers() {
 
@@ -179,6 +166,7 @@ class MyFavoritesViewModel: NSObject {
 
                 }
                 else {
+                    self?.isLoadingPublisher.send(false)
                     self?.dataChangedPublisher.send()
                     self?.emptyStateStatusPublisher.send(.noLogin)
                 }
@@ -234,14 +222,14 @@ class MyFavoritesViewModel: NSObject {
 
         self.store.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
 
-        self.favoriteMatches = self.store.matchesForListType(.favoriteMatchEvents)
+        self.favoriteMatchesDataPublisher.value = self.store.matchesForListType(.favoriteMatchEvents)
 
         if self.favoriteEventsIds.isNotEmpty {
             self.fetchFavoriteCompetitionsMatchesWithIds(self.favoriteEventsIds)
         }
         else {
-            self.favoriteMatches = []
-            self.favoriteCompetitions = []
+            self.favoriteMatchesDataPublisher.value = []
+            self.favoriteCompetitionsDataPublisher.value = []
             self.updateContentList()
         }
     }
@@ -337,7 +325,7 @@ class MyFavoritesViewModel: NSObject {
             }
         }
 
-        self.favoriteCompetitions = processedCompetitions
+        self.favoriteCompetitionsDataPublisher.value = processedCompetitions
 
         self.updateContentList()
     }
@@ -350,22 +338,18 @@ class MyFavoritesViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.myFavoriteMatchesDataSourcePublisher.value.setupMatchesBySport(favoriteMatches: self.favoriteMatches)
-
-        self.myFavoriteCompetitionsDataSourcePublisher.value.competitions = self.favoriteCompetitions
-
         if UserSessionStore.isUserLogged() {
-            if self.favoriteMatches.isEmpty && self.favoriteCompetitions.isEmpty {
+            if self.favoriteMatchesDataPublisher.value.isEmpty && self.favoriteCompetitionsDataPublisher.value.isEmpty {
                 self.emptyStateStatusPublisher.send(.noFavorites)
             }
-            else if self.favoriteMatches.isNotEmpty && self.favoriteCompetitions.isNotEmpty {
+            else if self.favoriteMatchesDataPublisher.value.isNotEmpty && self.favoriteCompetitionsDataPublisher.value.isNotEmpty {
                 self.emptyStateStatusPublisher.send(.none)
             }
             else {
-                if self.favoriteMatches.isEmpty {
+                if self.favoriteMatchesDataPublisher.value.isEmpty {
                     self.emptyStateStatusPublisher.send(.noGames)
                 }
-                else if self.favoriteCompetitions.isEmpty {
+                else if self.favoriteCompetitionsDataPublisher.value.isEmpty {
                     self.emptyStateStatusPublisher.send(.noCompetitions)
                 }
             }
@@ -374,8 +358,10 @@ class MyFavoritesViewModel: NSObject {
         else {
             self.emptyStateStatusPublisher.send(.noLogin)
         }
+
         self.isLoadingPublisher.send(false)
         self.dataChangedPublisher.send()
 
     }
+
 }
