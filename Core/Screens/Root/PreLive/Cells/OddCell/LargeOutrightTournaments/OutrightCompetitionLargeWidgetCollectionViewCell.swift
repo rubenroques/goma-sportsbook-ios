@@ -19,15 +19,8 @@ class OutrightCompetitionLargeWidgetViewModel {
     init(competition: Competition) {
         self.competition = competition
         self.name = competition.name
-
         self.countryName = competition.venue?.name ?? ""
-
-        if let isoCode = competition.venue?.isoCode {
-            self.countryImageName = Assets.flagName(withCountryCode: isoCode)
-        }
-        else {
-            self.countryImageName = "country_flag_240"
-        }
+        self.countryImageName = Assets.flagName(withCountryCode: competition.venue?.isoCode ?? "")
     }
 
 }

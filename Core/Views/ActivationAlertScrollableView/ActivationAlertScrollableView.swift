@@ -88,7 +88,11 @@ extension ActivationAlertScrollableView: UICollectionViewDelegate, UICollectionV
         else {
             fatalError()
         }
-        if let title = alertDataArray[safe: indexPath.row]?.title, let description = alertDataArray[safe: indexPath.row]?.description, let linkLabel = alertDataArray[safe: indexPath.row]?.linkLabel {
+
+        if let title = alertDataArray[safe: indexPath.row]?.title,
+           let description = alertDataArray[safe: indexPath.row]?.description,
+           let linkLabel = alertDataArray[safe: indexPath.row]?.linkLabel {
+
             cell.setText(title: title, info: description, linkText: linkLabel)
             cell.linkLabelAction = {
                 if let alertAction = self.alertDataArray[safe: indexPath.row]?.alertType {

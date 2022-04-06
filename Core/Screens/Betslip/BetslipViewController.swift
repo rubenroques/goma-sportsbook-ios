@@ -82,7 +82,7 @@ class BetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.isModalInPresentation = true
+        self.isModalInPresentation = false
 
         self.accountInfoBaseView.isHidden = true
         
@@ -99,6 +99,8 @@ class BetslipViewController: UIViewController {
         self.tabViewController.didMove(toParent: self)
 
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
+        self.tabViewController.setBarDistribution(.parent)
+
 
         self.accountInfoBaseView.clipsToBounds = true
         self.accountValuePlusView.clipsToBounds = true

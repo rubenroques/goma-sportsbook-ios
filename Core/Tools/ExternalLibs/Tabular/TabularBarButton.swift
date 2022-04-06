@@ -101,32 +101,6 @@ public class TabularBarButton: UIControl {
         titleLabel.removeFromSuperview()
 
         self.addSubview(titleLabel)
-//        leadingAnchorConstraint = NSLayoutConstraint(item: titleLabel,
-//                                                 attribute: .leading,
-//                                                 relatedBy: .equal,
-//                                                 toItem: self,
-//                                                 attribute: .leading,
-//                                                 multiplier: 1,
-//                                                 constant: CGFloat(self.verticalSpacing))
-//
-//        topAnchorConstraint = NSLayoutConstraint(item: titleLabel,
-//                                                 attribute: .top,
-//                                                 relatedBy: .equal,
-//                                                 toItem: self,
-//                                                 attribute: .top,
-//                                                 multiplier: 1,
-//                                                 constant: CGFloat(self.horizontalSpacing))
-//
-//
-//
-//
-
-//        NSLayoutConstraint.activate([
-//            leadingAnchorConstraint,
-//            topAnchorConstraint,
-//            titleLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: 0),
-//            titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor, constant: 0),
-//        ].compactMap({ $0 }))
 
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor),

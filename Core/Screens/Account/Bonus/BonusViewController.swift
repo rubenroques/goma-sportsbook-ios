@@ -210,6 +210,7 @@ class BonusViewController: UIViewController {
     }
 
     private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+
         if let bonusBannerUrl = bonusBannerUrl {
             let bonusDetailViewController = BonusDetailViewController(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
             self.navigationController?.pushViewController(bonusDetailViewController, animated: true)

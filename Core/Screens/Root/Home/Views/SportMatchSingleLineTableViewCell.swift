@@ -60,7 +60,7 @@ class SportMatchSingleLineTableViewCell: UITableViewCell {
 
         self.viewModel = nil
 
-        self.collectionView.setContentOffset(.zero, animated: false)
+        self.collectionView.setContentOffset(CGPoint(x: -8, y: 0), animated: false)
 
         self.showingBackSliderView = false
         self.backView.alpha = 0.0

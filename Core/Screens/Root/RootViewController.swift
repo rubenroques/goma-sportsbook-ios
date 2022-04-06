@@ -408,9 +408,22 @@ class RootViewController: UIViewController {
     }
 
     @objc func didTapLogoImageView() {
-        let socialViewController = SocialViewController(viewModel: SocialViewModel())
-        self.present(Router.navigationController(with: socialViewController),
-                     animated: true, completion: nil)
+
+        guard
+            Env.everyMatrixClient.userSessionStatusPublisher.value == .logged,
+            let userId = UserSessionStore.loggedUserSession()?.userId
+        else {
+            return
+        }
+
+        let casinoWebViewController = CasinoWebViewController(userId: userId)
+        casinoWebViewController.modalPresentationStyle = .fullScreen
+        
+        self.present(casinoWebViewController, animated: true, completion: nil)
+
+//        let socialViewController = SocialViewController(viewModel: SocialViewModel())
+//        self.present(Router.navigationController(with: socialViewController),
+//                     animated: true, completion: nil)
     }
 }
 

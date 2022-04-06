@@ -18,12 +18,13 @@ class VersionUpdateViewController: UIViewController {
     @IBOutlet private var dismissButton: UIButton!
 
     var dismissCallback: (() -> Void)?
-    // Variables
-    var imageGradient: UIImage
-    var required: Bool
 
-    init(required: Bool) {
-        self.required = required
+    // Variables
+    private var imageGradient: UIImage
+    private var updateRequired: Bool
+
+    init(updateRequired: Bool) {
+        self.updateRequired = updateRequired
         self.imageGradient = UIImage()
 
         super.init(nibName: "VersionUpdateViewController", bundle: nil)
@@ -36,16 +37,19 @@ class VersionUpdateViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageGradient = UIImage().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
 
-        commonInit()
-        setupWithTheme()
+        self.isModalInPresentation = self.updateRequired
+
+        self.imageGradient = UIImage().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
+
+        self.commonInit()
+        self.setupWithTheme()
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
@@ -86,7 +90,7 @@ class VersionUpdateViewController: UIViewController {
         dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.bold, size: 18)
         dismissButton.setTitle(localized("dismiss_title"), for: .normal)
 
-        if required {
+        if updateRequired {
             logoImageView.image = UIImage(named: "update_required_icon")
             titleLabel.text = localized("update_required_title")
             textLabel.text = localized("update_required_text")
@@ -104,7 +108,7 @@ class VersionUpdateViewController: UIViewController {
     }
 
     @IBAction private func dismissAction() {
-        if required {
+        if updateRequired {
             return
         }
 

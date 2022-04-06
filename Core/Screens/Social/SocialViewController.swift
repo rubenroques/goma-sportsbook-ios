@@ -79,6 +79,7 @@ class SocialViewController: UIViewController {
 
         self.addChildViewController(tabViewController, toView: containerBaseView)
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
+        self.tabViewController.setBarDistribution(.parent)
 
         self.setupWithTheme()
     }

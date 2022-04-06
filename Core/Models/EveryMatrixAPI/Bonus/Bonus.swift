@@ -56,7 +56,6 @@ extension EveryMatrix {
         }
     }
 
-    // typealias ClaimableBonusResponse = [ApplicableBonus]
     struct ClaimableBonusResponse: Decodable {
         let locallyInjectedKey: [ApplicableBonus]
     }

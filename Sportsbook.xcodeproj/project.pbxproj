@@ -126,6 +126,8 @@
 		452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452047B827036D3900B277B5 /* SplashViewController.swift */; };
 		452047BC27036D3900B277B5 /* SplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 452047B927036D3900B277B5 /* SplashViewController.xib */; };
 		452047BD27036D3900B277B5 /* SplashViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 452047B927036D3900B277B5 /* SplashViewController.xib */; };
+		4523AED027FB284000C5BF4E /* CasinoWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4523AECF27FB284000C5BF4E /* CasinoWebViewController.swift */; };
+		4523AED127FB284000C5BF4E /* CasinoWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4523AECF27FB284000C5BF4E /* CasinoWebViewController.swift */; };
 		453079382750EDBF00278B7C /* MatchDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */; };
 		453079392750EDBF00278B7C /* MatchDetailsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */; };
 		4540ED2E27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */; };
@@ -1163,6 +1165,7 @@
 		452047B52703656300B277B5 /* EventsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsStore.swift; sourceTree = "<group>"; };
 		452047B827036D3900B277B5 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
 		452047B927036D3900B277B5 /* SplashViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SplashViewController.xib; sourceTree = "<group>"; };
+		4523AECF27FB284000C5BF4E /* CasinoWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasinoWebViewController.swift; sourceTree = "<group>"; };
 		453079372750EDBF00278B7C /* MatchDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewModel.swift; sourceTree = "<group>"; };
 		4540ED2D27BC15CB00A14BB0 /* SuggestedBetLineTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetLineTableViewCell.swift; sourceTree = "<group>"; };
 		454990CB2716333F00D57CE2 /* SportsTypes.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = SportsTypes.xcassets; sourceTree = "<group>"; };
@@ -1952,6 +1955,14 @@
 			path = Splash;
 			sourceTree = "<group>";
 		};
+		4523AECE27FB282800C5BF4E /* Casino */ = {
+			isa = PBXGroup;
+			children = (
+				4523AECF27FB284000C5BF4E /* CasinoWebViewController.swift */,
+			);
+			path = Casino;
+			sourceTree = "<group>";
+		};
 		454A7A6126DA2FD600E6E74E /* Misc */ = {
 			isa = PBXGroup;
 			children = (
@@ -2524,6 +2535,7 @@
 				4589F3EA26BF017A005DF543 /* Account */,
 				A9E7C68A27B526C500F784C9 /* MyFavorites */,
 				452047BE27036D4600B277B5 /* Splash */,
+				4523AECE27FB282800C5BF4E /* Casino */,
 				A9A836AF26C6AC5D00508923 /* Maintenance */,
 				A9B8407926CA788000269B05 /* VersionUpdate */,
 				A9B8409426DE44BF00269B05 /* GeoLocation */,
@@ -4395,6 +4407,7 @@
 				A99622A627887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
 				A96279EB273ED1E40001E1D5 /* ActivationAlertView.swift in Sources */,
 				455A0D1926BDABA100EC572D /* Internationalization.swift in Sources */,
+				4523AED027FB284000C5BF4E /* CasinoWebViewController.swift in Sources */,
 				455A0CF226BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
 				45A16E142707B6C100A95C01 /* ListTypeCollectionViewCell.swift in Sources */,
 				45ACEEB02721B54E00D0A45F /* BannerCellViewModel.swift in Sources */,
@@ -4810,6 +4823,7 @@
 				45BD39C7270213DE001DD51D /* KeychainInterface.swift in Sources */,
 				4589F42326BF395E005DF543 /* UserDefaults.swift in Sources */,
 				A99622A727887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift in Sources */,
+				4523AED127FB284000C5BF4E /* CasinoWebViewController.swift in Sources */,
 				A96279EC273ED1E40001E1D5 /* ActivationAlertView.swift in Sources */,
 				455A0D1A26BDABA100EC572D /* Internationalization.swift in Sources */,
 				455A0CF326BD9D9000EC572D /* UIButton+Extensions.swift in Sources */,
@@ -5133,7 +5147,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00500;
+				CURRENT_PROJECT_VERSION = 00504;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -5159,7 +5173,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00500;
+				CURRENT_PROJECT_VERSION = 00504;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

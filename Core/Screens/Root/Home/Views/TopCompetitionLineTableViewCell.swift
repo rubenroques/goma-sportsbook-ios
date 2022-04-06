@@ -10,7 +10,7 @@ import Combine
 
 class TopCompetitionLineTableViewCell: UITableViewCell {
 
-    var didSelectSeeAllCompetitionAction: ((Sport, Competition) -> Void)?
+    var didSelectSeeAllCompetitionsAction: ((Sport, [Competition]) -> Void)?
 
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var linesStackView: UIStackView = Self.createLinesStackView()
@@ -37,6 +37,8 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
 
         self.viewModel = nil
         self.titleLabel.text = ""
+
+        self.collectionView.setContentOffset(CGPoint(x: -8, y: 0), animated: false)
 
         self.reloadCollections()
     }
@@ -84,36 +86,33 @@ class TopCompetitionLineTableViewCell: UITableViewCell {
         self.collectionView.reloadData()
     }
 
-    func didSelectSeeAllCompetition(competition: Competition) {
+    func didSelectSeeAllCompetitions(_ competitions: [Competition]) {
         guard
             let viewModel = self.viewModel
         else { return }
 
-        self.didSelectSeeAllCompetitionAction?(viewModel.sport, competition)
+        self.didSelectSeeAllCompetitionsAction?(viewModel.sport, competitions)
     }
 }
 
 extension TopCompetitionLineTableViewCell: UIScrollViewDelegate {
     
-//    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//
-//        if scrollView == self.collectionView,
-//           let viewModel = self.viewModel,
-//           let competition = viewModel.competition
-//        {
-//            let screenWidth = UIScreen.main.bounds.size.width
-//            if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
-//                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
-//                    let generator = UIImpactFeedbackGenerator(style: .heavy)
-//                    generator.prepare()
-//                    generator.impactOccurred()
-//                    self.didSelectSeeAllCompetitionAction?(viewModel.sport, competition)
-//                    return
-//                }
-//            }
-//        }
-//
-//    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+
+        if scrollView.isTracking, scrollView == self.collectionView, let viewModel = self.viewModel {
+            let screenWidth = UIScreen.main.bounds.size.width
+            if scrollView.contentSize.width > screenWidth {
+                if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
+                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+                    generator.prepare()
+                    generator.impactOccurred()
+                    self.didSelectSeeAllCompetitions(viewModel.allTopCompetitions())
+                    return
+                }
+            }
+        }
+
+    }
     
 }
 
@@ -150,7 +149,11 @@ extension TopCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectio
                     marketString = singularMarketRawString.replacingOccurrences(of: "%s", with: "\(numberTotalOfMarkets)")
                 }
                 cell.configureWithSubtitleString(marketString)
-
+                cell.tappedAction = { [weak self] in
+                    if let weakSelf = self, let viewModel = weakSelf.viewModel {
+                        weakSelf.didSelectSeeAllCompetitions(viewModel.allTopCompetitions() )
+                    }
+                }
                 if numberTotalOfMarkets == 0 {
                     cell.hideSubtitle()
                 }
@@ -167,7 +170,7 @@ extension TopCompetitionLineTableViewCell: UICollectionViewDelegate, UICollectio
         }
         cell.configure(withViewModel: viewModel)
         cell.didSelectCompetitionAction = { [weak self] competition in
-            self?.didSelectSeeAllCompetition(competition: competition)
+            self?.didSelectSeeAllCompetitions([competition])
         }
         
         return cell

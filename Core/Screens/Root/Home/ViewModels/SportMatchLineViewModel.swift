@@ -111,7 +111,7 @@ extension SportMatchLineViewModel {
     func numberOfSections(forLine lineIndex: Int) -> Int {
         if self.isCompetitionLine() {
             if self.topCompetitions != nil {
-                return 1
+                return 2
             }
             return 0
         }
@@ -186,6 +186,10 @@ extension SportMatchLineViewModel {
             return CompetitionWidgetViewModel(competition: competition)
         }
         return nil
+    }
+
+    func allTopCompetitions() -> [Competition] {
+        return self.topCompetitions ?? []
     }
 
     func isOutrightCompetitionLine() -> Bool {

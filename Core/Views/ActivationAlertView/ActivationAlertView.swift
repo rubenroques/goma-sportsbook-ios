@@ -14,6 +14,7 @@ class ActivationAlertView: NibView {
     @IBOutlet private var closeButton: UIButton!
     @IBOutlet private var infoLabel: UILabel!
     @IBOutlet private var linkLabel: UILabel!
+
     // Variables
     var onClose:(() -> Void)?
     var linkLabelAction: (() -> Void)?
@@ -31,26 +32,34 @@ class ActivationAlertView: NibView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        commonInit()
-        setupWithTheme()
+
+        self.commonInit()
+        self.setupWithTheme()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        commonInit()
-        setupWithTheme()
+
+        self.commonInit()
+        self.setupWithTheme()
     }
 
     override func commonInit() {
-        titleLabel.text = "Lorem Ipsum"
+        self.titleLabel.text = ""
 
-        closeButton.setImage(UIImage(named: "small_close_cross_icon"), for: .normal)
+        self.closeButton.setImage(UIImage(named: "small_close_cross_icon"), for: .normal)
+        if let image = self.closeButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
+            self.closeButton.setImage(image, for: .normal)
+            self.closeButton.tintColor = UIColor.App.highlightPrimary
+        }
+
         hasCloseAction = false
 
-        infoLabel.text = "Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum"
-        infoLabel.numberOfLines = 0
+        self.infoLabel.text = ""
+        self.infoLabel.numberOfLines = 0
 
-        linkLabel.text = "Click here"
+        self.linkLabel.text = ""
+
         let labelTap = UITapGestureRecognizer(target: self, action: #selector(self.labelTapped(_:)))
         self.linkLabel.isUserInteractionEnabled = true
         self.linkLabel.addGestureRecognizer(labelTap)

@@ -188,7 +188,7 @@ class PopularDetailsViewModel {
         if matches.isNotEmpty {
             self.matches = matches
 
-            self.titlePublisher = .init("\(self.sport.name) - Popular Matches")
+            self.titlePublisher.send("\(self.sport.name) - Popular Matches")
             
             self.isLoading.send(false)
             self.refreshPublisher.send()

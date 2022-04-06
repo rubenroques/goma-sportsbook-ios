@@ -16,21 +16,25 @@ class ProfileLimitsManagementViewController: UIViewController {
     @IBOutlet private var backButton: UIButton!
     @IBOutlet private var headerLabel: UILabel!
     @IBOutlet private var editButton: UIButton!
+
     @IBOutlet private var depositView: UIView!
     @IBOutlet private var depositLabel: UILabel!
     @IBOutlet private var depositHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var depositFrequencySelectTextFieldView: DropDownSelectionView!
     @IBOutlet private var depositLineView: UIView!
+
     @IBOutlet private var bettingView: UIView!
     @IBOutlet private var bettingLabel: UILabel!
     @IBOutlet private var bettingHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var bettingFrequencySelectTextFieldView: DropDownSelectionView!
     @IBOutlet private var bettingLineView: UIView!
+
     @IBOutlet private var lossView: UIView!
     @IBOutlet private var lossLabel: UILabel!
     @IBOutlet private var lossHeaderTextFieldView: HeaderTextFieldView!
     @IBOutlet private var lossFrequencySelectHeaderTextFieldView: DropDownSelectionView!
     @IBOutlet private var lossLineView: UIView!
+
     @IBOutlet private var exclusionView: UIView!
     @IBOutlet private var exclusionLabel: UILabel!
     @IBOutlet private var exclusionSelectTextFieldView: DropDownSelectionView!
@@ -206,7 +210,8 @@ class ProfileLimitsManagementViewController: UIViewController {
         headerLabel.font = AppFont.with(type: .semibold, size: 17)
         headerLabel.text = localized("limits_management")
 
-        editButton.underlineButtonTitleLabel(title: localized("save"))
+        editButton.titleLabel?.font = AppFont.with(type: .bold, size: 15)
+        editButton.setTitle(localized("save"), for: .normal)
 
         //
         //
@@ -447,7 +452,9 @@ class ProfileLimitsManagementViewController: UIViewController {
     }
 
     private func showRemoveAlert(limitType: String, period: String) {
-        let removeLimitAlert = UIAlertController(title: localized("remove_limit"), message: localized("remove_limit_warning"), preferredStyle: UIAlertController.Style.alert)
+        let removeLimitAlert = UIAlertController(title: localized("remove_limit"),
+                                                 message: localized("remove_limit_warning"),
+                                                 preferredStyle: UIAlertController.Style.alert)
 
         removeLimitAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { _ in
             self.viewModel.removeLimit(limitType: limitType, period: period)
@@ -466,7 +473,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         if self.viewModel.canUpdateDeposit {
             let period = self.depositFrequencySelectTextFieldView.text
             let amountString = self.depositHeaderTextFieldView.text
-            let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
+            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
             let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
@@ -477,7 +484,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         else if self.viewModel.canUpdateWagering {
             let period = self.bettingFrequencySelectTextFieldView.text
             let amountString = self.bettingHeaderTextFieldView.text
-            let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
+            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
             let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""
@@ -488,7 +495,7 @@ class ProfileLimitsManagementViewController: UIViewController {
         else if self.viewModel.canUpdateLoss {
             let period = self.lossFrequencySelectHeaderTextFieldView.text
             let amountString = self.lossHeaderTextFieldView.text
-            let amountFiltered = String( amountString.filter{acceptedInputs.contains($0)} )
+            let amountFiltered = String( amountString.filter{ acceptedInputs.contains($0)} )
             let amount = amountFiltered.replacingOccurrences(of: ",", with: ".")
 
             let currency = Env.userSessionStore.userBalanceWallet.value?.currency ?? ""

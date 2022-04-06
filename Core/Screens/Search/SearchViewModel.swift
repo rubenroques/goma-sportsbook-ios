@@ -187,30 +187,22 @@ class SearchViewModel: NSObject {
                 case .matchInfo(let matchInfo):
 
                     matchesInfo[matchInfo.id] = matchInfo
-                    // Set on storage aswell for live cards
-                    Env.everyMatrixStorage.matchesInfo[matchInfo.id] = matchInfo
 
                     if let matchId = matchInfo.matchId {
                         if var matchInfoForIterationMatch = matchesInfoForMatch[matchId] {
                             matchInfoForIterationMatch.insert(matchInfo.id)
                             matchesInfoForMatch[matchId] = matchInfoForIterationMatch
-                            // Set on storage aswell for live cards
-                            Env.everyMatrixStorage.matchesInfoForMatch[matchId] = matchInfoForIterationMatch
-                        }
+                      }
                         else {
                             var newSet = Set<String>.init()
                             newSet.insert(matchInfo.id)
 
                             matchesInfoForMatch[matchId] = newSet
-                            // Set on storage aswell for live cards
-                            Env.everyMatrixStorage.matchesInfoForMatch[matchId] = newSet
 
                             var matchIdArray = matchesInfoForMatchPublisher.value
                             matchIdArray.append(matchId)
                             matchesInfoForMatchPublisher.send(matchIdArray)
-                            // Set on storage aswell for live cards
-                            Env.everyMatrixStorage.matchesInfoForMatchPublisher.send(matchIdArray)
-                        }
+                      }
                     }
 
                 case .market(let marketContent):

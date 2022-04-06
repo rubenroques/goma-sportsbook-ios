@@ -71,8 +71,8 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
 
         self.viewModel = nil
 
-        self.topCollectionView.setContentOffset(.zero, animated: false)
-        self.bottomCollectionView.setContentOffset(.zero, animated: false)
+        self.topCollectionView.setContentOffset(CGPoint(x: -8, y: 0), animated: false)
+        self.bottomCollectionView.setContentOffset(CGPoint(x: -8, y: 0), animated: false)
 
         self.showingFirstBackSliderView = false
         self.firstBackView.alpha = 0.0
@@ -167,20 +167,27 @@ class SportMatchDoubleLineTableViewCell: UITableViewCell {
 extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let screenWidth = UIScreen.main.bounds.size.width
+        let width = screenWidth*0.6
 
-        if scrollView == self.topCollectionView, let firstMatch = self.viewModel?.match(forLine: 0) {
-            let screenWidth = UIScreen.main.bounds.size.width
+        if scrollView == self.topCollectionView {
+
             if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
                 if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
                     let generator = UIImpactFeedbackGenerator(style: .heavy)
                     generator.prepare()
                     generator.impactOccurred()
-                    self.tappedMatchLineAction?(firstMatch)
+
+                    if self.viewModel?.isOutrightCompetitionLine() ?? false, let competition = self.viewModel?.outrightCompetition(forLine: 0) {
+                        self.didSelectSeeAllCompetitionAction?(competition)
+                    }
+                    else if let firstMatch = self.viewModel?.match(forLine: 0) {
+                        self.tappedMatchLineAction?(firstMatch)
+                    }
+
                     return
                 }
             }
-       
-            let width = screenWidth*0.6
 
             if scrollView.contentOffset.x > width {
                 if !self.showingFirstBackSliderView {
@@ -199,19 +206,24 @@ extension SportMatchDoubleLineTableViewCell: UIScrollViewDelegate {
                 }
             }
         }
-        else if scrollView == self.bottomCollectionView, let secondMatch = self.viewModel?.match(forLine: 1) {
-            let screenWidth = UIScreen.main.bounds.size.width
+        else if scrollView == self.bottomCollectionView {
+
             if scrollView.isTracking && scrollView.contentSize.width > screenWidth {
                 if scrollView.contentOffset.x + scrollView.frame.width > scrollView.contentSize.width + 100 {
                     let generator = UIImpactFeedbackGenerator(style: .heavy)
                     generator.prepare()
                     generator.impactOccurred()
-                    self.tappedMatchLineAction?(secondMatch)
+
+                    if self.viewModel?.isOutrightCompetitionLine() ?? false, let competition = self.viewModel?.outrightCompetition(forLine: 1) {
+                        self.didSelectSeeAllCompetitionAction?(competition)
+                    }
+                    else if let firstMatch = self.viewModel?.match(forLine: 1) {
+                        self.tappedMatchLineAction?(firstMatch)
+                    }
+
                     return
                 }
             }
-            
-            let width = screenWidth*0.6
 
             if scrollView.contentOffset.x > width {
                 if !self.showingSecondBackSliderView {

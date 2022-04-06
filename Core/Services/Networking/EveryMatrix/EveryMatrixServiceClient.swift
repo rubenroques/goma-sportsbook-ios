@@ -338,4 +338,10 @@ class EveryMatrixServiceClient: ObservableObject {
             .eraseToAnyPublisher()
     }
 
+    func getCMSSessionID() -> AnyPublisher<EveryMatrix.CMSSession, EveryMatrix.APIError> {
+        return self.manager.getModel(router: .getCMSSessionID,
+                                     decodingType: EveryMatrix.CMSSession.self)
+            .eraseToAnyPublisher()
+
+    }
 }

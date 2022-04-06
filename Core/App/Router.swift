@@ -153,7 +153,6 @@ class Router {
                                     self?.showMatchDetailScreen(matchId: urlSubject)
                                 }
                                 else if let urlSubject = urlSubject["bet"] {
-
                                     self?.subscribeBetslipSharedTicketStatus(betToken: urlSubject)
                                 }
                             }
@@ -212,7 +211,6 @@ class Router {
         }
 
         let maintenanceViewController = MaintenanceViewController()
-        maintenanceViewController.isModalInPresentation = true
         self.rootViewController?.present(maintenanceViewController, animated: true, completion: nil)
     }
 
@@ -225,13 +223,11 @@ class Router {
 
     // Required Update Screen
     func showRequiredUpdateScreen() {
-        let versionUpdateViewController = VersionUpdateViewController(required: true)
-        versionUpdateViewController.isModalInPresentation = true
+        let versionUpdateViewController = VersionUpdateViewController(updateRequired: true)
         self.rootViewController?.present(versionUpdateViewController, animated: true, completion: nil)
     }
 
     func hideRequiredUpdateScreen() {
-
         if let presentedViewController = self.rootViewController?.presentedViewController,
            presentedViewController is VersionUpdateViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -240,8 +236,7 @@ class Router {
 
     // Update Screen
     func showAvailableUpdateScreen() {
-        let versionUpdateViewController = VersionUpdateViewController(required: false)
-        versionUpdateViewController.isModalInPresentation = false
+        let versionUpdateViewController = VersionUpdateViewController(updateRequired: false)
         self.rootViewController?.present(versionUpdateViewController, animated: true, completion: nil)
     }
 
@@ -269,7 +264,6 @@ class Router {
         self.hideLocationScreen()
 
         let forbiddenAccessViewController = ForbiddenLocationViewController()
-        forbiddenAccessViewController.isModalInPresentation = true
         self.rootViewController?.present(forbiddenAccessViewController, animated: true, completion: nil)
     }
 
@@ -277,7 +271,6 @@ class Router {
         self.hideLocationScreen()
 
         let permissionAccessViewController = RequestLocationAccessViewController()
-        permissionAccessViewController.isModalInPresentation = true
         self.rootViewController?.present(permissionAccessViewController, animated: true, completion: nil)
     }
 
@@ -285,7 +278,6 @@ class Router {
         self.hideLocationScreen()
         
         let refusedAccessViewController = RefusedAccessViewController()
-        refusedAccessViewController.isModalInPresentation = true
         self.rootViewController?.present(refusedAccessViewController, animated: true, completion: nil)
     }
 
@@ -294,7 +286,6 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
         let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
-        matchDetailsViewController.isModalInPresentation = true
         self.rootViewController?.present(matchDetailsViewController, animated: true, completion: nil)
     }
 
@@ -304,8 +295,6 @@ class Router {
         }
 
         let betslipViewController = BetslipViewController.init(startScreen: .myTickets(ticketType, ticketId) )
-        betslipViewController.isModalInPresentation = true
-
         self.rootViewController?.present(betslipViewController, animated: true, completion: nil)
     }
 
@@ -314,11 +303,9 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        let betslipViewController = BetslipViewController()
-        betslipViewController.isModalInPresentation = true
-
         Env.urlSchemaManager.shouldShowBetslipPublisher.send(false)
 
+        let betslipViewController = BetslipViewController()
         let navigationViewController = Router.navigationController(with: betslipViewController)
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
 

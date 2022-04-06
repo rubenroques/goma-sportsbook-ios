@@ -247,7 +247,6 @@ class MyFavoritesViewController: UIViewController {
         betslipViewController.willDismissAction = { [weak self] in
             self?.tableView.reloadData()
         }
-
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
     
