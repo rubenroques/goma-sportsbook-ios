@@ -245,6 +245,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var tableReloadDebouncePublisher: PassthroughSubject<Void, Never> = .init()
 
+    var invalidatedIndexes: [Int] = []
+
     init() {
         self.viewModel = PreSubmissionBetslipViewModel()
 
