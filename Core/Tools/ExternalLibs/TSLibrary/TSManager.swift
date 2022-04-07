@@ -25,6 +25,8 @@ final class TSManager {
     
     private let tsQueue = DispatchQueue(label: "com.goma.games.TSQueue")
 
+    private var cancellables = Set<AnyCancellable>()
+
     var swampSession: SSWampSession?
     var userAgentExtractionWebView: WKWebView?
     var isConnected: Bool { return swampSession?.isConnected() ?? false }
@@ -346,6 +348,8 @@ final class TSManager {
             return
         }
 
+        // print("UnregisterFromEndpoint \(endpointPublisherIdentifiable.identificationCode)")
+        
         swampSession.unregister(endpointPublisherIdentifiable.identificationCode) {
             ()
         } onError: { details, error in
@@ -413,6 +417,38 @@ final class TSManager {
         }, receiveCancel: {
 
         }).eraseToAnyPublisher()
+    }
+
+    func registerOnEndpointAsRPC<T: Decodable>(_ endpoint: TSRouter, decodingType: T.Type) -> AnyPublisher<T, EveryMatrix.APIError> {
+
+        let subject = PassthroughSubject<T, EveryMatrix.APIError>()
+
+        var endpointPublisherIdentifiable: EndpointPublisherIdentifiable?
+
+        self.registerOnEndpoint(endpoint, decodingType: decodingType)
+            .sink { completion in
+                subject.send(completion: completion)
+            } receiveValue: { subscriptionContent in
+                switch subscriptionContent {
+                case .connect(let publisherIdentifiable):
+                    endpointPublisherIdentifiable = publisherIdentifiable
+                case .initialContent(let object):
+
+                    subject.send(object)
+
+                    if let endpointPublisherIdentifiableValue = endpointPublisherIdentifiable {
+                        self.unregisterFromEndpoint(endpointPublisherIdentifiable: endpointPublisherIdentifiableValue)
+                    }
+
+                    subject.send(completion: .finished)
+                default:
+                    subject.send(completion: .finished)
+                }
+            }
+            .store(in: &cancellables)
+
+        return subject.eraseToAnyPublisher()
+
     }
 
 }

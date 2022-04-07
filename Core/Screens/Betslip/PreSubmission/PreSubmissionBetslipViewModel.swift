@@ -8,36 +8,53 @@
 import Foundation
 import Combine
 
-class PreSubmissionBetslipViewModel: NSObject {
-
-    // MARK: Private Properties
-    private var cancellables = Set<AnyCancellable>()
+class PreSubmissionBetslipViewModel {
 
     // MARK: Public Properties
     var bonusBetslipArrayPublisher: CurrentValueSubject<[BonusBetslip], Never> = .init([])
+    var sharedBetsPublisher: CurrentValueSubject<LoadableContent<[BettingTicket]>, Never> = .init(LoadableContent.idle)
 
-    override init() {
-        super.init()
+    // MARK: Private Properties
+    private var sharedBetToken: String?
+    private var sharedBetsRegisters: [EndpointPublisherIdentifiable] = []
 
-        self.getGrantedBonus()
+    private var cancellables = Set<AnyCancellable>()
+
+    init(sharedBetToken: String? = nil) {
+
+        self.sharedBetToken = sharedBetToken
+
+        Env.everyMatrixClient.userSessionStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+
+            } receiveValue: { [weak self] status in
+                if status == .logged {
+                    if let sharedBetTokenValue = self?.sharedBetToken {
+                        self?.sharedBetsPublisher.send(.loading)
+                        self?.getBetslipTicketData(betToken: sharedBetTokenValue)
+                    }
+                    self?.getGrantedBonus()
+                }
+            }
+            .store(in: &cancellables)
+
+    }
+
+    deinit {
+        print("PreSubmissionBetslipViewModel Called")
     }
 
     private func getGrantedBonus() {
 
         Env.everyMatrixClient.getGrantedBonus()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("GRANTED BONUS ERROR: \(error)")
-                case .finished:
-                    ()                }
-            }, receiveValue: { [weak self] bonusResponse in
+            .sink(receiveCompletion: { _ in
 
+            }, receiveValue: { [weak self] bonusResponse in
                 if let bonuses = bonusResponse.bonuses {
                     self?.processGrantedBonus(bonuses: bonuses)
                 }
-
             })
             .store(in: &cancellables)
     }
@@ -67,6 +84,124 @@ class PreSubmissionBetslipViewModel: NSObject {
         }
 
         self.bonusBetslipArrayPublisher.value = bonusArray
+    }
+
+    // Bet shares related functions
+    func getBetslipTicketData(betToken: String) {
+
+        let betDataRoute = TSRouter.getSharedBetData(betToken: betToken)
+        Env.everyMatrixClient.manager.getModel(router: betDataRoute, decodingType: SharedBetDataResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { _ in
+
+            },
+            receiveValue: { [weak self] betDataResponse in
+                self?.addBetDataTickets(betData: betDataResponse.sharedBetData)
+            })
+            .store(in: &cancellables)
+    }
+
+    private func addBetDataTickets(betData: SharedBetData) {
+
+        let requests = betData.selections.map(getBetMarketOddsRPC)
+
+        var bettingTickets: [BettingTicket?] = []
+
+        Publishers.MergeMany(requests)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                let validTickets = bettingTickets.compactMap({ $0 })
+
+                for ticket in validTickets {
+                    Env.betslipManager.addBettingTicket(ticket)
+                }
+
+                self?.sharedBetsPublisher.send(.loaded(validTickets))
+                self?.sharedBetsPublisher.send(.idle)
+            } receiveValue: { ticket in
+                bettingTickets.append(ticket)
+            }
+            .store(in: &cancellables)
+
+    }
+
+    private func getBetMarketOddsRPC(betSelection: SharedBet) -> AnyPublisher<BettingTicket?, EveryMatrix.APIError> {
+
+        let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId,
+                                                language: "en",
+                                                matchId: "\(betSelection.eventId)",
+                                                bettingType: "\(betSelection.bettingTypeId)",
+                                                eventPartId: "\(betSelection.bettingTypeEventPartId)")
+
+        return Env.everyMatrixClient.manager
+            .registerOnEndpointAsRPC(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .map { [weak self] aggregator in
+                return self?.processAggregator(aggregator: aggregator, betSelection: betSelection)
+            }
+            .eraseToAnyPublisher()
+
+    }
+
+    private func processAggregator(aggregator: EveryMatrix.Aggregator, betSelection: SharedBet) -> BettingTicket? {
+
+        var markets: [EveryMatrix.Market] = []
+        var betOutcomes: [EveryMatrix.BetOutcome] = []
+        var marketOutcomeRelations: [EveryMatrix.MarketOutcomeRelation] = []
+        var bettingOffers: [EveryMatrix.BettingOffer] = []
+        var betSelectionBettingOfferId: String?
+
+        for content in aggregator.content ?? [] {
+            switch content {
+            case .tournament:
+                ()
+            case .match:
+                ()
+            case .matchInfo:
+                ()
+            case .market(let marketContent):
+                markets.append(marketContent)
+            case .betOutcome(let betOutcomeContent):
+                betOutcomes.append(betOutcomeContent)
+            case .bettingOffer(let bettingOfferContent):
+                bettingOffers.append(bettingOfferContent)
+                if bettingOfferContent.outcomeId == betSelection.outcomeId {
+                    betSelectionBettingOfferId = bettingOfferContent.id
+                }
+            case .mainMarket:
+                ()
+            case .marketOutcomeRelation(let marketOutcomeRelationContent):
+                marketOutcomeRelations.append(marketOutcomeRelationContent)
+            case .marketGroup:
+                ()
+            case .location:
+               ()
+            case .cashout:
+               ()
+            case .event:
+                ()
+            case .eventPartScore:
+                ()
+            case .unknown:
+                ()
+            }
+        }
+
+        if let bettingOfferId = betSelectionBettingOfferId {
+                let marketDescription = "\(betSelection.marketName), \(betSelection.bettingTypeEventPartName)"
+                let bettingTicket = BettingTicket(id: bettingOfferId,
+                                                  outcomeId: betSelection.outcomeId,
+                                                  marketId: markets.first?.id ?? "1",
+                                                  matchId: betSelection.eventId,
+                                                  value: betSelection.priceValue,
+                                                  isAvailable: markets.first?.isAvailable ?? true,
+                                                  statusId: "1",
+                                                  matchDescription: betSelection.eventName,
+                                                  marketDescription: marketDescription,
+                                                  outcomeDescription: betSelection.betName)
+            return bettingTicket
+        }
+
+        return nil
     }
 
 }

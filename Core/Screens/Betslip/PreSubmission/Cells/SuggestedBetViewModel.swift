@@ -66,6 +66,7 @@ class SuggestedBetViewModel: NSObject {
     }
 
     deinit {
+        print("SuggestedBetViewModel deinit")
         self.unregisterSuggestedBets()
     }
 
@@ -81,9 +82,9 @@ class SuggestedBetViewModel: NSObject {
                                   self.suggestedBet3RetrievedPublisher,
                                   self.suggestedBet4RetrievedPublisher)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { bet1, bet2, bet3, bet4 in
+            .sink(receiveValue: { [weak self] bet1, bet2, bet3, bet4 in
                 if bet1 && bet2 && bet3 && bet4 {
-                    self.setupBets()
+                    self?.setupBets()
                 }
             })
             .store(in: &cancellables)
@@ -207,7 +208,7 @@ class SuggestedBetViewModel: NSObject {
         let router = TSRouter.getLocations(language: "en", sortByPopularity: false)
         return Env.everyMatrixClient.manager.getModel(router: router, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
             .map(\.records)
-            .compactMap({$0})
+            .compactMap({ $0 })
             .replaceError(with: [EveryMatrix.Location]())
             .eraseToAnyPublisher()
 
@@ -260,15 +261,11 @@ class SuggestedBetViewModel: NSObject {
 
         let processedSuggestedMatch = self.processSuggestedMatch()
 
-        if let suggestedMatch =
-            processedSuggestedMatch {
-
+        if let suggestedMatch = processedSuggestedMatch {
             self.betsArray.append(suggestedMatch)
-
         }
 
         self.suggestedBetsRetrievedPublishers[index].send(true)
-
     }
 
     func processSuggestedMatchAggregator(_ aggregator: EveryMatrix.Aggregator) {

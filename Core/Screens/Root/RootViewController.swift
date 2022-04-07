@@ -421,9 +421,6 @@ class RootViewController: UIViewController {
         
         self.present(casinoWebViewController, animated: true, completion: nil)
 
-//        let socialViewController = SocialViewController(viewModel: SocialViewModel())
-//        self.present(Router.navigationController(with: socialViewController),
-//                     animated: true, completion: nil)
     }
 }
 

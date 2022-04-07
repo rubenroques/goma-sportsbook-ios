@@ -359,9 +359,6 @@ class MyTicketTableViewCell: UITableViewCell {
             }
         }
     }
-    class MyTapGesture: UITapGestureRecognizer {
-        var matchId = String()
-    }
 
     @IBAction func didTapShareButton() {
         let renderer = UIGraphicsImageRenderer(size: self.baseView.bounds.size)
@@ -371,7 +368,6 @@ class MyTicketTableViewCell: UITableViewCell {
         self.snapshot = image
 
         self.tappedShareAction?()
-        
     }
 
     @IBAction private func didTapCashoutButton() {

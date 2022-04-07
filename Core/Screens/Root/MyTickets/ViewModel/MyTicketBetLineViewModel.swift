@@ -27,12 +27,14 @@ class MyTicketBetLineViewModel {
     }
 
     deinit {
-        self.goalsSubscription?.cancel()
-        self.goalsSubscription = nil
+        print("MyTicketBetLineViewModel deinit")
 
         if let goalsRegister = goalsRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: goalsRegister)
         }
+
+        self.goalsSubscription?.cancel()
+        self.goalsSubscription = nil
     }
 
     private func requestGoals(forMatchWithId id: String) {

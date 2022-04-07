@@ -213,8 +213,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var gomaSuggestedBetsResponse: [[SuggestedBetSummary]] = []
 
-    var suggestedBetsRegisters: [EndpointPublisherIdentifiable] = []
-    var suggestedCancellables = Set<AnyCancellable>()
     var isSuggestedBetsLoading: Bool = false {
         didSet {
             self.suggestedBetsLoadingBaseView.isHidden = !isSuggestedBetsLoading
@@ -245,8 +243,8 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var tableReloadDebouncePublisher: PassthroughSubject<Void, Never> = .init()
 
-    init() {
-        self.viewModel = PreSubmissionBetslipViewModel()
+    init(viewModel: PreSubmissionBetslipViewModel) {
+        self.viewModel = viewModel
 
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
@@ -259,6 +257,12 @@ class PreSubmissionBetslipViewController: UIViewController {
     }
 
     deinit {
+        print("PreSubmissionBetslipViewController deinit")
+
+        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
+            cachedBetSuggestedViewModel.unregisterSuggestedBets()
+        }
+
         cachedSuggestedBetViewModels = [:]
     }
 
@@ -276,6 +280,8 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(settingsPickerBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
+
+        self.emptyBetsBaseView.isHidden = true
 
         self.betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
@@ -349,6 +355,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             self.didChangeSegmentValue(self.betTypeSegmentControl)
         }
 
+        //
+        //
         singleBettingTicketDataSource.didUpdateBettingValueAction = { [weak self] id, value in
             if value == 0 {
                 self?.simpleBetsBettingValues.value[id] = nil
@@ -357,6 +365,8 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.simpleBetsBettingValues.value[id] = value
             }
         }
+
+        //
         singleBettingTicketDataSource.bettingValueForId = { [weak self] id in
             self?.simpleBetsBettingValues.value[id]
         }
@@ -451,8 +461,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.multiplierPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] multiplier in
-//                self?.multipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
-//                self?.secondaryMultipleOddsValueLabel.text = OddFormatter.formatOdd(withValue: multiplier)
                 if let oddsBoostSelected = self?.oddsBoostSelected {
                     let oddsBoostMultiplier = multiplier + (multiplier * oddsBoostSelected.oddsBoostPercent)
                     self?.multipleOddsValueLabel.text = OddConverter.stringForValue(oddsBoostMultiplier, format: UserDefaults.standard.userOddsFormat)
@@ -462,17 +470,44 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.multipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
                     self?.secondaryMultipleOddsValueLabel.text = OddConverter.stringForValue(multiplier, format: UserDefaults.standard.userOddsFormat)
                 }
-                
             })
             .store(in: &cancellables)
 
-        Env.betslipManager.bettingTicketsPublisher
+        //
+        self.viewModel.sharedBetsPublisher
             .receive(on: DispatchQueue.main)
-            .map(\.isEmpty)
-            .sink(receiveValue: { [weak self] isEmpty in
-                self?.emptyBetsBaseView.isHidden = !isEmpty
+            .sink { _ in
 
-                if isEmpty {
+            } receiveValue: { [weak self] sharedBetsLoadableContent in
+                switch sharedBetsLoadableContent {
+                case .idle:
+                    ()
+                case .loading:
+                    self?.isLoading = true
+                case .loaded:
+                    self?.isLoading = false
+                case .failed:
+                    ()
+                }
+            }
+            .store(in: &cancellables)
+
+        Publishers.CombineLatest(Env.betslipManager.bettingTicketsPublisher, self.viewModel.sharedBetsPublisher)
+            .filter { _, sharedBetsLoadableContent in
+
+                switch sharedBetsLoadableContent {
+                case .idle, .failed:
+                    return true
+                case .loading, .loaded:
+                    return false
+                }
+            }
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bettingTickets, _ in
+
+                self?.emptyBetsBaseView.isHidden = !bettingTickets.isEmpty
+
+                if bettingTickets.isEmpty {
                     self?.getSuggestedBets()
                 }
             })
@@ -563,11 +598,11 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Publishers.CombineLatest(self.multiplierPublisher, self.realBetValuePublisher)
             .receive(on: DispatchQueue.main)
-            .map({ multiplier, betValue -> String in
+            .map({ [weak self] multiplier, betValue -> String in
                 if multiplier >= 1 && betValue > 0 {
                     var oddMultiplier = multiplier
 
-                    if let oddsBoostSelected = self.oddsBoostSelected {
+                    if let oddsBoostSelected = self?.oddsBoostSelected {
                         oddMultiplier += (oddMultiplier * oddsBoostSelected.oddsBoostPercent)
                     }
 
@@ -585,15 +620,15 @@ class PreSubmissionBetslipViewController: UIViewController {
                 self?.multipleWinningsValueLabel.text = possibleEarnings
             })
             .store(in: &cancellables)
-        
+
         Publishers.CombineLatest3(self.listTypePublisher, self.simpleBetsBettingValues, Env.betslipManager.bettingTicketsPublisher)
             .receive(on: DispatchQueue.main)
             .filter { betslipType, _, _ in
                 betslipType == .simple
             }
-            .map({ _, simpleBetsBettingValues, tickets -> String in
+            .map({ [weak self] _, simpleBetsBettingValues, tickets -> String in
                 var expectedReturn = 0.0
-                let currentOddsBoost = self.singleBettingTicketDataSource.currentTicketOddsBoostSelected
+                let currentOddsBoost = self?.singleBettingTicketDataSource.currentTicketOddsBoostSelected
 
                 for ticket in tickets {
                     if let betValue = simpleBetsBettingValues[ticket.id] {
@@ -731,6 +766,8 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+
+
         Env.betslipManager.simpleBetslipSelectionStateList
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -753,7 +790,9 @@ class PreSubmissionBetslipViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        self.multipleBettingTicketDataSource.changedFreebetSelectionState = { freeBetMultiple in
+        self.multipleBettingTicketDataSource.changedFreebetSelectionState = { [weak self] freeBetMultiple in
+
+            guard let self = self else { return }
 
             if let freeBet = freeBetMultiple {
                 self.freeBetSelected = freeBet
@@ -771,7 +810,10 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
         }
 
-        self.multipleBettingTicketDataSource.changedOddsBoostSelectionState = { oddsBoostMultiple in
+        self.multipleBettingTicketDataSource.changedOddsBoostSelectionState = { [weak self] oddsBoostMultiple in
+
+            guard let self = self else { return }
+
             if let oddsBoost = oddsBoostMultiple {
                 self.oddsBoostSelected = oddsBoost
                 self.multiplierPublisher.send(self.multiplierPublisher.value)
@@ -822,12 +864,15 @@ class PreSubmissionBetslipViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide),
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
-        
+
         self.placeBetButton.isEnabled = false
 
         self.getUserSettings()
 
         Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
+
+
+
 
     }
 
@@ -840,7 +885,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     func getUserSettings() {
 
         if let userSetting = UserDefaults.standard.string(forKey: "user_betslip_settings"),
-           let userSettingIndex = Env.userBetslipSettingsSelectorList.firstIndex(where: {$0.key == userSetting}) {
+           let userSettingIndex = Env.userBetslipSettingsSelectorList.firstIndex(where: { $0.key == userSetting }) {
 
             self.settingsPickerView.selectRow(userSettingIndex, inComponent: 0, animated: true)
             self.selectedBetslipSetting = userSetting
@@ -864,25 +909,18 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.isSuggestedBetsLoading = true
 
-        // TODO: Code Review - O que é este register?!
-        for suggestedBetRegister in self.suggestedBetsRegisters {
-            Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: suggestedBetRegister)
-        }
-
         Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
+
             },
             receiveValue: { [weak self] gomaBetsArray in
-
-                guard let betsArray = gomaBetsArray else {return}
-
+                guard let betsArray = gomaBetsArray else { return }
                 self?.gomaSuggestedBetsResponse = betsArray
                 self?.betSuggestedCollectionView.reloadData()
-
             })
             .store(in: &cancellables)
-
+        
     }
 
     func showErrorView(errorMessage: String?) {
@@ -1148,7 +1186,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         switch segmentControl.selectedSegmentIndex {
         case 0:
             self.listTypePublisher.value = .simple
- 
+
         case 1:
             self.listTypePublisher.value = .multiple
         case 2:
@@ -1822,24 +1860,24 @@ class MultipleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableVie
             if let freeBet = bonusMultiple.freeBet {
                 cell.setupBonusInfo(freeBet: freeBet, oddsBoost: nil, bonusType: .freeBet)
 
-                cell.didTappedSwitch = {
+                cell.didTappedSwitch = { [weak self] in
                     if cell.isSwitchOn {
-                        self.changedFreebetSelectionState?(freeBet)
+                        self?.changedFreebetSelectionState?(freeBet)
                     }
                     else {
-                        self.changedFreebetSelectionState?(nil)
+                        self?.changedFreebetSelectionState?(nil)
                     }
                 }
             }
             else if let oddsBoost = bonusMultiple.oddsBoost {
                 cell.setupBonusInfo(freeBet: nil, oddsBoost: oddsBoost, bonusType: .oddsBoost)
 
-                cell.didTappedSwitch = {
+                cell.didTappedSwitch = { [weak self] in
                     if cell.isSwitchOn {
-                        self.changedOddsBoostSelectionState?(oddsBoost)
+                        self?.changedOddsBoostSelectionState?(oddsBoost)
                     }
                     else {
-                        self.changedOddsBoostSelectionState?(nil)
+                        self?.changedOddsBoostSelectionState?(nil)
                     }
                 }
             }

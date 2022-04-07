@@ -13,6 +13,7 @@ enum Route {
     case openBet(id: String)
     case resolvedBet(id: String)
     case event(id: String)
+    case ticket(id: String)
     case none
 }
 
@@ -196,6 +197,8 @@ class Router {
             self.showMyTickets(ticketType: MyTicketsType.resolved, ticketId: id)
         case .event(let id):
             self.showMatchDetailScreen(matchId: id)
+        case .ticket(let id):
+            self.showBetslipWithTicket(token: id)
         case .none:
             ()
         }
@@ -303,12 +306,19 @@ class Router {
             self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
         }
 
-        Env.urlSchemaManager.shouldShowBetslipPublisher.send(false)
-
         let betslipViewController = BetslipViewController()
         let navigationViewController = Router.navigationController(with: betslipViewController)
         self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
+    }
 
+    func showBetslipWithTicket(token: String) {
+        if self.rootViewController?.presentedViewController?.isModal == true {
+            self.rootViewController?.presentedViewController?.dismiss(animated: true, completion: nil)
+        }
+
+        let betslipViewController = BetslipViewController(startScreen: .sharedBet(token))
+        let navigationViewController = Router.navigationController(with: betslipViewController)
+        self.rootViewController?.present(navigationViewController, animated: true, completion: nil)
     }
 
     func subscribeBetslipSharedTicketStatus(betToken: String) {

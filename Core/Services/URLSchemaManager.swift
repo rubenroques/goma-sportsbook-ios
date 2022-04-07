@@ -188,4 +188,5 @@ class URLSchemaManager {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: sharedBetRegister)
         }
     }
+
 }

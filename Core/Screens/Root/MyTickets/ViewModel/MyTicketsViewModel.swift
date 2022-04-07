@@ -118,9 +118,7 @@ class MyTicketsViewModel: NSObject {
     }
 
     deinit {
-        for cellCachedViewModels in cachedViewModels.values {
-            cellCachedViewModels.unregisterCashoutSubscription()
-        }
+        print("MyTicketsViewModel deinit")
     }
 
     func setMyTicketsType(_ type: MyTicketsType) {
@@ -139,14 +137,13 @@ class MyTicketsViewModel: NSObject {
             .sink(receiveCompletion: { _ in
 
             },
-                  receiveValue: { [weak self] response in
+            receiveValue: { [weak self] response in
                 self?.locationsCodesDictionary = [:]
                 (response.records ?? []).forEach { location in
                     if let code = location.code {
                         self?.locationsCodesDictionary[location.id] = code
                     }
                 }
-
             })
             .store(in: &cancellables)
     }

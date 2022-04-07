@@ -103,19 +103,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                 }
 
                 let urlSections = url.pathComponents
-
                 if urlSections.contains("gamedetail") {
                     if let gameDetailId = urlSections.last {
-                        Env.urlSchemaManager.setRedirect(subject: ["gamedetail": gameDetailId])
+                        self.openRoute(Route.event(id: gameDetailId), onApplication: application)
                     }
                 }
                 else if urlSections.contains("bet") {
-                    if let betId = urlSections.last {
-                        print("BET ID: \(betId)")
-                        Env.urlSchemaManager.setRedirect(subject: ["bet": betId])
+                    if let ticketId = urlSections.last {
+                        self.openRoute(Route.ticket(id: ticketId), onApplication: application)
                     }
                 }
-
             }
             return true
     }
@@ -166,24 +163,30 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
             ()
         }
 
-        if let routeValue = route {
-            if application.applicationState == .active {
-                self.bootstrap.router.openedNotificationRouteWhileActive(routeValue)
-            }
-            if application.applicationState == .inactive {
-                if Env.everyMatrixClient.serviceStatusPublisher.value == .connected {
-                    self.bootstrap.router.openedNotificationRouteWhileActive(routeValue)
-                }
-                else {
-                    self.bootstrap.router.configureStartingRoute(routeValue)
-                }
-            }
-            if application.applicationState == .background {
-                self.bootstrap.router.configureStartingRoute(routeValue)
-            }
+        if let route = route {
+            self.openRoute(route, onApplication: application)
         }
 
         completionHandler()
+    }
+
+    private func openRoute(_ route: Route, onApplication application: UIApplication) {
+
+        if application.applicationState == .active {
+            self.bootstrap.router.openedNotificationRouteWhileActive(route)
+        }
+        else if application.applicationState == .inactive {
+            if Env.everyMatrixClient.serviceStatusPublisher.value == .connected {
+                self.bootstrap.router.openedNotificationRouteWhileActive(route)
+            }
+            else {
+                self.bootstrap.router.configureStartingRoute(route)
+            }
+        }
+        else if application.applicationState == .background {
+            self.bootstrap.router.configureStartingRoute(route)
+        }
+
     }
 
 }
