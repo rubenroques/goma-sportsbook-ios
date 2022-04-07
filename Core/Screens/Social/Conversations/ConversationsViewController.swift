@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PreviewChatViewModel {
+class PreviewChatCellViewModel {
 
 }
 
@@ -22,7 +22,9 @@ class PreviewChatTableViewCell: UITableViewCell {
     private lazy var dateLabel: UILabel = Self.createDateLabel()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
-    private var viewModel: PreviewChatViewModel?
+    private var viewModel: PreviewChatCellViewModel?
+
+    var didTapConversationAction: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,6 +34,9 @@ class PreviewChatTableViewCell: UITableViewCell {
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
+
+        let tapConversationGesture = UITapGestureRecognizer(target: self, action: #selector(didTapConversationView))
+        self.addGestureRecognizer(tapConversationGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -66,8 +71,12 @@ class PreviewChatTableViewCell: UITableViewCell {
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
-    func configure(withViewModel viewModel: PreviewChatViewModel) {
+    func configure(withViewModel viewModel: PreviewChatCellViewModel) {
         self.viewModel = viewModel
+    }
+
+    @objc func didTapConversationView() {
+        self.didTapConversationAction?()
     }
 
 }
@@ -246,6 +255,9 @@ class ConversationsViewController: UIViewController {
         self.tableView.register(PreviewChatTableViewCell.self,
                                 forCellReuseIdentifier: PreviewChatTableViewCell.identifier)
 
+        let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(backgroundTapGesture)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -308,11 +320,29 @@ class ConversationsViewController: UIViewController {
 
     }
 
+    // MARK: Functions
+
+    private func showConversationDetail() {
+        let conversationDetailViewController = ConversationDetailViewController()
+
+        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+    }
+
     // MARK: - Bindings
     private func bind(toViewModel viewModel: ConversationsViewModel) {
 
     }
     
+}
+
+//
+// MARK: - Actions
+//
+extension ConversationsViewController {
+
+    @objc func didTapBackground() {
+        self.searchBar.resignFirstResponder()
+    }
 }
 
 //
@@ -334,6 +364,11 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
         else {
             fatalError()
         }
+
+        cell.didTapConversationAction = { [weak self] in
+            self?.showConversationDetail()
+        }
+
         return cell
     }
 
@@ -348,6 +383,9 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
 
 extension ConversationsViewController: UISearchBarDelegate {
 
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.resignFirstResponder()
+    }
 }
 
 //
@@ -440,4 +478,3 @@ extension ConversationsViewController {
 
     }
 }
-

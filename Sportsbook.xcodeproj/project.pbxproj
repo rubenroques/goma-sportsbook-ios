@@ -862,6 +862,8 @@
 		A99622AA278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */; };
 		A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
+		A9992FD227FF1F260098854C /* SentMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */; };
+		A9992FD327FF1F260098854C /* SentMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -908,6 +910,10 @@
 		A99F7A2127DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */; };
 		A99F7A2327DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
 		A99F7A2427DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
+		A9A2E7F427FDE3DA00D35A9D /* ConversationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */; };
+		A9A2E7F527FDE3DA00D35A9D /* ConversationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */; };
+		A9A2E7F827FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */; };
+		A9A2E7F927FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -1536,6 +1542,7 @@
 		A99622A527887FF000ABDF97 /* SportSelectionCollectionViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportSelectionCollectionViewCellViewModel.swift; sourceTree = "<group>"; };
 		A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetTableViewCellViewModel.swift; sourceTree = "<group>"; };
 		A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutAggregator.swift; sourceTree = "<group>"; };
+		A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessageTableViewCell.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterPersonalInfoViewController.swift; sourceTree = "<group>"; };
@@ -1559,6 +1566,8 @@
 		A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchView.swift; sourceTree = "<group>"; };
 		A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreSubmissionBetslipViewModel.swift; sourceTree = "<group>"; };
 		A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDetailViewController.swift; sourceTree = "<group>"; };
+		A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedMessageTableViewCell.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -1965,9 +1974,9 @@
 		454E090627EB82F200391560 /* Social */ = {
 			isa = PBXGroup;
 			children = (
+				A9A2E7F227FDE07600D35A9D /* Friends */,
+				A9A2E7F127FDE06C00D35A9D /* Conversations */,
 				454E090727EB831600391560 /* SocialViewController.swift */,
-				454E090A27EC7A0300391560 /* ConversationsViewController.swift */,
-				454E090D27EC7C1100391560 /* FriendsListViewController.swift */,
 			);
 			path = Social;
 			sourceTree = "<group>";
@@ -3281,6 +3290,33 @@
 			path = BonusViews;
 			sourceTree = "<group>";
 		};
+		A9A2E7F127FDE06C00D35A9D /* Conversations */ = {
+			isa = PBXGroup;
+			children = (
+				A9A2E7F627FDF5AD00D35A9D /* Cells */,
+				454E090A27EC7A0300391560 /* ConversationsViewController.swift */,
+				A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */,
+			);
+			path = Conversations;
+			sourceTree = "<group>";
+		};
+		A9A2E7F227FDE07600D35A9D /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				454E090D27EC7C1100391560 /* FriendsListViewController.swift */,
+			);
+			path = Friends;
+			sourceTree = "<group>";
+		};
+		A9A2E7F627FDF5AD00D35A9D /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */,
+				A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		A9A836AF26C6AC5D00508923 /* Maintenance */ = {
 			isa = PBXGroup;
 			children = (
@@ -4309,6 +4345,7 @@
 				45626E3D2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */,
 				A9E7C69427B5638500F784C9 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
+				A9992FD227FF1F260098854C /* SentMessageTableViewCell.swift in Sources */,
 				454F0A7627C40C01003123DF /* OutrightCompetitionLineTableViewCell.swift in Sources */,
 				45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				A9C82FBB26F4E50D00059DCD /* EditAlertView.swift in Sources */,
@@ -4534,6 +4571,7 @@
 				457816BB2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB82732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A99F7A1D27DA1182008BAF41 /* BonusSwitchView.swift in Sources */,
+				A9A2E7F827FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */,
 				A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A90BC91A27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
@@ -4541,6 +4579,7 @@
 				455A0D0426BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0526F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
+				A9A2E7F427FDE3DA00D35A9D /* ConversationDetailViewController.swift in Sources */,
 				45A2897A26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				454F0A8327C4EA69003123DF /* OutrightMarketDetailsStore.swift in Sources */,
 				A96B619727A0508E005DC376 /* RecentSearchTableViewCell.swift in Sources */,
@@ -4724,6 +4763,7 @@
 				4515636926BE0AB200690896 /* ClientVariables.swift in Sources */,
 				45626E3E2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */,
 				455C677B27E39C3D00AAB2A5 /* PopularDetailsViewModel.swift in Sources */,
+				A9992FD327FF1F260098854C /* SentMessageTableViewCell.swift in Sources */,
 				A9E7C69527B5638500F784C9 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
 				454F0A7727C40C01003123DF /* OutrightCompetitionLineTableViewCell.swift in Sources */,
@@ -4949,6 +4989,7 @@
 				457816BC2707632400F66878 /* TitleTableViewHeader.swift in Sources */,
 				454E0AB92732C58D00794E0C /* TabularViewDelegate.swift in Sources */,
 				A99F7A1E27DA1182008BAF41 /* BonusSwitchView.swift in Sources */,
+				A9A2E7F927FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */,
 				A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
 				A90BC91B27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
@@ -4956,6 +4997,7 @@
 				455A0D0526BD9D9000EC572D /* NibIdentifiable.swift in Sources */,
 				45166D0626F3548D00E69D65 /* UnregisteredSSWampMessage.swift in Sources */,
 				455643A226F2634E00EE78FA /* GomaClientSettings.swift in Sources */,
+				A9A2E7F527FDE3DA00D35A9D /* ConversationDetailViewController.swift in Sources */,
 				45A2897B26C3E57E00BCD5DA /* Endpoint.swift in Sources */,
 				454F0A8427C4EA69003123DF /* OutrightMarketDetailsStore.swift in Sources */,
 				A96B619827A0508E005DC376 /* RecentSearchTableViewCell.swift in Sources */,
