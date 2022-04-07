@@ -10,6 +10,7 @@ import Combine
 
 class WithdrawViewController: UIViewController {
 
+    // MARK: Private Properties
     @IBOutlet private var topView: UIView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var navigationView: UIView!
@@ -24,9 +25,33 @@ class WithdrawViewController: UIViewController {
     @IBOutlet private var paymentsLogosStackView: UIStackView!
     @IBOutlet private var responsibleGamingLabel: UILabel!
     @IBOutlet private var faqLabel: UILabel!
+    @IBOutlet private var loadingBaseView: UIView!
 
-    // Variables
-    var cancellables = Set<AnyCancellable>()
+    private var cancellables = Set<AnyCancellable>()
+    private var viewModel: WithdrawViewModel
+
+    // MARK: Public Properties
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+            }
+        }
+    }
+
+    // MARK: Lifetime and Cycle
+    init() {
+        self.viewModel = WithdrawViewModel()
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,15 +59,11 @@ class WithdrawViewController: UIViewController {
         self.commonInit()
         self.setupWithTheme()
 
+        self.bind(toViewModel: self.viewModel)
+
     }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        setupWithTheme()
-    }
-
-    func commonInit() {
+    private func commonInit() {
         self.navigationLabel.text = localized("withdraw")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
@@ -78,11 +99,17 @@ class WithdrawViewController: UIViewController {
 
         self.setupPublishers()
 
-        self.activityIndicatorView.isHidden = true
-
+        self.isLoading = false
     }
 
-    func setupWithTheme() {
+    // MARK: Layout and Theme
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        setupWithTheme()
+    }
+
+    private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topView.backgroundColor = UIColor.App.backgroundPrimary
@@ -114,9 +141,43 @@ class WithdrawViewController: UIViewController {
         self.paymentsLabel.textColor = UIColor.App.textSecondary
 
         self.paymentsLogosStackView.backgroundColor = .clear
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
     }
 
-    func createPaymentsLogosImageViews() {
+    // MARK: Binding
+    private func bind(toViewModel viewModel: WithdrawViewModel) {
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+        viewModel.showErrorAlertTypePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] errorAlertType in
+
+                if let errorAlertType = errorAlertType {
+                    self?.showErrorAlert(errorType: errorAlertType)
+                }
+
+            })
+            .store(in: &cancellables)
+
+        viewModel.cashierUrlPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] cashierUrl in
+                if let cashierUrl = cashierUrl {
+                    self?.showWithdrawWebView(cashierUrl: cashierUrl)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    private func createPaymentsLogosImageViews() {
         let mastercardImageView = UIImageView()
         mastercardImageView.image = UIImage(named: "mastercard_logo")
         mastercardImageView.contentMode = .scaleAspectFit
@@ -253,12 +314,31 @@ class WithdrawViewController: UIViewController {
 
     }
 
-    func showErrorAlert() {
-        let alert = UIAlertController(title: localized("wallet_error"),
-                                      message: localized("wallet_error_message"),
+    private func showErrorAlert(errorType: BalanceErrorType) {
+        var errorTitle = ""
+        var errorMessage = ""
+
+        if errorType == .wallet {
+            errorTitle = localized("wallet_error")
+            errorMessage = localized("wallet_error_message")
+        }
+        else if errorType == .withdraw {
+            errorTitle = localized("withdraw_error")
+            errorMessage = localized("withdraw_error_message")
+        }
+        
+        let alert = UIAlertController(title: errorTitle,
+                                      message: errorMessage,
                                       preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)
+    }
+
+    private func showWithdrawWebView(cashierUrl: String) {
+        let withdrawWebViewController = WithdrawWebViewController(withdrawUrl: cashierUrl)
+
+        self.navigationController?.pushViewController(withdrawWebViewController, animated: true)
+
     }
 
     @IBAction private func didTapCloseButton() {
@@ -271,41 +351,11 @@ class WithdrawViewController: UIViewController {
     }
 
     @IBAction private func didTapNextButton() {
-        self.activityIndicatorView.isHidden = false
 
         let amountText = self.withdrawHeaderTextFieldView.text
-        let amount = amountText.replacingOccurrences(of: ",", with: ".")
-        var currency = ""
-        var gamingAccountId = ""
 
-        if let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency {
-            currency = walletCurrency
-        }
-        else {
-            self.showErrorAlert()
-            self.activityIndicatorView.isHidden = true
-        }
+        self.viewModel.getWithdrawInfo(amountText: amountText)
 
-        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
-            gamingAccountId = "\(walletGamingAccountId)"
-        }
-        else {
-            self.showErrorAlert()
-            self.activityIndicatorView.isHidden = true
-        }
-
-        Env.everyMatrixClient.getWithdrawResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-                self.activityIndicatorView.isHidden = true
-
-            }, receiveValue: { value in
-                let withdrawWebViewController = WithdrawWebViewController(withdrawUrl: value.cashierUrl)
-
-                self.navigationController?.pushViewController(withdrawWebViewController, animated: true)
-
-            })
-            .store(in: &cancellables)
     }
 
     @objc func didTapBackground() {

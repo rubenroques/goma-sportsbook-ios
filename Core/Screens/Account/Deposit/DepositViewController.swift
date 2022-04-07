@@ -28,10 +28,8 @@ class DepositViewController: UIViewController {
     @IBOutlet private var responsibleGamingLabel: UILabel!
     @IBOutlet private var faqLabel: UILabel!
     @IBOutlet private var depositTipLabel: UILabel!
-
-    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
-
-    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+    @IBOutlet private var loadingBaseView: UIView!
+    @IBOutlet private var activityIndicatorView: UIActivityIndicatorView!
 
     private var isLoading: Bool = false {
         didSet {
@@ -44,16 +42,30 @@ class DepositViewController: UIViewController {
         }
     }
 
-    // Variables
+    private var viewModel: DepositViewModel
+
+    // MARK: Public Properties
     var currentSelectedButton: UIButton?
     var cancellables = Set<AnyCancellable>()
+
+    // MARK: Lifetime and Cycle
+    init() {
+        self.viewModel = DepositViewModel()
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.setupSubviews()
         self.commonInit()
         self.setupWithTheme()
+
+        self.bind(toViewModel: self.viewModel)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification,
@@ -62,12 +74,6 @@ class DepositViewController: UIViewController {
                                                name: UIResponder.keyboardWillHideNotification,
                                                object: nil)
 
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-
-        setupWithTheme()
     }
 
     func commonInit() {
@@ -114,6 +120,13 @@ class DepositViewController: UIViewController {
         self.isLoading = false
     }
 
+    // MARK: Layout and Theme
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        setupWithTheme()
+    }
+
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -152,7 +165,40 @@ class DepositViewController: UIViewController {
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
     }
 
-    func setupPublishers() {
+    // MARK: Binding
+
+    private func bind(toViewModel viewModel: DepositViewModel) {
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+        viewModel.showErrorAlertTypePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] errorAlertType in
+
+                if let errorAlertType = errorAlertType {
+                    self?.showErrorAlert(errorType: errorAlertType)
+                }
+                
+            })
+            .store(in: &cancellables)
+
+        viewModel.cashierUrlPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] cashierUrl in
+                if let cashierUrl = cashierUrl {
+                    self?.showDepositWebView(cashierUrl: cashierUrl)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    private func setupPublishers() {
         self.depositHeaderTextFieldView.textPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -161,7 +207,7 @@ class DepositViewController: UIViewController {
             .store(in: &cancellables)
     }
 
-    func createPaymentsLogosImageViews() {
+    private func createPaymentsLogosImageViews() {
         let mastercardImageView = UIImageView()
         mastercardImageView.image = UIImage(named: "mastercard_logo")
         mastercardImageView.contentMode = .scaleAspectFit
@@ -185,7 +231,7 @@ class DepositViewController: UIViewController {
 
     }
 
-    func setupResponsableGamingUnderlineClickableLabel() {
+    private func setupResponsableGamingUnderlineClickableLabel() {
 
         let fullString = localized("responsible_gaming")
 
@@ -342,17 +388,24 @@ class DepositViewController: UIViewController {
 
     }
 
-    func checkForHighlightedAmountButton() {
+    private func checkForHighlightedAmountButton() {
         if currentSelectedButton != nil {
             currentSelectedButton?.backgroundColor = .clear
             currentSelectedButton?.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
         }
     }
 
-    func showRightLabelCustom() {
+    private func showRightLabelCustom() {
         if self.depositHeaderTextFieldView.text != "" {
             self.depositHeaderTextFieldView.showPasswordLabelVisible(visible: true)
         }
+    }
+
+    private func showDepositWebView(cashierUrl: String) {
+        let depositWebViewController = DepositWebViewController(depositUrl: cashierUrl)
+
+        self.navigationController?.pushViewController(depositWebViewController, animated: true)
+
     }
 
     @IBAction private func didTap10Button() {
@@ -410,51 +463,12 @@ class DepositViewController: UIViewController {
     }
 
     @IBAction private func didTapNextButton() {
-        self.isLoading = true
-    
         let amountText = self.depositHeaderTextFieldView.text
-        let amount = amountText.replacingOccurrences(of: ",", with: ".")
-        var currency = ""
-        var gamingAccountId = ""
 
-        if let walletCurrency = Env.userSessionStore.userBalanceWallet.value?.currency {
-            currency = walletCurrency
-        }
-        else {
-            self.showErrorAlert(errorType: .wallet)
-            self.isLoading = false
-        }
-
-        if let walletGamingAccountId = Env.userSessionStore.userBalanceWallet.value?.id {
-            gamingAccountId = "\(walletGamingAccountId)"
-        }
-        else {
-            self.showErrorAlert(errorType: .wallet)
-            self.isLoading = false
-        }
-
-        Env.everyMatrixClient.getDepositResponse(currency: currency, amount: amount, gamingAccountId: gamingAccountId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: {completion in
-                switch completion {
-                case .failure(let error):
-                    print("DEPOSIT ERROR: \(error)")
-                    self.showErrorAlert(errorType: .deposit)
-                case .finished:
-                    ()
-                }
-                self.isLoading = false
-
-            }, receiveValue: { value in
-                let depositWebViewController = DepositWebViewController(depositUrl: value.cashierUrl)
-
-                self.navigationController?.pushViewController(depositWebViewController, animated: true)
-
-            })
-            .store(in: &cancellables)
+        self.viewModel.getDepositInfo(amountText: amountText)
     }
 
-    func showErrorAlert(errorType: DepositErrorType) {
+    func showErrorAlert(errorType: BalanceErrorType) {
 
         var errorTitle = ""
         var errorMessage = ""
@@ -503,51 +517,8 @@ class DepositViewController: UIViewController {
 
 }
 
-extension DepositViewController {
-
-    private static func createLoadingBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
-        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
-        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicatorView.hidesWhenStopped = true
-        activityIndicatorView.startAnimating()
-        return activityIndicatorView
-    }
-
-    private func setupSubviews() {
-
-        self.containerView.addSubview(self.loadingBaseView)
-
-        self.loadingBaseView.addSubview(self.activityIndicatorView)
-
-        self.initConstraints()
-
-        self.containerView.bringSubviewToFront(self.loadingBaseView)
-
-    }
-
-    private func initConstraints() {
-
-        // Loading View
-        NSLayoutConstraint.activate([
-            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
-            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor),
-            self.loadingBaseView.topAnchor.constraint(equalTo: self.containerView.topAnchor),
-            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor),
-
-            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
-            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
-        ])
-    }
-
-}
-
-enum DepositErrorType {
+enum BalanceErrorType {
     case wallet
     case deposit
+    case withdraw
 }
