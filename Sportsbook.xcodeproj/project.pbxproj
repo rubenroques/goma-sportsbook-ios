@@ -910,6 +910,12 @@
 		A99F7A2127DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */; };
 		A99F7A2327DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
 		A99F7A2427DA5F61008BAF41 /* BonusSwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */; };
+		A9A2E7E327F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */; };
+		A9A2E7E427F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */; };
+		A9A2E7E627F5ED1F00D35A9D /* DepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */; };
+		A9A2E7E727F5ED1F00D35A9D /* DepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */; };
+		A9A2E7E927F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E827F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift */; };
+		A9A2E7EA27F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E827F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -1562,6 +1568,9 @@
 		A99F7A1C27DA1182008BAF41 /* BonusSwitchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchView.swift; sourceTree = "<group>"; };
 		A99F7A1F27DA1F4D008BAF41 /* PreSubmissionBetslipViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreSubmissionBetslipViewModel.swift; sourceTree = "<group>"; };
 		A99F7A2227DA5F61008BAF41 /* BonusSwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusSwitchTableViewCell.swift; sourceTree = "<group>"; };
+		A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewModel.swift; sourceTree = "<group>"; };
+		A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewModel.swift; sourceTree = "<group>"; };
+		A9A2E7E827F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleRegisterEmailCheckViewModel.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
@@ -2780,6 +2789,7 @@
 				45BEA47D26F4DC9900680181 /* SimpleRegisterEmailSentViewController.xib */,
 				45BEA47E26F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.swift */,
 				45BEA47926F4DC9900680181 /* SimpleRegisterSendEmailCodeViewController.xib */,
+				A9A2E7E827F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift */,
 			);
 			path = SimpleRegister;
 			sourceTree = "<group>";
@@ -3009,6 +3019,7 @@
 				A90D8AF4277200C400DF88EB /* WithdrawViewController.xib */,
 				A90D8AF9277223DC00DF88EB /* WithdrawWebViewController.swift */,
 				A90D8AFA277223DC00DF88EB /* WithdrawWebViewController.xib */,
+				A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */,
 			);
 			path = Withdraw;
 			sourceTree = "<group>";
@@ -3146,6 +3157,7 @@
 				A9875794276CA50F0099990D /* DepositViewController.xib */,
 				A9875799276CD3660099990D /* DepositWebViewController.swift */,
 				A987579A276CD3660099990D /* DepositWebViewController.xib */,
+				A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */,
 			);
 			path = Deposit;
 			sourceTree = "<group>";
@@ -4174,6 +4186,7 @@
 				A9BCF434274D1A77006DD528 /* MatchDetailsViewController.swift in Sources */,
 				452047BA27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				A99F7A0F27D11704008BAF41 /* BonusHistoryDataSource.swift in Sources */,
+				A9A2E7E927F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				A979CA562762247900230E93 /* SuggestedBetSummary.swift in Sources */,
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
@@ -4201,6 +4214,7 @@
 				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
 				A92F5D98272C410400884BDF /* DocumentPickerView.swift in Sources */,
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
+				A9A2E7E627F5ED1F00D35A9D /* DepositViewModel.swift in Sources */,
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB0270EEFA200E8260E /* LoadableContent.swift in Sources */,
 				45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */,
@@ -4474,6 +4488,7 @@
 				A99DD54526C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
 				A9B840C726E1285200269B05 /* Discipline.swift in Sources */,
 				455A0D0826BD9D9000EC572D /* CenterCellCollectionViewFlowLayout.swift in Sources */,
+				A9A2E7E327F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */,
 				A9C82FB026F3A37F00059DCD /* String+Extensions.swift in Sources */,
 				45BEA48126F4DC9900680181 /* SimpleRegisterEmailCheckViewController.swift in Sources */,
 				45166CE526F3548D00E69D65 /* SSWampMessage.swift in Sources */,
@@ -4590,6 +4605,7 @@
 				45B0BD40271F18DB009C41FA /* CheckboxToggleView.swift in Sources */,
 				A9BCF435274D1A77006DD528 /* MatchDetailsViewController.swift in Sources */,
 				452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */,
+				A9A2E7EA27F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
 				A99F7A1027D11704008BAF41 /* BonusHistoryDataSource.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				A979CA572762247900230E93 /* SuggestedBetSummary.swift in Sources */,
@@ -4617,6 +4633,7 @@
 				452047B72703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
+				A9A2E7E727F5ED1F00D35A9D /* DepositViewModel.swift in Sources */,
 				A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45B7DAE026F92CE40032C1C3 /* UserSession.swift in Sources */,
@@ -4890,6 +4907,7 @@
 				A9E7C69127B5405B00F784C9 /* MyFavoritesViewModel.swift in Sources */,
 				4515636026BE032E00690896 /* AnalyticsClient.swift in Sources */,
 				A99DD54626C5364600ACDB07 /* RealtimeSocketClient.swift in Sources */,
+				A9A2E7E427F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */,
 				A9B840C826E1285200269B05 /* Discipline.swift in Sources */,
 				455A0D0926BD9D9000EC572D /* CenterCellCollectionViewFlowLayout.swift in Sources */,
 				A9C82FB126F3A37F00059DCD /* String+Extensions.swift in Sources */,
