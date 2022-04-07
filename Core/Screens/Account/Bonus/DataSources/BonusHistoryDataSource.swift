@@ -14,6 +14,8 @@ class BonusHistoryDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     // MARK: Public Properties
     var bonusHistory: [EveryMatrix.GrantedBonus] = []
 
+    var bonusHistoryCellViewModels: [BonusHistoryCellViewModel] = []
+
     override init() {
         super.init()
     }
@@ -33,7 +35,9 @@ class BonusHistoryDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             if let cell = tableView.dequeueCellType(BonusHistoryTableViewCell.self) {
                 if let historyBonus = self.bonusHistory[safe: indexPath.row] {
-                    cell.setupBonus(bonus: historyBonus)
+                    if let cellViewModel = self.bonusHistoryCellViewModels[safe: indexPath.row] {
+                        cell.configure(withViewModel: cellViewModel)
+                    }
                 }
 
                 cell.selectionStyle = .none
@@ -52,12 +56,12 @@ class BonusHistoryDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        return 0.01
+        return 0
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        return 0.01
+        return 0
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

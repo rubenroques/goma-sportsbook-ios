@@ -43,29 +43,6 @@ class FavoritesAggregatorsRepository {
 
     private var cancellables: Set<AnyCancellable> = []
 
-    func getLocations() {
-
-        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
-        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
-            .sink(receiveCompletion: { completion in
-                switch completion {
-                case .failure(let error):
-                    print("LOCATIONS ERROR: \(error)")
-                case .finished:
-                    ()
-                }
-            },
-                  receiveValue: { [weak self] response in
-
-                (response.records ?? []).forEach { location in
-
-                    self?.locations[location.id] = location
-                }
-
-            })
-            .store(in: &cancellables)
-    }
-
     func processAggregator(_ aggregator: EveryMatrix.Aggregator, withListType type: FavoritesAggregatorListType, shouldClear: Bool = false) {
 
         if shouldClear {
