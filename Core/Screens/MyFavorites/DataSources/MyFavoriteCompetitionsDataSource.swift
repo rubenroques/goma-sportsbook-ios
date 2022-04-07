@@ -14,8 +14,11 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
 
     var collapsedCompetitionsSections: Set<Int> = []
 
+    var cachedMatchWidgetCellViewModels: [String: MatchWidgetCellViewModel] = [:]
+
     var didSelectMatchAction: ((Match) -> Void)?
     var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
+    var didTapFavoriteMatchAction: ((Match) -> Void)?
     var matchWentLiveAction: (() -> Void)?
 
     var matchStatsViewModelForMatch: ((Match) -> MatchStatsViewModel?)?
@@ -25,6 +28,7 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
     init(favoriteCompetitions: [Competition], store: AggregatorStore) {
         self.store = store
         self.competitions = favoriteCompetitions
+
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -54,22 +58,31 @@ class MyFavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITable
                 cell.matchStatsViewModel = matchStatsViewModel
             }
 
-            if self.store.hasMatchesInfoForMatch(withId: match.id) {
-                cell.setupWithMatch(match, liveMatch: true, store: self.store)
-            }
-            else {
-                cell.setupWithMatch(match, store: self.store)
+            if !collapsedCompetitionsSections.contains(indexPath.section) {
+                if self.store.hasMatchesInfoForMatch(withId: match.id) {
+                    cell.setupWithMatch(match, liveMatch: true, store: self.store)
+                }
+                else {
+                    cell.setupWithMatch(match, store: self.store)
+                }
+
+                cell.shouldShowCountryFlag(false)
+
+                cell.tappedMatchLineAction = { [weak self] in
+                    self?.didSelectMatchAction?(match)
+                }
+                cell.matchWentLive = { [weak self] in
+                    self?.matchWentLiveAction?()
+                }
+
+                cell.didTapFavoriteMatchAction = { [weak self] match in
+                    self?.didTapFavoriteMatchAction?(match)
+                }
+
             }
 
-            cell.shouldShowCountryFlag(false)
-            cell.tappedMatchLineAction = { [weak self] in
-                self?.didSelectMatchAction?(match)
-            }
-            cell.matchWentLive = { [weak self] in
-                self?.matchWentLiveAction?()
-            }
-            
             return cell
+
         }
         else {
             return UITableViewCell()
