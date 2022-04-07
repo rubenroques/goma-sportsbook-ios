@@ -30,6 +30,11 @@ class BonusViewController: UIViewController {
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private var cancellables = Set<AnyCancellable>()
 
+    // MARK: Data Sources
+    private var bonusAvailableDataSource = BonusAvailableDataSource()
+    private var bonusActiveDataSource = BonusActiveDataSource()
+    private var bonusHistoryDataSource = BonusHistoryDataSource()
+
     // MARK: Public Properties
     var viewModel: BonusViewModel
 
@@ -91,23 +96,7 @@ class BonusViewController: UIViewController {
 
         self.bonusSegmentedControl.addTarget(self, action: #selector(didChangeSegmentValue), for: .valueChanged)
 
-        self.promoCodeTextFieldView.textPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] text in
-                if text != "" {
-                    self?.promoCodeTextFieldView.isActionDisabled = false
-                }
-                else {
-                    self?.promoCodeTextFieldView.isActionDisabled = true
-                }
-            })
-            .store(in: &cancellables)
-
-        self.promoCodeTextFieldView.didTapButtonAction = { [weak self] in
-            print("APPLY BONUS!")
-            let bonusCode = self?.promoCodeTextFieldView.getTextFieldValue() ?? ""
-            self?.applyBonus(bonusCode: bonusCode)
-        }
+        self.setupPublishersAndActions()
 
     }
 
@@ -141,6 +130,45 @@ class BonusViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
+    }
+
+    // MARK: Publishers and Actions
+    private func setupPublishersAndActions() {
+        self.promoCodeTextFieldView.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] text in
+                if text != "" {
+                    self?.promoCodeTextFieldView.isActionDisabled = false
+                }
+                else {
+                    self?.promoCodeTextFieldView.isActionDisabled = true
+                }
+            })
+            .store(in: &cancellables)
+
+        self.promoCodeTextFieldView.didTapButtonAction = { [weak self] in
+            print("APPLY BONUS!")
+            let bonusCode = self?.promoCodeTextFieldView.getTextFieldValue() ?? ""
+            self?.applyBonus(bonusCode: bonusCode)
+        }
+
+        self.bonusAvailableDataSource.requestBonusDetail = { [weak self] bonusIndex in
+            if let bonus = self?.bonusAvailableDataSource.bonusAvailable[safe: bonusIndex] {
+                if let bonusBannerUrl = self?.viewModel.bonusBannersUrlPublisher.value[bonus.bonus.code] {
+                    self?.showBonusDetail(bonus: bonus.bonus, bonusBannerUrl: bonusBannerUrl)
+                }
+                else {
+                    self?.showBonusDetail(bonus: bonus.bonus)
+                }
+            }
+        }
+
+        self.bonusAvailableDataSource.requestApplyBonus = { [weak self] bonusIndex in
+            if let bonus = self?.bonusAvailableDataSource.bonusAvailable[safe: bonusIndex] {
+                let bonusCode = bonus.bonus.code
+                self?.applyBonus(bonusCode: bonusCode)
+            }
+        }
     }
 
     // MARK: Binding
@@ -179,43 +207,57 @@ class BonusViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        Publishers.CombineLatest(viewModel.isBonusApplicableLoading, viewModel.isBonusClaimableLoading)
+        Publishers.CombineLatest3(viewModel.isBonusApplicableLoading, viewModel.isBonusClaimableLoading, viewModel.isBonusGrantedLoading)
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { isApplicableLoading, isClaimableLoading in
-                if isApplicableLoading && isClaimableLoading {
+            .sink(receiveValue: { isApplicableLoading, isClaimableLoading, isGrantedLoading in
+                if isApplicableLoading && isClaimableLoading && isGrantedLoading {
                     self.isLoading = true
                 }
-                else if !isApplicableLoading && !isClaimableLoading {
+                else if !isApplicableLoading && !isClaimableLoading && !isGrantedLoading {
                     self.isLoading = false
-                    self.tableView.reloadData()
+                    self.setupDataSourcesData()
                 }
 
             })
             .store(in: &cancellables)
 
-        viewModel.requestBonusDetail = { [weak self] bonus in
-            if let bonusBannerUrl = self?.viewModel.bonusBannersUrlPublisher.value[bonus.code] {
-                self?.showBonusDetail(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
-            }
-            else {
-                self?.showBonusDetail(bonus: bonus)
-            }
-        }
+        viewModel.bonusBannersUrlPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] bonusBanners in
+                self?.bonusAvailableDataSource.bonusBannersUrl = bonusBanners
+            })
+            .store(in: &cancellables)
 
-        viewModel.requestApplyBonus = { [weak self] bonus in
-            let bonusCode = bonus.code
-            self?.applyBonus(bonusCode: bonusCode)
-        }
+    }
+
+    // MARK: Functions
+    private func setupDataSourcesData() {
+
+        self.bonusAvailableDataSource.bonusAvailable = self.viewModel.bonusAvailable
+
+        self.bonusAvailableDataSource.bonusAvailableCellViewModels = self.viewModel.bonusAvailableCellViewModels
+
+        self.bonusActiveDataSource.bonusActive = self.viewModel.bonusActive
+
+        self.bonusActiveDataSource.bonusActiveCellViewModels = self.viewModel.bonusActiveCellViewModels
+
+        self.bonusHistoryDataSource.bonusHistory = self.viewModel.bonusHistory
+
+        self.bonusHistoryDataSource.bonusHistoryCellViewModels = self.viewModel.bonusHistoryCellViewModels
+
+        self.tableView.reloadData()
 
     }
 
     private func showBonusDetail(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
         if let bonusBannerUrl = bonusBannerUrl {
-            let bonusDetailViewController = BonusDetailViewController(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
+            let bonusDetailViewModel = BonusDetailViewModel(bonus: bonus, bonusBannerUrl: bonusBannerUrl)
+            let bonusDetailViewController = BonusDetailViewController(viewModel: bonusDetailViewModel)
             self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
         }
         else {
-            let bonusDetailViewController = BonusDetailViewController(bonus: bonus)
+            let bonusDetailViewModel = BonusDetailViewModel(bonus: bonus)
+            let bonusDetailViewController = BonusDetailViewController(viewModel: bonusDetailViewModel)
             self.navigationController?.pushViewController(bonusDetailViewController, animated: true)
         }
 
@@ -243,14 +285,14 @@ class BonusViewController: UIViewController {
 
                 self?.isLoading = false
 
-            }, receiveValue: { [weak self] bonusResponse in
+            }, receiveValue: { [weak self] _ in
                 self?.showAlert(type: .success, text: localized("bonus_applied_success"))
                 self?.viewModel.updateDataSources()
             })
             .store(in: &cancellables)
     }
 
-    func showAlert(type: EditAlertView.AlertState, text: String = "") {
+    private func showAlert(type: EditAlertView.AlertState, text: String = "") {
 
         let popup = EditAlertView()
         popup.alertState = type
@@ -285,23 +327,111 @@ class BonusViewController: UIViewController {
 extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.numberOfSections(in: tableView)
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.numberOfSections(in: tableView)
+        case .active:
+            return self.bonusActiveDataSource.numberOfSections(in: tableView)
+        case .history:
+            return self.bonusHistoryDataSource.numberOfSections(in: tableView)
+        }
     }
 
+    func hasContentForSelectedListType() -> Bool {
+
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.bonusAvailable.isNotEmpty
+        case .active:
+            return self.bonusActiveDataSource.bonusActive.isNotEmpty
+        case .history:
+            return self.bonusHistoryDataSource.bonusHistory.isNotEmpty
+        }
+   }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.tableView(tableView, numberOfRowsInSection: section)
+
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.tableView(tableView, numberOfRowsInSection: section)
+        case .active:
+            return self.bonusActiveDataSource.tableView(tableView, numberOfRowsInSection: section)
+        case .history:
+            return self.bonusHistoryDataSource.tableView(tableView, numberOfRowsInSection: section)
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.tableView(tableView, cellForRowAt: indexPath)
+
+        case .active:
+            return self.bonusActiveDataSource.tableView(tableView, cellForRowAt: indexPath)
+        case .history:
+            return self.bonusHistoryDataSource.tableView(tableView, cellForRowAt: indexPath)
+        }
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.tableView(tableView, viewForHeaderInSection: section)
+        case .active:
+            return self.bonusActiveDataSource.tableView(tableView, viewForHeaderInSection: section)
+        case .history:
+            return self.bonusHistoryDataSource.tableView(tableView, viewForHeaderInSection: section)
+        }
+
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
+
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.tableView(tableView, heightForRowAt: indexPath)
+        case .active:
+            return self.bonusActiveDataSource.tableView(tableView, heightForRowAt: indexPath)
+        case .history:
+            return self.bonusHistoryDataSource.tableView(tableView, heightForRowAt: indexPath)
+        }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
+
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        case .active:
+            return self.bonusActiveDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        case .history:
+            return self.bonusHistoryDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.tableView(tableView, heightForHeaderInSection: section)
+        case .active:
+            return self.bonusActiveDataSource.tableView(tableView, heightForHeaderInSection: section)
+        case .history:
+            return self.bonusHistoryDataSource.tableView(tableView, heightForHeaderInSection: section)
+        }
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+
+        switch self.viewModel.bonusListTypePublisher.value {
+        case .available:
+            return self.bonusAvailableDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        case .active:
+            return self.bonusActiveDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        case .history:
+            return self.bonusHistoryDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        }
     }
 
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BonusActiveTableViewCell: UITableViewCell {
     // MARK: Private Properties
@@ -13,6 +14,16 @@ class BonusActiveTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
     private lazy var dateLabel: UILabel = Self.createDateLabel()
+    private lazy var stackView: UIStackView = Self.createStackView()
+
+    // MARK: Public Properties
+    var hasBonusAmount: Bool = false {
+        didSet {
+            self.stackView.isHidden = !hasBonusAmount
+        }
+    }
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -46,38 +57,68 @@ class BonusActiveTableViewCell: UITableViewCell {
 
         self.dateLabel.textColor = UIColor.App.textSecondary
 
-    }
-
-    func setupBonus(bonus: EveryMatrix.GrantedBonus) {
-        
-        self.titleLabel.text = bonus.name
-
-        let formattedDate = getDateFormatted(dateString: bonus.expiryDate ?? "")
-
-        if formattedDate != "" {
-            self.dateLabel.text = formattedDate
-        }
-        else {
-            self.dateLabel.text = localized("permanent")
-        }
+        self.stackView.backgroundColor = UIColor.App.backgroundSecondary
 
     }
 
-    func getDateFormatted(dateString: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+    func configure(withViewModel viewModel: BonusActiveCellViewModel) {
 
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
+        viewModel.titlePublisher
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &cancellables)
 
-        let date = dateString
+        viewModel.dateStringPublisher
+            .sink(receiveValue: { [weak self] dateString in
+                self?.dateLabel.text = dateString
+            })
+            .store(in: &cancellables)
 
-        if let formattedDate = dateFormatterGet.date(from: date) {
+        viewModel.hasBonusAmountPublisher
+            .sink(receiveValue: { [weak self] hasBonus in
+                if hasBonus {
+                    self?.stackView.removeAllArrangedSubviews()
 
-            return dateFormatterPrint.string(from: formattedDate)
+                    self?.setupProgressBars(bonus: viewModel.bonus)
+
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    private func setupProgressBars(bonus: EveryMatrix.GrantedBonus) {
+
+        if let bonusAmount = bonus.amount, bonusAmount > 0 {
+            let bonusProgressCardView = BonusProgressView()
+//            bonusProgressCardView.setTitle(title: localized("bonus_amount"))
+//            bonusProgressCardView.setupProgressInfo(bonus: bonus, progressType: .bonus)
+            let bonusProgressViewModel = BonusProgressViewModel(bonus: bonus, progressType: .bonus)
+            bonusProgressCardView.configure(withViewModel: bonusProgressViewModel)
+            self.stackView.addArrangedSubview(bonusProgressCardView)
+
         }
 
-        return ""
+        if let wagerAmount = bonus.initialWagerRequirementAmount, wagerAmount > 0 {
+            let wagerProgressCardView = BonusProgressView()
+//            wagerProgressCardView.setTitle(title: localized("wager_amount"))
+//            wagerProgressCardView.setupProgressInfo(bonus: bonus, progressType: .wager)
+            let wagerProgressViewModel = BonusProgressViewModel(bonus: bonus, progressType: .wager)
+            wagerProgressCardView.configure(withViewModel: wagerProgressViewModel)
+            self.stackView.addArrangedSubview(wagerProgressCardView)
+
+        }
+
+//        let bonusProgressCardView = BonusProgressView()
+//        bonusProgressCardView.setTitle(title: "Bonus Amount")
+//        bonusProgressCardView.testSetupProgressInfo(bonus: bonus, progressType: .bonus)
+//        self.stackView.addArrangedSubview(bonusProgressCardView)
+//
+//        let wagerProgressCardView = BonusProgressView()
+//        wagerProgressCardView.setTitle(title: "Wager Amount")
+//        wagerProgressCardView.testSetupProgressInfo(bonus: bonus, progressType: .wager)
+//        self.stackView.addArrangedSubview(wagerProgressCardView)
+
     }
 
 }
@@ -125,12 +166,22 @@ extension BonusActiveTableViewCell {
         return label
     }
 
+    private static func createStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.distribution = .equalSpacing
+        stackView.axis = .vertical
+        stackView.spacing = 8
+        return stackView
+    }
+
     private func setupSubviews() {
         self.contentView.addSubview(self.containerView)
 
         self.containerView.addSubview(self.titleLabel)
         self.containerView.addSubview(self.subtitleLabel)
         self.containerView.addSubview(self.dateLabel)
+        self.containerView.addSubview(self.stackView)
 
         self.initConstraints()
     }
@@ -154,11 +205,19 @@ extension BonusActiveTableViewCell {
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
             self.subtitleLabel.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 12),
-            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
+//            self.subtitleLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20),
 
             self.dateLabel.leadingAnchor.constraint(equalTo: self.subtitleLabel.trailingAnchor, constant: 4),
             self.dateLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
             self.dateLabel.centerYAnchor.constraint(equalTo: self.subtitleLabel.centerYAnchor)
+        ])
+
+        // StackView
+        NSLayoutConstraint.activate([
+            self.stackView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 15),
+            self.stackView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -15),
+            self.stackView.topAnchor.constraint(equalTo: self.subtitleLabel.bottomAnchor, constant: 16),
+            self.stackView.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -20)
         ])
 
     }
