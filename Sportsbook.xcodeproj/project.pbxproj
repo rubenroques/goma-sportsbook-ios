@@ -864,6 +864,10 @@
 		A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */; };
 		A9992FD227FF1F260098854C /* SentMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */; };
 		A9992FD327FF1F260098854C /* SentMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */; };
+		A9992FD528003DAC0098854C /* DateHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD428003DAC0098854C /* DateHeaderFooterView.swift */; };
+		A9992FD628003DAC0098854C /* DateHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD428003DAC0098854C /* DateHeaderFooterView.swift */; };
+		A9992FD9280057BB0098854C /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD8280057BB0098854C /* ChatMessageView.swift */; };
+		A9992FDA280057BB0098854C /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FD8280057BB0098854C /* ChatMessageView.swift */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -1543,6 +1547,8 @@
 		A99622A8278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitedBetTableViewCellViewModel.swift; sourceTree = "<group>"; };
 		A99622AB278DA15B00ABDF97 /* CashoutAggregator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CashoutAggregator.swift; sourceTree = "<group>"; };
 		A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessageTableViewCell.swift; sourceTree = "<group>"; };
+		A9992FD428003DAC0098854C /* DateHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHeaderFooterView.swift; sourceTree = "<group>"; };
+		A9992FD8280057BB0098854C /* ChatMessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterPersonalInfoViewController.swift; sourceTree = "<group>"; };
@@ -2598,6 +2604,7 @@
 		4589F40726BF01B4005DF543 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				A9992FD7280057960098854C /* Chat */,
 				A9FAD3A127EA242A0041F3E7 /* NavigationCardViews */,
 				A99F7A1B27DA1139008BAF41 /* BonusViews */,
 				A9E7C6AE27BD63A100F784C9 /* SettingsViews */,
@@ -3219,6 +3226,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		A9992FD7280057960098854C /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				A9992FD8280057BB0098854C /* ChatMessageView.swift */,
+			);
+			path = Chat;
+			sourceTree = "<group>";
+		};
 		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
 			isa = PBXGroup;
 			children = (
@@ -3313,6 +3328,7 @@
 			children = (
 				A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */,
 				A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */,
+				A9992FD428003DAC0098854C /* DateHeaderFooterView.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4411,6 +4427,7 @@
 				455A0D0C26BD9D9000EC572D /* CountryName.swift in Sources */,
 				455C962126FDD66400456F30 /* ProfileViewController.swift in Sources */,
 				A99F79F827CF98FB008BAF41 /* BonusViewController.swift in Sources */,
+				A9992FD9280057BB0098854C /* ChatMessageView.swift in Sources */,
 				454E0AD12734A39800794E0C /* CurrencyHelper.swift in Sources */,
 				45166D2326F3548D00E69D65 /* SSWampExtensions.swift in Sources */,
 				4515636E26BE94F600690896 /* Theme.swift in Sources */,
@@ -4424,6 +4441,7 @@
 				457F49642737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
 				A9627A0C274548610001E1D5 /* ActivationAlertCollectionViewCell.swift in Sources */,
 				4589F41926BF0243005DF543 /* NibView.swift in Sources */,
+				A9992FD528003DAC0098854C /* DateHeaderFooterView.swift in Sources */,
 				A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */,
 				45166D0926F3548D00E69D65 /* CallSSWampMessage.swift in Sources */,
 				457816A92706679400F66878 /* MatchLineTableViewCell.swift in Sources */,
@@ -4829,6 +4847,7 @@
 				45C3E8D027B40559007A1A0F /* HomeViewModel.swift in Sources */,
 				45166D1026F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0D26BD9D9000EC572D /* CountryName.swift in Sources */,
+				A9992FDA280057BB0098854C /* ChatMessageView.swift in Sources */,
 				455C962226FDD66400456F30 /* ProfileViewController.swift in Sources */,
 				A99F79F927CF98FB008BAF41 /* BonusViewController.swift in Sources */,
 				454E0AD22734A39800794E0C /* CurrencyHelper.swift in Sources */,
@@ -4842,6 +4861,7 @@
 				A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */,
 				45166CF426F3548D00E69D65 /* EventSSWampMessage.swift in Sources */,
 				457F49652737D9120047169D /* BetSubmissionSuccessViewController.swift in Sources */,
+				A9992FD628003DAC0098854C /* DateHeaderFooterView.swift in Sources */,
 				A9627A0D274548610001E1D5 /* ActivationAlertCollectionViewCell.swift in Sources */,
 				4589F41A26BF0243005DF543 /* NibView.swift in Sources */,
 				A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */,
