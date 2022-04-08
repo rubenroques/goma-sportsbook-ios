@@ -418,8 +418,8 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyNoFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .myGames ||
-                        self?.viewModel.matchListTypePublisher.value ==  .today ||
+                    if self?.viewModel.matchListTypePublisher.value == .popular ||
+                        self?.viewModel.matchListTypePublisher.value ==  .upcoming ||
                         self?.viewModel.matchListTypePublisher.value == .competitions {
                         self?.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                                     secondLabelText: localized("second_empty_list"),
@@ -431,8 +431,8 @@ class PreLiveEventsViewController: UIViewController {
                 case .emptyAndFilter:
                     self?.emptyBaseView.isHidden = false
                     self?.tableView.isHidden = true
-                    if self?.viewModel.matchListTypePublisher.value == .myGames ||
-                        self?.viewModel.matchListTypePublisher.value ==  .today ||
+                    if self?.viewModel.matchListTypePublisher.value == .popular ||
+                        self?.viewModel.matchListTypePublisher.value ==  .upcoming ||
                         self?.viewModel.matchListTypePublisher.value == .competitions {
                         self?.setEmptyStateBaseView(firstLabelText: localized("empty_list_with_filters"),
                                                     secondLabelText: localized("second_empty_list_with_filters"),
@@ -553,14 +553,14 @@ class PreLiveEventsViewController: UIViewController {
         switch index {
         case 0:
             AnalyticsClient.sendEvent(event: .myGamesScreen)
-            self.viewModel.setMatchListType(.myGames)
+            self.viewModel.setMatchListType(.popular)
             turnTimeRangeOn = false
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                        secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
         case 1:
             AnalyticsClient.sendEvent(event: .todayScreen)
-            self.viewModel.setMatchListType(.today)
+            self.viewModel.setMatchListType(.upcoming)
             turnTimeRangeOn = true
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                        secondLabelText: localized("second_empty_list"),
@@ -835,14 +835,14 @@ extension PreLiveEventsViewController: UICollectionViewDelegate, UICollectionVie
         switch indexPath.row {
         case 0:
             AnalyticsClient.sendEvent(event: .myGamesScreen)
-            self.viewModel.setMatchListType(.myGames)
+            self.viewModel.setMatchListType(.popular)
             turnTimeRangeOn = false
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                        secondLabelText: localized("second_empty_list"),
                                        isUserLoggedIn: true)
         case 1:
             AnalyticsClient.sendEvent(event: .todayScreen)
-            self.viewModel.setMatchListType(.today)
+            self.viewModel.setMatchListType(.upcoming)
             turnTimeRangeOn = true
             self.setEmptyStateBaseView(firstLabelText: localized("empty_list"),
                                        secondLabelText: localized("second_empty_list"),

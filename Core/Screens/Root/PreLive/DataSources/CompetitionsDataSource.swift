@@ -196,3 +196,64 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
     }
 
 }
+
+class FilteredOutrightCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+
+    var outrightCompetitions: [Competition]
+
+    var didSelectCompetitionAction: ((Competition) -> Void)?
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
+
+    init(outrightCompetitions: [Competition]) {
+        self.outrightCompetitions = outrightCompetitions
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return outrightCompetitions.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard
+            let competition = self.outrightCompetitions[safe: indexPath.row]
+        else {
+            fatalError()
+        }
+
+        guard
+            let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                as? OutrightCompetitionLargeLineTableViewCell
+        else {
+            fatalError()
+        }
+        cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
+        cell.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectCompetitionAction?(competition)
+        }
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 145
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 145
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+
+}
