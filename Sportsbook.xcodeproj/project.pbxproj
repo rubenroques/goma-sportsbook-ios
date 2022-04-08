@@ -212,6 +212,8 @@
 		454F0A8427C4EA69003123DF /* OutrightMarketDetailsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8227C4EA69003123DF /* OutrightMarketDetailsStore.swift */; };
 		454F0A8927C6468B003123DF /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
 		454F0A8A27C6468B003123DF /* SportGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454F0A8827C6468B003123DF /* SportGroupViewModel.swift */; };
+		45505F402800900600D4B53E /* MyTicketsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45505F3F2800900600D4B53E /* MyTicketsRootViewController.swift */; };
+		45505F412800900600D4B53E /* MyTicketsRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45505F3F2800900600D4B53E /* MyTicketsRootViewController.swift */; };
 		4556439E26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
 		4556439F26F2631700EE78FA /* FirebaseClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */; };
 		455643A126F2634E00EE78FA /* GomaClientSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 455643A026F2634E00EE78FA /* GomaClientSettings.swift */; };
@@ -1227,6 +1229,7 @@
 		454F0A7F27C4E95A003123DF /* OutrightMarketDetailsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightMarketDetailsViewModel.swift; sourceTree = "<group>"; };
 		454F0A8227C4EA69003123DF /* OutrightMarketDetailsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutrightMarketDetailsStore.swift; sourceTree = "<group>"; };
 		454F0A8827C6468B003123DF /* SportGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportGroupViewModel.swift; sourceTree = "<group>"; };
+		45505F3F2800900600D4B53E /* MyTicketsRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTicketsRootViewController.swift; sourceTree = "<group>"; };
 		4556439D26F2631700EE78FA /* FirebaseClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseClientSettings.swift; sourceTree = "<group>"; };
 		455643A026F2634E00EE78FA /* GomaClientSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaClientSettings.swift; sourceTree = "<group>"; };
 		455A0C5026BD902C00EC572D /* ShowcaseProd.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShowcaseProd.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2676,6 +2679,7 @@
 		458BAC66276B652F006C4BC7 /* MyTickets */ = {
 			isa = PBXGroup;
 			children = (
+				45505F3F2800900600D4B53E /* MyTicketsRootViewController.swift */,
 				458BAC67276B65D5006C4BC7 /* MyTicketsViewController.swift */,
 				458BAC68276B65D5006C4BC7 /* MyTicketsViewController.xib */,
 				458BAC7127709692006C4BC7 /* ViewModel */,
@@ -4578,6 +4582,7 @@
 				A99F7A1327D11BFE008BAF41 /* Bonus.swift in Sources */,
 				456B342D26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				A99DFBED27342AEB00002CDB /* FavoritesManager.swift in Sources */,
+				45505F402800900600D4B53E /* MyTicketsRootViewController.swift in Sources */,
 				455A0CEA26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1926F3548D00E69D65 /* SSWampSerializer.swift in Sources */,
 				A91F4B2E27BEAF0F008C7510 /* NotificationsViewController.swift in Sources */,
@@ -5004,6 +5009,7 @@
 				45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				A99F7A1427D11BFE008BAF41 /* Bonus.swift in Sources */,
 				456B342E26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
+				45505F412800900600D4B53E /* MyTicketsRootViewController.swift in Sources */,
 				A99DFBEE27342AEB00002CDB /* FavoritesManager.swift in Sources */,
 				455A0CEB26BD9D9000EC572D /* Throwable.swift in Sources */,
 				45166D1A26F3548D00E69D65 /* SSWampSerializer.swift in Sources */,

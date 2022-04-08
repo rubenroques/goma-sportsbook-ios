@@ -352,10 +352,10 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.amountBaseView.addGestureRecognizer(amountBaseViewTapGesture)
         self.amountTextfield.isUserInteractionEnabled = false
         
-        if Env.betslipManager.bettingTicketsPublisher.value.count > 1 {
-            self.betTypeSegmentControl.selectedSegmentIndex = 1
-            self.didChangeSegmentValue(self.betTypeSegmentControl)
-        }
+//        if Env.betslipManager.bettingTicketsPublisher.value.count > 1 {
+//            self.betTypeSegmentControl.selectedSegmentIndex = 1
+//            self.didChangeSegmentValue(self.betTypeSegmentControl)
+//        }
 
         //
         //
@@ -407,38 +407,60 @@ class PreSubmissionBetslipViewController: UIViewController {
 
                 let oldSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex ?? 0
 
-                if ticketsCount < 3 {
-                    if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
-                        self?.betTypeSegmentControl.selectedSegmentIndex = 1
-                    }
-
-                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
-                }
-                else {
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
-                }
-
-                if ticketsCount == 1 {
-                    if self?.betTypeSegmentControl.selectedSegmentIndex == 1 {
-                        self?.betTypeSegmentControl.selectedSegmentIndex = 0
-                    }
+                switch ticketsCount {
+                case 0...1:
+                    self?.betTypeSegmentControl.selectedSegmentIndex = 0
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
                     self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 1)
-                }
-                else {
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
-                }
-
-                if ticketsCount > 1 && self?.isSuggestedMultiple == true {
+                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+                case 2...3:
                     self?.betTypeSegmentControl.selectedSegmentIndex = 1
-                }
-
-                if ticketsCount >= 9 {
-                    if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
-                        self?.betTypeSegmentControl.selectedSegmentIndex = 1
-                    }
-
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
+                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+                case 4...8:
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
+                default:
+                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
+                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
                     self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
                 }
+
+//                if ticketsCount < 3 {
+//                    if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
+//                        self?.betTypeSegmentControl.selectedSegmentIndex = 1
+//                    }
+//
+//                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+//                }
+//                else {
+//                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
+//                }
+//
+//                if ticketsCount == 1 {
+//                    if self?.betTypeSegmentControl.selectedSegmentIndex == 1 {
+//                        self?.betTypeSegmentControl.selectedSegmentIndex = 0
+//                    }
+//                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 1)
+//                }
+//                else {
+//                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
+//                }
+//
+//                if ticketsCount > 1 && self?.isSuggestedMultiple == true {
+//                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
+//                }
+//
+//                if ticketsCount >= 9 {
+//                    if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
+//                        self?.betTypeSegmentControl.selectedSegmentIndex = 1
+//                    }
+//
+//                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+//                }
 
                 if let segmentControl = self?.betTypeSegmentControl,
                    let newSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex,
