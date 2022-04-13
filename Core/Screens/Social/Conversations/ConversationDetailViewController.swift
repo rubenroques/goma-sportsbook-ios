@@ -8,6 +8,7 @@
 import UIKit
 
 class ConversationDetailViewController: UIViewController {
+
     // MARK: Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
@@ -38,6 +39,7 @@ class ConversationDetailViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -122,7 +124,7 @@ class ConversationDetailViewController: UIViewController {
     }
 
     // MARK: Functions
-    func scrollToBottomTableView(){
+    func scrollToBottomTableView() {
         DispatchQueue.main.async {
             let section = self.viewModel.dateMessages.count - 1
             let row = self.viewModel.dateMessages[section].messages.count - 1
