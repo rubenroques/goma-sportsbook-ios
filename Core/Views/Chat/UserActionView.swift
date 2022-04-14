@@ -41,6 +41,9 @@ class UserActionView: UIView {
         }
     }
 
+    var tappedActionButtonAction: (() -> Void)?
+    var tappedCloseButtonAction: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -62,6 +65,10 @@ class UserActionView: UIView {
     private func commonInit() {
         self.hasLineSeparator = true
         self.isOnline = false
+
+        self.actionButton.addTarget(self, action: #selector(didTapActionButton), for: .primaryActionTriggered)
+
+        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
         self.layoutIfNeeded()
 
@@ -89,7 +96,7 @@ class UserActionView: UIView {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.actionButton.backgroundColor = .clear
-        self.actionButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+        self.actionButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.closeButton.backgroundColor = .clear
 
@@ -97,16 +104,36 @@ class UserActionView: UIView {
     }
 
     // MARK: Functions
+    // NOT WORKING
     func drawDottedLine(start: CGPoint, end: CGPoint) {
         let shapeLayer = CAShapeLayer()
         shapeLayer.strokeColor = UIColor.App.alertSuccess.cgColor
         shapeLayer.lineWidth = 1
-        shapeLayer.lineDashPattern = [3, 2] 
+        shapeLayer.lineDashPattern = [3, 2]
 
         let path = CGMutablePath()
         path.addLines(between: [start, end])
         shapeLayer.path = path
         self.separatorLineView.layer.addSublayer(shapeLayer)
+    }
+
+    func setupViewInfo(title: String, actionTitle: String) {
+        self.titleLabel.text = title
+
+        self.actionButton.setTitle(actionTitle, for: .normal)
+    }
+
+    func setActionButtonColor(color: UIColor) {
+        self.actionButton.setTitleColor(color, for: .normal)
+    }
+
+    // MARK: Actions
+    @objc func didTapActionButton() {
+        self.tappedActionButtonAction?()
+    }
+
+    @objc func didTapCloseButton() {
+        self.tappedCloseButtonAction?()
     }
 
 }

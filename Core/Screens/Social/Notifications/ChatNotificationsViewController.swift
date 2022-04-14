@@ -21,11 +21,12 @@ class ChatNotificationsViewController: UIViewController {
     private lazy var scrollView: UIScrollView = Self.createScrollView()
     private lazy var followersStackView: UIStackView = Self.createFollowersStackView()
     private lazy var sharedTicketsStackView: UIStackView = Self.createSharedTicketsStackView()
+    private var viewModel: ChatNotificationsViewModel
 
     // MARK: Public Properties
-    var isNotificationEnabled: Bool = false {
+    var isNotificationMuted: Bool = true {
         didSet {
-            if isNotificationEnabled {
+            if isNotificationMuted {
                 self.notificationsButton.setImage(UIImage(named: "notifications_status_on_icon"), for: UIControl.State.normal)
             }
             else {
@@ -35,8 +36,8 @@ class ChatNotificationsViewController: UIViewController {
     }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: ConversationDetailViewModel = ConversationDetailViewModel()) {
-        //self.viewModel = viewModel
+    init(viewModel: ChatNotificationsViewModel = ChatNotificationsViewModel()) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -51,6 +52,8 @@ class ChatNotificationsViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.bind(toViewModel: self.viewModel)
+
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
@@ -62,6 +65,8 @@ class ChatNotificationsViewController: UIViewController {
         self.setupFollowersStackView()
 
         self.setupSharedTicketsStackView()
+
+        self.isNotificationMuted = false
 
     }
 
@@ -107,6 +112,18 @@ class ChatNotificationsViewController: UIViewController {
 
     }
 
+    // MARK: Binding
+    func bind(toViewModel viewModel: ChatNotificationsViewModel) {
+
+        viewModel.shouldRemoveFollowerView = { [weak self] userActionView in
+            self?.followersStackView.removeArrangedSubview(userActionView)
+        }
+
+        viewModel.shouldRemoveSharedTicketView = { [weak self] userActionView in
+            self?.sharedTicketsStackView.removeArrangedSubview(userActionView)
+        }
+    }
+
     // MARK: Functions
 
     private func setupFollowersStackView() {
@@ -116,24 +133,10 @@ class ChatNotificationsViewController: UIViewController {
 
         self.followersStackView.addArrangedSubview(titleView)
 
-        let followerView = UserActionView()
-        followerView.isOnline = true
-        let followerView2 = UserActionView()
-        followerView2.isOnline = true
-        let followerView3 = UserActionView()
-        let followerView4 = UserActionView()
-        followerView4.isOnline = true
-        let followerView5 = UserActionView()
-        let followerView6 = UserActionView()
-        followerView6.isOnline = true
-        followerView6.hasLineSeparator = false
-
-        self.followersStackView.addArrangedSubview(followerView)
-        self.followersStackView.addArrangedSubview(followerView2)
-        self.followersStackView.addArrangedSubview(followerView3)
-        self.followersStackView.addArrangedSubview(followerView4)
-        self.followersStackView.addArrangedSubview(followerView5)
-        self.followersStackView.addArrangedSubview(followerView6)
+        for userActionView in self.viewModel.followerViews {
+            
+            self.followersStackView.addArrangedSubview(userActionView)
+        }
 
     }
 
@@ -144,23 +147,12 @@ class ChatNotificationsViewController: UIViewController {
 
         self.sharedTicketsStackView.addArrangedSubview(titleView)
 
-        let sharedTicketView = UserActionView()
-        let sharedTicketView2 = UserActionView()
-        let sharedTicketView3 = UserActionView()
-        sharedTicketView3.isOnline = true
-        let sharedTicketView4 = UserActionView()
-        let sharedTicketView5 = UserActionView()
-        sharedTicketView5.isOnline = true
-        let sharedTicketView6 = UserActionView()
-        sharedTicketView6.isOnline = true
-        sharedTicketView6.hasLineSeparator = false
+        for userActionView in self.viewModel.sharedTicketViews {
 
-        self.sharedTicketsStackView.addArrangedSubview(sharedTicketView)
-        self.sharedTicketsStackView.addArrangedSubview(sharedTicketView2)
-        self.sharedTicketsStackView.addArrangedSubview(sharedTicketView3)
-        self.sharedTicketsStackView.addArrangedSubview(sharedTicketView4)
-        self.sharedTicketsStackView.addArrangedSubview(sharedTicketView5)
-        self.sharedTicketsStackView.addArrangedSubview(sharedTicketView6)
+            userActionView.setActionButtonColor(color: UIColor.App.highlightSecondary)
+
+            self.sharedTicketsStackView.addArrangedSubview(userActionView)
+        }
 
     }
 
@@ -180,16 +172,71 @@ class ChatNotificationsViewController: UIViewController {
     }
 
     @objc func didTapNotificationButton() {
-        if self.isNotificationEnabled == true {
-            self.isNotificationEnabled = false
+
+        if self.isNotificationMuted == false {
+            let alert = UIAlertController(
+                title: "Mute notifications",
+                message: nil,
+                preferredStyle: .actionSheet
+            )
+            alert.addAction(UIAlertAction(
+                title: "For 15 minutes",
+                style: .default,
+                handler: { _ in
+                    print("15MIN")
+                    self.isNotificationMuted = true
+            }))
+            alert.addAction(UIAlertAction(
+                title: "For 1 hour",
+                style: .default,
+                handler: { _ in
+                    print("1H")
+                    self.isNotificationMuted = true
+
+            }))
+            alert.addAction(UIAlertAction(
+                title: "For 8 hours",
+                style: .default,
+                handler: { _ in
+                    print("8H")
+                    self.isNotificationMuted = true
+
+            }))
+            alert.addAction(UIAlertAction(
+                title: "For 24 hours",
+                style: .default,
+                handler: { _ in
+                    print("24H")
+                    self.isNotificationMuted = true
+
+            }))
+            alert.addAction(UIAlertAction(
+                title: "Until I turn it back on",
+                style: .default,
+                handler: { _ in
+                    print("ALWAYS")
+                    self.isNotificationMuted = true
+            }))
+            alert.addAction(UIAlertAction(
+                title: "Cancel",
+                style: .cancel,
+                handler: { _ in
+                print("CANCEL")
+            }))
+            present(alert,
+                    animated: true,
+                    completion: nil
+            )
         }
         else {
-            self.isNotificationEnabled = true
+            self.isNotificationMuted = false
         }
     }
 
     @objc func didTapClearAllButton() {
         print("CLEAR ALL")
+        self.followersStackView.removeAllArrangedSubviews()
+        self.sharedTicketsStackView.removeAllArrangedSubviews()
     }
 
 }
@@ -227,7 +274,7 @@ extension ChatNotificationsViewController {
     private static func createNotificationsButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "notifications_status_icon"), for: .normal)
+        button.setImage(UIImage(named: "notifications_status_on_icon"), for: .normal)
         button.contentMode = .scaleAspectFit
         return button
     }

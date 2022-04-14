@@ -874,6 +874,10 @@
 		A9992FE1280719310098854C /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FDF280719310098854C /* TitleView.swift */; };
 		A9992FE328071E8C0098854C /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
 		A9992FE428071E8C0098854C /* UserActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE228071E8C0098854C /* UserActionView.swift */; };
+		A9992FE728083C7C0098854C /* ConversationsDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */; };
+		A9992FE828083C7C0098854C /* ConversationsDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */; };
+		A9992FEB28083D000098854C /* ChatNotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FEA28083D000098854C /* ChatNotificationsViewModel.swift */; };
+		A9992FEC28083D000098854C /* ChatNotificationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9992FEA28083D000098854C /* ChatNotificationsViewModel.swift */; };
 		A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */; };
 		A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */; };
@@ -1558,6 +1562,8 @@
 		A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNotificationsViewController.swift; sourceTree = "<group>"; };
 		A9992FDF280719310098854C /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		A9992FE228071E8C0098854C /* UserActionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserActionView.swift; sourceTree = "<group>"; };
+		A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsDetailViewModel.swift; sourceTree = "<group>"; };
+		A9992FEA28083D000098854C /* ChatNotificationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatNotificationsViewModel.swift; sourceTree = "<group>"; };
 		A99A970926FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileLimitsManagementViewController.swift; sourceTree = "<group>"; };
 		A99A970A26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileLimitsManagementViewController.xib; sourceTree = "<group>"; };
 		A99A971A26FDDF4E00F8D163 /* FullRegisterPersonalInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullRegisterPersonalInfoViewController.swift; sourceTree = "<group>"; };
@@ -3249,9 +3255,26 @@
 		A9992FDB2806D5470098854C /* Notifications */ = {
 			isa = PBXGroup;
 			children = (
+				A9992FE928083CDF0098854C /* ViewModels */,
 				A9992FDC2806D5720098854C /* ChatNotificationsViewController.swift */,
 			);
 			path = Notifications;
+			sourceTree = "<group>";
+		};
+		A9992FE528083C500098854C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A9992FE928083CDF0098854C /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A9992FEA28083D000098854C /* ChatNotificationsViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		A99A970826FB2FDA00F8D163 /* LimitsManagement */ = {
@@ -3328,6 +3351,7 @@
 		A9A2E7F127FDE06C00D35A9D /* Conversations */ = {
 			isa = PBXGroup;
 			children = (
+				A9992FE528083C500098854C /* ViewModels */,
 				A9A2E7F627FDF5AD00D35A9D /* Cells */,
 				454E090A27EC7A0300391560 /* ConversationsViewController.swift */,
 				A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */,
@@ -4267,6 +4291,7 @@
 				452047B62703656300B277B5 /* EventsStore.swift in Sources */,
 				456B342426C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFB26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
+				A9992FE728083C7C0098854C /* ConversationsDetailViewModel.swift in Sources */,
 				A92F5D98272C410400884BDF /* DocumentPickerView.swift in Sources */,
 				455A0D0026BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
@@ -4363,6 +4388,7 @@
 				455F765126F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
 				455C677A27E39C3D00AAB2A5 /* PopularDetailsViewModel.swift in Sources */,
 				A99F7A0527D0EFD9008BAF41 /* BonusHistoryTableViewCell.swift in Sources */,
+				A9992FEB28083D000098854C /* ChatNotificationsViewModel.swift in Sources */,
 				A9B840A626DE831400269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B226E9054700269B05 /* Market.swift in Sources */,
 				458BAC752770ACAE006C4BC7 /* MyTicketTableViewCell.swift in Sources */,
@@ -4690,6 +4716,7 @@
 				45AA91CB27C16AE400F8BFDD /* SportMatchDoubleLineTableViewCell.swift in Sources */,
 				A9C6023F2716FACB00992E11 /* RadioButton.swift in Sources */,
 				452047B72703656300B277B5 /* EventsStore.swift in Sources */,
+				A9992FE828083C7C0098854C /* ConversationsDetailViewModel.swift in Sources */,
 				456B342526C17E83009D7D27 /* Constants.swift in Sources */,
 				45166CFC26F3548D00E69D65 /* YieldSSWampMessage.swift in Sources */,
 				A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */,
@@ -4786,6 +4813,7 @@
 				458F4C952712B6B800AC13DB /* AggregatorsRepository.swift in Sources */,
 				455C677127E230BF00AAB2A5 /* MarketGroupDetailsViewController.swift in Sources */,
 				455F765226F0EFCE00B9B85D /* LoginAccount.swift in Sources */,
+				A9992FEC28083D000098854C /* ChatNotificationsViewModel.swift in Sources */,
 				A99F7A0627D0EFD9008BAF41 /* BonusHistoryTableViewCell.swift in Sources */,
 				A9B840A926DE86BE00269B05 /* RequestLocationAccessViewController.swift in Sources */,
 				A9B841B326E9054700269B05 /* Market.swift in Sources */,
