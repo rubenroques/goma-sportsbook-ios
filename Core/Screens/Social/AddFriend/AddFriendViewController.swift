@@ -1,0 +1,489 @@
+//
+//  AddFriendViewController.swift
+//  Sportsbook
+//
+//  Created by André Lascas on 14/04/2022.
+//
+
+import UIKit
+import Contacts
+import Combine
+
+class AddFriendViewController: UIViewController {
+    // MARK: Private Properties
+    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
+    private lazy var navigationView: UIView = Self.createNavigationView()
+    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var closeButton: UIButton = Self.createCloseButton()
+    private lazy var searchBar: UISearchBar = Self.createSearchBar()
+    private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
+    private lazy var tableView: UITableView = Self.createTableView()
+
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
+    var viewModel: AddFriendViewModel
+
+    // MARK: - Lifetime and Cycle
+    init(viewModel: AddFriendViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(iOS, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.setupSubviews()
+        self.setupWithTheme()
+
+        self.searchBar.delegate = self
+
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+
+        self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
+        self.tableView.register(AddFriendTableViewCell.self,
+                                forCellReuseIdentifier: AddFriendTableViewCell.identifier)
+
+        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+
+        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+
+        self.addFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
+
+        let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(backgroundTapGesture)
+
+        self.bind(toViewModel: self.viewModel)
+    }
+    
+    // MARK: - Layout and Theme
+    override func viewDidLayoutSubviews() {
+
+        super.viewDidLayoutSubviews()
+
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        self.setupWithTheme()
+    }
+
+    private func setupWithTheme() {
+        self.view.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.topSafeAreaView.backgroundColor = .clear
+
+        self.bottomSafeAreaView.backgroundColor = .clear
+
+        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.backButton.backgroundColor = .clear
+
+        self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.closeButton.backgroundColor = .clear
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+
+        self.setupSearchBarStyle()
+
+        self.addFriendButton.tintColor = UIColor.App.highlightSecondary
+        self.addFriendButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+
+        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+    }
+
+    // MARK: binding
+
+    private func bind(toViewModel viewModel: AddFriendViewModel) {
+
+        viewModel.dataNeedsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    private func setupSearchBarStyle() {
+        self.searchBar.searchBarStyle = UISearchBar.Style.prominent
+        self.searchBar.sizeToFit()
+        self.searchBar.isTranslucent = false
+        self.searchBar.backgroundImage = UIImage()
+        self.searchBar.tintColor = .white
+        self.searchBar.barTintColor = .white
+        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.placeholder = localized("search")
+
+        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.textColor = .white
+            textfield.tintColor = .white
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_username"),
+                                                                 attributes: [NSAttributedString.Key.foregroundColor:
+                                                                                UIColor.App.inputTextTitle,
+                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
+
+            if let glassIconView = textfield.leftView as? UIImageView {
+                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+                glassIconView.tintColor = UIColor.App.inputTextTitle
+            }
+        }
+
+    }
+
+    // MARK: Actions
+    @objc func didTapBackButton() {
+        self.navigationController?.popViewController(animated: true)
+    }
+
+    @objc func didTapCloseButton() {
+
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
+    }
+
+    @objc func didTapAddFriendButton() {
+        print("TAPPED ADD FRIEND")
+        
+        let contactStore = CNContactStore()
+
+        switch CNContactStore.authorizationStatus(for: .contacts) {
+        case .authorized:
+            print("Authorized")
+        case .notDetermined:
+            contactStore.requestAccess(for: .contacts) { succeeded, error in
+                guard succeeded && error == nil else {
+                    return
+                }
+
+                if succeeded {
+                    // Do something with contacts
+                }
+            }
+            print("Not determined")
+        default:
+            print("Not handled")
+        }
+    }
+
+    @objc func didTapBackground() {
+        self.searchBar.resignFirstResponder()
+    }
+
+}
+
+//
+// MARK: Delegates
+//
+extension AddFriendViewController: UISearchBarDelegate {
+
+    func searchUsers(searchQuery: String = "") {
+
+        //self.activityIndicatorBaseView.isHidden = false
+
+        if searchQuery != "" && searchQuery.count >= 3 {
+            self.viewModel.getUsers()
+        }
+        else {
+            self.viewModel.clearUsers()
+        }
+
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if let searchText = searchBar.text {
+            self.searchUsers(searchQuery: searchText)
+        }
+
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let recentSearch = searchBar.text {
+
+           // Do something if needed
+        }
+
+        self.searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.text = ""
+        self.searchUsers()
+    }
+}
+
+extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.viewModel.users.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+
+        guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
+        else {
+            fatalError()
+        }
+
+        if let userContact = self.viewModel.users[safe: indexPath.row] {
+
+            if let cellViewModel = self.viewModel.cachedCellViewModels[indexPath.row] {
+                cell.configure(viewModel: cellViewModel)
+            }
+            else {
+                let cellViewModel = AddFriendCellViewModel(userContact: userContact)
+                self.viewModel.cachedCellViewModels[indexPath.row] = cellViewModel
+                cell.configure(viewModel: cellViewModel)
+            }
+
+        }
+
+        return cell
+
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        if !self.viewModel.isEmptySearch {
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+            else {
+                fatalError()
+            }
+
+            let resultsLabel = "Results (\(self.viewModel.users.count))"
+
+            headerView.configureHeader(title: resultsLabel)
+
+            return headerView
+        }
+        else {
+            return UIView()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+
+        if !self.viewModel.isEmptySearch {
+            return 50
+        }
+        else {
+            return 50
+        }
+
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+
+        if !self.viewModel.isEmptySearch {
+            return 50
+        }
+        else {
+            return 0
+        }
+
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+
+        if !self.viewModel.isEmptySearch {
+            return 30
+        }
+        else {
+            return 0
+        }
+
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+
+        if !self.viewModel.isEmptySearch {
+            return 30
+        }
+        else {
+            return 0
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
+        return 0
+    }
+
+}
+
+//
+// MARK: - Subviews Initialization and Setup
+//
+extension AddFriendViewController {
+    private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBottomSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createNavigationView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createBackButton() -> UIButton {
+        let button = UIButton.init(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+        button.setTitle(nil, for: .normal)
+        return button
+    }
+
+    private static func createTitleLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textColor = UIColor.App.textPrimary
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .center
+        label.numberOfLines = 1
+        label.text = localized("add_friend")
+        return label
+    }
+
+    private static func createCloseButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("close"), for: .normal)
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        return button
+    }
+
+    private static func createSearchBar() -> UISearchBar {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        return searchBar
+    }
+
+    private static func createAddFriendButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
+        button.setTitle(localized("add_from_contact_list"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
+        return button
+    }
+
+    private static func createTableView() -> UITableView {
+        let tableView = UITableView.init(frame: .zero, style: .plain)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.separatorStyle = .none
+        tableView.allowsSelection = false
+        return tableView
+    }
+
+    private func setupSubviews() {
+
+        self.view.addSubview(self.topSafeAreaView)
+
+        self.view.addSubview(self.navigationView)
+
+        self.navigationView.addSubview(self.backButton)
+        self.navigationView.addSubview(self.titleLabel)
+        self.navigationView.addSubview(self.closeButton)
+
+        self.view.addSubview(self.searchBar)
+
+        self.view.addSubview(self.addFriendButton)
+
+        self.view.addSubview(self.tableView)
+
+        self.view.addSubview(self.bottomSafeAreaView)
+
+        self.initConstraints()
+    }
+
+    private func initConstraints() {
+
+        // Top and Bottom Safe Area View
+        NSLayoutConstraint.activate([
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+
+            self.bottomSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.bottomSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.bottomSafeAreaView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor),
+            self.bottomSafeAreaView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+
+        // Navigation View
+        NSLayoutConstraint.activate([
+            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
+
+            self.backButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
+            self.backButton.widthAnchor.constraint(equalToConstant: 40),
+            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+
+            self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+
+            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -16),
+            self.closeButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.closeButton.heightAnchor.constraint(equalToConstant: 40)
+
+        ])
+
+        // Searchbar
+        NSLayoutConstraint.activate([
+            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
+            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
+            self.searchBar.heightAnchor.constraint(equalToConstant: 60)
+        ])
+
+        // Contact list button
+        NSLayoutConstraint.activate([
+            self.addFriendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
+            self.addFriendButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16)
+        ])
+
+        // Tableview
+        NSLayoutConstraint.activate([
+            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
+            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.tableView.topAnchor.constraint(equalTo: self.addFriendButton.bottomAnchor, constant: 16),
+            self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
+        ])
+
+    }
+}

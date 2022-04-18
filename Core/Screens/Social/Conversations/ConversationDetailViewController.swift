@@ -27,6 +27,10 @@ class ConversationDetailViewController: UIViewController {
     private lazy var messageInputView: ChatMessageView = Self.createMessageInputView()
     private lazy var sendButton: UIButton = Self.createSendButton()
 
+    // Constraints
+    private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
+    private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
+
     private var viewModel: ConversationDetailViewModel
 
     // MARK: - Lifetime and Cycle
@@ -167,14 +171,29 @@ class ConversationDetailViewController: UIViewController {
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {
-        self.view.frame.origin.y = 0
+        self.messageInputKeyboardConstraint.isActive = false
+        self.messageInputBottomConstraint.isActive = true
+        self.scrollToBottomTableView()
+
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-                self.view.frame.origin.y -= keyboardSize.height
+            let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
+
+            self.messageInputKeyboardConstraint =
+            NSLayoutConstraint(item: self.messageInputBaseView,
+                               attribute: .bottom,
+                               relatedBy: .equal,
+                               toItem: self.bottomSafeAreaView,
+                               attribute: .top,
+                               multiplier: 1,
+                               constant: -keyboardHeight)
+            self.messageInputBottomConstraint.isActive = false
+            self.messageInputKeyboardConstraint.isActive = true
             }
     }
 
     @objc func keyboardWillHide(notification: NSNotification) {
-        self.view.frame.origin.y = 0
+        self.messageInputKeyboardConstraint.isActive = false
+        self.messageInputBottomConstraint.isActive = true
     }
 
 }
@@ -379,6 +398,16 @@ extension ConversationDetailViewController {
         return button
     }
 
+    private static func createMessageInputBottomConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
+    private static func createMessageInputKeyboardConstraint() -> NSLayoutConstraint {
+        let constraint = NSLayoutConstraint()
+        return constraint
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -484,7 +513,7 @@ extension ConversationDetailViewController {
             self.messageInputBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.messageInputBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.messageInputBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor),
-            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+//            self.messageInputBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
             self.messageInputBaseView.heightAnchor.constraint(equalToConstant: 70),
 
             self.messageInputLineSeparatorView.leadingAnchor.constraint(equalTo: self.messageInputBaseView.leadingAnchor),
@@ -502,6 +531,18 @@ extension ConversationDetailViewController {
             self.sendButton.widthAnchor.constraint(equalToConstant: 46),
             self.sendButton.heightAnchor.constraint(equalTo: self.sendButton.widthAnchor)
         ])
+
+        self.messageInputBottomConstraint =
+        NSLayoutConstraint(item: self.messageInputBaseView,
+                           attribute: .bottom,
+                           relatedBy: .equal,
+                           toItem: self.bottomSafeAreaView,
+                           attribute: .top,
+                           multiplier: 1,
+                           constant: 0)
+        self.messageInputBottomConstraint.isActive = true
+
+        self.messageInputKeyboardConstraint.isActive = false
 
     }
 }

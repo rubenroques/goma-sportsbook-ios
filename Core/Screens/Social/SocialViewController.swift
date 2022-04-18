@@ -148,6 +148,11 @@ class SocialViewController: UIViewController {
 
     @objc func didTapFriendsButton() {
         print("FRIENDS")
+        let addFriendsViewModel = AddFriendViewModel()
+        
+        let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
+
+        self.navigationController?.pushViewController(addFriendsViewController, animated: true)
     }
 
     @objc func didTapSettingsButton() {

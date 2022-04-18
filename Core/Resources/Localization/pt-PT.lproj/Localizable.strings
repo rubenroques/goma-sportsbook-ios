@@ -412,3 +412,7 @@ Terms of use, Privacy Policy and EULA";
 
 "users_followed_you" = "Users followed you";
 "shared_tickets_to" = "You shared tickets to";
+
+"add_friend" = "Add Friend";
+"search_by_username" = "Search by username...";
+"add_from_contact_list" = "Add from contact list";

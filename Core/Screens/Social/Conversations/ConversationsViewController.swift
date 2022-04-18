@@ -51,11 +51,9 @@ class PreviewChatTableViewCell: UITableViewCell {
     var isOnline: Bool = false {
         didSet {
             if isOnline {
-                //self.photoImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
                 self.iconBaseView.backgroundColor = UIColor.App.highlightPrimary
             }
             else {
-                //self.photoImageView.layer.borderColor = UIColor.App.backgroundSecondary.cgColor
                 self.iconBaseView.backgroundColor = UIColor.App.backgroundSecondary
             }
         }
