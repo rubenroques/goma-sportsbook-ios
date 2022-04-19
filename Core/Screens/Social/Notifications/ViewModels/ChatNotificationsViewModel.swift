@@ -6,18 +6,21 @@
 //
 
 import Foundation
+import Combine
 
-class ChatNotificationsViewModel: NSObject {
+class ChatNotificationsViewModel {
+    // MARK: Private Properties
 
-    var followerViews: [UserActionView] = []
-    var sharedTicketViews: [UserActionView] = []
+    // MARK: Public Properties
+    var followerViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
+    var sharedTicketViewsPublisher: CurrentValueSubject<[UserActionView], Never> = .init([])
 
     var shouldRemoveFollowerView: ((UserActionView) -> Void)?
     var shouldRemoveSharedTicketView: ((UserActionView) -> Void)?
 
-    override init() {
-        super.init()
+    var isEmptyStatePublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
+    init() {
         self.setupFollowerViews()
         self.setupSharedTicketViews()
     }
@@ -26,6 +29,8 @@ class ChatNotificationsViewModel: NSObject {
         // TESTING
         for i in 1...8 {
             let followerView = UserActionView()
+
+            followerView.identifier = i
 
             if i % 2 == 0 {
                 followerView.isOnline = true
@@ -37,25 +42,37 @@ class ChatNotificationsViewModel: NSObject {
 
             followerView.setupViewInfo(title: "@GOMA_User", actionTitle: "FOLLOW")
 
-            followerView.tappedCloseButtonAction = {
-                print("REMOVED!")
-                //self.followersStackView.removeArrangedSubview(followerView)
-                self.shouldRemoveFollowerView?(followerView)
-                followerView.removeFromSuperview()
+            followerView.tappedCloseButtonAction = { [weak self] in
+                if let viewIdentifier = followerView.identifier {
+                    print("REMOVED!")
+                    self?.shouldRemoveFollowerView?(followerView)
+                    followerView.removeFromSuperview()
+
+                    if let followersViews = self?.followerViewsPublisher.value {
+                        for (index, view) in followersViews.enumerated() {
+                            if view.identifier == viewIdentifier {
+                                self?.followerViewsPublisher.value.remove(at: index)
+                            }
+                        }
+                    }
+                }
             }
 
             followerView.tappedActionButtonAction = {
                 print("FOLLOW USER!")
             }
-
-            self.followerViews.append(followerView)
+            self.followerViewsPublisher.value.append(followerView)
         }
+
+        self.isEmptyStatePublisher.send(false)
     }
 
     private func setupSharedTicketViews() {
         // TESTING
         for i in 1...8 {
             let sharedTicketView = UserActionView()
+
+            sharedTicketView.identifier = i
 
             if i % 2 == 0 {
                 sharedTicketView.isOnline = true
@@ -67,18 +84,31 @@ class ChatNotificationsViewModel: NSObject {
 
             sharedTicketView.setupViewInfo(title: "@GOMA_User", actionTitle: "OPEN")
 
-            sharedTicketView.tappedCloseButtonAction = {
-                print("REMOVED!")
-                self.shouldRemoveSharedTicketView?(sharedTicketView)
-                sharedTicketView.removeFromSuperview()
+            sharedTicketView.tappedCloseButtonAction = { [weak self] in
+                if let viewIdentifier = sharedTicketView.identifier {
+                    print("REMOVED!")
+                    self?.shouldRemoveSharedTicketView?(sharedTicketView)
+                    sharedTicketView.removeFromSuperview()
+
+                    if let sharedTicketViews = self?.sharedTicketViewsPublisher.value {
+                        for (index, view) in sharedTicketViews.enumerated() {
+                            if view.identifier == viewIdentifier {
+                                self?.sharedTicketViewsPublisher.value.remove(at: index)
+                            }
+                        }
+                    }
+                }
             }
 
             sharedTicketView.tappedActionButtonAction = {
                 print("SHARE TICKET!")
             }
 
-            self.sharedTicketViews.append(sharedTicketView)
+            self.sharedTicketViewsPublisher.value.append(sharedTicketView)
 
         }
+
+        self.isEmptyStatePublisher.send(false)
+
     }
 }

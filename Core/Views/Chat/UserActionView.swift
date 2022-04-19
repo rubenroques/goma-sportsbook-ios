@@ -41,6 +41,8 @@ class UserActionView: UIView {
         }
     }
 
+    var identifier: Int?
+
     var tappedActionButtonAction: (() -> Void)?
     var tappedCloseButtonAction: (() -> Void)?
 

@@ -97,6 +97,8 @@ class ChatSettingsViewController: UIViewController {
         everyoneView.viewId = 2
         self.viewModel.messagesRadioButtonViews.append(everyoneView)
 
+        self.viewModel.setMessagesSelectedValues()
+
         self.topStackView.addArrangedSubview(sendMessagesView)
         self.topStackView.addArrangedSubview(friendsView)
         self.topStackView.addArrangedSubview(everyoneView)
@@ -108,15 +110,17 @@ class ChatSettingsViewController: UIViewController {
         groupsView.setTitle(title: localized("who_add_groups"))
 
         let peopleFollowView = SettingsRadioRowView()
-        peopleFollowView.setTitle(title: localized("accept_higher"))
+        peopleFollowView.setTitle(title: localized("only_people_follow"))
         peopleFollowView.viewId = 1
         peopleFollowView.hasSeparatorLineView = true
         self.viewModel.groupsRadioButtonViews.append(peopleFollowView)
 
         let everyoneView = SettingsRadioRowView()
-        everyoneView.setTitle(title: localized("accept_any"))
+        everyoneView.setTitle(title: localized("everyone"))
         everyoneView.viewId = 2
         self.viewModel.groupsRadioButtonViews.append(everyoneView)
+
+        self.viewModel.setGroupsSelectedValues()
 
         self.bottomStackView.addArrangedSubview(groupsView)
         self.bottomStackView.addArrangedSubview(peopleFollowView)
