@@ -149,7 +149,7 @@ class SocialViewController: UIViewController {
     @objc func didTapFriendsButton() {
         print("FRIENDS")
         let addFriendsViewModel = AddFriendViewModel()
-        
+
         let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
 
         self.navigationController?.pushViewController(addFriendsViewController, animated: true)
@@ -157,6 +157,11 @@ class SocialViewController: UIViewController {
 
     @objc func didTapSettingsButton() {
         print("SETTINGS")
+        let chatSettingsViewModel = ChatSettingsViewModel()
+
+        let chatSettingsViewController = ChatSettingsViewController(viewModel: chatSettingsViewModel)
+
+        self.navigationController?.pushViewController(chatSettingsViewController, animated: true)
     }
 
     @objc func didTapCloseButton() {

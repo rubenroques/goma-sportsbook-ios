@@ -994,6 +994,10 @@
 		A9BA6D45280DC81B00E82724 /* ResultsHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */; };
 		A9BA6D48280DCA3400E82724 /* AddFriendCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D47280DCA3400E82724 /* AddFriendCellViewModel.swift */; };
 		A9BA6D49280DCA3400E82724 /* AddFriendCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D47280DCA3400E82724 /* AddFriendCellViewModel.swift */; };
+		A9BA6D4C280ED17000E82724 /* ChatSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4B280ED17000E82724 /* ChatSettingsViewController.swift */; };
+		A9BA6D4D280ED17000E82724 /* ChatSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4B280ED17000E82724 /* ChatSettingsViewController.swift */; };
+		A9BA6D4F280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */; };
+		A9BA6D50280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */; };
 		A9BCF42D274BBE7B006DD528 /* PolicyLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */; };
 		A9BCF42E274BBE7B006DD528 /* PolicyLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */; };
 		A9BCF430274BBE8D006DD528 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
@@ -1630,6 +1634,8 @@
 		A9BA6D3F280DB7D500E82724 /* AddFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendTableViewCell.swift; sourceTree = "<group>"; };
 		A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultsHeaderFooterView.swift; sourceTree = "<group>"; };
 		A9BA6D47280DCA3400E82724 /* AddFriendCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCellViewModel.swift; sourceTree = "<group>"; };
+		A9BA6D4B280ED17000E82724 /* ChatSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingsViewController.swift; sourceTree = "<group>"; };
+		A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingsViewModel.swift; sourceTree = "<group>"; };
 		A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyLinkView.swift; sourceTree = "<group>"; };
 		A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PolicyLinkView.xib; sourceTree = "<group>"; };
 		A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewController.swift; sourceTree = "<group>"; };
@@ -2010,6 +2016,7 @@
 		454E090627EB82F200391560 /* Social */ = {
 			isa = PBXGroup;
 			children = (
+				A9BA6D4A280ED14100E82724 /* Settings */,
 				A9992FED280888D80098854C /* AddFriend */,
 				A9992FDB2806D5470098854C /* Notifications */,
 				A9A2E7F227FDE07600D35A9D /* Friends */,
@@ -3579,6 +3586,15 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		A9BA6D4A280ED14100E82724 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A9BA6D4B280ED17000E82724 /* ChatSettingsViewController.swift */,
+				A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		A9BCF42B274BBE55006DD528 /* PolicyLinkView */ = {
 			isa = PBXGroup;
 			children = (
@@ -4376,6 +4392,7 @@
 				45166CE126F3548D00E69D65 /* TSNotification.swift in Sources */,
 				45A2897326C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0CA826BD973C00EC572D /* TargetVariables.swift in Sources */,
+				A9BA6D4C280ED17000E82724 /* ChatSettingsViewController.swift in Sources */,
 				455A0D1026BD9D9000EC572D /* Changeable.swift in Sources */,
 				A9C6022B2716F13F00992E11 /* HomeFilterViewController.swift in Sources */,
 				45166CA626F28D2E00E69D65 /* Bootstrap.swift in Sources */,
@@ -4704,6 +4721,7 @@
 				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896A26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				455C960626FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */,
+				A9BA6D4F280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */,
 				A9B841B826E91BBC00269B05 /* BettingOffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4806,6 +4824,7 @@
 				F476CD0E27C553F30042B7ED /* HistoryViewModel.swift in Sources */,
 				A98F3A572795C20F0029C3DB /* SuggestedBetViewModel.swift in Sources */,
 				45166CE226F3548D00E69D65 /* TSNotification.swift in Sources */,
+				A9BA6D4D280ED17000E82724 /* ChatSettingsViewController.swift in Sources */,
 				45A2897426C32E8600BCD5DA /* Authenticator.swift in Sources */,
 				455A0C9726BD943900EC572D /* TargetVariables.swift in Sources */,
 				455A0D1126BD9D9000EC572D /* Changeable.swift in Sources */,
@@ -5134,6 +5153,7 @@
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896B26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
 				455C960726FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */,
+				A9BA6D50280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */,
 				A9B841B926E91BBC00269B05 /* BettingOffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

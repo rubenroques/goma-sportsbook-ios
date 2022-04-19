@@ -15,8 +15,10 @@ class AddFriendTableViewCell: UITableViewCell {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var checkboxBaseView: UIView = Self.createCheckboxBaseView()
     private lazy var checkboxImageView: UIImageView = Self.createCheckboxImageView()
+    private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
     var viewModel: AddFriendCellViewModel?
+    var didTapCheckboxAction: (() -> Void)?
 
     // MARK: Public Properties
     var isCheckboxSelected: Bool = false {
@@ -27,6 +29,12 @@ class AddFriendTableViewCell: UITableViewCell {
             else {
                 self.checkboxImageView.image = UIImage(named: "checkbox_unselected_icon")
             }
+        }
+    }
+
+    var hasSeparatorLine: Bool = true {
+        didSet {
+            self.separatorLineView.isHidden = !hasSeparatorLine
         }
     }
 
@@ -78,6 +86,8 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.checkboxImageView.backgroundColor = .clear
 
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+
     }
 
     func configure(viewModel: AddFriendCellViewModel) {
@@ -96,6 +106,7 @@ class AddFriendTableViewCell: UITableViewCell {
         if let viewModel = self.viewModel {
             viewModel.isCheckboxSelected = !self.isCheckboxSelected
             self.isCheckboxSelected = viewModel.isCheckboxSelected
+            self.didTapCheckboxAction?()
         }
 
     }
@@ -141,6 +152,12 @@ extension AddFriendTableViewCell {
         return imageView
     }
 
+    private static func createSeparatorLineView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private func setupSubviews() {
 
         self.contentView.addSubview(self.iconBaseView)
@@ -153,6 +170,8 @@ extension AddFriendTableViewCell {
 
         self.checkboxBaseView.addSubview(self.checkboxImageView)
 
+        self.contentView.addSubview(self.separatorLineView)
+
         self.initConstraints()
 
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapCheckbox(_:)))
@@ -164,9 +183,9 @@ extension AddFriendTableViewCell {
 
         NSLayoutConstraint.activate([
             self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.iconBaseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 5),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
+            self.iconBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
             self.iconImageView.widthAnchor.constraint(equalToConstant: 30),
             self.iconImageView.heightAnchor.constraint(equalTo: self.iconImageView.widthAnchor),
@@ -177,7 +196,7 @@ extension AddFriendTableViewCell {
             self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
             self.checkboxBaseView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 20),
-            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 10),
             self.checkboxBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.checkboxBaseView.heightAnchor.constraint(equalTo: self.checkboxBaseView.widthAnchor),
@@ -185,7 +204,12 @@ extension AddFriendTableViewCell {
             self.checkboxImageView.widthAnchor.constraint(equalToConstant: 20),
             self.checkboxImageView.heightAnchor.constraint(equalTo: self.checkboxImageView.widthAnchor),
             self.checkboxImageView.centerXAnchor.constraint(equalTo: self.checkboxBaseView.centerXAnchor),
-            self.checkboxImageView.centerYAnchor.constraint(equalTo: self.checkboxBaseView.centerYAnchor)
+            self.checkboxImageView.centerYAnchor.constraint(equalTo: self.checkboxBaseView.centerYAnchor),
+
+            self.separatorLineView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.separatorLineView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.separatorLineView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
+            self.separatorLineView.heightAnchor.constraint(equalToConstant: 1)
 
         ])
 

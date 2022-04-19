@@ -16,35 +16,61 @@ class AddFriendViewModel {
     var users: [UserContact] = []
     var cachedCellViewModels: [Int: AddFriendCellViewModel] = [:]
     var hasDoneSearch: Bool = false
-    var isEmptySearch: Bool = true
+    var selectedUsers: [UserContact] = []
+    var isEmptySearchPublisher: CurrentValueSubject<Bool, Never> = .init(true)
     var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
+    var canAddFriendPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init() {
-
-        //self.getFriends()
+        self.canAddFriendPublisher.send(false)
     }
 
     func getUsers() {
+        // TEST
         if self.users.isEmpty {
-            for _ in 1...20 {
-                let user = UserContact(username: "@GOMA_User", phone: "+351 999 888 777")
+            for i in 0...20 {
+                let user = UserContact(id: i, username: "@GOMA_User", phone: "+351 999 888 777")
                 self.users.append(user)
 
             }
 
-            self.isEmptySearch = false
+            self.isEmptySearchPublisher.send(false)
         }
         self.dataNeedsReload.send()
     }
 
     func clearUsers() {
         self.users = []
+        self.selectedUsers = []
+        self.cachedCellViewModels = [:]
+        self.isEmptySearchPublisher.send(true)
+        self.canAddFriendPublisher.send(false)
         self.dataNeedsReload.send()
+    }
+
+    func checkSelectedUserContact(cellViewModel: AddFriendCellViewModel) {
+
+        if cellViewModel.isCheckboxSelected {
+            self.selectedUsers.append(cellViewModel.userContact)
+        }
+        else {
+            let usersArray = self.selectedUsers.filter {$0.id != cellViewModel.userContact.id}
+            self.selectedUsers = usersArray
+        }
+
+        if self.selectedUsers.isEmpty {
+            self.canAddFriendPublisher.send(false)
+        }
+        else {
+            self.canAddFriendPublisher.send(true)
+        }
+
     }
 }
 
 struct UserContact {
+    var id: Int
     var username: String
     var phone: String
 }

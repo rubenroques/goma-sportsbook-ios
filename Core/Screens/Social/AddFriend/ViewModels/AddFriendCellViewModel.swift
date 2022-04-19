@@ -9,11 +9,14 @@ import Foundation
 
 class AddFriendCellViewModel {
 
+    var userContact: UserContact
     var username: String
     var phone: String
     var isCheckboxSelected: Bool
 
     init(userContact: UserContact) {
+        self.userContact = userContact
+        
         self.username = userContact.username
 
         self.phone = userContact.phone

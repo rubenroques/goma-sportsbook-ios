@@ -416,3 +416,10 @@ Terms of use, Privacy Policy and EULA";
 "add_friend" = "Add Friend";
 "search_by_username" = "Search by username...";
 "add_from_contact_list" = "Add from contact list";
+"settings" = "Settings";
+
+"who_send_messages" = "Who can send messages";
+"who_add_groups" = "Who can add me to groups";
+"only_friends" = "Only friends";
+"everyone" = "Everyone";
+"only_people_follow" = "Only people I follow";

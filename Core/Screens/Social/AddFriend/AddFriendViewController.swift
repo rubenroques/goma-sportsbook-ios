@@ -18,13 +18,24 @@ class AddFriendViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
     private lazy var searchBar: UISearchBar = Self.createSearchBar()
-    private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
+    private lazy var addContactFriendButton: UIButton = Self.createAddContactFriendButton()
+    private lazy var tableSeparatorLineView: UIView = Self.createTableSeparatorLineView()
     private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var addFriendBaseView: UIView = Self.createAddFriendBaseView()
+    private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
+    private lazy var addFriendSeparatorLineView: UIView = Self.createAddFriendSeparatorLineView()
 
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var viewModel: AddFriendViewModel
+
+    var isEmptySearch: Bool = true {
+        didSet {
+            self.tableView.isHidden = isEmptySearch
+            self.tableSeparatorLineView.isHidden = isEmptySearch
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     init(viewModel: AddFriendViewModel) {
@@ -55,7 +66,7 @@ class AddFriendViewController: UIViewController {
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
-        self.addFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
+        self.addContactFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -94,10 +105,19 @@ class AddFriendViewController: UIViewController {
 
         self.setupSearchBarStyle()
 
-        self.addFriendButton.tintColor = UIColor.App.highlightSecondary
-        self.addFriendButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+        self.addContactFriendButton.backgroundColor = .clear
+        self.addContactFriendButton.tintColor = UIColor.App.highlightSecondary
+        self.addContactFriendButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
+
+        self.tableSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.addFriendBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        StyleHelper.styleButton(button: self.addFriendButton)
+
+        self.addFriendSeparatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
     // MARK: binding
@@ -108,6 +128,20 @@ class AddFriendViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
                 self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+
+        viewModel.isEmptySearchPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isEmptySearch in
+                self?.isEmptySearch = isEmptySearch
+            })
+            .store(in: &cancellables)
+
+        viewModel.canAddFriendPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isEnabled in
+                self?.addFriendButton.isEnabled = isEnabled
             })
             .store(in: &cancellables)
     }
@@ -156,8 +190,7 @@ class AddFriendViewController: UIViewController {
     }
 
     @objc func didTapAddFriendButton() {
-        print("TAPPED ADD FRIEND")
-        
+
         let contactStore = CNContactStore()
 
         switch CNContactStore.authorizationStatus(for: .contacts) {
@@ -191,8 +224,6 @@ class AddFriendViewController: UIViewController {
 extension AddFriendViewController: UISearchBarDelegate {
 
     func searchUsers(searchQuery: String = "") {
-
-        //self.activityIndicatorBaseView.isHidden = false
 
         if searchQuery != "" && searchQuery.count >= 3 {
             self.viewModel.getUsers()
@@ -247,13 +278,25 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
             if let cellViewModel = self.viewModel.cachedCellViewModels[indexPath.row] {
                 cell.configure(viewModel: cellViewModel)
+
+                cell.didTapCheckboxAction = { [weak self] in
+                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                }
             }
             else {
                 let cellViewModel = AddFriendCellViewModel(userContact: userContact)
                 self.viewModel.cachedCellViewModels[indexPath.row] = cellViewModel
                 cell.configure(viewModel: cellViewModel)
+
+                cell.didTapCheckboxAction = { [weak self] in
+                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                }
             }
 
+        }
+
+        if indexPath.row == self.viewModel.users.count - 1 {
+            cell.hasSeparatorLine = false
         }
 
         return cell
@@ -262,7 +305,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        if !self.viewModel.isEmptySearch {
+        if !self.viewModel.isEmptySearchPublisher.value {
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
             else {
@@ -282,19 +325,19 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if !self.viewModel.isEmptySearch {
-            return 50
+        if !self.viewModel.isEmptySearchPublisher.value {
+            return 70
         }
         else {
-            return 50
+            return 0
         }
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if !self.viewModel.isEmptySearch {
-            return 50
+        if !self.viewModel.isEmptySearchPublisher.value {
+            return 70
         }
         else {
             return 0
@@ -304,7 +347,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        if !self.viewModel.isEmptySearch {
+        if !self.viewModel.isEmptySearchPublisher.value {
             return 30
         }
         else {
@@ -315,7 +358,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        if !self.viewModel.isEmptySearch {
+        if !self.viewModel.isEmptySearchPublisher.value {
             return 30
         }
         else {
@@ -389,13 +432,21 @@ extension AddFriendViewController {
         return searchBar
     }
 
-    private static func createAddFriendButton() -> UIButton {
+    private static func createAddContactFriendButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
         button.setTitle(localized("add_from_contact_list"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
+    }
+
+    private static func createTableSeparatorLineView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createTableView() -> UITableView {
@@ -404,6 +455,25 @@ extension AddFriendViewController {
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
         return tableView
+    }
+
+    private static func createAddFriendBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createAddFriendButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("add_friend"), for: .normal)
+        return button
+    }
+
+    private static func createAddFriendSeparatorLineView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private func setupSubviews() {
@@ -418,9 +488,16 @@ extension AddFriendViewController {
 
         self.view.addSubview(self.searchBar)
 
-        self.view.addSubview(self.addFriendButton)
+        self.view.addSubview(self.addContactFriendButton)
+
+        self.view.addSubview(self.tableSeparatorLineView)
 
         self.view.addSubview(self.tableView)
+
+        self.view.addSubview(self.addFriendBaseView)
+
+        self.addFriendBaseView.addSubview(self.addFriendButton)
+        self.addFriendBaseView.addSubview(self.addFriendSeparatorLineView)
 
         self.view.addSubview(self.bottomSafeAreaView)
 
@@ -465,24 +542,49 @@ extension AddFriendViewController {
 
         // Searchbar
         NSLayoutConstraint.activate([
-            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
-            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
             self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
             self.searchBar.heightAnchor.constraint(equalToConstant: 60)
         ])
 
         // Contact list button
         NSLayoutConstraint.activate([
-            self.addFriendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
-            self.addFriendButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16)
+            self.addContactFriendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
+            self.addContactFriendButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16)
         ])
 
         // Tableview
         NSLayoutConstraint.activate([
+
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
-            self.tableView.topAnchor.constraint(equalTo: self.addFriendButton.bottomAnchor, constant: 16),
-            self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
+            self.tableView.topAnchor.constraint(equalTo: self.addContactFriendButton.bottomAnchor, constant: 16),
+
+            self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor),
+            self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor),
+            self.tableSeparatorLineView.bottomAnchor.constraint(equalTo: self.tableView.topAnchor),
+            self.tableSeparatorLineView.heightAnchor.constraint(equalToConstant: 1)
+
+        ])
+
+        // Add Friend Button View
+        NSLayoutConstraint.activate([
+            self.addFriendBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.addFriendBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.addFriendBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 8),
+            self.addFriendBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+            self.addFriendBaseView.heightAnchor.constraint(equalToConstant: 105),
+
+            self.addFriendButton.leadingAnchor.constraint(equalTo: self.addFriendBaseView.leadingAnchor, constant: 33),
+            self.addFriendButton.trailingAnchor.constraint(equalTo: self.addFriendBaseView.trailingAnchor, constant: -33),
+            self.addFriendButton.heightAnchor.constraint(equalToConstant: 55),
+            self.addFriendButton.centerYAnchor.constraint(equalTo: self.addFriendBaseView.centerYAnchor),
+
+            self.addFriendSeparatorLineView.leadingAnchor.constraint(equalTo: self.addFriendBaseView.leadingAnchor),
+            self.addFriendSeparatorLineView.trailingAnchor.constraint(equalTo: self.addFriendBaseView.trailingAnchor),
+            self.addFriendSeparatorLineView.topAnchor.constraint(equalTo: self.addFriendBaseView.topAnchor),
+            self.addFriendSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
         ])
 
     }
