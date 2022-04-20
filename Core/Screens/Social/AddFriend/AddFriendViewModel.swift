@@ -14,7 +14,7 @@ class AddFriendViewModel {
 
     // MARK: Public Properties
     var users: [UserContact] = []
-    var cachedCellViewModels: [Int: AddFriendCellViewModel] = [:]
+    var cachedCellViewModels: [String: AddFriendCellViewModel] = [:]
     var hasDoneSearch: Bool = false
     var selectedUsers: [UserContact] = []
     var isEmptySearchPublisher: CurrentValueSubject<Bool, Never> = .init(true)
@@ -30,7 +30,7 @@ class AddFriendViewModel {
         // TEST
         if self.users.isEmpty {
             for i in 0...20 {
-                let user = UserContact(id: i, username: "@GOMA_User", phone: "+351 999 888 777")
+                let user = UserContact(id: "\(i)", username: "@GOMA_User", phone: "+351 999 888 777")
                 self.users.append(user)
 
             }
@@ -70,7 +70,7 @@ class AddFriendViewModel {
 }
 
 struct UserContact {
-    var id: Int
+    var id: String
     var username: String
     var phone: String
 }

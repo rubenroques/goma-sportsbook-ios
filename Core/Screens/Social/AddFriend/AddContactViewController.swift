@@ -1,15 +1,14 @@
 //
-//  AddFriendViewController.swift
+//  AddContactViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 14/04/2022.
+//  Created by André Lascas on 20/04/2022.
 //
 
 import UIKit
-import Contacts
 import Combine
 
-class AddFriendViewController: UIViewController {
+class AddContactViewController: UIViewController {
     // MARK: Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
@@ -18,17 +17,15 @@ class AddFriendViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
     private lazy var searchBar: UISearchBar = Self.createSearchBar()
-    private lazy var addContactFriendButton: UIButton = Self.createAddContactFriendButton()
     private lazy var tableSeparatorLineView: UIView = Self.createTableSeparatorLineView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var addFriendBaseView: UIView = Self.createAddFriendBaseView()
     private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
     private lazy var addFriendSeparatorLineView: UIView = Self.createAddFriendSeparatorLineView()
-
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var viewModel: AddFriendViewModel
+    var viewModel: AddContactViewModel
 
     var isEmptySearch: Bool = true {
         didSet {
@@ -38,7 +35,7 @@ class AddFriendViewController: UIViewController {
     }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: AddFriendViewModel) {
+    init(viewModel: AddContactViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -61,19 +58,21 @@ class AddFriendViewController: UIViewController {
         self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
         self.tableView.register(AddFriendTableViewCell.self,
                                 forCellReuseIdentifier: AddFriendTableViewCell.identifier)
+        self.tableView.register(AddUnregisteredFriendTableViewCell.self,
+                                forCellReuseIdentifier: AddUnregisteredFriendTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
-        self.addContactFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
-
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
+
+        self.isEmptySearch = false
     }
-    
+
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
 
@@ -105,10 +104,6 @@ class AddFriendViewController: UIViewController {
 
         self.setupSearchBarStyle()
 
-        self.addContactFriendButton.backgroundColor = .clear
-        self.addContactFriendButton.tintColor = UIColor.App.highlightSecondary
-        self.addContactFriendButton.setTitleColor(UIColor.App.highlightSecondary, for: .normal)
-
         self.tableSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
@@ -120,9 +115,7 @@ class AddFriendViewController: UIViewController {
         self.addFriendSeparatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
-    // MARK: binding
-
-    private func bind(toViewModel viewModel: AddFriendViewModel) {
+    private func bind(toViewModel viewModel: AddContactViewModel) {
 
         viewModel.dataNeedsReload
             .receive(on: DispatchQueue.main)
@@ -161,7 +154,7 @@ class AddFriendViewController: UIViewController {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_username"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_contact"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
                                                                               NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
@@ -189,38 +182,6 @@ class AddFriendViewController: UIViewController {
         }
     }
 
-    @objc func didTapAddFriendButton() {
-
-        let contactStore = CNContactStore()
-
-        switch CNContactStore.authorizationStatus(for: .contacts) {
-        case .authorized:
-            print("Authorized")
-            let addContactViewModel = AddContactViewModel()
-            let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
-
-            self.navigationController?.pushViewController(addContactViewController, animated: true)
-            
-        case .notDetermined:
-            contactStore.requestAccess(for: .contacts) { succeeded, error in
-                guard succeeded && error == nil else {
-                    return
-                }
-
-                if succeeded {
-                    // Do something with contacts
-                    let addContactViewModel = AddContactViewModel()
-                    let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
-
-                    self.navigationController?.pushViewController(addContactViewController, animated: true)
-                }
-            }
-            print("Not determined")
-        default:
-            print("Not handled")
-        }
-    }
-
     @objc func didTapBackground() {
         self.searchBar.resignFirstResponder()
     }
@@ -230,15 +191,15 @@ class AddFriendViewController: UIViewController {
 //
 // MARK: Delegates
 //
-extension AddFriendViewController: UISearchBarDelegate {
+extension AddContactViewController: UISearchBarDelegate {
 
     func searchUsers(searchQuery: String = "") {
 
         if searchQuery != "" && searchQuery.count >= 3 {
-            self.viewModel.getUsers()
+            self.viewModel.filterSearch(searchQuery: searchQuery)
         }
         else {
-            self.viewModel.clearUsers()
+            self.viewModel.resetUsers()
         }
 
     }
@@ -266,49 +227,85 @@ extension AddFriendViewController: UISearchBarDelegate {
     }
 }
 
-extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
+extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return self.viewModel.sectionUsersArray.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.users.count
+        return self.viewModel.sectionUsersArray[section].userContacts.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
-        else {
-            fatalError()
-        }
+        if self.viewModel.sectionUsersArray[safe: indexPath.section]?.contactType == "registered" {
 
-        if let userContact = self.viewModel.users[safe: indexPath.row] {
-
-            if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
-                cell.configure(viewModel: cellViewModel)
-
-                cell.didTapCheckboxAction = { [weak self] in
-                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                }
-            }
+            guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
             else {
-                let cellViewModel = AddFriendCellViewModel(userContact: userContact)
-                self.viewModel.cachedCellViewModels[userContact.id] = cellViewModel
-                cell.configure(viewModel: cellViewModel)
-
-                cell.didTapCheckboxAction = { [weak self] in
-                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                }
+                fatalError()
             }
 
-        }
+            if let userContact = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts[safe: indexPath.row] {
 
-        if indexPath.row == self.viewModel.users.count - 1 {
-            cell.hasSeparatorLine = false
-        }
+                if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
+                    cell.configure(viewModel: cellViewModel)
 
-        return cell
+                    cell.didTapCheckboxAction = { [weak self] in
+                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                    }
+                }
+                else {
+                    let cellViewModel = AddFriendCellViewModel(userContact: userContact)
+                    self.viewModel.cachedCellViewModels[userContact.id] = cellViewModel
+                    cell.configure(viewModel: cellViewModel)
+
+                    cell.didTapCheckboxAction = { [weak self] in
+                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                    }
+                }
+
+            }
+
+            if indexPath.row == self.viewModel.users.count - 1 {
+                cell.hasSeparatorLine = false
+            }
+
+            return cell
+        }
+        else {
+            guard let cell = tableView.dequeueCellType(AddUnregisteredFriendTableViewCell.self)
+            else {
+                fatalError()
+            }
+
+            if let userContact = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts[safe: indexPath.row] {
+
+                if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
+                    cell.configure(viewModel: cellViewModel)
+
+                    cell.didTapCheckboxAction = { [weak self] in
+                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                    }
+                }
+                else {
+                    let cellViewModel = AddFriendCellViewModel(userContact: userContact)
+                    self.viewModel.cachedCellViewModels[userContact.id] = cellViewModel
+                    cell.configure(viewModel: cellViewModel)
+
+                    cell.didTapCheckboxAction = { [weak self] in
+                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+                    }
+                }
+
+            }
+
+            if indexPath.row == self.viewModel.users.count - 1 {
+                cell.hasSeparatorLine = false
+            }
+
+            return cell
+        }
 
     }
 
@@ -321,7 +318,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
                 fatalError()
             }
 
-            let resultsLabel = "Results (\(self.viewModel.users.count))"
+            let resultsLabel = "Results (\(self.viewModel.sectionUsersArray[section].userContacts.count))"
 
             headerView.configureHeader(title: resultsLabel)
 
@@ -388,7 +385,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 //
 // MARK: - Subviews Initialization and Setup
 //
-extension AddFriendViewController {
+extension AddContactViewController {
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -422,7 +419,7 @@ extension AddFriendViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         label.numberOfLines = 1
-        label.text = localized("add_friend")
+        label.text = localized("add_contact")
         return label
     }
 
@@ -439,17 +436,6 @@ extension AddFriendViewController {
         let searchBar = UISearchBar()
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         return searchBar
-    }
-
-    private static func createAddContactFriendButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
-        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
-        button.setTitle(localized("add_from_contact_list"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
-        return button
     }
 
     private static func createTableSeparatorLineView() -> UIView {
@@ -496,8 +482,6 @@ extension AddFriendViewController {
         self.navigationView.addSubview(self.closeButton)
 
         self.view.addSubview(self.searchBar)
-
-        self.view.addSubview(self.addContactFriendButton)
 
         self.view.addSubview(self.tableSeparatorLineView)
 
@@ -557,18 +541,12 @@ extension AddFriendViewController {
             self.searchBar.heightAnchor.constraint(equalToConstant: 60)
         ])
 
-        // Contact list button
-        NSLayoutConstraint.activate([
-            self.addContactFriendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.addContactFriendButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16)
-        ])
-
         // Tableview
         NSLayoutConstraint.activate([
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
-            self.tableView.topAnchor.constraint(equalTo: self.addContactFriendButton.bottomAnchor, constant: 16),
+            self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16),
 
             self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor),
             self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor),

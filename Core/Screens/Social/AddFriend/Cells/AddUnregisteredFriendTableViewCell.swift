@@ -1,36 +1,25 @@
 //
-//  AddFriendTableViewCell.swift
+//  AddUnregisteredFriendTableViewCell.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 18/04/2022.
+//  Created by André Lascas on 20/04/2022.
 //
 
 import UIKit
 
-class AddFriendTableViewCell: UITableViewCell {
+class AddUnregisteredFriendTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
-    private lazy var checkboxBaseView: UIView = Self.createCheckboxBaseView()
-    private lazy var checkboxImageView: UIImageView = Self.createCheckboxImageView()
+    private lazy var inviteButton: UIButton = Self.createInviteButton()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
     var viewModel: AddFriendCellViewModel?
     var didTapCheckboxAction: (() -> Void)?
 
     // MARK: Public Properties
-    var isCheckboxSelected: Bool = false {
-        didSet {
-            if isCheckboxSelected {
-                self.checkboxImageView.image = UIImage(named: "checkbox_selected_icon")
-            }
-            else {
-                self.checkboxImageView.image = UIImage(named: "checkbox_unselected_icon")
-            }
-        }
-    }
 
     var hasSeparatorLine: Bool = true {
         didSet {
@@ -45,10 +34,10 @@ class AddFriendTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.isCheckboxSelected = false
-
         self.setNeedsLayout()
         self.layoutIfNeeded()
+
+        self.inviteButton.addTarget(self, action: #selector(didTapInviteButton), for: .primaryActionTriggered)
 
     }
 
@@ -58,8 +47,6 @@ class AddFriendTableViewCell: UITableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-
-        self.isCheckboxSelected = false
 
         self.titleLabel.text = ""
 
@@ -84,9 +71,8 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
-        self.checkboxBaseView.backgroundColor = .clear
-
-        self.checkboxImageView.backgroundColor = .clear
+        self.inviteButton.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.inviteButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
 
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
@@ -97,25 +83,17 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.titleLabel.text = viewModel.username
 
-        self.isCheckboxSelected = viewModel.isCheckboxSelected
-
     }
 
     // MARK: Actions
-    @objc func didTapCheckbox(_ sender: UITapGestureRecognizer) {
+    @objc func didTapInviteButton() {
         print("TAPPED CELL!")
-
-        if let viewModel = self.viewModel {
-            viewModel.isCheckboxSelected = !self.isCheckboxSelected
-            self.isCheckboxSelected = viewModel.isCheckboxSelected
-            self.didTapCheckboxAction?()
-        }
 
     }
 
 }
 
-extension AddFriendTableViewCell {
+extension AddUnregisteredFriendTableViewCell {
 
     private static func createIconBaseView() -> UIView {
         let view = UIView()
@@ -140,18 +118,15 @@ extension AddFriendTableViewCell {
         return label
     }
 
-    private static func createCheckboxBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createCheckboxImageView() -> UIImageView {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "checkbox_unselected_icon")
-        imageView.contentMode = .scaleToFill
-        return imageView
+    private static func createInviteButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("invite"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .bold, size: 14)
+        button.layer.cornerRadius = CornerRadius.button
+        button.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 5.0, bottom: 0.0, right: 5.0)
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        return button
     }
 
     private static func createSeparatorLineView() -> UIView {
@@ -168,16 +143,11 @@ extension AddFriendTableViewCell {
 
         self.contentView.addSubview(self.titleLabel)
 
-        self.contentView.addSubview(self.checkboxBaseView)
-
-        self.checkboxBaseView.addSubview(self.checkboxImageView)
+        self.contentView.addSubview(self.inviteButton)
 
         self.contentView.addSubview(self.separatorLineView)
 
         self.initConstraints()
-
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapCheckbox(_:)))
-        self.checkboxBaseView.addGestureRecognizer(tapGesture)
 
     }
 
@@ -197,16 +167,11 @@ extension AddFriendTableViewCell {
             self.titleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 10),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
-            self.checkboxBaseView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 20),
-            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 10),
-            self.checkboxBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
-            self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
-            self.checkboxBaseView.heightAnchor.constraint(equalTo: self.checkboxBaseView.widthAnchor),
-
-            self.checkboxImageView.widthAnchor.constraint(equalToConstant: 20),
-            self.checkboxImageView.heightAnchor.constraint(equalTo: self.checkboxImageView.widthAnchor),
-            self.checkboxImageView.centerXAnchor.constraint(equalTo: self.checkboxBaseView.centerXAnchor),
-            self.checkboxImageView.centerYAnchor.constraint(equalTo: self.checkboxBaseView.centerYAnchor),
+            self.inviteButton.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
+            self.inviteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.inviteButton.heightAnchor.constraint(equalToConstant: 40),
+            self.inviteButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 64),
+            self.inviteButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),

@@ -424,3 +424,7 @@ Terms of use, Privacy Policy and EULA";
 "everyone" = "Everyone";
 "only_people_follow" = "Only people I follow";
 "no_notifications" = "There are no notifications to display.";
+
+"add_contact" = "Add Contact";
+"search_by_contact" = "Search by contact name...";
+"invite" = "Invite";

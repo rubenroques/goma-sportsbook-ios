@@ -998,6 +998,12 @@
 		A9BA6D4D280ED17000E82724 /* ChatSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4B280ED17000E82724 /* ChatSettingsViewController.swift */; };
 		A9BA6D4F280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */; };
 		A9BA6D50280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */; };
+		A9BA6D5228100F0C00E82724 /* AddContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5128100F0C00E82724 /* AddContactViewController.swift */; };
+		A9BA6D5328100F0C00E82724 /* AddContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5128100F0C00E82724 /* AddContactViewController.swift */; };
+		A9BA6D552810105600E82724 /* AddContactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D542810105600E82724 /* AddContactViewModel.swift */; };
+		A9BA6D562810105600E82724 /* AddContactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D542810105600E82724 /* AddContactViewModel.swift */; };
+		A9BA6D582810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */; };
+		A9BA6D592810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */; };
 		A9BCF42D274BBE7B006DD528 /* PolicyLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */; };
 		A9BCF42E274BBE7B006DD528 /* PolicyLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */; };
 		A9BCF430274BBE8D006DD528 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
@@ -1636,6 +1642,9 @@
 		A9BA6D47280DCA3400E82724 /* AddFriendCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendCellViewModel.swift; sourceTree = "<group>"; };
 		A9BA6D4B280ED17000E82724 /* ChatSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingsViewController.swift; sourceTree = "<group>"; };
 		A9BA6D4E280EF90100E82724 /* ChatSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatSettingsViewModel.swift; sourceTree = "<group>"; };
+		A9BA6D5128100F0C00E82724 /* AddContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactViewController.swift; sourceTree = "<group>"; };
+		A9BA6D542810105600E82724 /* AddContactViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactViewModel.swift; sourceTree = "<group>"; };
+		A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUnregisteredFriendTableViewCell.swift; sourceTree = "<group>"; };
 		A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyLinkView.swift; sourceTree = "<group>"; };
 		A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PolicyLinkView.xib; sourceTree = "<group>"; };
 		A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewController.swift; sourceTree = "<group>"; };
@@ -3308,6 +3317,7 @@
 				A9992FEE280888FA0098854C /* AddFriendViewController.swift */,
 				A9BA6D3C280DB18900E82724 /* AddFriendViewModel.swift */,
 				A9BA6D3F280DB7D500E82724 /* AddFriendTableViewCell.swift */,
+				A9BA6D5128100F0C00E82724 /* AddContactViewController.swift */,
 			);
 			path = AddFriend;
 			sourceTree = "<group>";
@@ -3574,6 +3584,7 @@
 			isa = PBXGroup;
 			children = (
 				A9BA6D43280DC81B00E82724 /* ResultsHeaderFooterView.swift */,
+				A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -3582,6 +3593,7 @@
 			isa = PBXGroup;
 			children = (
 				A9BA6D47280DCA3400E82724 /* AddFriendCellViewModel.swift */,
+				A9BA6D542810105600E82724 /* AddContactViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4614,6 +4626,7 @@
 				A90D8AFB277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */,
 				A9BCF443274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
 				454E0AB42732C58D00794E0C /* TabularBarButton.swift in Sources */,
+				A9BA6D552810105600E82724 /* AddContactViewModel.swift in Sources */,
 				454E0AB02732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
 				45CD7B502716F5CB003044C5 /* OddDoubleCollectionViewCell.swift in Sources */,
 				A99F7A0C27D1168C008BAF41 /* BonusActiveDataSource.swift in Sources */,
@@ -4681,6 +4694,7 @@
 				455A0CA226BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
 				454E0A8E2731B01F00794E0C /* FailableDecodable.swift in Sources */,
 				45BF4E6D270DC37D00785E79 /* FilterLineView.swift in Sources */,
+				A9BA6D5228100F0C00E82724 /* AddContactViewController.swift in Sources */,
 				A99F7A1327D11BFE008BAF41 /* Bonus.swift in Sources */,
 				456B342D26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
 				A99DFBED27342AEB00002CDB /* FavoritesManager.swift in Sources */,
@@ -4720,6 +4734,7 @@
 				454E0AA22732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */,
 				A9B841C226EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896A26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
+				A9BA6D582810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				455C960626FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */,
 				A9BA6D4F280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */,
 				A9B841B826E91BBC00269B05 /* BettingOffer.swift in Sources */,
@@ -5046,6 +5061,7 @@
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
 				45166D1826F3548D00E69D65 /* SSWampTransport.swift in Sources */,
 				A90D8AFC277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */,
+				A9BA6D562810105600E82724 /* AddContactViewModel.swift in Sources */,
 				A9BCF444274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
 				454E0AB52732C58D00794E0C /* TabularBarButton.swift in Sources */,
 				454E0AB12732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
@@ -5113,6 +5129,7 @@
 				4503E79E27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */,
 				455A0C8626BD904300EC572D /* AppDelegate.swift in Sources */,
 				454E0A8F2731B01F00794E0C /* FailableDecodable.swift in Sources */,
+				A9BA6D5328100F0C00E82724 /* AddContactViewController.swift in Sources */,
 				45BF4E6E270DC37D00785E79 /* FilterLineView.swift in Sources */,
 				A99F7A1427D11BFE008BAF41 /* Bonus.swift in Sources */,
 				456B342E26C18C75009D7D27 /* LogViewerViewController.swift in Sources */,
@@ -5152,6 +5169,7 @@
 				454E0AA32732C10C00794E0C /* SubmitedBetslipViewController.swift in Sources */,
 				A9B841C326EB5D5900269B05 /* Odd.swift in Sources */,
 				45A2896B26C32D7500BCD5DA /* NetworkSession.swift in Sources */,
+				A9BA6D592810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift in Sources */,
 				455C960726FCA85F00456F30 /* PhonePrefixSelectorViewController.swift in Sources */,
 				A9BA6D50280EF90100E82724 /* ChatSettingsViewModel.swift in Sources */,
 				A9B841B926E91BBC00269B05 /* BettingOffer.swift in Sources */,
