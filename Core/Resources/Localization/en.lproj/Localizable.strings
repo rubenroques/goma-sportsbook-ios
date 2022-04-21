@@ -429,3 +429,6 @@ Terms of use, Privacy Policy and EULA";
 "search_by_contact" = "Search by contact name...";
 "invite" = "Invite";
 "unregistered_contacts_invite" = "We found these contacts that don’t have Sportsbook yet, invite them";
+
+"new_group" = "New Group";
+"select_friends_add" = "Select friends to add";

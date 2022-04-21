@@ -437,6 +437,8 @@ class ConversationsViewController: UIViewController {
         self.tableView.register(PreviewChatTableViewCell.self,
                                 forCellReuseIdentifier: PreviewChatTableViewCell.identifier)
 
+        self.newGroupButton.addTarget(self, action: #selector(didTapNewGroupButton), for: .primaryActionTriggered)
+
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
 
@@ -524,6 +526,14 @@ extension ConversationsViewController {
 
     @objc func didTapBackground() {
         self.searchBar.resignFirstResponder()
+    }
+
+    @objc func didTapNewGroupButton() {
+        print("NEW GROUP")
+        let newGroupViewModel = NewGroupViewModel()
+        let newGroupViewController = NewGroupViewController(viewModel: newGroupViewModel)
+
+        self.navigationController?.pushViewController(newGroupViewController, animated: true)
     }
 }
 

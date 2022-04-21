@@ -13,6 +13,7 @@ class AddFriendCellViewModel {
     var username: String
     var phone: String
     var isCheckboxSelected: Bool
+    var isOnline: Bool
 
     init(userContact: UserContact) {
         self.userContact = userContact
@@ -23,5 +24,6 @@ class AddFriendCellViewModel {
 
         self.isCheckboxSelected = false
 
+        self.isOnline = false
     }
 }

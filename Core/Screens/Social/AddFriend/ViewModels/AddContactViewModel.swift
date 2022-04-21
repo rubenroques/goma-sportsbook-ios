@@ -175,8 +175,6 @@ class AddContactViewModel {
         }
         self.sectionUsersArray = sectionUsersSorted
 
-        print("SECTION USERS: \(self.sectionUsersArray)")
-
         self.initialFullUsers = self.users
 
         self.initialFullSectionUsers = self.sectionUsersArray

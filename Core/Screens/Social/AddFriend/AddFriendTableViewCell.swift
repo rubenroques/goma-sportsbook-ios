@@ -12,7 +12,10 @@ class AddFriendTableViewCell: UITableViewCell {
     // MARK: Private Properties
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
     private lazy var iconImageView: UIImageView = Self.createIconImageView()
+    private lazy var userInfoStackView: UIStackView = Self.createUserInfoStackView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
+    private lazy var userStateBaseView: UIView = Self.createUserStateBaseView()
+    private lazy var userStateView: UIView = Self.createUserStateView()
     private lazy var checkboxBaseView: UIView = Self.createCheckboxBaseView()
     private lazy var checkboxImageView: UIImageView = Self.createCheckboxImageView()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
@@ -35,6 +38,12 @@ class AddFriendTableViewCell: UITableViewCell {
     var hasSeparatorLine: Bool = true {
         didSet {
             self.separatorLineView.isHidden = !hasSeparatorLine
+        }
+    }
+
+    var isOnline: Bool = false {
+        didSet {
+            self.userStateBaseView.isHidden = !isOnline
         }
     }
 
@@ -63,6 +72,8 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.titleLabel.text = ""
 
+        self.isOnline = false
+
         self.hasSeparatorLine = true
     }
 
@@ -70,8 +81,10 @@ class AddFriendTableViewCell: UITableViewCell {
         super.layoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
+
         self.iconImageView.layer.cornerRadius = self.iconImageView.frame.height / 2
 
+        self.userStateView.layer.cornerRadius = self.userStateView.frame.height / 2
     }
 
     func setupWithTheme() {
@@ -82,7 +95,13 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.iconImageView.backgroundColor = UIColor.App.backgroundTertiary
 
+        self.userInfoStackView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.userStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.userStateView.backgroundColor = UIColor.App.alertSuccess
 
         self.checkboxBaseView.backgroundColor = .clear
 
@@ -99,12 +118,13 @@ class AddFriendTableViewCell: UITableViewCell {
 
         self.isCheckboxSelected = viewModel.isCheckboxSelected
 
+        self.isOnline = viewModel.isOnline
+
     }
 
     // MARK: Actions
     @objc func didTapCheckbox(_ sender: UITapGestureRecognizer) {
-        print("TAPPED CELL!")
-
+        
         if let viewModel = self.viewModel {
             viewModel.isCheckboxSelected = !self.isCheckboxSelected
             self.isCheckboxSelected = viewModel.isCheckboxSelected
@@ -131,13 +151,36 @@ extension AddFriendTableViewCell {
         return imageView
     }
 
+    private static func createUserInfoStackView() -> UIStackView {
+        let stackView = UIStackView()
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.axis = .horizontal
+        stackView.spacing = 8
+        stackView.distribution = .fill
+        return stackView
+    }
+
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "@User"
         label.font = AppFont.with(type: .bold, size: 14)
         label.numberOfLines = 0
+        label.setContentHuggingPriority(.required, for: .horizontal)
         return label
+    }
+
+    private static func createUserStateBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        return view
+    }
+
+    private static func createUserStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }
 
     private static func createCheckboxBaseView() -> UIView {
@@ -166,7 +209,14 @@ extension AddFriendTableViewCell {
 
         self.iconBaseView.addSubview(self.iconImageView)
 
-        self.contentView.addSubview(self.titleLabel)
+        self.contentView.addSubview(self.userInfoStackView)
+
+        self.userInfoStackView.addArrangedSubview(self.titleLabel)
+        self.userInfoStackView.addArrangedSubview(self.userStateBaseView)
+
+        self.userStateBaseView.addSubview(self.userStateView)
+
+        // self.contentView.addSubview(self.titleLabel)
 
         self.contentView.addSubview(self.checkboxBaseView)
 
@@ -194,10 +244,10 @@ extension AddFriendTableViewCell {
             self.iconImageView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
             self.iconImageView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
 
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 10),
-            self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+//            self.titleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 10),
+//            self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
-            self.checkboxBaseView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 20),
+            self.checkboxBaseView.leadingAnchor.constraint(equalTo: self.userInfoStackView.trailingAnchor, constant: 20),
             self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
             self.checkboxBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
@@ -213,6 +263,20 @@ extension AddFriendTableViewCell {
             self.separatorLineView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1)
 
+        ])
+
+        // Stackview
+        NSLayoutConstraint.activate([
+            self.userInfoStackView.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 15),
+            self.userInfoStackView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
+            self.userInfoStackView.heightAnchor.constraint(equalToConstant: 30),
+
+            self.userStateBaseView.widthAnchor.constraint(greaterThanOrEqualToConstant: 10),
+
+            self.userStateView.widthAnchor.constraint(equalToConstant: 8),
+            self.userStateView.heightAnchor.constraint(equalTo: self.userStateView.widthAnchor),
+            self.userStateView.leadingAnchor.constraint(equalTo: self.userStateBaseView.leadingAnchor),
+            self.userStateView.centerYAnchor.constraint(equalTo: self.userStateBaseView.centerYAnchor)
         ])
 
     }
