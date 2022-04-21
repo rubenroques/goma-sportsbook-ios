@@ -15,12 +15,13 @@ class AddContactViewModel {
 
     // MARK: Public Properties
     var users: [UserContact] = []
-    var sectionUsers: [String: [UserContact]] = [:]
+    var sectionUsers: [Int: [UserContact]] = [:]
     var sectionUsersArray: [UserContactSectionData] = []
     var initialFullSectionUsers: [UserContactSectionData] = []
     var initialFullUsers: [UserContact] = []
     var contactsData: [ContactsData] = []
-    var cachedCellViewModels: [String: AddFriendCellViewModel] = [:]
+    var cachedFriendCellViewModels: [String: AddFriendCellViewModel] = [:]
+    var cachedUnregisteredFriendCellViewModels: [String: AddUnregisteredFriendCellViewModel] = [:]
     var hasDoneSearch: Bool = false
     var selectedUsers: [UserContact] = []
     var isEmptySearchPublisher: CurrentValueSubject<Bool, Never> = .init(true)
@@ -36,11 +37,18 @@ class AddContactViewModel {
 
     func filterSearch(searchQuery: String) {
 
-        var filterUserSections = self.initialFullSectionUsers.filter { $0.userContacts.contains(where: { $0.username.contains(searchQuery) }) }
+        var filterUserSections = self.initialFullSectionUsers.filter {
+            $0.userContacts.contains(where: {
+                $0.username.localizedCaseInsensitiveContains(searchQuery)
+            })
+
+        }
 
         for (index, filterUserSection) in filterUserSections.enumerated() {
 
-           let filterUserContacts = filterUserSection.userContacts.filter({ $0.username.contains(searchQuery)})
+           let filterUserContacts = filterUserSection.userContacts.filter({
+               $0.username.localizedCaseInsensitiveContains(searchQuery)
+           })
 
             filterUserSections[index].userContacts = filterUserContacts
 
@@ -69,7 +77,8 @@ class AddContactViewModel {
     func clearUsers() {
         self.users = []
         self.selectedUsers = []
-        self.cachedCellViewModels = [:]
+        self.cachedFriendCellViewModels = [:]
+        self.cachedUnregisteredFriendCellViewModels = [:]
         self.isEmptySearchPublisher.send(true)
         self.canAddFriendPublisher.send(false)
         self.dataNeedsReload.send()
@@ -156,9 +165,15 @@ class AddContactViewModel {
         }
 
         for (key, userContact) in self.sectionUsers {
-                let userContactSection = UserContactSectionData(contactType: key, userContacts: userContact)
+            let contactType = (key == 1) ? UserContactType.registered : UserContactType.unregistered
+            let userContactSection = UserContactSectionData(contactType: contactType, userContacts: userContact)
             self.sectionUsersArray.append(userContactSection)
         }
+
+        let sectionUsersSorted = self.sectionUsersArray.sorted {
+            $0.contactType.identifier < $1.contactType.identifier
+        }
+        self.sectionUsersArray = sectionUsersSorted
 
         print("SECTION USERS: \(self.sectionUsersArray)")
 
@@ -173,21 +188,21 @@ class AddContactViewModel {
         // TEST
         if userContact.username.contains("Carlos") || userContact.username.contains("Lascas") {
 
-            if self.sectionUsers["unregistered"] != nil {
+            if self.sectionUsers[UserContactType.unregistered.identifier] != nil {
 
-                self.sectionUsers["unregistered"]?.append(userContact)
+                self.sectionUsers[UserContactType.unregistered.identifier]?.append(userContact)
             }
             else {
-                self.sectionUsers["unregistered"] = [userContact]
+                self.sectionUsers[UserContactType.unregistered.identifier] = [userContact]
             }
         }
         else {
-            if self.sectionUsers["registered"] != nil {
+            if self.sectionUsers[UserContactType.registered.identifier] != nil {
 
-                self.sectionUsers["registered"]?.append(userContact)
+                self.sectionUsers[UserContactType.registered.identifier]?.append(userContact)
             }
             else {
-                self.sectionUsers["registered"] = [userContact]
+                self.sectionUsers[UserContactType.registered.identifier] = [userContact]
             }
         }
 
@@ -211,6 +226,20 @@ struct ContactsData {
 }
 
 struct UserContactSectionData {
-    var contactType: String
+    var contactType: UserContactType
     var userContacts: [UserContact]
+}
+
+enum UserContactType {
+    case registered
+    case unregistered
+
+    var identifier: Int {
+        switch self {
+        case .registered:
+            return 1
+        case .unregistered:
+            return 2
+        }
+    }
 }

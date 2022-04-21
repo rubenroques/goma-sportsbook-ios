@@ -55,7 +55,7 @@ extension ResultsHeaderFooterView {
     private static func createTitleLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 1
+        label.numberOfLines = 0
         label.text = "Results"
         label.font = AppFont.with(type: .semibold, size: 14)
         label.textAlignment = .left
@@ -72,10 +72,9 @@ extension ResultsHeaderFooterView {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 25),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -25),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor)
         ])
     }
 }
-

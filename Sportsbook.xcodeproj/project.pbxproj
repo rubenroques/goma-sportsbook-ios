@@ -1004,6 +1004,8 @@
 		A9BA6D562810105600E82724 /* AddContactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D542810105600E82724 /* AddContactViewModel.swift */; };
 		A9BA6D582810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */; };
 		A9BA6D592810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */; };
+		A9BA6D5B281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5A281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift */; };
+		A9BA6D5C281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BA6D5A281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift */; };
 		A9BCF42D274BBE7B006DD528 /* PolicyLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */; };
 		A9BCF42E274BBE7B006DD528 /* PolicyLinkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */; };
 		A9BCF430274BBE8D006DD528 /* PolicyLinkView.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */; };
@@ -1645,6 +1647,7 @@
 		A9BA6D5128100F0C00E82724 /* AddContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactViewController.swift; sourceTree = "<group>"; };
 		A9BA6D542810105600E82724 /* AddContactViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactViewModel.swift; sourceTree = "<group>"; };
 		A9BA6D572810644D00E82724 /* AddUnregisteredFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUnregisteredFriendTableViewCell.swift; sourceTree = "<group>"; };
+		A9BA6D5A281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUnregisteredFriendCellViewModel.swift; sourceTree = "<group>"; };
 		A9BCF42C274BBE7B006DD528 /* PolicyLinkView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolicyLinkView.swift; sourceTree = "<group>"; };
 		A9BCF42F274BBE8D006DD528 /* PolicyLinkView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PolicyLinkView.xib; sourceTree = "<group>"; };
 		A9BCF432274D1A77006DD528 /* MatchDetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchDetailsViewController.swift; sourceTree = "<group>"; };
@@ -3594,6 +3597,7 @@
 			children = (
 				A9BA6D47280DCA3400E82724 /* AddFriendCellViewModel.swift */,
 				A9BA6D542810105600E82724 /* AddContactViewModel.swift */,
+				A9BA6D5A281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4472,6 +4476,7 @@
 				45B7DADB26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDE26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
 				45D728D72715F6DC00EFE04D /* AppModels.swift in Sources */,
+				A9BA6D5B281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				45A642D427985A96008EFD5B /* HeadToHeadCardStatsView.swift in Sources */,
 				A90BC90F27C3FF1000667616 /* AppearanceViewModel.swift in Sources */,
 				45166CFF26F3548D00E69D65 /* UnregisterSSWampMessage.swift in Sources */,
@@ -4907,6 +4912,7 @@
 				A9BCF43E274FB5CC006DD528 /* SimpleListMarketDetailTableViewCell.swift in Sources */,
 				45B7DADC26F8FF130032C1C3 /* PopUpDetails.swift in Sources */,
 				455A0CDF26BD9D9000EC572D /* RunningPlatform.swift in Sources */,
+				A9BA6D5C281168AA00E82724 /* AddUnregisteredFriendCellViewModel.swift in Sources */,
 				45D728D82715F6DC00EFE04D /* AppModels.swift in Sources */,
 				45A642D527985A96008EFD5B /* HeadToHeadCardStatsView.swift in Sources */,
 				A90BC91027C3FF1000667616 /* AppearanceViewModel.swift in Sources */,

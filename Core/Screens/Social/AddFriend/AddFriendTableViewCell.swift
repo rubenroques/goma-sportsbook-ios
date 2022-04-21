@@ -184,7 +184,7 @@ extension AddFriendTableViewCell {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 25),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
@@ -198,7 +198,7 @@ extension AddFriendTableViewCell {
             self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
             self.checkboxBaseView.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 20),
-            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: 10),
+            self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -15),
             self.checkboxBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
             self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.checkboxBaseView.heightAnchor.constraint(equalTo: self.checkboxBaseView.widthAnchor),
@@ -208,8 +208,8 @@ extension AddFriendTableViewCell {
             self.checkboxImageView.centerXAnchor.constraint(equalTo: self.checkboxBaseView.centerXAnchor),
             self.checkboxImageView.centerYAnchor.constraint(equalTo: self.checkboxBaseView.centerYAnchor),
 
-            self.separatorLineView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.separatorLineView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.separatorLineView.leadingAnchor.constraint(equalTo: self.iconBaseView.leadingAnchor),
+            self.separatorLineView.trailingAnchor.constraint(equalTo: self.checkboxBaseView.trailingAnchor, constant: -10),
             self.separatorLineView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1)
 

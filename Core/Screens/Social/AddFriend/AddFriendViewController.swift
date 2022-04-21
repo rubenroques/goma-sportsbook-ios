@@ -235,7 +235,8 @@ extension AddFriendViewController: UISearchBarDelegate {
     func searchUsers(searchQuery: String = "") {
 
         if searchQuery != "" && searchQuery.count >= 3 {
-            self.viewModel.getUsers()
+            // self.viewModel.getUsers()
+            self.viewModel.filterSearch(searchQuery: searchQuery)
         }
         else {
             self.viewModel.clearUsers()
@@ -566,12 +567,12 @@ extension AddFriendViewController {
         // Tableview
         NSLayoutConstraint.activate([
 
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: self.addContactFriendButton.bottomAnchor, constant: 16),
 
-            self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor),
-            self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor),
+            self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor, constant: 25),
+            self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor, constant: -25),
             self.tableSeparatorLineView.bottomAnchor.constraint(equalTo: self.tableView.topAnchor),
             self.tableSeparatorLineView.heightAnchor.constraint(equalToConstant: 1)
 

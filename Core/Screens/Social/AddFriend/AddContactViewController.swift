@@ -115,6 +115,7 @@ class AddContactViewController: UIViewController {
         self.addFriendSeparatorLineView.backgroundColor = UIColor.App.separatorLine
     }
 
+    // MARK: Binding
     private func bind(toViewModel viewModel: AddContactViewModel) {
 
         viewModel.dataNeedsReload
@@ -164,7 +165,11 @@ class AddContactViewController: UIViewController {
                 glassIconView.tintColor = UIColor.App.inputTextTitle
             }
         }
+    }
 
+    private func sendUserInvite(phoneNumber: String) {
+        // Send invite here
+        print("Send invite to: \(phoneNumber)")
     }
 
     // MARK: Actions
@@ -238,8 +243,8 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-        if self.viewModel.sectionUsersArray[safe: indexPath.section]?.contactType == "registered" {
+        
+        if self.viewModel.sectionUsersArray[safe: indexPath.section]?.contactType == .registered {
 
             guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
             else {
@@ -248,7 +253,7 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
 
             if let userContact = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts[safe: indexPath.row] {
 
-                if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
+                if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
                     cell.configure(viewModel: cellViewModel)
 
                     cell.didTapCheckboxAction = { [weak self] in
@@ -257,7 +262,7 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
                 }
                 else {
                     let cellViewModel = AddFriendCellViewModel(userContact: userContact)
-                    self.viewModel.cachedCellViewModels[userContact.id] = cellViewModel
+                    self.viewModel.cachedFriendCellViewModels[userContact.id] = cellViewModel
                     cell.configure(viewModel: cellViewModel)
 
                     cell.didTapCheckboxAction = { [weak self] in
@@ -267,7 +272,8 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
 
             }
 
-            if indexPath.row == self.viewModel.users.count - 1 {
+            if let sectionUsersCount = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts.count, indexPath.row == sectionUsersCount - 1 {
+
                 cell.hasSeparatorLine = false
             }
 
@@ -281,26 +287,24 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
 
             if let userContact = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts[safe: indexPath.row] {
 
-                if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
+                if let cellViewModel = self.viewModel.cachedUnregisteredFriendCellViewModels[userContact.id] {
                     cell.configure(viewModel: cellViewModel)
 
-                    cell.didTapCheckboxAction = { [weak self] in
-                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                    }
                 }
                 else {
-                    let cellViewModel = AddFriendCellViewModel(userContact: userContact)
-                    self.viewModel.cachedCellViewModels[userContact.id] = cellViewModel
+                    let cellViewModel = AddUnregisteredFriendCellViewModel(userContact: userContact)
+                    self.viewModel.cachedUnregisteredFriendCellViewModels[userContact.id] = cellViewModel
                     cell.configure(viewModel: cellViewModel)
 
-                    cell.didTapCheckboxAction = { [weak self] in
-                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                    }
                 }
 
+                cell.didTapInviteAction = { [weak self] phoneNumber in
+                    self?.sendUserInvite(phoneNumber: phoneNumber)
+                }
             }
 
-            if indexPath.row == self.viewModel.users.count - 1 {
+            if let sectionUsersCount = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts.count, indexPath.row == sectionUsersCount - 1 {
+
                 cell.hasSeparatorLine = false
             }
 
@@ -318,9 +322,16 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
                 fatalError()
             }
 
-            let resultsLabel = "Results (\(self.viewModel.sectionUsersArray[section].userContacts.count))"
+            if self.viewModel.sectionUsersArray[section].contactType == .registered {
+                let resultsLabel = "Results (\(self.viewModel.sectionUsersArray[section].userContacts.count))"
 
-            headerView.configureHeader(title: resultsLabel)
+                headerView.configureHeader(title: resultsLabel)
+            }
+            else {
+                let resultsLabel = localized("unregistered_contacts_invite")
+
+                headerView.configureHeader(title: resultsLabel)
+            }
 
             return headerView
         }
@@ -544,12 +555,12 @@ extension AddContactViewController {
         // Tableview
         NSLayoutConstraint.activate([
 
-            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
-            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16),
 
-            self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor),
-            self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor),
+            self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor, constant: 25),
+            self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor, constant: -25),
             self.tableSeparatorLineView.bottomAnchor.constraint(equalTo: self.tableView.topAnchor),
             self.tableSeparatorLineView.heightAnchor.constraint(equalToConstant: 1)
 

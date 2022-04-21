@@ -16,8 +16,8 @@ class AddUnregisteredFriendTableViewCell: UITableViewCell {
     private lazy var inviteButton: UIButton = Self.createInviteButton()
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
 
-    var viewModel: AddFriendCellViewModel?
-    var didTapCheckboxAction: (() -> Void)?
+    var viewModel: AddUnregisteredFriendCellViewModel?
+    var didTapInviteAction: ((String) -> Void)?
 
     // MARK: Public Properties
 
@@ -78,7 +78,7 @@ class AddUnregisteredFriendTableViewCell: UITableViewCell {
 
     }
 
-    func configure(viewModel: AddFriendCellViewModel) {
+    func configure(viewModel: AddUnregisteredFriendCellViewModel) {
         self.viewModel = viewModel
 
         self.titleLabel.text = viewModel.username
@@ -87,8 +87,9 @@ class AddUnregisteredFriendTableViewCell: UITableViewCell {
 
     // MARK: Actions
     @objc func didTapInviteButton() {
-        print("TAPPED CELL!")
-
+        if let phoneNumber = self.viewModel?.phone {
+            self.didTapInviteAction?(phoneNumber)
+        }
     }
 
 }
@@ -154,7 +155,7 @@ extension AddUnregisteredFriendTableViewCell {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
-            self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 25),
             self.iconBaseView.widthAnchor.constraint(equalToConstant: 40),
             self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
@@ -168,13 +169,13 @@ extension AddUnregisteredFriendTableViewCell {
             self.titleLabel.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
             self.inviteButton.leadingAnchor.constraint(equalTo: self.titleLabel.trailingAnchor, constant: 8),
-            self.inviteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.inviteButton.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -25),
             self.inviteButton.heightAnchor.constraint(equalToConstant: 40),
             self.inviteButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 64),
             self.inviteButton.centerYAnchor.constraint(equalTo: self.contentView.centerYAnchor),
 
-            self.separatorLineView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.separatorLineView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
+            self.separatorLineView.leadingAnchor.constraint(equalTo: self.iconBaseView.leadingAnchor),
+            self.separatorLineView.trailingAnchor.constraint(equalTo: self.inviteButton.trailingAnchor),
             self.separatorLineView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1)
 
