@@ -410,6 +410,12 @@ Terms of use, Privacy Policy and EULA";
 "quit_register" = "Quit Register";
 "quit_register_message" = "Do you want to quit your initial register? All changes will be lost.";
 
+"remaining_total_bonus" = "Remaining / Total Bonus";
+"remaining_total_wager" = "Remaining / Total Wager";
+
+"bonus_amount" = "Bonus Amount";
+"wager_amount" = "Wager Amount";
+
 "users_followed_you" = "Users followed you";
 "shared_tickets_to" = "You shared tickets to";
 

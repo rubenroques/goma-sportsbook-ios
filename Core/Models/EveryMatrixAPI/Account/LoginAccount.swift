@@ -7,6 +7,17 @@
 
 import Foundation
 
+extension EveryMatrix {
+    struct CMSSession: Decodable {
+
+        var id: String
+
+        enum CodingKeys: String, CodingKey {
+            case id = "cmsSessionID"
+        }
+    }
+}
+
 struct LoginAccount: Decodable {
 
     let username: String

@@ -29,6 +29,7 @@
                 <outlet property="bottomView" destination="iW1-Ih-khd" id="GYi-Sz-3VW"/>
                 <outlet property="checkboxImage" destination="IPL-h5-ucx" id="PlF-RY-wK1"/>
                 <outlet property="checkboxLabel" destination="cni-db-s7Q" id="rKY-z3-4tg"/>
+                <outlet property="checkboxView" destination="sdf-va-AVj" id="XfK-f7-BjS"/>
                 <outlet property="checkmarkImageView" destination="iAM-bp-dFl" id="8nG-tD-NVC"/>
                 <outlet property="continueButton" destination="yGx-GM-yb6" id="BaN-ae-ufN"/>
                 <outlet property="messageSubtitleLabel" destination="AlW-md-Iz3" id="Xva-F8-MWP"/>

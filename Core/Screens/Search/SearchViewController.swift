@@ -421,12 +421,6 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                     else {
                         cell.setupWithMatch(match, store: store)
                     }
-//                    if self.viewModel.matchesInfoForMatchPublisher.value.contains(match.id) {
-//                        cell.setupWithMatch(match, liveMatch: true)
-//                    }
-//                    else {
-//                        cell.setupWithMatch(match)
-//                    }
 
                     cell.tappedMatchLineAction = {
                         self.openMatchDetailsScreen(match: match)

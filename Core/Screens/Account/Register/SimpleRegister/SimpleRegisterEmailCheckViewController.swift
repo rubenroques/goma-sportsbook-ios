@@ -10,6 +10,7 @@ import Combine
 
 class SimpleRegisterEmailCheckViewController: UIViewController {
 
+    // MARK: Private Properties
     @IBOutlet private var scrollView: UIScrollView!
     @IBOutlet private var containerView: UIView!
     @IBOutlet private var skipView: UIView!
@@ -22,10 +23,27 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
     @IBOutlet private var policyLinkView: PolicyLinkView!
 
     @IBOutlet private var loadingEmailValidityView: UIActivityIndicatorView!
+    @IBOutlet private var loadingBaseView: UIView!
+    @IBOutlet private var acitivityIndicatorView: UIActivityIndicatorView!
 
-    var cancellables = Set<AnyCancellable>()
+    private var viewModel: SimpleRegisterEmailCheckViewModel
+    private var cancellables = Set<AnyCancellable>()
 
+    // MARK: Public Properties
+    var isLoading: Bool = false {
+        didSet {
+            if isLoading {
+                self.loadingBaseView.isHidden = false
+            }
+            else {
+                self.loadingBaseView.isHidden = true
+            }
+        }
+    }
+
+    // MARK: Lifetime and Cycle
     init() {
+        self.viewModel = SimpleRegisterEmailCheckViewModel()
         super.init(nibName: "SimpleRegisterEmailCheckViewController", bundle: nil)
     }
 
@@ -36,16 +54,16 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        AnalyticsClient.sendEvent(event: .signupScreen)
+        self.viewModel.sendAnalyticsEvent(event: .signupScreen)
         commonInit()
         setupWithTheme()
+
+        self.bind(toViewModel: self.viewModel)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
-
-    
 
     func commonInit() {
         skipButton.setTitle(localized("skip"), for: .normal)
@@ -74,13 +92,13 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
         emailHeadertextFieldView.textPublisher
             .compactMap { $0 }
-            .filter(isValidEmail)
+            .filter(self.viewModel.isValidEmail)
             .removeDuplicates()
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
             .handleEvents(receiveOutput: { [weak self] _ in
                 self?.loadingEmailValidityView.startAnimating()
             })
-            .sink(receiveValue: requestValidEmailCheck)
+            .sink(receiveValue: self.viewModel.requestValidEmailCheck)
             .store(in: &cancellables)
 
         checkPolicyLinks()
@@ -91,6 +109,17 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         else {
             self.skipButton.isHidden = false
         }
+
+        self.registerButton.isEnabled = false
+
+        self.isLoading = false
+    }
+
+    // MARK: Layout and Theme
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        setupWithTheme()
     }
 
     func setupWithTheme() {
@@ -121,9 +150,69 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         registerButton.layer.cornerRadius = CornerRadius.button
         registerButton.layer.masksToBounds = true
 
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
+
     }
 
-    func checkPolicyLinks() {
+    // MARK: Binding
+    private func bind(toViewModel viewModel: SimpleRegisterEmailCheckViewModel) {
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+        viewModel.registerErrorTypePublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] registerErrorType in
+                switch registerErrorType {
+                case .server:
+                    self?.showServerErrorAlert()
+                case .wrongEmail:
+                    self?.showWrongEmailFormatError()
+                case .usedEmail:
+                    self?.showEmailUsedError()
+                case .hideEmail:
+                    self?.hideEmailError()
+                default:
+                    ()
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.shouldShowNextViewController
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] shouldShowNextViewController in
+                if shouldShowNextViewController {
+                    self?.pushRegisterNextViewController()
+                }
+            })
+            .store(in: &cancellables)
+
+        viewModel.isRegisterEnabled
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isEnabled in
+                self?.registerButton.isEnabled = isEnabled
+            })
+            .store(in: &cancellables)
+
+        viewModel.shouldAnimateEmailValidityView
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] shouldAnimate in
+                if shouldAnimate {
+                    self?.loadingEmailValidityView.startAnimating()
+                }
+                else {
+                    self?.loadingEmailValidityView.stopAnimating()
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    private func checkPolicyLinks() {
             policyLinkView.didTapTerms = {
                 // TO-DO: Call VC to register
             }
@@ -137,6 +226,12 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
             }
         }
 
+    private func pushRegisterNextViewController() {
+        let smallRegisterStep2ViewController = SimpleRegisterDetailsViewController(emailAddress: self.emailHeadertextFieldView.text)
+        self.navigationController?.pushViewController(smallRegisterStep2ViewController, animated: true)
+    }
+
+    // MARK: Actions
     @objc func didTapBackground() {
         self.resignFirstResponder()
 
@@ -151,39 +246,8 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
         let email = emailHeadertextFieldView.text
 
-        if !isValidEmail(email) {
-            self.showWrongEmailFormatError()
-            return
-        }
+        self.viewModel.registerEmail(email: email)
 
-        Env.everyMatrixClient.validateEmail(email)
-            .receive(on: DispatchQueue.main)
-            .handleEvents(receiveOutput: { [weak self] _ in
-                self?.loadingEmailValidityView.startAnimating()
-            })
-            .sink { completed in
-                if case .failure = completed {
-                    self.showServerErrorAlert()
-                }
-                self.loadingEmailValidityView.stopAnimating()
-            }
-            receiveValue: { value in
-                if !value.isAvailable {
-                    self.showEmailUsedError()
-                    AnalyticsClient.sendEvent(event: .userSignUpFail)
-                }
-                else {
-                    self.pushRegisterNextViewController()
-                    AnalyticsClient.sendEvent(event: .userSignUpSuccess)
-                }
-                self.loadingEmailValidityView.stopAnimating()
-            }
-            .store(in: &cancellables)
-    }
-
-    private func pushRegisterNextViewController() {
-        let smallRegisterStep2ViewController = SimpleRegisterDetailsViewController(emailAddress: self.emailHeadertextFieldView.text)
-        self.navigationController?.pushViewController(smallRegisterStep2ViewController, animated: true)
     }
 
     @IBAction private func skipAction() {
@@ -191,32 +255,11 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         self.navigationController?.pushViewController(rootViewController, animated: true)
     }
 
-    func isValidEmail(_ email: String) -> Bool {
-        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
-
-        let emailPred = NSPredicate(format: "SELF MATCHES %@", emailRegEx)
-        return emailPred.evaluate(with: email)
-    }
-
 }
 
 extension SimpleRegisterEmailCheckViewController {
 
-    func requestValidEmailCheck(email: String) {
-        Env.everyMatrixClient.validateEmail(email)
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.loadingEmailValidityView.stopAnimating()
-            }
-            receiveValue: { value in
-                if !value.isAvailable {
-                    self.showEmailUsedError()
-                }
-                self.loadingEmailValidityView.stopAnimating()
-            }
-            .store(in: &cancellables)
-    }
-
+    // MARK: Error Alerts
     func showServerErrorAlert() {
         UIAlertController.showServerErrorMessage(on: self)
     }

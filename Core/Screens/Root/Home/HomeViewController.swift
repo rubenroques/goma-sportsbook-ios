@@ -85,14 +85,13 @@ class HomeViewController: UIViewController {
 
         self.showLoading()
 
-        executeDelayed(1.45) {
+        executeDelayed(1.5) {
             self.hideLoading()
         }
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
     }
 
     // MARK: - Layout and Theme
@@ -169,8 +168,8 @@ class HomeViewController: UIViewController {
     }
 
     // MARK: - Actions
-    private func openCompetitionDetails(competitionId: String, sport: Sport) {
-        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: [competitionId], sport: sport, store: AggregatorsRepository())
+    private func openCompetitionsDetails(competitionsIds: [String], sport: Sport) {
+        let competitionDetailsViewModel = CompetitionDetailsViewModel(competitionsIds: competitionsIds, sport: sport, store: AggregatorsRepository())
         let competitionDetailsViewController = CompetitionDetailsViewController(viewModel: competitionDetailsViewModel)
         self.navigationController?.pushViewController(competitionDetailsViewController, animated: true)
     }
@@ -381,7 +380,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                         self?.present(loginViewController, animated: true, completion: nil)
                     }
                 }
-                
                 return cell
                 
             case .competition:
@@ -392,11 +390,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     fatalError()
                 }
                 cell.configure(withViewModel: sportMatchLineViewModel)
-                cell.didSelectSeeAllCompetitionAction = { [weak self] sport, competition in
-                    self?.openCompetitionDetails(competitionId: competition.id, sport: sport)
+                cell.didSelectSeeAllCompetitionsAction = { [weak self] sport, competitions in
+                    self?.openCompetitionsDetails(competitionsIds: competitions.map(\.id), sport: sport)
                 }
                 return cell
-
             }
 
         case .userProfile:

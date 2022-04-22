@@ -25,7 +25,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
     var betslipTickets: [BettingTicket] = []
 
     var betNowCallbackAction: (() -> Void)?
-    
+
     var viewModel: SuggestedBetViewModel?
     var cancellables = Set<AnyCancellable>()
     var needsReload: PassthroughSubject<Void, Never> = .init()
@@ -49,6 +49,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.numberOfSelectionsValueLabel.text = ""
 
         self.viewModel = nil
+
     }
 
     func setReloadedState(reloaded: Bool) {
@@ -68,6 +69,7 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
                 }
             })
             .store(in: &cancellables)
+
     }
     
     func setupWithTheme() {

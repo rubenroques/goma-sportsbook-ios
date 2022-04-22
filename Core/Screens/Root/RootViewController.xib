@@ -370,7 +370,7 @@
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="KmS-Xh-sK7" secondAttribute="trailing" id="yT2-aa-NjI"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="-3" y="-34"/>
+            <point key="canvasLocation" x="-110" y="-38"/>
         </view>
     </objects>
     <resources>

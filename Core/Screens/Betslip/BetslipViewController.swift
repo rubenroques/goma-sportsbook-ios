@@ -12,7 +12,8 @@ class BetslipViewController: UIViewController {
 
     enum StartScreen {
         case bets
-        case myTickets(MyTicketsType, String) // Ticket id
+        case sharedBet(String)
+        case myTickets(MyTicketsType, String)
     }
 
     @IBOutlet private weak var topSafeAreaView: UIView!
@@ -45,8 +46,6 @@ class BetslipViewController: UIViewController {
 
         self.startScreen = startScreen
 
-        self.preSubmissionBetslipViewController = PreSubmissionBetslipViewController()
-
         switch startScreen {
         case .myTickets(let type, let value):
             self.myTicketsViewController = MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: type, highlightTicket: value))
@@ -54,12 +53,19 @@ class BetslipViewController: UIViewController {
             self.myTicketsViewController = MyTicketsViewController()
         }
 
-        self.viewControllers = [preSubmissionBetslipViewController, myTicketsViewController]
+        switch startScreen {
+        case .sharedBet(let token):
+            self.preSubmissionBetslipViewController = PreSubmissionBetslipViewController(viewModel: PreSubmissionBetslipViewModel(sharedBetToken: token))
+        default:
+            self.preSubmissionBetslipViewController = PreSubmissionBetslipViewController(viewModel: PreSubmissionBetslipViewModel())
+        }
 
-        self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)
+        self.viewControllers = [self.preSubmissionBetslipViewController, self.myTicketsViewController]
+
+        self.viewControllerTabDataSource = TitleTabularDataSource(with: self.viewControllers)
 
         switch startScreen {
-        case .bets:
+        case .bets, .sharedBet:
             self.viewControllerTabDataSource.initialPage = 0
         case .myTickets:
             self.viewControllerTabDataSource.initialPage = 1
@@ -71,7 +77,7 @@ class BetslipViewController: UIViewController {
     }
 
     deinit {
-        preSubmissionBetslipViewController.removeFromParent()
+        print("BetslipViewController deinit")
     }
 
     @available(iOS, unavailable)
@@ -82,7 +88,7 @@ class BetslipViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.isModalInPresentation = true
+        self.isModalInPresentation = false
 
         self.accountInfoBaseView.isHidden = true
         
@@ -99,6 +105,7 @@ class BetslipViewController: UIViewController {
         self.tabViewController.didMove(toParent: self)
 
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
+        self.tabViewController.setBarDistribution(.parent)
 
         self.accountInfoBaseView.clipsToBounds = true
         self.accountValuePlusView.clipsToBounds = true

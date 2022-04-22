@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BonusAvailableTableViewCell: UITableViewCell {
 
@@ -23,6 +24,8 @@ class BonusAvailableTableViewCell: UITableViewCell {
     private lazy var bannerImageViewDynamicHeightConstraint: NSLayoutConstraint = Self.createbannerImageViewDynamicHeightConstraint()
 
     private var aspectRatio: CGFloat = 1.0
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var hasBannerImage: Bool = false {
@@ -108,25 +111,56 @@ class BonusAvailableTableViewCell: UITableViewCell {
         self.getBonusButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
     }
 
-    func setupBonus(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+    func configure(withViewModel viewModel: BonusAvailableCellViewModel) {
 
-        self.titleLabel.text = bonus.name
+        viewModel.titlePublisher
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &cancellables)
 
-        self.subtitleLabel.text = bonus.description
+        viewModel.subtitlePublisher
+            .sink(receiveValue: { [weak self] subtitle in
+                self?.subtitleLabel.text = subtitle
+            })
+            .store(in: &cancellables)
 
-        if let bonusBannerUrl = bonusBannerUrl {
-            self.bannerImageView.kf.setImage(with: bonusBannerUrl)
-            if let bonusBannerImage = self.bannerImageView.image {
-                self.resizeBannerImageView(bonusBanner: bonusBannerImage)
-            }
+        viewModel.bonusBannerUrlPublisher
+            .sink(receiveValue: { [weak self] bonusBannerUrl in
+                if let bonusBannerUrl = bonusBannerUrl {
+                    self?.bannerImageView.kf.setImage(with: bonusBannerUrl)
+                    if let bonusBannerImage = self?.bannerImageView.image {
+                        self?.resizeBannerImageView(bonusBanner: bonusBannerImage)
+                    }
 
-            self.hasBannerImage = true
-        }
-        else {
-            self.hasBannerImage = false
-        }
-
+                    self?.hasBannerImage = true
+                }
+                else {
+                    self?.hasBannerImage = false
+                }
+            })
+            .store(in: &cancellables)
     }
+
+//    func setupBonus(bonus: EveryMatrix.ApplicableBonus, bonusBannerUrl: URL? = nil) {
+//
+//        self.titleLabel.text = bonus.name
+//
+//        self.subtitleLabel.text = bonus.description
+//
+//        if let bonusBannerUrl = bonusBannerUrl {
+//            self.bannerImageView.kf.setImage(with: bonusBannerUrl)
+//            if let bonusBannerImage = self.bannerImageView.image {
+//                self.resizeBannerImageView(bonusBanner: bonusBannerImage)
+//            }
+//
+//            self.hasBannerImage = true
+//        }
+//        else {
+//            self.hasBannerImage = false
+//        }
+//
+//    }
 
     private func resizeBannerImageView(bonusBanner: UIImage) {
         self.aspectRatio = bonusBanner.size.width/bonusBanner.size.height

@@ -67,6 +67,16 @@ class MyTicketBetLineView: NibView {
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {
+        print("MyTicketBetLineView deinit")
+
+        self.homeResultSubscription?.cancel()
+        self.homeResultSubscription = nil
+
+        self.awayResultSubscription?.cancel()
+        self.awayResultSubscription = nil
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 

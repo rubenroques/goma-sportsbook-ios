@@ -7,94 +7,62 @@
 
 import Foundation
 import Combine
-import UIKit
 import OrderedCollections
 
 class MyFavoritesViewModel: NSObject {
 
-    private var favoriteMatches: [Match] = []
-    private var favoriteCompetitions: [Competition] = []
-
+    // MARK: Private Properties
     private var favoriteMatchesRegister: EndpointPublisherIdentifiable?
     private var favoriteCompetitionsMatchesRegister: EndpointPublisherIdentifiable?
+
     private var favoriteMatchesPublisher: AnyCancellable?
     private var favoriteCompetitionsMatchesPublisher: AnyCancellable?
 
-    private var cancellables = Set<AnyCancellable>()
-    var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
-    var didSelectMatchAction: ((Match) -> Void)?
-    var didTapFavoriteMatchAction: ((Match) -> Void)?
-    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
-    var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
-
-    var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
-
     private var favoriteEventsIds: [String] = []
+
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
+    var favoriteMatchesDataPublisher: CurrentValueSubject<[Match], Never> = .init([])
+    var favoriteCompetitionsDataPublisher: CurrentValueSubject<[Competition], Never> = .init([])
+
+    var dataChangedPublisher = PassthroughSubject<Void, Never>.init()
+    var favoriteListTypePublisher: CurrentValueSubject<FavoriteListType, Never> = .init(.favoriteGames)
+    var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     enum FavoriteListType {
         case favoriteGames
         case favoriteCompetitions
     }
 
-    // Caches
+    // MARK: Caches
     private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
 
-    // Data Sources
-    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], store: FavoritesAggregatorsRepository())
-    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], store: FavoritesAggregatorsRepository())
-
+    // MARK: Store
     var store: FavoritesAggregatorsRepository = FavoritesAggregatorsRepository()
 
+    // MARK: Lifetime and Cycle
     override init() {
         super.init()
 
-        self.store.getLocations()
-
-        self.myFavoriteMatchesDataSource.store = self.store
-
-        self.myFavoriteCompetitionsDataSource.store = self.store
-
-        self.myFavoriteMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
-            return self?.matchStatsViewModel(forMatch: match)
-        }
-
-        self.myFavoriteCompetitionsDataSource.matchStatsViewModelForMatch = { [weak self] match in
-            return self?.matchStatsViewModel(forMatch: match)
-        }
-
-        // Match Select
-        self.myFavoriteMatchesDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
-        }
-        self.myFavoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
-            self?.didSelectMatchAction?(match)
-        }
-
-        // Match went live
-        self.myFavoriteMatchesDataSource.matchWentLiveAction = { [weak self] in
-            self?.dataChangedPublisher.send()
-        }
-        self.myFavoriteCompetitionsDataSource.matchWentLiveAction = { [weak self] in
-            self?.dataChangedPublisher.send()
-        }
-
-        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
-            self?.didTapFavoriteMatchAction?(match)
-        }
-        
-        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
-            self?.didTapFavoriteCompetitionAction?(competition)
-        }
-        
-        self.setupPublishers()
+        self.initialSetup()
 
     }
 
     deinit {
+        print("VM DEINIT")
         self.unregisterEndpoints()
     }
+
+    // MARK: Functions
+    private func initialSetup() {
+
+        self.getLocations()
+
+    }
     
-    func unregisterEndpoints() {
+    private func unregisterEndpoints() {
 
         if let favoriteMatchesRegister = self.favoriteMatchesRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: favoriteMatchesRegister)
@@ -128,12 +96,13 @@ class MyFavoritesViewModel: NSObject {
         self.updateContentList()
     }
 
-    func markAsFavorite(match : Match){
+    func markAsFavorite(match: Match) {
+
         var isFavorite = false
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             isFavorite = true
         }
-        
+
         if isFavorite {
             Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
         }
@@ -142,7 +111,7 @@ class MyFavoritesViewModel: NSObject {
         }
     }
     
-    func markCompetitionAsFavorite(competition: Competition){
+    func markCompetitionAsFavorite(competition: Competition) {
         
         var isFavorite = false
         for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
@@ -157,6 +126,33 @@ class MyFavoritesViewModel: NSObject {
         }
    
     }
+
+    private func getLocations() {
+        self.isLoadingPublisher.send(true)
+
+        let resolvedRoute = TSRouter.getLocations(language: "en", sortByPopularity: false)
+        Env.everyMatrixClient.manager.getModel(router: resolvedRoute, decodingType: EveryMatrixSocketResponse<EveryMatrix.Location>.self)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("LOCATIONS ERROR: \(error)")
+                    self?.isLoadingPublisher.send(false)
+                case .finished:
+                    ()
+                }
+            },
+                  receiveValue: { [weak self] response in
+
+                (response.records ?? []).forEach { location in
+
+                    self?.store.locations[location.id] = location
+                }
+
+                self?.setupPublishers()
+
+            })
+            .store(in: &cancellables)
+    }
     
     private func setupPublishers() {
 
@@ -164,11 +160,13 @@ class MyFavoritesViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] favoriteEvents in
                 if UserSessionStore.isUserLogged() {
+                    self?.isLoadingPublisher.send(true)
                     self?.favoriteEventsIds = favoriteEvents
                     self?.fetchFavoriteMatches()
 
                 }
                 else {
+                    self?.isLoadingPublisher.send(false)
                     self?.dataChangedPublisher.send()
                     self?.emptyStateStatusPublisher.send(.noLogin)
                 }
@@ -224,14 +222,14 @@ class MyFavoritesViewModel: NSObject {
 
         self.store.processAggregator(aggregator, withListType: .favoriteMatchEvents, shouldClear: true)
 
-        self.favoriteMatches = self.store.matchesForListType(.favoriteMatchEvents)
+        self.favoriteMatchesDataPublisher.value = self.store.matchesForListType(.favoriteMatchEvents)
 
         if self.favoriteEventsIds.isNotEmpty {
             self.fetchFavoriteCompetitionsMatchesWithIds(self.favoriteEventsIds)
         }
         else {
-            self.favoriteMatches = []
-            self.favoriteCompetitions = []
+            self.favoriteMatchesDataPublisher.value = []
+            self.favoriteCompetitionsDataPublisher.value = []
             self.updateContentList()
         }
     }
@@ -327,7 +325,7 @@ class MyFavoritesViewModel: NSObject {
             }
         }
 
-        self.favoriteCompetitions = processedCompetitions
+        self.favoriteCompetitionsDataPublisher.value = processedCompetitions
 
         self.updateContentList()
     }
@@ -340,22 +338,18 @@ class MyFavoritesViewModel: NSObject {
 
     private func updateContentList() {
 
-        self.myFavoriteMatchesDataSource.setupMatchesBySport(favoriteMatches: self.favoriteMatches)
-
-        self.myFavoriteCompetitionsDataSource.competitions = self.favoriteCompetitions
-
         if UserSessionStore.isUserLogged() {
-            if self.favoriteMatches.isEmpty && self.favoriteCompetitions.isEmpty {
+            if self.favoriteMatchesDataPublisher.value.isEmpty && self.favoriteCompetitionsDataPublisher.value.isEmpty {
                 self.emptyStateStatusPublisher.send(.noFavorites)
             }
-            else if self.favoriteMatches.isNotEmpty && self.favoriteCompetitions.isNotEmpty {
+            else if self.favoriteMatchesDataPublisher.value.isNotEmpty && self.favoriteCompetitionsDataPublisher.value.isNotEmpty {
                 self.emptyStateStatusPublisher.send(.none)
             }
             else {
-                if self.favoriteMatches.isEmpty {
+                if self.favoriteMatchesDataPublisher.value.isEmpty {
                     self.emptyStateStatusPublisher.send(.noGames)
                 }
-                else if self.favoriteCompetitions.isEmpty {
+                else if self.favoriteCompetitionsDataPublisher.value.isEmpty {
                     self.emptyStateStatusPublisher.send(.noCompetitions)
                 }
             }
@@ -365,111 +359,9 @@ class MyFavoritesViewModel: NSObject {
             self.emptyStateStatusPublisher.send(.noLogin)
         }
 
+        self.isLoadingPublisher.send(false)
         self.dataChangedPublisher.send()
 
-    }
-}
-
-extension MyFavoritesViewModel: UITableViewDataSource, UITableViewDelegate {
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.numberOfSections(in: tableView)
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.numberOfSections(in: tableView)
-        }
-    }
-
-    func hasContentForSelectedListType() -> Bool {
-       switch self.favoriteListTypePublisher.value {
-       case .favoriteGames:
-           return self.myFavoriteMatchesDataSource.userFavoriteMatches.isNotEmpty
-       case .favoriteCompetitions:
-          return self.myFavoriteCompetitionsDataSource.competitions.isNotEmpty
-       }
-   }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.tableView(tableView, numberOfRowsInSection: section)
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.tableView(tableView, numberOfRowsInSection: section)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell: UITableViewCell
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            cell = self.myFavoriteMatchesDataSource.tableView(tableView, cellForRowAt: indexPath)
-        case .favoriteCompetitions:
-            cell = self.myFavoriteCompetitionsDataSource.tableView(tableView, cellForRowAt: indexPath)
-        }
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            ()
-        case .favoriteCompetitions:
-            ()
-        }
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.tableView(tableView, viewForHeaderInSection: section)
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.tableView(tableView, viewForHeaderInSection: section)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.tableView(tableView, heightForRowAt: indexPath)
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.tableView(tableView, heightForRowAt: indexPath)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.tableView(tableView, heightForHeaderInSection: section)
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.tableView(tableView, heightForHeaderInSection: section)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        switch self.favoriteListTypePublisher.value {
-        case .favoriteGames:
-            return self.myFavoriteMatchesDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
-        case .favoriteCompetitions:
-            return self.myFavoriteCompetitionsDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.01
-    }
-
-    func tableView(_ tableView: UITableView, estimatedHeightForFooterInSection section: Int) -> CGFloat {
-        return 0.01
     }
 
 }

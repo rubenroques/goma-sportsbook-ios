@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BonusHistoryTableViewCell: UITableViewCell {
 
@@ -18,6 +19,8 @@ class BonusHistoryTableViewCell: UITableViewCell {
     private lazy var endDateLabel: UILabel = Self.createEndDateLabel()
     private lazy var bonusStatusView: UIView = Self.createBonusStatusView()
     private lazy var bonusStatusLabel: UILabel = Self.createBonusStatusLabel()
+
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Lifetime and Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -58,32 +61,31 @@ class BonusHistoryTableViewCell: UITableViewCell {
         self.bonusStatusLabel.textColor = UIColor.App.textPrimary
     }
 
-    func setupBonus(bonus: EveryMatrix.GrantedBonus) {
+    func configure(withViewModel viewModel: BonusHistoryCellViewModel) {
 
-        self.titleLabel.text = bonus.name
+        viewModel.titlePublisher
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &cancellables)
 
-        self.startDateLabel.text = getDateFormatted(dateString: bonus.grantedDate ?? "")
+        viewModel.startDateStringPublisher
+            .sink(receiveValue: { [weak self] startDateString in
+                self?.startDateLabel.text = startDateString
+            })
+            .store(in: &cancellables)
 
-        self.endDateLabel.text = getDateFormatted(dateString: bonus.expiryDate ?? "")
+        viewModel.endDateStringPublisher
+            .sink(receiveValue: { [weak self] endDateString in
+                self?.endDateLabel.text = endDateString
+            })
+            .store(in: &cancellables)
 
-        self.bonusStatusLabel.text = bonus.status.capitalized
-    }
-
-    func getDateFormatted(dateString: String) -> String {
-        let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
-
-        let dateFormatterPrint = DateFormatter()
-        dateFormatterPrint.dateFormat = "yyyy-MM-dd HH:mm"
-
-        let date = dateString
-
-        if let formattedDate = dateFormatterGet.date(from: date) {
-
-            return dateFormatterPrint.string(from: formattedDate)
-        }
-
-        return ""
+        viewModel.bonusStatusPublisher
+            .sink(receiveValue: { [weak self] bonusStatus in
+                self?.bonusStatusLabel.text = bonusStatus
+            })
+            .store(in: &cancellables)
     }
 
 }

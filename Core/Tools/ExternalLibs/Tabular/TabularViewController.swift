@@ -109,10 +109,15 @@ public class TabularViewController: UIViewController {
         self.reloadContent()
     }
 
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+    }
+
     public override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        self.reloadContent()
+        self.scrollToDefaultIndex()
     }
 
     public override func willMove(toParent parent: UIViewController?) {
@@ -205,6 +210,10 @@ public class TabularViewController: UIViewController {
 
         self.barView.reloadBarButtons()
 
+        self.scrollToDefaultIndex()
+    }
+
+    private func scrollToDefaultIndex() {
         if let savedIndex = self.savedIndex, self.viewControllers.count > savedIndex {
             self.scrollContentToIndex(savedIndex, animated: false)
             self.barView.scrollToIndex(savedIndex, animated: false)

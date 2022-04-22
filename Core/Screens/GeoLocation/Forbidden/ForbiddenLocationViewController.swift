@@ -27,6 +27,8 @@ class ForbiddenLocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.isModalInPresentation = true
+
         setupWithTheme()
         commonInit()
     }

@@ -23,16 +23,16 @@ class MaintenanceViewController: UIViewController {
 
         self.isModalInPresentation = true
 
-        imageGradient = UIImage().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
+        self.imageGradient = UIImage().getGradientColorImage(red: 37, green: 40, blue: 50, alpha: 1.0, bounds: self.view.bounds)
 
-        commonInit()
-        setupWithTheme()
+        self.commonInit()
+        self.setupWithTheme()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {

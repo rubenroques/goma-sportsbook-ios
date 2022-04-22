@@ -164,7 +164,14 @@ public class TabularBarView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
 
-        let intrinsicWidth = self.stackView.subviews.reduce(0.0) { $0 + $1.intrinsicContentSize.width }
+        var intrinsicWidth: CGFloat = 0
+
+        self.stackView.arrangedSubviews.forEach({ view in
+            let intrinsicContentWidth = view.intrinsicContentSize.width
+            intrinsicWidth = intrinsicWidth + intrinsicContentWidth
+        })
+
+        //let intrinsicWidth = self.stackView.arrangedSubviews.reduce(0.0) { $0 + $1.intrinsicContentSize.width }
         let scrollViewWidth = self.baseScrollView.bounds.size.width
         let currentDistribution = self.stackView.distribution
         if intrinsicWidth > scrollViewWidth {

@@ -29,9 +29,9 @@ class BetSubmissionSuccessViewController: UIViewController {
     @IBOutlet private weak var totalOddsLabel: UILabel!
     @IBOutlet private weak var possibleEarningsLabel: UILabel!
     @IBOutlet private weak var betsMadeLabel: UILabel!
-    
+
+    @IBOutlet private weak var checkboxView: UIView!
     @IBOutlet private weak var checkboxImage: UIImageView!
-    
     @IBOutlet private weak var checkboxLabel: UILabel!
 
     private var totalOddsValue: String
@@ -101,13 +101,14 @@ class BetSubmissionSuccessViewController: UIViewController {
         self.possibleEarningsLabel.font = AppFont.with(type: .semibold, size: 21)
         self.possibleEarningsValueLabel.font = AppFont.with(type: .bold, size: 33)
 
-        self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
         StyleHelper.styleButton(button: self.continueButton)
+
+        self.checkboxImage.image = UIImage(named: "checkbox_unselected_icon")
         self.checkboxLabel.text = localized("keep_bet_checkbox")
         self.checkboxLabel.font = AppFont.with(type: .semibold, size: 14)
 
         let checkboxTap = UITapGestureRecognizer(target: self, action: #selector(didTapCheckbox))
-        checkboxImage.addGestureRecognizer(checkboxTap)
+        self.checkboxView.addGestureRecognizer(checkboxTap)
 
         self.setupWithTheme()
     }

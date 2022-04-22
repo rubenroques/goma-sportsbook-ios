@@ -20,20 +20,23 @@ class RefusedAccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupWithTheme()
-        commonInit()
+        self.isModalInPresentation = true
+
+        self.setupWithTheme()
+        self.commonInit()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         containerView.backgroundColor = UIColor.App.backgroundPrimary
+
         refusedView.backgroundColor = UIColor.App.backgroundPrimary
         refusedTitleLabel.textColor = UIColor.App.textPrimary
         refusedSubtitleLabel.textColor = UIColor.App.textSecondary
@@ -46,6 +49,7 @@ class RefusedAccessViewController: UIViewController {
     func commonInit() {
         logoMainImageView.image = UIImage(named: "logo_horizontal_large")
         logoMainImageView.sizeToFit()
+
         refusedImageView.image = UIImage(named: "location_error_icon")
         refusedImageView.contentMode = .scaleAspectFill
         refusedTitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
@@ -55,6 +59,7 @@ class RefusedAccessViewController: UIViewController {
         refusedSubtitleLabel.font = AppFont.with(type: AppFont.AppFontType.medium, size: 14)
         refusedSubtitleLabel.numberOfLines = 0
         refusedSubtitleLabel.text = localized("refused_location_subtitle")
+
         locationButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         locationButton.layer.cornerRadius = 5
         locationButton.layer.borderWidth = 1

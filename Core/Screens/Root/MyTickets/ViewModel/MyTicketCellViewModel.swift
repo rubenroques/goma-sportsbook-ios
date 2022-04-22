@@ -63,6 +63,11 @@ class MyTicketCellViewModel {
 
     }
 
+    deinit {
+        print("MyTicketCellViewModel deinit")
+        self.unregisterCashoutSubscription()
+    }
+
     private func requestCashoutAvailability(ticket: BetHistoryEntry) {
 
         self.cashout = nil
@@ -90,12 +95,9 @@ class MyTicketCellViewModel {
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
-
                     self?.cashoutRegister = publisherIdentifiable
-                    
                 case .initialContent(let aggregator):
                     print("MyBets cashoutPublisher initialContent")
-
                     if let content = aggregator.content?.first {
                         switch content {
                         case .cashout(let cashout):
@@ -106,8 +108,7 @@ class MyTicketCellViewModel {
                         default: ()
                         }
                     }
-
-                case .updatedContent(let aggregatorUpdates):
+                case .updatedContent:
                     print("MyBets cashoutPublisher updatedContent")
                 case .disconnect:
                     print("MyBets cashoutPublisher disconnect")
@@ -156,6 +157,7 @@ class MyTicketCellViewModel {
     }
 
     func unregisterCashoutSubscription() {
+        
         if let cashoutRegister = self.cashoutRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: cashoutRegister)
         }
@@ -165,7 +167,6 @@ class MyTicketCellViewModel {
 
         self.cashoutSubscription?.cancel()
         self.cashoutSubscription = nil
-
     }
 
 }

@@ -104,7 +104,7 @@ extension SuggestedBetLineTableViewCell: UICollectionViewDelegate, UICollectionV
         }
 
         cell.setupWithViewModel(viewModel: viewModel)
-        
+
         cell.betNowCallbackAction = { [weak self] in
             self?.betNowCallbackAction?()
         }

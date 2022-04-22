@@ -56,7 +56,6 @@ extension EveryMatrix {
         }
     }
 
-    // typealias ClaimableBonusResponse = [ApplicableBonus]
     struct ClaimableBonusResponse: Decodable {
         let locallyInjectedKey: [ApplicableBonus]
     }
@@ -96,8 +95,11 @@ extension EveryMatrix {
         let vendor: String?
         let currency: String?
         let amount: Double?
+        let remainingAmount: Double?
         let expiryDate: String?
         let grantedDate: String?
+        let initialWagerRequirementAmount: Double?
+        let remainingWagerRequirementAmount: Double?
 
         enum CodingKeys: String, CodingKey {
             case id = "id"
@@ -109,8 +111,11 @@ extension EveryMatrix {
             case vendor = "vendor"
             case currency = "currency"
             case amount = "amount"
+            case remainingAmount = "remainingAmount"
             case expiryDate = "expiryDate"
             case grantedDate = "grantedDate"
+            case initialWagerRequirementAmount = "initialWagerRequirementAmount"
+            case remainingWagerRequirementAmount = "remainingWagerRequirementAmount"
         }
     }
 

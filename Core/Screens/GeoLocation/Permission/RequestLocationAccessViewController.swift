@@ -31,14 +31,16 @@ class RequestLocationAccessViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupWithTheme()
-        commonInit()
+        self.isModalInPresentation = true
+
+        self.setupWithTheme()
+        self.commonInit()
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
 
-        setupWithTheme()
+        self.setupWithTheme()
     }
 
     func setupWithTheme() {

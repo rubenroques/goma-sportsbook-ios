@@ -27,6 +27,10 @@ class MyFavoritesViewController: UIViewController {
     private lazy var emptyStateLoginButton: UIButton = Self.createEmptyStateLoginButton()
     private var cancellables = Set<AnyCancellable>()
 
+    // Data Sources
+    private var myFavoriteMatchesDataSource = MyFavoriteMatchesDataSource(userFavoriteMatches: [], store: FavoritesAggregatorsRepository())
+    private var myFavoriteCompetitionsDataSource = MyFavoriteCompetitionsDataSource(favoriteCompetitions: [], store: FavoritesAggregatorsRepository())
+
     // MARK: Public Properties
     var viewModel: MyFavoritesViewModel
     var filterSelectedOption: Int = 0
@@ -35,11 +39,9 @@ class MyFavoritesViewController: UIViewController {
         didSet {
             if isLoading {
                 self.loadingScreenBaseView.isHidden = false
-                self.tableView.isHidden = true
             }
             else {
                 self.loadingScreenBaseView.isHidden = true
-                self.tableView.isHidden = false
             }
         }
     }
@@ -63,6 +65,10 @@ class MyFavoritesViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
+    deinit {
+        print("VC DEINIT")
+    }
+
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -72,10 +78,11 @@ class MyFavoritesViewController: UIViewController {
         super.viewDidLoad()
 
         self.setupSubviews()
+        
         self.setupWithTheme()
+
         self.bind(toViewModel: self.viewModel)
 
-        self.isLoading = true
         self.isEmptyState = false
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
@@ -84,26 +91,6 @@ class MyFavoritesViewController: UIViewController {
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
-        
-        self.viewModel.didTapFavoriteMatchAction = { match in
-            if !UserSessionStore.isUserLogged() {
-                self.presentLoginViewController()
-            }
-            else {
-                self.viewModel.markAsFavorite(match: match)
-                self.tableView.reloadData()
-            }
-        }
-        
-       self.viewModel.didTapFavoriteCompetitionAction = { competition in
-            if !UserSessionStore.isUserLogged() {
-                self.presentLoginViewController()
-            }
-            else {
-                self.viewModel.markCompetitionAsFavorite(competition: competition)
-                self.tableView.reloadData()
-            }
-        }
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -181,7 +168,7 @@ class MyFavoritesViewController: UIViewController {
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
 
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
 
@@ -194,18 +181,75 @@ class MyFavoritesViewController: UIViewController {
     // MARK: Binding
     private func bind(toViewModel viewModel: MyFavoritesViewModel) {
 
-        viewModel.dataChangedPublisher
-            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
-                self?.tableView.reloadData()
-                self?.isLoading = false
+        self.myFavoriteMatchesDataSource.store = viewModel.store
+
+        self.myFavoriteCompetitionsDataSource.store = viewModel.store
+
+        self.myFavoriteMatchesDataSource.matchStatsViewModelForMatch = { [weak self] match in
+            return self?.viewModel.matchStatsViewModel(forMatch: match)
+        }
+
+        self.myFavoriteCompetitionsDataSource.matchStatsViewModelForMatch = { [weak self] match in
+            return self?.viewModel.matchStatsViewModel(forMatch: match)
+        }
+
+        self.myFavoriteMatchesDataSource.didSelectMatchAction = { [weak self] match in
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+            self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+
+        self.myFavoriteCompetitionsDataSource.didSelectMatchAction = { [weak self] match in
+            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
+            self?.navigationController?.pushViewController(matchDetailsViewController, animated: true)
+        }
+
+        self.myFavoriteMatchesDataSource.matchWentLiveAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+
+        self.myFavoriteCompetitionsDataSource.matchWentLiveAction = { [weak self] in
+            self?.tableView.reloadData()
+        }
+
+        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markAsFavorite(match: match)
+            }
+        }
+
+        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markCompetitionAsFavorite(competition: competition)
+            }
+        }
+
+        self.myFavoriteCompetitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
+            if !UserSessionStore.isUserLogged() {
+                self?.presentLoginViewController()
+            }
+            else {
+                self?.viewModel.markAsFavorite(match: match)
+            }
+        }
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
             })
             .store(in: &cancellables)
 
-        viewModel.didSelectMatchAction = { match in
-            let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
-            //self.present(matchDetailsViewController, animated: true, completion: nil)
-            self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
-        }
+        viewModel.dataChangedPublisher
+            .receive(on: DispatchQueue.main).sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
 
         viewModel.emptyStateStatusPublisher
             .receive(on: DispatchQueue.main)
@@ -222,6 +266,20 @@ class MyFavoritesViewController: UIViewController {
                 case .none:
                     ()
                 }
+            })
+            .store(in: &cancellables)
+
+        viewModel.favoriteMatchesDataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] matches in
+                self?.myFavoriteMatchesDataSource.setupMatchesBySport(favoriteMatches: matches)
+            })
+            .store(in: &cancellables)
+
+        viewModel.favoriteCompetitionsDataPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] competitions in
+                self?.myFavoriteCompetitionsDataSource.competitions = competitions
             })
             .store(in: &cancellables)
 
@@ -247,7 +305,6 @@ class MyFavoritesViewController: UIViewController {
         betslipViewController.willDismissAction = { [weak self] in
             self?.tableView.reloadData()
         }
-
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
     
@@ -325,39 +382,95 @@ extension MyFavoritesViewController: UICollectionViewDelegate, UICollectionViewD
 extension MyFavoritesViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.numberOfSections(in: tableView)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.numberOfSections(in: tableView)
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.numberOfSections(in: tableView)
+        }
     }
 
+    func hasContentForSelectedListType() -> Bool {
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.userFavoriteMatches.isNotEmpty
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.competitions.isNotEmpty
+        }
+   }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.tableView(tableView, numberOfRowsInSection: section)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.tableView(tableView, numberOfRowsInSection: section)
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.tableView(tableView, numberOfRowsInSection: section)
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return self.viewModel.tableView(tableView, cellForRowAt: indexPath)
+        var cell: UITableViewCell
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            cell = self.myFavoriteMatchesDataSource.tableView(tableView, cellForRowAt: indexPath)
+        case .favoriteCompetitions:
+            cell = self.myFavoriteCompetitionsDataSource.tableView(tableView, cellForRowAt: indexPath)
+        }
+        return cell
     }
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        return self.viewModel.tableView(tableView, willDisplay: cell, forRowAt: indexPath)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            ()
+        case .favoriteCompetitions:
+            ()
+        }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        return self.viewModel.tableView(tableView, viewForHeaderInSection: section)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.tableView(tableView, viewForHeaderInSection: section)
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.tableView(tableView, viewForHeaderInSection: section)
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.viewModel.tableView(tableView, heightForRowAt: indexPath)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.tableView(tableView, heightForRowAt: indexPath)
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.tableView(tableView, heightForRowAt: indexPath)
+        }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return self.viewModel.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return self.viewModel.tableView(tableView, heightForHeaderInSection: section)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.tableView(tableView, heightForHeaderInSection: section)
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.tableView(tableView, heightForHeaderInSection: section)
+        }
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
-        return self.viewModel.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        switch self.viewModel.favoriteListTypePublisher.value {
+        case .favoriteGames:
+            return self.myFavoriteMatchesDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        case .favoriteCompetitions:
+            return self.myFavoriteCompetitionsDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
+        }
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

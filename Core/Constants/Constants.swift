@@ -41,6 +41,9 @@ enum EveryMatrixInfo {
 
 enum Assets {
     static func flagName(withCountryCode code: String) -> String {
+        if code.isEmpty {
+            return "country_flag_240"
+        }
         return "country_flag_\(code.lowercased())"
     }
 }

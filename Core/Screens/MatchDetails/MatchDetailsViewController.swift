@@ -505,6 +505,10 @@ class MatchDetailsViewController: UIViewController {
         self.currentPageViewControllerIndex = index
     }
 
+    func reloadSelectedIndex() {
+        self.selectMarketType(atIndex: self.currentPageViewControllerIndex)
+    }
+
     func selectMarketType(atIndex index: Int) {
         self.viewModel.selectMarketType(atIndex: index)
         self.marketTypesCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: true)
@@ -756,16 +760,19 @@ extension MatchDetailsViewController: WKNavigationDelegate {
 
     private func redrawWebView(withHeight heigth: CGFloat) {
         self.matchFielHeight = heigth
+
+        if self.shouldShowWebView {
+            self.matchFieldBaseView.isHidden = false
+            self.view.setNeedsLayout()
+            self.view.layoutSubviews()
+            self.reloadSelectedIndex()
+        }
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         self.matchFieldWebView.evaluateJavaScript("document.readyState", completionHandler: { complete, error in
             if complete != nil {
                 self.recalculateWebview()
-
-                if self.shouldShowWebView {
-                    self.matchFieldBaseView.isHidden = false
-                }
             }
             else if let error = error {
                 Logger.log("Match details WKWebView didFinish error \(error)")

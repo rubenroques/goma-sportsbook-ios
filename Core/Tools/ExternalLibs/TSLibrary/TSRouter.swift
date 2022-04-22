@@ -56,6 +56,8 @@ enum TSRouter {
     case getSharedBetTokens(betId: String)
     case getSharedBetData(betToken: String)
 
+    case getCMSSessionID
+
     // EveryMatrix <-> GOMA  Subscriptions
     case sportsInitialDump(topic: String)
     case sportsPublisher(operatorId: String)
@@ -194,27 +196,14 @@ enum TSRouter {
             return "/sports#betHistoryV2"
 
 
-        case .matchDetailsPublisher(let operatorId, let language, let matchId):
-            return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
-        case .matchMarketGroupsPublisher(let operatorId, let language, let matchId):
-            return "/sports/\(operatorId)/\(language)/event/\(matchId)/market-groups"
-        case .matchMarketGroupDetailsPublisher(let operatorId, let language, let matchId, let marketGroupName):
-            return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/market-group/\(marketGroupName)"
-
-        case .matchDetailsAggregatorPublisher(let operatorId, let language, let matchId):
-            return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
-
-        case .tournamentOddsPublisher(let operatorId, let language, let eventId):
-            return "/sports/\(operatorId)/\(language)/\(eventId)/tournament-odds"
-
         case .searchV2:
             return "/sports#searchV2"
-
         case .getSharedBetTokens:
             return "/sports#sharedBetTokens"
-
         case .getSharedBetData:
             return "/sports#sharedBetData"
+        case .getCMSSessionID:
+            return "/user#getCmsSessionID"
 
         //
         // EM Subscription
@@ -278,6 +267,18 @@ enum TSRouter {
             return "/account/balanceChanged"
         case .eventCategoryBySport(let operatorId, let language, let sportId):
             return "/sports/\(operatorId)/\(language)/event-category-by-sport/\(sportId)/BOTH"
+
+
+        case .matchDetailsPublisher(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
+        case .matchMarketGroupsPublisher(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/event/\(matchId)/market-groups"
+        case .matchMarketGroupDetailsPublisher(let operatorId, let language, let matchId, let marketGroupName):
+            return "/sports/\(operatorId)/\(language)/\(matchId)/match-odds/market-group/\(marketGroupName)"
+        case .matchDetailsAggregatorPublisher(let operatorId, let language, let matchId):
+            return "/sports/\(operatorId)/\(language)/match-aggregator-groups-overview/\(matchId)/1"
+        case .tournamentOddsPublisher(let operatorId, let language, let eventId):
+            return "/sports/\(operatorId)/\(language)/\(eventId)/tournament-odds"
 
         //
         //
