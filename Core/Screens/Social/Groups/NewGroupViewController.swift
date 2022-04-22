@@ -177,7 +177,16 @@ class NewGroupViewController: UIViewController {
 
     @objc func didTapNextButton() {
         print("NEXT")
-        let newGroupManagementViewModel = NewGroupViewModel()
+        var selectedUsers: [UserContact] = []
+        if let loggedUser = UserSessionStore.loggedUserSession(){
+            let adminUser = UserContact(id: loggedUser.userId, username: loggedUser.username, phone: "+351968765890")
+
+            selectedUsers.append(adminUser)
+        }
+
+        selectedUsers.append(contentsOf: self.viewModel.selectedUsers) 
+
+        let newGroupManagementViewModel = NewGroupManagementViewModel(users: selectedUsers)
 
         let newGroupManagementViewController = NewGroupManagementViewController(viewModel: newGroupManagementViewModel)
 

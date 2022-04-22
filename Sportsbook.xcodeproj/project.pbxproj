@@ -812,6 +812,12 @@
 		A979CA54275E6C0B00230E93 /* MatchOddsContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */; };
 		A979CA562762247900230E93 /* SuggestedBetSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA552762247900230E93 /* SuggestedBetSummary.swift */; };
 		A979CA572762247900230E93 /* SuggestedBetSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A979CA552762247900230E93 /* SuggestedBetSummary.swift */; };
+		A97D24622812BA47003EEDEC /* NewGroupManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24612812BA47003EEDEC /* NewGroupManagementViewModel.swift */; };
+		A97D24632812BA47003EEDEC /* NewGroupManagementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24612812BA47003EEDEC /* NewGroupManagementViewModel.swift */; };
+		A97D24652812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24642812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift */; };
+		A97D24662812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24642812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift */; };
+		A97D24682812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */; };
+		A97D24692812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -1559,6 +1565,9 @@
 		A96B70BA273A891F00FEF07D /* UserLoginForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginForm.swift; sourceTree = "<group>"; };
 		A979CA52275E6C0B00230E93 /* MatchOddsContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchOddsContent.swift; sourceTree = "<group>"; };
 		A979CA552762247900230E93 /* SuggestedBetSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuggestedBetSummary.swift; sourceTree = "<group>"; };
+		A97D24612812BA47003EEDEC /* NewGroupManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupManagementViewModel.swift; sourceTree = "<group>"; };
+		A97D24642812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUserManagementTableViewCell.swift; sourceTree = "<group>"; };
+		A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUserManagementCellViewModel.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -3627,6 +3636,7 @@
 				A9BA6D6128119EF200E82724 /* ViewModels */,
 				A9BA6D5E281179DA00E82724 /* NewGroupViewController.swift */,
 				A9F1041C2811BE420011AAAC /* NewGroupManagementViewController.swift */,
+				A97D24642812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift */,
 			);
 			path = Groups;
 			sourceTree = "<group>";
@@ -3635,6 +3645,8 @@
 			isa = PBXGroup;
 			children = (
 				A9BA6D6228119F0700E82724 /* NewGroupViewModel.swift */,
+				A97D24612812BA47003EEDEC /* NewGroupManagementViewModel.swift */,
+				A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4579,6 +4591,7 @@
 				45D712F227031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
 				A99F7A0927D10BBC008BAF41 /* BonusAvailableDataSource.swift in Sources */,
 				4589F40126BF017A005DF543 /* LoginViewController.swift in Sources */,
+				A97D24652812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift in Sources */,
 				45C3E8CF27B40559007A1A0F /* HomeViewModel.swift in Sources */,
 				45166D0F26F3548D00E69D65 /* HelloSSWampMessage.swift in Sources */,
 				455A0D0C26BD9D9000EC572D /* CountryName.swift in Sources */,
@@ -4617,6 +4630,7 @@
 				45C26DCB27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */,
 				458BAC812770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				45C3E8CA27B190A1007A1A0F /* HomeViewController.swift in Sources */,
+				A97D24622812BA47003EEDEC /* NewGroupManagementViewModel.swift in Sources */,
 				A9B840C426E1275900269B05 /* EveryMatrixSocketResponse.swift in Sources */,
 				45C3D2B42773AFAD00B3EF44 /* MyTicketCellViewModel.swift in Sources */,
 				A9E7C6A227B6B0CC00F784C9 /* FavoritesAggregatorRepository.swift in Sources */,
@@ -4695,6 +4709,7 @@
 				F4B32D992790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE726F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				A9992FEF280888FA0098854C /* AddFriendViewController.swift in Sources */,
+				A97D24682812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */,
 				45A2896726C32D3F00BCD5DA /* NetworkModels.swift in Sources */,
 				455C962826FE11CA00456F30 /* RootViewController.swift in Sources */,
 				45166D1126F3548D00E69D65 /* AbortSSWampMessage.swift in Sources */,
@@ -5018,6 +5033,7 @@
 				458BAC6F276CD246006C4BC7 /* MyTicketsViewModel.swift in Sources */,
 				45C3D2B82773B1B500B3EF44 /* EventPartScore.swift in Sources */,
 				45D712F327031DDE00AC0364 /* PreLiveEventsViewController.swift in Sources */,
+				A97D24662812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift in Sources */,
 				A99F7A0A27D10BBC008BAF41 /* BonusAvailableDataSource.swift in Sources */,
 				4589F40226BF017A005DF543 /* LoginViewController.swift in Sources */,
 				45C3E8D027B40559007A1A0F /* HomeViewModel.swift in Sources */,
@@ -5056,6 +5072,7 @@
 				A9627A0027440F300001E1D5 /* EmailVerificationTableViewCell.swift in Sources */,
 				A9B8408726D3E84000269B05 /* ForbiddenLocationViewController.swift in Sources */,
 				45626E35275530990069B89B /* OddFormatter.swift in Sources */,
+				A97D24632812BA47003EEDEC /* NewGroupManagementViewModel.swift in Sources */,
 				45C26DCC27976A7300513D41 /* FavoriteMatchesDataSource.swift in Sources */,
 				458BAC822770EF53006C4BC7 /* MyTicketBetLineView.swift in Sources */,
 				45C3E8CB27B190A1007A1A0F /* HomeViewController.swift in Sources */,
@@ -5134,6 +5151,7 @@
 				A90BC90927C3B99500667616 /* GamesNotificationViewModel.swift in Sources */,
 				A995C1AD279B10B600151462 /* SearchTitleSectionHeaderView.swift in Sources */,
 				A9992FF0280888FA0098854C /* AddFriendViewController.swift in Sources */,
+				A97D24692812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */,
 				F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */,
 				45166CE826F3548D00E69D65 /* AuthenticateSSWampMessage.swift in Sources */,
 				45A2896826C32D3F00BCD5DA /* NetworkModels.swift in Sources */,

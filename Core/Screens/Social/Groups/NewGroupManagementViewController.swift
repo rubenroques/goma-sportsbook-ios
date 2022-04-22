@@ -17,15 +17,24 @@ class NewGroupManagementViewController: UIViewController {
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
+    private lazy var newGroupInfoBaseView: UIView = Self.createNewGroupInfoBaseView()
+    private lazy var newGroupIconBaseView: UIView = Self.createNewGroupIconBaseView()
+    private lazy var newGroupIconInnerView: UIView = Self.createNewGroupIconInnerBaseView()
+    private lazy var newGroupIconLabel: UILabel = Self.createNewGroupIconLabel()
+    private lazy var textFieldBaseView: UIView = Self.createTextFieldBaseView()
+    private lazy var newGroupTextField: UITextField = Self.createNewGroupTextField()
     private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var startNewGroupBaseView: UIView = Self.createStartNewGroupBaseView()
+    private lazy var startNewGroupButton: UIButton = Self.createStartNewGroupButton()
+    private lazy var startNewGroupSeparatorLineView: UIView = Self.createStartNewGroupSeparatorLineView()
 
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var viewModel: NewGroupViewModel
+    var viewModel: NewGroupManagementViewModel
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: NewGroupViewModel) {
+    init(viewModel: NewGroupManagementViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -40,18 +49,20 @@ class NewGroupManagementViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.newGroupTextField.delegate = self
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
 
         self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
-        self.tableView.register(AddFriendTableViewCell.self,
-                                forCellReuseIdentifier: AddFriendTableViewCell.identifier)
+        self.tableView.register(GroupUserManagementTableViewCell.self,
+                                forCellReuseIdentifier: GroupUserManagementTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
-        //self.nextButton.addTarget(self, action: #selector(didTapNextButton), for: .primaryActionTriggered)
+        self.startNewGroupButton.addTarget(self, action: #selector(didTapStartNewGroupButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -63,6 +74,10 @@ class NewGroupManagementViewController: UIViewController {
     override func viewDidLayoutSubviews() {
 
         super.viewDidLayoutSubviews()
+
+        self.newGroupIconBaseView.layer.cornerRadius = self.newGroupIconBaseView.frame.height / 2
+
+        self.newGroupIconInnerView.layer.cornerRadius = self.newGroupIconInnerView.frame.height / 2
 
     }
 
@@ -88,20 +103,31 @@ class NewGroupManagementViewController: UIViewController {
         self.closeButton.backgroundColor = .clear
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
+        self.startNewGroupBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        //self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.newGroupIconBaseView.backgroundColor = UIColor.App.backgroundOdds
 
-        //self.nextBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.newGroupIconInnerView.backgroundColor = UIColor.App.backgroundPrimary
 
-        //StyleHelper.styleButton(button: self.nextButton)
+        self.newGroupIconLabel.textColor = UIColor.App.backgroundOdds
 
-        //self.nextSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.textFieldBaseView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.newGroupTextField.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.startNewGroupBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        StyleHelper.styleButton(button: self.startNewGroupButton)
+
+        self.startNewGroupSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
     }
 
     // MARK: Binding
 
-    private func bind(toViewModel viewModel: NewGroupViewModel) {
+    private func bind(toViewModel viewModel: NewGroupManagementViewModel) {
 
         viewModel.dataNeedsReload
             .receive(on: DispatchQueue.main)
@@ -110,12 +136,6 @@ class NewGroupManagementViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.canAddFriendPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isEnabled in
-                //self?.nextButton.isEnabled = isEnabled
-            })
-            .store(in: &cancellables)
     }
 
     // MARK: Actions
@@ -133,17 +153,20 @@ class NewGroupManagementViewController: UIViewController {
         }
     }
 
-    @objc func didTapNextButton() {
-        print("NEXT")
+    @objc func didTapStartNewGroupButton() {
+        print("NEW GROUP")
         //self.navigationController?.popViewController(animated: true)
     }
 
     @objc func didTapBackground() {
-
+        self.newGroupTextField.resignFirstResponder()
     }
 
 }
 
+//
+// MARK: Delegates
+//
 extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -156,38 +179,45 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
+        guard let cell = tableView.dequeueCellType(GroupUserManagementTableViewCell.self)
         else {
             fatalError()
         }
 
         if let userContact = self.viewModel.users[safe: indexPath.row] {
 
-            if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
+            if let cellViewModel = self.viewModel.cachedUserCellViewModels[userContact.id] {
                 // TEST
                 if indexPath.row % 2 == 0 {
                     cellViewModel.isOnline = true
                 }
+                if indexPath.row == 0 {
+                    cellViewModel.isAdmin = true
+                }
+
                 cell.configure(viewModel: cellViewModel)
 
-                cell.didTapCheckboxAction = { [weak self] in
-                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                }
             }
             else {
-                let cellViewModel = AddFriendCellViewModel(userContact: userContact)
-                self.viewModel.cachedFriendCellViewModels[userContact.id] = cellViewModel
+                let cellViewModel = GroupUserManagementCellViewModel(userContact: userContact)
+                self.viewModel.cachedUserCellViewModels[userContact.id] = cellViewModel
                 // TEST
                 if indexPath.row % 2 == 0 {
                     cellViewModel.isOnline = true
                 }
+                if indexPath.row == 0 {
+                    cellViewModel.isAdmin = true
+                }
+                
                 cell.configure(viewModel: cellViewModel)
 
-                cell.didTapCheckboxAction = { [weak self] in
-                    self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                }
             }
 
+            cell.didTapDeleteAction = { [weak self] in
+                self?.viewModel.users.remove(at: indexPath.row)
+                self?.viewModel.cachedUserCellViewModels[userContact.id] = nil
+                self?.tableView.reloadData()
+            }
         }
 
         if indexPath.row == self.viewModel.users.count - 1 {
@@ -199,18 +229,19 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
-        else {
-            fatalError()
-        }
+//        guard
+//            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+//        else {
+//            fatalError()
+//        }
+//
+//        let resultsLabel = localized("select_friends_add")
+//
+//        headerView.configureHeader(title: resultsLabel)
+//
+//        return headerView
 
-        let resultsLabel = localized("select_friends_add")
-
-        headerView.configureHeader(title: resultsLabel)
-
-        return headerView
-
+        return UIView()
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -227,13 +258,13 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        return 30
+        return 0
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-       return 30
+       return 0
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -244,6 +275,20 @@ extension NewGroupManagementViewController: UITableViewDataSource, UITableViewDe
         return 0
     }
 
+}
+
+extension NewGroupManagementViewController: UITextFieldDelegate {
+
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        print("TEXT: \(textField.text)")
+
+        if let text = textField.text, text != "" {
+            self.newGroupIconLabel.text = self.viewModel.getGroupInitials(text: text)
+        }
+        else {
+            self.newGroupIconLabel.text = "G"
+        }
+    }
 }
 
 //
@@ -296,6 +341,47 @@ extension NewGroupManagementViewController {
         return button
     }
 
+    private static func createNewGroupInfoBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createNewGroupIconBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createNewGroupIconInnerBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createNewGroupIconLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "G"
+        label.font = AppFont.with(type: .bold, size: 16)
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createTextFieldBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createNewGroupTextField() -> UITextField {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.placeholder = localized("group_name")
+        textField.layer.cornerRadius = CornerRadius.view
+        return textField
+    }
+
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -304,20 +390,20 @@ extension NewGroupManagementViewController {
         return tableView
     }
 
-    private static func createNextBaseView() -> UIView {
+    private static func createStartNewGroupBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createNextButton() -> UIButton {
+    private static func createStartNewGroupButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("next"), for: .normal)
+        button.setTitle(localized("start_group_chat"), for: .normal)
         return button
     }
 
-    private static func createNextSeparatorLineView() -> UIView {
+    private static func createStartNewGroupSeparatorLineView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
@@ -333,12 +419,24 @@ extension NewGroupManagementViewController {
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.closeButton)
 
+        self.view.addSubview(self.newGroupInfoBaseView)
+
+        self.newGroupInfoBaseView.addSubview(self.newGroupIconBaseView)
+
+        self.newGroupIconBaseView.addSubview(self.newGroupIconInnerView)
+
+        self.newGroupIconInnerView.addSubview(self.newGroupIconLabel)
+
+        self.newGroupInfoBaseView.addSubview(self.textFieldBaseView)
+
+        self.textFieldBaseView.addSubview(self.newGroupTextField)
+
         self.view.addSubview(self.tableView)
 
-//        self.view.addSubview(self.nextBaseView)
-//
-//        self.nextBaseView.addSubview(self.nextButton)
-//        self.nextBaseView.addSubview(self.nextSeparatorLineView)
+        self.view.addSubview(self.startNewGroupBaseView)
+
+        self.startNewGroupBaseView.addSubview(self.startNewGroupButton)
+        self.startNewGroupBaseView.addSubview(self.startNewGroupSeparatorLineView)
 
         self.view.addSubview(self.bottomSafeAreaView)
 
@@ -381,33 +479,66 @@ extension NewGroupManagementViewController {
 
         ])
 
+        // New Group Top View
+        NSLayoutConstraint.activate([
+            self.newGroupInfoBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.newGroupInfoBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.newGroupInfoBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.newGroupInfoBaseView.heightAnchor.constraint(equalToConstant: 70),
+
+            self.newGroupIconBaseView.leadingAnchor.constraint(equalTo: self.newGroupInfoBaseView.leadingAnchor, constant: 25),
+            self.newGroupIconBaseView.widthAnchor.constraint(equalToConstant: 40),
+            self.newGroupIconBaseView.heightAnchor.constraint(equalTo: self.newGroupIconBaseView.widthAnchor),
+            self.newGroupIconBaseView.centerYAnchor.constraint(equalTo: self.newGroupInfoBaseView.centerYAnchor),
+
+            self.newGroupIconInnerView.widthAnchor.constraint(equalToConstant: 37),
+            self.newGroupIconInnerView.heightAnchor.constraint(equalTo: self.newGroupIconInnerView.widthAnchor),
+            self.newGroupIconInnerView.centerXAnchor.constraint(equalTo: self.newGroupIconBaseView.centerXAnchor),
+            self.newGroupIconInnerView.centerYAnchor.constraint(equalTo: self.newGroupIconBaseView.centerYAnchor),
+
+            self.newGroupIconLabel.leadingAnchor.constraint(equalTo: self.newGroupIconInnerView.leadingAnchor, constant: 4),
+            self.newGroupIconLabel.trailingAnchor.constraint(equalTo: self.newGroupIconInnerView.trailingAnchor, constant: -4),
+            self.newGroupIconLabel.centerYAnchor.constraint(equalTo: self.newGroupIconInnerView.centerYAnchor),
+
+            self.textFieldBaseView.leadingAnchor.constraint(equalTo: self.newGroupIconBaseView.trailingAnchor, constant: 8),
+            self.textFieldBaseView.trailingAnchor.constraint(equalTo: self.newGroupInfoBaseView.trailingAnchor, constant: -25),
+            self.textFieldBaseView.centerYAnchor.constraint(equalTo: self.newGroupInfoBaseView.centerYAnchor),
+            self.textFieldBaseView.heightAnchor.constraint(equalToConstant: 50),
+
+            self.newGroupTextField.leadingAnchor.constraint(equalTo: self.textFieldBaseView.leadingAnchor, constant: 10),
+            self.newGroupTextField.trailingAnchor.constraint(equalTo: self.textFieldBaseView.trailingAnchor, constant: -10),
+            self.newGroupTextField.topAnchor.constraint(equalTo: self.textFieldBaseView.topAnchor, constant: 5),
+            self.newGroupTextField.bottomAnchor.constraint(equalTo: self.textFieldBaseView.bottomAnchor, constant: -5)
+
+        ])
+
         // Tableview
         NSLayoutConstraint.activate([
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 16),
-            self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
+            self.tableView.topAnchor.constraint(equalTo: self.newGroupInfoBaseView.bottomAnchor, constant: 16),
+            self.tableView.bottomAnchor.constraint(equalTo: self.startNewGroupBaseView.topAnchor)
         ])
 
-        // Add Friend Button View
-//        NSLayoutConstraint.activate([
-//            self.nextBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-//            self.nextBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-//            self.nextBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 8),
-//            self.nextBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-//            self.nextBaseView.heightAnchor.constraint(equalToConstant: 105),
-//
-//            self.nextButton.leadingAnchor.constraint(equalTo: self.nextBaseView.leadingAnchor, constant: 33),
-//            self.nextButton.trailingAnchor.constraint(equalTo: self.nextBaseView.trailingAnchor, constant: -33),
-//            self.nextButton.heightAnchor.constraint(equalToConstant: 55),
-//            self.nextButton.centerYAnchor.constraint(equalTo: self.nextBaseView.centerYAnchor),
-//
-//            self.nextSeparatorLineView.leadingAnchor.constraint(equalTo: self.nextBaseView.leadingAnchor),
-//            self.nextSeparatorLineView.trailingAnchor.constraint(equalTo: self.nextBaseView.trailingAnchor),
-//            self.nextSeparatorLineView.topAnchor.constraint(equalTo: self.nextBaseView.topAnchor),
-//            self.nextSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
-//        ])
+        // New Group Button View
+        NSLayoutConstraint.activate([
+            self.startNewGroupBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.startNewGroupBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.startNewGroupBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 8),
+            self.startNewGroupBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
+            self.startNewGroupBaseView.heightAnchor.constraint(equalToConstant: 105),
+
+            self.startNewGroupButton.leadingAnchor.constraint(equalTo: self.startNewGroupBaseView.leadingAnchor, constant: 33),
+            self.startNewGroupButton.trailingAnchor.constraint(equalTo: self.startNewGroupBaseView.trailingAnchor, constant: -33),
+            self.startNewGroupButton.heightAnchor.constraint(equalToConstant: 55),
+            self.startNewGroupButton.centerYAnchor.constraint(equalTo: self.startNewGroupBaseView.centerYAnchor),
+
+            self.startNewGroupSeparatorLineView.leadingAnchor.constraint(equalTo: self.startNewGroupBaseView.leadingAnchor),
+            self.startNewGroupSeparatorLineView.trailingAnchor.constraint(equalTo: self.startNewGroupBaseView.trailingAnchor),
+            self.startNewGroupSeparatorLineView.topAnchor.constraint(equalTo: self.startNewGroupBaseView.topAnchor),
+            self.startNewGroupSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+        ])
 
     }
 }
