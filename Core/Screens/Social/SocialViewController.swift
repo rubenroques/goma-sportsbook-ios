@@ -40,6 +40,10 @@ class SocialViewController: UIViewController {
     private lazy var navigationView: UIView = Self.createNavigationView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var containerBaseView: UIView = Self.createContainerBaseView()
+    private lazy var notificationsButton: UIButton = Self.createNotificationsButton()
+    private lazy var friendsButton: UIButton = Self.createFriendsButton()
+    private lazy var settingsButton: UIButton = Self.createSettingsButton()
+    private lazy var closeButton: UIButton = Self.createCloseButton()
 
     private var tabViewController: TabularViewController
     private var viewControllerTabDataSource: TitleTabularDataSource
@@ -82,6 +86,14 @@ class SocialViewController: UIViewController {
         self.tabViewController.setBarDistribution(.parent)
 
         self.setupWithTheme()
+
+        self.notificationsButton.addTarget(self, action: #selector(didTapNotificationsButton), for: .primaryActionTriggered)
+
+        self.friendsButton.addTarget(self, action: #selector(didTapFriendsButton), for: .primaryActionTriggered)
+
+        self.settingsButton.addTarget(self, action: #selector(didTapSettingsButton), for: .primaryActionTriggered)
+
+        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
     }
 
     // MARK: - Layout and Theme
@@ -110,11 +122,58 @@ class SocialViewController: UIViewController {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.containerBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.notificationsButton.backgroundColor = .clear
+
+        self.friendsButton.backgroundColor = .clear
+
+        self.settingsButton.backgroundColor = .clear
+
+        self.closeButton.backgroundColor = .clear
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: SocialViewModel) {
 
+    }
+
+    // MARK: Action
+
+    @objc func didTapNotificationsButton() {
+        print("NOTIFICATIONS")
+        let notificationsViewController = ChatNotificationsViewController()
+
+        self.navigationController?.pushViewController(notificationsViewController, animated: true)
+    }
+
+    @objc func didTapFriendsButton() {
+        print("FRIENDS")
+        let addFriendsViewModel = AddFriendViewModel()
+
+        let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
+
+        self.navigationController?.pushViewController(addFriendsViewController, animated: true)
+    }
+
+    @objc func didTapSettingsButton() {
+        print("SETTINGS")
+        let chatSettingsViewModel = ChatSettingsViewModel()
+
+        let chatSettingsViewController = ChatSettingsViewController(viewModel: chatSettingsViewModel)
+
+        self.navigationController?.pushViewController(chatSettingsViewController, animated: true)
+    }
+
+    @objc func didTapCloseButton() {
+        print("CLOSE")
+
+        if self.isModal {
+            self.dismiss(animated: true, completion: nil)
+        }
+        else {
+            self.navigationController?.popViewController(animated: true)
+        }
     }
 
 }
@@ -160,12 +219,50 @@ extension SocialViewController {
         return containerBaseView
     }
 
+    private static func createNotificationsButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "notification_inactive_icon"), for: .normal)
+        button.contentMode = .scaleAspectFit
+        return button
+    }
+
+    private static func createFriendsButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "add_friend_icon"), for: .normal)
+        button.contentMode = .scaleAspectFit
+        return button
+    }
+
+    private static func createSettingsButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setImage(UIImage(named: "app_settings_profile_icon"), for: .normal)
+        button.contentMode = .scaleAspectFit
+        return button
+    }
+
+    private static func createCloseButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(localized("close"), for: .normal)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        return button
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
 
         self.view.addSubview(self.navigationView)
         self.navigationView.addSubview(self.titleLabel)
+
+        self.navigationView.addSubview(self.notificationsButton)
+        self.navigationView.addSubview(self.friendsButton)
+        self.navigationView.addSubview(self.settingsButton)
+        self.navigationView.addSubview(self.closeButton)
 
         self.view.addSubview(self.containerBaseView)
 
@@ -182,8 +279,27 @@ extension SocialViewController {
             self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 80),
+//            self.titleLabel.leadingAnchor.constraint(equalTo: self.friendsButton.trailingAnchor, constant: 8),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+
+            self.notificationsButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 8),
+            self.notificationsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.notificationsButton.widthAnchor.constraint(equalToConstant: 40),
+            self.notificationsButton.heightAnchor.constraint(equalTo: self.notificationsButton.widthAnchor),
+
+            self.friendsButton.leadingAnchor.constraint(equalTo: self.notificationsButton.trailingAnchor, constant: 8),
+            self.friendsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.friendsButton.widthAnchor.constraint(equalToConstant: 40),
+            self.friendsButton.heightAnchor.constraint(equalTo: self.friendsButton.widthAnchor),
+
+            self.settingsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.settingsButton.widthAnchor.constraint(equalToConstant: 40),
+            self.settingsButton.heightAnchor.constraint(equalTo: self.settingsButton.widthAnchor),
+
+            self.closeButton.leadingAnchor.constraint(equalTo: self.settingsButton.trailingAnchor, constant: 8),
+            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -8),
+            self.closeButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.closeButton.heightAnchor.constraint(equalToConstant: 40),
         ])
 
         NSLayoutConstraint.activate([
