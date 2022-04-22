@@ -131,11 +131,12 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             }
             weakSelf.needReloadSection(section, tableView: weakTableView)
         }
+
         if self.collapsedCompetitionsSections.contains(section) {
-            headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
+            headerView.isCollapsed = true
         }
         else {
-            headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
+            headerView.isCollapsed = false
         }
 
         return headerView
@@ -151,10 +152,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
-        }
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
+            return .leastNonzeroMagnitude
         }
 
         if let competition = competitions[safe: indexPath.section] {
@@ -170,7 +168,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
+            return .leastNonzeroMagnitude
         }
 
         if let competition = competitions[safe: indexPath.section] {

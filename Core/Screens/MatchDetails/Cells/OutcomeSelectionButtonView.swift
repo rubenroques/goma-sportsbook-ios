@@ -20,6 +20,9 @@ class OutcomeSelectionButtonView: NibView {
 
     var match: Match?
     var marketId: String?
+
+    var competitionName: String?
+
     var outcome: Outcome?
     var bettingOffer: BettingOffer?
 
@@ -240,7 +243,13 @@ class OutcomeSelectionButtonView: NibView {
         }
         else {
             let marketName = outcome.marketName ?? ""
-            let matchDescription =  marketName.isNotEmpty ? "\(outcome.translatedName), \(marketName)" : "\(outcome.translatedName)"
+            var matchDescription: String
+            if let competitionName = self.competitionName {
+                matchDescription = competitionName
+            }
+            else {
+                matchDescription =  marketName.isNotEmpty ? "\(outcome.translatedName), \(marketName)" : "\(outcome.translatedName)"
+            }
             let marketDescription = outcome.marketName ?? ""
             let outcomeDescription = outcome.translatedName
 

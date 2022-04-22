@@ -216,31 +216,18 @@ class MyTicketsViewController: UIViewController {
           let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
           if let betStatus = self.viewModel.clickedBetStatus, betStatus == "OPEN" {
-              let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot], applicationActivities: nil)
+              let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot],
+                                                   applicationActivities: nil)
               present(share, animated: true, completion: nil)
           }
           else {
-              let share = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot], applicationActivities: nil)
+              let share = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot],
+                                                   applicationActivities: nil)
               present(share, animated: true, completion: nil)
           }
 
           self.isLoading = false
     }
-//
-//    @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
-//
-//        switch segmentControl.selectedSegmentIndex {
-//        case 0:
-//            self.viewModel.setMyTicketsType(.opened)
-//        case 1:
-//            self.viewModel.setMyTicketsType(.resolved)
-//        case 2:
-//            self.viewModel.setMyTicketsType(.won)
-//        default:
-//            ()
-//        }
-//
-//    }
 
 }
 

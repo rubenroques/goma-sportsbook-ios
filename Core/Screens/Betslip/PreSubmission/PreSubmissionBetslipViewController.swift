@@ -74,8 +74,6 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var placeBetSendButtonBaseView: UIView!
     @IBOutlet private weak var placeBetButton: UIButton!
 
-    @IBOutlet private weak var placeBetBottomConstraint: NSLayoutConstraint!
-
     @IBOutlet private weak var secondaryPlaceBetBaseView: UIView!
     
     @IBOutlet private weak var secondaryPlaceBetButtonsBaseView: UIView!
@@ -103,20 +101,14 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var secondarySystemOddsValueLabel: UILabel!
     @IBOutlet private weak var secondarySystemWinningsSeparatorView: UIView!
 
-    @IBOutlet private weak var dontHaveSelectionsBetslipInfoLabel: UILabel!
-    @IBOutlet private weak var hereAreYourSuggestedBetLabel: UILabel!
-    
     @IBOutlet private weak var emptyBetsBaseView: UIView!
 
     @IBOutlet private weak var loadingBaseView: UIView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
-    @IBOutlet private weak var betSuggestedCollectionView: UICollectionView!
-    
     @IBOutlet private weak var secondPlaceBetBaseViewConstraint: NSLayoutConstraint!
 
-    private lazy var suggestedBetsLoadingBaseView: UIView = Self.createSuggestedBetsLoadingBaseView()
-    private lazy var suggestedBetsActivityIndicatorView: UIActivityIndicatorView = Self.createSuggestedBetsActivityIndicatorView()
+    private var suggestedBetsListViewController: SuggestedBetsListViewController
 
     private var singleBettingTicketDataSource = SingleBettingTicketDataSource.init(bettingTickets: [])
     private var multipleBettingTicketDataSource = MultipleBettingTicketDataSource.init(bettingTickets: [])
@@ -211,42 +203,16 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     var betPlacedAction: (([BetPlacedDetails]) -> Void)?
 
-    var gomaSuggestedBetsResponse: [[SuggestedBetSummary]] = []
-
-    var isSuggestedBetsLoading: Bool = false {
-        didSet {
-            self.suggestedBetsLoadingBaseView.isHidden = !isSuggestedBetsLoading
-        }
-    }
-    var cachedSuggestedBetViewModels: [Int: SuggestedBetViewModel] = [:]
-    var suggestedCellLoadedPublisher: AnyCancellable?
-
     var maxStakeMultiple: Double?
     var maxStakeSystem: Double?
     var userBalance: Double?
 
-    // Suggested Aggregator Variables
-    var matches: [String: EveryMatrix.Match] = [:]
-    var match: EveryMatrix.Match?
-    var marketsForMatch: [String: Set<String>] = [:]
-    var betOutcomes: [String: EveryMatrix.BetOutcome] = [:]
-    var bettingOffers: [String: EveryMatrix.BettingOffer] = [:]
-    var marketOutcomeRelations: [String: EveryMatrix.MarketOutcomeRelation] = [:]
-    var tournaments: [String: EveryMatrix.Tournament] = [:]
-    var mainMarkets: OrderedDictionary<String, EveryMatrix.Market> = [:]
-    var mainMarketsOrder: OrderedSet<String> = []
-    var bettingOutcomesForMarket: [String: Set<String>] = [:]
-
     // Publishers
-    var marketsPublishers: [String: CurrentValueSubject<EveryMatrix.Market, Never>] = [:]
-    var bettingOfferPublishers: [String: CurrentValueSubject<EveryMatrix.BettingOffer, Never>] = [:]
-
     var tableReloadDebouncePublisher: PassthroughSubject<Void, Never> = .init()
-
-    var invalidatedIndexes: [Int] = []
 
     init(viewModel: PreSubmissionBetslipViewModel) {
         self.viewModel = viewModel
+        self.suggestedBetsListViewController = SuggestedBetsListViewController(viewModel: SuggestedBetsListViewModel())
 
         super.init(nibName: "PreSubmissionBetslipViewController", bundle: nil)
 
@@ -260,37 +226,23 @@ class PreSubmissionBetslipViewController: UIViewController {
 
     deinit {
         print("PreSubmissionBetslipViewController deinit")
-
-        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
-            cachedBetSuggestedViewModel.unregisterSuggestedBets()
-        }
-
-        cachedSuggestedBetViewModels = [:]
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.commonInit()
-
-        self.setupSubviews()
 
         self.systemBetTypeSelectorBaseView.alpha = 0.0
         self.loadingBaseView.alpha = 0.0
         self.settingsPickerBaseView.alpha = 0.0
 
         self.view.bringSubviewToFront(systemBetTypeSelectorBaseView)
-        self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(settingsPickerBaseView)
+        self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
 
-        self.emptyBetsBaseView.isHidden = true
+        self.addChildViewController(self.suggestedBetsListViewController, toView: self.emptyBetsBaseView)
 
-        self.betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
-                                       forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
-        self.betSuggestedCollectionView.delegate = self
-        self.betSuggestedCollectionView.dataSource = self
-        self.betSuggestedCollectionView.showsVerticalScrollIndicator = false
-        self.betSuggestedCollectionView.showsHorizontalScrollIndicator = false
+        self.emptyBetsBaseView.isHidden = true
 
         self.systemBetTypePickerView.delegate = self
         self.systemBetTypePickerView.dataSource = self
@@ -419,6 +371,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
                     self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
                 case 4...8:
+                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
                     self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
@@ -528,12 +481,7 @@ class PreSubmissionBetslipViewController: UIViewController {
             }
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] bettingTickets, _ in
-
                 self?.emptyBetsBaseView.isHidden = !bettingTickets.isEmpty
-
-                if bettingTickets.isEmpty {
-                    self?.getSuggestedBets()
-                }
             })
             .store(in: &cancellables)
 
@@ -631,7 +579,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     }
 
                     var totalValue = oddMultiplier * betValue
-                    totalValue = Double(floor(totalValue * 100)/100)
+                    // totalValue = Double(floor(totalValue * 100)/100)
 
                     return CurrencyFormater.defaultFormat.string(from: NSNumber(value: totalValue)) ?? "-.--€"
                 }
@@ -673,7 +621,7 @@ class PreSubmissionBetslipViewController: UIViewController {
                     return "-.--€"
                 }
                 else {
-                    expectedReturn = Double(floor(expectedReturn * 100)/100)
+                    // expectedReturn = Double(floor(expectedReturn * 100)/100)
                     return  CurrencyFormater.defaultFormat.string(from: NSNumber(value: expectedReturn)) ?? "-.--€"
                 }
             })
@@ -791,7 +739,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             .store(in: &cancellables)
 
 
-
         Env.betslipManager.simpleBetslipSelectionStateList
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] _ in
@@ -895,9 +842,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         Env.everyMatrixClient.manager.swampSession?.printMemoryLogs()
 
-
-
-
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -929,23 +873,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.tableView.reloadData()
     }
 
-    func getSuggestedBets() {
-
-        self.isSuggestedBetsLoading = true
-
-        Env.gomaNetworkClient.requestSuggestedBets(deviceId: Env.deviceId)
-            .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { _ in
-
-            },
-            receiveValue: { [weak self] gomaBetsArray in
-                guard let betsArray = gomaBetsArray else { return }
-                self?.gomaSuggestedBetsResponse = betsArray
-                self?.betSuggestedCollectionView.reloadData()
-            })
-            .store(in: &cancellables)
-        
-    }
 
     func showErrorView(errorMessage: String?) {
 
@@ -1004,17 +931,6 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.setupWithTheme()
     }
 
-    private func commonInit() {
-
-        betSuggestedCollectionView.showsVerticalScrollIndicator = false
-        betSuggestedCollectionView.showsHorizontalScrollIndicator = true
-        betSuggestedCollectionView.register(BetSuggestedCollectionViewCell.nib,
-                                       forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
-        betSuggestedCollectionView.delegate = self
-        betSuggestedCollectionView.dataSource = self
-
-    }
-
     func setupWithTheme() {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
@@ -1070,9 +986,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14),
             NSAttributedString.Key.foregroundColor: UIColor.App.textDisablePrimary
         ])
-
-        self.dontHaveSelectionsBetslipInfoLabel.textColor = UIColor.App.textPrimary
-        self.hereAreYourSuggestedBetLabel.textColor = UIColor.App.textPrimary
 
         self.secondaryAmountBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
@@ -1177,9 +1090,7 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.settingsButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
         self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
-        
-        self.suggestedBetsLoadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        
+
     }
 
     @objc func dismissKeyboard() {
@@ -1194,15 +1105,17 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBAction private func didTapClearButton() {
         Env.betslipManager.clearAllBettingTickets()
 
-        self.gomaSuggestedBetsResponse = []
-
-        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
-            cachedBetSuggestedViewModel.unregisterSuggestedBets()
-        }
-
-        self.cachedSuggestedBetViewModels = [:]
-
-        self.betSuggestedCollectionView.reloadData()
+        self.suggestedBetsListViewController.refreshSuggestedBets()
+//
+//        self.gomaSuggestedBetsResponse = []
+//
+//        for cachedBetSuggestedViewModel in self.cachedSuggestedBetViewModels.values {
+//            cachedBetSuggestedViewModel.unregisterSuggestedBets()
+//        }
+//
+//        self.cachedSuggestedBetViewModels = [:]
+//
+//        self.betSuggestedCollectionView.reloadData()
     }
 
     @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
@@ -1404,8 +1317,6 @@ class PreSubmissionBetslipViewController: UIViewController {
             let loginViewController = Router.navigationController(with: LoginViewController())
             self.present(loginViewController, animated: true, completion: nil)
             self.isLoading = false
-           // self.view.bringSubviewToFront(self.emptyBetsBaseView)
-            
         }
     }
 
@@ -1541,7 +1452,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
             }
         }
 
-        let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
+        let calculatedAmount = displayBetValue // Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
         secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
     }
@@ -1553,7 +1464,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         if newValue == "" {
             displayBetValue /= 10
         }
-        let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
+        let calculatedAmount = displayBetValue // Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
         
         secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
@@ -1623,80 +1534,6 @@ extension PreSubmissionBetslipViewController: UITableViewDelegate, UITableViewDa
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.currentDataSource().tableView?(tableView, heightForRowAt: indexPath) ?? 0.0
     }
-}
-
-extension PreSubmissionBetslipViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.gomaSuggestedBetsResponse.count
-    }
-
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
-    }
-
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 16
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard
-            let cell = collectionView.dequeueCellType(BetSuggestedCollectionViewCell.self, indexPath: indexPath)
-        else {
-            fatalError()
-        }
-
-        if let cachedViewModel = self.cachedSuggestedBetViewModels[indexPath.row].value {
-            cell.setupWithViewModel(viewModel: cachedViewModel)
-        }
-        else {
-            let betsArray = gomaSuggestedBetsResponse[indexPath.row]
-            let viewModel = SuggestedBetViewModel(suggestedBetCardSummary: SuggestedBetCardSummary(bets: betsArray))
-            self.cachedSuggestedBetViewModels[indexPath.row] = viewModel
-            cell.setupWithViewModel(viewModel: viewModel)
-        }
-
-        cell.betNowCallbackAction = { [weak self] in
-            self?.isSuggestedMultiple = true
-        }
-
-        cell.needsReload
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] _ in
-                self?.isSuggestedBetsLoading = false
-                cell.setReloadedState(reloaded: true)
-                collectionView.reloadData()
-            })
-            .store(in: &cancellables)
-
-        return cell
-    }
-
-    func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
-
-        let bottomBarHeigth = 60.0
-        var size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 1 * 40)
-        if !self.gomaSuggestedBetsResponse[indexPath.row].isEmpty {
-            size = CGSize(width: Double(collectionView.frame.size.width)*0.85, height: bottomBarHeigth + 4 * 60)
-        }
-        return size
-    }
-
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.betSuggestedCollectionView.reloadData()
-        self.betSuggestedCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-    }
-
 }
 
 class SingleBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewDataSource {
@@ -1969,45 +1806,6 @@ class SystemBettingTicketDataSource: NSObject, UITableViewDelegate, UITableViewD
     
 }
 
-extension PreSubmissionBetslipViewController {
-
-    private static func createSuggestedBetsLoadingBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createSuggestedBetsActivityIndicatorView() -> UIActivityIndicatorView {
-        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
-        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicatorView.hidesWhenStopped = true
-        activityIndicatorView.startAnimating()
-        return activityIndicatorView
-    }
-
-    private func setupSubviews() {
-        self.emptyBetsBaseView.addSubview(self.suggestedBetsLoadingBaseView)
-
-        self.suggestedBetsLoadingBaseView.addSubview(self.suggestedBetsActivityIndicatorView)
-
-        self.emptyBetsBaseView.bringSubviewToFront(self.suggestedBetsLoadingBaseView)
-
-        self.initConstraints()
-    }
-
-    private func initConstraints() {
-
-        NSLayoutConstraint.activate([
-            self.suggestedBetsLoadingBaseView.leadingAnchor.constraint(equalTo: self.emptyBetsBaseView.leadingAnchor),
-            self.suggestedBetsLoadingBaseView.trailingAnchor.constraint(equalTo: self.emptyBetsBaseView.trailingAnchor),
-            self.suggestedBetsLoadingBaseView.topAnchor.constraint(equalTo: self.betSuggestedCollectionView.topAnchor),
-            self.suggestedBetsLoadingBaseView.bottomAnchor.constraint(equalTo: self.betSuggestedCollectionView.bottomAnchor),
-
-            self.suggestedBetsActivityIndicatorView.centerXAnchor.constraint(equalTo: self.suggestedBetsLoadingBaseView.centerXAnchor),
-            self.suggestedBetsActivityIndicatorView.centerYAnchor.constraint(equalTo: self.suggestedBetsLoadingBaseView.centerYAnchor)
-        ])
-    }
-}
 
 struct SingleBetslipFreebet {
     var bettingId: String

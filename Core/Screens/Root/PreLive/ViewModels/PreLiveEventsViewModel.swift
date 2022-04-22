@@ -806,8 +806,6 @@ class PreLiveEventsViewModel: NSObject {
 
         self.lastCompetitionsMatchesRequested = ids
 
-        self.isLoadingCompetitionMatches.send(true)
-
         if let competitionsMatchesRegister = competitionsMatchesRegister {
             Env.everyMatrixClient.manager.unregisterFromEndpoint(endpointPublisherIdentifiable: competitionsMatchesRegister)
         }
@@ -819,6 +817,17 @@ class PreLiveEventsViewModel: NSObject {
 
         self.competitionsMatchesPublisher?.cancel()
         self.competitionsMatchesPublisher = nil
+
+        if ids.isEmpty {
+            self.competitionsDataSource.competitions = []
+            self.competitions = []
+            self.filteredOutrightCompetitionsDataSource.outrightCompetitions = []
+
+            self.updateContentList()
+            return
+        }
+
+        self.isLoadingCompetitionMatches.send(true)
 
         self.competitionsMatchesPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)

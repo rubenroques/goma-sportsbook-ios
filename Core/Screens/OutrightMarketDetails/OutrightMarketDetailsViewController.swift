@@ -180,6 +180,8 @@ extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewD
             else {
                 return UITableViewCell()
             }
+
+            cell.competitionName = self.viewModel.competition.name
             cell.marketId = marketGroupOrganizer.marketId
             cell.didExpandCellAction = { marketGroupOrganizerId in
                 self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -198,6 +200,7 @@ extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewD
             else {
                 return UITableViewCell()
             }
+            cell.competitionName = self.viewModel.competition.name
             cell.marketId = marketGroupOrganizer.marketId
             cell.didExpandCellAction = { marketGroupOrganizerId in
                 self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -216,6 +219,7 @@ extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewD
             else {
                 return UITableViewCell()
             }
+            cell.competitionName = self.viewModel.competition.name
             cell.marketId = marketGroupOrganizer.marketId
             cell.didExpandCellAction = { marketGroupOrganizerId in
                 self.expandedMarketGroupIds.insert(marketGroupOrganizerId)
@@ -234,6 +238,7 @@ extension OutrightMarketDetailsViewController: UITableViewDelegate, UITableViewD
             else {
                 return UITableViewCell()
             }
+            cell.competitionName = self.viewModel.competition.name
             cell.configure(withMarketGroupOrganizer: marketGroupOrganizer)
             return cell
         }

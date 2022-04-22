@@ -12,14 +12,13 @@ struct CompetitionFilterRowViewModel {
     var id: String = ""
     var name: String = ""
 
-    init(id: String, name: String) {
-        self.id = id
-        self.name = name
+    var competition: Competition
+
+    init(competition: Competition) {
+        self.id =  competition.id
+        self.name = competition.name
+        self.competition = competition
     }
+    
 }
 
-extension CompetitionFilterRowViewModel {
-    init(competition: Competition) {
-        self.init(id: competition.id, name: competition.name)
-    }
-}

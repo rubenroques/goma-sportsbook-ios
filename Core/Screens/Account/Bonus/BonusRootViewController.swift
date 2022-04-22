@@ -1,34 +1,39 @@
 //
-//  MyTicketsRootViewController.swift
+//  BonusRootViewController.swift
 //  Sportsbook
 //
-//  Created by Ruben Roques on 08/04/2022.
+//  Created by Ruben Roques on 12/04/2022.
 //
 
 import UIKit
 import Combine
 
-class MyTicketsRootViewModel {
+class BonusRootViewModel {
 
-    var selectedTicketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
+    var selectedBonusTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
     private var startTabIndex: Int
 
-    init(startTabIndex: Int) {
+    init(startTabIndex: Int = 0) {
         self.startTabIndex = startTabIndex
-        self.selectedTicketTypeIndexPublisher.send(startTabIndex)
+        self.selectedBonusTypeIndexPublisher.send(startTabIndex)
     }
 
-    func selectTicketType(atIndex index: Int) {
-        self.selectedTicketTypeIndexPublisher.send(index)
+    func selectBonusType(atIndex index: Int) {
+        self.selectedBonusTypeIndexPublisher.send(index)
     }
 
 }
 
-class MyTicketsRootViewController: UIViewController {
+class BonusRootViewController: UIViewController {
+
+    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
+    private lazy var navigationBaseView: UIView = Self.createNavigationView()
+    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var titleLabel: UILabel = Self.createTitleLabel()
 
     private lazy var topBaseView: UIView = Self.createTopBaseView()
-    private lazy var ticketTypesCollectionView: UICollectionView = Self.createTicketTypesCollectionView()
+    private lazy var bonusTypesCollectionView: UICollectionView = Self.createBonusTypesCollectionView()
     private lazy var pagesBaseView: UIView = Self.createPagesBaseView()
 
     private lazy var noLoginBaseView: UIView = Self.createNoLoginBaseView()
@@ -37,20 +42,20 @@ class MyTicketsRootViewController: UIViewController {
     private lazy var noLoginSubtitleLabel: UILabel = Self.createNoLoginSubtitleLabel()
     private lazy var noLoginButton: UIButton = Self.createNoLoginButton()
 
-    private var ticketTypePagedViewController: UIPageViewController
+    private var bonusTypePagedViewController: UIPageViewController
 
-    private var ticketTypesViewControllers = [UIViewController]()
+    private var bonusTypesViewControllers = [UIViewController]()
     private var currentPageViewControllerIndex: Int = 0
 
-    private var viewModel: MyTicketsRootViewModel
+    private var viewModel: BonusRootViewModel
 
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: MyTicketsRootViewModel) {
+    init(viewModel: BonusRootViewModel) {
         self.viewModel = viewModel
 
-        self.ticketTypePagedViewController  = UIPageViewController(transitionStyle: .scroll,
+        self.bonusTypePagedViewController  = UIPageViewController(transitionStyle: .scroll,
                                                                    navigationOrientation: .horizontal,
                                                                    options: nil)
 
@@ -70,25 +75,39 @@ class MyTicketsRootViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.ticketTypesViewControllers = [
-            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .opened)),
-            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .resolved)),
-            MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: .won))
+        self.bonusTypesViewControllers = [
+            BonusViewController(viewModel: BonusViewModel(bonusListType: .available)),
+            BonusViewController(viewModel: BonusViewModel(bonusListType: .active)),
+            BonusViewController(viewModel: BonusViewModel(bonusListType: .history)),
         ]
 
-        self.ticketTypePagedViewController.delegate = self
-        self.ticketTypePagedViewController.dataSource = self
+        self.bonusTypePagedViewController.delegate = self
+        self.bonusTypePagedViewController.dataSource = self
 
-        self.ticketTypesCollectionView.register(ListTypeCollectionViewCell.nib,
+        self.bonusTypesCollectionView.register(ListTypeCollectionViewCell.nib,
                                        forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
 
-        self.ticketTypesCollectionView.delegate = self
-        self.ticketTypesCollectionView.dataSource = self
+        self.bonusTypesCollectionView.delegate = self
+        self.bonusTypesCollectionView.dataSource = self
 
-        self.noLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .primaryActionTriggered)
+        self.noLoginButton.addTarget(self, action: #selector(self.didTapLoginButton), for: .primaryActionTriggered)
+
+        self.backButton.addTarget(self, action: #selector(self.didTapBackButton), for: .primaryActionTriggered)
 
         self.reloadCollectionView()
         self.bind(toViewModel: self.viewModel)
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = self
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        self.navigationController?.interactivePopGestureRecognizer?.delegate = nil
     }
 
     // MARK: - Layout and Theme
@@ -102,7 +121,7 @@ class MyTicketsRootViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topBaseView.backgroundColor = UIColor.App.backgroundSecondary
-        self.ticketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
+        self.bonusTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.noLoginBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.noLoginTitleLabel.textColor = UIColor.App.textPrimary
@@ -113,9 +132,9 @@ class MyTicketsRootViewController: UIViewController {
 
 
     // MARK: - Bindings
-    private func bind(toViewModel viewModel: MyTicketsRootViewModel) {
+    private func bind(toViewModel viewModel: BonusRootViewModel) {
 
-        self.viewModel.selectedTicketTypeIndexPublisher
+        self.viewModel.selectedBonusTypeIndexPublisher
             .removeDuplicates()
             .compactMap({ $0 })
             .receive(on: DispatchQueue.main)
@@ -143,6 +162,10 @@ class MyTicketsRootViewController: UIViewController {
         self.present(loginViewController, animated: true, completion: nil)
     }
 
+    @objc private func didTapBackButton() {
+        self.navigationController?.popViewController(animated: true)
+    }
+
     // MARK: - Convenience
     func showNoLoginView() {
         self.noLoginBaseView.isHidden = false
@@ -153,22 +176,22 @@ class MyTicketsRootViewController: UIViewController {
     }
 
     func reloadCollectionView() {
-        self.ticketTypesCollectionView.reloadData()
+        self.bonusTypesCollectionView.reloadData()
     }
 
     func scrollToViewController(atIndex index: Int) {
         let previousIndex = self.currentPageViewControllerIndex
         if index > previousIndex {
-            if let selectedViewController = self.ticketTypesViewControllers[safe: index] {
-                self.ticketTypePagedViewController.setViewControllers([selectedViewController],
+            if let selectedViewController = self.bonusTypesViewControllers[safe: index] {
+                self.bonusTypePagedViewController.setViewControllers([selectedViewController],
                                                                         direction: .forward,
                                                                         animated: true,
                                                                         completion: nil)
             }
         }
         else {
-            if let selectedViewController = self.ticketTypesViewControllers[safe: index] {
-                self.ticketTypePagedViewController.setViewControllers([selectedViewController],
+            if let selectedViewController = self.bonusTypesViewControllers[safe: index] {
+                self.bonusTypePagedViewController.setViewControllers([selectedViewController],
                                                                         direction: .reverse,
                                                                         animated: true,
                                                                         completion: nil)
@@ -180,29 +203,29 @@ class MyTicketsRootViewController: UIViewController {
 
 }
 
-extension MyTicketsRootViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
+extension BonusRootViewController: UIPageViewControllerDelegate, UIPageViewControllerDataSource {
 
-    func selectTicketType(atIndex index: Int, animated: Bool = true) {
-        self.viewModel.selectTicketType(atIndex: index)
+    func selectBonusType(atIndex index: Int, animated: Bool = true) {
+        self.viewModel.selectBonusType(atIndex: index)
 
-        self.ticketTypesCollectionView.reloadData()
-        self.ticketTypesCollectionView.layoutIfNeeded()
-        self.ticketTypesCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: animated)
+        self.bonusTypesCollectionView.reloadData()
+        self.bonusTypesCollectionView.layoutIfNeeded()
+        self.bonusTypesCollectionView.scrollToItem(at: IndexPath(row: index, section: 0), at: .centeredHorizontally, animated: animated)
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        if let index = ticketTypesViewControllers.firstIndex(of: viewController) {
+        if let index = bonusTypesViewControllers.firstIndex(of: viewController) {
             if index > 0 {
-                return ticketTypesViewControllers[index - 1]
+                return bonusTypesViewControllers[index - 1]
             }
         }
         return nil
     }
 
     func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        if let index = ticketTypesViewControllers.firstIndex(of: viewController) {
-            if index < ticketTypesViewControllers.count - 1 {
-                return ticketTypesViewControllers[index + 1]
+        if let index = bonusTypesViewControllers.firstIndex(of: viewController) {
+            if index < bonusTypesViewControllers.count - 1 {
+                return bonusTypesViewControllers[index + 1]
             }
         }
         return nil
@@ -218,17 +241,17 @@ extension MyTicketsRootViewController: UIPageViewControllerDelegate, UIPageViewC
         }
 
         if let currentViewController = pageViewController.viewControllers?.first,
-           let index = ticketTypesViewControllers.firstIndex(of: currentViewController) {
-            self.selectTicketType(atIndex: index)
+           let index = bonusTypesViewControllers.firstIndex(of: currentViewController) {
+            self.selectBonusType(atIndex: index)
         }
         else {
-            self.selectTicketType(atIndex: 0)
+            self.selectBonusType(atIndex: 0)
         }
     }
 
 }
 
-extension MyTicketsRootViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+extension BonusRootViewController: UICollectionViewDelegate, UICollectionViewDataSource {
 
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -247,16 +270,16 @@ extension MyTicketsRootViewController: UICollectionViewDelegate, UICollectionVie
 
         switch indexPath.row {
         case 0:
-            cell.setupWithTitle("Open")
+            cell.setupWithTitle(localized("available"))
         case 1:
-            cell.setupWithTitle("Resolved")
+            cell.setupWithTitle(localized("active"))
         case 2:
-            cell.setupWithTitle("Won")
+            cell.setupWithTitle(localized("history"))
         default:
             ()
         }
 
-        if let index = self.viewModel.selectedTicketTypeIndexPublisher.value, index == indexPath.row {
+        if let index = self.viewModel.selectedBonusTypeIndexPublisher.value, index == indexPath.row {
             cell.setSelectedType(true)
         }
         else {
@@ -268,17 +291,63 @@ extension MyTicketsRootViewController: UICollectionViewDelegate, UICollectionVie
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
-        let previousSelectionValue = self.viewModel.selectedTicketTypeIndexPublisher.value ?? -1
+        let previousSelectionValue = self.viewModel.selectedBonusTypeIndexPublisher.value ?? -1
 
         if indexPath.row != previousSelectionValue {
-            self.viewModel.selectedTicketTypeIndexPublisher.send(indexPath.row)
+            self.viewModel.selectedBonusTypeIndexPublisher.send(indexPath.row)
             collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
         }
     }
 
 }
 
-extension MyTicketsRootViewController {
+extension BonusRootViewController: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+
+}
+
+extension BonusRootViewController {
+
+
+    private static func createTopSafeAreaView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createNavigationView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createTitleLabel() -> UILabel {
+        let titleLabel = UILabel()
+        titleLabel.text = localized("bonus")
+        titleLabel.font = AppFont.with(type: .bold, size: 16)
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.textAlignment = .center
+        return titleLabel
+    }
+
+    private static func createBackButton() -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("", for: .normal)
+        button.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
+        return button
+    }
 
     private static func createTopBaseView() -> UIView {
         let view = UIView()
@@ -328,7 +397,7 @@ extension MyTicketsRootViewController {
         return button
     }
 
-    private static func createTicketTypesCollectionView() -> UICollectionView {
+    private static func createBonusTypesCollectionView() -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
@@ -350,7 +419,14 @@ extension MyTicketsRootViewController {
 
     private func setupSubviews() {
 
-        self.topBaseView.addSubview(self.ticketTypesCollectionView)
+        // Add subviews to self.view or each other
+        self.navigationBaseView.addSubview(self.titleLabel)
+        self.navigationBaseView.addSubview(self.backButton)
+
+        self.view.addSubview(self.topSafeAreaView)
+        self.view.addSubview(self.navigationBaseView)
+
+        self.topBaseView.addSubview(self.bonusTypesCollectionView)
 
         self.view.addSubview(self.topBaseView)
         self.view.addSubview(self.pagesBaseView)
@@ -359,12 +435,12 @@ extension MyTicketsRootViewController {
         self.noLoginBaseView.addSubview(self.noLoginSubtitleLabel)
         self.noLoginBaseView.addSubview(self.noLoginImageView)
         self.noLoginBaseView.addSubview(self.noLoginButton)
-        
+
         self.view.addSubview(self.noLoginBaseView)
 
         self.noLoginBaseView.isHidden = true
 
-        self.addChildViewController(self.ticketTypePagedViewController, toView: self.pagesBaseView)
+        self.addChildViewController(self.bonusTypePagedViewController, toView: self.pagesBaseView)
 
         self.initConstraints()
     }
@@ -372,17 +448,39 @@ extension MyTicketsRootViewController {
     private func initConstraints() {
 
         NSLayoutConstraint.activate([
+            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.navigationBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.navigationBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.navigationBaseView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
+            self.navigationBaseView.heightAnchor.constraint(equalToConstant: 44),
+
+            self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationBaseView.centerXAnchor),
+            self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
+
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationBaseView.leadingAnchor, constant: 0),
+            self.backButton.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
+            self.backButton.heightAnchor.constraint(equalToConstant: 44),
+            self.backButton.widthAnchor.constraint(equalToConstant: 40),
+        ])
+
+        NSLayoutConstraint.activate([
             self.topBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.topBaseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor),
             self.topBaseView.heightAnchor.constraint(equalToConstant: 70),
         ])
 
         NSLayoutConstraint.activate([
-            self.ticketTypesCollectionView.leadingAnchor.constraint(equalTo: self.topBaseView.leadingAnchor),
-            self.ticketTypesCollectionView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
-            self.ticketTypesCollectionView.topAnchor.constraint(equalTo: self.topBaseView.topAnchor),
-            self.ticketTypesCollectionView.bottomAnchor.constraint(equalTo: self.topBaseView.bottomAnchor)
+            self.bonusTypesCollectionView.leadingAnchor.constraint(equalTo: self.topBaseView.leadingAnchor),
+            self.bonusTypesCollectionView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
+            self.bonusTypesCollectionView.topAnchor.constraint(equalTo: self.topBaseView.topAnchor),
+            self.bonusTypesCollectionView.bottomAnchor.constraint(equalTo: self.topBaseView.bottomAnchor)
         ])
 
         NSLayoutConstraint.activate([
@@ -395,7 +493,7 @@ extension MyTicketsRootViewController {
         NSLayoutConstraint.activate([
             self.noLoginBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.noLoginBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.noLoginBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.noLoginBaseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor),
             self.noLoginBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.noLoginTitleLabel.centerXAnchor.constraint(equalTo: self.noLoginBaseView.centerXAnchor),
@@ -419,3 +517,4 @@ extension MyTicketsRootViewController {
 
     }
 }
+

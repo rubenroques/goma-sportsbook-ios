@@ -26,6 +26,8 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
 
     var match: Match?
     var marketId: String?
+    var competitionName: String?
+    
     var marketGroupOrganizer: MarketGroupOrganizer?
 
     private let lineHeight: CGFloat = 56
@@ -68,6 +70,8 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
         self.marketId = nil
         self.marketGroupOrganizer = nil
 
+        self.competitionName = nil
+        
         self.expandBaseView.isHidden = false
         self.isExpanded = false
 
@@ -125,6 +129,7 @@ class OverUnderMarketDetailTableViewCell: UITableViewCell {
                     if let outcomeValue = outcome {
                         let outcomeSelectionButtonView = OutcomeSelectionButtonView()
                         outcomeSelectionButtonView.match = self.match
+                        outcomeSelectionButtonView.competitionName = self.competitionName
                         outcomeSelectionButtonView.marketId = self.marketId
                         outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
                         stackView.addArrangedSubview(outcomeSelectionButtonView)

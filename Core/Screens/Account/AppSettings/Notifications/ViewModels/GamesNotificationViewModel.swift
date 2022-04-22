@@ -18,7 +18,6 @@ class GamesNotificationViewModel: NSObject {
     var notificationsEnabledViews: [SettingsRowView] = []
     var isStackViewDisabledPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var shouldSendSettingsPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var settingsUpdatedPublisher: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Lifetime and sCycle
     override init() {
@@ -33,11 +32,8 @@ class GamesNotificationViewModel: NSObject {
         if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
             do {
                 let decoder = JSONDecoder()
-
                 let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
                 self.userSettings = userSettings
-
             }
             catch {
                 print("Unable to Decode UserSettings Goma (\(error))")
@@ -49,9 +45,7 @@ class GamesNotificationViewModel: NSObject {
         if let userSettings = self.userSettings {
             do {
                 let encoder = JSONEncoder()
-
                 let data = try encoder.encode(userSettings)
-
                 UserDefaults.standard.set(data, forKey: "gomaUserSettings")
             }
             catch {
@@ -205,8 +199,7 @@ class GamesNotificationViewModel: NSObject {
                             print("Finished")
                         }
                     }, receiveValue: {[weak self] value in
-                        print("GOMA SETTINGS: \(value)")
-                        self?.settingsUpdatedPublisher.send()
+
                     })
                     .store(in: &cancellables)
 

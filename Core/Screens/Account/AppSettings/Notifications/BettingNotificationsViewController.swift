@@ -15,11 +15,11 @@ class BettingNotificationsViewController: UIViewController {
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
     private lazy var topStackView: UIStackView = Self.createTopStackView()
+
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var viewModel: BettingNotificationViewModel
-    var shouldUpdateSettings: Bool = false
 
     // MARK: Lifetime and Cycle
     init() {
@@ -68,21 +68,6 @@ class BettingNotificationsViewController: UIViewController {
     // MARK: Binding
     private func bind(toViewModel viewModel: BettingNotificationViewModel) {
 
-        viewModel.shouldSendSettingsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] sendState in
-                self?.shouldUpdateSettings = sendState
-            })
-            .store(in: &cancellables)
-
-        viewModel.settingsUpdatedPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                if self?.shouldUpdateSettings == true {
-                    self?.navigationController?.popViewController(animated: true)
-                }
-            })
-            .store(in: &cancellables)
     }
 
     private func setupTopStackView() {
@@ -115,12 +100,8 @@ class BettingNotificationsViewController: UIViewController {
 //
 extension BettingNotificationsViewController {
     @objc private func didTapBackButton() {
-        if self.shouldUpdateSettings {
-            self.viewModel.setUserSettings()
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        self.viewModel.setUserSettings()
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
@@ -182,7 +163,7 @@ extension BettingNotificationsViewController {
             self.topView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 0),
             self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
             self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),

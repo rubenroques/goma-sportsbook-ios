@@ -94,8 +94,12 @@ class LoginViewController: UIViewController {
             self?.didTapLoginButton()
         }
 
-        skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 18)
+        skipButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         skipButton.setTitle(localized("skip"), for: .normal)
+
+        dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        dismissButton.setTitle(localized("close"), for: .normal)
+
 
         logoImageView.image = UIImage(named: "logo_horizontal_large")
         logoImageView.sizeToFit()

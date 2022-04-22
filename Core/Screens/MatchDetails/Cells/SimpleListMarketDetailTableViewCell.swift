@@ -23,6 +23,7 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
     var match: Match?
     var market: Market?
+    var competitionName: String?
 
     private let lineHeight: CGFloat = 56
 
@@ -54,6 +55,7 @@ class SimpleListMarketDetailTableViewCell: UITableViewCell {
 
         self.match = nil
         self.market = nil
+        self.competitionName = nil
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

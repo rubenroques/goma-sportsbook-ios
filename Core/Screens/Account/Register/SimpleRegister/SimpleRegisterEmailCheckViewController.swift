@@ -67,7 +67,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
     func commonInit() {
         skipButton.setTitle(localized("skip"), for: .normal)
-        skipButton.titleLabel?.font = AppFont.with(type: .semibold, size: 18)
+        skipButton.titleLabel?.font = AppFont.with(type: .semibold, size: 17)
 
         logoImageView.image = UIImage(named: "logo_horizontal_large")
         logoImageView.sizeToFit()

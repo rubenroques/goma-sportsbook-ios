@@ -11,12 +11,6 @@ import Combine
 class BonusViewController: UIViewController {
 
     // MARK: Private Properties
-    private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
-    private lazy var navigationView: UIView = Self.createTopView()
-    private lazy var backButton: UIButton = Self.createBackButton()
-    private lazy var topTitleLabel: UILabel = Self.createTopTitleLabel()
-    private lazy var bonusSegmentedControlBaseView: UIView = Self.createBonusSegmentedBaseView()
-    private lazy var bonusSegmentedControl: UISegmentedControl = Self.createBonusSegmentedControl()
     private lazy var promoCodeBaseView: UIView = Self.createPromoCodeBaseView()
     private lazy var promoCodeStackView: UIStackView = Self.createPromoCodeStackView()
     private lazy var promoCodeLabel: UILabel = Self.createPromoCodeLabel()
@@ -74,8 +68,8 @@ class BonusViewController: UIViewController {
     }
 
     // MARK: Lifetime and Cycle
-    init() {
-        self.viewModel = BonusViewModel()
+    init(viewModel: BonusViewModel) {
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -92,12 +86,7 @@ class BonusViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
-        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-
-        self.bonusSegmentedControl.addTarget(self, action: #selector(didChangeSegmentValue), for: .valueChanged)
-
         self.setupPublishersAndActions()
-
     }
 
     // MARK: Layout and Theme
@@ -110,21 +99,9 @@ class BonusViewController: UIViewController {
     func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.bonusSegmentedControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.bonusSegmentedControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
-        self.bonusSegmentedControl.backgroundColor = UIColor.App.backgroundTertiary
-
         self.promoCodeStackView.backgroundColor = .clear
-
         self.promoCodeBaseView.backgroundColor = .clear
-
         self.promoCodeLabel.textColor = UIColor.App.textPrimary
-
         self.promoCodeLineSeparatorView.backgroundColor = UIColor.App.buttonTextDisablePrimary
 
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
@@ -174,31 +151,32 @@ class BonusViewController: UIViewController {
     // MARK: Binding
     private func bind(toViewModel viewModel: BonusViewModel) {
 
-        viewModel.bonusListTypePublisher
+        switch viewModel.bonusListType {
+        case .available:
+            self.isPromoCodeViewHidden = false
+            self.isEmptyState = false
+        case .active:
+            self.isPromoCodeViewHidden = true
+        case .history:
+            self.isPromoCodeViewHidden = true
+        }
+
+        self.tableView.reloadData()
+
+        viewModel.isBonusHistoryEmptyPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] bonusType in
-                switch bonusType {
-                case .available:
-                    self?.isPromoCodeViewHidden = false
-                    self?.isEmptyState = false
-
-                case .active:
-                    self?.isPromoCodeViewHidden = true
-                    if let bonusActiveEmptyState = self?.viewModel.isBonusActiveEmptyPublisher.value {
-                        self?.isEmptyState = bonusActiveEmptyState
-                    }
-                    
-                case .history:
-                    self?.isPromoCodeViewHidden = true
-                    if let bonuHistoryEmptyState = self?.viewModel.isBonusHistoryEmptyPublisher.value {
-                        self?.isEmptyState = bonuHistoryEmptyState
-                    }
-
-                }
-
-                self?.tableView.reloadData()
+            .sink(receiveValue: { [weak self] isBonusHistoryEmpty in
+                self?.isEmptyState = isBonusHistoryEmpty
             })
             .store(in: &cancellables)
+
+        viewModel.isBonusActiveEmptyPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isBonusActiveEmpty in
+                self?.isEmptyState = isBonusActiveEmpty
+            })
+            .store(in: &cancellables)
+
 
         viewModel.shouldReloadData
             .receive(on: DispatchQueue.main)
@@ -234,15 +212,12 @@ class BonusViewController: UIViewController {
     private func setupDataSourcesData() {
 
         self.bonusAvailableDataSource.bonusAvailable = self.viewModel.bonusAvailable
-
         self.bonusAvailableDataSource.bonusAvailableCellViewModels = self.viewModel.bonusAvailableCellViewModels
 
         self.bonusActiveDataSource.bonusActive = self.viewModel.bonusActive
-
         self.bonusActiveDataSource.bonusActiveCellViewModels = self.viewModel.bonusActiveCellViewModels
 
         self.bonusHistoryDataSource.bonusHistory = self.viewModel.bonusHistory
-
         self.bonusHistoryDataSource.bonusHistoryCellViewModels = self.viewModel.bonusHistoryCellViewModels
 
         self.tableView.reloadData()
@@ -279,7 +254,6 @@ class BonusViewController: UIViewController {
                     else {
                         self?.showAlert(type: .error, text: localized("error_bonus_code"))
                     }
-
                 case .finished:
                     ()
                 }
@@ -328,7 +302,7 @@ class BonusViewController: UIViewController {
 extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.numberOfSections(in: tableView)
         case .active:
@@ -340,7 +314,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func hasContentForSelectedListType() -> Bool {
 
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.bonusAvailable.isNotEmpty
         case .active:
@@ -352,7 +326,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, numberOfRowsInSection: section)
         case .active:
@@ -363,7 +337,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, cellForRowAt: indexPath)
 
@@ -376,7 +350,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, viewForHeaderInSection: section)
         case .active:
@@ -389,7 +363,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, heightForRowAt: indexPath)
         case .active:
@@ -401,7 +375,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, estimatedHeightForRowAt: indexPath)
         case .active:
@@ -413,7 +387,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, heightForHeaderInSection: section)
         case .active:
@@ -425,7 +399,7 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        switch self.viewModel.bonusListTypePublisher.value {
+        switch self.viewModel.bonusListType {
         case .available:
             return self.bonusAvailableDataSource.tableView(tableView, estimatedHeightForHeaderInSection: section)
         case .active:
@@ -441,23 +415,6 @@ extension BonusViewController: UITableViewDataSource, UITableViewDelegate {
 // MARK: - Actions
 //
 extension BonusViewController {
-    @objc private func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
-    }
-
-    @objc private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
-
-        switch segmentControl.selectedSegmentIndex {
-        case 0:
-            self.viewModel.setBonusType(.available)
-        case 1:
-            self.viewModel.setBonusType(.active)
-        case 2:
-            self.viewModel.setBonusType(.history)
-        default:
-            ()
-        }
-    }
 
     @objc func didTapBackground() {
         self.promoCodeTextFieldView.resignFirstResponder()
@@ -468,61 +425,6 @@ extension BonusViewController {
 // MARK: Subviews initialization and setup
 //
 extension BonusViewController {
-
-    private static func createTopSafeAreaView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createTopView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createBackButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("", for: .normal)
-        button.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
-        return button
-    }
-
-    private static func createTopTitleLabel() -> UILabel {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = localized("bonus")
-        label.font = AppFont.with(type: .bold, size: 17)
-        label.textAlignment = .center
-        return label
-    }
-
-    private static func createBonusSegmentedBaseView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
-    private static func createBonusSegmentedControl() -> UISegmentedControl {
-        let segmentedControl = UISegmentedControl(items: [localized("available"), localized("active"), localized("history")])
-        segmentedControl.translatesAutoresizingMaskIntoConstraints = false
-        segmentedControl.selectedSegmentIndex = 0
-        segmentedControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
-        ], for: .selected)
-        segmentedControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
-        ], for: .normal)
-        segmentedControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
-        ], for: .disabled)
-        return segmentedControl
-
-    }
 
     private static func createPromoCodeStackView() -> UIStackView {
         let stackView = UIStackView()
@@ -610,15 +512,6 @@ extension BonusViewController {
     }
 
     private func setupSubviews() {
-        self.view.addSubview(self.topSafeAreaView)
-        
-        self.view.addSubview(self.navigationView)
-
-        self.navigationView.addSubview(self.backButton)
-        self.navigationView.addSubview(self.topTitleLabel)
-
-        self.view.addSubview(self.bonusSegmentedControlBaseView)
-        self.bonusSegmentedControlBaseView.addSubview(self.bonusSegmentedControl)
 
         self.view.addSubview(self.promoCodeStackView)
 
@@ -657,50 +550,11 @@ extension BonusViewController {
 
     private func initConstraints() {
 
-        // Top safe area view
-        NSLayoutConstraint.activate([
-            self.topSafeAreaView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.topSafeAreaView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topSafeAreaView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.topSafeAreaView.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor)
-        ])
-
-        // Navigation view
-        NSLayoutConstraint.activate([
-            self.navigationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.navigationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
-            self.navigationView.heightAnchor.constraint(equalToConstant: 44),
-
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
-            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.heightAnchor.constraint(equalToConstant: 44),
-            self.backButton.widthAnchor.constraint(equalToConstant: 40),
-
-            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 40),
-            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -40),
-            self.topTitleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor)
-
-        ])
-
-        // Segmented view
-        NSLayoutConstraint.activate([
-            self.bonusSegmentedControlBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.bonusSegmentedControlBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.bonusSegmentedControlBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
-            self.bonusSegmentedControlBaseView.heightAnchor.constraint(equalToConstant: 40),
-
-            self.bonusSegmentedControl.leadingAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.leadingAnchor, constant: 30),
-            self.bonusSegmentedControl.trailingAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.trailingAnchor, constant: -30),
-            self.bonusSegmentedControl.heightAnchor.constraint(equalToConstant: 30),
-            self.bonusSegmentedControl.centerYAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.centerYAnchor)
-        ])
-
         // Promo code view
         NSLayoutConstraint.activate([
             self.promoCodeStackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.promoCodeStackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.promoCodeStackView.topAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.bottomAnchor, constant: 16),
+            self.promoCodeStackView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 16),
 
             self.promoCodeBaseView.leadingAnchor.constraint(equalTo: self.promoCodeStackView.leadingAnchor),
             self.promoCodeBaseView.trailingAnchor.constraint(equalTo: self.promoCodeStackView.trailingAnchor),
@@ -732,7 +586,7 @@ extension BonusViewController {
         NSLayoutConstraint.activate([
             self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.emptyStateView.topAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.bottomAnchor, constant: 8),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
             self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
             self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 80),
@@ -748,7 +602,7 @@ extension BonusViewController {
 
         // Loading Screen
         NSLayoutConstraint.activate([
-            self.loadingScreenBaseView.topAnchor.constraint(equalTo: self.bonusSegmentedControlBaseView.bottomAnchor),
+            self.loadingScreenBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.loadingScreenBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.loadingScreenBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.loadingScreenBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),

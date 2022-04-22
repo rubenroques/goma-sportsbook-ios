@@ -164,17 +164,6 @@ class PreLiveEventsViewController: UIViewController {
         self.connectPublishers()
         self.viewModel.fetchData()
 
-//        self.viewModel.didSelectActivationAlertAction = { alertType in
-//            if alertType == ActivationAlertType.email {
-//                let emailVerificationViewController = EmailVerificationViewController()
-//                self.present(emailVerificationViewController, animated: true, completion: nil)
-//            }
-//            else if alertType == ActivationAlertType.profile {
-//                let fullRegisterViewController = FullRegisterPersonalInfoViewController(isBackButtonDisabled: true)
-//                self.navigationController?.pushViewController(fullRegisterViewController, animated: true)
-//            }
-//        }
-
         self.viewModel.didSelectMatchAction = { match in
             let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(match: match))
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
@@ -199,14 +188,14 @@ class PreLiveEventsViewController: UIViewController {
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
         
-        self.viewModel.isUserLoggedPublisher.receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isLogged in
-                if !isLogged {
-                    let loginViewController = Router.navigationController(with: LoginViewController())
-                    self?.present(loginViewController, animated: true, completion: nil)
-                }
-            })
-            .store(in: &self.cancellables)
+//        self.viewModel.isUserLoggedPublisher.receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] isLogged in
+//                if !isLogged {
+//                    let loginViewController = Router.navigationController(with: LoginViewController())
+//                    self?.present(loginViewController, animated: true, completion: nil)
+//                }
+//            })
+//            .store(in: &self.cancellables)
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -330,6 +319,7 @@ class PreLiveEventsViewController: UIViewController {
         }
 
         self.competitionsFiltersDarkBackgroundView.alpha = 1
+        self.competitionsFiltersDarkBackgroundView.backgroundColor = .black
         self.competitionsFiltersBaseView.backgroundColor = UIColor.clear
         self.competitionsFiltersBaseView.addSubview(self.competitionsFiltersView)
 
@@ -376,13 +366,6 @@ class PreLiveEventsViewController: UIViewController {
         self.view.layoutIfNeeded()
     }
 
-   
-
-    func presentLoginViewController() {
-      let loginViewController = Router.navigationController(with: LoginViewController())
-      self.present(loginViewController, animated: true, completion: nil)
-    }
-    
     func connectPublishers() {
 
         self.viewModel.isLoading
@@ -526,6 +509,8 @@ class PreLiveEventsViewController: UIViewController {
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
+        self.competitionsFiltersDarkBackgroundView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -607,6 +592,11 @@ class PreLiveEventsViewController: UIViewController {
         self.showBottomBarCompetitionsFilters(animated: animated)
     }
 
+    func presentLoginViewController() {
+        let loginViewController = Router.navigationController(with: LoginViewController())
+        self.present(loginViewController, animated: true, completion: nil)
+    }
+
     func reloadData() {
         self.tableView.reloadData()
     }
@@ -626,7 +616,7 @@ class PreLiveEventsViewController: UIViewController {
         }
 
         UIView.animate(withDuration: 0.32, delay: 0.0, options: .curveEaseOut, animations: {
-            self.competitionsFiltersDarkBackgroundView.alpha = 0.4
+            self.competitionsFiltersDarkBackgroundView.alpha = 0.9
             self.openedCompetitionsFiltersConstraint.constant = 0
             self.tableView.contentInset.bottom = 16
             self.competitionsFiltersView.state = .opened

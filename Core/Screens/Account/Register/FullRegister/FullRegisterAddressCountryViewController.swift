@@ -56,8 +56,9 @@ class FullRegisterAddressCountryViewController: UIViewController {
     }
 
     func commonInit() {
+
+        closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         closeButton.setTitle(localized("close"), for: .normal)
-        closeButton.titleLabel?.font = AppFont.with(type: .bold, size: 16)
 
         progressLabel.text = localized("complete_signup")
         progressLabel.font = AppFont.with(type: .bold, size: 24)
@@ -89,7 +90,9 @@ class FullRegisterAddressCountryViewController: UIViewController {
 
         navigationView.backgroundColor = UIColor.App.backgroundPrimary
 
-        closeButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        closeButton.setTitleColor( UIColor.App.highlightPrimary, for: .normal)
+        closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
+        closeButton.setTitleColor( UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
 
         progressView.backgroundColor = UIColor.App.backgroundPrimary
 
