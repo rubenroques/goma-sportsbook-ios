@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class PreviewChatCellViewModel {
     var cellData: ConversationData
@@ -344,48 +345,6 @@ extension PreviewChatTableViewCell {
 
 }
 
-class ConversationsViewModel {
-
-    var conversations: [ConversationData] = []
-
-    init() {
-
-        for i in 1...15 {
-            if i <= 2 {
-                let conversationData = ConversationData(conversationType: .group,
-                                                        name: "GOMA Champs GOMA Champs GOMA Champs",
-                                                        lastMessage: "I won the bet! Whoo!",
-                                                        date: "10:15",
-                                                        lastMessageUser: "André",
-                                                        isLastMessageSeen: false)
-                self.conversations.append(conversationData)
-            }
-            else {
-                let conversationData = ConversationData(conversationType: .user,
-                                                        name: "Lascas",
-                                                        lastMessage: "I won the bet! Whoo!",
-                                                        date: "Today",
-                                                        lastMessageUser: nil,
-                                                        isLastMessageSeen: true)
-                self.conversations.append(conversationData)
-            }
-        }
-    }
-
-}
-
-extension ConversationsViewModel {
-
-    func numberOfSections() -> Int {
-        return 1
-    }
-
-    func numberOfRows(forSectionIndex section: Int) -> Int {
-        return self.conversations.count
-    }
-
-}
-
 struct ConversationData {
     var conversationType: ConversationType
     var name: String
@@ -411,6 +370,7 @@ class ConversationsViewController: UIViewController {
     private lazy var headerSeparatorLineView: UIView = Self.createHeaderSeparatorLineView()
 
     private var viewModel: ConversationsViewModel
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationsViewModel = ConversationsViewModel()) {
@@ -441,6 +401,8 @@ class ConversationsViewController: UIViewController {
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
+
+        self.bind(toViewModel: self.viewModel)
 
     }
 
@@ -515,6 +477,12 @@ class ConversationsViewController: UIViewController {
     // MARK: - Bindings
     private func bind(toViewModel viewModel: ConversationsViewModel) {
 
+        viewModel.dataNeedsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] _ in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
     }
     
 }

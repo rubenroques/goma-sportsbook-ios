@@ -830,6 +830,16 @@
 		A97D24662812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24642812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift */; };
 		A97D24682812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */; };
 		A97D24692812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */; };
+		A97D246C28180586003EEDEC /* SocialModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D246B28180586003EEDEC /* SocialModels.swift */; };
+		A97D246D28180586003EEDEC /* SocialModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D246B28180586003EEDEC /* SocialModels.swift */; };
+		A97D247128183168003EEDEC /* FriendsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247028183168003EEDEC /* FriendsListViewModel.swift */; };
+		A97D247228183168003EEDEC /* FriendsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247028183168003EEDEC /* FriendsListViewModel.swift */; };
+		A97D2474281831A2003EEDEC /* FriendStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2473281831A2003EEDEC /* FriendStatusTableViewCell.swift */; };
+		A97D2475281831A2003EEDEC /* FriendStatusTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2473281831A2003EEDEC /* FriendStatusTableViewCell.swift */; };
+		A97D2477281831E7003EEDEC /* FriendStatusCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2476281831E7003EEDEC /* FriendStatusCellViewModel.swift */; };
+		A97D2478281831E7003EEDEC /* FriendStatusCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2476281831E7003EEDEC /* FriendStatusCellViewModel.swift */; };
+		A97D247A2818519A003EEDEC /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24792818519A003EEDEC /* ConversationsViewModel.swift */; };
+		A97D247B2818519A003EEDEC /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24792818519A003EEDEC /* ConversationsViewModel.swift */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -1596,6 +1606,11 @@
 		A97D24612812BA47003EEDEC /* NewGroupManagementViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewGroupManagementViewModel.swift; sourceTree = "<group>"; };
 		A97D24642812EF0D003EEDEC /* GroupUserManagementTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUserManagementTableViewCell.swift; sourceTree = "<group>"; };
 		A97D24672812EFE1003EEDEC /* GroupUserManagementCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupUserManagementCellViewModel.swift; sourceTree = "<group>"; };
+		A97D246B28180586003EEDEC /* SocialModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocialModels.swift; sourceTree = "<group>"; };
+		A97D247028183168003EEDEC /* FriendsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewModel.swift; sourceTree = "<group>"; };
+		A97D2473281831A2003EEDEC /* FriendStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendStatusTableViewCell.swift; sourceTree = "<group>"; };
+		A97D2476281831E7003EEDEC /* FriendStatusCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendStatusCellViewModel.swift; sourceTree = "<group>"; };
+		A97D24792818519A003EEDEC /* ConversationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewModel.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -2479,6 +2494,7 @@
 		456B341326C13AEE009D7D27 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A97D246A28180566003EEDEC /* GGAPI */,
 				45D728D52715F6C700EFE04D /* App */,
 				45B7DADD26F92CC30032C1C3 /* Shared */,
 				A9B840C126E1270E00269B05 /* EveryMatrixAPI */,
@@ -3266,6 +3282,31 @@
 			path = SearchViews;
 			sourceTree = "<group>";
 		};
+		A97D246A28180566003EEDEC /* GGAPI */ = {
+			isa = PBXGroup;
+			children = (
+				A97D246B28180586003EEDEC /* SocialModels.swift */,
+			);
+			path = GGAPI;
+			sourceTree = "<group>";
+		};
+		A97D246E2818314A003EEDEC /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A97D247028183168003EEDEC /* FriendsListViewModel.swift */,
+				A97D2476281831E7003EEDEC /* FriendStatusCellViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A97D246F28183151003EEDEC /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A97D2473281831A2003EEDEC /* FriendStatusTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		A9875792276CA4ED0099990D /* Deposit */ = {
 			isa = PBXGroup;
 			children = (
@@ -3364,6 +3405,7 @@
 			isa = PBXGroup;
 			children = (
 				A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */,
+				A97D24792818519A003EEDEC /* ConversationsViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -3480,6 +3522,8 @@
 		A9A2E7F227FDE07600D35A9D /* Friends */ = {
 			isa = PBXGroup;
 			children = (
+				A97D246F28183151003EEDEC /* Cells */,
+				A97D246E2818314A003EEDEC /* ViewModels */,
 				454E090D27EC7C1100391560 /* FriendsListViewController.swift */,
 			);
 			path = Friends;
@@ -4584,6 +4628,7 @@
 				A9E7C69427B5638500F784C9 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				F4CE68472742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
 				A9992FD227FF1F260098854C /* SentMessageTableViewCell.swift in Sources */,
+				A97D2477281831E7003EEDEC /* FriendStatusCellViewModel.swift in Sources */,
 				454F0A7627C40C01003123DF /* OutrightCompetitionLineTableViewCell.swift in Sources */,
 				45166CF726F3548D00E69D65 /* SubscribeSSWampMessage.swift in Sources */,
 				A9C82FBB26F4E50D00059DCD /* EditAlertView.swift in Sources */,
@@ -4706,6 +4751,7 @@
 				F4E3B74D2742B47100855C58 /* MainMarketType.swift in Sources */,
 				4515637426BE982000690896 /* Colors.swift in Sources */,
 				A99622AC278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
+				A97D247A2818519A003EEDEC /* ConversationsViewModel.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				F410E62C27BD183A005C1964 /* BettingsTableViewCell.swift in Sources */,
 				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
@@ -4726,6 +4772,7 @@
 				A9C6023B2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				454E090827EB831600391560 /* SocialViewController.swift in Sources */,
 				45D3DE36271492E000717124 /* BannerInfo.swift in Sources */,
+				A97D246C28180586003EEDEC /* SocialModels.swift in Sources */,
 				45726336272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
 				45166D1F26F3548D00E69D65 /* SSWampSession.swift in Sources */,
 				A99622A9278C4DC700ABDF97 /* SubmitedBetTableViewCellViewModel.swift in Sources */,
@@ -4735,6 +4782,7 @@
 				45166D1726F3548D00E69D65 /* SSWampTransport.swift in Sources */,
 				A90D8AFB277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */,
 				A9BCF443274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
+				A97D2474281831A2003EEDEC /* FriendStatusTableViewCell.swift in Sources */,
 				454E0AB42732C58D00794E0C /* TabularBarButton.swift in Sources */,
 				A9BA6D552810105600E82724 /* AddContactViewModel.swift in Sources */,
 				454E0AB02732C58D00794E0C /* TabularBarDelegate.swift in Sources */,
@@ -4821,6 +4869,7 @@
 				4589F41426BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				A9627A11274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				A9BA6D48280DCA3400E82724 /* AddFriendCellViewModel.swift in Sources */,
+				A97D247128183168003EEDEC /* FriendsListViewModel.swift in Sources */,
 				455A0D0E26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8B26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				454E090B27EC7A0300391560 /* ConversationsViewController.swift in Sources */,
@@ -5037,6 +5086,7 @@
 				45626E3E2755445A0069B89B /* OutcomeSelectionButtonView.swift in Sources */,
 				455C677B27E39C3D00AAB2A5 /* PopularDetailsViewModel.swift in Sources */,
 				A9992FD327FF1F260098854C /* SentMessageTableViewCell.swift in Sources */,
+				A97D2478281831E7003EEDEC /* FriendStatusCellViewModel.swift in Sources */,
 				A9E7C69527B5638500F784C9 /* MyFavoriteMatchesDataSource.swift in Sources */,
 				F4CE68482742CD8A003413AE /* MultiSliderExtensions.swift in Sources */,
 				454F0A7727C40C01003123DF /* OutrightCompetitionLineTableViewCell.swift in Sources */,
@@ -5159,6 +5209,7 @@
 				45D9CBDF270F34D800B8C321 /* EveryMatrixModel.swift in Sources */,
 				454F0A7E27C41C22003123DF /* OutrightMarketDetailsViewController.swift in Sources */,
 				A9E7C69C27B67D9800F784C9 /* MyFavoriteCompetitionsDataSource.swift in Sources */,
+				A97D247B2818519A003EEDEC /* ConversationsViewModel.swift in Sources */,
 				F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
 				A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
@@ -5179,6 +5230,7 @@
 				A9E7C69927B582DC00F784C9 /* SportSectionHeaderView.swift in Sources */,
 				454E090927EB831600391560 /* SocialViewController.swift in Sources */,
 				45C3D2BB2773C56F00B3EF44 /* MyTicketBetLineViewModel.swift in Sources */,
+				A97D246D28180586003EEDEC /* SocialModels.swift in Sources */,
 				A9C6023C2716F99A00992E11 /* CheckboxButton.swift in Sources */,
 				45D3DE37271492E000717124 /* BannerInfo.swift in Sources */,
 				45726337272C0998002F2959 /* LiveEventsViewModel.swift in Sources */,
@@ -5188,6 +5240,7 @@
 				A90D8AF6277200C400DF88EB /* WithdrawViewController.swift in Sources */,
 				A9B841A726E6557000269B05 /* Location.swift in Sources */,
 				45166D1826F3548D00E69D65 /* SSWampTransport.swift in Sources */,
+				A97D2475281831A2003EEDEC /* FriendStatusTableViewCell.swift in Sources */,
 				A90D8AFC277223DC00DF88EB /* WithdrawWebViewController.swift in Sources */,
 				A9BA6D562810105600E82724 /* AddContactViewModel.swift in Sources */,
 				A9BCF444274FC3FF006DD528 /* MarketDetailCollectionViewCell.swift in Sources */,
@@ -5274,6 +5327,7 @@
 				4589F41526BF0203005DF543 /* TitleTextFieldView.swift in Sources */,
 				A9627A12274553700001E1D5 /* ActivationAlert.swift in Sources */,
 				A9BA6D49280DCA3400E82724 /* AddFriendCellViewModel.swift in Sources */,
+				A97D247228183168003EEDEC /* FriendsListViewModel.swift in Sources */,
 				455A0D0F26BD9D9000EC572D /* Debounce.swift in Sources */,
 				A9C82F8C26F0E92300059DCD /* UITapGestureRecognizer+Extensions.swift in Sources */,
 				454E090C27EC7A0300391560 /* ConversationsViewController.swift in Sources */,

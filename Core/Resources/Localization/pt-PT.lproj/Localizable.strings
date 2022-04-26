@@ -440,3 +440,7 @@ Terms of use, Privacy Policy and EULA";
 "select_friends_add" = "Select friends to add";
 "start_group_chat" = "Start Group Chat";
 "group_name" = "Group name";
+
+"my_friends" = "My Friends";
+"search_friend" = "Search a friend";
+"no_friends" = "There are no friends to display.";

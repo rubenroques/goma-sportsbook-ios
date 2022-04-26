@@ -191,38 +191,63 @@ class AddFriendViewController: UIViewController {
 
     @objc func didTapAddFriendButton() {
 
-        let contactStore = CNContactStore()
+//        let contactStore = CNContactStore()
+//
+//        switch CNContactStore.authorizationStatus(for: .contacts) {
+//        case .authorized:
+//            print("Authorized")
+//            let addContactViewModel = AddContactViewModel()
+//            let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
+//
+//            self.navigationController?.pushViewController(addContactViewController, animated: true)
+//
+//        case .notDetermined:
+//            contactStore.requestAccess(for: .contacts) { succeeded, error in
+//                guard succeeded && error == nil else {
+//                    return
+//                }
+//
+//                if succeeded {
+//                    // Do something with contacts
+//                    DispatchQueue.main.async {
+//                        let addContactViewModel = AddContactViewModel()
+//                        let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
+//
+//                        self.navigationController?.pushViewController(addContactViewController, animated: true)
+//                    }
+//
+//                }
+//            }
+//            print("Not determined")
+//        default:
+//            print("Not handled")
+//        }
 
-        switch CNContactStore.authorizationStatus(for: .contacts) {
-        case .authorized:
-            print("Authorized")
-            let addContactViewModel = AddContactViewModel()
-            let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
-
-            self.navigationController?.pushViewController(addContactViewController, animated: true)
-            
-        case .notDetermined:
-            contactStore.requestAccess(for: .contacts) { succeeded, error in
-                guard succeeded && error == nil else {
-                    return
-                }
-
-                if succeeded {
-                    // Do something with contacts
-                    let addContactViewModel = AddContactViewModel()
-                    let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
-
-                    self.navigationController?.pushViewController(addContactViewController, animated: true)
-                }
-            }
-            print("Not determined")
-        default:
-            print("Not handled")
-        }
+        self.addGomaFriend()
     }
 
     @objc func didTapBackground() {
         self.searchBar.resignFirstResponder()
+    }
+
+    // TEST
+    private func addGomaFriend() {
+        let userIds = ["1", "2"]
+
+        Env.gomaNetworkClient.addFriends(deviceId: Env.deviceId, userIds: userIds)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("ADD FRIEND ERROR: \(error)")
+                case .finished:
+                    print("ADD FRIEND FINISHED")
+                }
+            }, receiveValue: { response in
+                print("ADD FRIEND GOMA: \(response)")
+            })
+            .store(in: &cancellables)
+
     }
 
 }

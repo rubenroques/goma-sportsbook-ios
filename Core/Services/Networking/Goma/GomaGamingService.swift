@@ -22,6 +22,11 @@ enum GomaGamingService {
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
     case userSettings
     case sendUserSettings(userSettings: UserSettingsGoma)
+
+    // Social Endpoits
+    case addFriend(userIds: [String])
+    case listFriends
+    case chatrooms
 }
 
 extension GomaGamingService: Endpoint {
@@ -61,6 +66,13 @@ extension GomaGamingService: Endpoint {
             return "/api/favorites/\(apiVersion)"
         case .sendUserSettings:
             return "/api/settings/\(apiVersion)/user"
+        // Social
+        case .addFriend:
+            return "/api/social/\(apiVersion)/friends"
+        case .listFriends:
+            return "/api/social/\(apiVersion)/friends"
+        case .chatrooms:
+            return "/api/social/\(apiVersion)/chatrooms"
         }
     }
 
@@ -76,6 +88,9 @@ extension GomaGamingService: Endpoint {
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
+        // Social
+        case .addFriend, .listFriends, .chatrooms:
+            return nil
         }
     }
 
@@ -107,6 +122,11 @@ extension GomaGamingService: Endpoint {
             return .post
         case .removeFavorite:
             return .delete
+        // Social
+        case .addFriend:
+            return .post
+        case .listFriends, .chatrooms:
+            return .get
         }
     }
 
@@ -167,6 +187,15 @@ extension GomaGamingService: Endpoint {
                        "notification_email": \(userSettings.notificationEmail),
                        "notification_sms": \(userSettings.notificationSms)}
                        """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        // Social
+        case .addFriend(let userIds):
+            let body = """
+                    {"users_ids":
+                    \(userIds)
+                    }
+                    """
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:
