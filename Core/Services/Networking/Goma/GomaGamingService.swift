@@ -27,6 +27,8 @@ enum GomaGamingService {
     case addFriend(userIds: [String])
     case listFriends
     case chatrooms
+    case addGroup(userIds: [String], groupName: String)
+    case deleteGroup(chatroomId: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -73,6 +75,10 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/friends"
         case .chatrooms:
             return "/api/social/\(apiVersion)/chatrooms"
+        case .addGroup:
+            return "/api/social/\(apiVersion)/groups"
+        case .deleteGroup(let chatroomId):
+            return "/api/social/\(apiVersion)/groups/\(chatroomId)"
         }
     }
 
@@ -89,7 +95,7 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         // Social
-        case .addFriend, .listFriends, .chatrooms:
+        case .addFriend, .listFriends, .chatrooms, .addGroup, .deleteGroup:
             return nil
         }
     }
@@ -123,10 +129,12 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite:
             return .delete
         // Social
-        case .addFriend:
+        case .addFriend, .addGroup:
             return .post
         case .listFriends, .chatrooms:
             return .get
+        case .deleteGroup:
+            return .delete
         }
     }
 
@@ -196,6 +204,15 @@ extension GomaGamingService: Endpoint {
                     \(userIds)
                     }
                     """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .addGroup(let userIds, let groupName):
+            let body = """
+                    {"name": "\(groupName)",
+                    "users_ids": \(userIds)
+                    }
+                    """
+            print("GROUP BODY: \(body)")
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:

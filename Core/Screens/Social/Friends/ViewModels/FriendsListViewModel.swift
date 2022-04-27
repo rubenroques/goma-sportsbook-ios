@@ -37,14 +37,13 @@ class FriendsListViewModel {
                 case .failure(let error):
                     print("LIST FRIEND ERROR: \(error)")
                 case .finished:
-                    print("LIST FRIEND FINISHED")
+                    ()
                 }
 
                 self?.isLoadingPublisher.send(false)
                 self?.dataNeedsReload.send()
 
             }, receiveValue: { response in
-                print("LIST FRIENDS GOMA: \(response)")
                 if let friends = response.data {
                     self.friendsPublisher.value = friends
                     self.initialFriends = friends

@@ -232,7 +232,7 @@ class AddFriendViewController: UIViewController {
 
     // TEST
     private func addGomaFriend() {
-        let userIds = ["1", "2"]
+        let userIds = ["42", "124", "215", "225", "224"]
 
         Env.gomaNetworkClient.addFriends(deviceId: Env.deviceId, userIds: userIds)
             .receive(on: DispatchQueue.main)

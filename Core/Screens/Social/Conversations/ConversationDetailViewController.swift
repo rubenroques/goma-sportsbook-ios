@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Combine
+import Nuke
 
 class ConversationDetailViewController: UIViewController {
 
@@ -16,6 +18,7 @@ class ConversationDetailViewController: UIViewController {
     private lazy var iconBaseView: UIView = Self.createIconBaseView()
     private lazy var iconView: UIView = Self.createIconView()
     private lazy var iconIdentifierLabel: UILabel = Self.createIconIdentifierLabel()
+    private lazy var iconUserImageView: UIImageView = Self.createIconUserImageView()
     private lazy var iconStateView: UIView = Self.createIconStateView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
@@ -33,8 +36,17 @@ class ConversationDetailViewController: UIViewController {
 
     private var viewModel: ConversationDetailViewModel
 
+    private var cancellables = Set<AnyCancellable>()
+
+    private var isChatGroup: Bool = false {
+        didSet {
+            self.iconIdentifierLabel.isHidden = !isChatGroup
+            self.iconUserImageView.isHidden = isChatGroup
+        }
+    }
+
     // MARK: - Lifetime and Cycle
-    init(viewModel: ConversationDetailViewModel = ConversationDetailViewModel()) {
+    init(viewModel: ConversationDetailViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -73,6 +85,10 @@ class ConversationDetailViewController: UIViewController {
             self.iconStateView.isHidden = true
         }
 
+        self.isChatGroup = self.viewModel.isChatGroup
+
+        self.bind(toViewModel: self.viewModel)
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -85,8 +101,12 @@ class ConversationDetailViewController: UIViewController {
         super.viewDidLayoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
+
         self.iconView.layer.cornerRadius = self.iconView.frame.height / 2
+
         self.iconStateView.layer.cornerRadius = self.iconStateView.frame.height / 2
+
+        self.iconUserImageView.layer.cornerRadius = self.iconUserImageView.frame.height / 2
 
         self.sendButton.layer.cornerRadius = self.sendButton.frame.height / 2
     }
@@ -125,6 +145,29 @@ class ConversationDetailViewController: UIViewController {
         self.messageInputLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.sendButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+    }
+
+    // MARK: Binding
+    private func bind(toViewModel viewModel: ConversationDetailViewModel) {
+
+        viewModel.titlePublisher
+            .sink(receiveValue: { [weak self] title in
+                self?.titleLabel.text = title
+            })
+            .store(in: &cancellables)
+
+        viewModel.usersPublisher
+            .sink(receiveValue: { [weak self] users in
+                self?.subtitleLabel.text = users
+            })
+            .store(in: &cancellables)
+
+        viewModel.groupInitialsPublisher
+            .sink(receiveValue: { [weak self] initials in
+                self?.iconIdentifierLabel.text = initials
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -321,6 +364,14 @@ extension ConversationDetailViewController {
         return label
     }
 
+    private static func createIconUserImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "my_account_profile_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
     private static func createIconStateView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -422,6 +473,7 @@ extension ConversationDetailViewController {
         self.iconBaseView.addSubview(self.iconStateView)
 
         self.iconView.addSubview(self.iconIdentifierLabel)
+        self.iconView.addSubview(self.iconUserImageView)
 
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.subtitleLabel)
@@ -477,6 +529,11 @@ extension ConversationDetailViewController {
 
             self.iconIdentifierLabel.centerXAnchor.constraint(equalTo: self.iconView.centerXAnchor),
             self.iconIdentifierLabel.centerYAnchor.constraint(equalTo: self.iconView.centerYAnchor),
+
+            self.iconUserImageView.centerXAnchor.constraint(equalTo: self.iconView.centerXAnchor),
+            self.iconUserImageView.centerYAnchor.constraint(equalTo: self.iconView.centerYAnchor),
+            self.iconUserImageView.widthAnchor.constraint(equalToConstant: 26),
+            self.iconUserImageView.heightAnchor.constraint(equalTo: self.iconUserImageView.widthAnchor),
 
             self.iconStateView.trailingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: -1.5),
             self.iconStateView.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor, constant: 1.5),

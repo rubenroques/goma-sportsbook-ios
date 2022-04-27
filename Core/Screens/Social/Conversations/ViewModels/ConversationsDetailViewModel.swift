@@ -6,18 +6,96 @@
 //
 
 import Foundation
+import Combine
 
 class ConversationDetailViewModel: NSObject {
 
+    // MARK: Private Properties
+    private var conversationData: ConversationData
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
     var messages: [MessageData] = []
     var sectionMessages: [String: [MessageData]] = [:]
     var dateMessages: [DateMessages] = []
-
     var isChatOnline: Bool = false
+    var isChatGroup: Bool = false
 
-    override init() {
+    var titlePublisher: CurrentValueSubject<String, Never> = .init("")
+    var usersPublisher: CurrentValueSubject<String, Never> = .init("")
+    var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
+
+    init(conversationData: ConversationData) {
+        self.conversationData = conversationData
+
         super.init()
-        
+
+        print("CHATROOM ID: \(self.conversationData.id)")
+
+        self.setupConversationInfo()
+        self.getConversationMessages()
+
+    }
+
+    private func setupConversationInfo() {
+
+        self.titlePublisher.value = self.conversationData.name
+
+        if self.conversationData.conversationType == .user {
+            self.usersPublisher.value = "\(self.conversationData.name.lowercased())"
+            self.isChatGroup = false
+        }
+        else {
+            if let groupUsers = self.conversationData.groupUsers {
+                var usersString = ""
+                var loggedUsername = ""
+
+                if let loggedUser = UserSessionStore.loggedUserSession() {
+                    loggedUsername = loggedUser.username
+                }
+
+                for (index, user) in groupUsers.enumerated() {
+                    if user.username != loggedUsername && loggedUsername != "" {
+                        if index == groupUsers.endIndex - 1 {
+                            usersString += "\(user.username)"
+                        }
+                        else {
+                            usersString += "\(user.username), "
+                        }
+                    }
+                }
+
+                self.usersPublisher.value = usersString
+
+                self.groupInitialsPublisher.value = self.getGroupInitials(text: self.conversationData.name)
+
+                self.isChatGroup = true
+            }
+
+        }
+    }
+
+    private func getGroupInitials(text: String) -> String {
+        var initials = ""
+
+        for letter in text {
+            if letter.isUppercase {
+                if initials.count < 2 {
+                    initials = "\(initials)\(letter)"
+                }
+            }
+        }
+
+        if initials == "" {
+            if let firstChar = text.first {
+                initials = "\(firstChar.uppercased())"
+            }
+        }
+
+        return initials
+    }
+
+    private func getConversationMessages() {
         // TESTING CHAT MESSAGES
         let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")
         let message2 = MessageData(messageType: .sentSeen, messageText: "Oh what is it? And how are you?", messageDate: "06/04/2022 16:00")
@@ -38,6 +116,8 @@ class ConversationDetailViewModel: NSObject {
         self.sortAllMessages()
 
         self.isChatOnline = true
+
+        // Get chat messages for chatroom id
 
     }
 

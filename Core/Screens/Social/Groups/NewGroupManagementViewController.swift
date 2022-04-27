@@ -154,8 +154,27 @@ class NewGroupManagementViewController: UIViewController {
     }
 
     @objc func didTapStartNewGroupButton() {
-        print("NEW GROUP")
         //self.navigationController?.popViewController(animated: true)
+        var userIds: [String] = []
+        let groupName = self.newGroupTextField.text ?? ""
+
+        for user in self.viewModel.users {
+            userIds.append(user.id)
+        }
+
+        Env.gomaNetworkClient.addGroup(deviceId: Env.deviceId, userIds: userIds, groupName: groupName)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("ADD GROUP ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+            }, receiveValue: { response in
+                print("ADD GROUP GOMA: \(response)")
+            })
+            .store(in: &cancellables)
     }
 
     @objc func didTapBackground() {

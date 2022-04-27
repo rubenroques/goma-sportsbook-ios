@@ -14,6 +14,26 @@ class PreviewChatCellViewModel {
     init(cellData: ConversationData) {
         self.cellData = cellData
     }
+
+    func getGroupInitials(text: String) -> String {
+        var initials = ""
+
+        for letter in text {
+            if letter.isUppercase {
+                if initials.count < 2 {
+                    initials = "\(initials)\(letter)"
+                }
+            }
+        }
+
+        if initials == "" {
+            if let firstChar = text.first {
+                initials = "\(firstChar.uppercased())"
+            }
+        }
+
+        return initials
+    }
 }
 
 class PreviewChatTableViewCell: UITableViewCell {
@@ -34,7 +54,7 @@ class PreviewChatTableViewCell: UITableViewCell {
 
     private var viewModel: PreviewChatCellViewModel?
 
-    var didTapConversationAction: (() -> Void)?
+    var didTapConversationAction: ((ConversationData) -> Void)?
 
     var isSeen: Bool = false {
         didSet {
@@ -146,6 +166,7 @@ class PreviewChatTableViewCell: UITableViewCell {
         }
         else if viewModel.cellData.conversationType == .group {
             self.isGroup = true
+            self.initialLabel.text = viewModel.getGroupInitials(text: viewModel.cellData.name)
         }
 
         self.dateLabel.text = viewModel.cellData.date
@@ -157,7 +178,9 @@ class PreviewChatTableViewCell: UITableViewCell {
     }
 
     @objc func didTapConversationView() {
-        self.didTapConversationAction?()
+        if let viewModel = self.viewModel {
+            self.didTapConversationAction?(viewModel.cellData)
+        }
     }
 
 }
@@ -346,12 +369,14 @@ extension PreviewChatTableViewCell {
 }
 
 struct ConversationData {
+    var id: Int
     var conversationType: ConversationType
     var name: String
     var lastMessage: String
     var date: String
     var lastMessageUser: String?
     var isLastMessageSeen: Bool
+    var groupUsers: [GomaFriend]?
 }
 
 enum ConversationType {
@@ -468,8 +493,10 @@ class ConversationsViewController: UIViewController {
 
     // MARK: Functions
 
-    private func showConversationDetail() {
-        let conversationDetailViewController = ConversationDetailViewController()
+    private func showConversationDetail(conversationData: ConversationData) {
+        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+
+        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 
         self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
     }
@@ -535,8 +562,9 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             cell.configure(withViewModel: cellViewModel)
         }
 
-        cell.didTapConversationAction = { [weak self] in
-            self?.showConversationDetail()
+
+        cell.didTapConversationAction = { [weak self] conversationData in
+            self?.showConversationDetail(conversationData: conversationData)
         }
 
         return cell

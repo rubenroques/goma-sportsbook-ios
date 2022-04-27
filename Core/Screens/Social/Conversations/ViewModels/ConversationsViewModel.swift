@@ -70,16 +70,71 @@ class ConversationsViewModel {
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
 
         for chatroomData in chatroomsData {
-            let conversationData = ConversationData(conversationType: .user,
-                             name: chatroomData.chatroom.name,
-                                                    lastMessage: "I won the bet! Whoo!",
-                                                    date: "10:15",
-                                                    lastMessageUser: "André",
-                                                    isLastMessageSeen: false)
-            self.conversations.append(conversationData)
+
+            if chatroomData.chatroom.type == ChatroomType.individual.identifier {
+
+                self.setupIndividualChatroomData(chatroomData: chatroomData)
+
+            }
+            else {
+
+                self.setupGroupChatroomData(chatroomData: chatroomData)
+
+            }
         }
 
         self.dataNeedsReload.send()
+    }
+
+    private func setupIndividualChatroomData(chatroomData: ChatroomData) {
+        var loggedUsername = ""
+        var chatroomName = ""
+
+        for user in chatroomData.users {
+            if let loggedUser = UserSessionStore.loggedUserSession() {
+
+                if user.username != loggedUser.username {
+                    chatroomName = user.username
+                }
+
+                loggedUsername = loggedUser.username
+
+            }
+        }
+
+        let conversationData = ConversationData(id: chatroomData.chatroom.id,
+                                                conversationType: .user,
+                                                name: chatroomName,
+                                                lastMessage: "I won the bet! Whoo!",
+                                                date: "10:15",
+                                                lastMessageUser: loggedUsername,
+                                                isLastMessageSeen: false)
+        self.conversations.append(conversationData)
+    }
+
+    private func setupGroupChatroomData(chatroomData: ChatroomData) {
+        var loggedUsername = ""
+        var chatroomName = chatroomData.chatroom.name
+        var chatroomUsers: [GomaFriend] = []
+
+        if let loggedUser = UserSessionStore.loggedUserSession() {
+
+            loggedUsername = loggedUser.username
+
+        }
+
+        for user in chatroomData.users {
+            chatroomUsers.append(user)
+        }
+
+        let conversationData = ConversationData(id: chatroomData.chatroom.id,
+                                                conversationType: .group,
+                                                name: chatroomName,
+                                                lastMessage: "I won the bet! Whoo!",
+                                                date: "10:15",
+                                                lastMessageUser: loggedUsername,
+                                                isLastMessageSeen: true, groupUsers: chatroomUsers)
+        self.conversations.append(conversationData)
     }
 
 }
@@ -94,4 +149,18 @@ extension ConversationsViewModel {
         return self.conversations.count
     }
 
+}
+
+enum ChatroomType {
+    case individual
+    case group
+
+    var identifier: String {
+        switch self {
+        case .individual:
+            return "individual"
+        case .group:
+            return "group"
+        }
+    }
 }
