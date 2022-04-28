@@ -150,9 +150,9 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func addGroup(deviceId: String, userIds: [String], groupName: String) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
+    func addGroup(deviceId: String, userIds: [String], groupName: String) -> AnyPublisher<NetworkResponse<ChatroomId>, NetworkError> {
         let endpoint = GomaGamingService.addGroup(userIds: userIds, groupName: groupName)
-        let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        let requestPublisher: AnyPublisher<NetworkResponse<ChatroomId>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 

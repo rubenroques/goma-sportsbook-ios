@@ -89,8 +89,6 @@ class NewGroupViewModel {
             })
             .store(in: &cancellables)
 
-
-        // self.dataNeedsReload.send()
     }
 
     private func processFriendsData(friends: [GomaFriend]) {

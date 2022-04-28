@@ -109,6 +109,8 @@ extension FriendStatusTableViewCell {
     private static func createPhotoImageView() -> UIImageView {
         let photoImageView = UIImageView()
         photoImageView.translatesAutoresizingMaskIntoConstraints = false
+        photoImageView.image = UIImage(named: "my_account_profile_icon")
+        photoImageView.contentMode = .scaleAspectFit
         photoImageView.clipsToBounds = true
         photoImageView.layer.masksToBounds = true
         photoImageView.layer.borderWidth = 2.5

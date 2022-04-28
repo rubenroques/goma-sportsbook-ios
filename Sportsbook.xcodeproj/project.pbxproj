@@ -840,6 +840,10 @@
 		A97D2478281831E7003EEDEC /* FriendStatusCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2476281831E7003EEDEC /* FriendStatusCellViewModel.swift */; };
 		A97D247A2818519A003EEDEC /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24792818519A003EEDEC /* ConversationsViewModel.swift */; };
 		A97D247B2818519A003EEDEC /* ConversationsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D24792818519A003EEDEC /* ConversationsViewModel.swift */; };
+		A97D247D281AD374003EEDEC /* PreviewChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */; };
+		A97D247E281AD374003EEDEC /* PreviewChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */; };
+		A97D2480281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */; };
+		A97D2481281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -1611,6 +1615,8 @@
 		A97D2473281831A2003EEDEC /* FriendStatusTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendStatusTableViewCell.swift; sourceTree = "<group>"; };
 		A97D2476281831E7003EEDEC /* FriendStatusCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendStatusCellViewModel.swift; sourceTree = "<group>"; };
 		A97D24792818519A003EEDEC /* ConversationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewModel.swift; sourceTree = "<group>"; };
+		A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewChatTableViewCell.swift; sourceTree = "<group>"; };
+		A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewChatCellViewModel.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -3406,6 +3412,7 @@
 			children = (
 				A9992FE628083C7C0098854C /* ConversationsDetailViewModel.swift */,
 				A97D24792818519A003EEDEC /* ConversationsViewModel.swift */,
+				A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -3535,6 +3542,7 @@
 				A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */,
 				A9992FD127FF1F260098854C /* SentMessageTableViewCell.swift */,
 				A9992FD428003DAC0098854C /* DateHeaderFooterView.swift */,
+				A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -4468,6 +4476,7 @@
 				4502BF372798712E00F5B0CD /* HomeAwayCardStatsView.swift in Sources */,
 				4591358127602961009D1193 /* MarketGroupOrganizer.swift in Sources */,
 				457F497527383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */,
+				A97D247D281AD374003EEDEC /* PreviewChatTableViewCell.swift in Sources */,
 				455A0CFC26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45628E7D27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */,
 				45D728D127158DA400EFE04D /* BannerMatchCollectionViewCell.swift in Sources */,
@@ -4666,6 +4675,7 @@
 				A995C19A2799AF1100151462 /* SearchViewModel.swift in Sources */,
 				45166D0326F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
 				A98757A1276CDB990099990D /* DepositResponse.swift in Sources */,
+				A97D2480281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */,
 				A9627A15274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,
 				A98E6C5927B2B09800453CF9 /* UserSettingsGoma.swift in Sources */,
 				455A0CE226BD9D9000EC572D /* Localization.swift in Sources */,
@@ -4926,6 +4936,7 @@
 				455C677527E255A300AAB2A5 /* MarketGroupDetailsStore.swift in Sources */,
 				4502BF382798712E00F5B0CD /* HomeAwayCardStatsView.swift in Sources */,
 				4591358227602961009D1193 /* MarketGroupOrganizer.swift in Sources */,
+				A97D247E281AD374003EEDEC /* PreviewChatTableViewCell.swift in Sources */,
 				457F497627383A2B0047169D /* SubmitedBetSelectionView.swift in Sources */,
 				455A0CFD26BD9D9000EC572D /* UIApplication+Extensions.swift in Sources */,
 				45628E7E27BEE02400AAB160 /* SuggestedBetLineViewModel.swift in Sources */,
@@ -5124,6 +5135,7 @@
 				45626E452755599E0069B89B /* OverUnderMarketDetailTableViewCell.swift in Sources */,
 				A995C19B2799AF1100151462 /* SearchViewModel.swift in Sources */,
 				45166D0426F3548D00E69D65 /* InvocationSSWampMessage.swift in Sources */,
+				A97D2481281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */,
 				A98757A2276CDB990099990D /* DepositResponse.swift in Sources */,
 				455C677827E256A700AAB2A5 /* MarketGroupDetailsViewModel.swift in Sources */,
 				A9627A16274564890001E1D5 /* ActivationAlertScrollableTableViewCell.swift in Sources */,

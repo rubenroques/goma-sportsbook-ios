@@ -125,8 +125,25 @@ class NewGroupManagementViewController: UIViewController {
 
     }
 
-    // MARK: Binding
+    // MARK: Functions
+    private func showConversationDetail(chatroomId: Int, groupName: String) {
+        let conversationData = ConversationData(id: chatroomId,
+                                                conversationType: .group,
+                                                name: groupName,
+                                                lastMessage: "",
+                                                date: "Now",
+                                                lastMessageUser: nil,
+                                                isLastMessageSeen: false,
+                                                groupUsers: self.viewModel.gomaFriends)
 
+        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
+
+        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+    }
+
+    // MARK: Binding
     private func bind(toViewModel viewModel: NewGroupManagementViewModel) {
 
         viewModel.dataNeedsReload
@@ -171,8 +188,12 @@ class NewGroupManagementViewController: UIViewController {
                 case .finished:
                     ()
                 }
-            }, receiveValue: { response in
+            }, receiveValue: { [weak self] response in
                 print("ADD GROUP GOMA: \(response)")
+
+                if let chatroomId = response.data?.id {
+                    self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
+                }
             })
             .store(in: &cancellables)
     }

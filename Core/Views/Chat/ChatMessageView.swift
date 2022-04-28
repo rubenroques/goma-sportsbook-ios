@@ -14,6 +14,9 @@ class ChatMessageView: UIView {
     private lazy var inputTextView: UITextView = Self.createInputTextView()
     private lazy var ticketButton: UIButton = Self.createTicketButton()
 
+    // MARK: Public Properties
+    var textPublisher: CurrentValueSubject<String, Never> = .init("")
+
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -82,6 +85,12 @@ extension ChatMessageView: UITextViewDelegate {
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         print("END EDITING")
+
+    }
+
+    func textViewDidChangeSelection(_ textView: UITextView) {
+
+        self.textPublisher.send(textView.text)
 
     }
 }

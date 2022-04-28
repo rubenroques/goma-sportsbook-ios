@@ -14,6 +14,7 @@ class NewGroupManagementViewModel {
 
     // MARK: Public Properties
     var users: [UserContact] = []
+    var gomaFriends: [GomaFriend] = []
     var cachedUserCellViewModels: [String: GroupUserManagementCellViewModel] = [:]
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
 
@@ -21,7 +22,16 @@ class NewGroupManagementViewModel {
 
         self.users = users
         //self.getUsers()
+        self.processUserContacts()
+    }
 
+    private func processUserContacts() {
+        for user in self.users {
+            if let userId = Int(user.id) {
+                let gomaFriend = GomaFriend(id: userId, name: user.username, username: user.username)
+                self.gomaFriends.append(gomaFriend)
+            }
+        }
     }
 
     func getUsers() {

@@ -12,10 +12,11 @@ class ConversationsViewModel {
 
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
-
+    private var initialConversations: [ConversationData] = []
     // MARK: Public Properties
-    var conversations: [ConversationData] = []
+    var conversationsPublisher: CurrentValueSubject<[ConversationData], Never> = .init([])
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init() {
 
@@ -44,18 +45,20 @@ class ConversationsViewModel {
     }
 
     private func getConversations() {
+        self.isLoadingPublisher.send(true)
+
         Env.gomaNetworkClient.requestChatrooms(deviceId: Env.deviceId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 switch completion {
                 case .failure(let error):
                     print("CHATROOMS ERROR: \(error)")
+                    self?.isLoadingPublisher.send(false)
+                    self?.dataNeedsReload.send()
+
                 case .finished:
                     print("CHATROOMS FINISHED")
                 }
-
-//                self?.isLoadingPublisher.send(false)
-//                self?.dataNeedsReload.send()
 
             }, receiveValue: { [weak self] response in
                 print("CHATROOMS GOMA: \(response)")
@@ -83,6 +86,9 @@ class ConversationsViewModel {
             }
         }
 
+        self.initialConversations = self.conversationsPublisher.value
+
+        self.isLoadingPublisher.send(false)
         self.dataNeedsReload.send()
     }
 
@@ -109,7 +115,7 @@ class ConversationsViewModel {
                                                 date: "10:15",
                                                 lastMessageUser: loggedUsername,
                                                 isLastMessageSeen: false)
-        self.conversations.append(conversationData)
+        self.conversationsPublisher.value.append(conversationData)
     }
 
     private func setupGroupChatroomData(chatroomData: ChatroomData) {
@@ -134,7 +140,24 @@ class ConversationsViewModel {
                                                 date: "10:15",
                                                 lastMessageUser: loggedUsername,
                                                 isLastMessageSeen: true, groupUsers: chatroomUsers)
-        self.conversations.append(conversationData)
+        self.conversationsPublisher.value.append(conversationData)
+    }
+
+    func filterSearch(searchQuery: String) {
+
+        let filteredUsers = self.initialConversations.filter({ $0.name.localizedCaseInsensitiveContains(searchQuery)})
+
+        self.conversationsPublisher.value = filteredUsers
+
+        self.dataNeedsReload.send()
+
+    }
+
+    func resetUsers() {
+
+        self.conversationsPublisher.value = self.initialConversations
+
+        self.dataNeedsReload.send()
     }
 
 }
@@ -146,7 +169,7 @@ extension ConversationsViewModel {
     }
 
     func numberOfRows(forSectionIndex section: Int) -> Int {
-        return self.conversations.count
+        return self.conversationsPublisher.value.count
     }
 
 }

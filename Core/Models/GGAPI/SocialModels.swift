@@ -40,3 +40,11 @@ struct Chatroom: Decodable {
         case type = "type"
     }
 }
+
+struct ChatroomId: Decodable {
+    let id: Int
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+    }
+}

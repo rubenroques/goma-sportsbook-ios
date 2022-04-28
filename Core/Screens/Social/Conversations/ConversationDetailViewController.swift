@@ -89,6 +89,8 @@ class ConversationDetailViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.setupPublishers()
+
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -171,6 +173,20 @@ class ConversationDetailViewController: UIViewController {
     }
 
     // MARK: Functions
+    private func setupPublishers() {
+
+        self.messageInputView.textPublisher
+            .map{ text in
+                if text != "" {
+                    return true
+                }
+                return false
+            }
+            .assign(to: \.isEnabled, on: self.sendButton)
+            .store(in: &cancellables)
+
+    }
+
     func scrollToBottomTableView() {
         DispatchQueue.main.async {
             let section = self.viewModel.dateMessages.count - 1
@@ -183,7 +199,7 @@ class ConversationDetailViewController: UIViewController {
 
     // MARK: Actions
     @objc func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
 
     @objc func didTapSendButton() {
@@ -257,30 +273,30 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let messageData = self.viewModel.dateMessages[safe: indexPath.section]?.messages[indexPath.row] {
             if messageData.messageType == .sentNotSeen || messageData.messageType == .sentSeen {
-            guard
-                let cell = tableView.dequeueCellType(SentMessageTableViewCell.self)
-            else {
-                fatalError()
-            }
+                guard
+                    let cell = tableView.dequeueCellType(SentMessageTableViewCell.self)
+                else {
+                    fatalError()
+                }
 
                 cell.setupMessage(messageData: messageData)
 
-            return cell
-        }
-        else {
-            guard
-                let cell = tableView.dequeueCellType(ReceivedMessageTableViewCell.self)
-            else {
-                fatalError()
+                return cell
             }
+            else {
+                guard
+                    let cell = tableView.dequeueCellType(ReceivedMessageTableViewCell.self)
+                else {
+                    fatalError()
+                }
 
-            cell.setupMessage(messageData: messageData)
+                cell.setupMessage(messageData: messageData)
 
-            return cell
-        }
+                return cell
+            }
         }
         else {
-            fatalError()
+            return UITableViewCell()
         }
     }
 
