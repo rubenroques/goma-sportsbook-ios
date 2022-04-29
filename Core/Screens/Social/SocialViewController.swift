@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 class SocialViewModel {
 
@@ -15,16 +16,17 @@ class SocialViewModel {
     }
 
     var startScreen: StartScreen
+    var socialClient: GomaGamingSocialServiceClient
 
     init(startScreen: StartScreen = .conversations) {
         self.startScreen = startScreen
 
+        self.socialClient = GomaGamingSocialServiceClient()
     }
 
 }
 
 extension SocialViewModel {
-
     func startPageIndex() -> Int {
         switch self.startScreen {
         case .conversations: return 0
@@ -141,14 +143,12 @@ class SocialViewController: UIViewController {
     // MARK: Action
 
     @objc func didTapNotificationsButton() {
-        print("NOTIFICATIONS")
         let notificationsViewController = ChatNotificationsViewController()
 
         self.navigationController?.pushViewController(notificationsViewController, animated: true)
     }
 
     @objc func didTapFriendsButton() {
-        print("FRIENDS")
         let addFriendsViewModel = AddFriendViewModel()
 
         let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
@@ -157,7 +157,6 @@ class SocialViewController: UIViewController {
     }
 
     @objc func didTapSettingsButton() {
-        print("SETTINGS")
         let chatSettingsViewModel = ChatSettingsViewModel()
 
         let chatSettingsViewController = ChatSettingsViewController(viewModel: chatSettingsViewModel)
@@ -166,7 +165,6 @@ class SocialViewController: UIViewController {
     }
 
     @objc func didTapCloseButton() {
-        print("CLOSE")
 
         if self.isModal {
             self.dismiss(animated: true, completion: nil)

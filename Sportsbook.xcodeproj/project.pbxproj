@@ -844,6 +844,10 @@
 		A97D247E281AD374003EEDEC /* PreviewChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */; };
 		A97D2480281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */; };
 		A97D2481281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */; };
+		A97D2488281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */; };
+		A97D2489281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */; };
+		A97D248E281C40DD003EEDEC /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A97D248D281C40DD003EEDEC /* SocketIO */; };
+		A97D2490281C41F8003EEDEC /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A97D248F281C41F8003EEDEC /* SocketIO */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -1617,6 +1621,7 @@
 		A97D24792818519A003EEDEC /* ConversationsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewModel.swift; sourceTree = "<group>"; };
 		A97D247C281AD374003EEDEC /* PreviewChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewChatTableViewCell.swift; sourceTree = "<group>"; };
 		A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewChatCellViewModel.swift; sourceTree = "<group>"; };
+		A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingSocialServiceClient.swift; sourceTree = "<group>"; };
 		A9875793276CA50F0099990D /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		A9875794276CA50F0099990D /* DepositViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DepositViewController.xib; sourceTree = "<group>"; };
 		A9875799276CD3660099990D /* DepositWebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositWebViewController.swift; sourceTree = "<group>"; };
@@ -1804,6 +1809,7 @@
 				45D871C62710769600F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */,
 				A9B841A126E26BEE00269B05 /* Starscream in Frameworks */,
+				A97D248E281C40DD003EEDEC /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1835,6 +1841,7 @@
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */,
 				45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */,
+				A97D2490281C41F8003EEDEC /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3086,6 +3093,7 @@
 			children = (
 				45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */,
 				454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */,
+				A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */,
 			);
 			path = Goma;
 			sourceTree = "<group>";
@@ -4039,6 +4047,7 @@
 				F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */,
 				45F8B153274BC3B60087652B /* FirebaseMessaging */,
 				457EDAC22791D39B00DDCD83 /* SwiftyBeaver */,
+				A97D248D281C40DD003EEDEC /* SocketIO */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -4095,6 +4104,7 @@
 				F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */,
 				A96B70B82739891200FEF07D /* FirebaseMessaging */,
 				457EDAC42791D3AC00DDCD83 /* SwiftyBeaver */,
+				A97D248F281C41F8003EEDEC /* SocketIO */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -4141,6 +4151,7 @@
 				F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */,
 				F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */,
 				457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -4764,6 +4775,7 @@
 				A97D247A2818519A003EEDEC /* ConversationsViewModel.swift in Sources */,
 				A92F5D792717169900884BDF /* FilterRowView.swift in Sources */,
 				F410E62C27BD183A005C1964 /* BettingsTableViewCell.swift in Sources */,
+				A97D2488281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift in Sources */,
 				A92F5DA6272C44A000884BDF /* UploadView.swift in Sources */,
 				45626E38275541790069B89B /* ThreeAwayMarketDetailTableViewCell.swift in Sources */,
 				A9BA6D3D280DB18900E82724 /* AddFriendViewModel.swift in Sources */,
@@ -5224,6 +5236,7 @@
 				A97D247B2818519A003EEDEC /* ConversationsViewModel.swift in Sources */,
 				F4E3B74E2742B48400855C58 /* MainMarketType.swift in Sources */,
 				4515637526BE982000690896 /* Colors.swift in Sources */,
+				A97D2489281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift in Sources */,
 				A99622AD278DA15B00ABDF97 /* CashoutAggregator.swift in Sources */,
 				A92F5D7A2717169900884BDF /* FilterRowView.swift in Sources */,
 				A9BA6D3E280DB18900E82724 /* AddFriendViewModel.swift in Sources */,
@@ -5785,6 +5798,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 15.0.0;
+			};
+		};
 		A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding.git";
@@ -5949,6 +5970,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		A97D248D281C40DD003EEDEC /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+		A97D248F281C41F8003EEDEC /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
 		};
 		A9B8419026E2359800269B05 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;

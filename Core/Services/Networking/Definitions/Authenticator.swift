@@ -36,6 +36,10 @@ class Authenticator {
         self.currentToken = token
     }
 
+    func getCurrentToken() -> AuthToken? {
+        return self.currentToken
+    }
+
     func validToken(deviceId: String, forceRefresh: Bool = false, loggedUser: UserLoginForm?) -> AnyPublisher<AuthToken, Error> {
 
         if let loggedUser = loggedUser {

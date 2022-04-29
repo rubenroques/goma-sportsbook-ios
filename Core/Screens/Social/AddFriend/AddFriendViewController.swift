@@ -174,7 +174,6 @@ class AddFriendViewController: UIViewController {
             .store(in: &cancellables)
 
         self.searchFriendTextFieldView.didTapButtonAction = { [weak self] in
-            print("FRIEND CODE SEARCHED!")
             let friendCode = self?.searchFriendTextFieldView.getTextFieldValue() ?? ""
             self?.viewModel.getUserInfo(friendCode: friendCode)
         }

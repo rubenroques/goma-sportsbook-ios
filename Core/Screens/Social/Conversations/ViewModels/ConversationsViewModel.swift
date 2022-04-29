@@ -61,7 +61,7 @@ class ConversationsViewModel {
                 }
 
             }, receiveValue: { [weak self] response in
-                print("CHATROOMS GOMA: \(response)")
+                // print("CHATROOMS GOMA: \(response)")
                 if let chatrooms = response.data {
                     self?.storeChatrooms(chatroomsData: chatrooms)
                 }
