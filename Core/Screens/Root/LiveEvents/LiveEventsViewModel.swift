@@ -92,9 +92,9 @@ class LiveEventsViewModel: NSObject {
             self?.didSelectMatchAction?(match)
         }
         
-        self.allMatchesViewModelDataSource.didTapFavoriteAction = { [weak self] match in
-            self?.didTapFavoriteMatchAction?(match)
-        }
+//        self.allMatchesViewModelDataSource.didTapFavoriteAction = { [weak self] match in
+//            self?.didTapFavoriteMatchAction?(match)
+//        }
         self.allMatchesViewModelDataSource.matchStatsViewModelForMatch = { [weak self] match in
             return self?.matchStatsViewModel(forMatch: match)
         }
@@ -493,9 +493,9 @@ class AllMatchesViewModelDataSource: NSObject, UITableViewDataSource, UITableVie
                     self.didSelectMatchAction?(match)
                 }
                 
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    self?.didTapFavoriteAction?(match)
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteAction?(match)
+//                }
                 
                 return cell
             }

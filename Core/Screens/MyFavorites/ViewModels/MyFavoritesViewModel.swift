@@ -31,6 +31,8 @@ class MyFavoritesViewModel: NSObject {
     var emptyStateStatusPublisher: CurrentValueSubject<EmptyStateType, Never> = .init(.none)
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
+    var initialLoading: Bool = true
+
     enum FavoriteListType {
         case favoriteGames
         case favoriteCompetitions
@@ -160,7 +162,10 @@ class MyFavoritesViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] favoriteEvents in
                 if UserSessionStore.isUserLogged() {
-                    self?.isLoadingPublisher.send(true)
+                    if self?.initialLoading == true {
+                     self?.isLoadingPublisher.send(true)
+                        self?.initialLoading = false
+                    }
                     self?.favoriteEventsIds = favoriteEvents
                     self?.fetchFavoriteMatches()
 

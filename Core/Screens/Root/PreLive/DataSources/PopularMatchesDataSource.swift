@@ -87,9 +87,9 @@ class PopularMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDele
                     self.didSelectMatchAction?(match)
                 }
                 
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    self?.didTapFavoriteMatchAction?(match)
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteMatchAction?(match)
+//                }
                 return cell
             }
         case 2:

@@ -248,15 +248,15 @@ class SearchViewController: UIViewController {
 
         }
         
-        self.didTapFavoriteMatchAction = { match in
-            if !UserSessionStore.isUserLogged() {
-                self.presentLoginViewController()
-            }
-            else {
-                self.viewModel.markAsFavorite(match: match)
-                self.tableView.reloadData()
-            }
-        }
+//        self.didTapFavoriteMatchAction = { match in
+//            if !UserSessionStore.isUserLogged() {
+//                self.presentLoginViewController()
+//            }
+//            else {
+//                self.viewModel.markAsFavorite(match: match)
+//                self.tableView.reloadData()
+//            }
+//        }
 
         self.searchTextPublisher
             .debounce(for: 0.5, scheduler: DispatchQueue.main)
@@ -426,9 +426,9 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                         self.openMatchDetailsScreen(match: match)
                     }
                     
-                    cell.didTapFavoriteMatchAction = { [weak self] match in
-                        self?.didTapFavoriteMatchAction?(match)
-                    }
+//                    cell.didTapFavoriteMatchAction = { [weak self] match in
+//                        self?.didTapFavoriteMatchAction?(match)
+//                    }
 
                     return cell
                 }

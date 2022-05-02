@@ -224,7 +224,7 @@ class HomeViewModel {
         self.bannersInfoPublisher = nil
     }
     
-    func markAsFavorite(match : Match){
+    func markAsFavorite(match : Match) {
         var isFavorite = false
         for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
             isFavorite = true

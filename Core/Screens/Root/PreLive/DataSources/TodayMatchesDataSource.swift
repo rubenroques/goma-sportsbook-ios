@@ -57,9 +57,9 @@ class TodayMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDelega
                 cell.tappedMatchLineAction = {
                     self.didSelectMatchAction?(match)
                 }
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    self?.didTapFavoriteMatchAction?(match)
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteMatchAction?(match)
+//                }
 
                 return cell
             }

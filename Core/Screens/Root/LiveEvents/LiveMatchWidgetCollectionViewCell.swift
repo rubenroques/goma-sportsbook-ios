@@ -594,11 +594,37 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.isHidden = !show
     }
 
+    func markAsFavorite(match: Match) {
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+            self.isFavorite = false
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+            self.isFavorite = true
+        }
+    }
+
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-        if let match = self.viewModel?.match {
-            self.didTapFavoriteMatchAction?(match)
+//        if let match = self.viewModel?.match {
+//            self.didTapFavoriteMatchAction?(match)
+//        }
+        if UserSessionStore.isUserLogged() {
+            if let match = self.viewModel?.match {
+                //self.didTapFavoriteMatchAction?(match)
+                self.markAsFavorite(match: match)
+            }
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.viewController?.present(loginViewController, animated: true, completion: nil)
         }
     }
 

@@ -269,10 +269,10 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                         self.tappedMatchLineAction?()
                     }
                   
-                    cell.didTapFavoriteMatchAction = { [weak self] match in
-                        print("Tapped Favorite")
-                        self?.didTapFavoriteMatchAction?(match)
-                    }
+//                    cell.didTapFavoriteMatchAction = { [weak self] match in
+//                        print("Tapped Favorite")
+//                        self?.didTapFavoriteMatchAction?(match)
+//                    }
                     
                 }
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
@@ -297,9 +297,9 @@ extension MatchLineTableViewCell: UICollectionViewDelegate, UICollectionViewData
                    
                 }
                 
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    self?.didTapFavoriteMatchAction?(match)
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteMatchAction?(match)
+//                }
                 
                 cell.shouldShowCountryFlag(self.shouldShowCountryFlag)
 
