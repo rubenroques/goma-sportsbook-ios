@@ -176,7 +176,7 @@ class ConversationDetailViewController: UIViewController {
     private func setupPublishers() {
 
         self.messageInputView.textPublisher
-            .map{ text in
+            .map { text in
                 if text != "" {
                     return true
                 }

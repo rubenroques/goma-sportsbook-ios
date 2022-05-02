@@ -19,29 +19,32 @@ class ConversationsViewModel {
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init() {
+        // DUMMY DATA
+        for i in 1...15 {
+            if i <= 2 {
+                let friend1 = GomaFriend(id: 1, name: "User1", username: "@user1")
+                let friend2 = GomaFriend(id: 2, name: "User2", username: "@user2")
+                let conversationData = ConversationData(id: i, conversationType: .group,
+                                                        name: "GOMA Champs",
+                                                        lastMessage: "I won the bet! Whoo!",
+                                                        date: "10:15",
+                                                        lastMessageUser: "André",
+                                                        isLastMessageSeen: false,
+                groupUsers: [friend1, friend2])
+                self.conversationsPublisher.value.append(conversationData)
+            }
+            else {
+                let conversationData = ConversationData(id: i, conversationType: .user,
+                                                        name: "John Doe",
+                                                        lastMessage: "I won the bet! Whoo!",
+                                                        date: "Today",
+                                                        lastMessageUser: nil,
+                                                        isLastMessageSeen: true)
+                self.conversationsPublisher.value.append(conversationData)
+            }
+        }
 
-//        for i in 1...15 {
-//            if i <= 2 {
-//                let conversationData = ConversationData(conversationType: .group,
-//                                                        name: "GOMA Champs GOMA Champs GOMA Champs",
-//                                                        lastMessage: "I won the bet! Whoo!",
-//                                                        date: "10:15",
-//                                                        lastMessageUser: "André",
-//                                                        isLastMessageSeen: false)
-//                self.conversations.append(conversationData)
-//            }
-//            else {
-//                let conversationData = ConversationData(conversationType: .user,
-//                                                        name: "Lascas",
-//                                                        lastMessage: "I won the bet! Whoo!",
-//                                                        date: "Today",
-//                                                        lastMessageUser: nil,
-//                                                        isLastMessageSeen: true)
-//                self.conversations.append(conversationData)
-//            }
-//        }
-
-        self.getConversations()
+        //self.getConversations()
     }
 
     private func getConversations() {
