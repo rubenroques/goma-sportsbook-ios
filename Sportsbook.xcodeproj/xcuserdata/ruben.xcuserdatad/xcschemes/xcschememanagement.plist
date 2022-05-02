@@ -4,19 +4,24 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>GOMASports.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>32</integer>
+		</dict>
 		<key>Promises (Playground) 1.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>27</integer>
+			<integer>30</integer>
 		</dict>
 		<key>Promises (Playground) 2.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>29</integer>
+			<integer>31</integer>
 		</dict>
 		<key>Promises (Playground) 3.xcscheme</key>
 		<dict>
@@ -65,7 +70,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>24</integer>
+			<integer>3</integer>
 		</dict>
 		<key>ShowcaseBeta.xcscheme_^#shared#^_</key>
 		<dict>
@@ -117,6 +122,11 @@
 			<true/>
 		</dict>
 		<key>455A0C8326BD904300EC572D</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4589C756282024E400243547</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -100,8 +100,7 @@ class LoginViewController: UIViewController {
         dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         dismissButton.setTitle(localized("close"), for: .normal)
 
-
-        logoImageView.image = UIImage(named: "logo_horizontal_large")
+        logoImageView.image = UIImage(named: "logo_horizontal_center")
         logoImageView.sizeToFit()
 
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)

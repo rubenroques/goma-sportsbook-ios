@@ -47,7 +47,7 @@ class RefusedAccessViewController: UIViewController {
     }
 
     func commonInit() {
-        logoMainImageView.image = UIImage(named: "logo_horizontal_large")
+        logoMainImageView.image = UIImage(named: "logo_horizontal_center")
         logoMainImageView.sizeToFit()
 
         refusedImageView.image = UIImage(named: "location_error_icon")

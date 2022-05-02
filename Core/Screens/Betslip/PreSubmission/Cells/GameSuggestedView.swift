@@ -51,12 +51,11 @@ class GameSuggestedView: NibView {
         self.gameTitleLabel.text = self.gameTitle
         self.gameInfoLabel.text = self.gameInfo
         
-        self.gameImageView.image = UIImage(named: "")
+        self.gameImageView.image = nil
         self.gameImageView.clipsToBounds = true
         self.gameImageView.layer.masksToBounds = true
   
         self.setupWithTheme()
-        
     }
     
     override var intrinsicContentSize: CGSize {

@@ -18,7 +18,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RootViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="RootViewController" customModule="GOMASports" customModuleProvider="target">
             <connections>
                 <outlet property="accountPlusView" destination="iYA-bp-KRe" id="nII-Tt-fvU"/>
                 <outlet property="accountValueBaseView" destination="teU-V0-Kor" id="aIf-3X-9c4"/>
@@ -121,7 +121,7 @@
                                                 <constraint firstItem="9OD-Ud-62c" firstAttribute="leading" secondItem="gk0-bi-8cJ" secondAttribute="leading" id="yYP-U0-BRN"/>
                                             </constraints>
                                         </view>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_horizontal_medium" translatesAutoresizingMaskIntoConstraints="NO" id="RMW-wP-BFm">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_horizontal_left" translatesAutoresizingMaskIntoConstraints="NO" id="RMW-wP-BFm">
                                             <rect key="frame" x="58" y="0.0" width="120" height="64"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <constraints>
@@ -375,7 +375,7 @@
     </objects>
     <resources>
         <image name="empty_user_image" width="100" height="100"/>
-        <image name="logo_horizontal_medium" width="400" height="44"/>
+        <image name="logo_horizontal_left" width="400" height="44"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <image name="search_bar_icon" width="24" height="24"/>
         <image name="tabbar_home_icon" width="25" height="25"/>
