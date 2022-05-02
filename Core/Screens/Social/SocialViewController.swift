@@ -24,6 +24,11 @@ class SocialViewModel {
         self.socialClient = GomaGamingSocialServiceClient()
     }
 
+    deinit {
+        print("DEINIT SOCIAL VM")
+        self.socialClient.disconnectSocket()
+    }
+
 }
 
 extension SocialViewModel {
@@ -197,9 +202,9 @@ extension SocialViewController {
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.textColor = UIColor.App.textPrimary
-        titleLabel.font = AppFont.with(type: .semibold, size: 16)
+        titleLabel.font = AppFont.with(type: .bold, size: 17)
         titleLabel.textAlignment = .center
-        titleLabel.text = "Chat"
+        titleLabel.text = localized("chat")
         return titleLabel
     }
 
@@ -245,7 +250,7 @@ extension SocialViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("close"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         button.setContentHuggingPriority(.required, for: .horizontal)
         return button
     }

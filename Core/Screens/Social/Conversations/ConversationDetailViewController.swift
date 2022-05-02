@@ -409,7 +409,7 @@ extension ConversationDetailViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor.App.textSecondary
-        label.font = AppFont.with(type: .regular, size: 12)
+        label.font = AppFont.with(type: .regular, size: 14)
         label.textAlignment = .left
         label.numberOfLines = 1
         label.text = "@chattitle"

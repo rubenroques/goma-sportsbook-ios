@@ -47,25 +47,27 @@ class ConversationDetailViewModel: NSObject {
         }
         else {
             if let groupUsers = self.conversationData.groupUsers {
-                var usersString = ""
-                var loggedUsername = ""
 
-                if let loggedUser = UserSessionStore.loggedUserSession() {
-                    loggedUsername = loggedUser.username
-                }
+                let numberUsers = groupUsers.count
+                let onlineUsers = 0
+                var userDetailsString = ""
 
-                for (index, user) in groupUsers.enumerated() {
-                    if user.username != loggedUsername && loggedUsername != "" {
-                        if index == groupUsers.endIndex - 1 {
-                            usersString += "\(user.username)"
-                        }
-                        else {
-                            usersString += "\(user.username), "
-                        }
-                    }
-                }
+//                for (index, user) in groupUsers.enumerated() {
+//                    if user.username != loggedUsername && loggedUsername != "" {
+//                        if index == groupUsers.endIndex - 1 {
+//                            usersString += "\(user.username)"
+//                        }
+//                        else {
+//                            usersString += "\(user.username), "
+//                        }
+//                    }
+//                }
+                let chatGroupDetailString = localized("chat_group_users_details")
 
-                self.usersPublisher.value = usersString
+                userDetailsString = chatGroupDetailString.replacingFirstOccurrence(of: "%s", with: "\(onlineUsers)")
+                userDetailsString = userDetailsString.replacingOccurrences(of: "%s", with: "\(numberUsers)")
+
+                self.usersPublisher.value = userDetailsString
 
                 self.groupInitialsPublisher.value = self.getGroupInitials(text: self.conversationData.name)
 
@@ -97,25 +99,25 @@ class ConversationDetailViewModel: NSObject {
 
     private func getConversationMessages() {
         // TESTING CHAT MESSAGES
-//        let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")
-//        let message2 = MessageData(messageType: .sentSeen, messageText: "Oh what is it? And how are you?", messageDate: "06/04/2022 16:00")
-//        let message3 = MessageData(messageType: .receivedOnline, messageText: "All fine here! What about: Lorem ipsum dolor sit amet," +
-//                                   "consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 01:50")
-//        let message4 = MessageData(messageType: .sentSeen, messageText: "I'm up for it! 👀", messageDate: "07/04/2022 02:32")
-//        let message5 = MessageData(messageType: .receivedOnline, messageText: "Alright! Then I'll send you the details: " +
-//                                   "Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 17:35")
-//        let message6 = MessageData(messageType: .sentNotSeen, messageText: "This seems like a nice deal. looking forward to it! 🤪", messageDate: "08/04/2022 10:01")
-//
-//        messages.append(message1)
-//        messages.append(message2)
-//        messages.append(message3)
-//        messages.append(message4)
-//        messages.append(message5)
-//        messages.append(message6)
-//
-//        self.sortAllMessages()
-//
-//        self.isChatOnline = true
+        let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")
+        let message2 = MessageData(messageType: .sentSeen, messageText: "Oh what is it? And how are you?", messageDate: "06/04/2022 16:00")
+        let message3 = MessageData(messageType: .receivedOnline, messageText: "All fine here! What about: Lorem ipsum dolor sit amet," +
+                                   "consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 01:50")
+        let message4 = MessageData(messageType: .sentSeen, messageText: "I'm up for it! 👀", messageDate: "07/04/2022 02:32")
+        let message5 = MessageData(messageType: .receivedOnline, messageText: "Alright! Then I'll send you the details: " +
+                                   "Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 17:35")
+        let message6 = MessageData(messageType: .sentNotSeen, messageText: "This seems like a nice deal. looking forward to it! 🤪", messageDate: "08/04/2022 10:01")
+
+        messages.append(message1)
+        messages.append(message2)
+        messages.append(message3)
+        messages.append(message4)
+        messages.append(message5)
+        messages.append(message6)
+
+        self.sortAllMessages()
+
+        self.isChatOnline = true
 
         // Get chat messages for chatroom id
 
@@ -144,7 +146,14 @@ class ConversationDetailViewModel: NSObject {
 
         // Sort by date
         self.dateMessages.sort {
-            $0.date < $1.date
+
+            if let firstDate = self.getDateFromString(dateString: $0.date), let secondDate = self.getDateFromString(dateString: $1.date) {
+                return firstDate < secondDate
+            }
+            else {
+               return $0.date < $1.date
+            }
+
         }
     }
 
@@ -176,6 +185,18 @@ class ConversationDetailViewModel: NSObject {
         dateFormatterPrint.dateFormat = "dd-MM-yyyy HH:mm"
 
         return dateFormatterPrint.string(from: date)
+    }
+
+    func getDateFromString(dateString: String) -> Date? {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "dd-MM-yyyy"
+
+        if let formattedDate = dateFormatterGet.date(from: dateString) {
+
+            return formattedDate
+        }
+
+        return nil
     }
 }
 

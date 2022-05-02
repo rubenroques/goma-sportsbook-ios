@@ -449,3 +449,8 @@ Terms of use, Privacy Policy and EULA";
 "friend_code" = "Friend Code";
 "search" = "Search";
 "invalid_friend_code" = "Invalid friend code";
+
+"chat" = "Chat";
+"message" = "Message";
+
+"chat_group_users_details" = "%s online, %s members";

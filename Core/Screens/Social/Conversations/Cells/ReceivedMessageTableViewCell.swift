@@ -155,7 +155,7 @@ extension ReceivedMessageTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Username"
-        label.font = AppFont.with(type: .semibold, size: 12)
+        label.font = AppFont.with(type: .semibold, size: 16)
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }
@@ -179,7 +179,7 @@ extension ReceivedMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit."
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 11)
+        label.font = AppFont.with(type: .medium, size: 14)
         return label
     }
 
@@ -188,7 +188,7 @@ extension ReceivedMessageTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "01/01/2022 12:59"
         label.textAlignment = .right
-        label.font = AppFont.with(type: .medium, size: 9)
+        label.font = AppFont.with(type: .medium, size: 12)
         return label
     }
 

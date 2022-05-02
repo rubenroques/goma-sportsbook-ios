@@ -205,7 +205,7 @@ extension PreviewChatTableViewCell {
     private static func createNameLabel() -> UILabel {
         let nameLabel = UILabel()
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.font = AppFont.with(type: .bold, size: 14)
+        nameLabel.font = AppFont.with(type: .bold, size: 16)
         nameLabel.text = "Suspendisse potenti. Cras a suscipit mi. Nam et mi ac ipsum luctus maximus."
         nameLabel.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return nameLabel
@@ -214,7 +214,7 @@ extension PreviewChatTableViewCell {
     private static func createNumberMessagesLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 14)
+        label.font = AppFont.with(type: .bold, size: 16)
         label.text = "(1)"
         label.textAlignment = .left
         label.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -240,14 +240,14 @@ extension PreviewChatTableViewCell {
 
     private static func createMessageLabel() -> UILabel {
         let messageLabel = UILabel()
-        messageLabel.font = AppFont.with(type: .medium, size: 12)
+        messageLabel.font = AppFont.with(type: .regular, size: 14)
         messageLabel.translatesAutoresizingMaskIntoConstraints = false
         messageLabel.text = "Suspendisse potenti. Cras a suscipit mi. Nam et mi ac ipsum luctus maximus."
         return messageLabel
     }
     private static func createDateLabel() -> UILabel {
         let dateLabel = UILabel()
-        dateLabel.font = AppFont.with(type: .medium, size: 12)
+        dateLabel.font = AppFont.with(type: .semibold, size: 14)
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         dateLabel.text = "Yesterday"
         dateLabel.textAlignment = .right

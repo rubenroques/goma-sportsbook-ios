@@ -22,12 +22,11 @@ class GomaGamingSocialServiceClient {
             self.manager.config = SocketIOClientConfiguration.init(arrayLiteral: .log(true),
                                                                    .forceWebsockets(true),
                                                                    .forcePolling(false),
-                                                                   .connectParams(["jwt": "\(jwtToken.hash)",
-                                                                                   "EIO": "4"]),
+                                                                   .connectParams(["jwt": "\(jwtToken.hash)"]),
                                                                    .extraHeaders(["token": "\(Env.deviceFCMToken)"]),
                                                                    .path("/socket/socket.io/")
                         )
-//            self.manager.reconnects = true
+            self.manager.reconnects = false
 //            self.manager.reconnectWait = 10
 //            self.manager.reconnectWaitMax = 40
         }

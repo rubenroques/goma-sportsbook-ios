@@ -132,7 +132,8 @@ class ConversationsViewController: UIViewController {
             textfield.tintColor = .white
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App.inputTextTitle])
+                                                                                UIColor.App.inputTextTitle,
+                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
 
             if let glassIconView = textfield.leftView as? UIImageView {
                 glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
@@ -298,7 +299,7 @@ extension ConversationsViewController {
 
     private static func createNewGroupButton() -> UIButton {
         let newGroupButton = UIButton(type: .custom)
-        newGroupButton.setTitle("New Group", for: .normal)
+        newGroupButton.setTitle(localized("new_group"), for: .normal)
         newGroupButton.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         newGroupButton.translatesAutoresizingMaskIntoConstraints = false
         return newGroupButton
