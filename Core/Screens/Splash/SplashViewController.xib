@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -30,6 +31,7 @@
                 </activityIndicatorView>
             </subviews>
             <viewLayoutGuide key="safeArea" id="VxJ-Uj-Cmr"/>
+            <color key="backgroundColor" name="backgroundPrimary"/>
             <constraints>
                 <constraint firstItem="VxJ-Uj-Cmr" firstAttribute="bottom" secondItem="t17-ry-fsZ" secondAttribute="bottom" constant="16" id="4YG-Ja-y75"/>
                 <constraint firstItem="dAh-qY-Dav" firstAttribute="centerY" secondItem="ZmS-qX-itl" secondAttribute="centerY" constant="-20" id="50f-5j-Ak4"/>
@@ -42,5 +44,8 @@
     </objects>
     <resources>
         <image name="logo_horizontal_center" width="400" height="44"/>
+        <namedColor name="backgroundPrimary">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
     </resources>
 </document>
