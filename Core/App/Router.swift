@@ -82,6 +82,9 @@ class Router {
         }
 
         self.rootWindow.rootViewController = bootRootViewController
+
+        // self.rootWindow.rootViewController = ContainerViewController(containedView: FloatingShortcutsView(),
+        //                                                              containerType: .center)
     }
 
     func subscribeToUserActionBlockers() {

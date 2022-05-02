@@ -29,7 +29,6 @@ struct TargetVariables: SportsbookTarget {
         "https://sportsbook-api.gomagaming.com/api/auth/v1/login"
     }
 
-
     static var firebaseDatabaseURL: String {
         #if DEBUG
         "https://goma-sportsbook-ios-dev.europe-west1.firebasedatabase.app/"

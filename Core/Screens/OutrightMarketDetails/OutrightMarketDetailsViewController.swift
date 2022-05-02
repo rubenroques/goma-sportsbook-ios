@@ -28,6 +28,11 @@ class OutrightMarketDetailsViewController: UIViewController {
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
+    private lazy var accountValueView: UIView = Self.createAccountValueView()
+    private lazy var accountPlusView: UIView = Self.createAccountPlusView()
+    private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
+    private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
+
     private var expandedMarketGroupIds: Set<String> = []
 
     private var viewModel: OutrightMarketDetailsViewModel
@@ -65,6 +70,11 @@ class OutrightMarketDetailsViewController: UIViewController {
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        accountValueView.addGestureRecognizer(accountValueTapGesture)
+
+        self.showLoading()
+
         self.bind(toViewModel: self.viewModel)
     }
 
@@ -93,6 +103,13 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
         
         self.titleLabel.backgroundColor = .clear
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.loadingActivityIndicatorView.tintColor = .gray
+
+        self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValueLabel.textColor = UIColor.App.textPrimary
+        self.accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
     }
 
     override func viewDidLayoutSubviews() {
@@ -104,6 +121,46 @@ class OutrightMarketDetailsViewController: UIViewController {
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: OutrightMarketDetailsViewModel) {
+
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSession in
+                if userSession != nil { // Is Logged In
+                    self?.accountValueView.isHidden = false
+                }
+                else {
+                    self?.accountValueView.isHidden = true
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+                    let accountValue = bonusWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+
+                }
+                else {
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBonusBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+                    let accountValue = currentWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
 
         Env.betslipManager.bettingTicketsPublisher
             .map(\.count)
@@ -120,6 +177,17 @@ class OutrightMarketDetailsViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        self.viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoading()
+                }
+                else {
+                    self?.hideLoading()
+                }
+            }.store(in: &cancellables)
+
         self.viewModel.refreshPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
@@ -134,6 +202,16 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.tableView.reloadData()
     }
 
+    private func showLoading() {
+        self.loadingBaseView.isHidden = false
+        self.loadingActivityIndicatorView.startAnimating()
+    }
+
+    private func hideLoading() {
+        self.loadingBaseView.isHidden = true
+        self.loadingActivityIndicatorView.stopAnimating()
+    }
+
     // MARK: - Actions
     @objc func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
@@ -144,12 +222,17 @@ class OutrightMarketDetailsViewController: UIViewController {
     }
 
     func openBetslipModal() {
-
         let betslipViewController = BetslipViewController()
         betslipViewController.willDismissAction = { [weak self] in
             self?.tableView.reloadData()
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
     }
 
 }
@@ -273,7 +356,7 @@ extension OutrightMarketDetailsViewController {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.textColor = UIColor.App.textPrimary
         titleLabel.font = AppFont.with(type: .semibold, size: 14)
-        titleLabel.textAlignment = .center
+        titleLabel.textAlignment = .left
         titleLabel.text = ""
         return titleLabel
     }
@@ -382,12 +465,50 @@ extension OutrightMarketDetailsViewController {
         return activityIndicatorView
     }
 
+    private static func createAccountValueView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = CornerRadius.view
+        view.layer.masksToBounds = true
+        view.isUserInteractionEnabled = true
+        return view
+    }
+
+    private static func createAccountPlusView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = CornerRadius.squareView
+        view.layer.masksToBounds = true
+        return view
+    }
+
+    private static func createAccountPlusImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "plus_small_icon")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createAccountValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.text = "Loading"
+        return label
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.titleLabel)
+
+        self.accountValueView.addSubview(self.accountPlusView)
+        self.accountPlusView.addSubview(self.accountPlusImageView)
+        self.accountValueView.addSubview(self.accountValueLabel)
+        self.navigationView.addSubview(self.accountValueView)
 
         self.view.addSubview(self.headerView)
         self.headerView.addSubview(self.outrightsLabel)
@@ -423,14 +544,32 @@ extension OutrightMarketDetailsViewController {
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 40),
 
-            self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 44),
+            self.titleLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor),
 
             self.backButton.widthAnchor.constraint(equalTo: self.backButton.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 8),
+
+            self.accountValueView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.accountValueView.heightAnchor.constraint(equalToConstant: 24),
+            self.accountValueView.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -12),
+
+            self.accountPlusView.widthAnchor.constraint(equalTo: self.accountPlusView.heightAnchor),
+            self.accountPlusView.leadingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor, constant: 4),
+            self.accountPlusView.topAnchor.constraint(equalTo: self.accountValueView.topAnchor, constant: 4),
+            self.accountPlusView.bottomAnchor.constraint(equalTo: self.accountValueView.bottomAnchor, constant: -4),
+
+            self.accountPlusImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.accountPlusImageView.heightAnchor.constraint(equalToConstant: 12),
+            self.accountPlusImageView.centerXAnchor.constraint(equalTo: self.accountPlusView.centerXAnchor),
+            self.accountPlusImageView.centerYAnchor.constraint(equalTo: self.accountPlusView.centerYAnchor),
+
+            self.accountValueLabel.centerYAnchor.constraint(equalTo: self.accountValueView.centerYAnchor),
+            self.accountValueLabel.leadingAnchor.constraint(equalTo: self.accountPlusView.trailingAnchor, constant: 4),
+            self.accountValueLabel.trailingAnchor.constraint(equalTo: self.accountValueView.trailingAnchor, constant: -4),
         ])
 
         NSLayoutConstraint.activate([
@@ -469,6 +608,18 @@ extension OutrightMarketDetailsViewController {
 
             self.betslipCountLabel.widthAnchor.constraint(equalToConstant: 20),
             self.betslipCountLabel.widthAnchor.constraint(equalTo: self.betslipCountLabel.heightAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
 }

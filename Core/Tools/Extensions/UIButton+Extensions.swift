@@ -36,28 +36,23 @@ extension UIButton {
         let range1 = (text as NSString).range(of: title)
 
         underlineAttriString.addAttribute(NSAttributedString.Key.font, value: AppFont.with(type: .regular, size: 16), range: range1)
-
         underlineAttriString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.App.highlightPrimary, range: range1)
-
         underlineAttriString.addAttribute(NSAttributedString.Key.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: range1)
 
         self.setAttributedTitle(underlineAttriString, for: .normal)
     }
 
-    func enableButton() {
-        self.isEnabled = true
-        self.backgroundColor = UIColor.App.buttonBackgroundPrimary
-    }
+//    func enableButton() {
+//        self.isEnabled = true
+//        self.backgroundColor = UIColor.App.buttonBackgroundPrimary
+//    }
+//
+//    func disableButton() {
+//        self.isEnabled = false
+//        self.backgroundColor = UIColor.App.buttonDisablePrimary
+//    }
 
-    func disableButton() {
-        self.isEnabled = false
-        self.backgroundColor = UIColor.App.buttonDisablePrimary
-    }
-
-    func setInsets(
-        forContentPadding contentPadding: UIEdgeInsets,
-        imageTitlePadding: CGFloat
-    ) {
+    func setInsets(forContentPadding contentPadding: UIEdgeInsets, imageTitlePadding: CGFloat) {
         self.contentEdgeInsets = UIEdgeInsets(
             top: contentPadding.top,
             left: contentPadding.left,

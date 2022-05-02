@@ -199,10 +199,8 @@ class RootViewController: UIViewController {
             .sink { [weak self] value in
                 if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
                     let accountValue = currentWallet.amount + value
-
                     self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
                 }
-
             }
             .store(in: &cancellables)
 
@@ -509,7 +507,6 @@ extension RootViewController {
 
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
-        //self.navigationController?.pushViewController(depositViewController, animated: true)
         let navigationViewController = Router.navigationController(with: depositViewController)
         self.present(navigationViewController, animated: true, completion: nil)
     }

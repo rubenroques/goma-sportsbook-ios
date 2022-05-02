@@ -80,4 +80,8 @@ class HomeAwayCardStatsView: NibView {
         }
     }
 
+    func setupCaptionText(_ captionText: String) {
+        self.captionLabel.text = captionText
+    }
+
 }

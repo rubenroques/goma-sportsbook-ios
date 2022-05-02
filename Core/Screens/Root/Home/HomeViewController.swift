@@ -25,6 +25,8 @@ class HomeViewController: UIViewController {
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
+    private let refreshControl = UIRefreshControl()
+
     // Logic
     private var cancellables: Set<AnyCancellable> = []
     private let viewModel: HomeViewModel
@@ -58,7 +60,11 @@ class HomeViewController: UIViewController {
         self.tableView.register(MatchLineTableViewCell.nib, forCellReuseIdentifier: MatchLineTableViewCell.identifier)
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
-        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
+        self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
+
+        self.refreshControl.tintColor = UIColor.lightGray
+        self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
+        self.tableView.addSubview(self.refreshControl)
 
         self.loadingBaseView.isHidden = true
 
@@ -130,9 +136,11 @@ class HomeViewController: UIViewController {
     private func bind(toViewModel viewModel: HomeViewModel) {
 
         viewModel.refreshPublisher
+            .debounce(for: .milliseconds(500), scheduler: DispatchQueue.main)
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
                 self?.reloadData()
+                self?.refreshControl.endRefreshing()
             })
             .store(in: &self.cancellables)
 
@@ -153,6 +161,10 @@ class HomeViewController: UIViewController {
     }
 
     // MARK: - Convenience
+    @objc func refreshControllPulled() {
+        self.viewModel.refresh()
+    }
+
     func reloadData() {
         self.tableView.reloadData()
     }

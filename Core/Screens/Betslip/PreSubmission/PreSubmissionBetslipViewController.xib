@@ -23,7 +23,6 @@
             <connections>
                 <outlet property="amountBaseView" destination="AXI-gL-Dno" id="xMl-GR-YWE"/>
                 <outlet property="amountTextfield" destination="MS2-zN-0UQ" id="ITn-A4-lDf"/>
-                <outlet property="betTypeSegmentControl" destination="mRH-ES-pb4" id="hA2-9n-TBI"/>
                 <outlet property="betTypeSegmentControlBaseView" destination="TZO-Zq-dgn" id="4YH-2y-5U0"/>
                 <outlet property="bottomSafeArea" destination="Wu6-kU-jpt" id="DoY-Dg-dC6"/>
                 <outlet property="clearBaseView" destination="cEh-jz-3Se" id="vuR-kr-g6Y"/>
@@ -203,31 +202,13 @@
                     <rect key="frame" x="0.0" y="0.0" width="757" height="1107"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TZO-Zq-dgn">
-                    <rect key="frame" x="0.0" y="44" width="757" height="50"/>
-                    <subviews>
-                        <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="mRH-ES-pb4">
-                            <rect key="frame" x="238.5" y="10.5" width="280" height="32"/>
-                            <constraints>
-                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="280" id="pwa-kh-ytt"/>
-                            </constraints>
-                            <segments>
-                                <segment title="Single"/>
-                                <segment title="Multiple"/>
-                                <segment title="System"/>
-                            </segments>
-                            <connections>
-                                <action selector="didChangeSegmentValue:" destination="-1" eventType="valueChanged" id="7yA-ld-g4U"/>
-                            </connections>
-                        </segmentedControl>
-                    </subviews>
+                    <rect key="frame" x="0.0" y="44" width="757" height="56"/>
                     <constraints>
-                        <constraint firstItem="mRH-ES-pb4" firstAttribute="centerX" secondItem="TZO-Zq-dgn" secondAttribute="centerX" id="P0x-v0-n73"/>
-                        <constraint firstItem="mRH-ES-pb4" firstAttribute="centerY" secondItem="TZO-Zq-dgn" secondAttribute="centerY" constant="1" id="kab-nj-cGV"/>
-                        <constraint firstAttribute="height" constant="50" id="rJr-ME-4RE"/>
+                        <constraint firstAttribute="height" constant="56" id="rJr-ME-4RE"/>
                     </constraints>
                 </view>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Q4m-H4-Smm">
-                    <rect key="frame" x="0.0" y="126" width="757" height="685"/>
+                    <rect key="frame" x="0.0" y="132" width="757" height="679"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </tableView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Oi-Vo-9uT">
@@ -796,7 +777,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cEh-jz-3Se">
-                    <rect key="frame" x="0.0" y="94" width="757" height="32"/>
+                    <rect key="frame" x="0.0" y="100" width="757" height="32"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1NK-ag-RHY">
                             <rect key="frame" x="694" y="5" width="51" height="25"/>

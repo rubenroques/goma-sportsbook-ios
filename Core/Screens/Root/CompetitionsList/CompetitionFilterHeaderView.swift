@@ -37,7 +37,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         var label  = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 12)
-        label.text = "99"
+        label.text = ""
         return label
     }()
 
@@ -194,7 +194,7 @@ class CompetitionFilterHeaderView: UITableViewHeaderFooterView {
         self.titleLabel.textColor = UIColor.App.textPrimary
         self.arrowImageView.backgroundColor = .clear
 
-        self.selectedFiltersBaseView.backgroundColor = UIColor.App.highlightPrimary
+        self.selectedFiltersBaseView.backgroundColor = UIColor.App.highlightSecondary
         self.selectedFiltersLabel.textColor = UIColor.App.buttonTextPrimary
     }
 

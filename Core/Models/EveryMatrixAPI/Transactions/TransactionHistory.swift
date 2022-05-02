@@ -7,9 +7,7 @@
 
 import Foundation
 
-// MARK: - TransactionsHistoryRow
-
-extension EveryMatrix{
+extension EveryMatrix {
     
     struct TransactionsHistoryResponse: Codable {
         var currentPageIndex: Int
@@ -25,7 +23,6 @@ extension EveryMatrix{
             case totalPageCount = "totalPageCount"
         }
     }
-
 
     struct TransactionHistory: Codable {
         let transactionID: String
@@ -52,12 +49,10 @@ extension EveryMatrix{
         }
     }
 
-
     struct DebitCredit: Codable {
         let currency: String
         let amount: Int
         let name: String
-
 
         enum CodingKeys: String, CodingKey {
             case currency = "currency"
@@ -70,12 +65,10 @@ extension EveryMatrix{
         let currency: String
         let amount: Int
 
-
         enum CodingKeys: String, CodingKey {
             case currency = "currency"
             case amount = "amount"
         }
     }
-
 
 }

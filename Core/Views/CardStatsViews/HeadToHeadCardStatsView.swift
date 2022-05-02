@@ -97,6 +97,10 @@ class HeadToHeadCardStatsView: NibView {
         }
     }
 
+    func setupCaptionText(_ captionText: String) {
+        self.captionLabel.text = captionText
+    }
+
     override func layoutSubviews() {
         super.layoutSubviews()
 
