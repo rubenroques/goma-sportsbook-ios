@@ -6,18 +6,98 @@
 //
 
 import Foundation
+import Combine
 
 class ConversationDetailViewModel: NSObject {
 
+    // MARK: Private Properties
+    private var conversationData: ConversationData
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
     var messages: [MessageData] = []
     var sectionMessages: [String: [MessageData]] = [:]
     var dateMessages: [DateMessages] = []
-
     var isChatOnline: Bool = false
+    var isChatGroup: Bool = false
 
-    override init() {
+    var titlePublisher: CurrentValueSubject<String, Never> = .init("")
+    var usersPublisher: CurrentValueSubject<String, Never> = .init("")
+    var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
+
+    init(conversationData: ConversationData) {
+        self.conversationData = conversationData
+
         super.init()
-        
+
+        print("CHATROOM ID: \(self.conversationData.id)")
+
+        self.setupConversationInfo()
+        self.getConversationMessages()
+
+    }
+
+    private func setupConversationInfo() {
+
+        self.titlePublisher.value = self.conversationData.name
+
+        if self.conversationData.conversationType == .user {
+            self.usersPublisher.value = "\(self.conversationData.name.lowercased())"
+            self.isChatGroup = false
+        }
+        else {
+            if let groupUsers = self.conversationData.groupUsers {
+
+                let numberUsers = groupUsers.count
+                let onlineUsers = 0
+                var userDetailsString = ""
+
+//                for (index, user) in groupUsers.enumerated() {
+//                    if user.username != loggedUsername && loggedUsername != "" {
+//                        if index == groupUsers.endIndex - 1 {
+//                            usersString += "\(user.username)"
+//                        }
+//                        else {
+//                            usersString += "\(user.username), "
+//                        }
+//                    }
+//                }
+                let chatGroupDetailString = localized("chat_group_users_details")
+
+                userDetailsString = chatGroupDetailString.replacingFirstOccurrence(of: "%s", with: "\(onlineUsers)")
+                userDetailsString = userDetailsString.replacingOccurrences(of: "%s", with: "\(numberUsers)")
+
+                self.usersPublisher.value = userDetailsString
+
+                self.groupInitialsPublisher.value = self.getGroupInitials(text: self.conversationData.name)
+
+                self.isChatGroup = true
+            }
+
+        }
+    }
+
+    private func getGroupInitials(text: String) -> String {
+        var initials = ""
+
+        for letter in text {
+            if letter.isUppercase {
+                if initials.count < 2 {
+                    initials = "\(initials)\(letter)"
+                }
+            }
+        }
+
+        if initials == "" {
+            if let firstChar = text.first {
+                initials = "\(firstChar.uppercased())"
+            }
+        }
+
+        return initials
+    }
+
+    private func getConversationMessages() {
         // TESTING CHAT MESSAGES
         let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")
         let message2 = MessageData(messageType: .sentSeen, messageText: "Oh what is it? And how are you?", messageDate: "06/04/2022 16:00")
@@ -38,6 +118,8 @@ class ConversationDetailViewModel: NSObject {
         self.sortAllMessages()
 
         self.isChatOnline = true
+
+        // Get chat messages for chatroom id
 
     }
 
@@ -64,7 +146,14 @@ class ConversationDetailViewModel: NSObject {
 
         // Sort by date
         self.dateMessages.sort {
-            $0.date < $1.date
+
+            if let firstDate = self.getDateFromString(dateString: $0.date), let secondDate = self.getDateFromString(dateString: $1.date) {
+                return firstDate < secondDate
+            }
+            else {
+               return $0.date < $1.date
+            }
+
         }
     }
 
@@ -96,6 +185,18 @@ class ConversationDetailViewModel: NSObject {
         dateFormatterPrint.dateFormat = "dd-MM-yyyy HH:mm"
 
         return dateFormatterPrint.string(from: date)
+    }
+
+    func getDateFromString(dateString: String) -> Date? {
+        let dateFormatterGet = DateFormatter()
+        dateFormatterGet.dateFormat = "dd-MM-yyyy"
+
+        if let formattedDate = dateFormatterGet.date(from: dateString) {
+
+            return formattedDate
+        }
+
+        return nil
     }
 }
 

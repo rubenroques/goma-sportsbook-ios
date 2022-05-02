@@ -13,12 +13,14 @@ class NewGroupViewModel {
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var users: [UserContact] = []
+    var usersPublisher: CurrentValueSubject<[UserContact], Never> = .init([])
     var initialUsers: [UserContact] = []
     var cachedFriendCellViewModels: [String: AddFriendCellViewModel] = [:]
     var selectedUsers: [UserContact] = []
+
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
     var canAddFriendPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     
     init() {
         self.getUsers()
@@ -30,7 +32,7 @@ class NewGroupViewModel {
         
         let filteredUsers = self.initialUsers.filter({ $0.username.localizedCaseInsensitiveContains(searchQuery)})
 
-        self.users = filteredUsers
+        self.usersPublisher.value = filteredUsers
 
         self.dataNeedsReload.send()
 
@@ -38,35 +40,67 @@ class NewGroupViewModel {
 
     func resetUsers() {
 
-        self.users = self.initialUsers
+        self.usersPublisher.value = self.initialUsers
 
         self.dataNeedsReload.send()
     }
 
     func getUsers() {
         // TEST
-        if self.users.isEmpty {
-            for i in 0...19 {
-                if i <= 5 {
-                    let user = UserContact(id: "\(i)", username: "@GOMA_User_\(i)", phone: "+351 999 888 777")
-                    self.users.append(user)
-                }
-                else if i > 5 && i <= 13 {
-                    let user = UserContact(id: "\(i)", username: "@Sportsbook_Admin_\(i)", phone: "+351 995 664 551")
-                    self.users.append(user)
-                }
-                else {
-                    let user = UserContact(id: "\(i)", username: "@Ze_da_Tasca_\(i)", phone: "+351 991 233 012")
-                    self.users.append(user)
+//        if self.users.isEmpty {
+//            for i in 0...19 {
+//                if i <= 5 {
+//                    let user = UserContact(id: "\(i)", username: "@GOMA_User_\(i)", phone: "+351 999 888 777")
+//                    self.users.append(user)
+//                }
+//                else if i > 5 && i <= 13 {
+//                    let user = UserContact(id: "\(i)", username: "@Sportsbook_Admin_\(i)", phone: "+351 995 664 551")
+//                    self.users.append(user)
+//                }
+//                else {
+//                    let user = UserContact(id: "\(i)", username: "@Ze_da_Tasca_\(i)", phone: "+351 991 233 012")
+//                    self.users.append(user)
+//                }
+//
+//            }
+//
+//            //self.isEmptySearchPublisher.send(false)
+//        }
+
+        self.isLoadingPublisher.send(true)
+
+        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("LIST FRIEND ERROR: \(error)")
+                    self?.isLoadingPublisher.send(false)
+                    self?.dataNeedsReload.send()
+
+                case .finished:
+                    ()
                 }
 
-            }
+            }, receiveValue: { response in
+                if let friends = response.data {
+                    self.processFriendsData(friends: friends)
+                }
+            })
+            .store(in: &cancellables)
 
-            //self.isEmptySearchPublisher.send(false)
+    }
+
+    private func processFriendsData(friends: [GomaFriend]) {
+
+        for friend in friends {
+            let user = UserContact(id: "\(friend.id)", username: friend.username, phone: "+351 999 888 777")
+            self.usersPublisher.value.append(user)
         }
 
-        self.initialUsers = self.users
+        self.initialUsers = self.usersPublisher.value
 
+        self.isLoadingPublisher.send(false)
         self.dataNeedsReload.send()
     }
 

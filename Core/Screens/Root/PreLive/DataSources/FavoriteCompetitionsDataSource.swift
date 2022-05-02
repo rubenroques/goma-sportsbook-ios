@@ -68,9 +68,9 @@ class FavoriteCompetitionsDataSource: NSObject, UITableViewDataSource, UITableVi
                 self.didSelectMatchAction?(match)
             }
             
-            cell.didTapFavoriteMatchAction = { [weak self] match in
-                self?.didTapFavoriteMatchAction?(match)
-            }
+//            cell.didTapFavoriteMatchAction = { [weak self] match in
+//                self?.didTapFavoriteMatchAction?(match)
+//            }
             
             cell.matchWentLive = {
                 self.matchWentLiveAction?()

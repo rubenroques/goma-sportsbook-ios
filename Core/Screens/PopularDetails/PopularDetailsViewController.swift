@@ -307,6 +307,11 @@ extension PopularDetailsViewController: UITableViewDelegate, UITableViewDataSour
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match)
             }
+
+//            cell.didTapFavoriteMatchAction = { [weak self] match in
+//                self?.viewModel.markAsFavorite(match: match)
+//            }
+
             return cell
 
         case 1:

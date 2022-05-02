@@ -217,32 +217,32 @@ class MyFavoritesViewController: UIViewController {
             self?.tableView.reloadData()
         }
 
-        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
-            if !UserSessionStore.isUserLogged() {
-                self?.presentLoginViewController()
-            }
-            else {
-                self?.viewModel.markAsFavorite(match: match)
-            }
-        }
-
-        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
-            if !UserSessionStore.isUserLogged() {
-                self?.presentLoginViewController()
-            }
-            else {
-                self?.viewModel.markCompetitionAsFavorite(competition: competition)
-            }
-        }
-
-        self.myFavoriteCompetitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
-            if !UserSessionStore.isUserLogged() {
-                self?.presentLoginViewController()
-            }
-            else {
-                self?.viewModel.markAsFavorite(match: match)
-            }
-        }
+//        self.myFavoriteMatchesDataSource.didTapFavoriteMatchAction = { [weak self] match in
+//            if !UserSessionStore.isUserLogged() {
+//                self?.presentLoginViewController()
+//            }
+//            else {
+//                self?.viewModel.markAsFavorite(match: match)
+//            }
+//        }
+//
+//        self.myFavoriteCompetitionsDataSource.didTapFavoriteCompetitionAction = { [weak self] competition in
+//            if !UserSessionStore.isUserLogged() {
+//                self?.presentLoginViewController()
+//            }
+//            else {
+//                self?.viewModel.markCompetitionAsFavorite(competition: competition)
+//            }
+//        }
+//
+//        self.myFavoriteCompetitionsDataSource.didTapFavoriteMatchAction = { [weak self] match in
+//            if !UserSessionStore.isUserLogged() {
+//                self?.presentLoginViewController()
+//            }
+//            else {
+//                self?.viewModel.markAsFavorite(match: match)
+//            }
+//        }
 
 
         Env.userSessionStore.userSessionPublisher

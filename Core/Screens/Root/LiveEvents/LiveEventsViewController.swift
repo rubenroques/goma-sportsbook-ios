@@ -136,15 +136,15 @@ class LiveEventsViewController: UIViewController {
         self.tableView.isHidden = false
         self.emptyBaseView.isHidden = true
         
-        self.viewModel.didTapFavoriteMatchAction = { match in
-            if !UserSessionStore.isUserLogged() {
-                self.presentLoginViewController()
-            }
-            else {
-                self.viewModel.markAsFavorite(match: match)
-                self.tableView.reloadData()
-            }
-        }
+//        self.viewModel.didTapFavoriteMatchAction = { match in
+//            if !UserSessionStore.isUserLogged() {
+//                self.presentLoginViewController()
+//            }
+//            else {
+//                self.viewModel.markAsFavorite(match: match)
+//                self.tableView.reloadData()
+//            }
+//        }
         
     }
 

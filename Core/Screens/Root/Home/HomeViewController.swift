@@ -282,9 +282,10 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.tappedMatchLineAction = { [weak self] in
                 self?.openMatchDetails(match: match)
             }
-            cell.didTapFavoriteMatchAction = { [weak self] match in
-                self?.viewModel.markAsFavorite(match: match)
-            }
+
+//            cell.didTapFavoriteMatchAction = { [weak self] match in
+//                self?.viewModel.markAsFavorite(match: match)
+//            }
            
             return cell
 
@@ -345,16 +346,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openOutrightCompetition(competition: competition)
                 }
                 
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    if UserSessionStore.isUserLogged() {
-                        self?.viewModel.markAsFavorite(match: match)
-                    }
-                    else {
-                        let loginViewController = Router.navigationController(with: LoginViewController())
-                        self?.present(loginViewController, animated: true, completion: nil)
-                    }
-                    
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    if UserSessionStore.isUserLogged() {
+//                        self?.viewModel.markAsFavorite(match: match)
+//                    }
+//                    else {
+//                        let loginViewController = Router.navigationController(with: LoginViewController())
+//                        self?.present(loginViewController, animated: true, completion: nil)
+//                    }
+//                    
+//                }
                 
                 return cell
 

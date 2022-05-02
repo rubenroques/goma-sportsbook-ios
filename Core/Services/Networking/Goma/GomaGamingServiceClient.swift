@@ -24,6 +24,10 @@ class GomaGamingServiceClient {
         self.networkClient.refreshAuthToken(token: token)
     }
 
+    func getCurrentToken() -> AuthToken? {
+        return self.networkClient.getCurrentToken()
+    }
+
     func sendLog(type: String, message: String) -> AnyPublisher<String, NetworkError> {
         let endpoint = GomaGamingService.log(type: type, message: message)
         let requestPublisher: AnyPublisher<String, NetworkError> = networkClient.requestEndpoint(deviceId: "logs", endpoint: endpoint)
@@ -128,6 +132,37 @@ class GomaGamingServiceClient {
     func sendUserSettings(deviceId: String, userSettings: UserSettingsGoma) -> AnyPublisher<JSON, NetworkError> {
         let endpoint = GomaGamingService.sendUserSettings(userSettings: userSettings)
         let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    // Social
+    func addFriends(deviceId: String, userIds: [String]) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
+        let endpoint = GomaGamingService.addFriend(userIds: userIds)
+        let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func requestFriends(deviceId: String) -> AnyPublisher<NetworkResponse<[GomaFriend]>, NetworkError> {
+        let endpoint = GomaGamingService.listFriends
+        let requestPublisher: AnyPublisher<NetworkResponse<[GomaFriend]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func requestChatrooms(deviceId: String) -> AnyPublisher<NetworkResponse<[ChatroomData]>, NetworkError> {
+        let endpoint = GomaGamingService.chatrooms
+        let requestPublisher: AnyPublisher<NetworkResponse<[ChatroomData]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func addGroup(deviceId: String, userIds: [String], groupName: String) -> AnyPublisher<NetworkResponse<ChatroomId>, NetworkError> {
+        let endpoint = GomaGamingService.addGroup(userIds: userIds, groupName: groupName)
+        let requestPublisher: AnyPublisher<NetworkResponse<ChatroomId>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
+    func deleteGroup(deviceId: String, chatroomId: String) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
+        let endpoint = GomaGamingService.deleteGroup(chatroomId: chatroomId)
+        let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
     }
 }

@@ -14,6 +14,20 @@ class ChatMessageView: UIView {
     private lazy var inputTextView: UITextView = Self.createInputTextView()
     private lazy var ticketButton: UIButton = Self.createTicketButton()
 
+    // MARK: Public Properties
+    var textPublisher: CurrentValueSubject<String, Never> = .init("")
+
+    var showPlaceholder: Bool = false {
+        didSet {
+            if showPlaceholder {
+                self.inputTextView.text = localized("message")
+            }
+            else {
+                self.inputTextView.text = nil
+            }
+        }
+    }
+
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,6 +50,8 @@ class ChatMessageView: UIView {
 
         self.ticketButton.addTarget(self, action: #selector(didTapTicketButton), for: .touchUpInside)
 
+        self.showPlaceholder = true
+
     }
 
     func setupWithTheme() {
@@ -44,6 +60,8 @@ class ChatMessageView: UIView {
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.inputTextView.backgroundColor = .clear
+
+        self.inputTextView.textColor = UIColor.App.textSecondary
 
         self.ticketButton.backgroundColor = .clear
     }
@@ -78,10 +96,22 @@ extension ChatMessageView: UITextViewDelegate {
 
     func textViewDidBeginEditing(_ textView: UITextView) {
         print("BEGIN EDIT")
+        if self.showPlaceholder == true {
+            self.showPlaceholder = false
+        }
 
     }
     func textViewDidEndEditing(_ textView: UITextView) {
         print("END EDITING")
+        if self.inputTextView.text.isEmpty {
+            self.showPlaceholder = true
+        }
+
+    }
+
+    func textViewDidChangeSelection(_ textView: UITextView) {
+
+        self.textPublisher.send(textView.text)
 
     }
 }
@@ -102,6 +132,8 @@ extension ChatMessageView {
         let textView = UITextView()
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = true
+        textView.font = AppFont.with(type: .semibold, size: 14)
+        textView.text = localized("message")
         return textView
     }
 

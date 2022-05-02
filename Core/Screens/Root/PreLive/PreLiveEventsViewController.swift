@@ -169,15 +169,15 @@ class PreLiveEventsViewController: UIViewController {
             self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
         }
         
-        self.viewModel.didTapFavoriteMatchAction = { match in
-            if !UserSessionStore.isUserLogged(){
-                self.presentLoginViewController()
-            }
-            else{
-                self.viewModel.markAsFavorite(match: match)
-                self.tableView.reloadData()
-            }
-        }
+//        self.viewModel.didTapFavoriteMatchAction = { match in
+//            if !UserSessionStore.isUserLogged(){
+//                self.presentLoginViewController()
+//            }
+//            else{
+//                self.viewModel.markAsFavorite(match: match)
+//                self.tableView.reloadData()
+//            }
+//        }
 
         self.viewModel.didSelectCompetitionAction = { competition in
             let viewModel = OutrightMarketDetailsViewModel(competition: competition, store: OutrightMarketDetailsStore())

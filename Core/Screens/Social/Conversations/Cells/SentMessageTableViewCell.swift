@@ -137,7 +137,7 @@ extension SentMessageTableViewCell {
         label.text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.font = AppFont.with(type: .medium, size: 11)
+        label.font = AppFont.with(type: .medium, size: 14)
         return label
     }
 
@@ -146,7 +146,7 @@ extension SentMessageTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "01/01/2022 12:59"
         label.textAlignment = .right
-        label.font = AppFont.with(type: .medium, size: 9)
+        label.font = AppFont.with(type: .medium, size: 12)
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }

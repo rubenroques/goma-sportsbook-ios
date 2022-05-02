@@ -115,6 +115,22 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         }
     }
 
+    func markAsFavorite(competition: Competition) {
+        var isFavorite = false
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
+            isFavorite = true
+        }
+
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .match)
+            self.isFavorite = false
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .match)
+            self.isFavorite = true
+        }
+    }
+
     @objc func didToggleCell() {
         if let sectionIndex = sectionIndex {
             self.isCollapsed.toggle()
@@ -124,10 +140,9 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
     @objc func didTapFavoriteImageView() {
         if let competition = competition {
-            self.didTapFavoriteCompetitionAction?(competition)
+            //self.didTapFavoriteCompetitionAction?(competition)
+            self.markAsFavorite(competition: competition)
         }
     }
-    
-  
-       
+
 }

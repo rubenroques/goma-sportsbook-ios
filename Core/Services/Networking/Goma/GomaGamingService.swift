@@ -22,6 +22,13 @@ enum GomaGamingService {
     // case getActivateUserEmailCode(userEmail: String, activationCode: String) //example of request with params
     case userSettings
     case sendUserSettings(userSettings: UserSettingsGoma)
+
+    // Social Endpoits
+    case addFriend(userIds: [String])
+    case listFriends
+    case chatrooms
+    case addGroup(userIds: [String], groupName: String)
+    case deleteGroup(chatroomId: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -61,6 +68,17 @@ extension GomaGamingService: Endpoint {
             return "/api/favorites/\(apiVersion)"
         case .sendUserSettings:
             return "/api/settings/\(apiVersion)/user"
+        // Social
+        case .addFriend:
+            return "/api/social/\(apiVersion)/friends"
+        case .listFriends:
+            return "/api/social/\(apiVersion)/friends"
+        case .chatrooms:
+            return "/api/social/\(apiVersion)/chatrooms"
+        case .addGroup:
+            return "/api/social/\(apiVersion)/groups"
+        case .deleteGroup(let chatroomId):
+            return "/api/social/\(apiVersion)/groups/\(chatroomId)"
         }
     }
 
@@ -76,6 +94,9 @@ extension GomaGamingService: Endpoint {
             return nil
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
+        // Social
+        case .addFriend, .listFriends, .chatrooms, .addGroup, .deleteGroup:
+            return nil
         }
     }
 
@@ -106,6 +127,13 @@ extension GomaGamingService: Endpoint {
         case .log, .simpleRegister, .login, .addFavorites, .sendUserSettings:
             return .post
         case .removeFavorite:
+            return .delete
+        // Social
+        case .addFriend, .addGroup:
+            return .post
+        case .listFriends, .chatrooms:
+            return .get
+        case .deleteGroup:
             return .delete
         }
     }
@@ -167,6 +195,24 @@ extension GomaGamingService: Endpoint {
                        "notification_email": \(userSettings.notificationEmail),
                        "notification_sms": \(userSettings.notificationSms)}
                        """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        // Social
+        case .addFriend(let userIds):
+            let body = """
+                    {"users_ids":
+                    \(userIds)
+                    }
+                    """
+            let data = body.data(using: String.Encoding.utf8)!
+            return data
+        case .addGroup(let userIds, let groupName):
+            let body = """
+                    {"name": "\(groupName)",
+                    "users_ids": \(userIds)
+                    }
+                    """
+            print("GROUP BODY: \(body)")
             let data = body.data(using: String.Encoding.utf8)!
             return data
         default:

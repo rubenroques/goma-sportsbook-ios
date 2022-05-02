@@ -65,9 +65,9 @@ class FavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewDel
                         self.didSelectMatchAction?(match)
                     }
                     
-                    cell.didTapFavoriteMatchAction = { [weak self] match in
-                        self?.didTapFavoriteMatchAction?(match)
-                    }
+//                    cell.didTapFavoriteMatchAction = { [weak self] match in
+//                        self?.didTapFavoriteMatchAction?(match)
+//                    }
                     
                     cell.matchWentLive = {
                         DispatchQueue.main.async {

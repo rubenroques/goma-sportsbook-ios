@@ -17,7 +17,9 @@ class AddFriendViewController: UIViewController {
     private lazy var backButton: UIButton = Self.createBackButton()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
-    private lazy var searchBar: UISearchBar = Self.createSearchBar()
+//    private lazy var searchBar: UISearchBar = Self.createSearchBar()
+    private lazy var searchFriendLabel: UILabel = Self.createSearchFriendLabel()
+    private lazy var searchFriendTextFieldView: ActionTextFieldView = Self.createSearchFriendTextFieldView()
     private lazy var addContactFriendButton: UIButton = Self.createAddContactFriendButton()
     private lazy var tableSeparatorLineView: UIView = Self.createTableSeparatorLineView()
     private lazy var tableView: UITableView = Self.createTableView()
@@ -53,7 +55,7 @@ class AddFriendViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.searchBar.delegate = self
+//        self.searchBar.delegate = self
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -72,6 +74,8 @@ class AddFriendViewController: UIViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
+
+        self.setupPublishers()
     }
     
     // MARK: - Layout and Theme
@@ -103,7 +107,9 @@ class AddFriendViewController: UIViewController {
         self.closeButton.backgroundColor = .clear
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
-        self.setupSearchBarStyle()
+//        self.setupSearchBarStyle()
+
+        self.searchFriendLabel.textColor = UIColor.App.textPrimary
 
         self.addContactFriendButton.backgroundColor = .clear
         self.addContactFriendButton.tintColor = UIColor.App.highlightSecondary
@@ -131,48 +137,74 @@ class AddFriendViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.isEmptySearchPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isEmptySearch in
-                self?.isEmptySearch = isEmptySearch
-            })
-            .store(in: &cancellables)
-
         viewModel.canAddFriendPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isEnabled in
                 self?.addFriendButton.isEnabled = isEnabled
             })
             .store(in: &cancellables)
+
+        viewModel.usersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] users in
+                self?.isEmptySearch = users.isEmpty
+            })
+            .store(in: &cancellables)
+
+        viewModel.friendCodeInvalidPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.showAlert(type: .error, errorText: localized("invalid_friend_code"))
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
-    private func setupSearchBarStyle() {
-        self.searchBar.searchBarStyle = UISearchBar.Style.prominent
-        self.searchBar.sizeToFit()
-        self.searchBar.isTranslucent = false
-        self.searchBar.backgroundImage = UIImage()
-        self.searchBar.tintColor = .white
-        self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
-        self.searchBar.placeholder = localized("search")
+    private func setupPublishers() {
+        self.searchFriendTextFieldView.textPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] text in
+                if text != "" {
+                    self?.searchFriendTextFieldView.isActionDisabled = false
+                }
+                else {
+                    self?.searchFriendTextFieldView.isActionDisabled = true
+                }
+            })
+            .store(in: &cancellables)
 
-        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_username"),
-                                                                 attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App.inputTextTitle,
-                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
-
-            if let glassIconView = textfield.leftView as? UIImageView {
-                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.inputTextTitle
-            }
+        self.searchFriendTextFieldView.didTapButtonAction = { [weak self] in
+            let friendCode = self?.searchFriendTextFieldView.getTextFieldValue() ?? ""
+            self?.viewModel.getUserInfo(friendCode: friendCode)
         }
-
     }
+
+//    private func setupSearchBarStyle() {
+//        self.searchBar.searchBarStyle = UISearchBar.Style.prominent
+//        self.searchBar.sizeToFit()
+//        self.searchBar.isTranslucent = false
+//        self.searchBar.backgroundImage = UIImage()
+//        self.searchBar.tintColor = .white
+//        self.searchBar.barTintColor = .white
+//        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+//        self.searchBar.placeholder = localized("search")
+//
+//        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
+//            textfield.backgroundColor = UIColor.App.backgroundSecondary
+//            textfield.textColor = .white
+//            textfield.tintColor = .white
+//            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_username"),
+//                                                                 attributes: [NSAttributedString.Key.foregroundColor:
+//                                                                                UIColor.App.inputTextTitle,
+//                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
+//
+//            if let glassIconView = textfield.leftView as? UIImageView {
+//                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+//                glassIconView.tintColor = UIColor.App.inputTextTitle
+//            }
+//        }
+//
+//    }
 
     // MARK: Actions
     @objc func didTapBackButton() {
@@ -200,7 +232,7 @@ class AddFriendViewController: UIViewController {
             let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
 
             self.navigationController?.pushViewController(addContactViewController, animated: true)
-            
+
         case .notDetermined:
             contactStore.requestAccess(for: .contacts) { succeeded, error in
                 guard succeeded && error == nil else {
@@ -209,20 +241,46 @@ class AddFriendViewController: UIViewController {
 
                 if succeeded {
                     // Do something with contacts
-                    let addContactViewModel = AddContactViewModel()
-                    let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
+                    DispatchQueue.main.async {
+                        let addContactViewModel = AddContactViewModel()
+                        let addContactViewController = AddContactViewController(viewModel: addContactViewModel)
 
-                    self.navigationController?.pushViewController(addContactViewController, animated: true)
+                        self.navigationController?.pushViewController(addContactViewController, animated: true)
+                    }
+
                 }
             }
             print("Not determined")
         default:
             print("Not handled")
         }
+
+        // self.addGomaFriend()
     }
 
     @objc func didTapBackground() {
-        self.searchBar.resignFirstResponder()
+        //self.searchBar.resignFirstResponder()
+        self.searchFriendTextFieldView.resignFirstResponder()
+    }
+
+    // TEST
+    private func addGomaFriend() {
+        let userIds = ["42", "124", "215", "225", "224"]
+
+        Env.gomaNetworkClient.addFriends(deviceId: Env.deviceId, userIds: userIds)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                switch completion {
+                case .failure(let error):
+                    print("ADD FRIEND ERROR: \(error)")
+                case .finished:
+                    print("ADD FRIEND FINISHED")
+                }
+            }, receiveValue: { response in
+                print("ADD FRIEND GOMA: \(response)")
+            })
+            .store(in: &cancellables)
+
     }
 
 }
@@ -230,42 +288,42 @@ class AddFriendViewController: UIViewController {
 //
 // MARK: Delegates
 //
-extension AddFriendViewController: UISearchBarDelegate {
-
-    func searchUsers(searchQuery: String = "") {
-
-        if searchQuery != "" && searchQuery.count >= 3 {
-            // self.viewModel.getUsers()
-            self.viewModel.filterSearch(searchQuery: searchQuery)
-        }
-        else {
-            self.viewModel.clearUsers()
-        }
-
-    }
-
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-
-        if let searchText = searchBar.text {
-            self.searchUsers(searchQuery: searchText)
-        }
-
-    }
-
-    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        if let recentSearch = searchBar.text {
-
-           // Do something if needed
-        }
-
-        self.searchBar.resignFirstResponder()
-    }
-
-    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        self.searchBar.text = ""
-        self.searchUsers()
-    }
-}
+//extension AddFriendViewController: UISearchBarDelegate {
+//
+//    func searchUsers(searchQuery: String = "") {
+//
+//        if searchQuery != "" && searchQuery.count >= 3 {
+//            // self.viewModel.getUsers()
+//            self.viewModel.filterSearch(searchQuery: searchQuery)
+//        }
+//        else {
+//            self.viewModel.clearUsers()
+//        }
+//
+//    }
+//
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//
+//        if let searchText = searchBar.text {
+//            self.searchUsers(searchQuery: searchText)
+//        }
+//
+//    }
+//
+//    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+//        if let recentSearch = searchBar.text {
+//
+//           // Do something if needed
+//        }
+//
+//        self.searchBar.resignFirstResponder()
+//    }
+//
+//    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//        self.searchBar.text = ""
+//        self.searchUsers()
+//    }
+//}
 
 extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
@@ -274,7 +332,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.users.count
+        return self.viewModel.usersPublisher.value.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -284,7 +342,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-        if let userContact = self.viewModel.users[safe: indexPath.row] {
+        if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
 
             if let cellViewModel = self.viewModel.cachedCellViewModels[userContact.id] {
                 cell.configure(viewModel: cellViewModel)
@@ -305,7 +363,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
         }
 
-        if indexPath.row == self.viewModel.users.count - 1 {
+        if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
             cell.hasSeparatorLine = false
         }
 
@@ -315,14 +373,14 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
+        if self.viewModel.usersPublisher.value.isNotEmpty {
             guard
                 let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
             else {
                 fatalError()
             }
 
-            let resultsLabel = "Results (\(self.viewModel.users.count))"
+            let resultsLabel = "Results (\(self.viewModel.usersPublisher.value.count))"
 
             headerView.configureHeader(title: resultsLabel)
 
@@ -335,7 +393,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
+        if self.viewModel.usersPublisher.value.isNotEmpty {
             return 70
         }
         else {
@@ -346,7 +404,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
+        if self.viewModel.usersPublisher.value.isNotEmpty {
             return 70
         }
         else {
@@ -357,7 +415,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
+        if self.viewModel.usersPublisher.value.isNotEmpty {
             return 30
         }
         else {
@@ -368,7 +426,7 @@ extension AddFriendViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
+        if self.viewModel.usersPublisher.value.isNotEmpty {
             return 30
         }
         else {
@@ -442,6 +500,24 @@ extension AddFriendViewController {
         return searchBar
     }
 
+    private static func createSearchFriendLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .bold, size: 14)
+        label.numberOfLines = 0
+        label.textAlignment = .left
+        label.text = localized("search_friend_code")
+        return label
+    }
+
+    private static func createSearchFriendTextFieldView() -> ActionTextFieldView {
+        let textFieldView = ActionTextFieldView()
+        textFieldView.translatesAutoresizingMaskIntoConstraints = false
+        textFieldView.setPlaceholderText(placeholder: localized("friend_code"))
+        textFieldView.setActionButtonTitle(title: localized("search"))
+        return textFieldView
+    }
+
     private static func createAddContactFriendButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -496,7 +572,11 @@ extension AddFriendViewController {
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.closeButton)
 
-        self.view.addSubview(self.searchBar)
+//        self.view.addSubview(self.searchBar)
+
+        self.view.addSubview(self.searchFriendLabel)
+
+        self.view.addSubview(self.searchFriendTextFieldView)
 
         self.view.addSubview(self.addContactFriendButton)
 
@@ -551,17 +631,28 @@ extension AddFriendViewController {
         ])
 
         // Searchbar
+//        NSLayoutConstraint.activate([
+//            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+//            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+//            self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
+//            self.searchBar.heightAnchor.constraint(equalToConstant: 60)
+//        ])
+
+        // Search friend code views
         NSLayoutConstraint.activate([
-            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
-            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
-            self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
-            self.searchBar.heightAnchor.constraint(equalToConstant: 60)
+            self.searchFriendLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
+            self.searchFriendLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.searchFriendLabel.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
+
+            self.searchFriendTextFieldView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
+            self.searchFriendTextFieldView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -25),
+            self.searchFriendTextFieldView.topAnchor.constraint(equalTo: self.searchFriendLabel.bottomAnchor, constant: 8),
         ])
 
         // Contact list button
         NSLayoutConstraint.activate([
             self.addContactFriendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.addContactFriendButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16)
+            self.addContactFriendButton.topAnchor.constraint(equalTo: self.searchFriendTextFieldView.bottomAnchor, constant: 16)
         ])
 
         // Tableview

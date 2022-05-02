@@ -116,9 +116,9 @@ class MyFavoriteMatchesDataSource: NSObject, UITableViewDataSource, UITableViewD
                     self?.matchWentLiveAction?()
                 }
 
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    self?.didTapFavoriteMatchAction?(match)
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteMatchAction?(match)
+//                }
                 
                 return cell
             }

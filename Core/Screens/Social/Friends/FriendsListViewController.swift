@@ -6,200 +6,26 @@
 //
 
 import UIKit
-
-class FriendStatusViewModel {
-
-}
-
-class FriendStatusTableViewCell: UITableViewCell {
-
-    private lazy var baseView: UIView = Self.createBaseView()
-    private lazy var photoImageView: UIImageView = Self.createPhotoImageView()
-    private lazy var nameLabel: UILabel = Self.createNameLabel()
-    private lazy var statusView: UIView = Self.createStatusView()
-    private lazy var notificationEnabledButton: UIButton = Self.createNotificationEnabledButton()
-    private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
-
-    private var viewModel: FriendStatusViewModel?
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
-        self.setupSubviews()
-        self.setupWithTheme()
-
-        self.setNeedsLayout()
-        self.layoutIfNeeded()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        self.viewModel = nil
-    }
-
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        self.photoImageView.layer.cornerRadius = self.photoImageView.frame.size.width / 2
-        self.statusView.layer.cornerRadius = self.statusView.frame.size.width / 2
-    }
-
-    func setupWithTheme() {
-        self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
-        self.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.photoImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-        self.photoImageView.backgroundColor = UIColor.App.backgroundSecondary
-
-        self.nameLabel.textColor = UIColor.App.textPrimary
-        self.statusView.backgroundColor = .systemGreen
-
-        if let image = self.notificationEnabledButton.imageView?.image?.withRenderingMode(.alwaysTemplate) {
-            self.notificationEnabledButton.setImage(image, for: .normal)
-            self.notificationEnabledButton.tintColor = UIColor.App.highlightSecondary
-        }
-
-        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
-    }
-
-    func configure(withViewModel viewModel: FriendStatusViewModel) {
-        self.viewModel = viewModel
-    }
-
-}
-
-extension FriendStatusTableViewCell {
-
-    private static func createBaseView() -> UIView {
-        let baseView = UIView()
-        baseView.translatesAutoresizingMaskIntoConstraints = false
-        return baseView
-    }
-
-    private static func createPhotoImageView() -> UIImageView {
-        let photoImageView = UIImageView()
-        photoImageView.translatesAutoresizingMaskIntoConstraints = false
-        photoImageView.clipsToBounds = true
-        photoImageView.layer.masksToBounds = true
-        photoImageView.layer.borderWidth = 2.5
-        photoImageView.layer.borderColor = UIColor.brown.cgColor
-        return photoImageView
-    }
-
-    private static func createNameLabel() -> UILabel {
-        let nameLabel = UILabel()
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        nameLabel.font = AppFont.with(type: .bold, size: 14)
-        nameLabel.text = "@NameSurname"
-        return nameLabel
-    }
-
-    private static func createStatusView() -> UIView {
-        let statusView = UIView()
-        statusView.translatesAutoresizingMaskIntoConstraints = false
-        return statusView
-    }
-
-    private static func createMessageLineStackView() -> UIStackView {
-        let messageLineStackView = UIStackView()
-        messageLineStackView.axis = .horizontal
-        messageLineStackView.distribution = .fill
-        messageLineStackView.spacing = 6
-        messageLineStackView.translatesAutoresizingMaskIntoConstraints = false
-        return messageLineStackView
-    }
-
-    private static func createNotificationEnabledButton() -> UIButton {
-        let notificationEnabledButton = UIButton(type: .custom)
-        notificationEnabledButton.setImage(UIImage(named: "notifications_status_icon"), for: .normal)
-        notificationEnabledButton.translatesAutoresizingMaskIntoConstraints = false
-        return notificationEnabledButton
-    }
-
-    private static func createSeparatorLineView() -> UIView {
-        let headerSeparatorLine = UIView()
-        headerSeparatorLine.translatesAutoresizingMaskIntoConstraints = false
-        return headerSeparatorLine
-    }
-
-    private func setupSubviews() {
-
-        self.contentView.addSubview(self.baseView)
-
-        self.baseView.addSubview(self.photoImageView)
-        self.baseView.addSubview(self.nameLabel)
-        self.baseView.addSubview(self.statusView)
-        self.baseView.addSubview(self.notificationEnabledButton)
-
-        self.baseView.addSubview(self.separatorLineView)
-
-        // Initialize constraints
-        self.initConstraints()
-    }
-
-    private func initConstraints() {
-        NSLayoutConstraint.activate([
-            self.baseView.heightAnchor.constraint(equalToConstant: 66),
-
-            self.baseView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.baseView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
-
-            self.photoImageView.heightAnchor.constraint(equalTo: self.photoImageView.widthAnchor),
-            self.photoImageView.heightAnchor.constraint(equalToConstant: 40),
-
-            self.photoImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 24),
-            self.photoImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
-
-            self.nameLabel.leadingAnchor.constraint(equalTo: self.photoImageView.trailingAnchor, constant: 12),
-            self.nameLabel.centerYAnchor.constraint(equalTo: self.photoImageView.centerYAnchor),
-
-            self.statusView.heightAnchor.constraint(equalTo: self.statusView.widthAnchor),
-            self.statusView.heightAnchor.constraint(equalToConstant: 8),
-            self.statusView.centerYAnchor.constraint(equalTo: self.nameLabel.centerYAnchor),
-            self.statusView.leadingAnchor.constraint(equalTo: self.nameLabel.trailingAnchor, constant: 8),
-
-            self.notificationEnabledButton.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -23),
-            self.notificationEnabledButton.centerYAnchor.constraint(equalTo: self.nameLabel.centerYAnchor),
-            self.notificationEnabledButton.heightAnchor.constraint(equalTo: self.notificationEnabledButton.widthAnchor),
-            self.notificationEnabledButton.heightAnchor.constraint(equalToConstant: 44),
-
-            self.baseView.bottomAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor, constant: 0),
-            self.baseView.leadingAnchor.constraint(equalTo: self.separatorLineView.leadingAnchor, constant: -23),
-            self.baseView.trailingAnchor.constraint(equalTo: self.separatorLineView.trailingAnchor, constant: 23),
-            self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
-        ])
-    }
-
-}
-
-
-class FriendsListViewModel {
-
-}
-
-extension FriendsListViewModel {
-
-    func numberOfSections() -> Int {
-        return 1
-    }
-
-    func numberOfRows(forSectionIndex section: Int) -> Int {
-        return 100
-    }
-
-}
+import Combine
 
 class FriendsListViewController: UIViewController {
 
+    // MARK: Private Properties
+    private lazy var searchBar: UISearchBar = Self.createSearchBar()
     private lazy var tableView: UITableView = Self.createTableView()
+    private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var emptyStateImageView: UIView = Self.createEmptyStateImageView()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
 
     private var viewModel: FriendsListViewModel
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: Public Properties
+    var isEmptyState: Bool = false {
+        didSet {
+            self.emptyStateView.isHidden = !isEmptyState
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     init(viewModel: FriendsListViewModel = FriendsListViewModel()) {
@@ -220,12 +46,20 @@ class FriendsListViewController: UIViewController {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.searchBar.delegate = self
+
         self.tableView.delegate = self
         self.tableView.dataSource = self
+
+        self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
 
         self.tableView.register(FriendStatusTableViewCell.self,
                                 forCellReuseIdentifier: FriendStatusTableViewCell.identifier)
 
+        let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
+        self.view.addGestureRecognizer(backgroundTapGesture)
+
+        self.bind(toViewModel: self.viewModel)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -237,6 +71,8 @@ class FriendsListViewController: UIViewController {
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+
+        self.emptyStateImageView.layer.cornerRadius = self.emptyStateImageView.frame.height / 2
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -247,9 +83,108 @@ class FriendsListViewController: UIViewController {
 
     private func setupWithTheme() {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.setupSearchBarStyle()
+
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
+    // MARK: Binding
+    private func bind(toViewModel viewModel: FriendsListViewModel) {
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                // Spinner if needed
+            })
+            .store(in: &cancellables)
+
+        viewModel.dataNeedsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+
+        viewModel.friendsPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] friends in
+                self?.isEmptyState = friends.isEmpty
+            })
+            .store(in: &cancellables)
+    }
+
+    // MARK: Functions
+    private func setupSearchBarStyle() {
+        self.searchBar.searchBarStyle = UISearchBar.Style.prominent
+        self.searchBar.sizeToFit()
+        self.searchBar.isTranslucent = false
+        self.searchBar.backgroundImage = UIImage()
+        self.searchBar.tintColor = .white
+        self.searchBar.barTintColor = .white
+        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.placeholder = localized("search")
+
+        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.textColor = .white
+            textfield.tintColor = .white
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_friend"),
+                                                                 attributes: [NSAttributedString.Key.foregroundColor:
+                                                                                UIColor.App.inputTextTitle,
+                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
+
+            if let glassIconView = textfield.leftView as? UIImageView {
+                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+                glassIconView.tintColor = UIColor.App.inputTextTitle
+            }
+        }
+
+    }
+
+    // MARK: Actions
+    @objc func didTapBackground() {
+        self.searchBar.resignFirstResponder()
+    }
+}
+
+//
+// MARK: Searchbar Protocols
+//
+extension FriendsListViewController: UISearchBarDelegate {
+
+    func searchUsers(searchQuery: String = "") {
+
+        if searchQuery != "" && searchQuery.count >= 3 {
+            self.viewModel.filterSearch(searchQuery: searchQuery)
+        }
+        else {
+            self.viewModel.resetUsers()
+        }
+
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+
+        if let searchText = searchBar.text {
+            self.searchUsers(searchQuery: searchText)
+        }
+
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if let recentSearch = searchBar.text {
+
+           // Do something if needed
+        }
+
+        self.searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.searchBar.text = ""
+        self.searchUsers()
+    }
 }
 
 //
@@ -271,7 +206,63 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
         else {
             fatalError()
         }
+
+        if let friend = self.viewModel.friendsPublisher.value[safe: indexPath.row] {
+
+            if let cellViewModel = self.viewModel.cachedFriendCellViewModels[friend.id] {
+                cell.configure(withViewModel: cellViewModel)
+            }
+            else {
+                let cellViewModel = FriendStatusCellViewModel(friend: friend)
+                self.viewModel.cachedFriendCellViewModels[friend.id] = cellViewModel
+
+                cell.configure(withViewModel: cellViewModel)
+            }
+
+        }
+
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+        if !self.viewModel.friendsPublisher.value.isEmpty {
+            guard
+                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
+            else {
+                fatalError()
+            }
+
+            let titleLabel = localized("my_friends")
+
+            headerView.configureHeader(title: titleLabel)
+
+            return headerView
+        }
+        else {
+            return UIView()
+        }
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+
+        if !self.viewModel.friendsPublisher.value.isEmpty {
+            return 30
+        }
+        else {
+            return 0
+        }
+
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+
+        if !self.viewModel.friendsPublisher.value.isEmpty {
+            return 30
+        }
+        else {
+            return 0
+        }
     }
 
 }
@@ -280,6 +271,11 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
 // MARK: - Subviews Initialization and Setup
 //
 extension FriendsListViewController {
+    private static func createSearchBar() -> UISearchBar {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        return searchBar
+    }
 
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
@@ -289,21 +285,77 @@ extension FriendsListViewController {
         return tableView
     }
 
+    private static func createEmptyStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyStateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "no_content_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("no_friends")
+        label.numberOfLines = 0
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.textAlignment = .center
+        return label
+    }
+
     private func setupSubviews() {
+
+        self.view.addSubview(self.searchBar)
 
         self.view.addSubview(self.tableView)
 
-        // Initialize constraints
+        self.view.addSubview(self.emptyStateView)
+
+        self.emptyStateView.addSubview(self.emptyStateImageView)
+        self.emptyStateView.addSubview(self.emptyStateLabel)
+
         self.initConstraints()
     }
 
     private func initConstraints() {
 
+        // Searchbar
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
+            self.searchBar.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
+            self.searchBar.heightAnchor.constraint(equalToConstant: 60)
+        ])
+
+        // Tableview
+        NSLayoutConstraint.activate([
+            self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+        ])
+
+        // Empty state view
+        NSLayoutConstraint.activate([
+            self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor),
+            self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 60),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.heightAnchor.constraint(equalTo: self.emptyStateImageView.widthAnchor),
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
+
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 80),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -80),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 30)
         ])
     }
 

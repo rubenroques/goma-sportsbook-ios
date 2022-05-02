@@ -72,7 +72,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
     var tappedMatchWidgetAction: (() -> Void)?
     var didTapFavoriteMatchAction: ((Match) -> Void)?
-    
+
     private var leftOddButtonSubscriber: AnyCancellable?
     private var middleOddButtonSubscriber: AnyCancellable?
     private var rightOddButtonSubscriber: AnyCancellable?
@@ -529,17 +529,39 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.locationFlagImageView.isHidden = !show
     }
 
+    func markAsFavorite(match: Match) {
+        var isFavorite = false
+        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+            isFavorite = true
+        }
+
+        if isFavorite {
+            Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+            self.isFavorite = false
+        }
+        else {
+            Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+            self.isFavorite = true
+        }
+    }
+
     //
     //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
 
-        guard
-            let match = self.viewModel?.match
+        if UserSessionStore.isUserLogged() {
+            if let match = self.viewModel?.match {
+                //self.didTapFavoriteMatchAction?(match)
+                self.markAsFavorite(match: match)
+            }
+        }
         else {
-            return
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            //self?.present(loginViewController, animated: true, completion: nil)
+            self.viewController?.present(loginViewController, animated: true, completion: nil)
         }
 
-        self.didTapFavoriteMatchAction?(match)
+        // self.didTapFavoriteMatchAction?(match)
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {

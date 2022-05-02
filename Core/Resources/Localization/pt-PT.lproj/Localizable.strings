@@ -440,3 +440,17 @@ Terms of use, Privacy Policy and EULA";
 "select_friends_add" = "Select friends to add";
 "start_group_chat" = "Start Group Chat";
 "group_name" = "Group name";
+
+"my_friends" = "My Friends";
+"search_friend" = "Search a friend";
+"no_friends" = "There are no friends to display.";
+"no_chatrooms" = "There are no chatrooms to display.";
+"search_friend_code" = "Search friend with code";
+"friend_code" = "Friend Code";
+"search" = "Search";
+"invalid_friend_code" = "Invalid friend code";
+
+"chat" = "Chat";
+"message" = "Message";
+
+"chat_group_users_details" = "%s online, %s members";

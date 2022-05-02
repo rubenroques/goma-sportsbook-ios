@@ -357,9 +357,9 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.tappedMatchWidgetAction = { [weak self] in
                     self?.tappedMatchLineAction?(match)
                 }
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    self?.didTapFavoriteMatchAction?(match)
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteMatchAction?(match)
+//                }
              
                 cell.shouldShowCountryFlag(true)
                 return cell
@@ -378,9 +378,9 @@ extension SportMatchDoubleLineTableViewCell: UICollectionViewDelegate, UICollect
                 cell.tappedMatchWidgetAction = { [weak self] in
                     self?.tappedMatchLineAction?(match)
                 }
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    self?.didTapFavoriteMatchAction?(match)
-                }
+//                cell.didTapFavoriteMatchAction = { [weak self] match in
+//                    self?.didTapFavoriteMatchAction?(match)
+//                }
                 
                 cell.shouldShowCountryFlag(true)
                 return cell

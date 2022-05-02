@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MapKit
 
 class SocialViewModel {
 
@@ -15,16 +16,22 @@ class SocialViewModel {
     }
 
     var startScreen: StartScreen
+    var socialClient: GomaGamingSocialServiceClient
 
     init(startScreen: StartScreen = .conversations) {
         self.startScreen = startScreen
 
+        self.socialClient = GomaGamingSocialServiceClient()
+    }
+
+    deinit {
+        print("DEINIT SOCIAL VM")
+        self.socialClient.disconnectSocket()
     }
 
 }
 
 extension SocialViewModel {
-
     func startPageIndex() -> Int {
         switch self.startScreen {
         case .conversations: return 0
@@ -141,14 +148,12 @@ class SocialViewController: UIViewController {
     // MARK: Action
 
     @objc func didTapNotificationsButton() {
-        print("NOTIFICATIONS")
         let notificationsViewController = ChatNotificationsViewController()
 
         self.navigationController?.pushViewController(notificationsViewController, animated: true)
     }
 
     @objc func didTapFriendsButton() {
-        print("FRIENDS")
         let addFriendsViewModel = AddFriendViewModel()
 
         let addFriendsViewController = AddFriendViewController(viewModel: addFriendsViewModel)
@@ -157,7 +162,6 @@ class SocialViewController: UIViewController {
     }
 
     @objc func didTapSettingsButton() {
-        print("SETTINGS")
         let chatSettingsViewModel = ChatSettingsViewModel()
 
         let chatSettingsViewController = ChatSettingsViewController(viewModel: chatSettingsViewModel)
@@ -166,7 +170,6 @@ class SocialViewController: UIViewController {
     }
 
     @objc func didTapCloseButton() {
-        print("CLOSE")
 
         if self.isModal {
             self.dismiss(animated: true, completion: nil)
@@ -199,9 +202,9 @@ extension SocialViewController {
         let titleLabel = UILabel()
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.textColor = UIColor.App.textPrimary
-        titleLabel.font = AppFont.with(type: .semibold, size: 16)
+        titleLabel.font = AppFont.with(type: .bold, size: 17)
         titleLabel.textAlignment = .center
-        titleLabel.text = "Chat"
+        titleLabel.text = localized("chat")
         return titleLabel
     }
 
@@ -247,7 +250,7 @@ extension SocialViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("close"), for: .normal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         button.setContentHuggingPriority(.required, for: .horizontal)
         return button
     }

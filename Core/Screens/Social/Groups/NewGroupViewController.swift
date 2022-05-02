@@ -22,11 +22,28 @@ class NewGroupViewController: UIViewController {
     private lazy var nextBaseView: UIView = Self.createNextBaseView()
     private lazy var nextButton: UIButton = Self.createNextButton()
     private lazy var nextSeparatorLineView: UIView = Self.createNextSeparatorLineView()
+    private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
 
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
     var viewModel: NewGroupViewModel
+
+    var isEmptyState: Bool = false {
+        didSet {
+            self.emptyStateView.isHidden = !isEmptyState
+        }
+    }
+
+    var isLoading: Bool = false {
+        didSet {
+            self.loadingBaseView.isHidden = !isLoading
+        }
+    }
 
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupViewModel) {
@@ -63,6 +80,23 @@ class NewGroupViewController: UIViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
+
+        // TEST
+//        let chatroomId = "28"
+//
+//        Env.gomaNetworkClient.deleteGroup(deviceId: Env.deviceId, chatroomId: chatroomId)
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveCompletion: { completion in
+//                switch completion {
+//                case .failure(let error):
+//                    print("DELETE GROUP ERROR: \(error)")
+//                case .finished:
+//                    ()
+//                }
+//            }, receiveValue: { response in
+//                print("DELETE GROUP GOMA: \(response)")
+//            })
+//            .store(in: &cancellables)
     }
 
     // MARK: - Layout and Theme
@@ -104,6 +138,14 @@ class NewGroupViewController: UIViewController {
 
         self.nextSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
+        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.emptyStateImageView.backgroundColor = .clear
+
+        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
     }
 
     // MARK: binding
@@ -117,17 +159,24 @@ class NewGroupViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-//        viewModel.isEmptySearchPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] isEmptySearch in
-//                self?.isEmptySearch = isEmptySearch
-//            })
-//            .store(in: &cancellables)
-
         viewModel.canAddFriendPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isEnabled in
                 self?.nextButton.isEnabled = isEnabled
+            })
+            .store(in: &cancellables)
+
+        viewModel.usersPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] users in
+                self?.isEmptyState = users.isEmpty
+            })
+            .store(in: &cancellables)
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
             })
             .store(in: &cancellables)
     }
@@ -178,7 +227,7 @@ class NewGroupViewController: UIViewController {
     @objc func didTapNextButton() {
         print("NEXT")
         var selectedUsers: [UserContact] = []
-        if let loggedUser = UserSessionStore.loggedUserSession(){
+        if let loggedUser = UserSessionStore.loggedUserSession() {
             let adminUser = UserContact(id: loggedUser.userId, username: loggedUser.username, phone: "+351968765890")
 
             selectedUsers.append(adminUser)
@@ -244,7 +293,7 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.users.count
+        return self.viewModel.usersPublisher.value.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -254,7 +303,7 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
             fatalError()
         }
 
-        if let userContact = self.viewModel.users[safe: indexPath.row] {
+        if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
 
             if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
                 // TEST
@@ -283,7 +332,7 @@ extension NewGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
         }
 
-        if indexPath.row == self.viewModel.users.count - 1 {
+        if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
             cell.hasSeparatorLine = false
         }
 
@@ -422,6 +471,44 @@ extension NewGroupViewController {
         return view
     }
 
+    private static func createEmptyStateView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createEmptyStateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "no_content_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("no_friends")
+        label.numberOfLines = 0
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.textAlignment = .center
+        return label
+    }
+
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -440,6 +527,15 @@ extension NewGroupViewController {
 
         self.nextBaseView.addSubview(self.nextButton)
         self.nextBaseView.addSubview(self.nextSeparatorLineView)
+
+        self.view.addSubview(self.emptyStateView)
+
+        self.emptyStateView.addSubview(self.emptyStateImageView)
+        self.emptyStateView.addSubview(self.emptyStateLabel)
+
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.view.addSubview(self.bottomSafeAreaView)
 
@@ -490,7 +586,6 @@ extension NewGroupViewController {
             self.searchBar.heightAnchor.constraint(equalToConstant: 60)
         ])
 
-
         // Tableview
         NSLayoutConstraint.activate([
 
@@ -519,5 +614,32 @@ extension NewGroupViewController {
             self.nextSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
         ])
 
+        // Empty state view
+        NSLayoutConstraint.activate([
+            self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor),
+            self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 60),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.heightAnchor.constraint(equalTo: self.emptyStateImageView.widthAnchor),
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
+
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 80),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -80),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 30)
+        ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
+        ])
     }
 }
