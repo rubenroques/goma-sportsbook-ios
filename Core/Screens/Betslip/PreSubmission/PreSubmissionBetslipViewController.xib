@@ -23,15 +23,12 @@
             <connections>
                 <outlet property="amountBaseView" destination="AXI-gL-Dno" id="xMl-GR-YWE"/>
                 <outlet property="amountTextfield" destination="MS2-zN-0UQ" id="ITn-A4-lDf"/>
-                <outlet property="betSuggestedCollectionView" destination="bms-St-XjN" id="hcF-lP-r9T"/>
                 <outlet property="betTypeSegmentControl" destination="mRH-ES-pb4" id="hA2-9n-TBI"/>
                 <outlet property="betTypeSegmentControlBaseView" destination="TZO-Zq-dgn" id="4YH-2y-5U0"/>
                 <outlet property="bottomSafeArea" destination="Wu6-kU-jpt" id="DoY-Dg-dC6"/>
                 <outlet property="clearBaseView" destination="cEh-jz-3Se" id="vuR-kr-g6Y"/>
                 <outlet property="clearButton" destination="1NK-ag-RHY" id="KEL-kL-XIx"/>
-                <outlet property="dontHaveSelectionsBetslipInfoLabel" destination="Ldl-f4-u9t" id="sH4-hG-hGS"/>
                 <outlet property="emptyBetsBaseView" destination="WLl-sg-9Tv" id="12I-jL-puf"/>
-                <outlet property="hereAreYourSuggestedBetLabel" destination="DFg-gs-vfx" id="Lap-Ad-SZv"/>
                 <outlet property="loadingBaseView" destination="WId-wH-AbA" id="e6z-KH-C4B"/>
                 <outlet property="loadingView" destination="cMq-CI-620" id="18N-Rk-IcL"/>
                 <outlet property="maxValueButtonView" destination="gFf-QV-h6m" id="qga-Nt-U3P"/>
@@ -204,45 +201,6 @@
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WLl-sg-9Tv">
                     <rect key="frame" x="0.0" y="0.0" width="757" height="1107"/>
-                    <subviews>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You don’t have any selections yet." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ldl-f4-u9t">
-                            <rect key="frame" x="8" y="50" width="741" height="14"/>
-                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="14"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="249" text="Here are your Suggested Bets!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DFg-gs-vfx">
-                            <rect key="frame" x="8" y="76" width="741" height="20"/>
-                            <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
-                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <nil key="highlightedColor"/>
-                        </label>
-                        <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" verticalHuggingPriority="249" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="bms-St-XjN">
-                            <rect key="frame" x="0.0" y="121" width="757" height="300"/>
-                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="300" id="e02-d2-uim"/>
-                            </constraints>
-                            <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" sectionInsetReference="safeArea" id="8DZ-bW-diK">
-                                <size key="itemSize" width="350" height="300"/>
-                                <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                <inset key="sectionInset" minX="16" minY="0.0" maxX="16" maxY="0.0"/>
-                            </collectionViewFlowLayout>
-                        </collectionView>
-                    </subviews>
-                    <constraints>
-                        <constraint firstItem="bms-St-XjN" firstAttribute="leading" secondItem="WLl-sg-9Tv" secondAttribute="leading" id="98m-6j-wah"/>
-                        <constraint firstItem="bms-St-XjN" firstAttribute="top" secondItem="DFg-gs-vfx" secondAttribute="bottom" constant="25" id="N8u-Kj-baU"/>
-                        <constraint firstItem="DFg-gs-vfx" firstAttribute="leading" secondItem="WLl-sg-9Tv" secondAttribute="leading" constant="8" id="NlS-1k-0b8"/>
-                        <constraint firstAttribute="trailing" secondItem="bms-St-XjN" secondAttribute="trailing" id="QJV-J8-V2d"/>
-                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="leading" secondItem="WLl-sg-9Tv" secondAttribute="leading" constant="8" id="Qbe-cK-xYj"/>
-                        <constraint firstAttribute="trailing" secondItem="DFg-gs-vfx" secondAttribute="trailing" constant="8" id="S64-24-2Ga"/>
-                        <constraint firstAttribute="trailing" secondItem="Ldl-f4-u9t" secondAttribute="trailing" constant="8" id="c6j-m6-vcF"/>
-                        <constraint firstItem="Ldl-f4-u9t" firstAttribute="top" secondItem="WLl-sg-9Tv" secondAttribute="top" constant="50" id="cBV-Yy-lBk"/>
-                        <constraint firstItem="DFg-gs-vfx" firstAttribute="top" secondItem="Ldl-f4-u9t" secondAttribute="bottom" constant="12" id="wYI-05-79X"/>
-                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="TZO-Zq-dgn">
                     <rect key="frame" x="0.0" y="44" width="757" height="50"/>

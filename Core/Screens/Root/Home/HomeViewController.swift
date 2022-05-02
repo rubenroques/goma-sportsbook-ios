@@ -199,9 +199,8 @@ class HomeViewController: UIViewController {
     }
 
     private func openBonusView() {
-
-        let bonusDetailsViewController = BonusViewController()
-        self.navigationController?.pushViewController(bonusDetailsViewController, animated: true)
+        let bonusRootViewController = BonusRootViewController(viewModel: BonusRootViewModel(startTabIndex: 0))
+        self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
     @objc private func didTapOpenFavorites() {

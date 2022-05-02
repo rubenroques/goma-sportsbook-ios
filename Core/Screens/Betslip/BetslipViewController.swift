@@ -32,7 +32,7 @@ class BetslipViewController: UIViewController {
     private var viewControllerTabDataSource: TitleTabularDataSource
 
     private var preSubmissionBetslipViewController: PreSubmissionBetslipViewController
-    private var myTicketsViewController: MyTicketsViewController
+    private var myTicketsRootViewController: MyTicketsRootViewController
 
     private var viewControllers: [UIViewController] = []
 
@@ -46,12 +46,14 @@ class BetslipViewController: UIViewController {
 
         self.startScreen = startScreen
 
-        switch startScreen {
-        case .myTickets(let type, let value):
-            self.myTicketsViewController = MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: type, highlightTicket: value))
-        default:
-            self.myTicketsViewController = MyTicketsViewController()
-        }
+//        switch startScreen {
+//        case .myTickets(let type, let value):
+//            self.myTicketsViewController = MyTicketsViewController(viewModel: MyTicketsViewModel(myTicketType: type, highlightTicket: value))
+//        default:
+//            self.myTicketsViewController = MyTicketsViewController()
+//        }
+
+        self.myTicketsRootViewController = MyTicketsRootViewController(viewModel: MyTicketsRootViewModel(startTabIndex: 0))
 
         switch startScreen {
         case .sharedBet(let token):
@@ -60,7 +62,7 @@ class BetslipViewController: UIViewController {
             self.preSubmissionBetslipViewController = PreSubmissionBetslipViewController(viewModel: PreSubmissionBetslipViewModel())
         }
 
-        self.viewControllers = [self.preSubmissionBetslipViewController, self.myTicketsViewController]
+        self.viewControllers = [self.preSubmissionBetslipViewController, self.myTicketsRootViewController]
 
         self.viewControllerTabDataSource = TitleTabularDataSource(with: self.viewControllers)
 
@@ -106,6 +108,9 @@ class BetslipViewController: UIViewController {
 
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
         self.tabViewController.setBarDistribution(.parent)
+
+        self.closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        self.closeButton.setTitle(localized("close"), for: .normal)
 
         self.accountInfoBaseView.clipsToBounds = true
         self.accountValuePlusView.clipsToBounds = true

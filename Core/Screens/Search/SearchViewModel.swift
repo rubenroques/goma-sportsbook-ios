@@ -41,6 +41,8 @@ class SearchViewModel: NSObject {
     var eventStatuses: [Int] = [1, 2]
     var sortBy: [String] = ["START_TIME"]
 
+    private var cachedMatchStatsViewModels: [String: MatchStatsViewModel] = [:]
+
     override init() {
         super.init()
 
@@ -406,6 +408,17 @@ class SearchViewModel: NSObject {
 
     func location(forId id: String) -> EveryMatrix.Location? {
         return Env.everyMatrixStorage.locations[id]
+    }
+
+    func matchStatsViewModel(forMatch match: Match) -> MatchStatsViewModel {
+        if let viewModel = cachedMatchStatsViewModels[match.id] {
+            return viewModel
+        }
+        else {
+            let viewModel = MatchStatsViewModel(match: match)
+            cachedMatchStatsViewModels[match.id] = viewModel
+            return viewModel
+        }
     }
 
     func addRecentSearch(search: String) {

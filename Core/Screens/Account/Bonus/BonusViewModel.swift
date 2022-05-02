@@ -8,7 +8,8 @@
 import Foundation
 import Combine
 
-class BonusViewModel: NSObject {
+class BonusViewModel {
+
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
 
@@ -22,7 +23,8 @@ class BonusViewModel: NSObject {
     var bonusHistoryCellViewModels: [BonusHistoryCellViewModel] = []
 
     // MARK: Public Properties
-    var bonusListTypePublisher: CurrentValueSubject<BonusListType, Never> = .init(.available)
+    var bonusListType: BonusListType
+
     var shouldReloadData: PassthroughSubject<Void, Never> = .init()
     var isBonusAvailableEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isBonusActiveEmptyPublisher: CurrentValueSubject<Bool, Never> = .init(false)
@@ -43,33 +45,30 @@ class BonusViewModel: NSObject {
     }
 
     // MARK: Lifetime and Cycle
-    override init() {
-        super.init()
+    init(bonusListType: BonusListType) {
+        self.bonusListType = bonusListType
 
-        self.setupPublishers()
+        self.requestBonesForType()
+    }
 
+    func requestBonesForType() {
+        switch self.bonusListType {
+        case .available:
+            self.getAvailableBonus()
+        case .active:
+            self.getGrantedBonus()
+        case .history:
+            self.getGrantedBonus()
+        }
     }
 
     // MARK: Functions
-    func setBonusType(_ type: BonusListType) {
-        self.bonusListTypePublisher.value = type
-    }
-
-    private func setupPublishers() {
-
-        self.getAvailableBonus()
-        self.getGrantedBonus()
-
-    }
-
     func updateDataSources() {
         self.bonusAvailable = []
         self.bonusActive = []
         self.bonusHistory = []
 
-        self.getAvailableBonus()
-        self.getGrantedBonus()
-        
+        self.requestBonesForType()
     }
 
     private func getAvailableBonus() {

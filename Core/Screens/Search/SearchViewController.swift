@@ -426,10 +426,11 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
                         self.openMatchDetailsScreen(match: match)
                     }
                     
-//                    cell.didTapFavoriteMatchAction = { [weak self] match in
-//                        self?.didTapFavoriteMatchAction?(match)
-//                    }
-
+                    cell.didTapFavoriteMatchAction = { [weak self] match in
+                        self?.didTapFavoriteMatchAction?(match)
+                    }
+                    cell.matchStatsViewModel = self.viewModel.matchStatsViewModel(forMatch: match)
+                    
                     return cell
                 }
 

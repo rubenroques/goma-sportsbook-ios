@@ -13,21 +13,23 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
     @IBOutlet private weak var headerBaseView: UIView!
 
+    @IBOutlet private weak var closeButton: UIButton!
+    @IBOutlet private weak var clearButton: UIButton!
+
     @IBOutlet private weak var searchBarBaseView: UIView!
     @IBOutlet private weak var searchBarView: UISearchBar!
 
     @IBOutlet private weak var titleLabel: UILabel!
     @IBOutlet private weak var smallTitleLabel: UILabel!
 
-    @IBOutlet private weak var buttonBaseVIew: UIView!
-    @IBOutlet private weak var buttonSeparatorBaseVIew: UIView!
-    @IBOutlet private weak var applyButton: UIButton!
-
     @IBOutlet private weak var tableView: UITableView!
     @IBOutlet private weak var loadingView: UIActivityIndicatorView!
 
     var applyFiltersAction: (([String]) -> Void)?
     var tapHeaderViewAction: (() -> Void)?
+
+    private var competitionSelectedIds: [String: Set<String>] = [:]
+    private var initialSelectedIds: Set<String> = []
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -58,7 +60,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     var filteredCompetitions: [CompetitionFilterSectionViewModel] = [] {
         didSet {
             let selectedCells = tableView.indexPathsForSelectedRows ?? []
-            self.tableView.reloadData()
+            self.reloadTableView()
             for selectedCellIndexPath in selectedCells {
                 tableView.selectRow(at: selectedCellIndexPath, animated: false, scrollPosition: .none)
             }
@@ -75,19 +77,29 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         didSet {
             switch self.state {
             case .opened:
+
+                self.initialSelectedIds = self.selectedIds.value
+                self.closeButton.setTitle("Close", for: .normal)
+
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 1.0
                     self.smallTitleLabel.alpha = 0.0
+                    self.closeButton.alpha = 1.0
+                    self.clearButton.alpha = 1.0
                 }
             case .bar:
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 1.0
                     self.smallTitleLabel.alpha = 0.0
+                    self.closeButton.alpha = 0.0
+                    self.clearButton.alpha = 0.0
                 }
             case .line:
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 0.0
                     self.smallTitleLabel.alpha = 1.0
+                    self.closeButton.alpha = 0.0
+                    self.clearButton.alpha = 0.0
                 }
             }
 
@@ -126,13 +138,10 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.separatorStyle = .none
-        self.tableView.allowsSelection = true
+        self.tableView.allowsSelection = false
         self.tableView.register(CompetitionFilterTableViewCell.self, forCellReuseIdentifier: CompetitionFilterTableViewCell.identifier)
         self.tableView.register(CompetitionFilterHeaderView.self, forHeaderFooterViewReuseIdentifier: CompetitionFilterHeaderView.identifier)
         self.tableView.contentInset = UIEdgeInsets(top: 2, left: 0, bottom: 16, right: 0)
-        self.applyButton.backgroundColor = .clear
-        self.applyButton.layer.cornerRadius = CornerRadius.button
-        self.applyButton.layer.masksToBounds = true
 
         self.searchBarBaseView.backgroundColor = .clear
 
@@ -158,10 +167,32 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 //        self.headerBaseView.layer.borderColor = UIColor.black.cgColor
 //        self.headerBaseView.layer.borderWidth = 2
 
+        let swipeGestureRecognizer = UISwipeGestureRecognizer(target: self, action: #selector(self.didSwipeDownToClose))
+        swipeGestureRecognizer.direction = .down
+        self.addGestureRecognizer(swipeGestureRecognizer)
+
         self.selectedIds
             .map(\.isNotEmpty)
             .receive(on: DispatchQueue.main)
-            .assign(to: \.isEnabled, on: applyButton)
+            .assign(to: \.isEnabled, on: clearButton)
+            .store(in: &cancellables)
+
+//        self.selectedIds
+//            .map(\.isNotEmpty)
+//            .receive(on: DispatchQueue.main)
+//            .assign(to: \.isEnabled, on: closeButton)
+//            .store(in: &cancellables)
+
+        self.selectedIds
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] currentSelection in
+                if (self?.initialSelectedIds ?? []) == currentSelection {
+                    self?.closeButton.setTitle("Close", for: .normal)
+                }
+                else {
+                    self?.closeButton.setTitle("Apply", for: .normal)
+                }
+            })
             .store(in: &cancellables)
 
         self.selectedIds
@@ -186,7 +217,6 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         super.layoutSubviews()
 
         self.headerBaseView.roundCorners(corners: [.topRight, .topLeft], radius: 20)
-
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -198,9 +228,6 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.buttonSeparatorBaseVIew.backgroundColor = UIColor.App.separatorLine
-        self.buttonSeparatorBaseVIew.alpha = 0.5
-
         self.headerBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.searchBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -209,14 +236,14 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundSecondary
         self.tableView.backgroundColor = UIColor.App.backgroundSecondary
-        self.buttonBaseVIew.backgroundColor = UIColor.App.backgroundTertiary
 
-        self.applyButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        self.applyButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
-        self.applyButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
 
-        self.applyButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-        self.applyButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
+        self.clearButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.clearButton.setTitleColor(UIColor.App.highlightPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.clearButton.setTitleColor(UIColor.App.highlightPrimary.withAlphaComponent(0.4), for: .disabled)
 
         self.searchBarView.tintColor = .white
         self.searchBarView.barTintColor = .white
@@ -241,8 +268,51 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         self.selectedIds.send(Set.init(ids))
     }
 
-    @IBAction func didTapApplyButton() {
+    private func insertCompetition(withId id: String, countryGroupId: String) {
+
+        for sectionGroup in self.filteredCompetitions {
+            if sectionGroup.cells.map(\.id).contains(where: { $0 == id }) {
+
+                if var competitions = self.competitionSelectedIds[sectionGroup.id] {
+                    competitions.insert(id)
+                    self.competitionSelectedIds[sectionGroup.id] = competitions
+                }
+                else {
+                    self.competitionSelectedIds[sectionGroup.id] = [id]
+                }
+            }
+        }
+
+    }
+
+    private func removeCompetition(withId id: String, countryGroupId: String) {
+
+        for sectionGroup in self.filteredCompetitions {
+            if sectionGroup.cells.map(\.id).contains(where: { $0 == id }) {
+
+                if var competitions = self.competitionSelectedIds[sectionGroup.id] {
+                    competitions.remove(id)
+                    self.competitionSelectedIds[sectionGroup.id] = competitions
+                }
+                else {
+                    self.competitionSelectedIds[sectionGroup.id] = []
+                }
+
+            }
+        }
+
+    }
+
+    @IBAction private func didTapApplyButton() {
         self.applyFiltersAction?(Array(self.selectedIds.value))
+    }
+
+    @IBAction private func didTapClearButton() {
+        self.resetSelection()
+    }
+
+    @objc func didSwipeDownToClose() {
+        self.didTapApplyButton()
     }
 
     @objc func didTapHeaderView() {
@@ -255,9 +325,14 @@ class CompetitionsFiltersView: UIView, NibLoadable {
 
     func resetSelection() {
         self.selectedIds.send([])
-        self.tableView.reloadData()
+        self.competitionSelectedIds = [:]
+
+        self.reloadTableView()
     }
 
+    func reloadTableView() {
+        self.tableView.reloadData()
+    }
 }
 
 extension CompetitionsFiltersView: UIScrollViewDelegate {
@@ -284,21 +359,44 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard
             let cell = tableView.dequeueCellType(CompetitionFilterTableViewCell.self),
-            let viewModel = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row]
+            let groupViewModel = filteredCompetitions[safe: indexPath.section],
+            let viewModel = groupViewModel.cells[safe: indexPath.row]
         else {
             fatalError()
         }
 
+        let isSelected = self.selectedIds.value.contains(viewModel.id)
         let isLastCell = tableView.numberOfRows(inSection: indexPath.section) == indexPath.row + 1
-        if isLastCell {
-            cell.configureAsLastCell()
-        }
-        else {
-            cell.configureAsNormalCell()
+
+        cell.configure(withViewModel: CompetitionFilterCellViewModel(competition: viewModel.competition,
+                                                                     locationId: groupViewModel.id,
+                                                                     isSelected: isSelected,
+                                                                     isLastCell: isLastCell))
+
+        cell.didTapCellAction = { [weak self] viewModel in
+
+            guard let self = self else { return }
+
+            if viewModel.isSelected {
+                var selectedIdsCopy = self.selectedIds.value
+                selectedIdsCopy.insert(viewModel.id)
+                self.selectedIds.send(selectedIdsCopy)
+
+                self.insertCompetition(withId: viewModel.id, countryGroupId: viewModel.locationId)
+            }
+            else {
+                var selectedIdsCopy = self.selectedIds.value
+                selectedIdsCopy.remove(viewModel.id)
+                self.selectedIds.send(selectedIdsCopy)
+
+                self.removeCompetition(withId: viewModel.id, countryGroupId: viewModel.locationId)
+            }
+
+            self.reloadTableView()
         }
 
-        cell.titleLabel.text = viewModel.name
-        cell.selectionStyle = .none
+        // cell.titleLabel.text = viewModel.name
+        // cell.selectionStyle = .none
         
         return cell
     }
@@ -354,36 +452,38 @@ extension CompetitionsFiltersView: UITableViewDelegate, UITableViewDataSource {
         headerView.sectionIdentifier = viewModelForSection.id
         headerView.titleLabel.text = viewModelForSection.name
 
+        headerView.selectionCount = self.competitionSelectedIds[viewModelForSection.id]?.count ?? 0
+
         return headerView
     }
 
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let typedCell = cell as? CompetitionFilterTableViewCell,
-           let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
-            if self.selectedIds.value.contains(viewModelForIndex.id) {
-                typedCell.setSelected(true, animated: false)
-            }
-            else {
-                typedCell.setSelected(false, animated: false)
-            }
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
-            var selectedIdsCopy = selectedIds.value
-            selectedIdsCopy.insert(viewModelForIndex.id)
-            self.selectedIds.send(selectedIdsCopy)
-        }
-    }
-
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-        if let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
-            var selectedIdsCopy = selectedIds.value
-            selectedIdsCopy.remove(viewModelForIndex.id)
-            self.selectedIds.send(selectedIdsCopy)
-        }
-    }
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if let typedCell = cell as? CompetitionFilterTableViewCell,
+//           let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
+//            if self.selectedIds.value.contains(viewModelForIndex.id) {
+//                typedCell.setSelected(true, animated: false)
+//            }
+//            else {
+//                typedCell.setSelected(false, animated: false)
+//            }
+//        }
+//    }
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        if let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
+//            var selectedIdsCopy = selectedIds.value
+//            selectedIdsCopy.insert(viewModelForIndex.id)
+//            self.selectedIds.send(selectedIdsCopy)
+//        }
+//    }
+//
+//    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+//        if let viewModelForIndex = filteredCompetitions[safe: indexPath.section]?.cells[safe: indexPath.row] {
+//            var selectedIdsCopy = selectedIds.value
+//            selectedIdsCopy.remove(viewModelForIndex.id)
+//            self.selectedIds.send(selectedIdsCopy)
+//        }
+//    }
 
 }
 

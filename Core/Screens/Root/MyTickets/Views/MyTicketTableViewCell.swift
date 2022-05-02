@@ -381,7 +381,9 @@ class MyTicketTableViewCell: UITableViewCell {
 
         let cashoutAlertMessage = "\(localized("return_money")) \(cashoutValueString)"
 
-        let submitCashoutAlert = UIAlertController(title: localized("cashout_verification"), message: cashoutAlertMessage, preferredStyle: UIAlertController.Style.alert)
+        let submitCashoutAlert = UIAlertController(title: localized("cashout_verification"),
+                                                   message: cashoutAlertMessage,
+                                                   preferredStyle: UIAlertController.Style.alert)
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cashout"), style: .default, handler: { _ in
             self.viewModel?.requestCashout()
         }))

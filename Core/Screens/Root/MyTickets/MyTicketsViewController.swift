@@ -11,10 +11,7 @@ import LinkPresentation
 
 class MyTicketsViewController: UIViewController {
 
-    @IBOutlet private weak var myBetsSegmentedControlBaseView: UIView!
-    @IBOutlet private weak var myBetsSegmentedControl: UISegmentedControl!
-    
-    @IBOutlet private var ticketsTableView: UITableView!
+    @IBOutlet private weak var ticketsTableView: UITableView!
 
     @IBOutlet private weak var emptyBaseView: UIView!
     @IBOutlet private weak var firstTextFieldLabel: UILabel!
@@ -44,7 +41,7 @@ class MyTicketsViewController: UIViewController {
         }
     }
 
-    init(viewModel: MyTicketsViewModel = MyTicketsViewModel() ) {
+    init(viewModel: MyTicketsViewModel = MyTicketsViewModel()) {
         self.viewModel = viewModel
         
         super.init(nibName: "MyTicketsViewController", bundle: nil)
@@ -66,21 +63,7 @@ class MyTicketsViewController: UIViewController {
 
         self.noBetsButton.isHidden = true
 
-        self.myBetsSegmentedControlBaseView.isHidden = false
-        self.myBetsSegmentedControlBaseView.backgroundColor = .systemPink
         self.emptyBaseView.isHidden = true
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        flowLayout.scrollDirection = .horizontal
-
-        switch self.viewModel.myTicketsTypePublisher.value {
-        case .opened:
-            self.myBetsSegmentedControl.selectedSegmentIndex = 0
-        case .resolved:
-            self.myBetsSegmentedControl.selectedSegmentIndex = 1
-        case .won:
-            self.myBetsSegmentedControl.selectedSegmentIndex = 2
-        }
 
         self.ticketsTableView.delegate = self.viewModel
         self.ticketsTableView.dataSource = self.viewModel
@@ -199,25 +182,7 @@ class MyTicketsViewController: UIViewController {
         self.secondTextFieldLabel.textColor = UIColor.App.textPrimary
         
         self.noBetsButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        
-        self.myBetsSegmentedControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
-        ], for: .selected)
-        self.myBetsSegmentedControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
-        ], for: .normal)
-        self.myBetsSegmentedControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
-        ], for: .disabled)
 
-        self.myBetsSegmentedControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
-
-        self.myBetsSegmentedControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.myBetsSegmentedControl.backgroundColor = UIColor.App.backgroundTertiary
-        
         StyleHelper.styleButton(button: self.noBetsButton)
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
@@ -251,31 +216,17 @@ class MyTicketsViewController: UIViewController {
           let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
           if let betStatus = self.viewModel.clickedBetStatus, betStatus == "OPEN" {
-              let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot], applicationActivities: nil)
+              let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot],
+                                                   applicationActivities: nil)
               present(share, animated: true, completion: nil)
           }
           else {
-              let share = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot], applicationActivities: nil)
+              let share = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot],
+                                                   applicationActivities: nil)
               present(share, animated: true, completion: nil)
           }
 
           self.isLoading = false
-
-    }
-
-    @IBAction private func didChangeSegmentValue(_ segmentControl: UISegmentedControl) {
-
-        switch segmentControl.selectedSegmentIndex {
-        case 0:
-            self.viewModel.setMyTicketsType(.opened)
-        case 1:
-            self.viewModel.setMyTicketsType(.resolved)
-        case 2:
-            self.viewModel.setMyTicketsType(.won)
-        default:
-            ()
-        }
-
     }
 
 }

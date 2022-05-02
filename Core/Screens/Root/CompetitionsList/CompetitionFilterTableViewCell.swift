@@ -8,6 +8,24 @@
 import UIKit
 import Combine
 
+class CompetitionFilterCellViewModel {
+
+    var id: String
+    var locationId: String
+    var title: String
+    var isSelected: Bool
+    var isLastCell: Bool
+
+    init(competition: Competition, locationId: String, isSelected: Bool, isLastCell: Bool) {
+        self.id = competition.id
+        self.title = competition.name
+        self.locationId = locationId
+        self.isSelected = isSelected
+        self.isLastCell = isLastCell
+    }
+
+}
+
 class CompetitionFilterTableViewCell: UITableViewCell {
 
     private var baseView: UIView = {
@@ -24,7 +42,7 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         return baseView
     }()
 
-    var titleLabel: UILabel = {
+    private var titleLabel: UILabel = {
         var label  = UILabel()
         label.font = AppFont.with(type: .bold, size: 14)
         label.numberOfLines = 2
@@ -32,15 +50,16 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         return label
     }()
 
-    var selectedImageView: UIImageView = {
+    private var selectedImageView: UIImageView = {
         var imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
 
-    var isCellSelected: Bool = false
-    var isLastCell: Bool = false
+    var viewModel: CompetitionFilterCellViewModel?
+
+    var didTapCellAction: ((CompetitionFilterCellViewModel) -> Void)?
 
     private var cancellables: Set<AnyCancellable> = []
 
@@ -50,7 +69,8 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
-        self.titleLabel.text = "Competition Name and selector"
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapCell))
+        self.contentView.addGestureRecognizer(tapGestureRecognizer)
     }
 
     @available(iOS, unavailable)
@@ -63,6 +83,8 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
         self.configureAsNormalCell()
 
+        self.viewModel = nil
+
         self.selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
         self.titleLabel.text = ""
     }
@@ -73,32 +95,23 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.setupWithTheme()
     }
 
-    override func layoutSubviews() {
-        super.layoutSubviews()
-
-        if isLastCell {
-            baseView.roundCorners(corners: [.bottomLeft, .bottomRight], radius: 5)
-        }
-        else {
-            baseView.layer.mask = nil
-        }
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        if selected {
-            selectedImageView.image = UIImage(named: "checkbox_selected_icon")!
-        }
-        else {
-            selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
-        }
-    }
+//    override func layoutSubviews() {
+//        super.layoutSubviews()
+//
+//        if viewModel?.isLastCell ?? false {
+//            baseView.clipsToBounds = true
+//            baseView.layer.cornerRadius = 5
+//            baseView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+//        }
+//        else {
+//            baseView.clipsToBounds = true
+//            baseView.layer.cornerRadius = 0
+//            baseView.layer.maskedCorners = []
+//        }
+//    }
 
     func setCellSelected(_ selected: Bool) {
-        self.isCellSelected = selected
-
-        if self.isCellSelected {
+        if selected {
             selectedImageView.image = UIImage(named: "checkbox_selected_icon")!
         }
         else {
@@ -112,18 +125,18 @@ class CompetitionFilterTableViewCell: UITableViewCell {
 
         selectedImageView.image = UIImage(named: "checkbox_unselected_icon")!
 
-        self.addSubview(baseView)
+        self.contentView.addSubview(baseView)
         baseView.addSubview(titleLabel)
         baseView.addSubview(separatorLineView)
         baseView.addSubview(selectedImageView)
 
         NSLayoutConstraint.activate([
-            self.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: -26),
-            self.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 26),
-            self.topAnchor.constraint(equalTo: baseView.topAnchor),
-            self.bottomAnchor.constraint(equalTo: baseView.bottomAnchor),
+            self.contentView.leadingAnchor.constraint(equalTo: baseView.leadingAnchor, constant: -26),
+            self.contentView.trailingAnchor.constraint(equalTo: baseView.trailingAnchor, constant: 26),
+            self.contentView.topAnchor.constraint(equalTo: baseView.topAnchor),
+            self.contentView.bottomAnchor.constraint(equalTo: baseView.bottomAnchor),
 
-            baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 56),
+            baseView.heightAnchor.constraint(greaterThanOrEqualToConstant: 52),
 
             baseView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor, constant: -20),
             baseView.centerYAnchor.constraint(equalTo: titleLabel.centerYAnchor, constant: -1),
@@ -149,20 +162,48 @@ class CompetitionFilterTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
 
-        baseView.backgroundColor = UIColor.App.backgroundPrimary
-        titleLabel.textColor = UIColor.App.textPrimary
-        separatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.baseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.titleLabel.textColor = UIColor.App.textPrimary
+        self.separatorLineView.backgroundColor = UIColor.App.separatorLine
+    }
+
+    func configure(withViewModel viewModel: CompetitionFilterCellViewModel) {
+        self.viewModel = viewModel
+
+        self.titleLabel.text = viewModel.title
+
+        self.setCellSelected(viewModel.isSelected)
+
+        if viewModel.isLastCell {
+            self.configureAsLastCell()
+        }
+        else {
+            self.configureAsNormalCell()
+        }
+
     }
 
     func configureAsNormalCell() {
-        baseView.layer.mask = nil
-        self.isLastCell = false
         self.separatorLineView.isHidden = false
+
+        self.baseView.clipsToBounds = true
+        self.baseView.layer.cornerRadius = 0
+        self.baseView.layer.maskedCorners = []
     }
 
     func configureAsLastCell() {
-        self.isLastCell = true
         self.separatorLineView.isHidden = true
+
+        self.baseView.clipsToBounds = true
+        self.baseView.layer.cornerRadius = 5
+        self.baseView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+    }
+
+    @objc func didTapCell() {
+        if let viewModel = viewModel {
+            viewModel.isSelected.toggle()
+            self.didTapCellAction?(viewModel)
+        }
     }
 
 }

@@ -131,11 +131,12 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
             }
             weakSelf.needReloadSection(section, tableView: weakTableView)
         }
+
         if self.collapsedCompetitionsSections.contains(section) {
-            headerView.collapseImageView.image = UIImage(named: "arrow_down_icon")
+            headerView.isCollapsed = true
         }
         else {
-            headerView.collapseImageView.image = UIImage(named: "arrow_up_icon")
+            headerView.isCollapsed = false
         }
 
         return headerView
@@ -151,10 +152,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
-        }
-        if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
+            return .leastNonzeroMagnitude
         }
 
         if let competition = competitions[safe: indexPath.section] {
@@ -170,7 +168,7 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         if self.collapsedCompetitionsSections.contains(indexPath.section) {
-            return 0
+            return .leastNonzeroMagnitude
         }
 
         if let competition = competitions[safe: indexPath.section] {
@@ -193,6 +191,67 @@ class CompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelega
         tableView.beginUpdates()
         tableView.reloadRows(at: rows, with: .automatic)
         tableView.endUpdates()
+    }
+
+}
+
+class FilteredOutrightCompetitionsDataSource: NSObject, UITableViewDataSource, UITableViewDelegate {
+
+    var outrightCompetitions: [Competition]
+
+    var didSelectCompetitionAction: ((Competition) -> Void)?
+    var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
+
+    init(outrightCompetitions: [Competition]) {
+        self.outrightCompetitions = outrightCompetitions
+    }
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return outrightCompetitions.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard
+            let competition = self.outrightCompetitions[safe: indexPath.row]
+        else {
+            fatalError()
+        }
+
+        guard
+            let cell = tableView.dequeueReusableCell(withIdentifier: OutrightCompetitionLargeLineTableViewCell.identifier)
+                as? OutrightCompetitionLargeLineTableViewCell
+        else {
+            fatalError()
+        }
+        cell.configure(withViewModel: OutrightCompetitionLargeLineViewModel(competition: competition))
+        cell.didSelectCompetitionAction = { [weak self] competition in
+            self?.didSelectCompetitionAction?(competition)
+        }
+        return cell
+    }
+
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 145
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 145
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        return nil
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
     }
 
 }

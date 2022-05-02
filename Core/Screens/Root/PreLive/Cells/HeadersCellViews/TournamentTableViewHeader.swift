@@ -38,6 +38,17 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
         }
     }
 
+    var isCollapsed: Bool = false {
+        didSet {
+            if isCollapsed {
+                self.collapseImageView.image = UIImage(named: "arrow_down_icon")
+            }
+            else {
+                self.collapseImageView.image = UIImage(named: "arrow_up_icon")
+            }
+        }
+    }
+
     var didToggleHeaderViewAction: ((Int) -> Void)?
     var didTapFavoriteCompetitionAction: ((Competition) -> Void)?
     
@@ -122,6 +133,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
     @objc func didToggleCell() {
         if let sectionIndex = sectionIndex {
+            self.isCollapsed.toggle()
             self.didToggleHeaderViewAction?(sectionIndex)
         }
     }

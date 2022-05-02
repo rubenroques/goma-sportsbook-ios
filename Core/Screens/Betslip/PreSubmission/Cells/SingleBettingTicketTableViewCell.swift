@@ -376,10 +376,16 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
                 if let currentBoostedOddPercentage = self?.currentBoostedOddPercentage, currentBoostedOddPercentage != 0 {
                     let boostedValue = newOddValue + (newOddValue * currentBoostedOddPercentage)
 
+                    let possibleWinnings = boostedValue * (self?.realBetValue ?? 0)
+                    let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
+                    self?.returnsValueLabel.text = possibleWinningsString
+
                     self?.oddValueLabel.text = OddConverter.stringForValue(boostedValue, format: UserDefaults.standard.userOddsFormat)
+                    self?.refreshPossibleWinnings()
                 }
                 else {
                     self?.oddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
+                    self?.refreshPossibleWinnings()
                 }
 
             })
@@ -456,7 +462,7 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.freeBetView.isHidden = false
     }
 
-    func setupOddsBoostInfo(oddsBoost: BetslipOddsBoost , isSwitchOn: Bool = false) {
+    func setupOddsBoostInfo(oddsBoost: BetslipOddsBoost, isSwitchOn: Bool = false) {
         self.oddsBoostView.setupBonusInfo(freeBet: nil, oddsBoost: oddsBoost, bonusType: .oddsBoost)
 
         self.oldOddLabel.isHidden = true
@@ -487,6 +493,8 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
 
                 self.oldOddLabel.attributedText = attributeString
                 self.oddValueLabel.text = boostedValueConverted
+
+                self.refreshPossibleWinnings()
             }
 
         }
@@ -538,6 +546,21 @@ class SingleBettingTicketTableViewCell: UITableViewCell {
         self.addAmountValue(maxAmountPossible, isMax: true)
     }
 
+    func refreshPossibleWinnings() {
+
+        if let currentOddValue = currentOddValue {
+
+            let boostedValue = currentOddValue * (1 + self.currentBoostedOddPercentage)
+
+            let possibleWinnings = boostedValue * self.realBetValue
+            let possibleWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: possibleWinnings)) ?? "-.--€"
+            self.returnsValueLabel.text = possibleWinningsString
+        }
+        else {
+            self.returnsValueLabel.text = "-.--€"
+        }
+    }
+
 }
 
 extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
@@ -570,7 +593,9 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
 //        }
 
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
-        amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+
+        self.refreshPossibleWinnings()
     }
 
     func updateAmountValue(_ newValue: String) {
@@ -581,7 +606,9 @@ extension SingleBettingTicketTableViewCell: UITextFieldDelegate {
             currentValue /= 10
         }
         let calculatedAmount = Double(currentValue/100) + Double(currentValue%100)/100
-        amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+        self.amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
+
+        self.refreshPossibleWinnings()
     }
 
 }

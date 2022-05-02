@@ -24,7 +24,6 @@ class FilterHistoryViewController: UIViewController{
     private lazy var filterBaseView : UIView = Self.createSimpleView()
     private lazy var filtersButtonImage: UIImageView = Self.createFilterImageView()
     private lazy var tableView: UITableView = Self.createTableView()
-   // private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var loadingBaseView: SpinnerViewController = SpinnerViewController()
     private lazy var emptyStateBaseView: UIView = Self.createEmptyStateView()
     private lazy var emptyStateImageView: UIImageView = Self.createImageView()
@@ -41,12 +40,11 @@ class FilterHistoryViewController: UIViewController{
     private var filterSelectedOption: Int = 0
     
     // MARK: - Lifetime and Cycle
-    init(viewModel: HistoryViewModel = HistoryViewModel()) {
+    init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions)) {
         self.viewModel = viewModel
-        //self.viewModel.reloadTableView()
+
         super.init(nibName: nil, bundle: nil)
     }
-
 
     @available(iOS, unavailable)
     required init?(coder: NSCoder) {
@@ -203,8 +201,8 @@ class FilterHistoryViewController: UIViewController{
                     self?.emptyStateBaseView.isHidden = true
                     self?.loadingBaseView.view.isHidden = false
                     self?.tableView.isHidden = true
-                }else{
-                    self?.viewModel.listTypePublisher.send(.transactions)
+                }
+                else {
                     self?.viewModel.transactionsTypePublisher.send(.deposit)
                     if let numberOfRows = self?.viewModel.numberOfRowsInTable()  {
                         if numberOfRows == 0 {
@@ -217,12 +215,7 @@ class FilterHistoryViewController: UIViewController{
                             self?.tableView.reloadData()
                         }
                     }
-                    
-
                 }
-                
-                
-                
             })
             .store(in: &self.cancellables)
         
@@ -254,7 +247,7 @@ extension FilterHistoryViewController: UITableViewDelegate, UITableViewDataSourc
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        switch self.viewModel.listTypePublisher.value{
+        switch self.viewModel.listType {
         case .transactions:
             let ticket: EveryMatrix.TransactionHistory?
             var transactionType = 0
@@ -309,7 +302,7 @@ extension FilterHistoryViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        switch self.viewModel.listTypePublisher.value{
+        switch self.viewModel.listType {
         case .transactions:
             return 80
         case .bettings:
@@ -358,7 +351,6 @@ extension FilterHistoryViewController: UICollectionViewDelegate, UICollectionVie
         self.filterSelectedOption = indexPath.row
         
         if self.optionSegmentControl.selectedSegmentIndex == 0 {
-            self.viewModel.listTypePublisher.send(.transactions)
 
             if indexPath.row == 0 {
                 self.viewModel.transactionsTypePublisher.send(.deposit)
@@ -381,7 +373,6 @@ extension FilterHistoryViewController: UICollectionViewDelegate, UICollectionVie
                
                 self.viewModel.ticketsTypePublisher.send(.cashout)
             }
-            self.viewModel.listTypePublisher.send(.bettings)
         }
         
         self.viewModel.didSelectShortcut(atSection: indexPath.section)
@@ -426,18 +417,14 @@ extension FilterHistoryViewController {
     
     @objc func didChangeSegmentValue(_ sender: UISegmentedControl) {
         if self.optionSegmentControl.selectedSegmentIndex == 0 {
-          
-            self.viewModel.listTypePublisher.send(.transactions)
             self.viewModel.transactionsTypePublisher.send(.deposit)
-        }else{
-    
-            self.viewModel.listTypePublisher.send(.bettings)
+        }
+        else {
             self.viewModel.ticketsTypePublisher.send(.resolved)
             self.tableView.reloadData()
         }
     
         self.filterSelectedOption = 0
-        
       
         self.tableView.reloadData()
         self.topSliderCollectionView.reloadData()
@@ -556,10 +543,8 @@ extension FilterHistoryViewController {
     
     
     private func setupEmptyState(){
-        
-        
-        
-        switch self.viewModel.listTypePublisher.value{
+
+        switch self.viewModel.listType {
         case .transactions:
         
             self.emptyStateLabel.text = "There’s no transations here!"

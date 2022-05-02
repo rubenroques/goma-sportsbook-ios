@@ -16,7 +16,6 @@ class BettingNotificationViewModel: NSObject {
     // MARK: Public Properties
     var userSettings: UserSettingsGoma?
     var shouldSendSettingsPublisher: CurrentValueSubject<Bool, Never> = .init(false)
-    var settingsUpdatedPublisher: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Lifetime and sCycle
     override init() {
@@ -31,11 +30,8 @@ class BettingNotificationViewModel: NSObject {
         if let data = UserDefaults.standard.data(forKey: "gomaUserSettings") {
             do {
                 let decoder = JSONDecoder()
-
                 let userSettings = try decoder.decode(UserSettingsGoma.self, from: data)
-
                 self.userSettings = userSettings
-
             }
             catch {
                 print("Unable to Decode UserSettings Goma (\(error))")
@@ -47,9 +43,7 @@ class BettingNotificationViewModel: NSObject {
         if let userSettings = self.userSettings {
             do {
                 let encoder = JSONEncoder()
-
                 let data = try encoder.encode(userSettings)
-
                 UserDefaults.standard.set(data, forKey: "gomaUserSettings")
             }
             catch {
@@ -78,7 +72,6 @@ class BettingNotificationViewModel: NSObject {
                         }
                     }, receiveValue: {[weak self] value in
                         print("GOMA SETTINGS: \(value)")
-                        self?.settingsUpdatedPublisher.send()
                     })
                     .store(in: &cancellables)
 

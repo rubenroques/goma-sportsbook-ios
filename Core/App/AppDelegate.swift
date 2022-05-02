@@ -98,23 +98,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, MessagingDelegate {
                      restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
 
         if userActivity.activityType == NSUserActivityTypeBrowsingWeb {
-                guard let url = userActivity.webpageURL else {
-                    return false
-                }
+            guard let url = userActivity.webpageURL else {
+                return false
+            }
 
-                let urlSections = url.pathComponents
-                if urlSections.contains("gamedetail") {
-                    if let gameDetailId = urlSections.last {
-                        self.openRoute(Route.event(id: gameDetailId), onApplication: application)
-                    }
-                }
-                else if urlSections.contains("bet") {
-                    if let ticketId = urlSections.last {
-                        self.openRoute(Route.ticket(id: ticketId), onApplication: application)
-                    }
+            let urlSections = url.pathComponents
+            if urlSections.contains("gamedetail") {
+                if let gameDetailId = urlSections.last {
+                    self.openRoute(Route.event(id: gameDetailId), onApplication: application)
                 }
             }
-            return true
+            else if urlSections.contains("bet") {
+                if let ticketId = urlSections.last {
+                    self.openRoute(Route.ticket(id: ticketId), onApplication: application)
+                }
+            }
+        }
+        return true
     }
 
 }

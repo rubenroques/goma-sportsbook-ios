@@ -94,21 +94,6 @@ class GamesNotificationViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.shouldSendSettingsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] sendState in
-                self?.shouldUpdateSettings = sendState
-            })
-            .store(in: &cancellables)
-
-        viewModel.settingsUpdatedPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                if self?.shouldUpdateSettings == true {
-                    self?.navigationController?.popViewController(animated: true)
-                }
-            })
-            .store(in: &cancellables)
     }
 
     private func setupTopStackView() {
@@ -215,12 +200,8 @@ class GamesNotificationViewController: UIViewController {
 //
 extension GamesNotificationViewController {
     @objc private func didTapBackButton() {
-        if self.shouldUpdateSettings {
-            self.viewModel.setUserSettings()
-        }
-        else {
-            self.navigationController?.popViewController(animated: true)
-        }
+        self.viewModel.setUserSettings()
+        self.navigationController?.popViewController(animated: true)
     }
 }
 

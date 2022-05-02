@@ -201,7 +201,7 @@ class ProfileViewController: UIViewController {
         shadowView.layer.shadowColor = UIColor.black.cgColor
         shadowView.layer.shadowOpacity = 0.4
 
-        closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 18)
+        closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         closeButton.setTitle(localized("close"), for: .normal)
         closeButton.backgroundColor = .clear
 
@@ -550,13 +550,13 @@ extension ProfileViewController {
     }
 
     @objc func bonusViewTapped(sender: UITapGestureRecognizer) {
-        let bonusViewController = BonusViewController()
-        self.navigationController?.pushViewController(bonusViewController, animated: true)
+        let bonusRootViewController = BonusRootViewController(viewModel: BonusRootViewModel(startTabIndex: 0))
+        self.navigationController?.pushViewController(bonusRootViewController, animated: true)
     }
 
     @objc func historyViewTapped(sender: UITapGestureRecognizer) {
-        let historyViewController = HistoryViewController()
-        self.navigationController?.pushViewController(historyViewController, animated: true)
+        let historyRootViewController = HistoryRootViewController()
+        self.navigationController?.pushViewController(historyRootViewController, animated: true)
     }
 //
 //    @objc func limitsViewTapped() {

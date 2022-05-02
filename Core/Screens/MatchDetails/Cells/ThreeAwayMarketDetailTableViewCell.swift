@@ -29,7 +29,8 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
     var match: Match?
     var marketId: String?
     var marketGroupOrganizer: MarketGroupOrganizer?
-
+    var competitionName: String?
+    
     private let lineHeight: CGFloat = 56
 
     private let collapsedMaxNumberOfLines = 4
@@ -69,6 +70,8 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
         self.match = nil
         self.marketId = nil
         self.marketGroupOrganizer = nil
+
+        self.competitionName = nil
 
         self.expandBaseView.isHidden = false
         self.isExpanded = false
@@ -132,6 +135,7 @@ class ThreeAwayMarketDetailTableViewCell: UITableViewCell {
                     if let outcomeValue = outcome {
                         let outcomeSelectionButtonView = OutcomeSelectionButtonView()
                         outcomeSelectionButtonView.match = self.match
+                        outcomeSelectionButtonView.competitionName = self.competitionName
                         outcomeSelectionButtonView.marketId = self.marketId
                         outcomeSelectionButtonView.configureWith(outcome: outcomeValue)
                         stackView.addArrangedSubview(outcomeSelectionButtonView)

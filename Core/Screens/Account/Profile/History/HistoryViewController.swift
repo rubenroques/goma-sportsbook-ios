@@ -7,18 +7,11 @@
 
 import UIKit
 import Combine
-import OrderedCollections
-import SwiftUI
 
 class HistoryViewController: UIViewController {
     
     // MARK: - Private Properties
     // Sub Views
-    private lazy var navigationBaseView: UIView = Self.createNavigationView()
-    private lazy var backButton: UIButton = Self.createBackButton()
-    private lazy var optionSegmentControlBaseView: UIView = Self.createSimpleView()
-    private lazy var optionSegmentControl: UISegmentedControl = Self.createSegmentedControl()
-    private lazy var topLabel: UILabel = Self.createTopLabel()
     private lazy var topSliderSeparatorView: UIView = Self.createSimpleView()
     private lazy var topSliderView: UIView = Self.createSimpleView()
     private lazy var topSliderCollectionView: UICollectionView = Self.createTopSliderCollectionView()
@@ -43,10 +36,17 @@ class HistoryViewController: UIViewController {
     private let rightGradientMaskLayer = CAGradientLayer()
     
     // MARK: - Lifetime and Cycle
-    init(viewModel: HistoryViewModel = HistoryViewModel()) {
+    init(viewModel: HistoryViewModel = HistoryViewModel(listType: .transactions)) {
         self.viewModel = viewModel
-        
+
         super.init(nibName: nil, bundle: nil)
+
+        switch viewModel.listType {
+        case .transactions:
+            self.title = "Transactions"
+        case .bettings:
+            self.title = "Betting"
+        }
     }
     
     @available(iOS, unavailable)
@@ -69,7 +69,8 @@ class HistoryViewController: UIViewController {
         self.tableView.contentInset.bottom = 12
         
         self.topSliderCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
-        
+
+        self.tableView.allowsSelection = false
         self.tableView.register(TransactionsTableViewCell.self, forCellReuseIdentifier: TransactionsTableViewCell.identifier)
         self.tableView.register(BettingsTableViewCell.self, forCellReuseIdentifier: BettingsTableViewCell.identifier)
         
@@ -80,15 +81,11 @@ class HistoryViewController: UIViewController {
         self.filterBaseView.isUserInteractionEnabled = true
         self.filterBaseView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
 
-        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-        
         let tapDepositGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapMakeDeposit))
         self.emptyStateButton.isUserInteractionEnabled = true
         self.emptyStateButton.addGestureRecognizer(tapDepositGestureRecognizer)
         StyleHelper.styleButton(button: self.emptyStateButton)
-        
-        self.optionSegmentControl.addTarget(self, action: #selector(self.didChangeSegmentValue(_:)), for: .valueChanged)
-        
+
         if filterSelectedOption == 0 {
             self.viewModel.ticketsTypePublisher.send(.resolved)
             
@@ -105,6 +102,7 @@ class HistoryViewController: UIViewController {
         self.loadingBaseView.view.isHidden = true
         self.tableView.isHidden = false
         self.emptyStateBaseView.isHidden = true
+
         self.bind(toViewModel: viewModel)
         
     }
@@ -132,32 +130,13 @@ class HistoryViewController: UIViewController {
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
         self.tableView.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         
-        self.navigationBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.topSliderSeparatorView.backgroundColor = UIColor.App.separatorLine
                 
         self.topSliderCollectionView.backgroundView?.backgroundColor = .clear
         self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundSecondary
-        
-        self.topLabel.textColor = UIColor.App.textPrimary
-        
+
         self.filterBaseView.backgroundColor = UIColor.App.backgroundTertiary
-        
-        self.optionSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.buttonTextPrimary
-        ], for: .selected)
-        self.optionSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
-        ], for: .normal)
-        self.optionSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
-        ], for: .disabled)
-        
-        self.optionSegmentControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
-        self.optionSegmentControl.backgroundColor = UIColor.App.backgroundTertiary
-        
+
         self.emptyStateBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.emptyStateImageView.image = UIImage(named: "no_content_icon")
         
@@ -181,7 +160,7 @@ class HistoryViewController: UIViewController {
     
     // MARK: - Bindings
     private func bind(toViewModel viewModel: HistoryViewModel) {
-        
+
         viewModel.isLoading
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
@@ -192,7 +171,6 @@ class HistoryViewController: UIViewController {
                     self?.tableView.isHidden = true
                 }
                 else {
-                    self?.viewModel.listTypePublisher.send(.transactions)
                     self?.viewModel.transactionsTypePublisher.send(.deposit)
                     if let numberOfRows = self?.viewModel.numberOfRowsInTable() {
                         if numberOfRows == 0 {
@@ -240,7 +218,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        switch self.viewModel.listTypePublisher.value {
+        switch self.viewModel.listType {
         case .transactions:
             let ticket: EveryMatrix.TransactionHistory?
             switch self.viewModel.transactionsTypePublisher.value {
@@ -289,7 +267,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        switch self.viewModel.listTypePublisher.value {
+        switch self.viewModel.listType {
         case .transactions:
             return 80
         case .bettings:
@@ -336,9 +314,7 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.filterSelectedOption = indexPath.row
         
-        if self.optionSegmentControl.selectedSegmentIndex == 0 {
-            self.viewModel.listTypePublisher.send(.transactions)
-            
+        if self.viewModel.listType == .transactions {
             if indexPath.row == 0 {
                 self.viewModel.transactionsTypePublisher.send(.deposit)
             }
@@ -348,11 +324,9 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
         }
         else {
             if indexPath.row == 0 {
-                
                 self.viewModel.ticketsTypePublisher.send(.resolved)
             }
             else if indexPath.row == 1 {
-                
                 self.viewModel.ticketsTypePublisher.send(.opened)
                 self.viewModel.loadOpenedTickets(page: 0)
             }
@@ -365,7 +339,6 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
                 
                 self.viewModel.ticketsTypePublisher.send(.cashout)
             }
-            self.viewModel.listTypePublisher.send(.bettings)
         }
         
         self.viewModel.didSelectShortcut(atSection: indexPath.section)
@@ -374,7 +347,6 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
         self.tableView.reloadData()
         self.topSliderCollectionView.layoutIfNeeded()
         self.topSliderCollectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-        
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -389,11 +361,7 @@ extension HistoryViewController: UICollectionViewDelegate, UICollectionViewDataS
 // MARK: - Actions
 //
 extension HistoryViewController {
-  
-    @objc func didTapBackButton() {
-        self.navigationController?.popViewController(animated: true)
-    }
-    
+
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {
         // print("clicou nos filtros")
     }
@@ -403,6 +371,7 @@ extension HistoryViewController {
         self.present(depositViewController, animated: true, completion: nil)
     }
 
+    /*
     @objc func didChangeSegmentValue(_ sender: UISegmentedControl) {
         if self.optionSegmentControl.selectedSegmentIndex == 0 {
             self.viewModel.listTypePublisher.send(.transactions)
@@ -418,9 +387,9 @@ extension HistoryViewController {
         
         self.tableView.reloadData()
         self.topSliderCollectionView.reloadData()
-        
     }
-    
+    */
+
 }
 
 //
@@ -489,7 +458,7 @@ extension HistoryViewController {
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.alwaysBounceHorizontal = true
-        collectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 54)
         
         return collectionView
     }
@@ -538,12 +507,11 @@ extension HistoryViewController {
     
     private func setupEmptyState() {
     
-        switch self.viewModel.listTypePublisher.value {
+        switch self.viewModel.listType {
         case .transactions:
-            
             self.emptyStateLabel.text = "There’s no transations here!"
             self.emptyStateSecondaryLabel.text = "You haven’t made a transation yet, it’s time to deposit some money and start betting on your favourites."
-            
+             
             self.emptyStateButton.setTitle("Make a deposit", for: .normal)
             self.emptyStateButton.setTitle("Make a deposit", for: .disabled)
             
@@ -553,23 +521,12 @@ extension HistoryViewController {
             
             self.emptyStateButton.setTitle("Go to popular games", for: .normal)
             self.emptyStateButton.setTitle("Go to popular games", for: .disabled)
-            
         }
-        
     }
     
     private func setupSubviews() {
         
         // Add subviews to self.view or each other
-        self.navigationBaseView.addSubview(self.topLabel)
-        self.navigationBaseView.addSubview(self.backButton)
-        
-        self.view.addSubview(self.navigationBaseView)
-        
-        self.optionSegmentControlBaseView.addSubview(self.optionSegmentControl)
-        
-        self.view.addSubview(self.optionSegmentControlBaseView)
-        
         self.topSliderView.addSubview(self.topSliderCollectionView)
         self.topSliderView.addSubview(self.rightGradientBaseView)
         self.topSliderView.addSubview(self.filterBaseView)
@@ -584,48 +541,19 @@ extension HistoryViewController {
         self.emptyStateBaseView.addSubview(self.emptyStateLabel)
         self.emptyStateBaseView.addSubview(self.emptyStateSecondaryLabel)
         self.emptyStateBaseView.addSubview(self.emptyStateButton)
+
         self.view.addSubview(self.emptyStateBaseView)
         
         self.initConstraints()
     }
     
     private func initConstraints() {
-        
-        NSLayoutConstraint.activate([
-            
-            self.navigationBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.navigationBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.navigationBaseView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.navigationBaseView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.topLabel.centerXAnchor.constraint(equalTo: self.navigationBaseView.centerXAnchor),
-            self.topLabel.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
-            
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationBaseView.leadingAnchor, constant: 0),
-            self.backButton.centerYAnchor.constraint(equalTo: self.navigationBaseView.centerYAnchor),
-            self.backButton.heightAnchor.constraint(equalToConstant: 44),
-            self.backButton.widthAnchor.constraint(equalToConstant: 40),
-            
-        ])
-        
-        NSLayoutConstraint.activate([
-            
-            self.optionSegmentControlBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.optionSegmentControlBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.optionSegmentControlBaseView.topAnchor.constraint(equalTo: self.navigationBaseView.bottomAnchor),
-            self.optionSegmentControlBaseView.heightAnchor.constraint(equalToConstant: 70),
-            
-            self.optionSegmentControl.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-            self.optionSegmentControl.centerYAnchor.constraint(equalTo: self.optionSegmentControlBaseView.centerYAnchor),
-            self.optionSegmentControl.centerXAnchor.constraint(equalTo: self.optionSegmentControlBaseView.centerXAnchor),
-            
-        ])
-    
         NSLayoutConstraint.activate([
             
             self.topSliderView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.topSliderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.topSliderView.topAnchor.constraint(equalTo: self.optionSegmentControlBaseView.bottomAnchor),
+            self.topSliderView.topAnchor.constraint(equalTo: self.view.topAnchor),
             self.topSliderView.heightAnchor.constraint(equalToConstant: 70),
             
             self.topSliderCollectionView.leadingAnchor.constraint(equalTo: self.topSliderView.leadingAnchor),
