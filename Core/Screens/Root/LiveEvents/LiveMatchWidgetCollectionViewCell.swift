@@ -599,12 +599,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func markAsFavorite(match: Match) {
-        var isFavorite = false
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
-            isFavorite = true
-        }
-
-        if isFavorite {
+        if Env.favoritesManager.isEventFavorite(eventId: match.id) {
             Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
             self.isFavorite = false
         }
@@ -614,15 +609,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    //
-    //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-//        if let match = self.viewModel?.match {
-//            self.didTapFavoriteMatchAction?(match)
-//        }
         if UserSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
-                //self.didTapFavoriteMatchAction?(match)
+                // self.didTapFavoriteMatchAction?(match)
                 self.markAsFavorite(match: match)
             }
         }

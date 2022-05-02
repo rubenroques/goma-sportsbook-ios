@@ -530,12 +530,7 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func markAsFavorite(match: Match) {
-        var isFavorite = false
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
-            isFavorite = true
-        }
-
-        if isFavorite {
+        if Env.favoritesManager.isEventFavorite(eventId: match.id) {
             Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
             self.isFavorite = false
         }
@@ -545,27 +540,20 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    //
-    //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-
         if UserSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
-                //self.didTapFavoriteMatchAction?(match)
+                // self.didTapFavoriteMatchAction?(match)
                 self.markAsFavorite(match: match)
             }
         }
         else {
             let loginViewController = Router.navigationController(with: LoginViewController())
-            //self?.present(loginViewController, animated: true, completion: nil)
             self.viewController?.present(loginViewController, animated: true, completion: nil)
         }
-
-        // self.didTapFavoriteMatchAction?(match)
     }
 
     @IBAction private func didTapMatchView(_ sender: Any) {
-
         self.tappedMatchWidgetAction?()
     }
 
