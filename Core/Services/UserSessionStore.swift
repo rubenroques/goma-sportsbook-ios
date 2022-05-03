@@ -386,7 +386,7 @@ extension UserSessionStore {
             .sink { completion in
                 switch completion {
                 case .finished:
-                    Env.favoritesManager.getUserMetadata()
+                    Env.favoritesManager.getUserFavorites()
                     self.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
                     print("error \(error)")

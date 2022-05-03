@@ -502,9 +502,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
 
         }
 
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
-            self.isFavorite = true
-        }
+//        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
+//            self.isFavorite = true
+//        }
+        self.isFavorite = Env.favoritesManager.isEventFavorite(eventId: match.id)
     }
 
     //
@@ -543,7 +544,6 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
         if UserSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
-                // self.didTapFavoriteMatchAction?(match)
                 self.markAsFavorite(match: match)
             }
         }
