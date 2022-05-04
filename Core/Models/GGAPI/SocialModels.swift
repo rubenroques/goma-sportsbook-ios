@@ -48,3 +48,13 @@ struct ChatroomId: Decodable {
         case id = "id"
     }
 }
+
+struct GomaContact: Decodable {
+    let id: Int
+    let phoneNumber: String
+
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case phoneNumber = "phone_number"
+    }
+}

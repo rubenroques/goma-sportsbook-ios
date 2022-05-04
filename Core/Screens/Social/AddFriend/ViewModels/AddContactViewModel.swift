@@ -12,7 +12,7 @@ import Contacts
 class AddContactViewModel {
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
-
+    private var registeredUsers: [GomaContact] = []
     // MARK: Public Properties
     var users: [UserContact] = []
     var sectionUsers: [Int: [UserContact]] = [:]
@@ -142,7 +142,43 @@ class AddContactViewModel {
 
         self.isEmptySearchPublisher.send(false)
 
-        self.populateContactsData()
+        //self.populateContactsData()
+        self.getRegisteredUsers()
+    }
+
+    private func getRegisteredUsers() {
+        var phones: [String] = []
+
+        for contact in self.contactsData {
+            if contact.phoneNumber.isNotEmpty {
+                for phoneNumber in contact.phoneNumber {
+                    phones.append(phoneNumber)
+                }
+            }
+        }
+
+        // print("PHONES TO LOOK: \(phones)")
+
+        Env.gomaNetworkClient.lookupPhones(deviceId: Env.deviceId, phones: phones)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("PHONES ERROR: \(error)")
+//                    self?.isLoadingPublisher.send(false)
+//                    self?.dataNeedsReload.send()
+
+                case .finished:
+                    print("PHONES FINISHED")
+                }
+
+            }, receiveValue: { [weak self] registeredUsers in
+                print("PHONES GOMA: \(registeredUsers)")
+                self?.registeredUsers = registeredUsers
+                self?.populateContactsData()
+
+            })
+            .store(in: &cancellables)
     }
 
     private func populateContactsData() {
@@ -150,17 +186,33 @@ class AddContactViewModel {
         for contactData in self.contactsData {
 
             if contactData.phoneNumber.isNotEmpty {
-                let identifier = contactData.identifier
 
-                let username = "\(contactData.givenName) \(contactData.familyName)"
-
-                let phoneNumber = contactData.phoneNumber.first ?? ""
-
-                let user = UserContact(id: identifier, username: username, phone: phoneNumber)
-
-                self.users.append(user)
-
-                self.verifyUserRegistered(userContact: user)
+                self.createUserContact(contactData: contactData)
+//                let identifier = contactData.identifier
+//
+//                let username = "\(contactData.givenName) \(contactData.familyName)"
+//
+//                if contactData.phoneNumber.count > 1 {
+//
+//                    for contactPhone in contactData.phoneNumber {
+//                        let phoneNumber = contactPhone
+//
+//                        let user = UserContact(id: identifier, username: username, phone: phoneNumber)
+//
+//                        self.users.append(user)
+//
+//                        self.verifyUserRegistered(contactData: contactData)
+//                    }
+//                }
+//                else {
+//                    let phoneNumber = contactData.phoneNumber.first ?? ""
+//
+//                    let user = UserContact(id: identifier, username: username, phone: phoneNumber)
+//
+//                    self.users.append(user)
+//
+//                    self.verifyUserRegistered(userContact: user)
+//                }
             }
         }
 
@@ -182,9 +234,58 @@ class AddContactViewModel {
         self.dataNeedsReload.send()
     }
 
-    private func verifyUserRegistered(userContact: UserContact) {
-        // TEST
-        if userContact.username.contains("Carlos") || userContact.username.contains("Lascas") {
+    private func createUserContact(contactData: ContactsData) {
+
+        let username = "\(contactData.givenName) \(contactData.familyName)"
+
+        if contactData.phoneNumber.count > 1 {
+            for contactPhone in contactData.phoneNumber {
+
+                let phoneNumber = contactPhone
+
+                let userContact = UserContact(id: contactData.identifier, username: username, phone: phoneNumber)
+
+                self.verifyUserRegister(userContact: userContact)
+            }
+        }
+        else {
+            let phoneNumber = contactData.phoneNumber.first ?? ""
+
+            let userContact = UserContact(id: contactData.identifier, username: username, phone: phoneNumber)
+
+            self.verifyUserRegister(userContact: userContact)
+        }
+
+    }
+
+    private func verifyUserRegister(userContact: UserContact) {
+        // TEST PHONE
+        let userContactPhone = userContact.phone.replacingOccurrences(of: " ", with: "")
+
+        if self.registeredUsers.isNotEmpty, self.registeredUsers.contains(where: {
+            $0.phoneNumber == userContactPhone }) {
+
+            var newId = 0
+
+            if let registerUser = self.registeredUsers.first(where: { $0.phoneNumber == userContactPhone}) {
+                newId = registerUser.id
+            }
+
+            let newUserContact = UserContact(id: "\(newId)", username: userContact.username, phone: userContact.phone)
+
+            self.users.append(newUserContact)
+
+            if self.sectionUsers[UserContactType.registered.identifier] != nil {
+
+                self.sectionUsers[UserContactType.registered.identifier]?.append(newUserContact)
+            }
+            else {
+                self.sectionUsers[UserContactType.registered.identifier] = [newUserContact]
+            }
+        }
+        else {
+
+            self.users.append(userContact)
 
             if self.sectionUsers[UserContactType.unregistered.identifier] != nil {
 
@@ -194,16 +295,6 @@ class AddContactViewModel {
                 self.sectionUsers[UserContactType.unregistered.identifier] = [userContact]
             }
         }
-        else {
-            if self.sectionUsers[UserContactType.registered.identifier] != nil {
-
-                self.sectionUsers[UserContactType.registered.identifier]?.append(userContact)
-            }
-            else {
-                self.sectionUsers[UserContactType.registered.identifier] = [userContact]
-            }
-        }
-
     }
 }
 

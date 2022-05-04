@@ -22,7 +22,8 @@ class GomaGamingSocialServiceClient {
             self.manager.config = SocketIOClientConfiguration.init(arrayLiteral: .log(true),
                                                                    .forceWebsockets(true),
                                                                    .forcePolling(false),
-                                                                   .connectParams(["jwt": "\(jwtToken.hash)"]),
+                                                                   .connectParams(["jwt": "\(jwtToken.hash)",
+                                                                                   "EIO": "4"]),
                                                                    .extraHeaders(["token": "\(Env.deviceFCMToken)"]),
                                                                    .path("/socket/socket.io/")
                         )
@@ -38,6 +39,7 @@ class GomaGamingSocialServiceClient {
     }
 
     private func connectSocket() {
+        
         self.socket.on(clientEvent: .connect) {data, ack in
             print("Socket connected to Goma Social Server!")
         }
