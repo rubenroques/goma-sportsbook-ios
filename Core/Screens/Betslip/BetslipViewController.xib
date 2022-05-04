@@ -16,7 +16,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BetslipViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="BetslipViewController" customModule="GOMASports" customModuleProvider="target">
             <connections>
                 <outlet property="accountInfoBaseView" destination="r4b-AX-Hcc" id="JOD-WW-eky"/>
                 <outlet property="accountValueBaseView" destination="rhA-jS-cOO" id="oOl-98-O0u"/>
@@ -39,7 +39,7 @@
                     <rect key="frame" x="0.0" y="44" width="414" height="56"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dRc-be-G9Z">
-                            <rect key="frame" x="360" y="14" width="42" height="28"/>
+                            <rect key="frame" x="361" y="12.5" width="41" height="31"/>
                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="16"/>
                             <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                             <state key="normal" title="Close"/>
@@ -48,16 +48,16 @@
                             </connections>
                         </button>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="r4b-AX-Hcc">
-                            <rect key="frame" x="12" y="14" width="80" height="28"/>
+                            <rect key="frame" x="12" y="14.5" width="73.5" height="27"/>
                             <subviews>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UEW-bO-H0x">
-                                    <rect key="frame" x="0.0" y="0.0" width="28" height="28"/>
+                                    <rect key="frame" x="4" y="4" width="19" height="19"/>
                                     <subviews>
                                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="plus_small_icon" translatesAutoresizingMaskIntoConstraints="NO" id="Gh6-K1-3a6">
-                                            <rect key="frame" x="5.5" y="5.5" width="17" height="17"/>
+                                            <rect key="frame" x="3" y="3" width="13" height="13"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" secondItem="Gh6-K1-3a6" secondAttribute="height" multiplier="1:1" id="Rzr-kt-WyI"/>
-                                                <constraint firstAttribute="width" constant="17" id="USZ-6z-ibJ"/>
+                                                <constraint firstAttribute="width" constant="13" id="ehA-bz-lUK"/>
                                             </constraints>
                                         </imageView>
                                     </subviews>
@@ -69,10 +69,10 @@
                                     </constraints>
                                 </view>
                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rhA-jS-cOO">
-                                    <rect key="frame" x="28" y="0.0" width="52" height="28"/>
+                                    <rect key="frame" x="23" y="0.0" width="50.5" height="27"/>
                                     <subviews>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fGx-aT-4yN">
-                                            <rect key="frame" x="8" y="7" width="36" height="14"/>
+                                            <rect key="frame" x="8" y="5.5" width="34.5" height="16.5"/>
                                             <fontDescription key="fontDescription" name="Gilroy-Semibold" family="Gilroy" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
@@ -86,18 +86,18 @@
                                 </view>
                             </subviews>
                             <constraints>
-                                <constraint firstAttribute="height" constant="28" id="8Tx-yP-Ovx"/>
+                                <constraint firstAttribute="height" constant="27" id="8Tx-yP-Ovx"/>
                                 <constraint firstItem="rhA-jS-cOO" firstAttribute="leading" secondItem="UEW-bO-H0x" secondAttribute="trailing" id="A1E-Ik-Oii"/>
-                                <constraint firstAttribute="bottom" secondItem="UEW-bO-H0x" secondAttribute="bottom" id="B8R-Ks-Y12"/>
-                                <constraint firstItem="UEW-bO-H0x" firstAttribute="leading" secondItem="r4b-AX-Hcc" secondAttribute="leading" id="HnQ-Q1-uYA"/>
-                                <constraint firstItem="UEW-bO-H0x" firstAttribute="top" secondItem="r4b-AX-Hcc" secondAttribute="top" id="K6J-5k-8Wg"/>
+                                <constraint firstAttribute="bottom" secondItem="UEW-bO-H0x" secondAttribute="bottom" constant="4" id="B8R-Ks-Y12"/>
+                                <constraint firstItem="UEW-bO-H0x" firstAttribute="leading" secondItem="r4b-AX-Hcc" secondAttribute="leading" constant="4" id="HnQ-Q1-uYA"/>
+                                <constraint firstItem="UEW-bO-H0x" firstAttribute="top" secondItem="r4b-AX-Hcc" secondAttribute="top" constant="4" id="K6J-5k-8Wg"/>
                                 <constraint firstAttribute="trailing" secondItem="rhA-jS-cOO" secondAttribute="trailing" id="KJ5-oG-Jcw"/>
                                 <constraint firstAttribute="bottom" secondItem="rhA-jS-cOO" secondAttribute="bottom" id="Xl3-mV-fuY"/>
                                 <constraint firstItem="rhA-jS-cOO" firstAttribute="top" secondItem="r4b-AX-Hcc" secondAttribute="top" id="sb4-Z5-sR6"/>
                             </constraints>
                         </view>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Bets" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PDT-dO-Wde">
-                            <rect key="frame" x="186.5" y="18" width="41" height="20"/>
+                            <rect key="frame" x="186.5" y="16.5" width="41" height="23.5"/>
                             <fontDescription key="fontDescription" name="Gilroy-Bold" family="Gilroy" pointSize="20"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>

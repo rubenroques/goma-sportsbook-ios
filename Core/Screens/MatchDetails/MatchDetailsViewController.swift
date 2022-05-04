@@ -61,6 +61,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var statsCollectionBaseView: UIView!
     @IBOutlet private var statsCollectionView: UICollectionView!
     @IBOutlet private var statsCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet private var statsBackSliderView: UIView!
 
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
@@ -121,6 +122,7 @@ class MatchDetailsViewController: UIViewController {
         return gameCard
     }()
 
+    private var showingStatsBackSliderView: Bool = false
     private var shouldShowStatsView = false
     private var isStatsViewExpanded: Bool = false {
         didSet {
@@ -256,12 +258,16 @@ class MatchDetailsViewController: UIViewController {
 
         //
         // account balance
+        self.accountValueView.isHidden = true
         self.accountValueView.layer.cornerRadius = CornerRadius.view
         self.accountValueView.layer.masksToBounds = true
         self.accountValueView.isUserInteractionEnabled = true
 
         self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
         self.accountPlusView.layer.masksToBounds = true
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        accountValueView.addGestureRecognizer(accountValueTapGesture)
 
         // betslip
         //
@@ -317,6 +323,13 @@ class MatchDetailsViewController: UIViewController {
         self.statsCollectionView.collectionViewLayout = statsFlowLayout
 
         self.statsCollectionView.register(MatchStatsCollectionViewCell.nib, forCellWithReuseIdentifier: MatchStatsCollectionViewCell.identifier)
+
+        self.statsBackSliderView.alpha = 0.0
+        self.statsBackSliderView.layer.cornerRadius = 6
+
+        let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
+        self.statsBackSliderView.addGestureRecognizer(backSliderTapGesture)
+
 
         // match share
         //
@@ -433,6 +446,7 @@ class MatchDetailsViewController: UIViewController {
         self.statsCollectionBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsToggleSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.statsBackSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
 
     }
 
@@ -782,6 +796,16 @@ class MatchDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    @objc func didTapBackSliderButton() {
+        self.statsCollectionView.setContentOffset(CGPoint(x: -self.statsCollectionView.contentInset.left, y: 1), animated: true)
+    }
+
     @IBAction private func didTapFieldToogleView() {
         self.isMatchFieldExpanded.toggle()
     }
@@ -1041,4 +1065,31 @@ extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionView
         return CGSize(width: width, height: collectionView.frame.size.height - 4)
     }
 
+}
+
+
+extension MatchDetailsViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.statsCollectionView {
+            let screenWidth = UIScreen.main.bounds.size.width
+            let width = screenWidth*0.6
+
+            if scrollView.contentOffset.x > width {
+                if !self.showingStatsBackSliderView {
+                    self.showingStatsBackSliderView = true
+                    UIView.animate(withDuration: 0.2) {
+                        self.statsBackSliderView.alpha = 1.0
+                    }
+                }
+            }
+            else {
+                if self.showingStatsBackSliderView {
+                    self.showingStatsBackSliderView = false
+                    UIView.animate(withDuration: 0.2) {
+                        self.statsBackSliderView.alpha = 0.0
+                    }
+                }
+            }
+        }
+    }
 }

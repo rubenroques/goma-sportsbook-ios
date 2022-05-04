@@ -96,7 +96,11 @@ class MyFavoritesViewController: UIViewController {
         self.betslipCountLabel.isHidden = true
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        self.accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.isHidden = true
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -355,7 +359,13 @@ class MyFavoritesViewController: UIViewController {
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
-    
+
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)

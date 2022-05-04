@@ -68,10 +68,11 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
 
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
-        accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.isHidden = true
 
         self.showLoading()
 

@@ -530,7 +530,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
         let seeAllLabel = UILabel()
         seeAllLabel.translatesAutoresizingMaskIntoConstraints = false
-        seeAllLabel.font = AppFont.with(type: .bold, size: 13)
+        seeAllLabel.font = AppFont.with(type: .semibold, size: 12)
         seeAllLabel.textColor = UIColor.App.highlightPrimary
         seeAllLabel.text = "See All"
         seeAllLabel.isUserInteractionEnabled = true

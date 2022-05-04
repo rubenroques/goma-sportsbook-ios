@@ -21,7 +21,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MatchDetailsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MatchDetailsViewController" customModule="GOMASports" customModuleProvider="target">
             <connections>
                 <outlet property="accountPlusView" destination="SVA-o8-XPi" id="Isv-Ap-ZEM"/>
                 <outlet property="accountValueLabel" destination="Xa4-nk-Zrj" id="Pfv-lN-cem"/>
@@ -59,6 +59,7 @@
                 <outlet property="matchNotAvailableLabel" destination="4rD-5c-LKj" id="yUd-cV-eNc"/>
                 <outlet property="matchNotAvailableView" destination="eBl-1l-lUO" id="mvn-Gb-pP3"/>
                 <outlet property="shareButton" destination="LCn-mO-oLD" id="5b2-Y8-m78"/>
+                <outlet property="statsBackSliderView" destination="FNl-xv-eiY" id="3xL-Mv-ecR"/>
                 <outlet property="statsBaseView" destination="KgX-cu-06F" id="af9-6g-mUa"/>
                 <outlet property="statsCollectionBaseView" destination="e3T-vt-UD2" id="yMz-yF-9sl"/>
                 <outlet property="statsCollectionView" destination="Cq7-1c-axi" id="42q-6R-LEx"/>
@@ -366,6 +367,25 @@
                                                 <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                             </collectionViewFlowLayout>
                                         </collectionView>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FNl-xv-eiY">
+                                            <rect key="frame" x="-36" y="54.5" width="78" height="38"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow_circle_left_icon" translatesAutoresizingMaskIntoConstraints="NO" id="h4r-jO-YD2">
+                                                    <rect key="frame" x="47" y="7" width="24" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="h4r-jO-YD2" secondAttribute="height" multiplier="1:1" id="S7m-AZ-JZp"/>
+                                                        <constraint firstAttribute="width" constant="24" id="vhf-uC-osI"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="h4r-jO-YD2" secondAttribute="trailing" constant="7" id="31H-Ay-sBj"/>
+                                                <constraint firstItem="h4r-jO-YD2" firstAttribute="centerY" secondItem="FNl-xv-eiY" secondAttribute="centerY" id="88Y-x1-ygb"/>
+                                                <constraint firstAttribute="height" constant="38" id="HIJ-fF-evM"/>
+                                                <constraint firstAttribute="width" constant="78" id="Ug8-hV-FDC"/>
+                                            </constraints>
+                                        </view>
                                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j3b-a3-Eag">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="1"/>
                                             <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -381,7 +401,9 @@
                                         <constraint firstItem="j3b-a3-Eag" firstAttribute="top" secondItem="e3T-vt-UD2" secondAttribute="top" id="9x2-kO-0dQ"/>
                                         <constraint firstItem="j3b-a3-Eag" firstAttribute="leading" secondItem="e3T-vt-UD2" secondAttribute="leading" id="JwV-jZ-VWG"/>
                                         <constraint firstItem="Cq7-1c-axi" firstAttribute="top" secondItem="e3T-vt-UD2" secondAttribute="top" id="NIf-oh-Bw6"/>
+                                        <constraint firstItem="FNl-xv-eiY" firstAttribute="leading" secondItem="Cq7-1c-axi" secondAttribute="leading" constant="-36" id="eJk-j4-meg"/>
                                         <constraint firstAttribute="height" id="eS6-cG-Tyv"/>
+                                        <constraint firstItem="FNl-xv-eiY" firstAttribute="centerY" secondItem="Cq7-1c-axi" secondAttribute="centerY" id="tjk-QA-uEe"/>
                                         <constraint firstAttribute="trailing" secondItem="j3b-a3-Eag" secondAttribute="trailing" id="y93-EW-adP"/>
                                     </constraints>
                                 </view>
@@ -561,6 +583,7 @@
     </objects>
     <resources>
         <image name="arrow_back_icon" width="12" height="21"/>
+        <image name="arrow_circle_left_icon" width="24" height="24"/>
         <image name="country_flag_pt" width="33.333332061767578" height="22.333333969116211"/>
         <image name="more_options_icon" width="6" height="22"/>
         <image name="plus_small_icon" width="16" height="16"/>
