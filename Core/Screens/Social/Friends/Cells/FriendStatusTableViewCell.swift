@@ -33,6 +33,8 @@ class FriendStatusTableViewCell: UITableViewCell {
         }
     }
 
+    var removeFriendAction: ((Int) -> Void)?
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
@@ -94,6 +96,35 @@ class FriendStatusTableViewCell: UITableViewCell {
             viewModel.notificationsEnabled = !self.notificationsEnabled
             self.notificationsEnabled = viewModel.notificationsEnabled
         }
+    }
+
+    @objc private func didLongPressFriendView() {
+
+        guard
+            let parentViewController = self.viewController,
+            let friendId = self.viewModel?.id
+        else {
+            return
+        }
+
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let removeFriendAction: UIAlertAction = UIAlertAction(title: "Remove friend", style: .default) { [weak self] _ -> Void in
+            print("REMOVE FRIEND ID: \(friendId)")
+            self?.removeFriendAction?(friendId)
+        }
+        actionSheetController.addAction(removeFriendAction)
+
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        actionSheetController.addAction(cancelAction)
+
+        if let popoverController = actionSheetController.popoverPresentationController {
+            popoverController.sourceView = parentViewController.view
+            popoverController.sourceRect = CGRect(x: parentViewController.view.bounds.midX, y: parentViewController.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        parentViewController.present(actionSheetController, animated: true, completion: nil)
     }
 
 }
@@ -169,6 +200,9 @@ extension FriendStatusTableViewCell {
         self.initConstraints()
 
         self.notificationEnabledButton.addTarget(self, action: #selector(didTapNotificationsEnabledButton), for: .primaryActionTriggered)
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressFriendView))
+        self.baseView.addGestureRecognizer(longPressGestureRecognizer)
     }
 
     private func initConstraints() {

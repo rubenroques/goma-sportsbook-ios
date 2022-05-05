@@ -22,6 +22,8 @@ class AddFriendViewModel {
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
     var canAddFriendPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var friendCodeInvalidPublisher: PassthroughSubject<Void, Never> = .init()
+    var shouldShowAlert: CurrentValueSubject<Bool, Never> = .init(false)
+    var friendAlertType: FriendAlertType?
 
     init() {
         self.canAddFriendPublisher.send(false)
@@ -29,8 +31,7 @@ class AddFriendViewModel {
 
     func getUserInfo(friendCode: String) {
         // TEST
-        var friendCodes = ["GOMA123", "SB100", "FCPCHAMP"]
-
+        
         if friendCode == "GOMA123" {
             let user = UserContact(id: "123", username: "@GOMA_User", phones: ["+351 999 888 777"])
 
@@ -38,15 +39,15 @@ class AddFriendViewModel {
                 self.usersPublisher.value.append(user)
             }
         }
-        else if friendCode == "SB100" {
-            let user = UserContact(id: "100", username: "@Sportsbook_User", phones: ["+351 999 000 123"])
+        else if friendCode == "SLB37" {
+            let user = UserContact(id: "42", username: "Pedro", phones: ["966 302 428"])
 
             if !self.userInfoAlreadyRetrieved(user: user) {
                 self.usersPublisher.value.append(user)
             }
         }
         else if friendCode == "FCPCHAMP" {
-            let user = UserContact(id: "30", username: "@FCPorto_ Champion", phones: ["+351 999 001 893"])
+            let user = UserContact(id: "138", username: "A.Lascas", phones: ["968 765 890"])
 
             if !self.userInfoAlreadyRetrieved(user: user) {
                 self.usersPublisher.value.append(user)
@@ -66,60 +67,31 @@ class AddFriendViewModel {
         return true
     }
 
-//    func filterSearch(searchQuery: String) {
-//
-//        self.getUsers()
-//
-//        let filteredUsers = self.users.filter({ $0.username.localizedCaseInsensitiveContains(searchQuery)})
-//
-//        self.users = filteredUsers
-//
-//        self.dataNeedsReload.send()
-//
-//    }
-//
-//    func getUsers() {
-//        // TEST
-//        if self.users.isEmpty {
-//            for i in 0...19 {
-//                if i <= 5 {
-//                    let user = UserContact(id: "\(i)", username: "@GOMA_User_\(i)", phone: "+351 999 888 777")
-//                    self.users.append(user)
-//                }
-//                else if i > 5 && i <= 13 {
-//                    let user = UserContact(id: "\(i)", username: "@Sportsbook_Admin_\(i)", phone: "+351 995 664 551")
-//                    self.users.append(user)
-//                }
-//                else {
-//                    let user = UserContact(id: "\(i)", username: "@Ze_da_Tasca_\(i)", phone: "+351 991 233 012")
-//                    self.users.append(user)
-//                }
-//
-//            }
-//
-//            self.isEmptySearchPublisher.send(false)
-//        }
-//
-//        self.initialUsers = self.users
-//
-//        //self.dataNeedsReload.send()
-//    }
-//
-//    func clearUsers() {
-//        self.users = []
-//        self.selectedUsers = []
-//        self.cachedCellViewModels = [:]
-//        self.isEmptySearchPublisher.send(true)
-//        self.canAddFriendPublisher.send(false)
-//        self.dataNeedsReload.send()
-//    }
-//
-//    func resetUsers() {
-//
-//        //self.sectionUsersArray = self.initialFullSectionUsers
-//
-//        self.dataNeedsReload.send()
-//    }
+    func sendFriendRequest() {
+        var userIds: [String] = []
+
+        for selectedUser in self.selectedUsers {
+            userIds.append(selectedUser.id)
+        }
+
+        Env.gomaNetworkClient.addFriends(deviceId: Env.deviceId, userIds: userIds)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("ADD FRIEND ERROR: \(error)")
+                    self?.friendAlertType = .error
+                case .finished:
+                    print("ADD FRIEND FINISHED")
+                }
+
+                self?.shouldShowAlert.send(true)
+            }, receiveValue: { [weak self] response in
+                print("ADD FRIEND GOMA: \(response)")
+                self?.friendAlertType = .success
+            })
+            .store(in: &cancellables)
+    }
 
     func checkSelectedUserContact(cellViewModel: AddFriendCellViewModel) {
 

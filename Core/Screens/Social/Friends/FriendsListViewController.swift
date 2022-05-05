@@ -219,6 +219,10 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
                 cell.configure(withViewModel: cellViewModel)
             }
 
+            cell.removeFriendAction = { [weak self] friendId in
+                self?.viewModel.removeFriend(friendId: friendId)
+            }
+
         }
 
         return cell

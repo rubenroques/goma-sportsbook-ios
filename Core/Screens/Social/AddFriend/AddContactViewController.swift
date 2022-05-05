@@ -161,7 +161,6 @@ class AddContactViewController: UIViewController {
             .sink(receiveValue: { [weak self] showAlert in
                 if showAlert, let friendAlertType = viewModel.friendAlertType {
                     self?.showAddFriendAlert(friendAlertType: friendAlertType)
-
                 }
             })
             .store(in: &cancellables)

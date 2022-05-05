@@ -142,7 +142,7 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func deleteFriend(deviceId: String, userId: String) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
+    func deleteFriend(deviceId: String, userId: Int) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
         let endpoint = GomaGamingService.deleteFriend(userId: userId)
         let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher
@@ -166,7 +166,7 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
-    func deleteGroup(deviceId: String, chatroomId: String) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
+    func deleteGroup(deviceId: String, chatroomId: Int) -> AnyPublisher<NetworkResponse<[String]>, NetworkError> {
         let endpoint = GomaGamingService.deleteGroup(chatroomId: chatroomId)
         let requestPublisher: AnyPublisher<NetworkResponse<[String]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher

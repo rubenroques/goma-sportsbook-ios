@@ -36,7 +36,7 @@ class AddContactViewModel {
         self.canAddFriendPublisher.send(false)
 
         self.getFriendsList()
-        //self.getContactsData()
+
     }
 
     func filterSearch(searchQuery: String) {
@@ -155,7 +155,7 @@ class AddContactViewModel {
 
             let emailAddress = contact.emailAddresses.first?.value ?? ""
 
-            let phoneNumber: [String] = contact.phoneNumbers.map{ $0.value.stringValue }
+            let phoneNumber: [String] = contact.phoneNumbers.map { $0.value.stringValue }
 
             let identifier = contact.identifier
 

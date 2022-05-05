@@ -26,6 +26,7 @@ class PreviewChatTableViewCell: UITableViewCell {
     private var viewModel: PreviewChatCellViewModel?
 
     var didTapConversationAction: ((ConversationData) -> Void)?
+    var removeChatroomAction: ((Int) -> Void)?
 
     var isSeen: Bool = false {
         didSet {
@@ -152,6 +153,34 @@ class PreviewChatTableViewCell: UITableViewCell {
         if let viewModel = self.viewModel {
             self.didTapConversationAction?(viewModel.cellData)
         }
+    }
+
+    @objc private func didLongPressConversationView() {
+
+        guard
+            let parentViewController = self.viewController,
+            let chatroomId = self.viewModel?.cellData.id        else {
+            return
+        }
+
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ -> Void in
+            print("REMOVE CHATROOM ID: \(chatroomId)")
+            self?.removeChatroomAction?(chatroomId)
+        }
+        actionSheetController.addAction(removeChatroomAction)
+
+        let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
+        actionSheetController.addAction(cancelAction)
+
+        if let popoverController = actionSheetController.popoverPresentationController {
+            popoverController.sourceView = parentViewController.view
+            popoverController.sourceRect = CGRect(x: parentViewController.view.bounds.midX, y: parentViewController.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        parentViewController.present(actionSheetController, animated: true, completion: nil)
     }
 
 }
@@ -285,6 +314,9 @@ extension PreviewChatTableViewCell {
 
         // Initialize constraints
         self.initConstraints()
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressConversationView))
+        self.baseView.addGestureRecognizer(longPressGestureRecognizer)
     }
 
     private func initConstraints() {

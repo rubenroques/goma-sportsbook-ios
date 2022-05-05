@@ -25,11 +25,11 @@ enum GomaGamingService {
 
     // Social Endpoits
     case addFriend(userIds: [String])
-    case deleteFriend(userId: String)
+    case deleteFriend(userId: Int)
     case listFriends
     case chatrooms
     case addGroup(userIds: [String], groupName: String)
-    case deleteGroup(chatroomId: String)
+    case deleteGroup(chatroomId: Int)
     case lookupPhone(phones: [String])
 }
 
@@ -74,7 +74,7 @@ extension GomaGamingService: Endpoint {
         case .addFriend:
             return "/api/social/\(apiVersion)/friends"
         case .deleteFriend(let userId):
-            return "/api/social/v1/\(apiVersion)/\(userId)"
+            return "/api/social/\(apiVersion)/friends/\(userId)"
         case .listFriends:
             return "/api/social/\(apiVersion)/friends"
         case .chatrooms:

@@ -231,6 +231,10 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             self?.showConversationDetail(conversationData: conversationData)
         }
 
+        cell.removeChatroomAction = { [weak self] chatroomId in
+            self?.viewModel.removeChatroom(chatroomId: chatroomId)
+        }
+
         return cell
     }
 
