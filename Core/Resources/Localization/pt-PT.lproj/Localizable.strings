@@ -454,3 +454,11 @@ Terms of use, Privacy Policy and EULA";
 "message" = "Message";
 
 "chat_group_users_details" = "%s online, %s members";
+"invalid_code" = "Invalid Code";
+"invalid_code_message" = "The input code is invalid.";
+
+"friend_added" = "Friend/s Added";
+"friend_added_message" = "Friend request was sent to the selected users.";
+
+"friend_added_error" = "Friend Add Error";
+"friend_added_message_error" = "There was an error trying to add the selected friend/s. Try again later.";

@@ -13,6 +13,7 @@ class AddContactViewModel {
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
     private var registeredUsers: [GomaContact] = []
+    private var friendsList: [GomaFriend] = []
     // MARK: Public Properties
     var users: [UserContact] = []
     var sectionUsers: [Int: [UserContact]] = [:]
@@ -25,14 +26,17 @@ class AddContactViewModel {
     var hasDoneSearch: Bool = false
     var selectedUsers: [UserContact] = []
     var isEmptySearchPublisher: CurrentValueSubject<Bool, Never> = .init(true)
-    var isLoading: CurrentValueSubject<Bool, Never> = .init(false)
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
     var canAddFriendPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    var shouldShowAlert: CurrentValueSubject<Bool, Never> = .init(false)
+    var friendAlertType: FriendAlertType?
 
     init() {
         self.canAddFriendPublisher.send(false)
 
-        self.getContactsData()
+        self.getFriendsList()
+        //self.getContactsData()
     }
 
     func filterSearch(searchQuery: String) {
@@ -64,7 +68,7 @@ class AddContactViewModel {
         // TEST
         if self.users.isEmpty {
             for i in 0...20 {
-                let user = UserContact(id: "\(i)", username: "@GOMA_User", phone: "+351 999 888 777")
+                let user = UserContact(id: "\(i)", username: "@GOMA_User", phones: ["+351 999 888 777"])
                 self.users.append(user)
 
             }
@@ -110,6 +114,30 @@ class AddContactViewModel {
 
     }
 
+    private func getFriendsList() {
+        self.isLoadingPublisher.send(true)
+
+        Env.gomaNetworkClient.requestFriends(deviceId: Env.deviceId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("LIST FRIEND ERROR: \(error)")
+                case .finished:
+                    ()
+                }
+
+                self?.getContactsData()
+
+            }, receiveValue: { response in
+                if let friends = response.data {
+                    self.friendsList = friends
+                    print("LIST FRIEND: \(friends)")
+                }
+            })
+            .store(in: &cancellables)
+    }
+
     private func getContactsData() {
         let contactStore = CNContactStore()
 
@@ -142,7 +170,6 @@ class AddContactViewModel {
 
         self.isEmptySearchPublisher.send(false)
 
-        //self.populateContactsData()
         self.getRegisteredUsers()
     }
 
@@ -165,8 +192,8 @@ class AddContactViewModel {
                 switch completion {
                 case .failure(let error):
                     print("PHONES ERROR: \(error)")
-//                    self?.isLoadingPublisher.send(false)
-//                    self?.dataNeedsReload.send()
+                    self?.isLoadingPublisher.send(false)
+                    self?.dataNeedsReload.send()
 
                 case .finished:
                     print("PHONES FINISHED")
@@ -188,34 +215,11 @@ class AddContactViewModel {
             if contactData.phoneNumber.isNotEmpty {
 
                 self.createUserContact(contactData: contactData)
-//                let identifier = contactData.identifier
-//
-//                let username = "\(contactData.givenName) \(contactData.familyName)"
-//
-//                if contactData.phoneNumber.count > 1 {
-//
-//                    for contactPhone in contactData.phoneNumber {
-//                        let phoneNumber = contactPhone
-//
-//                        let user = UserContact(id: identifier, username: username, phone: phoneNumber)
-//
-//                        self.users.append(user)
-//
-//                        self.verifyUserRegistered(contactData: contactData)
-//                    }
-//                }
-//                else {
-//                    let phoneNumber = contactData.phoneNumber.first ?? ""
-//
-//                    let user = UserContact(id: identifier, username: username, phone: phoneNumber)
-//
-//                    self.users.append(user)
-//
-//                    self.verifyUserRegistered(userContact: user)
-//                }
+
             }
         }
 
+        // Sort contacts for registered/unregistered sections
         for (key, userContact) in self.sectionUsers {
             let contactType = (key == 1) ? UserContactType.registered : UserContactType.unregistered
             let userContactSection = UserContactSectionData(contactType: contactType, userContacts: userContact)
@@ -225,11 +229,14 @@ class AddContactViewModel {
         let sectionUsersSorted = self.sectionUsersArray.sorted {
             $0.contactType.identifier < $1.contactType.identifier
         }
+        
         self.sectionUsersArray = sectionUsersSorted
 
         self.initialFullUsers = self.users
 
         self.initialFullSectionUsers = self.sectionUsersArray
+
+        self.isLoadingPublisher.send(false)
 
         self.dataNeedsReload.send()
     }
@@ -238,20 +245,9 @@ class AddContactViewModel {
 
         let username = "\(contactData.givenName) \(contactData.familyName)"
 
-        if contactData.phoneNumber.count > 1 {
-            for contactPhone in contactData.phoneNumber {
+        if contactData.phoneNumber.count >= 1 {
 
-                let phoneNumber = contactPhone
-
-                let userContact = UserContact(id: contactData.identifier, username: username, phone: phoneNumber)
-
-                self.verifyUserRegister(userContact: userContact)
-            }
-        }
-        else {
-            let phoneNumber = contactData.phoneNumber.first ?? ""
-
-            let userContact = UserContact(id: contactData.identifier, username: username, phone: phoneNumber)
+            let userContact = UserContact(id: contactData.identifier, username: username, phones: contactData.phoneNumber)
 
             self.verifyUserRegister(userContact: userContact)
         }
@@ -260,27 +256,44 @@ class AddContactViewModel {
 
     private func verifyUserRegister(userContact: UserContact) {
         // TEST PHONE
-        let userContactPhone = userContact.phone.replacingOccurrences(of: " ", with: "")
 
-        if self.registeredUsers.isNotEmpty, self.registeredUsers.contains(where: {
-            $0.phoneNumber == userContactPhone }) {
+        var isRegistered = false
+        var registeredPhone = ""
+
+        for phone in userContact.phones {
+            let userContactPhone = phone.replacingOccurrences(of: " ", with: "")
+
+            if self.registeredUsers.isNotEmpty, self.registeredUsers.contains(where: {
+                $0.phoneNumber == userContactPhone }) {
+                isRegistered = true
+                registeredPhone = userContactPhone
+            }
+            else {
+                isRegistered = false
+            }
+        }
+
+        if isRegistered {
 
             var newId = 0
 
-            if let registerUser = self.registeredUsers.first(where: { $0.phoneNumber == userContactPhone}) {
+            if let registerUser = self.registeredUsers.first(where: { $0.phoneNumber == registeredPhone}) {
                 newId = registerUser.id
             }
 
-            let newUserContact = UserContact(id: "\(newId)", username: userContact.username, phone: userContact.phone)
+            if !self.friendsList.contains(where: { $0.id == newId }) {
 
-            self.users.append(newUserContact)
+                let newUserContact = UserContact(id: "\(newId)", username: userContact.username, phones: userContact.phones)
 
-            if self.sectionUsers[UserContactType.registered.identifier] != nil {
+                self.users.append(newUserContact)
 
-                self.sectionUsers[UserContactType.registered.identifier]?.append(newUserContact)
-            }
-            else {
-                self.sectionUsers[UserContactType.registered.identifier] = [newUserContact]
+                if self.sectionUsers[UserContactType.registered.identifier] != nil {
+
+                    self.sectionUsers[UserContactType.registered.identifier]?.append(newUserContact)
+                }
+                else {
+                    self.sectionUsers[UserContactType.registered.identifier] = [newUserContact]
+                }
             }
         }
         else {
@@ -295,6 +308,32 @@ class AddContactViewModel {
                 self.sectionUsers[UserContactType.unregistered.identifier] = [userContact]
             }
         }
+    }
+
+    func sendFriendRequest() {
+        var userIds: [String] = []
+
+        for selectedUser in self.selectedUsers {
+            userIds.append(selectedUser.id)
+        }
+
+        Env.gomaNetworkClient.addFriends(deviceId: Env.deviceId, userIds: userIds)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("ADD FRIEND ERROR: \(error)")
+                    self?.friendAlertType = .error
+                case .finished:
+                    print("ADD FRIEND FINISHED")
+                }
+
+                self?.shouldShowAlert.send(true)
+            }, receiveValue: { [weak self] response in
+                print("ADD FRIEND GOMA: \(response)")
+                self?.friendAlertType = .success
+            })
+            .store(in: &cancellables)
     }
 }
 
@@ -331,4 +370,9 @@ enum UserContactType {
             return 2
         }
     }
+}
+
+enum FriendAlertType {
+    case success
+    case error
 }

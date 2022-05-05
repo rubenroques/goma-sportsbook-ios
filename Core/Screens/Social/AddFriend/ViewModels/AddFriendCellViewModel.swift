@@ -11,7 +11,7 @@ class AddFriendCellViewModel {
 
     var userContact: UserContact
     var username: String
-    var phone: String
+    var phones: [String]
     var isCheckboxSelected: Bool
     var isOnline: Bool
 
@@ -20,7 +20,7 @@ class AddFriendCellViewModel {
         
         self.username = userContact.username
 
-        self.phone = userContact.phone
+        self.phones = userContact.phones
 
         self.isCheckboxSelected = false
 

@@ -94,7 +94,7 @@ class NewGroupViewModel {
     private func processFriendsData(friends: [GomaFriend]) {
 
         for friend in friends {
-            let user = UserContact(id: "\(friend.id)", username: friend.username, phone: "+351 999 888 777")
+            let user = UserContact(id: "\(friend.id)", username: friend.username, phones: ["+351 999 888 777"])
             self.usersPublisher.value.append(user)
         }
 

@@ -228,7 +228,7 @@ class NewGroupViewController: UIViewController {
         print("NEXT")
         var selectedUsers: [UserContact] = []
         if let loggedUser = UserSessionStore.loggedUserSession() {
-            let adminUser = UserContact(id: loggedUser.userId, username: loggedUser.username, phone: "+351968765890")
+            let adminUser = UserContact(id: loggedUser.userId, username: loggedUser.username, phones: ["+351968765890"])
 
             selectedUsers.append(adminUser)
         }

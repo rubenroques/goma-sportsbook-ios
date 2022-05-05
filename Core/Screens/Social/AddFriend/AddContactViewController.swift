@@ -22,6 +22,8 @@ class AddContactViewController: UIViewController {
     private lazy var addFriendBaseView: UIView = Self.createAddFriendBaseView()
     private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
     private lazy var addFriendSeparatorLineView: UIView = Self.createAddFriendSeparatorLineView()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
@@ -31,6 +33,12 @@ class AddContactViewController: UIViewController {
         didSet {
             self.tableView.isHidden = isEmptySearch
             self.tableSeparatorLineView.isHidden = isEmptySearch
+        }
+    }
+
+    var isLoading: Bool = false {
+        didSet {
+            self.loadingBaseView.isHidden = !isLoading
         }
     }
 
@@ -64,6 +72,8 @@ class AddContactViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+
+        self.addFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -138,6 +148,23 @@ class AddContactViewController: UIViewController {
                 self?.addFriendButton.isEnabled = isEnabled
             })
             .store(in: &cancellables)
+
+        viewModel.isLoadingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] isLoading in
+                self?.isLoading = isLoading
+            })
+            .store(in: &cancellables)
+
+        viewModel.shouldShowAlert
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] showAlert in
+                if showAlert, let friendAlertType = viewModel.friendAlertType {
+                    self?.showAddFriendAlert(friendAlertType: friendAlertType)
+
+                }
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
@@ -172,6 +199,28 @@ class AddContactViewController: UIViewController {
         print("Send invite to: \(phoneNumber)")
     }
 
+    private func showAddFriendAlert(friendAlertType: FriendAlertType) {
+        switch friendAlertType {
+        case .success:
+            let addFriendAlert = UIAlertController(title: localized("friend_added"),
+                                                       message: localized("friend_added_message"),
+                                                       preferredStyle: UIAlertController.Style.alert)
+
+            addFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+
+            self.present(addFriendAlert, animated: true, completion: nil)
+        case .error:
+            let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
+                                                       message: localized("friend_added_message_error"),
+                                                       preferredStyle: UIAlertController.Style.alert)
+
+            errorFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+
+            self.present(errorFriendAlert, animated: true, completion: nil)
+        }
+
+    }
+
     // MARK: Actions
     @objc func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
@@ -185,6 +234,13 @@ class AddContactViewController: UIViewController {
         else {
             self.navigationController?.popViewController(animated: true)
         }
+    }
+
+    @objc func didTapAddFriendButton() {
+
+        print("FRIENDS SELECTED: \(self.viewModel.selectedUsers)")
+
+        self.viewModel.sendFriendRequest()
     }
 
     @objc func didTapBackground() {
@@ -482,6 +538,20 @@ extension AddContactViewController {
         return view
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -502,6 +572,10 @@ extension AddContactViewController {
 
         self.addFriendBaseView.addSubview(self.addFriendButton)
         self.addFriendBaseView.addSubview(self.addFriendSeparatorLineView)
+
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.view.addSubview(self.bottomSafeAreaView)
 
@@ -583,6 +657,17 @@ extension AddContactViewController {
             self.addFriendSeparatorLineView.trailingAnchor.constraint(equalTo: self.addFriendBaseView.trailingAnchor),
             self.addFriendSeparatorLineView.topAnchor.constraint(equalTo: self.addFriendBaseView.topAnchor),
             self.addFriendSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+        ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
 
     }

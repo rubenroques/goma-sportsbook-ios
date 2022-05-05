@@ -154,7 +154,8 @@ class AddFriendViewController: UIViewController {
         viewModel.friendCodeInvalidPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.showAlert(type: .error, errorText: localized("invalid_friend_code"))
+                // self?.showAlert(type: .error, errorText: localized("invalid_friend_code"))
+                self?.showInvalidCodeAlert()
             })
             .store(in: &cancellables)
     }
@@ -177,6 +178,16 @@ class AddFriendViewController: UIViewController {
             let friendCode = self?.searchFriendTextFieldView.getTextFieldValue() ?? ""
             self?.viewModel.getUserInfo(friendCode: friendCode)
         }
+    }
+
+    private func showInvalidCodeAlert() {
+        let invalidCodeAlert = UIAlertController(title: localized("invalid_code"),
+                                                   message: localized("invalid_code_message"),
+                                                   preferredStyle: UIAlertController.Style.alert)
+
+        invalidCodeAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+
+        self.present(invalidCodeAlert, animated: true, completion: nil)
     }
 
 //    private func setupSearchBarStyle() {

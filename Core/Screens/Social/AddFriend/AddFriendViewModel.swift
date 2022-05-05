@@ -32,21 +32,21 @@ class AddFriendViewModel {
         var friendCodes = ["GOMA123", "SB100", "FCPCHAMP"]
 
         if friendCode == "GOMA123" {
-            let user = UserContact(id: "123", username: "@GOMA_User", phone: "+351 999 888 777")
+            let user = UserContact(id: "123", username: "@GOMA_User", phones: ["+351 999 888 777"])
 
             if !self.userInfoAlreadyRetrieved(user: user) {
                 self.usersPublisher.value.append(user)
             }
         }
         else if friendCode == "SB100" {
-            let user = UserContact(id: "100", username: "@Sportsbook_User", phone: "+351 999 000 123")
+            let user = UserContact(id: "100", username: "@Sportsbook_User", phones: ["+351 999 000 123"])
 
             if !self.userInfoAlreadyRetrieved(user: user) {
                 self.usersPublisher.value.append(user)
             }
         }
         else if friendCode == "FCPCHAMP" {
-            let user = UserContact(id: "30", username: "@FCPorto_ Champion", phone: "+351 999 001 893")
+            let user = UserContact(id: "30", username: "@FCPorto_ Champion", phones: ["+351 999 001 893"])
 
             if !self.userInfoAlreadyRetrieved(user: user) {
                 self.usersPublisher.value.append(user)
@@ -144,5 +144,5 @@ class AddFriendViewModel {
 struct UserContact {
     var id: String
     var username: String
-    var phone: String
+    var phones: [String]
 }
