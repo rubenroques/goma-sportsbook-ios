@@ -47,16 +47,10 @@ class BannerTopCollectionViewCell: UICollectionViewCell {
     func setupWithViewModel(_ viewModel: BannerCellViewModel) {
         self.viewModel = viewModel
 
-        switch viewModel.presentationType {
-        case .image:
-            if let url = viewModel.imageURL {
-                self.imageView.kf.setImage(with: url)
-            }
-        case .match:
-            if let url = viewModel.imageURL {
-                self.imageView.kf.setImage(with: url)
-            }
+        if let url = viewModel.imageURL {
+            self.imageView.kf.setImage(with: url)
         }
+
     }
 
 }

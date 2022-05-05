@@ -10,10 +10,25 @@ import Combine
 
 class SportMatchLineViewModel {
 
-    enum MatchesType: String, CaseIterable {
+    enum MatchesType {
         case popular
+        case popularVideo(title: String, contents: [VideoItemFeedContent])
         case live
+        case liveVideo(title: String, contents: [VideoItemFeedContent])
         case topCompetition
+        case topCompetitionVideo(title: String, contents: [VideoItemFeedContent])
+
+        var identifier: String {
+            switch self {
+            case .popular: return "popular"
+            case .popularVideo(let title, let contents): return "popularVideo\(title)\(contents.count)"
+            case .live: return "live"
+            case .liveVideo(let title, let contents): return "liveVideo\(title)\(contents.count)"
+            case .topCompetition: return "topCompetition"
+            case .topCompetitionVideo(let title, let contents): return "topCompetitionVideo\(title)\(contents.count)"
+
+            }
+        }
     }
 
     enum LoadingState {
@@ -26,6 +41,7 @@ class SportMatchLineViewModel {
         case doubleLine
         case singleLine
         case competition
+        case video
     }
 
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
@@ -41,6 +57,8 @@ class SportMatchLineViewModel {
     var topCompetitions: [Competition]?
 
     var outrightCompetitions: [Competition] = []
+
+    private var videoItemContents: [VideoItemFeedContent]?
 
     private var matchesType: MatchesType
 
@@ -65,21 +83,52 @@ class SportMatchLineViewModel {
         self.store = store
 
         switch matchesType {
-        case .popular:
-            self.titlePublisher = .init( localized("Popular").uppercased() )
-        case .live:
-            self.titlePublisher = .init( localized("Live").uppercased() )
-        case .topCompetition:
-            self.titlePublisher = .init( localized("Popular Competitions").uppercased() )
-            self.layoutTypePublisher.send(.competition)
-        }
 
-        self.requestMatches()
+        case .popular:
+            self.titlePublisher = .init( localized("Popular").uppercased())
+            self.requestMatches()
+        case .live:
+            self.titlePublisher = .init( localized("Live").uppercased())
+            self.requestMatches()
+        case .topCompetition:
+            self.titlePublisher = .init( localized("Popular Competitions").uppercased())
+            self.layoutTypePublisher.send(.competition)
+            self.requestMatches()
+
+        case .popularVideo(let title, let contents):
+            self.videoItemContents = contents
+            self.titlePublisher = .init(title)
+            self.layoutTypePublisher.send(.video)
+            self.requestMatches()
+            self.loadingPublisher.send(.loaded)
+            self.refreshPublisher.send()
+        case .liveVideo(let title, let contents):
+            self.videoItemContents = contents
+            self.titlePublisher = .init(title)
+            self.layoutTypePublisher.send(.video)
+            self.loadingPublisher.send(.loaded)
+            self.refreshPublisher.send()
+        case .topCompetitionVideo(let title, let contents):
+            self.videoItemContents = contents
+            self.titlePublisher = .init(title)
+            self.layoutTypePublisher.send(.video)
+            self.loadingPublisher.send(.loaded)
+            self.refreshPublisher.send()
+        }
     }
 
 }
 
 extension SportMatchLineViewModel {
+
+    func isVideoLine() -> Bool {
+        switch self.matchesType {
+        case .topCompetitionVideo, .liveVideo, .popularVideo:
+            return true
+        default:
+            return false
+        }
+    }
 
     func isCompetitionLine() -> Bool {
         if case .topCompetition = self.matchesType {
@@ -99,17 +148,11 @@ extension SportMatchLineViewModel {
         }
     }
 
-    static func matchesType(forIndex index: Int) -> MatchesType? {
-        switch index {
-        case 0: return .popular
-        case 1: return .live
-        case 2: return .topCompetition
-        default: return nil
-        }
-    }
-
     func numberOfSections(forLine lineIndex: Int) -> Int {
-        if self.isCompetitionLine() {
+        if self.isVideoLine() {
+            return 1
+        }
+        else if self.isCompetitionLine() {
             if self.topCompetitions != nil {
                 return 2
             }
@@ -128,8 +171,10 @@ extension SportMatchLineViewModel {
     }
 
     func numberOfItems(forLine lineIndex: Int, forSection section: Int) -> Int {
-
-        if lineIndex == 0 && self.isCompetitionLine() {
+        if self.isVideoLine() {
+            return self.videoItemContents?.count ?? 0
+        }
+        else if lineIndex == 0 && self.isCompetitionLine() {
             if let topCompetitions = self.topCompetitions {
                 if section == 1 {
                     return 1 // see all
@@ -200,6 +245,15 @@ extension SportMatchLineViewModel {
         return outrightCompetitions[safe: lineIndex]
     }
 
+    func videoPreviewLineCellViewModel() -> VideoPreviewLineCellViewModel? {
+        if let videoItemContents = self.videoItemContents {
+            return VideoPreviewLineCellViewModel(title: self.titlePublisher.value, videoItemFeedContents: videoItemContents)
+        }
+        else {
+            return nil
+        }
+    }
+
 }
 
 extension SportMatchLineViewModel {
@@ -207,7 +261,6 @@ extension SportMatchLineViewModel {
     private func requestMatches() {
 
         self.loadingPublisher.send(.loading)
-
         switch self.matchesType {
         case .popular:
             self.fetchPopularMatches()
@@ -215,6 +268,8 @@ extension SportMatchLineViewModel {
             self.fetchLiveMatches()
         case .topCompetition:
             self.fetchTopCompetitionMatches()
+        case .popularVideo, .liveVideo, .topCompetitionVideo:
+            self.loadingPublisher.send(.loaded)
         }
     }
 
@@ -354,7 +409,7 @@ extension SportMatchLineViewModel {
         self.outrightCompetitionsPublisher = Env.everyMatrixClient.manager
             .registerOnEndpoint(endpoint, decodingType: EveryMatrix.Aggregator.self)
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .failure:
                     print("Error retrieving data!")
@@ -411,8 +466,10 @@ extension SportMatchLineViewModel {
         self.matchesIds = Array(matchesIds.prefix(2))
 
         // Request outright if no popular matches found
-        if self.matchesType == .popular && self.matchesIds.isEmpty && self.outrightCompetitions.isEmpty {
-            self.fetchOutrightCompetitions()
+        if case .popular = self.matchesType {
+            if self.matchesIds.isEmpty && self.outrightCompetitions.isEmpty {
+                self.fetchOutrightCompetitions()
+            }
         }
 
     }
@@ -460,6 +517,8 @@ extension SportMatchLineViewModel {
                 else {
                     self.loadingPublisher.send(.loaded)
                 }
+            case .popularVideo, .liveVideo, .topCompetitionVideo:
+                self.layoutTypePublisher.send(.video)
             }
         }
 

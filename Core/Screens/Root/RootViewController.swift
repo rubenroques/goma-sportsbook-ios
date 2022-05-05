@@ -48,6 +48,30 @@ class RootViewController: UIViewController {
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
 
+    //
+    //
+    private var initialMovementOffset: CGPoint = .zero
+    private var latestCenterPosition: CGPoint? = nil
+
+    private lazy var pictureInPictureView: UIView = {
+        let view = UIView()
+        view.backgroundColor = UIColor(hex: 0xF2F23A)
+        view.layer.cornerRadius = 12
+        return view
+    }()
+
+    private let pictureInPictureViewWidth: CGFloat = 160
+    private let pictureInPictureViewHeight: CGFloat = 90
+
+    private let horizontalSpacing: CGFloat = 20
+    private let verticalSpacing: CGFloat = 20
+
+    private var pictureInPicturePositionViews = [UIView]()
+    private var pipPositions: [CGPoint] {
+        return pictureInPicturePositionViews.map { $0.center }
+    }
+
+    //
     // Child view controllers
     lazy var homeViewController = HomeViewController()
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
@@ -120,6 +144,10 @@ class RootViewController: UIViewController {
 
         self.commonInit()
         self.loadChildViewControllerIfNeeded(tab: self.selectedTabItem)
+
+        //
+        self.configurePictureInPictureView()
+
         self.setupWithTheme()
 
         Env.userSessionStore.userSessionPublisher
@@ -233,6 +261,8 @@ class RootViewController: UIViewController {
 
         accountPlusView.layer.cornerRadius = CornerRadius.squareView
         accountPlusView.layer.masksToBounds = true
+
+        pictureInPictureView.center = self.latestCenterPosition ?? (pipPositions.last ?? .zero)
     }
 
     func commonInit() {
@@ -420,6 +450,137 @@ class RootViewController: UIViewController {
         self.present(casinoWebViewController, animated: true, completion: nil)
 
     }
+}
+
+extension RootViewController {
+
+    private func configurePictureInPictureView() {
+
+        // guard let mainWindow = UIApplication.shared.keyWindow else { return }
+
+        let topLeftView = pictureInPictureCornerView()
+        topLeftView.isUserInteractionEnabled = false
+        self.view.addSubview(topLeftView)
+        self.view.sendSubviewToBack(topLeftView)
+        pictureInPicturePositionViews.append(topLeftView)
+        topLeftView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalSpacing).isActive = true
+        topLeftView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalSpacing).isActive = true
+
+        let topRightView = pictureInPictureCornerView()
+        topRightView.isUserInteractionEnabled = false
+        self.view.addSubview(topRightView)
+        self.view.sendSubviewToBack(topRightView)
+        pictureInPicturePositionViews.append(topRightView)
+        topRightView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalSpacing).isActive = true
+        topRightView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalSpacing).isActive = true
+
+        let bottomLeftView = pictureInPictureCornerView()
+        bottomLeftView.isUserInteractionEnabled = false
+        self.view.addSubview(bottomLeftView)
+        self.view.sendSubviewToBack(bottomLeftView)
+        pictureInPicturePositionViews.append(bottomLeftView)
+        bottomLeftView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalSpacing).isActive = true
+        bottomLeftView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -verticalSpacing).isActive = true
+
+        let bottomRightView = pictureInPictureCornerView()
+        bottomRightView.isUserInteractionEnabled = false
+        self.view.addSubview(bottomRightView)
+        self.view.sendSubviewToBack(bottomRightView)
+        pictureInPicturePositionViews.append(bottomRightView)
+        bottomRightView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalSpacing).isActive = true
+        bottomRightView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -verticalSpacing).isActive = true
+
+        self.view.addSubview(pictureInPictureView)
+        pictureInPictureView.translatesAutoresizingMaskIntoConstraints = false
+        pictureInPictureView.widthAnchor.constraint(equalToConstant: pictureInPictureViewWidth).isActive = true
+        pictureInPictureView.heightAnchor.constraint(equalToConstant: pictureInPictureViewHeight).isActive = true
+
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureView))
+        tapGestureRecognizer.numberOfTapsRequired = 2
+        pictureInPictureView.addGestureRecognizer(tapGestureRecognizer)
+
+        let panRecognizer = UIPanGestureRecognizer()
+        panRecognizer.addTarget(self, action: #selector(pictureInPicturePanned(recognizer:)))
+        pictureInPictureView.addGestureRecognizer(panRecognizer)
+    }
+
+    private func pictureInPictureCornerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalToConstant: pictureInPictureViewWidth).isActive = true
+        view.heightAnchor.constraint(equalToConstant: pictureInPictureViewHeight).isActive = true
+        return view
+    }
+
+    @objc private func pictureInPicturePanned(recognizer: UIPanGestureRecognizer) {
+        let touchPoint = recognizer.location(in: view)
+        switch recognizer.state {
+        case .began:
+            initialMovementOffset = CGPoint(x: touchPoint.x - pictureInPictureView.center.x, y: touchPoint.y - pictureInPictureView.center.y)
+        case .changed:
+            pictureInPictureView.center = CGPoint(x: touchPoint.x - initialMovementOffset.x, y: touchPoint.y - initialMovementOffset.y)
+        case .ended, .cancelled:
+            let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
+            let velocity = recognizer.velocity(in: view)
+            let projectedPosition = CGPoint(
+                x: pictureInPictureView.center.x + project(initialVelocity: velocity.x, decelerationRate: decelerationRate),
+                y: pictureInPictureView.center.y + project(initialVelocity: velocity.y, decelerationRate: decelerationRate)
+            )
+            let nearestCornerPosition = nearestCorner(to: projectedPosition)
+            let relativeInitialVelocity = CGVector(
+                dx: relativeVelocity(forVelocity: velocity.x, from: pictureInPictureView.center.x, to: nearestCornerPosition.x),
+                dy: relativeVelocity(forVelocity: velocity.y, from: pictureInPictureView.center.y, to: nearestCornerPosition.y)
+            )
+            
+            let timingParameters = UISpringTimingParameters(dampingRatio: 1, initialVelocity: relativeInitialVelocity)
+            let animator = UIViewPropertyAnimator(duration: 0, timingParameters: timingParameters)
+            animator.addAnimations {
+                self.pictureInPictureView.center = nearestCornerPosition
+            }
+            animator.startAnimation()
+
+            self.latestCenterPosition = nearestCornerPosition
+
+        default: break
+        }
+    }
+
+    // Distance traveled after decelerating to zero velocity at a constant rate.
+    private func project(initialVelocity: CGFloat, decelerationRate: CGFloat) -> CGFloat {
+        return (initialVelocity / 1000) * decelerationRate / (1 - decelerationRate)
+    }
+
+    // Finds the position of the nearest corner to the given point.
+    private func nearestCorner(to point: CGPoint) -> CGPoint {
+        var minDistance = CGFloat.greatestFiniteMagnitude
+        var closestPosition = CGPoint.zero
+        for position in pipPositions {
+            let distance = point.distance(to: position)
+            if distance < minDistance {
+                closestPosition = position
+                minDistance = distance
+            }
+        }
+        return closestPosition
+    }
+
+    // Calculates the relative velocity needed for the initial velocity of the animation.
+    private func relativeVelocity(forVelocity velocity: CGFloat, from currentValue: CGFloat, to targetValue: CGFloat) -> CGFloat {
+        guard currentValue - targetValue != 0 else { return 0 }
+        return velocity / (targetValue - currentValue)
+    }
+
+    @objc private func didTapPictureInPictureView() {
+
+        UIView.animate(withDuration: 0.4) {
+            self.pictureInPictureView.alpha = 0.0
+        } completion: { _ in
+            self.pictureInPictureView.isHidden = true
+            self.pictureInPictureView.alpha = 1.0
+        }
+
+    }
+
 }
 
 // Navigations between tabs

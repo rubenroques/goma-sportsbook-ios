@@ -61,6 +61,7 @@ class HomeViewController: UIViewController {
         self.tableView.register(SuggestedBetLineTableViewCell.self, forCellReuseIdentifier: SuggestedBetLineTableViewCell.identifier)
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: UITableViewCell.identifier)
         self.tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
+        self.tableView.register(VideoPreviewLineTableViewCell.self, forCellReuseIdentifier: VideoPreviewLineTableViewCell.identifier)
 
         self.refreshControl.tintColor = UIColor.lightGray
         self.refreshControl.addTarget(self, action: #selector(self.refreshControllPulled), for: .valueChanged)
@@ -192,9 +193,8 @@ class HomeViewController: UIViewController {
         self.navigationController?.pushViewController(outrightMarketDetailsViewController, animated: true)
     }
 
-    private func openMatchDetails(match: Match) {
-        let matchMode: MatchDetailsViewModel.MatchMode = self.viewModel.isMatchLive(withMatchId: match.id) ? .live : .preLive
-        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchMode: matchMode, match: match))
+    private func openMatchDetails(matchId: String) {
+        let matchDetailsViewController = MatchDetailsViewController(viewModel: MatchDetailsViewModel(matchId: matchId))
         self.navigationController?.pushViewController(matchDetailsViewController, animated: true)
     }
 
@@ -258,12 +258,19 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             }
             cell.configure(withViewModel: sportMatchLineViewModel)
 
-            cell.tappedBannerMatchAction = { [weak self] match in
-                self?.openMatchDetails(match: match)
-            }
-
-            cell.tappedBannerBonusAction = { [weak self] in
-                self?.openBonusView()
+            cell.didTapBannerViewAction = { [weak self] presentationType in
+                switch presentationType {
+                case .image:
+                    self?.openBonusView()
+                case .match(id: let matchId):
+                    self?.openMatchDetails(matchId: matchId)
+                case .externalMatch(contentId: let matchId, _, _, _):
+                    self?.openMatchDetails(matchId: matchId)
+                case .externalLink(_, linkURLString: let linkURLString):
+                    () // TODO: implement this
+                case .externalStream(_, streamURLString: let streamURLString):
+                    () // TODO: implement this
+                }
             }
             
             return cell
@@ -280,19 +287,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.setupWithMatch(match, store: self.viewModel.store)
             cell.setupFavoriteMatchInfoPublisher(match: match)
             cell.tappedMatchLineAction = { [weak self] in
-                self?.openMatchDetails(match: match)
+                self?.openMatchDetails(matchId: match.id)
             }
-
-//            cell.didTapFavoriteMatchAction = { [weak self] match in
-//                self?.viewModel.markAsFavorite(match: match)
-//            }
            
             return cell
 
         case .suggestedBets:
             guard
                 let cell = tableView.dequeueReusableCell(withIdentifier: SuggestedBetLineTableViewCell.identifier) as? SuggestedBetLineTableViewCell,
-                let suggestedBetLineViewModel = self.viewModel.getSuggestedBetLineViewModel()
+                let suggestedBetLineViewModel = self.viewModel.suggestedBetLineViewModel()
             else {
                 fatalError()
             }
@@ -313,11 +316,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             switch sportMatchLineViewModel.loadingPublisher.value {
             case .loading, .empty:
                 let cell = tableView.dequeueReusableCell(withIdentifier: UITableViewCell.identifier, for: indexPath)
-                
                 return cell
             case.loaded:
                 ()
-                
             }
             
             switch sportMatchLineViewModel.layoutTypePublisher.value {
@@ -334,7 +335,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.tappedMatchLineAction = { [weak self] match in
-                    self?.openMatchDetails(match: match)
+                    self?.openMatchDetails(matchId: match.id)
                 }
                 cell.didSelectSeeAllLive = { [weak self] sport in
                     self?.openLiveDetails(sport)
@@ -345,24 +346,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.didSelectSeeAllCompetitionAction = { [weak self] competition in
                     self?.openOutrightCompetition(competition: competition)
                 }
-                
-//                cell.didTapFavoriteMatchAction = { [weak self] match in
-//                    if UserSessionStore.isUserLogged() {
-//                        self?.viewModel.markAsFavorite(match: match)
-//                    }
-//                    else {
-//                        let loginViewController = Router.navigationController(with: LoginViewController())
-//                        self?.present(loginViewController, animated: true, completion: nil)
-//                    }
-//                    
-//                }
-                
+
                 return cell
 
             case .singleLine:
                 guard
-                    let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchSingleLineTableViewCell.identifier)
-                        as? SportMatchSingleLineTableViewCell
+                    let cell = tableView.dequeueReusableCell(withIdentifier: SportMatchSingleLineTableViewCell.identifier) as? SportMatchSingleLineTableViewCell
                 else {
                     fatalError()
                 }
@@ -371,7 +360,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.tappedMatchLineAction = { [weak self] match in
-                    self?.openMatchDetails(match: match)
+                    self?.openMatchDetails(matchId: match.id)
                 }
                 cell.didSelectSeeAllLive = { [weak self] sport in
                     self?.openLiveDetails(sport)
@@ -383,27 +372,28 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                     self?.openOutrightCompetition(competition: competition)
                 }
 
-                cell.didTapFavoriteMatchAction = { [weak self] match in
-                    if UserSessionStore.isUserLogged() {
-                        self?.viewModel.markAsFavorite(match: match)
-                    }
-                    else {
-                        let loginViewController = Router.navigationController(with: LoginViewController())
-                        self?.present(loginViewController, animated: true, completion: nil)
-                    }
-                }
                 return cell
                 
             case .competition:
                 guard
-                    let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionLineTableViewCell.identifier)
-                        as? TopCompetitionLineTableViewCell
+                    let cell = tableView.dequeueReusableCell(withIdentifier: TopCompetitionLineTableViewCell.identifier) as? TopCompetitionLineTableViewCell
                 else {
                     fatalError()
                 }
                 cell.configure(withViewModel: sportMatchLineViewModel)
                 cell.didSelectSeeAllCompetitionsAction = { [weak self] sport, competitions in
                     self?.openCompetitionsDetails(competitionsIds: competitions.map(\.id), sport: sport)
+                }
+                return cell
+
+            case .video:
+                guard
+                    let cell = tableView.dequeueReusableCell(withIdentifier: VideoPreviewLineTableViewCell.identifier) as? VideoPreviewLineTableViewCell
+                else {
+                    fatalError()
+                }
+                if let videoPreviewLineCellViewModel = sportMatchLineViewModel.videoPreviewLineCellViewModel() {
+                    cell.configure(withViewModel: videoPreviewLineCellViewModel)
                 }
                 return cell
             }
@@ -416,7 +406,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
             cell.activationAlertCollectionViewCellLinkLabelAction = { alertType in
                 self.didSelectActivationAlertAction?(alertType)
             }
-            cell.setAlertArrayData(arrayData: self.viewModel.alertsArray)
+            cell.setAlertArrayData(arrayData: self.viewModel.alertsArrayViewModel())
 
             return cell
 
@@ -458,6 +448,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .doubleLine: return 400
                 case .singleLine: return 226
                 case .competition: return 200
+                case .video: return 258
                 }
             }
         case .userProfile:
@@ -501,6 +492,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 case .doubleLine: return 400
                 case .singleLine: return 226
                 case .competition: return 200
+                case .video: return 258
                 }
             }
         case .userProfile:
@@ -616,7 +608,7 @@ extension HomeViewController: UITableViewDataSourcePrefetching {
             case .userFavorites:
                 ()
             case .suggestedBets:
-                _ = self.viewModel.getSuggestedBetLineViewModel()
+                _ = self.viewModel.suggestedBetLineViewModel()
             case .sport:
                 _ = self.viewModel.sportGroupViewModel(forSection: indexPath.section)
             case .userProfile:

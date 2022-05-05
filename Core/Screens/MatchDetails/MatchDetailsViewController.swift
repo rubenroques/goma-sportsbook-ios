@@ -210,7 +210,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
 
-        self.headerCompetitionImageView.image = UIImage(named: "")
+        self.headerCompetitionImageView.image = nil
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .scaleAspectFill
 

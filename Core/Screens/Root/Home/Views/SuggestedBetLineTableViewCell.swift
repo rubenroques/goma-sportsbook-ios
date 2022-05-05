@@ -33,6 +33,14 @@ class SuggestedBetLineTableViewCell: UITableViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
+
+        self.collectionView.register(BetSuggestedCollectionViewCell.nib,
+                                     forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -126,12 +134,6 @@ extension SuggestedBetLineTableViewCell {
         // Add subviews to self.view or each other
         self.contentView.addSubview(self.collectionView)
 
-        self.collectionView.delegate = self
-        self.collectionView.dataSource = self
-
-        self.collectionView.register(BetSuggestedCollectionViewCell.nib,
-                                     forCellWithReuseIdentifier: BetSuggestedCollectionViewCell.identifier)
-        
         // Initialize constraints
         self.initConstraints()
     }

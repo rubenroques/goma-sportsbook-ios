@@ -35,7 +35,7 @@ class RecentSearchRowView: NibView {
         self.titleLabel.font = AppFont.with(type: .semibold, size: 14)
 
         self.clearButton.setTitle("", for: .normal)
-        self.clearButton.setImage(UIImage(named: ""), for: .normal)
+        self.clearButton.setImage(nil, for: .normal)
     }
 
     func setTitle(title: String) {

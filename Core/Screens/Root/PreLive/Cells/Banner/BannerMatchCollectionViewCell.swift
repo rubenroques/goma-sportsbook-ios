@@ -66,8 +66,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     var completeMatch: Match?
-    var tappedMatchBaseViewAction: ((Match) -> Void)?
-    var tappedBonusBaseViewAction: (() -> Void)?
+
+    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType) -> Void)?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -106,6 +106,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         self.baseView.clipsToBounds = true
         self.baseView.alpha = 1.0
+        self.baseView.isUserInteractionEnabled = true
 
         self.participantsBaseView.backgroundColor = .clear
         self.oddsStackView.backgroundColor = .clear
@@ -127,11 +128,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
 
-        let tapMatchBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchBaseView))
-        self.matchBaseView.addGestureRecognizer(tapMatchBaseView)
-
-        let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerBaseView))
-        self.imageBaseView.addGestureRecognizer(tapBannerBaseView)
+        let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+        self.baseView.addGestureRecognizer(tapBannerBaseView)
 
         self.setupWithTheme()
     }
@@ -264,6 +262,38 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             if let url = viewModel.imageURL {
                 self.imageView.kf.setImage(with: url)
             }
+            
+        case .externalStream:
+            self.imageView.isHidden = false
+            if let url = viewModel.imageURL {
+                self.imageView.kf.setImage(with: url)
+            }
+
+        case .externalLink:
+            self.imageView.isHidden = false
+            if let url = viewModel.imageURL {
+                self.imageView.kf.setImage(with: url)
+            }
+
+        case .externalMatch:
+            self.imageView.isHidden = false
+            if let url = viewModel.imageURL {
+                self.imageView.kf.setImage(with: url)
+            }
+            viewModel.match
+                .receive(on: DispatchQueue.main)
+                .compactMap({$0}).sink { [weak self] match in
+                    self?.matchViewModel = MatchWidgetCellViewModel(match: match)
+                }
+                .store(in: &cancellables)
+
+            viewModel.completeMatch
+                .receive(on: DispatchQueue.main)
+                .compactMap({$0}).sink { [weak self] completeMatch in
+                    self?.completeMatch = completeMatch
+                    self?.setupWithMatch(completeMatch)
+                }
+                .store(in: &cancellables)
         }
 
     }
@@ -293,8 +323,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         }
 
         if let market = match.markets.first {
+
+            if market.outcomes.count == 2 {
+                self.awayBaseView.isHidden = true
+            }
+
             if let outcome = market.outcomes[safe: 0] {
-                self.homeOddTitleLabel.text = outcome.typeName
+                self.homeOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
                 self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 // self.currentHomeOddValue = outcome.bettingOffer.value
                 self.leftOutcome = outcome
@@ -328,7 +363,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
             }
             if let outcome = market.outcomes[safe: 1] {
-                self.drawOddTitleLabel.text = outcome.typeName
+                self.drawOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
                 self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 // self.currentDrawOddValue = outcome.bettingOffer.value
                 self.middleOutcome = outcome
@@ -361,7 +396,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                     })
             }
             if let outcome = market.outcomes[safe: 2] {
-                self.awayOddTitleLabel.text = outcome.typeName
+                self.awayOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
                 self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 // self.currentAwayOddValue = outcome.bettingOffer.value
                 self.rightOutcome = outcome
@@ -393,8 +428,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                         //weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                         weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
-
             }
+            
         }
         else {
             Logger.log("No markets found")
@@ -404,6 +439,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             self.drawOddValueLabel.text = "-"
             self.awayOddValueLabel.text = "-"
         }
+
 
     }
 
@@ -504,15 +540,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @objc func didTapMatchBaseView() {
-
-        guard let completeMatch = self.completeMatch else { return }
-
-        self.tappedMatchBaseViewAction?(completeMatch)
-
+    @objc func didTapBannerView() {
+        if let presentationType = self.viewModel?.presentationType {
+            self.didTapBannerViewAction?(presentationType)
+        }
     }
 
-    @objc func didTapBannerBaseView() {
-        self.tappedBonusBaseViewAction?()
-    }
 }

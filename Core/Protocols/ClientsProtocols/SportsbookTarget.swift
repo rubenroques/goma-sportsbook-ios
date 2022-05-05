@@ -23,6 +23,8 @@ protocol SportsbookTarget {
 
     static var firebaseDatabaseURL: String { get }
 
+    static var homeTemplateKey: String? { get }
+    
     static var everyMatrixHost: String { get }
 
     static var featureFlags: Flags.Type { get }

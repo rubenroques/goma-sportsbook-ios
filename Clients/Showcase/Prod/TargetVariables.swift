@@ -38,6 +38,10 @@ struct TargetVariables: SportsbookTarget {
         #endif
     }
 
+    static var homeTemplateKey: String? {
+        return nil
+    }
+
     static var everyMatrixHost: String {
         return ""
     }
