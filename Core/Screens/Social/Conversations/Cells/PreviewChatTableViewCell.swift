@@ -159,17 +159,23 @@ class PreviewChatTableViewCell: UITableViewCell {
 
         guard
             let parentViewController = self.viewController,
-            let chatroomId = self.viewModel?.cellData.id        else {
+            let chatroomId = self.viewModel?.cellData.id,
+            let chatroomType = self.viewModel?.cellData.conversationType
+        else {
             return
         }
 
         let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
 
-        let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ -> Void in
-            print("REMOVE CHATROOM ID: \(chatroomId)")
-            self?.removeChatroomAction?(chatroomId)
+        // TEST
+        if chatroomType == .group {
+
+            let removeChatroomAction: UIAlertAction = UIAlertAction(title: "Remove chatroom", style: .default) { [weak self] _ -> Void in
+                print("REMOVE CHATROOM ID: \(chatroomId)")
+                self?.removeChatroomAction?(chatroomId)
+            }
+            actionSheetController.addAction(removeChatroomAction)
         }
-        actionSheetController.addAction(removeChatroomAction)
 
         let cancelAction: UIAlertAction = UIAlertAction(title: localized("cancel"), style: .cancel) { _ -> Void in }
         actionSheetController.addAction(cancelAction)

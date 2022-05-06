@@ -335,6 +335,26 @@ class AddContactViewModel {
             })
             .store(in: &cancellables)
     }
+
+    func inviteFriendRequest(phoneNumber: String) {
+        Env.gomaNetworkClient.inviteFriend(deviceId: Env.deviceId, phone: phoneNumber)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("INVITE FRIEND ERROR: \(error)")
+                    self?.friendAlertType = .error
+                case .finished:
+                    print("INVITE FRIEND FINISHED")
+                }
+
+                self?.shouldShowAlert.send(true)
+            }, receiveValue: { [weak self] response in
+                print("INVITE FRIEND GOMA: \(response)")
+                self?.friendAlertType = .success
+            })
+            .store(in: &cancellables)
+    }
 }
 
 struct ContactsData {

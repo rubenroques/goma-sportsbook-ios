@@ -20,6 +20,7 @@ class FriendsListViewModel {
 
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
+    var conversationDataNeedsReload: PassthroughSubject<Void, Never> = .init()
 
     // MARK: Lifetime and cycle
     init() {
@@ -85,6 +86,7 @@ class FriendsListViewModel {
             }, receiveValue: { [weak self] response in
                 print("DELETE FRIEND GOMA: \(response)")
                 self?.getFriends()
+                self?.conversationDataNeedsReload.send()
             })
             .store(in: &cancellables)
     }

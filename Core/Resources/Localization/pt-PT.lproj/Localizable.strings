@@ -440,6 +440,7 @@ Terms of use, Privacy Policy and EULA";
 "select_friends_add" = "Select friends to add";
 "start_group_chat" = "Start Group Chat";
 "group_name" = "Group name";
+"select_a_friend" = "Select a friend";
 
 "my_friends" = "My Friends";
 "search_friend" = "Search a friend";
@@ -462,3 +463,5 @@ Terms of use, Privacy Policy and EULA";
 
 "friend_added_error" = "Friend Add Error";
 "friend_added_message_error" = "There was an error trying to add the selected friend/s. Try again later.";
+
+"new_message" = "New Message";

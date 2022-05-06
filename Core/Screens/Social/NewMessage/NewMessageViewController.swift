@@ -1,14 +1,15 @@
 //
-//  AddContactViewController.swift
+//  NewMessageViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 20/04/2022.
+//  Created by André Lascas on 06/05/2022.
 //
 
 import UIKit
 import Combine
 
-class AddContactViewController: UIViewController {
+class NewMessageViewController: UIViewController {
+
     // MARK: Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var bottomSafeAreaView: UIView = Self.createBottomSafeAreaView()
@@ -17,22 +18,21 @@ class AddContactViewController: UIViewController {
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var closeButton: UIButton = Self.createCloseButton()
     private lazy var searchBar: UISearchBar = Self.createSearchBar()
-    private lazy var tableSeparatorLineView: UIView = Self.createTableSeparatorLineView()
     private lazy var tableView: UITableView = Self.createTableView()
-    private lazy var addFriendBaseView: UIView = Self.createAddFriendBaseView()
-    private lazy var addFriendButton: UIButton = Self.createAddFriendButton()
-    private lazy var addFriendSeparatorLineView: UIView = Self.createAddFriendSeparatorLineView()
+    private lazy var emptyStateView: UIView = Self.createEmptyStateView()
+    private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
+    private lazy var emptyStateLabel: UILabel = Self.createEmptyStateLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
     private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
+
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
-    var viewModel: AddContactViewModel
+    var viewModel: NewMesssageViewModel
 
-    var isEmptySearch: Bool = true {
+    var isEmptyState: Bool = false {
         didSet {
-            self.tableView.isHidden = isEmptySearch
-            self.tableSeparatorLineView.isHidden = isEmptySearch
+            self.emptyStateView.isHidden = !isEmptyState
         }
     }
 
@@ -43,7 +43,7 @@ class AddContactViewController: UIViewController {
     }
 
     // MARK: - Lifetime and Cycle
-    init(viewModel: AddContactViewModel) {
+    init(viewModel: NewMesssageViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -52,6 +52,7 @@ class AddContactViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -64,23 +65,18 @@ class AddContactViewController: UIViewController {
         self.tableView.dataSource = self
 
         self.tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
-        self.tableView.register(AddFriendTableViewCell.self,
-                                forCellReuseIdentifier: AddFriendTableViewCell.identifier)
-        self.tableView.register(AddUnregisteredFriendTableViewCell.self,
-                                forCellReuseIdentifier: AddUnregisteredFriendTableViewCell.identifier)
+        self.tableView.register(SelectFriendTableViewCell.self,
+                                forCellReuseIdentifier: SelectFriendTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
-
-        self.addFriendButton.addTarget(self, action: #selector(didTapAddFriendButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
 
-        self.isEmptySearch = false
     }
 
     // MARK: - Layout and Theme
@@ -114,19 +110,20 @@ class AddContactViewController: UIViewController {
 
         self.setupSearchBarStyle()
 
-        self.tableSeparatorLineView.backgroundColor = UIColor.App.separatorLine
-
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.addFriendBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
 
-        StyleHelper.styleButton(button: self.addFriendButton)
+        self.emptyStateImageView.backgroundColor = .clear
 
-        self.addFriendSeparatorLineView.backgroundColor = UIColor.App.separatorLine
+        self.emptyStateLabel.textColor = UIColor.App.textPrimary
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
     }
 
     // MARK: Binding
-    private func bind(toViewModel viewModel: AddContactViewModel) {
+    private func bind(toViewModel viewModel: NewMesssageViewModel) {
 
         viewModel.dataNeedsReload
             .receive(on: DispatchQueue.main)
@@ -135,17 +132,10 @@ class AddContactViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.isEmptySearchPublisher
+        viewModel.usersPublisher
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isEmptySearch in
-                self?.isEmptySearch = isEmptySearch
-            })
-            .store(in: &cancellables)
-
-        viewModel.canAddFriendPublisher
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] isEnabled in
-                self?.addFriendButton.isEnabled = isEnabled
+            .sink(receiveValue: { [weak self] users in
+                self?.isEmptyState = users.isEmpty
             })
             .store(in: &cancellables)
 
@@ -153,15 +143,6 @@ class AddContactViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
                 self?.isLoading = isLoading
-            })
-            .store(in: &cancellables)
-
-        viewModel.shouldShowAlert
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] showAlert in
-                if showAlert, let friendAlertType = viewModel.friendAlertType {
-                    self?.showAddFriendAlert(friendAlertType: friendAlertType)
-                }
             })
             .store(in: &cancellables)
     }
@@ -181,7 +162,7 @@ class AddContactViewController: UIViewController {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
             textfield.textColor = .white
             textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_by_contact"),
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_friend"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
                                                                               NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
@@ -193,32 +174,13 @@ class AddContactViewController: UIViewController {
         }
     }
 
-    private func sendUserInvite(phoneNumber: String) {
-        // Send invite here
-        print("Send invite to: \(phoneNumber)")
-        self.viewModel.inviteFriendRequest(phoneNumber: phoneNumber)
-    }
+    private func showConversationDetail(conversationData: ConversationData) {
 
-    private func showAddFriendAlert(friendAlertType: FriendAlertType) {
-        switch friendAlertType {
-        case .success:
-            let addFriendAlert = UIAlertController(title: localized("friend_added"),
-                                                       message: localized("friend_added_message"),
-                                                       preferredStyle: UIAlertController.Style.alert)
+        let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
 
-            addFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+        let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 
-            self.present(addFriendAlert, animated: true, completion: nil)
-        case .error:
-            let errorFriendAlert = UIAlertController(title: localized("friend_added_error"),
-                                                       message: localized("friend_added_message_error"),
-                                                       preferredStyle: UIAlertController.Style.alert)
-
-            errorFriendAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
-
-            self.present(errorFriendAlert, animated: true, completion: nil)
-        }
-
+        self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
     }
 
     // MARK: Actions
@@ -236,23 +198,15 @@ class AddContactViewController: UIViewController {
         }
     }
 
-    @objc func didTapAddFriendButton() {
-
-        print("FRIENDS SELECTED: \(self.viewModel.selectedUsers)")
-
-        self.viewModel.sendFriendRequest()
-    }
-
     @objc func didTapBackground() {
         self.searchBar.resignFirstResponder()
     }
-
 }
 
 //
 // MARK: Delegates
 //
-extension AddContactViewController: UISearchBarDelegate {
+extension NewMessageViewController: UISearchBarDelegate {
 
     func searchUsers(searchQuery: String = "") {
 
@@ -288,155 +242,99 @@ extension AddContactViewController: UISearchBarDelegate {
     }
 }
 
-extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
+extension NewMessageViewController: UITableViewDataSource, UITableViewDelegate {
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return self.viewModel.sectionUsersArray.count
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.viewModel.sectionUsersArray[section].userContacts.count
+        return self.viewModel.usersPublisher.value.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        if self.viewModel.sectionUsersArray[safe: indexPath.section]?.contactType == .registered {
 
-            guard let cell = tableView.dequeueCellType(AddFriendTableViewCell.self)
-            else {
-                fatalError()
-            }
-
-            if let userContact = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts[safe: indexPath.row] {
-
-                if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
-                    cell.configure(viewModel: cellViewModel)
-
-                    cell.didTapCheckboxAction = { [weak self] in
-                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                    }
-                }
-                else {
-                    let cellViewModel = AddFriendCellViewModel(userContact: userContact)
-                    self.viewModel.cachedFriendCellViewModels[userContact.id] = cellViewModel
-                    cell.configure(viewModel: cellViewModel)
-
-                    cell.didTapCheckboxAction = { [weak self] in
-                        self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-                    }
-                }
-
-            }
-
-            if let sectionUsersCount = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts.count, indexPath.row == sectionUsersCount - 1 {
-
-                cell.hasSeparatorLine = false
-            }
-
-            return cell
-        }
+        guard let cell = tableView.dequeueCellType(SelectFriendTableViewCell.self)
         else {
-            guard let cell = tableView.dequeueCellType(AddUnregisteredFriendTableViewCell.self)
-            else {
-                fatalError()
-            }
-
-            if let userContact = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts[safe: indexPath.row] {
-
-                if let cellViewModel = self.viewModel.cachedUnregisteredFriendCellViewModels[userContact.id] {
-                    cell.configure(viewModel: cellViewModel)
-
-                }
-                else {
-                    let cellViewModel = AddUnregisteredFriendCellViewModel(userContact: userContact)
-                    self.viewModel.cachedUnregisteredFriendCellViewModels[userContact.id] = cellViewModel
-                    cell.configure(viewModel: cellViewModel)
-
-                }
-
-                cell.didTapInviteAction = { [weak self] phoneNumber in
-                    self?.sendUserInvite(phoneNumber: phoneNumber)
-                }
-            }
-
-            if let sectionUsersCount = self.viewModel.sectionUsersArray[safe: indexPath.section]?.userContacts.count, indexPath.row == sectionUsersCount - 1 {
-
-                cell.hasSeparatorLine = false
-            }
-
-            return cell
+            fatalError()
         }
 
+        if let userContact = self.viewModel.usersPublisher.value[safe: indexPath.row] {
+
+            if let cellViewModel = self.viewModel.cachedFriendCellViewModels[userContact.id] {
+                // TEST
+                if indexPath.row % 2 == 0 {
+                    cellViewModel.isOnline = true
+                }
+                cell.configure(viewModel: cellViewModel)
+
+            }
+            else {
+                let conversationData = self.viewModel.getConversationData(userId: userContact.id)
+
+                let cellViewModel = SelectFriendCellViewModel(userContact: userContact, conversationData: conversationData)
+
+                self.viewModel.cachedFriendCellViewModels[userContact.id] = cellViewModel
+                // TEST
+                if indexPath.row % 2 == 0 {
+                    cellViewModel.isOnline = true
+                }
+                cell.configure(viewModel: cellViewModel)
+
+            }
+
+        }
+
+        cell.shouldShowChatroomAction = { [weak self] conversationData in
+            print("CHATROOM ID: \(conversationData.id)")
+
+            self?.showConversationDetail(conversationData: conversationData)
+        }
+
+        if indexPath.row == self.viewModel.usersPublisher.value.count - 1 {
+            cell.hasSeparatorLine = false
+        }
+
+        return cell
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
-            guard
-                let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
-            else {
-                fatalError()
-            }
-
-            if self.viewModel.sectionUsersArray[section].contactType == .registered {
-                let resultsLabel = "Results (\(self.viewModel.sectionUsersArray[section].userContacts.count))"
-
-                headerView.configureHeader(title: resultsLabel)
-            }
-            else {
-                let resultsLabel = localized("unregistered_contacts_invite")
-
-                headerView.configureHeader(title: resultsLabel)
-            }
-
-            return headerView
-        }
+        guard
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
         else {
-            return UIView()
+            fatalError()
         }
+
+        let resultsLabel = localized("select_a_friend")
+
+        headerView.configureHeader(title: resultsLabel)
+
+        return headerView
+
     }
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
-            return 70
-        }
-        else {
-            return 0
-        }
+       return 70
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
-            return 70
-        }
-        else {
-            return 0
-        }
+        return 70
 
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
-            return 30
-        }
-        else {
-            return 0
-        }
+        return 30
 
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForHeaderInSection section: Int) -> CGFloat {
 
-        if !self.viewModel.isEmptySearchPublisher.value {
-            return 30
-        }
-        else {
-            return 0
-        }
+       return 30
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -452,7 +350,7 @@ extension AddContactViewController: UITableViewDataSource, UITableViewDelegate {
 //
 // MARK: - Subviews Initialization and Setup
 //
-extension AddContactViewController {
+extension NewMessageViewController {
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -486,7 +384,7 @@ extension AddContactViewController {
         label.font = AppFont.with(type: .bold, size: 16)
         label.textAlignment = .center
         label.numberOfLines = 1
-        label.text = localized("add_contact")
+        label.text = localized("new_message")
         return label
     }
 
@@ -505,12 +403,6 @@ extension AddContactViewController {
         return searchBar
     }
 
-    private static func createTableSeparatorLineView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
-    }
-
     private static func createTableView() -> UITableView {
         let tableView = UITableView.init(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -519,23 +411,28 @@ extension AddContactViewController {
         return tableView
     }
 
-    private static func createAddFriendBaseView() -> UIView {
+    private static func createEmptyStateView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
 
-    private static func createAddFriendButton() -> UIButton {
-        let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle(localized("add_friend"), for: .normal)
-        return button
+    private static func createEmptyStateImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.image = UIImage(named: "no_content_icon")
+        imageView.contentMode = .scaleAspectFit
+        return imageView
     }
 
-    private static func createAddFriendSeparatorLineView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+    private static func createEmptyStateLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = localized("no_friends")
+        label.numberOfLines = 0
+        label.font = AppFont.with(type: .bold, size: 18)
+        label.textAlignment = .center
+        return label
     }
 
     private static func createLoadingBaseView() -> UIView {
@@ -564,14 +461,12 @@ extension AddContactViewController {
 
         self.view.addSubview(self.searchBar)
 
-        self.view.addSubview(self.tableSeparatorLineView)
-
         self.view.addSubview(self.tableView)
 
-        self.view.addSubview(self.addFriendBaseView)
+        self.view.addSubview(self.emptyStateView)
 
-        self.addFriendBaseView.addSubview(self.addFriendButton)
-        self.addFriendBaseView.addSubview(self.addFriendSeparatorLineView)
+        self.emptyStateView.addSubview(self.emptyStateImageView)
+        self.emptyStateView.addSubview(self.emptyStateLabel)
 
         self.view.addSubview(self.loadingBaseView)
 
@@ -632,31 +527,24 @@ extension AddContactViewController {
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16),
-
-            self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor, constant: 25),
-            self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor, constant: -25),
-            self.tableSeparatorLineView.bottomAnchor.constraint(equalTo: self.tableView.topAnchor),
-            self.tableSeparatorLineView.heightAnchor.constraint(equalToConstant: 1)
-
+            self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
         ])
 
-        // Add Friend Button View
+        // Empty state view
         NSLayoutConstraint.activate([
-            self.addFriendBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.addFriendBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.addFriendBaseView.topAnchor.constraint(equalTo: self.tableView.bottomAnchor, constant: 8),
-            self.addFriendBaseView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
-            self.addFriendBaseView.heightAnchor.constraint(equalToConstant: 105),
+            self.emptyStateView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.emptyStateView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.emptyStateView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor),
+            self.emptyStateView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
 
-            self.addFriendButton.leadingAnchor.constraint(equalTo: self.addFriendBaseView.leadingAnchor, constant: 33),
-            self.addFriendButton.trailingAnchor.constraint(equalTo: self.addFriendBaseView.trailingAnchor, constant: -33),
-            self.addFriendButton.heightAnchor.constraint(equalToConstant: 55),
-            self.addFriendButton.centerYAnchor.constraint(equalTo: self.addFriendBaseView.centerYAnchor),
+            self.emptyStateImageView.topAnchor.constraint(equalTo: self.emptyStateView.topAnchor, constant: 60),
+            self.emptyStateImageView.widthAnchor.constraint(equalToConstant: 120),
+            self.emptyStateImageView.heightAnchor.constraint(equalTo: self.emptyStateImageView.widthAnchor),
+            self.emptyStateImageView.centerXAnchor.constraint(equalTo: self.emptyStateView.centerXAnchor),
 
-            self.addFriendSeparatorLineView.leadingAnchor.constraint(equalTo: self.addFriendBaseView.leadingAnchor),
-            self.addFriendSeparatorLineView.trailingAnchor.constraint(equalTo: self.addFriendBaseView.trailingAnchor),
-            self.addFriendSeparatorLineView.topAnchor.constraint(equalTo: self.addFriendBaseView.topAnchor),
-            self.addFriendSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
+            self.emptyStateLabel.leadingAnchor.constraint(equalTo: self.emptyStateView.leadingAnchor, constant: 80),
+            self.emptyStateLabel.trailingAnchor.constraint(equalTo: self.emptyStateView.trailingAnchor, constant: -80),
+            self.emptyStateLabel.topAnchor.constraint(equalTo: self.emptyStateImageView.bottomAnchor, constant: 30)
         ])
 
         // Loading Screen
@@ -669,6 +557,5 @@ extension AddContactViewController {
             self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
             self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
-
     }
 }

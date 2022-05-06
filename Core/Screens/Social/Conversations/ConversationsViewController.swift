@@ -67,6 +67,8 @@ class ConversationsViewController: UIViewController {
 
         self.newGroupButton.addTarget(self, action: #selector(didTapNewGroupButton), for: .primaryActionTriggered)
 
+        self.newMessageButton.addTarget(self, action: #selector(didTapNewMessageButton), for: .primaryActionTriggered)
+
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
 
@@ -144,13 +146,16 @@ class ConversationsViewController: UIViewController {
     }
 
     // MARK: Functions
-
     private func showConversationDetail(conversationData: ConversationData) {
         let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
 
         self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
+    }
+
+    func needsRefetchData() {
+        self.viewModel.refetchConversations()
     }
 
     // MARK: - Bindings
@@ -194,6 +199,13 @@ extension ConversationsViewController {
         let newGroupViewController = NewGroupViewController(viewModel: newGroupViewModel)
 
         self.navigationController?.pushViewController(newGroupViewController, animated: true)
+    }
+
+    @objc func didTapNewMessageButton() {
+        let newMessageViewModel = NewMesssageViewModel()
+        let newMessageViewController = NewMessageViewController(viewModel: newMessageViewModel)
+
+        self.navigationController?.pushViewController(newMessageViewController, animated: true)
     }
 }
 

@@ -181,7 +181,7 @@ class ConversationsViewModel {
             .store(in: &cancellables)
     }
 
-    private func refetchConversations() {
+    func refetchConversations() {
         self.initialConversations = []
 
         self.conversationsPublisher.value = []

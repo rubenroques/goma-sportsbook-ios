@@ -27,6 +27,8 @@ class FriendsListViewController: UIViewController {
         }
     }
 
+    var reloadConversationsData: ( () -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: FriendsListViewModel = FriendsListViewModel()) {
         self.viewModel = viewModel
@@ -110,6 +112,13 @@ class FriendsListViewController: UIViewController {
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] friends in
                 self?.isEmptyState = friends.isEmpty
+            })
+            .store(in: &cancellables)
+
+        viewModel.conversationDataNeedsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadConversationsData?()
             })
             .store(in: &cancellables)
     }

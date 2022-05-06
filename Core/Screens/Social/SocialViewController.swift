@@ -101,6 +101,10 @@ class SocialViewController: UIViewController {
         self.settingsButton.addTarget(self, action: #selector(didTapSettingsButton), for: .primaryActionTriggered)
 
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
+
+        self.friendsListViewController.reloadConversationsData = { [weak self] in
+            self?.conversationsViewController.needsRefetchData()
+        }
     }
 
     // MARK: - Layout and Theme

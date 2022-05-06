@@ -55,6 +55,7 @@ class NewGroupViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -148,7 +149,7 @@ class NewGroupViewController: UIViewController {
 
     }
 
-    // MARK: binding
+    // MARK: Binding
 
     private func bind(toViewModel viewModel: NewGroupViewModel) {
 
@@ -434,7 +435,7 @@ extension NewGroupViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle(localized("close"), for: .normal)
         button.setContentHuggingPriority(.required, for: .horizontal)
-        button.titleLabel?.font = AppFont.with(type: .semibold, size: 12)
+        button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
     }
 
