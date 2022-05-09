@@ -62,6 +62,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var statsCollectionView: UICollectionView!
     @IBOutlet private var statsCollectionViewHeight: NSLayoutConstraint!
     @IBOutlet private var statsBackSliderView: UIView!
+    @IBOutlet private var statsNotFoundLabel: UILabel!
 
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
@@ -330,6 +331,7 @@ class MatchDetailsViewController: UIViewController {
         let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
         self.statsBackSliderView.addGestureRecognizer(backSliderTapGesture)
 
+        self.statsNotFoundLabel.isHidden = true
 
         // match share
         //
@@ -447,7 +449,8 @@ class MatchDetailsViewController: UIViewController {
         self.statsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsToggleSeparatorView.backgroundColor = UIColor.App.separatorLine
         self.statsBackSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
-
+        self.statsNotFoundLabel.textColor = UIColor.App.textPrimary
+        
     }
 
     // MARK: - Bindings
@@ -579,7 +582,7 @@ class MatchDetailsViewController: UIViewController {
         self.viewModel.matchStatsUpdatedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.statsCollectionView.reloadData()
+                self?.reloadStatsCollectionView()
             })
             .store(in: &cancellables)
     }
@@ -643,6 +646,19 @@ class MatchDetailsViewController: UIViewController {
 
         self.currentPageViewControllerIndex = index
     }
+
+    func reloadStatsCollectionView() {
+        if self.viewModel.numberOfStatsSections() == 0 {
+            self.statsNotFoundLabel.isHidden = false
+            self.statsCollectionView.isHidden = true
+        }
+        else {
+            self.statsNotFoundLabel.isHidden = true
+            self.statsCollectionView.isHidden = false
+        }
+        self.statsCollectionView.reloadData()
+    }
+
 
     func reloadSelectedIndex() {
         self.selectMarketType(atIndex: self.currentPageViewControllerIndex)

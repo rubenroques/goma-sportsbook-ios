@@ -30,9 +30,17 @@ class VideoPreviewCellViewModel {
         self.videoItemFeedContent.description ?? ""
     }
 
+    var externalStreamURL: URL? {
+        if let streamURLString = videoItemFeedContent.streamURL {
+            return URL(string: streamURLString)
+        }
+        return nil
+    }
 }
 
 class VideoPreviewCollectionViewCell: UICollectionViewCell {
+
+    var didTapVideoPreviewCellAction: ((VideoPreviewCellViewModel) -> Void) = { _ in }
 
     private lazy var baseView: UIView = Self.createBaseView()
 
@@ -49,6 +57,9 @@ class VideoPreviewCollectionViewCell: UICollectionViewCell {
 
         self.setupSubviews()
         self.setupWithTheme()
+
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapBaseView))
+        self.baseView.addGestureRecognizer(tapGesture)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -94,6 +105,12 @@ class VideoPreviewCollectionViewCell: UICollectionViewCell {
         self.subtitleLabel.text = viewModel.title
     }
 
+    @objc private func didTapBaseView() {
+        if let viewModel = self.viewModel {
+            self.didTapVideoPreviewCellAction(viewModel)
+        }
+    }
+
 }
 
 extension VideoPreviewCollectionViewCell {
@@ -110,7 +127,7 @@ extension VideoPreviewCollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
-        imageView.alpha = 0.7
+        imageView.alpha = 0.85
         imageView.clipsToBounds = true
         return imageView
     }

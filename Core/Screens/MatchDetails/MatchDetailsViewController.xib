@@ -21,7 +21,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MatchDetailsViewController" customModule="GOMASports" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MatchDetailsViewController" customModule="DAZN" customModuleProvider="target">
             <connections>
                 <outlet property="accountPlusView" destination="SVA-o8-XPi" id="Isv-Ap-ZEM"/>
                 <outlet property="accountValueLabel" destination="Xa4-nk-Zrj" id="Pfv-lN-cem"/>
@@ -64,6 +64,7 @@
                 <outlet property="statsCollectionBaseView" destination="e3T-vt-UD2" id="yMz-yF-9sl"/>
                 <outlet property="statsCollectionView" destination="Cq7-1c-axi" id="42q-6R-LEx"/>
                 <outlet property="statsCollectionViewHeight" destination="eS6-cG-Tyv" id="CIa-0k-01J"/>
+                <outlet property="statsNotFoundLabel" destination="dAB-7h-UFd" id="h7H-v3-ZK0"/>
                 <outlet property="statsTitleArrowImageView" destination="uDx-g6-fq6" id="cZB-vi-4NU"/>
                 <outlet property="statsTitleLabel" destination="voi-2t-pGj" id="A15-dH-AOy"/>
                 <outlet property="statsToggleSeparatorView" destination="j3b-a3-Eag" id="v6e-bd-dhW"/>
@@ -393,14 +394,23 @@
                                                 <constraint firstAttribute="height" constant="1" id="VKe-ov-2Iw"/>
                                             </constraints>
                                         </view>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="There aren't any statistics available for this event." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dAB-7h-UFd">
+                                            <rect key="frame" x="57" y="56.5" width="300" height="34"/>
+                                            <fontDescription key="fontDescription" name="Gilroy-Medium" family="Gilroy" pointSize="17"/>
+                                            <nil key="textColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <color key="backgroundColor" systemColor="systemRedColor"/>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="Cq7-1c-axi" secondAttribute="trailing" id="8PC-7I-l5N"/>
                                         <constraint firstItem="Cq7-1c-axi" firstAttribute="leading" secondItem="e3T-vt-UD2" secondAttribute="leading" id="8eu-xM-cru"/>
+                                        <constraint firstItem="dAB-7h-UFd" firstAttribute="centerY" secondItem="Cq7-1c-axi" secondAttribute="centerY" id="9Vc-Fz-OEV"/>
                                         <constraint firstItem="j3b-a3-Eag" firstAttribute="top" secondItem="e3T-vt-UD2" secondAttribute="top" id="9x2-kO-0dQ"/>
                                         <constraint firstItem="j3b-a3-Eag" firstAttribute="leading" secondItem="e3T-vt-UD2" secondAttribute="leading" id="JwV-jZ-VWG"/>
+                                        <constraint firstItem="dAB-7h-UFd" firstAttribute="centerX" secondItem="Cq7-1c-axi" secondAttribute="centerX" id="Lar-zA-vWx"/>
                                         <constraint firstItem="Cq7-1c-axi" firstAttribute="top" secondItem="e3T-vt-UD2" secondAttribute="top" id="NIf-oh-Bw6"/>
+                                        <constraint firstItem="dAB-7h-UFd" firstAttribute="leading" secondItem="e3T-vt-UD2" secondAttribute="leading" constant="57" id="Z3X-bm-HPl"/>
                                         <constraint firstItem="FNl-xv-eiY" firstAttribute="leading" secondItem="Cq7-1c-axi" secondAttribute="leading" constant="-36" id="eJk-j4-meg"/>
                                         <constraint firstAttribute="height" id="eS6-cG-Tyv"/>
                                         <constraint firstItem="FNl-xv-eiY" firstAttribute="centerY" secondItem="Cq7-1c-axi" secondAttribute="centerY" id="tjk-QA-uEe"/>
@@ -568,7 +578,7 @@
                 <constraint firstItem="jEG-kW-DaM" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="tgb-6V-df0"/>
                 <constraint firstItem="W2u-dp-ZVd" firstAttribute="top" secondItem="fdu-WM-VjI" secondAttribute="bottom" id="zRG-Hv-0tu"/>
             </constraints>
-            <point key="canvasLocation" x="419" y="-11"/>
+            <point key="canvasLocation" x="151" y="-27"/>
         </view>
         <tapGestureRecognizer id="Pcg-xO-JoO">
             <connections>
@@ -588,7 +598,7 @@
         <image name="more_options_icon" width="6" height="22"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.18823529411764706" green="0.36078431372549019" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.63921568627450975" blue="0.85490196078431369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

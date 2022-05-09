@@ -39,7 +39,7 @@ struct TargetVariables: SportsbookTarget {
     }
 
     static var homeTemplateKey: String? {
-        return "dazn"
+        return nil
     }
 
     static var everyMatrixHost: String {

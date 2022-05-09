@@ -38,6 +38,8 @@ class VideoPreviewLineCellViewModel {
 
 class VideoPreviewLineTableViewCell: UITableViewCell {
 
+    var didTapVideoPreviewLineCellAction: ((VideoPreviewCellViewModel) -> Void) = { _ in }
+
     private lazy var baseView: UIView = Self.createBaseView()
     private lazy var collectionView: UICollectionView = Self.createCollectionView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
@@ -132,6 +134,9 @@ extension VideoPreviewLineTableViewCell: UICollectionViewDelegate, UICollectionV
             fatalError()
         }
         cell.configure(withViewModel: viewModel)
+        cell.didTapVideoPreviewCellAction = { [weak self] viewModel in
+            self?.didTapVideoPreviewLineCellAction(viewModel)
+        }
         return cell
     }
 

@@ -103,6 +103,12 @@ class SocialViewController: UIViewController {
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        self.showWorkInProgressAlert()
+    }
+
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -145,8 +151,13 @@ class SocialViewController: UIViewController {
 
     }
 
-    // MARK: Action
+    func showWorkInProgressAlert() {
+        let alert = UIAlertController(title: "WIP", message: "Chat is a Work In Progress and its design only.", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 
+    // MARK: Action
     @objc func didTapNotificationsButton() {
         let notificationsViewController = ChatNotificationsViewController()
 

@@ -12,6 +12,10 @@ class HomeViewController: UIViewController {
 
     // MARK: - Public Properties
     var didTapBetslipButtonAction: (() -> Void)?
+    var didTapExternalVideoAction: ((URL) -> Void) = { _ in }
+
+    var didTapExternalLinkAction: ((URL) -> Void) = { _ in }
+
     var didTapChatButtonAction: (() -> Void)?
     var didSelectMatchAction: ((Match) -> Void)?
     var didSelectActivationAlertAction: ((ActivationAlertType) -> Void)?
@@ -92,7 +96,7 @@ class HomeViewController: UIViewController {
 
         self.showLoading()
 
-        executeDelayed(1.5) {
+        executeDelayed(1.6) {
             self.hideLoading()
         }
     }
@@ -262,14 +266,18 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 switch presentationType {
                 case .image:
                     self?.openBonusView()
-                case .match(id: let matchId):
+                case .match(let matchId):
                     self?.openMatchDetails(matchId: matchId)
-                case .externalMatch(contentId: let matchId, _, _, _):
+                case .externalMatch(let matchId, _, _, _):
                     self?.openMatchDetails(matchId: matchId)
-                case .externalLink(_, linkURLString: let linkURLString):
-                    () // TODO: implement this
-                case .externalStream(_, streamURLString: let streamURLString):
-                    () // TODO: implement this
+                case .externalLink(_, let linkURLString):
+                    if let linkURL =  URL(string: linkURLString) {
+                        self?.didTapExternalLinkAction(linkURL)
+                    }
+                case .externalStream(_, let streamURLString):
+                    if let streamURL =  URL(string: streamURLString) {
+                        self?.didTapExternalVideoAction(streamURL)
+                    }
                 }
             }
             
@@ -394,6 +402,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
                 if let videoPreviewLineCellViewModel = sportMatchLineViewModel.videoPreviewLineCellViewModel() {
                     cell.configure(withViewModel: videoPreviewLineCellViewModel)
+                    cell.didTapVideoPreviewLineCellAction = { [weak self] viewModel in
+                        if let externalStreamURL = viewModel.externalStreamURL {
+                            self?.didTapExternalVideoAction(externalStreamURL)
+                        }
+                    }
                 }
                 return cell
             }

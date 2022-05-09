@@ -207,12 +207,41 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.awayOddTitleLabel.textColor = .white
         self.awayOddValueLabel.textColor = .white
 
-        self.homeBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.drawBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.awayBaseView.backgroundColor =  UIColor(hex: 0x696E83)
-
         self.matchOffuscationView.backgroundColor = UIColor(hex: 0x242830)
         self.matchOffuscationView.alpha = 0.66
+
+        if isLeftOutcomeButtonSelected {
+            self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isMiddleOutcomeButtonSelected {
+            self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isRightOutcomeButtonSelected {
+            self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.textPrimary
+        }
 
         self.setupGradient()
     }
@@ -326,6 +355,9 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
             if market.outcomes.count == 2 {
                 self.awayBaseView.isHidden = true
+            }
+            else {
+                self.awayBaseView.isHidden = false
             }
 
             if let outcome = market.outcomes[safe: 0] {
@@ -445,13 +477,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.homeOddValueLabel.textColor = .white
-        self.homeOddTitleLabel.textColor = .white
+        self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.homeOddValueLabel.textColor = .white
-        self.homeOddTitleLabel.textColor = .white
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapLeftOddButton() {
@@ -478,13 +510,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     func selectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.drawOddValueLabel.textColor = .white
-        self.drawOddTitleLabel.textColor = .white
+        self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.drawOddTitleLabel.textColor = .white
-        self.drawOddValueLabel.textColor = .white
+        self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.drawOddValueLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapMiddleOddButton() {
@@ -510,13 +542,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     func selectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.awayOddValueLabel.textColor = .white
-        self.awayOddTitleLabel.textColor = .white
+        self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.awayOddValueLabel.textColor = .white
-        self.awayOddTitleLabel.textColor = .white
+        self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.awayOddValueLabel.textColor = UIColor.App.textPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapRightOddButton() {

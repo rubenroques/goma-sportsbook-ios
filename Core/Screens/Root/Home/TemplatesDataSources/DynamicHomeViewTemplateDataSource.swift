@@ -403,7 +403,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
 
         guard
             let feedContentType =  self.homeFeedTemplate.feedContents[safe: section],
-            case let .sport(sportId, _, contents) = feedContentType
+            case let .sport(sportId, name, contents) = feedContentType
         else {
             return nil
         }
@@ -412,7 +412,7 @@ extension DynamicHomeViewTemplateDataSource: HomeViewTemplateDataSource {
             return viewModel
         }
         else {
-            let sportGroupViewModel = SportGroupViewModel(sport: Sport(id: sportId), contents: contents, store: self.store)
+            let sportGroupViewModel = SportGroupViewModel(sport: Sport(id: sportId, name: name.capitalized), contents: contents, store: self.store)
             sportGroupViewModel.requestRefreshPublisher
                 .sink { [weak self] _ in
                     self?.refreshPublisher.send()
