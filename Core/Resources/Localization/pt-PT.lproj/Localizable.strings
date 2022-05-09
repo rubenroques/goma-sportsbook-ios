@@ -465,3 +465,10 @@ Terms of use, Privacy Policy and EULA";
 "friend_added_message_error" = "There was an error trying to add the selected friend/s. Try again later.";
 
 "new_message" = "New Message";
+"edit_contact" = "Edit contact";
+"delete" = "Delete";
+"block_contact" = "Block contact";
+"report" = "Report";
+
+"delete_contact" = "Delect Contact";
+"delete_contact_message" = "Are you sure you want to delete this contact?";

@@ -1006,6 +1006,16 @@
 		A9B0589328252FEA0089B0D7 /* SelectFriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589128252FEA0089B0D7 /* SelectFriendTableViewCell.swift */; };
 		A9B05896282531810089B0D7 /* SelectFriendCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B05895282531810089B0D7 /* SelectFriendCellViewModel.swift */; };
 		A9B05897282531810089B0D7 /* SelectFriendCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B05895282531810089B0D7 /* SelectFriendCellViewModel.swift */; };
+		A9B0589A28291D690089B0D7 /* EditContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589928291D690089B0D7 /* EditContactViewController.swift */; };
+		A9B0589B28291D690089B0D7 /* EditContactViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589928291D690089B0D7 /* EditContactViewController.swift */; };
+		A9B0589E2829201B0089B0D7 /* EditContactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589D2829201B0089B0D7 /* EditContactViewModel.swift */; };
+		A9B0589F2829201B0089B0D7 /* EditContactViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B0589D2829201B0089B0D7 /* EditContactViewModel.swift */; };
+		A9B058A128293C250089B0D7 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B058A028293C250089B0D7 /* UserInfoView.swift */; };
+		A9B058A228293C250089B0D7 /* UserInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B058A028293C250089B0D7 /* UserInfoView.swift */; };
+		A9B058A4282974900089B0D7 /* EditGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B058A3282974900089B0D7 /* EditGroupViewController.swift */; };
+		A9B058A5282974900089B0D7 /* EditGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B058A3282974900089B0D7 /* EditGroupViewController.swift */; };
+		A9B058A7282975950089B0D7 /* EditGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B058A6282975950089B0D7 /* EditGroupViewModel.swift */; };
+		A9B058A8282975950089B0D7 /* EditGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B058A6282975950089B0D7 /* EditGroupViewModel.swift */; };
 		A9B8407C26CA789A00269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
 		A9B8407D26CA789A00269B05 /* VersionUpdateViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */; };
 		A9B8407E26CAAEB200269B05 /* VersionUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */; };
@@ -1727,6 +1737,11 @@
 		A9B0588D28252B360089B0D7 /* NewMessageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageViewModel.swift; sourceTree = "<group>"; };
 		A9B0589128252FEA0089B0D7 /* SelectFriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFriendTableViewCell.swift; sourceTree = "<group>"; };
 		A9B05895282531810089B0D7 /* SelectFriendCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectFriendCellViewModel.swift; sourceTree = "<group>"; };
+		A9B0589928291D690089B0D7 /* EditContactViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContactViewController.swift; sourceTree = "<group>"; };
+		A9B0589D2829201B0089B0D7 /* EditContactViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditContactViewModel.swift; sourceTree = "<group>"; };
+		A9B058A028293C250089B0D7 /* UserInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoView.swift; sourceTree = "<group>"; };
+		A9B058A3282974900089B0D7 /* EditGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGroupViewController.swift; sourceTree = "<group>"; };
+		A9B058A6282975950089B0D7 /* EditGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditGroupViewModel.swift; sourceTree = "<group>"; };
 		A9B8407A26CA789A00269B05 /* VersionUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionUpdateViewController.swift; sourceTree = "<group>"; };
 		A9B8407B26CA789A00269B05 /* VersionUpdateViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = VersionUpdateViewController.xib; sourceTree = "<group>"; };
 		A9B8408026CFB49000269B05 /* DateUserLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateUserLocation.swift; sourceTree = "<group>"; };
@@ -2163,6 +2178,7 @@
 		454E090627EB82F200391560 /* Social */ = {
 			isa = PBXGroup;
 			children = (
+				A9B0589828291D4C0089B0D7 /* Edits */,
 				A9B058892825295C0089B0D7 /* NewMessage */,
 				A9BA6D5D281179A700E82724 /* Groups */,
 				A9BA6D4A280ED14100E82724 /* Settings */,
@@ -3462,6 +3478,7 @@
 				A9992FD8280057BB0098854C /* ChatMessageView.swift */,
 				A9992FDF280719310098854C /* TitleView.swift */,
 				A9992FE228071E8C0098854C /* UserActionView.swift */,
+				A9B058A028293C250089B0D7 /* UserInfoView.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -3648,6 +3665,25 @@
 			children = (
 				A9B0588D28252B360089B0D7 /* NewMessageViewModel.swift */,
 				A9B05895282531810089B0D7 /* SelectFriendCellViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		A9B0589828291D4C0089B0D7 /* Edits */ = {
+			isa = PBXGroup;
+			children = (
+				A9B0589C2829200B0089B0D7 /* ViewModels */,
+				A9B0589928291D690089B0D7 /* EditContactViewController.swift */,
+				A9B058A3282974900089B0D7 /* EditGroupViewController.swift */,
+			);
+			path = Edits;
+			sourceTree = "<group>";
+		};
+		A9B0589C2829200B0089B0D7 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A9B0589D2829201B0089B0D7 /* EditContactViewModel.swift */,
+				A9B058A6282975950089B0D7 /* EditGroupViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -4571,6 +4607,7 @@
 			files = (
 				A995C195279991A100151462 /* SearchViewController.swift in Sources */,
 				457F4972273804810047169D /* BetslipHistory.swift in Sources */,
+				A9B058A4282974900089B0D7 /* EditGroupViewController.swift in Sources */,
 				45D9CBE1270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E091827F223DB00391560 /* HeaderDropDownSelectionView.swift in Sources */,
 				454E0AB62732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
@@ -4591,6 +4628,7 @@
 				452047BA27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				A99F7A0F27D11704008BAF41 /* BonusHistoryDataSource.swift in Sources */,
 				A9A2E7E927F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
+				A9B0589E2829201B0089B0D7 /* EditContactViewModel.swift in Sources */,
 				45166D0126F3548D00E69D65 /* RegisterSSWampMessage.swift in Sources */,
 				A979CA562762247900230E93 /* SuggestedBetSummary.swift in Sources */,
 				45166D2826F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
@@ -4624,6 +4662,7 @@
 				A9A2E7E627F5ED1F00D35A9D /* DepositViewModel.swift in Sources */,
 				45B7DADF26F92CE40032C1C3 /* UserSession.swift in Sources */,
 				45936CB0270EEFA200E8260E /* LoadableContent.swift in Sources */,
+				A9B0589A28291D690089B0D7 /* EditContactViewController.swift in Sources */,
 				45EF543B270C664100D1E13E /* CollapsibleView.swift in Sources */,
 				454E091427EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				45B0BD31271EED6C009C41FA /* CompetitionSectionViewModel.swift in Sources */,
@@ -4680,6 +4719,7 @@
 				454E0A912732A78B00794E0C /* BetslipManager.swift in Sources */,
 				45E5190C270C8B570052794F /* Color+Extensions.swift in Sources */,
 				A99A970B26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
+				A9B058A7282975950089B0D7 /* EditGroupViewModel.swift in Sources */,
 				45166CE326F3548D00E69D65 /* TSRouter.swift in Sources */,
 				455A0D0226BD9D9000EC572D /* UILabel+Extensions.swift in Sources */,
 				4589F3F726BF017A005DF543 /* WelcomeViewController.swift in Sources */,
@@ -4708,6 +4748,7 @@
 				45166CEB26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				A96B619F27AC0642005DC376 /* URLSchemaManager.swift in Sources */,
 				4532213F280F01410092CCB4 /* TransactionsHistoryViewModel.swift in Sources */,
+				A9B058A128293C250089B0D7 /* UserInfoView.swift in Sources */,
 				45A2898626C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0726F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,
 				A99A972226FE16D500F8D163 /* FullRegisterAddressCountryViewController.swift in Sources */,
@@ -5045,6 +5086,7 @@
 			files = (
 				A995C196279991A100151462 /* SearchViewController.swift in Sources */,
 				457F4973273804810047169D /* BetslipHistory.swift in Sources */,
+				A9B058A5282974900089B0D7 /* EditGroupViewController.swift in Sources */,
 				45D9CBE2270F3C8400B8C321 /* AppSession.swift in Sources */,
 				454E091927F223DB00391560 /* HeaderDropDownSelectionView.swift in Sources */,
 				454E0AB72732C58D00794E0C /* TabularViewDataSource.swift in Sources */,
@@ -5065,6 +5107,7 @@
 				A9BCF435274D1A77006DD528 /* MatchDetailsViewController.swift in Sources */,
 				452047BB27036D3900B277B5 /* SplashViewController.swift in Sources */,
 				A9A2E7EA27F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift in Sources */,
+				A9B0589F2829201B0089B0D7 /* EditContactViewModel.swift in Sources */,
 				A99F7A1027D11704008BAF41 /* BonusHistoryDataSource.swift in Sources */,
 				45166D2926F3836D00E69D65 /* Bundle+Extensions.swift in Sources */,
 				A979CA572762247900230E93 /* SuggestedBetSummary.swift in Sources */,
@@ -5098,6 +5141,7 @@
 				A9A2E7E727F5ED1F00D35A9D /* DepositViewModel.swift in Sources */,
 				A92F5D99272C410400884BDF /* DocumentPickerView.swift in Sources */,
 				455A0D0126BD9D9000EC572D /* NSAttributedString+Extensions.swift in Sources */,
+				A9B0589B28291D690089B0D7 /* EditContactViewController.swift in Sources */,
 				45B7DAE026F92CE40032C1C3 /* UserSession.swift in Sources */,
 				454E091327EDF45300391560 /* OutrightCompetitionLargeWidgetCollectionViewCell.swift in Sources */,
 				45936CB1270EEFA200E8260E /* LoadableContent.swift in Sources */,
@@ -5154,6 +5198,7 @@
 				F476CD1027C553F60042B7ED /* HistoryViewController.swift in Sources */,
 				457816B62707631000F66878 /* TournamentTableViewHeader.swift in Sources */,
 				454E0A922732A78B00794E0C /* BetslipManager.swift in Sources */,
+				A9B058A8282975950089B0D7 /* EditGroupViewModel.swift in Sources */,
 				45E5190D270C8B570052794F /* Color+Extensions.swift in Sources */,
 				A99A970C26FB30EE00F8D163 /* ProfileLimitsManagementViewController.swift in Sources */,
 				45166CE426F3548D00E69D65 /* TSRouter.swift in Sources */,
@@ -5182,6 +5227,7 @@
 				454E0AD52735709E00794E0C /* BettingTicket.swift in Sources */,
 				45166CEC26F3548D00E69D65 /* SSWampMessages.swift in Sources */,
 				45322140280F01410092CCB4 /* TransactionsHistoryViewModel.swift in Sources */,
+				A9B058A228293C250089B0D7 /* UserInfoView.swift in Sources */,
 				A96B61A027AC0642005DC376 /* URLSchemaManager.swift in Sources */,
 				45A2898726C418F700BCD5DA /* NetworkError.swift in Sources */,
 				45166D0826F3548D00E69D65 /* ResultSSWampMessage.swift in Sources */,

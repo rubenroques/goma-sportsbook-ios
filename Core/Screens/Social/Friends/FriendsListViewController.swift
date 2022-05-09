@@ -151,6 +151,10 @@ class FriendsListViewController: UIViewController {
 
     }
 
+    func needsRefetchData() {
+        self.viewModel.refetchConversations()
+    }
+
     // MARK: Actions
     @objc func didTapBackground() {
         self.searchBar.resignFirstResponder()

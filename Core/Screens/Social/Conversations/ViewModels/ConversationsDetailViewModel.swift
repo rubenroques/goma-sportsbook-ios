@@ -77,6 +77,10 @@ class ConversationDetailViewModel: NSObject {
         }
     }
 
+    func getConversationData() -> ConversationData {
+        return self.conversationData
+    }
+
     private func getGroupInitials(text: String) -> String {
         var initials = ""
 

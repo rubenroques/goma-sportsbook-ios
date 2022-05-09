@@ -90,6 +90,14 @@ class FriendsListViewModel {
             })
             .store(in: &cancellables)
     }
+
+    func refetchConversations() {
+        self.initialFriends = []
+
+        self.friendsPublisher.value = []
+
+        self.getFriends()
+    }
 }
 
 extension FriendsListViewModel {

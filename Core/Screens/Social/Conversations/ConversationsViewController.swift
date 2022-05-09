@@ -40,6 +40,8 @@ class ConversationsViewController: UIViewController {
         }
     }
 
+    var reloadFriendsData: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationsViewModel = ConversationsViewModel()) {
         self.viewModel = viewModel
@@ -150,6 +152,11 @@ class ConversationsViewController: UIViewController {
         let conversationDetailViewModel = ConversationDetailViewModel(conversationData: conversationData)
 
         let conversationDetailViewController = ConversationDetailViewController(viewModel: conversationDetailViewModel)
+
+        conversationDetailViewController.shouldCloseChat = { [weak self] in
+            self?.needsRefetchData()
+            self?.reloadFriendsData?()
+        }
 
         self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
     }

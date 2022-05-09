@@ -98,6 +98,11 @@ class ConversationsViewModel {
     private func setupIndividualChatroomData(chatroomData: ChatroomData) {
         var loggedUsername = ""
         var chatroomName = ""
+        var chatroomUsers: [GomaFriend] = []
+
+        for user in chatroomData.users {
+            chatroomUsers.append(user)
+        }
 
         for user in chatroomData.users {
             if let loggedUser = UserSessionStore.loggedUserSession() {
@@ -117,7 +122,8 @@ class ConversationsViewModel {
                                                 lastMessage: "I won the bet! Whoo!",
                                                 date: "10:15",
                                                 lastMessageUser: loggedUsername,
-                                                isLastMessageSeen: false)
+                                                isLastMessageSeen: false, groupUsers: chatroomUsers)
+
         self.conversationsPublisher.value.append(conversationData)
     }
 

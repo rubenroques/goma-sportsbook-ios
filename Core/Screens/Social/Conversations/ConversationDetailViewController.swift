@@ -45,6 +45,9 @@ class ConversationDetailViewController: UIViewController {
         }
     }
 
+    // MARK: Public Properties
+    var shouldCloseChat: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationDetailViewModel) {
         self.viewModel = viewModel
@@ -77,6 +80,9 @@ class ConversationDetailViewController: UIViewController {
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
+
+        let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
+        self.navigationView.addGestureRecognizer(contactTapGesture)
 
         if self.viewModel.isChatOnline {
             self.iconStateView.isHidden = false
@@ -227,6 +233,39 @@ class ConversationDetailViewController: UIViewController {
         self.resignFirstResponder()
 
         self.messageInputView.resignFirstResponder()
+    }
+
+    @objc func didTapContactInfo() {
+        if self.isChatGroup {
+            print("CHAT GROUP")
+
+            let conversationData = self.viewModel.getConversationData()
+
+            let editGroupViewModel = EditGroupViewModel(conversationData: conversationData)
+
+            let editContactViewController = EditGroupViewController(viewModel: editGroupViewModel)
+
+            editContactViewController.shouldCloseChat = { [weak self] in
+                self?.shouldCloseChat?()
+            }
+
+            self.navigationController?.pushViewController(editContactViewController, animated: true)
+        }
+        else {
+            print("CONTACT INDIVIDUAL")
+
+            let conversationData = self.viewModel.getConversationData()
+
+            let editContactViewModel = EditContactViewModel(conversationData: conversationData)
+
+            let editContactViewController = EditContactViewController(viewModel: editContactViewModel)
+
+            editContactViewController.shouldCloseChat = { [weak self] in
+                self?.shouldCloseChat?()
+            }
+
+            self.navigationController?.pushViewController(editContactViewController, animated: true)
+        }
     }
 
     @objc func keyboardWillShow(notification: NSNotification) {

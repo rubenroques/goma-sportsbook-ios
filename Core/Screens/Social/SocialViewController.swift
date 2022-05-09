@@ -105,6 +105,10 @@ class SocialViewController: UIViewController {
         self.friendsListViewController.reloadConversationsData = { [weak self] in
             self?.conversationsViewController.needsRefetchData()
         }
+
+        self.conversationsViewController.reloadFriendsData = { [weak self] in
+            self?.friendsListViewController.needsRefetchData()
+        }
     }
 
     // MARK: - Layout and Theme
