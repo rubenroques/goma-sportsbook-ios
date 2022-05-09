@@ -63,7 +63,7 @@ class RootViewController: UIViewController {
 
     //
     let activeButtonAlpha = 1.0
-    let idleButtonAlpha = 0.3
+    let idleButtonAlpha = 0.52
 
     //
     // Child view controllers
