@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class HistoryRootViewController : UIViewController {
+class HistoryRootViewController: UIViewController {
 
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationBaseView: UIView = Self.createNavigationView()

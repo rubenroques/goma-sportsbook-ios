@@ -53,110 +53,13 @@ class RootViewController: UIViewController {
 
     //
     //
-    private lazy var overlayWindow: UIWindow = {
-        var overlayWindow: UIWindow = UIWindow(frame: UIScreen.main.bounds)
+    private var pictureInPictureView: PictureInPictureView?
+
+    private lazy var overlayWindow: PassthroughWindow = {
+        var overlayWindow: PassthroughWindow = PassthroughWindow(frame: UIScreen.main.bounds)
         overlayWindow.windowLevel = .alert
         return overlayWindow
     }()
-
-    private lazy var pictureInPictureBackgroundView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.black.withAlphaComponent(0.9)
-
-        let tipLabel = UILabel()
-        tipLabel.translatesAutoresizingMaskIntoConstraints = false
-        tipLabel.font = AppFont.with(type: .medium, size: 13)
-        tipLabel.alpha = 0.5
-        tipLabel.textAlignment = .center
-        tipLabel.textColor = .white
-        tipLabel.text = "Drag video for Miniplayer"
-        view.addSubview(tipLabel)
-
-        let imageView = UIImageView.init(image: UIImage(systemName: "multiply.circle"))
-        imageView.isUserInteractionEnabled = true
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .white
-        view.addSubview(imageView)
-
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureCloseView))
-        imageView.addGestureRecognizer(tapGesture)
-
-        view.addSubview(imageView)
-        NSLayoutConstraint.activate([
-            imageView.widthAnchor.constraint(equalToConstant: 45),
-            imageView.heightAnchor.constraint(equalToConstant: 45),
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-
-            tipLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            tipLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 12),
-            tipLabel.bottomAnchor.constraint(equalTo: imageView.topAnchor, constant: -24)
-        ])
-
-        return view
-    }()
-
-    private lazy var pictureInPictureView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .black
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 10
-        return view
-    }()
-
-    private var pictureInPictureWebView: WKWebView?
-
-    private lazy var pictureInPictureCloseView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.buttonActiveHoverSecondary
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 8
-
-        let imageView = UIImageView.init(image: UIImage(systemName: "multiply"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .white
-        view.addSubview(imageView, anchors: [LayoutAnchor.centerX(0), LayoutAnchor.centerY(0), LayoutAnchor.width(17), LayoutAnchor.height(17)])
-
-        return view
-    }()
-
-    private lazy var pictureInPictureExpandView: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = UIColor.App.buttonActiveHoverSecondary
-        view.clipsToBounds = true
-        view.layer.cornerRadius = 8
-
-        let imageView = UIImageView.init(image: UIImage(systemName: "arrow.up.left.and.arrow.down.right.circle"))
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .white
-        view.addSubview(imageView, anchors: [LayoutAnchor.centerX(0), LayoutAnchor.centerY(0), LayoutAnchor.width(17), LayoutAnchor.height(17)])
-
-        return view
-    }()
-
-    private var initialMovementOffset: CGPoint = .zero
-    private var latestCenterPosition: CGPoint?
-
-    private var pictureInPictureViewWidthConstraint: NSLayoutConstraint?
-    private var pictureInPictureViewHeightConstraint: NSLayoutConstraint?
-
-    private let pictureInPictureViewWidth: CGFloat = 192
-    private let pictureInPictureViewHeight: CGFloat = 108
-
-    private let horizontalSpacing: CGFloat = 20
-    private let verticalSpacing: CGFloat = 20
-
-    private var pictureInPicturePositionViews = [UIView]()
-    private var pictureInPicturePositions: [CGPoint] {
-        return pictureInPicturePositionViews.map { $0.center }
-    }
 
     //
     let activeButtonAlpha = 1.0
@@ -237,8 +140,12 @@ class RootViewController: UIViewController {
         self.loadChildViewControllerIfNeeded(tab: self.selectedTabItem)
 
         //
-        self.configurePictureInPictureView()
+        // self.pictureInPictureView = PictureInPictureView()
+        // self.overlayWindow.addSubview(self.pictureInPictureView!, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)] )
 
+        // self.overlayWindow.isHidden = false // .makeKeyAndVisible()
+
+        //
         self.setupWithTheme()
 
         Env.userSessionStore.userSessionPublisher
@@ -342,7 +249,7 @@ class RootViewController: UIViewController {
         self.profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
         self.profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
         self.profilePictureImageView.layer.borderWidth = 1
-        self.profilePictureImageView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
+        self.profilePictureImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
         
         self.profilePictureImageView.layer.masksToBounds = true
 
@@ -352,26 +259,11 @@ class RootViewController: UIViewController {
 
         self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
         self.accountPlusView.layer.masksToBounds = true
-
-        self.pictureInPictureView.center = self.latestCenterPosition ?? self.view.center // (pictureInPicturePositions.last ?? .zero)
     }
 
     func commonInit() {
 
-        switch self.selectedTabItem {
-        case .home:
-            homeButtonBaseView.alpha = self.activeButtonAlpha
-            sportsButtonBaseView.alpha = self.idleButtonAlpha
-            liveButtonBaseView.alpha = self.idleButtonAlpha
-        case .preLive:
-            homeButtonBaseView.alpha = self.idleButtonAlpha
-            sportsButtonBaseView.alpha = self.activeButtonAlpha
-            liveButtonBaseView.alpha = self.idleButtonAlpha
-        case .live:
-            homeButtonBaseView.alpha = self.idleButtonAlpha
-            sportsButtonBaseView.alpha = self.idleButtonAlpha
-            liveButtonBaseView.alpha = self.activeButtonAlpha
-        }
+        self.redrawButtonButtons()
 
         if let image = self.logoImageView.image {
             let ratio = image.size.height / image.size.width
@@ -413,52 +305,53 @@ class RootViewController: UIViewController {
 
     func setupWithTheme() {
 
-        homeBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        homeTitleLabel.textColor = UIColor.App.highlightPrimary
-        liveTitleLabel.textColor = UIColor.App.highlightPrimary
-        sportsTitleLabel.textColor = UIColor.App.highlightPrimary
+        self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
+        self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
+        self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
 
-        sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
-        liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        self.sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        self.homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        self.liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
 
-        topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        topBarView.backgroundColor = UIColor.App.backgroundPrimary
-        contentView.backgroundColor = UIColor.App.backgroundPrimary
-        tabBarView.backgroundColor = UIColor.App.backgroundPrimary
-        bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tabBarView.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
 
-        tabBarView.layer.shadowRadius = 20
-        tabBarView.layer.shadowOffset = .zero
-        tabBarView.layer.shadowColor = UIColor.black.cgColor
-        tabBarView.layer.shadowOpacity = 0.25
+        self.tabBarView.layer.shadowRadius = 20
+        self.tabBarView.layer.shadowOffset = .zero
+        self.tabBarView.layer.shadowColor = UIColor.black.cgColor
+        self.tabBarView.layer.shadowOpacity = 0.25
 
-        topBarView.layer.shadowRadius = 20
-        topBarView.layer.shadowOffset = .zero
-        topBarView.layer.shadowColor = UIColor.black.cgColor
-        topBarView.layer.shadowOpacity = 0.25
+        self.topBarView.layer.shadowRadius = 20
+        self.topBarView.layer.shadowOffset = .zero
+        self.topBarView.layer.shadowColor = UIColor.black.cgColor
+        self.topBarView.layer.shadowOpacity = 0.25
 
-        homeButtonBaseView.backgroundColor = .clear
-        sportsButtonBaseView.backgroundColor = .clear
-        liveButtonBaseView.backgroundColor = .clear
+        self.homeButtonBaseView.backgroundColor = .clear
+        self.sportsButtonBaseView.backgroundColor = .clear
+        self.liveButtonBaseView.backgroundColor = .clear
 
-        profilePictureBaseView.backgroundColor = UIColor.App.highlightSecondary
+        self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
-        loginButton.layer.cornerRadius = CornerRadius.view
-        loginButton.layer.masksToBounds = true
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
+        self.loginButton.layer.cornerRadius = CornerRadius.view
+        self.loginButton.layer.masksToBounds = true
 
-        accountValueView.backgroundColor = UIColor.App.backgroundSecondary
-        accountValueLabel.textColor = UIColor.App.textPrimary
-        accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
+        self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValueLabel.textColor = UIColor.App.textPrimary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
+        self.redrawButtonButtons()
     }
 
     func setupWithState(_ state: ScreenState) {
@@ -547,282 +440,14 @@ class RootViewController: UIViewController {
 
     @objc func didTapLogoImageView() {
 
-
     }
+    
 }
 
 extension RootViewController {
 
-    private func configurePictureInPictureView() {
-
-        // guard let mainWindow = UIApplication.shared.keyWindow else { return }
-
-        let topLeftView = pictureInPictureCornerView()
-        topLeftView.isUserInteractionEnabled = false
-        self.view.addSubview(topLeftView)
-        self.view.sendSubviewToBack(topLeftView)
-        self.pictureInPicturePositionViews.append(topLeftView)
-        topLeftView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalSpacing).isActive = true
-        topLeftView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalSpacing).isActive = true
-
-        let topRightView = pictureInPictureCornerView()
-        topRightView.isUserInteractionEnabled = false
-        self.view.addSubview(topRightView)
-        self.view.sendSubviewToBack(topRightView)
-        self.pictureInPicturePositionViews.append(topRightView)
-        topRightView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalSpacing).isActive = true
-        topRightView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: verticalSpacing).isActive = true
-
-        let bottomLeftView = pictureInPictureCornerView()
-        bottomLeftView.isUserInteractionEnabled = false
-        self.view.addSubview(bottomLeftView)
-        self.view.sendSubviewToBack(bottomLeftView)
-        self.pictureInPicturePositionViews.append(bottomLeftView)
-        bottomLeftView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: horizontalSpacing).isActive = true
-        bottomLeftView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -verticalSpacing).isActive = true
-
-        let bottomRightView = pictureInPictureCornerView()
-        bottomRightView.isUserInteractionEnabled = false
-        self.view.addSubview(bottomRightView)
-        self.view.sendSubviewToBack(bottomRightView)
-        self.pictureInPicturePositionViews.append(bottomRightView)
-        bottomRightView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -horizontalSpacing).isActive = true
-        bottomRightView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -verticalSpacing).isActive = true
-
-        self.view.addSubview(self.pictureInPictureBackgroundView)
-
-        NSLayoutConstraint.activate([
-            self.pictureInPictureBackgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.pictureInPictureBackgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.pictureInPictureBackgroundView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            self.pictureInPictureBackgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
-        ])
-
-        //
-        let closeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureCloseView))
-        closeTapGestureRecognizer.numberOfTapsRequired = 1
-        self.pictureInPictureCloseView.addGestureRecognizer(closeTapGestureRecognizer)
-
-        self.pictureInPictureView.addSubview(self.pictureInPictureCloseView)
-        NSLayoutConstraint.activate([
-            self.pictureInPictureCloseView.leadingAnchor.constraint(equalTo: self.pictureInPictureView.leadingAnchor, constant: 6),
-            self.pictureInPictureCloseView.topAnchor.constraint(equalTo: self.pictureInPictureView.topAnchor, constant: 7),
-            self.pictureInPictureCloseView.widthAnchor.constraint(equalToConstant: 30),
-            self.pictureInPictureCloseView.heightAnchor.constraint(equalToConstant: 26),
-        ])
-
-        //
-
-        let expandTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureExpandView))
-        expandTapGestureRecognizer.numberOfTapsRequired = 1
-        self.pictureInPictureExpandView.addGestureRecognizer(expandTapGestureRecognizer)
-
-        self.pictureInPictureView.addSubview(self.pictureInPictureExpandView)
-        NSLayoutConstraint.activate([
-            self.pictureInPictureExpandView.trailingAnchor.constraint(equalTo: self.pictureInPictureView.trailingAnchor, constant: -6),
-            self.pictureInPictureExpandView.bottomAnchor.constraint(equalTo: self.pictureInPictureView.bottomAnchor, constant: -7),
-            self.pictureInPictureExpandView.widthAnchor.constraint(equalToConstant: 30),
-            self.pictureInPictureExpandView.heightAnchor.constraint(equalToConstant: 26),
-        ])
-
-        //
-        self.view.addSubview(self.pictureInPictureView)
-        self.pictureInPictureViewWidthConstraint = self.pictureInPictureView.widthAnchor.constraint(equalToConstant: pictureInPictureViewWidth)
-        self.pictureInPictureViewWidthConstraint?.isActive = true
-        self.pictureInPictureViewHeightConstraint = self.pictureInPictureView.heightAnchor.constraint(equalToConstant: pictureInPictureViewHeight)
-        self.pictureInPictureViewHeightConstraint?.isActive = true
-
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.didTapPictureInPictureView))
-        tapGestureRecognizer.numberOfTapsRequired = 2
-        pictureInPictureView.addGestureRecognizer(tapGestureRecognizer)
-
-        let panRecognizer = UIPanGestureRecognizer()
-        panRecognizer.addTarget(self, action: #selector(pictureInPicturePanned(recognizer:)))
-        pictureInPictureView.addGestureRecognizer(panRecognizer)
-
-        // Prepare initial state
-        self.pictureInPictureBackgroundView.alpha = 0.0
-        self.pictureInPictureView.alpha = 0.0
-
-        self.pictureInPictureCloseView.alpha = 0.0
-        self.pictureInPictureExpandView.alpha = 0.0
-
-    }
-
-    private func pictureInPictureCornerView() -> UIView {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        view.widthAnchor.constraint(equalToConstant: pictureInPictureViewWidth).isActive = true
-        view.heightAnchor.constraint(equalToConstant: pictureInPictureViewHeight).isActive = true
-        return view
-    }
-
-    @objc private func pictureInPicturePanned(recognizer: UIPanGestureRecognizer) {
-        let touchPoint = recognizer.location(in: view)
-        switch recognizer.state {
-        case .began:
-            initialMovementOffset = CGPoint(x: touchPoint.x - pictureInPictureView.center.x, y: touchPoint.y - pictureInPictureView.center.y)
-
-            UIView.animate(withDuration: 0.20) {
-                self.pictureInPictureCloseView.alpha = 1.0
-                self.pictureInPictureExpandView.alpha = 1.0
-
-                self.pictureInPictureBackgroundView.alpha = 0.0
-
-                self.pictureInPictureViewWidthConstraint?.constant = self.pictureInPictureViewWidth
-                self.pictureInPictureViewHeightConstraint?.constant = self.pictureInPictureViewHeight
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-            }
-
-        case .changed:
-            pictureInPictureView.center = CGPoint(x: touchPoint.x - initialMovementOffset.x, y: touchPoint.y - initialMovementOffset.y)
-        case .ended, .cancelled:
-            let decelerationRate = UIScrollView.DecelerationRate.normal.rawValue
-            let velocity = recognizer.velocity(in: view)
-            let projectedPosition = CGPoint(
-                x: pictureInPictureView.center.x + project(initialVelocity: velocity.x, decelerationRate: decelerationRate),
-                y: pictureInPictureView.center.y + project(initialVelocity: velocity.y, decelerationRate: decelerationRate)
-            )
-            let nearestCornerPosition = nearestCorner(to: projectedPosition)
-            let relativeInitialVelocity = CGVector(
-                dx: relativeVelocity(forVelocity: velocity.x, from: pictureInPictureView.center.x, to: nearestCornerPosition.x),
-                dy: relativeVelocity(forVelocity: velocity.y, from: pictureInPictureView.center.y, to: nearestCornerPosition.y)
-            )
-            
-            let timingParameters = UISpringTimingParameters(dampingRatio: 1, initialVelocity: relativeInitialVelocity)
-            let animator = UIViewPropertyAnimator(duration: 0, timingParameters: timingParameters)
-            animator.addAnimations {
-                self.pictureInPictureView.center = nearestCornerPosition
-            }
-            animator.startAnimation()
-
-            self.latestCenterPosition = nearestCornerPosition
-
-        default: break
-        }
-    }
-
-    // Distance traveled after decelerating to zero velocity at a constant rate.
-    private func project(initialVelocity: CGFloat, decelerationRate: CGFloat) -> CGFloat {
-        return (initialVelocity / 1000) * decelerationRate / (1 - decelerationRate)
-    }
-
-    // Finds the position of the nearest corner to the given point.
-    private func nearestCorner(to point: CGPoint) -> CGPoint {
-        var minDistance = CGFloat.greatestFiniteMagnitude
-        var closestPosition = CGPoint.zero
-        for position in pictureInPicturePositions {
-            let distance = point.distance(to: position)
-            if distance < minDistance {
-                closestPosition = position
-                minDistance = distance
-            }
-        }
-        return closestPosition
-    }
-
-    // Calculates the relative velocity needed for the initial velocity of the animation.
-    private func relativeVelocity(forVelocity velocity: CGFloat, from currentValue: CGFloat, to targetValue: CGFloat) -> CGFloat {
-        guard currentValue - targetValue != 0 else { return 0 }
-        return velocity / (targetValue - currentValue)
-    }
-
-    @objc private func didTapPictureInPictureCloseView() {
-        self.hidePictureInPicture()
-    }
-
-    @objc private func didTapPictureInPictureExpandView() {
-        self.expandPictureInPicture()
-    }
-
-    @objc private func didTapPictureInPictureView() {
-        self.hidePictureInPicture()
-    }
-
     private func openExternalVideo(fromURL url: URL) {
-
-        self.pictureInPictureWebView?.removeFromSuperview()
-        self.pictureInPictureWebView = nil
-
-        let configuration = WKWebViewConfiguration()
-        configuration.allowsInlineMediaPlayback = true
-        configuration.mediaTypesRequiringUserActionForPlayback = []
-
-        self.pictureInPictureWebView = WKWebView(frame: .zero, configuration: configuration)
-        self.pictureInPictureWebView!.translatesAutoresizingMaskIntoConstraints = false
-
-        // let request = URLRequest(url: URL(string: "https://drive.google.com/file/d/1sNeBr2dsgI0Smo9YEjc7-RWDEZI8zu2v/view?usp=sharing")!)
-        // let request = URLRequest(url: URL(string: "https://dl.dropboxusercontent.com/s/0nad0lmrba04ilc/autop.mp4?playsinline=1")!)
-        let request = URLRequest(url: url)
-        self.pictureInPictureWebView!.load(request)
-
-        self.pictureInPictureView.addSubview(self.pictureInPictureWebView!)
-
-        NSLayoutConstraint.activate([
-            self.pictureInPictureWebView!.leadingAnchor.constraint(equalTo: self.pictureInPictureView.leadingAnchor),
-            self.pictureInPictureWebView!.trailingAnchor.constraint(equalTo: self.pictureInPictureView.trailingAnchor),
-            self.pictureInPictureWebView!.bottomAnchor.constraint(equalTo: self.pictureInPictureView.bottomAnchor),
-            self.pictureInPictureWebView!.topAnchor.constraint(equalTo: self.pictureInPictureView.topAnchor),
-        ])
-
-        self.pictureInPictureView.bringSubviewToFront(self.pictureInPictureCloseView)
-        self.pictureInPictureView.bringSubviewToFront(self.pictureInPictureExpandView)
-
-        self.expandPictureInPicture()
-
-        self.showPictureInPicture()
-    }
-
-    private func expandPictureInPicture() {
-
-        UIView.animate(withDuration: 0.45) {
-
-            self.latestCenterPosition = self.view.center
-            self.pictureInPictureView.center = self.view.center
-
-            self.pictureInPictureBackgroundView.alpha = 1.0
-
-            self.pictureInPictureCloseView.alpha = 0.0
-            self.pictureInPictureExpandView.alpha = 0.0
-
-            let width = self.view.frame.size.width - 20
-            let height = width * (9/16)
-
-            self.pictureInPictureViewWidthConstraint?.constant = width
-            self.pictureInPictureViewHeightConstraint?.constant = height
-
-            self.view.setNeedsLayout()
-            self.view.layoutIfNeeded()
-        }
-    }
-
-    private func hidePictureInPicture() {
-
-        UIView.animate(withDuration: 0.35) {
-            self.pictureInPictureView.alpha = 0.0
-        }
-        completion: { _ in
-            self.pictureInPictureWebView?.removeFromSuperview()
-            self.pictureInPictureWebView = nil
-        }
-
-        UIView.animate(withDuration: 0.3) {
-            self.pictureInPictureBackgroundView.alpha = 0.0
-        }
-
-    }
-
-    func showPictureInPicture() {
-
-        UIView.animate(withDuration: 0.35) {
-            self.pictureInPictureView.alpha = 1.0
-        }
-
-        UIView.animate(withDuration: 0.3) {
-            self.pictureInPictureBackgroundView.alpha = 1.0
-        }
-
+        self.pictureInPictureView?.playVideo(fromURL: url)
     }
 
 }
@@ -906,7 +531,6 @@ extension RootViewController {
 
 extension RootViewController {
 
-    // TODO: Not implemented on the flow
     @IBAction private func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
@@ -1050,9 +674,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = true
 
-        homeButtonBaseView.alpha = self.activeButtonAlpha
-        sportsButtonBaseView.alpha = self.idleButtonAlpha
-        liveButtonBaseView.alpha = self.idleButtonAlpha
+        self.redrawButtonButtons()
     }
 
     func selectSportsTabBarItem() {
@@ -1062,9 +684,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = false
         self.liveBaseView.isHidden = true
 
-        homeButtonBaseView.alpha = self.idleButtonAlpha
-        sportsButtonBaseView.alpha = self.activeButtonAlpha
-        liveButtonBaseView.alpha = self.idleButtonAlpha
+        self.redrawButtonButtons()
     }
 
     func selectLiveTabBarItem() {
@@ -1074,9 +694,50 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = false
 
-        homeButtonBaseView.alpha = self.idleButtonAlpha
-        sportsButtonBaseView.alpha = self.idleButtonAlpha
-        liveButtonBaseView.alpha = self.activeButtonAlpha
+        self.redrawButtonButtons()
+
+    }
+
+    func redrawButtonButtons() {
+
+        switch self.selectedTabItem {
+        case .home:
+            homeButtonBaseView.alpha = self.activeButtonAlpha
+            sportsButtonBaseView.alpha = self.idleButtonAlpha
+            liveButtonBaseView.alpha = self.idleButtonAlpha
+
+            homeTitleLabel.textColor = UIColor.App.highlightPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            sportsTitleLabel.textColor = UIColor.App.textPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            liveTitleLabel.textColor = UIColor.App.textPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+
+        case .preLive:
+            homeButtonBaseView.alpha = self.idleButtonAlpha
+            sportsButtonBaseView.alpha = self.activeButtonAlpha
+            liveButtonBaseView.alpha = self.idleButtonAlpha
+
+            homeTitleLabel.textColor = UIColor.App.textPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            sportsTitleLabel.textColor = UIColor.App.highlightPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            liveTitleLabel.textColor = UIColor.App.textPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+
+        case .live:
+            homeButtonBaseView.alpha = self.idleButtonAlpha
+            sportsButtonBaseView.alpha = self.idleButtonAlpha
+            liveButtonBaseView.alpha = self.activeButtonAlpha
+
+            homeTitleLabel.textColor = UIColor.App.textPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            sportsTitleLabel.textColor = UIColor.App.textPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            liveTitleLabel.textColor = UIColor.App.highlightPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        }
+
     }
 
 }

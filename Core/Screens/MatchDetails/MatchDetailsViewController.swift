@@ -419,7 +419,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
-        self.accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
         // Market List CollectionView
         self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary

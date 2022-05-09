@@ -119,6 +119,10 @@
 		451E1F6D2825636F000E957B /* InternalBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */; };
 		451E1F6E2825636F000E957B /* InternalBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */; };
 		451E1F6F2825636F000E957B /* InternalBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */; };
+		451E1F7128290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
+		451E1F7228290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
+		451E1F7328290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
+		451E1F7428290DE2000E957B /* PictureInPictureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 451E1F7028290DE2000E957B /* PictureInPictureView.swift */; };
 		452047AD2703597500B277B5 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 452047AC2703597500B277B5 /* FirebaseAnalytics */; };
 		452047AF2703597500B277B5 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 452047AE2703597500B277B5 /* FirebaseAuth */; };
 		452047B12703597500B277B5 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 452047B02703597500B277B5 /* FirebaseCrashlytics */; };
@@ -2515,6 +2519,7 @@
 		45166CDC26F3548D00E69D65 /* TSManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TSManager.swift; sourceTree = "<group>"; };
 		45166D2726F3836D00E69D65 /* Bundle+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+Extensions.swift"; sourceTree = "<group>"; };
 		451E1F6B2825636F000E957B /* InternalBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternalBrowserViewController.swift; sourceTree = "<group>"; };
+		451E1F7028290DE2000E957B /* PictureInPictureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureInPictureView.swift; sourceTree = "<group>"; };
 		4520365A26EF9B7F000BCFA6 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = SOURCE_ROOT; };
 		452047B52703656300B277B5 /* EventsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsStore.swift; sourceTree = "<group>"; };
 		452047B827036D3900B277B5 /* SplashViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashViewController.swift; sourceTree = "<group>"; };
@@ -3847,6 +3852,7 @@
 		455C962526FE11B300456F30 /* Root */ = {
 			isa = PBXGroup;
 			children = (
+				451E1F7028290DE2000E957B /* PictureInPictureView.swift */,
 				455C962626FE11CA00456F30 /* RootViewController.swift */,
 				455C962726FE11CA00456F30 /* RootViewController.xib */,
 				45C3E8D727B56DC7007A1A0F /* Home */,
@@ -6481,6 +6487,7 @@
 				455A0CE626BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
 				45A0B302274FA3B800211A85 /* MarketGroup.swift in Sources */,
 				455C677427E255A300AAB2A5 /* MarketGroupDetailsStore.swift in Sources */,
+				451E1F7128290DE2000E957B /* PictureInPictureView.swift in Sources */,
 				454E0AC82733FBF200794E0C /* StyleHelpers.swift in Sources */,
 				454E0A962732C01B00794E0C /* BetslipViewController.swift in Sources */,
 				A96CA7B727F3578A00022DB2 /* PasswordUpdateViewModel.swift in Sources */,
@@ -6964,6 +6971,7 @@
 				45B7DAE326F92CF30032C1C3 /* UserRegisterForm.swift in Sources */,
 				A99622A42788565D00ABDF97 /* SportsAggregatorRepository.swift in Sources */,
 				455A0CE726BD9D9000EC572D /* FunctionalUtils.swift in Sources */,
+				451E1F7228290DE2000E957B /* PictureInPictureView.swift in Sources */,
 				45A0B303274FA3B800211A85 /* MarketGroup.swift in Sources */,
 				454E0AC92733FBF200794E0C /* StyleHelpers.swift in Sources */,
 				A96CA7B827F3578A00022DB2 /* PasswordUpdateViewModel.swift in Sources */,
@@ -7439,6 +7447,7 @@
 				4589C7F0282024E400243547 /* MarketGroup.swift in Sources */,
 				4589C7F1282024E400243547 /* MarketGroupDetailsStore.swift in Sources */,
 				4589C7F2282024E400243547 /* StyleHelpers.swift in Sources */,
+				451E1F7328290DE2000E957B /* PictureInPictureView.swift in Sources */,
 				4589C7F3282024E400243547 /* BetslipViewController.swift in Sources */,
 				4589C7F4282024E400243547 /* PasswordUpdateViewModel.swift in Sources */,
 				4589C7F5282024E400243547 /* LiveMatchWidgetCollectionViewCell.swift in Sources */,
@@ -7914,6 +7923,7 @@
 				45A6BC3D28246A7500D9B416 /* FunctionalUtils.swift in Sources */,
 				45A6BC3E28246A7500D9B416 /* MarketGroup.swift in Sources */,
 				45A6BC3F28246A7500D9B416 /* MarketGroupDetailsStore.swift in Sources */,
+				451E1F7428290DE2000E957B /* PictureInPictureView.swift in Sources */,
 				45A6BC4028246A7500D9B416 /* StyleHelpers.swift in Sources */,
 				45A6BC4128246A7500D9B416 /* BetslipViewController.swift in Sources */,
 				45A6BC4228246A7500D9B416 /* PasswordUpdateViewModel.swift in Sources */,
@@ -8436,7 +8446,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00521;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8462,7 +8472,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Prod/ShowcaseProd.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00521;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Prod/ShowcaseProd-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8532,7 +8542,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Beta/ShowcaseBeta.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00521;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Beta/ShowcaseBeta-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8540,7 +8550,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.5;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.showcasebeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8558,7 +8568,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/Showcase/Beta/ShowcaseBeta.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00521;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "Clients/Showcase/Beta/ShowcaseBeta-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8566,7 +8576,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 0.0.2;
+				MARKETING_VERSION = 0.0.5;
 				OTHER_LDFLAGS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = com.gomagaming.sportsbook.showcasebeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -8584,7 +8594,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00522;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8610,7 +8620,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/GOMASports/Misc/GOMASports.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00522;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/GOMASports/Misc/GOMASports-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8636,7 +8646,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00521;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8662,7 +8672,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00520;
+				CURRENT_PROJECT_VERSION = 00521;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

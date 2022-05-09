@@ -124,7 +124,7 @@ class LiveDetailsViewController: UIViewController {
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
-        self.accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
 
     }
 
