@@ -47,6 +47,7 @@ class ConversationDetailViewController: UIViewController {
 
     // MARK: Public Properties
     var shouldCloseChat: (() -> Void)?
+    var shouldReloadData: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: ConversationDetailViewModel) {
@@ -247,6 +248,10 @@ class ConversationDetailViewController: UIViewController {
 
             editContactViewController.shouldCloseChat = { [weak self] in
                 self?.shouldCloseChat?()
+            }
+
+            editContactViewController.shouldReloadData = { [weak self] in
+                self?.shouldReloadData?()
             }
 
             self.navigationController?.pushViewController(editContactViewController, animated: true)

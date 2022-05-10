@@ -994,6 +994,8 @@
 		A9A2E7F527FDE3DA00D35A9D /* ConversationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */; };
 		A9A2E7F827FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */; };
 		A9A2E7F927FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */; };
+		A9A31455282AA6A0004F7E77 /* ActionButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A31454282AA6A0004F7E77 /* ActionButtonTableViewCell.swift */; };
+		A9A31456282AA6A0004F7E77 /* ActionButtonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A31454282AA6A0004F7E77 /* ActionButtonTableViewCell.swift */; };
 		A9A836B226C6AC8400508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
 		A9A836B326C6AC8400508923 /* MaintenanceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */; };
 		A9A836B426C6B55600508923 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */; };
@@ -1731,6 +1733,7 @@
 		A9A2E7EE27FC97ED00D35A9D /* BonusProgressViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BonusProgressViewModel.swift; sourceTree = "<group>"; };
 		A9A2E7F327FDE3DA00D35A9D /* ConversationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationDetailViewController.swift; sourceTree = "<group>"; };
 		A9A2E7F727FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedMessageTableViewCell.swift; sourceTree = "<group>"; };
+		A9A31454282AA6A0004F7E77 /* ActionButtonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButtonTableViewCell.swift; sourceTree = "<group>"; };
 		A9A836B026C6AC8400508923 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		A9A836B126C6AC8400508923 /* MaintenanceViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MaintenanceViewController.xib; sourceTree = "<group>"; };
 		A9B0588A282529820089B0D7 /* NewMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageViewController.swift; sourceTree = "<group>"; };
@@ -3633,6 +3636,14 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		A9A31453282AA66E004F7E77 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				A9A31454282AA6A0004F7E77 /* ActionButtonTableViewCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		A9A836AF26C6AC5D00508923 /* Maintenance */ = {
 			isa = PBXGroup;
 			children = (
@@ -3672,6 +3683,7 @@
 		A9B0589828291D4C0089B0D7 /* Edits */ = {
 			isa = PBXGroup;
 			children = (
+				A9A31453282AA66E004F7E77 /* Cells */,
 				A9B0589C2829200B0089B0D7 /* ViewModels */,
 				A9B0589928291D690089B0D7 /* EditContactViewController.swift */,
 				A9B058A3282974900089B0D7 /* EditGroupViewController.swift */,
@@ -5017,6 +5029,7 @@
 				45CD7B522716F5CB003044C5 /* OddTripleCollectionViewCell.swift in Sources */,
 				455A0D1E26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
 				455A0CF026BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
+				A9A31455282AA6A0004F7E77 /* ActionButtonTableViewCell.swift in Sources */,
 				45D527DC2720534600744D34 /* CompetitionsFiltersView.swift in Sources */,
 				4503E79D27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */,
 				455A0CA226BD96BF00EC572D /* SportsbookTarget.swift in Sources */,
@@ -5496,6 +5509,7 @@
 				45166D2626F3548D00E69D65 /* TSManager.swift in Sources */,
 				45CD7B532716F5CB003044C5 /* OddTripleCollectionViewCell.swift in Sources */,
 				455A0D1F26BDE7AE00EC572D /* DebugViewController.swift in Sources */,
+				A9A31456282AA6A0004F7E77 /* ActionButtonTableViewCell.swift in Sources */,
 				455A0CF126BD9D9000EC572D /* UIViewController+Extensions.swift in Sources */,
 				45D527DD2720534600744D34 /* CompetitionsFiltersView.swift in Sources */,
 				4503E79E27D0E9FC00077CD2 /* CompetitionDetailsViewModel.swift in Sources */,

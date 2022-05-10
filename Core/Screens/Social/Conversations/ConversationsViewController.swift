@@ -158,6 +158,10 @@ class ConversationsViewController: UIViewController {
             self?.reloadFriendsData?()
         }
 
+        conversationDetailViewController.shouldReloadData = { [weak self] in
+            self?.needsRefetchData()
+        }
+
         self.navigationController?.pushViewController(conversationDetailViewController, animated: true)
     }
 

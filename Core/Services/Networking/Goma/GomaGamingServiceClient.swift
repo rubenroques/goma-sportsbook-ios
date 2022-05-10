@@ -172,6 +172,12 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func editGroup(deviceId: String, chatroomId: Int, groupName: String) -> AnyPublisher<NetworkResponse<[JSON]>, NetworkError> {
+        let endpoint = GomaGamingService.editGroup(chatroomId: chatroomId, groupName: groupName)
+        let requestPublisher: AnyPublisher<NetworkResponse<[JSON]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
     func lookupPhones(deviceId: String, phones: [String]) -> AnyPublisher<[GomaContact], NetworkError> {
         let endpoint = GomaGamingService.lookupPhone(phones: phones)
         let requestPublisher: AnyPublisher<[GomaContact], NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)

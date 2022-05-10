@@ -298,9 +298,9 @@ extension EditContactViewController {
     private static func createBlockButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
+        button.setImage(UIImage(named: "block_user_icon"), for: .normal)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: -3, left: -15, bottom: 0, right: 0)
         button.setTitle(localized("block_contact"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
@@ -309,9 +309,9 @@ extension EditContactViewController {
     private static func createReportButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
+        button.setImage(UIImage(named: "report_user_icon"), for: .normal)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: -3, left: -15, bottom: 0, right: 0)
         button.setTitle(localized("report"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
@@ -320,9 +320,9 @@ extension EditContactViewController {
     private static func createDeleteButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "add_orange_icon"), for: .normal)
+        button.setImage(UIImage(named: "delete_user_icon"), for: .normal)
         button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 0)
+        button.imageEdgeInsets = UIEdgeInsets(top: -3, left: -15, bottom: 0, right: 0)
         button.setTitle(localized("delete"), for: .normal)
         button.titleLabel?.font = AppFont.with(type: .semibold, size: 14)
         return button
@@ -404,15 +404,15 @@ extension EditContactViewController {
 
         NSLayoutConstraint.activate([
 
-            self.blockButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.blockButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.blockButton.heightAnchor.constraint(equalToConstant: 30),
             self.blockButton.bottomAnchor.constraint(equalTo: self.reportButton.topAnchor, constant: -10),
 
-            self.reportButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.reportButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.reportButton.heightAnchor.constraint(equalToConstant: 30),
             self.reportButton.bottomAnchor.constraint(equalTo: self.deleteButton.topAnchor, constant: -10),
 
-            self.deleteButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            self.deleteButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.deleteButton.heightAnchor.constraint(equalToConstant: 30),
             self.deleteButton.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor, constant: -10)
         ])
