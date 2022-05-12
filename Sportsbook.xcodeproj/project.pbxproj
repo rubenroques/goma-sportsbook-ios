@@ -1051,7 +1051,7 @@
 		4589C9C8282024E400243547 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
 		4589C9DF2820279500243547 /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589C9D9282025C400243547 /* TargetVariables.swift */; };
 		4589C9E02820279900243547 /* ClientVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589C9DD282025C400243547 /* ClientVariables.swift */; };
-		4589C9E12820279E00243547 /* NewThemeColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DA282025C400243547 /* NewThemeColors.xcassets */; };
+		4589C9E12820279E00243547 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DA282025C400243547 /* Colors.xcassets */; };
 		4589C9E2282027A100243547 /* GOMASports-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9DB282025C400243547 /* GOMASports-Assets.xcassets */; };
 		4589C9E4282029F700243547 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4589C9E3282029F700243547 /* GoogleService-Info.plist */; };
 		4589F3F726BF017A005DF543 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4589F3EC26BF017A005DF543 /* WelcomeViewController.swift */; };
@@ -1780,7 +1780,7 @@
 		45A6BE2128246A7500D9B416 /* OddTripleCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 45CD7B4D2716F5CB003044C5 /* OddTripleCollectionViewCell.xib */; };
 		45A6BE3328246AFA00D9B416 /* DAZN-Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A6BE2928246AFA00D9B416 /* DAZN-Assets.xcassets */; };
 		45A6BE3428246AFA00D9B416 /* LaunchScreen-DAZN.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 45A6BE2A28246AFA00D9B416 /* LaunchScreen-DAZN.storyboard */; };
-		45A6BE3528246AFA00D9B416 /* NewThemeColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A6BE2C28246AFA00D9B416 /* NewThemeColors.xcassets */; };
+		45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 45A6BE2C28246AFA00D9B416 /* Colors.xcassets */; };
 		45A6BE3728246AFA00D9B416 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 45A6BE2E28246AFA00D9B416 /* GoogleService-Info.plist */; };
 		45A6BE3828246AFA00D9B416 /* TargetVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A6BE3028246AFA00D9B416 /* TargetVariables.swift */; };
 		45A6BE3928246AFA00D9B416 /* ClientVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45A6BE3228246AFA00D9B416 /* ClientVariables.swift */; };
@@ -2428,8 +2428,8 @@
 		F4B32D9A2790D0AC001E31A5 /* EmptyCardTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */; };
 		F4B32D9B2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */; };
 		F4B32D9C2790D0AC001E31A5 /* EmptyCardTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */; };
-		F4B32D9E2791BBA5001E31A5 /* NewThemeColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D9D2791BBA5001E31A5 /* NewThemeColors.xcassets */; };
-		F4B32D9F2791BBA5001E31A5 /* NewThemeColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D9D2791BBA5001E31A5 /* NewThemeColors.xcassets */; };
+		F4B32D9E2791BBA5001E31A5 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D9D2791BBA5001E31A5 /* Colors.xcassets */; };
+		F4B32D9F2791BBA5001E31A5 /* Colors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F4B32D9D2791BBA5001E31A5 /* Colors.xcassets */; };
 		F4CE68412742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68422742CD8A003413AE /* MultiSlider+Drag.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */; };
 		F4CE68432742CD8A003413AE /* MultiSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4CE683E2742CD8A003413AE /* MultiSlider.swift */; };
@@ -2702,7 +2702,7 @@
 		4589C9CD282024E400243547 /* GOMASports.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GOMASports.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4589C9D7282025C400243547 /* GOMASports-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GOMASports-Info.plist"; sourceTree = "<group>"; };
 		4589C9D9282025C400243547 /* TargetVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetVariables.swift; sourceTree = "<group>"; };
-		4589C9DA282025C400243547 /* NewThemeColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewThemeColors.xcassets; sourceTree = "<group>"; };
+		4589C9DA282025C400243547 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		4589C9DB282025C400243547 /* GOMASports-Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "GOMASports-Assets.xcassets"; sourceTree = "<group>"; };
 		4589C9DD282025C400243547 /* ClientVariables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientVariables.swift; sourceTree = "<group>"; };
 		4589C9E3282029F700243547 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -2761,7 +2761,7 @@
 		45A6BB9A2823D1B300D9B416 /* VideoPreviewCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPreviewCollectionViewCell.swift; sourceTree = "<group>"; };
 		45A6BE2628246A7500D9B416 /* DAZN.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DAZN.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		45A6BE2928246AFA00D9B416 /* DAZN-Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "DAZN-Assets.xcassets"; sourceTree = "<group>"; };
-		45A6BE2C28246AFA00D9B416 /* NewThemeColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewThemeColors.xcassets; sourceTree = "<group>"; };
+		45A6BE2C28246AFA00D9B416 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		45A6BE2D28246AFA00D9B416 /* DAZN-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DAZN-Info.plist"; sourceTree = "<group>"; };
 		45A6BE2E28246AFA00D9B416 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		45A6BE2F28246AFA00D9B416 /* DAZN.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = DAZN.entitlements; sourceTree = "<group>"; };
@@ -3083,7 +3083,7 @@
 		F4A438E4274FD8FB00F59CFF /* BetSubmissionSuccessViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BetSubmissionSuccessViewController.xib; sourceTree = "<group>"; };
 		F4B32D972790D0AC001E31A5 /* EmptyCardTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmptyCardTableViewCell.swift; sourceTree = "<group>"; };
 		F4B32D982790D0AC001E31A5 /* EmptyCardTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EmptyCardTableViewCell.xib; sourceTree = "<group>"; };
-		F4B32D9D2791BBA5001E31A5 /* NewThemeColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NewThemeColors.xcassets; sourceTree = "<group>"; };
+		F4B32D9D2791BBA5001E31A5 /* Colors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Colors.xcassets; sourceTree = "<group>"; };
 		F4CE683D2742CD8A003413AE /* MultiSlider+Drag.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Drag.swift"; sourceTree = "<group>"; };
 		F4CE683E2742CD8A003413AE /* MultiSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MultiSlider.swift; sourceTree = "<group>"; };
 		F4CE683F2742CD8A003413AE /* MultiSlider+Internal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "MultiSlider+Internal.swift"; sourceTree = "<group>"; };
@@ -3718,7 +3718,7 @@
 			children = (
 				4515636726BE0AB200690896 /* ClientVariables.swift */,
 				455A0CA526BD973400EC572D /* Showcase-Assets.xcassets */,
-				F4B32D9D2791BBA5001E31A5 /* NewThemeColors.xcassets */,
+				F4B32D9D2791BBA5001E31A5 /* Colors.xcassets */,
 				45A6BE3A2824701C00D9B416 /* LaunchScreen */,
 				455A0C9326BD91F200EC572D /* Prod */,
 				455A0C9426BD920400EC572D /* Beta */,
@@ -4327,7 +4327,7 @@
 			isa = PBXGroup;
 			children = (
 				4589C9DB282025C400243547 /* GOMASports-Assets.xcassets */,
-				4589C9DA282025C400243547 /* NewThemeColors.xcassets */,
+				4589C9DA282025C400243547 /* Colors.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -4346,7 +4346,7 @@
 			isa = PBXGroup;
 			children = (
 				45A6BE2928246AFA00D9B416 /* DAZN-Assets.xcassets */,
-				45A6BE2C28246AFA00D9B416 /* NewThemeColors.xcassets */,
+				45A6BE2C28246AFA00D9B416 /* Colors.xcassets */,
 			);
 			path = Assets;
 			sourceTree = "<group>";
@@ -5811,7 +5811,7 @@
 				A96B619327A0496C005DC376 /* RecentSearchHeaderView.xib in Resources */,
 				A98D3B2B271481A8003BAE6F /* SportSelectionViewController.xib in Resources */,
 				A92F5D7C271716B900884BDF /* FilterRowView.xib in Resources */,
-				F4B32D9E2791BBA5001E31A5 /* NewThemeColors.xcassets in Resources */,
+				F4B32D9E2791BBA5001E31A5 /* Colors.xcassets in Resources */,
 				A99A970D26FB30EE00F8D163 /* ProfileLimitsManagementViewController.xib in Resources */,
 				A90D8AFD277223DC00DF88EB /* WithdrawWebViewController.xib in Resources */,
 				A92F5D96272C410400884BDF /* DocumentPickerView.xib in Resources */,
@@ -6006,7 +6006,7 @@
 				45D712F527031DDE00AC0364 /* PreLiveEventsViewController.xib in Resources */,
 				A92F5DA5272C44A000884BDF /* UploadView.xib in Resources */,
 				454A7A6426DA300900E6E74E /* .swiftlint.yml in Resources */,
-				F4B32D9F2791BBA5001E31A5 /* NewThemeColors.xcassets in Resources */,
+				F4B32D9F2791BBA5001E31A5 /* Colors.xcassets in Resources */,
 				45B0BD49271F206C009C41FA /* CheckboxToggleView.xib in Resources */,
 				A9627A0F274548610001E1D5 /* ActivationAlertCollectionViewCell.xib in Resources */,
 				45726334272B13D7002F2959 /* LoadingMoreTableViewCell.xib in Resources */,
@@ -6066,7 +6066,7 @@
 				4589C975282024E400243547 /* PreSubmissionBetslipViewController.xib in Resources */,
 				4589C976282024E400243547 /* BannerScrollTableViewCell.xib in Resources */,
 				4589C977282024E400243547 /* BetslipViewController.xib in Resources */,
-				4589C9E12820279E00243547 /* NewThemeColors.xcassets in Resources */,
+				4589C9E12820279E00243547 /* Colors.xcassets in Resources */,
 				4589C978282024E400243547 /* MatchFiltersViewController.xib in Resources */,
 				4589C979282024E400243547 /* WelcomeViewController.xib in Resources */,
 				4589C97A282024E400243547 /* UploadView.xib in Resources */,
@@ -6205,7 +6205,7 @@
 				45A6BDD728246A7500D9B416 /* Gilroy-Medium.ttf in Resources */,
 				45A6BDD828246A7500D9B416 /* Localizable.strings in Resources */,
 				45A6BDD928246A7500D9B416 /* LoadingMoreTableViewCell.xib in Resources */,
-				45A6BE3528246AFA00D9B416 /* NewThemeColors.xcassets in Resources */,
+				45A6BE3528246AFA00D9B416 /* Colors.xcassets in Resources */,
 				45A6BE3728246AFA00D9B416 /* GoogleService-Info.plist in Resources */,
 				45A6BDDA28246A7500D9B416 /* MatchLineTableViewCell.xib in Resources */,
 				45A6BDDB28246A7500D9B416 /* RecentSearchHeaderView.xib in Resources */,
@@ -8646,7 +8646,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00521;
+				CURRENT_PROJECT_VERSION = 00531;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -8672,7 +8672,7 @@
 				CODE_SIGN_ENTITLEMENTS = Clients/DAZN/Misc/DAZN.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 00521;
+				CURRENT_PROJECT_VERSION = 00531;
 				DEVELOPMENT_TEAM = 422GNXXZJR;
 				INFOPLIST_FILE = "$(SRCROOT)/Clients/DAZN/Misc/DAZN-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

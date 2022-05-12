@@ -179,6 +179,8 @@ class LoginViewController: UIViewController {
         rememberView.backgroundColor = .clear
         rememberLabel.textColor = UIColor.App.textPrimary
 
+        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+
         if self.shouldRememberUser {
             rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
@@ -232,12 +234,14 @@ class LoginViewController: UIViewController {
 
     private func enableRememberUser() {
         rememberImageView.image = UIImage(named: "active_toggle_icon")
+        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         rememberToggleView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         Env.userSessionStore.shouldRecordUserSession = true
     }
 
     private func disableRememberUser() {
         rememberImageView.image = nil
+        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         rememberToggleView.backgroundColor = UIColor.App.buttonBackgroundSecondary
         Env.userSessionStore.shouldRecordUserSession = false
     }

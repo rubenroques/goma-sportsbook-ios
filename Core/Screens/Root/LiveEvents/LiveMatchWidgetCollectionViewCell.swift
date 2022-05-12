@@ -138,6 +138,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
 
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
+
         self.eventNameLabel.text = ""
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
@@ -194,6 +198,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayParticipantNameLabel.text = ""
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
+
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
 
         self.homeOddValueLabel.text = ""
         self.drawOddValueLabel.text = ""

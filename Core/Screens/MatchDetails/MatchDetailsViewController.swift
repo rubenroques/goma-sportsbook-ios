@@ -42,6 +42,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var accountValueView: UIView!
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
+    @IBOutlet private var accountPlusImageView: UIImageView!
 
     @IBOutlet private var marketTypeSeparator: UILabel!
 
@@ -82,6 +83,7 @@ class MatchDetailsViewController: UIViewController {
         var iconImageView = UIImageView()
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         betslipButtonView.addSubview(iconImageView)
 
@@ -420,6 +422,7 @@ class MatchDetailsViewController: UIViewController {
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
         // Market List CollectionView
         self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
@@ -429,7 +432,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
         
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldToggleView.backgroundColor = UIColor.App.backgroundTertiary

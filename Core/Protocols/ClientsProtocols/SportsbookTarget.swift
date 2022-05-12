@@ -28,4 +28,6 @@ protocol SportsbookTarget {
     static var everyMatrixHost: String { get }
 
     static var featureFlags: Flags.Type { get }
+
+    static var supportedThemes: [Theme] { get }
 }

@@ -137,6 +137,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.drawBaseView.layer.cornerRadius = 4.5
         self.awayBaseView.layer.cornerRadius = 4.5
 
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
+
         self.eventNameLabel.text = ""
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
@@ -210,6 +214,10 @@ class MatchWidgetCollectionViewCell: UICollectionViewCell {
         self.dateLabel.text = ""
         self.timeLabel.text = ""
 
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
+        
         self.homeOddValueLabel.text = ""
         self.drawOddValueLabel.text = ""
         self.awayOddValueLabel.text = ""

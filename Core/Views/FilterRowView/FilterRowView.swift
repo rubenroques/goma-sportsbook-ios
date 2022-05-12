@@ -52,15 +52,16 @@ class FilterRowView: NibView {
         didSet {
             if isChecked {
                 if buttonType == ButtonType.checkbox {
-                buttonImageView.image = UIImage(named: "active_toggle_icon")
-                buttonImageView.backgroundColor = UIColor.App.highlightPrimary
+                    buttonImageView.image = UIImage(named: "active_toggle_icon")
+                    buttonImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+                    buttonImageView.backgroundColor = UIColor.App.highlightPrimary
                     buttonImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
-
                 }
                 else if buttonType == ButtonType.radio {
                     buttonImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
                     buttonImageView.backgroundColor = UIColor.App.highlightPrimary
                     buttonImageView.image = (UIImage(named: "white_dot_icon"))
+                    buttonImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
                 }
             }
             else {
@@ -117,6 +118,8 @@ class FilterRowView: NibView {
         buttonImageView.contentMode = .scaleAspectFit
 
         lineView.backgroundColor = UIColor.App.separatorLine
+
+        buttonImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
         self.buttonType = .checkbox
 

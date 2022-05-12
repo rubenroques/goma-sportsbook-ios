@@ -105,6 +105,8 @@ class CompetitionDetailsViewController: UIViewController {
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
         self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        
     }
 
     override func viewDidLayoutSubviews() {
@@ -495,6 +497,7 @@ extension CompetitionDetailsViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([

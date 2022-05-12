@@ -44,4 +44,8 @@ struct TargetVariables: SportsbookTarget {
     }
     static var featureFlags: TargetFeatureFlags.Type { TargetFeatureFlags.self }
 
+    static var supportedThemes: [Theme] {
+        return Theme.allCases
+    }
+    
 }

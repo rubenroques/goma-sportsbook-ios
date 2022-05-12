@@ -17,9 +17,10 @@ class LiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersSeparatorLineView: UIView!
     @IBOutlet private weak var tableView: UITableView!
 
-    @IBOutlet private weak var sportTypeIconImageView: UIImageView!
-    @IBOutlet private weak var leftGradientBaseView: UIView!
     @IBOutlet private weak var sportsSelectorButtonView: UIView!
+    @IBOutlet private weak var sportTypeIconImageView: UIImageView!
+    @IBOutlet private weak var sportsSelectorExpandImageView: UIImageView!
+    @IBOutlet private weak var leftGradientBaseView: UIView!
 
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
@@ -44,6 +45,7 @@ class LiveEventsViewController: UIViewController {
         var iconImageView = UIImageView()
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         betslipButtonView.addSubview(iconImageView)
 
@@ -89,6 +91,7 @@ class LiveEventsViewController: UIViewController {
     var selectedSport: Sport {
         didSet {
             self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_\(selectedSport.id)")
+            self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
             self.viewModel.selectedSport = selectedSport
         }
     }
@@ -161,6 +164,7 @@ class LiveEventsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
+        self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width / 2
         self.filtersButtonView.layer.cornerRadius = self.filtersButtonView.frame.height / 2
         self.sportsSelectorButtonView.layer.cornerRadius = self.sportsSelectorButtonView.frame.height / 2
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
@@ -324,14 +328,29 @@ class LiveEventsViewController: UIViewController {
         self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
         self.filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-        
-        self.liveEventsCountView.layer.cornerRadius = self.liveEventsCountView.frame.size.width/2
-        self.liveEventsCountView.backgroundColor = UIColor.App.highlightSecondary
-        self.filtersCountLabel.font = AppFont.with(type: .bold, size: 10.0)
+
+
+
+        //
+        //
+        self.filtersCountLabel.font = AppFont.with(type: .bold, size: 9)
         self.filtersCountLabel.backgroundColor = UIColor.App.highlightSecondary
+        self.filtersCountLabel.textColor = UIColor.App.buttonTextPrimary
 
         self.liveEventsCountLabel.font = AppFont.with(type: .semibold, size: 9)
-        
+
+        self.liveEventsCountView.backgroundColor = UIColor.App.highlightSecondary
+        self.liveEventsCountLabel.textColor = UIColor.App.buttonTextPrimary
+
+        // Flip the color to avoid matching
+        if UIColor.App.highlightPrimary.isEqualTo(UIColor.App.highlightSecondary) {
+            self.liveEventsCountView.backgroundColor = UIColor.App.buttonTextPrimary
+            self.liveEventsCountLabel.textColor = UIColor.App.highlightSecondary
+        }
+        //
+        //
+
+
         self.tableView.backgroundColor = .clear
         self.tableView.backgroundView?.backgroundColor = .clear
         
@@ -354,9 +373,11 @@ class LiveEventsViewController: UIViewController {
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
 
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
-        self.liveEventsCountLabel.textColor = UIColor.App.buttonTextPrimary
-        
+        self.betslipCountLabel.textColor = UIColor.white
+
+
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
     }
 
     @objc func didTapFilterAction(sender: UITapGestureRecognizer) {

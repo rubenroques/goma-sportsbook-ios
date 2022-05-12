@@ -23,6 +23,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MatchDetailsViewController" customModule="DAZN" customModuleProvider="target">
             <connections>
+                <outlet property="accountPlusImageView" destination="l1J-BP-7pm" id="u6e-Ot-0T5"/>
                 <outlet property="accountPlusView" destination="SVA-o8-XPi" id="Isv-Ap-ZEM"/>
                 <outlet property="accountValueLabel" destination="Xa4-nk-Zrj" id="Pfv-lN-cem"/>
                 <outlet property="accountValueView" destination="xvA-vM-kST" id="hQR-VN-Ueh"/>
@@ -598,7 +599,7 @@
         <image name="more_options_icon" width="6" height="22"/>
         <image name="plus_small_icon" width="16" height="16"/>
         <namedColor name="buttonBackgroundPrimary">
-            <color red="0.0" green="0.63921568627450975" blue="0.85490196078431369" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.97254901960784312" green="0.9882352941176471" blue="0.0078431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
