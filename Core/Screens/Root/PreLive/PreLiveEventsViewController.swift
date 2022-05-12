@@ -17,14 +17,13 @@ class PreLiveEventsViewController: UIViewController {
     @IBOutlet private weak var filtersSeparatorLineView: UIView!
     @IBOutlet private weak var tableView: UITableView!
 
+    @IBOutlet private weak var sportsSelectorButtonView: UIView!
+    @IBOutlet private weak var sportsSelectorExpandImageView: UIImageView!
     @IBOutlet private weak var sportTypeIconImageView: UIImageView!
     @IBOutlet private weak var leftGradientBaseView: UIView!
-    @IBOutlet private weak var sportsSelectorButtonView: UIView!
 
     @IBOutlet private weak var rightGradientBaseView: UIView!
     @IBOutlet private weak var filtersButtonView: UIView!
-    
-    @IBOutlet private weak var filtersCountView: UIView!
 
     @IBOutlet private weak var emptyBaseView: UIView!
     @IBOutlet private weak var filtersCountLabel: UILabel!
@@ -45,6 +44,8 @@ class PreLiveEventsViewController: UIViewController {
         var iconImageView = UIImageView()
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         betslipButtonView.addSubview(iconImageView)
 
@@ -100,9 +101,11 @@ class PreLiveEventsViewController: UIViewController {
 
             if let sportIconImage = UIImage(named: "sport_type_mono_icon_\( selectedSport.id)") {
                 self.sportTypeIconImageView.image = sportIconImage
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
             }
             else {
                 self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_default")
+                self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
             }
 
             self.competitionsFiltersView.resetSelection()
@@ -227,6 +230,8 @@ class PreLiveEventsViewController: UIViewController {
     private func commonInit() {
 
         self.sportTypeIconImageView.image = UIImage(named: "sport_type_mono_icon_1")
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        
         let color = UIColor.App.backgroundPrimary
         
         leftGradientBaseView.backgroundColor = color
@@ -267,8 +272,7 @@ class PreLiveEventsViewController: UIViewController {
         filtersCollectionView.showsVerticalScrollIndicator = false
         filtersCollectionView.showsHorizontalScrollIndicator = false
         filtersCollectionView.alwaysBounceHorizontal = true
-        filtersCollectionView.register(ListTypeCollectionViewCell.nib,
-                                       forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
+        filtersCollectionView.register(ListTypeCollectionViewCell.nib, forCellWithReuseIdentifier: ListTypeCollectionViewCell.identifier)
         filtersCollectionView.delegate = self
         filtersCollectionView.dataSource = self
 
@@ -290,7 +294,6 @@ class PreLiveEventsViewController: UIViewController {
         tableView.register(LoadingMoreTableViewCell.nib, forCellReuseIdentifier: LoadingMoreTableViewCell.identifier)
         tableView.register(TitleTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TitleTableViewHeader.identifier)
         tableView.register(TournamentTableViewHeader.nib, forHeaderFooterViewReuseIdentifier: TournamentTableViewHeader.identifier)
-//        tableView.register(ActivationAlertScrollableTableViewCell.nib, forCellReuseIdentifier: ActivationAlertScrollableTableViewCell.identifier)
         tableView.register(EmptyCardTableViewCell.nib, forCellReuseIdentifier: EmptyCardTableViewCell.identifier)
 
         tableView.delegate = self
@@ -523,12 +526,15 @@ class PreLiveEventsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
         
         self.emptyBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.firstTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.secondTextFieldEmptyStateLabel.textColor = UIColor.App.textPrimary
         self.emptyStateButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+
+        self.sportsSelectorExpandImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        self.sportTypeIconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
     }
 

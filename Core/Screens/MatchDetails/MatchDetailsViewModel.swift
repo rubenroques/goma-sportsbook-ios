@@ -28,6 +28,8 @@ class MatchDetailsViewModel: NSObject {
     var marketGroupsPublisher: CurrentValueSubject<[MarketGroup], Never> = .init([])
     var selectedMarketTypeIndexPublisher: CurrentValueSubject<Int?, Never> = .init(nil)
 
+    var matchStatsUpdatedPublisher = PassthroughSubject<Void, Never>.init()
+
     var match: Match? {
         switch matchPublisher.value {
         case .loaded(let match):
@@ -43,25 +45,31 @@ class MatchDetailsViewModel: NSObject {
     private var matchDetailsRegister: EndpointPublisherIdentifiable?
     private var matchDetailsAggregatorPublisher: AnyCancellable?
 
+    private var statsJSON: JSON?
+    let matchStatsViewModel: MatchStatsViewModel
+
     private var cancellables = Set<AnyCancellable>()
 
     init(matchMode: MatchMode = .preLive, match: Match) {
 
         self.matchId = match.id
 
+        self.matchStatsViewModel = MatchStatsViewModel(matchId: match.id)
+
         self.store = MatchDetailsAggregatorRepository(matchId: match.id)
-        self.matchPublisher.send(.loaded(match))
+        self.matchPublisher.send(.idle) // .loaded(match))
 
         self.matchModePublisher.send(matchMode)
 
         super.init()
 
         self.connectPublishers()
-        self.fetchMarketGroupsPublisher()
     }
 
     init(matchMode: MatchMode = .preLive, matchId: String) {
         self.matchId = matchId
+
+        self.matchStatsViewModel = MatchStatsViewModel(matchId: matchId)
 
         self.matchModePublisher.send(matchMode)
 
@@ -105,15 +113,21 @@ class MatchDetailsViewModel: NSObject {
                 self.fetchMatchData()
             })
             .store(in: &cancellables)
+
+        self.matchStatsViewModel.statsTypePublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] statsJSON in
+                self?.statsJSON = statsJSON
+                self?.matchStatsUpdatedPublisher.send()
+            }
+            .store(in: &cancellables)
     }
 
     func fetchMatchData() {
         self.fetchLocations()
             .sink { [weak self] locations in
                 self?.store.storeLocations(locations: locations)
-
                 self?.fetchMatchDetailsPublisher()
-                self?.fetchMarketGroupsPublisher()
             }
             .store(in: &cancellables)
     }
@@ -176,6 +190,8 @@ class MatchDetailsViewModel: NSObject {
                 self.matchModePublisher.send(.live)
             }
             self.matchPublisher.send(.loaded(match))
+
+            self.fetchMarketGroupsPublisher()
         }
         else {
             self.matchPublisher.send(.failed)
@@ -190,7 +206,6 @@ class MatchDetailsViewModel: NSObject {
         }
     }
 
-    //
     //
     //
     private func fetchMarketGroupsPublisher() {
@@ -302,3 +317,76 @@ extension MatchDetailsViewModel: UICollectionViewDataSource, UICollectionViewDel
     }
 
 }
+
+extension MatchDetailsViewModel {
+
+    func numberOfStatsSections() -> Int {
+
+        guard
+            let json = self.statsJSON
+        else {
+            return 0
+        }
+
+        if let eventPartsArray =  json["event_parts"].array {
+            return eventPartsArray.count
+        }
+
+        return 0
+    }
+
+    func numberOfStatsRows(forSection section: Int) -> Int {
+
+        guard
+            let json = self.statsJSON
+        else {
+            return 0
+        }
+
+        if let eventPartsArray =  json["event_parts"].array,
+           let partDict = eventPartsArray[safe: section],
+           let bettintTypesArray = partDict["betting_types"].array {
+            return bettintTypesArray.count
+        }
+
+        return 0
+    }
+
+    func jsonData(forIndexPath indexPath: IndexPath) -> JSON? {
+
+        guard
+            let json = self.statsJSON
+        else {
+            return 0
+        }
+
+        if let eventPartsArray =  json["event_parts"].array,
+           let partDict = eventPartsArray[safe: indexPath.section],
+           let bettintTypesArray = partDict["betting_types"].array,
+           let statsJSON = bettintTypesArray[safe: indexPath.row] {
+            return JSON(statsJSON)
+        }
+
+        return nil
+    }
+
+    func marketStatsTitle(forIndexPath indexPath: IndexPath) -> String? {
+
+        guard
+            let json = self.statsJSON
+        else {
+            return nil
+        }
+
+        if let eventPartsArray =  json["event_parts"].array,
+           let partDict = eventPartsArray[safe: indexPath.section],
+           let bettintTypesArray = partDict["betting_types"].array,
+           let statsJSON = bettintTypesArray[safe: indexPath.row] {
+            return "\(statsJSON["name"].string ?? "") - \(partDict["name"].string ?? "")"
+        }
+
+        return nil
+    }
+
+}
+

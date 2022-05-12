@@ -44,36 +44,6 @@ class ProfileViewController: UIViewController {
 
     @IBOutlet private weak var stackView: UIStackView!
 
-//    @IBOutlet private weak var personalInfoBaseView: UIView!
-//    @IBOutlet private weak var personalInfoIconBaseView: UIView!
-//    @IBOutlet private weak var personalInfoIconImageView: UIImageView!
-//    @IBOutlet private weak var personalInfoLabel: UILabel!
-//
-//    @IBOutlet private weak var favoritesBaseView: UIView!
-//    @IBOutlet private weak var favoritesIconBaseView: UIView!
-//    @IBOutlet private weak var favoritesIconImageView: UIImageView!
-//    @IBOutlet private weak var favoritesLabel: UILabel!
-//
-//    @IBOutlet private weak var historyBaseView: UIView!
-//    @IBOutlet private weak var historyIconBaseView: UIView!
-//    @IBOutlet private weak var historyIconImageView: UIImageView!
-//    @IBOutlet private weak var historyLabel: UILabel!
-//
-//    @IBOutlet private weak var bonusBaseView: UIView!
-//    @IBOutlet private weak var bonusIconBaseView: UIView!
-//    @IBOutlet private weak var bonusIconImageView: UIImageView!
-//    @IBOutlet private weak var bonusLabel: UILabel!
-//
-//    @IBOutlet private weak var appSettingsBaseView: UIView!
-//    @IBOutlet private weak var appSettingsIconBaseView: UIView!
-//    @IBOutlet private weak var appSettingsIconImageView: UIImageView!
-//    @IBOutlet private weak var appSettingsLabel: UILabel!
-//
-//    @IBOutlet private weak var supportBaseView: UIView!
-//    @IBOutlet private weak var supportIconBaseView: UIView!
-//    @IBOutlet private weak var supportIconImageView: UIImageView!
-//    @IBOutlet private weak var supportLabel: UILabel!
-
     @IBOutlet private weak var logoutBaseView: UIView!
     @IBOutlet private weak var logoutButton: UIButton!
 
@@ -242,50 +212,8 @@ class ProfileViewController: UIViewController {
         logoutButton.layer.borderWidth = 2
         logoutButton.setTitle(localized("logout"), for: .normal)
 
-//        personalInfoBaseView.layer.cornerRadius = CornerRadius.view
-//        personalInfoIconBaseView.layer.cornerRadius = CornerRadius.view
-//        personalInfoIconImageView.backgroundColor = UIColor.App.backgroundTertiary
-//        let personalInfoTapGesture = UITapGestureRecognizer(target: self, action: #selector(myAccountViewTapped(sender:)))
-//        personalInfoBaseView.addGestureRecognizer(personalInfoTapGesture)
-//
-//        favoritesBaseView.layer.cornerRadius = CornerRadius.view
-//        favoritesIconBaseView.layer.cornerRadius = CornerRadius.view
-//        let favoritesTapGesture = UITapGestureRecognizer(target: self, action: #selector(favoritesViewTapped))
-//        favoritesBaseView.addGestureRecognizer(favoritesTapGesture)
-//
-//        historyBaseView.layer.cornerRadius = CornerRadius.view
-//        historyIconBaseView.layer.cornerRadius = CornerRadius.view
-//        historyIconImageView.backgroundColor = .clear
-//        let historyTapGesture = UITapGestureRecognizer(target: self, action: #selector(historyViewTapped))
-//        historyBaseView.addGestureRecognizer(historyTapGesture)
-//
-//        bonusBaseView.layer.cornerRadius = CornerRadius.view
-//        bonusIconBaseView.layer.cornerRadius = CornerRadius.view
-//        bonusIconImageView.backgroundColor = .clear
-//        let bonusTapGesture = UITapGestureRecognizer(target: self, action: #selector(bonusViewTapped))
-//        bonusBaseView.addGestureRecognizer(bonusTapGesture)
-//
-//        appSettingsBaseView.layer.cornerRadius = CornerRadius.view
-//        appSettingsIconBaseView.layer.cornerRadius = CornerRadius.view
-//        appSettingsIconImageView.backgroundColor = .clear
-//        let appSettingsTapGesture = UITapGestureRecognizer(target: self, action: #selector(appSettingsViewTapped))
-//        appSettingsBaseView.addGestureRecognizer(appSettingsTapGesture)
-//
-//        supportBaseView.layer.cornerRadius = CornerRadius.view
-//        supportIconBaseView.layer.cornerRadius = CornerRadius.view
-//        supportIconImageView.backgroundColor = .clear
-//        let supportTapGesture = UITapGestureRecognizer(target: self, action: #selector(supportViewTapped))
-//        supportBaseView.addGestureRecognizer(supportTapGesture)
-
         currentBalanceLabel.text = localized("loading")
 
-        //
-//        personalInfoLabel.text = localized("my_account")
-//        favoritesLabel.text = localized("my_favorites")
-//        historyLabel.text = localized("history")
-//        bonusLabel.text = localized("bonus")
-//        appSettingsLabel.text = localized("app_settings")
-//        supportLabel.text = localized("support")
 
         if let versionNumber = Bundle.main.versionNumber,
            let buildNumber = Bundle.main.buildNumber {
@@ -295,13 +223,16 @@ class ProfileViewController: UIViewController {
             self.infoLabel.text = appVersionStringFinal
         }
 
-        activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
-        activationAlertScrollableView.layer.masksToBounds = true
+        self.infoLabel.isUserInteractionEnabled = true
+        let infolabelTapGesture = UITapGestureRecognizer.init(target: self, action: #selector(self.didTapAppVersionLabel))
+        self.infoLabel.addGestureRecognizer(infolabelTapGesture)
+
+        self.activationAlertScrollableView.layer.cornerRadius = CornerRadius.button
+        self.activationAlertScrollableView.layer.masksToBounds = true
 
         self.verifyUserActivationConditions()
 
         self.setupStackView()
-
     }
 
     func verifyUserActivationConditions() {
@@ -362,7 +293,7 @@ class ProfileViewController: UIViewController {
 
         safeAreaTopView.backgroundColor = UIColor.App.backgroundPrimary
         profileBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        profilePictureBaseView.backgroundColor = UIColor.App.highlightSecondary
+        profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
         bonusBalanceBaseView.backgroundColor = UIColor.App.backgroundPrimary
         scrollBaseView.backgroundColor = UIColor.App.backgroundPrimary
         profilePictureImageView.backgroundColor = .clear
@@ -518,6 +449,19 @@ class ProfileViewController: UIViewController {
         }
     }
 
+    @IBAction private func didTapAppVersionLabel() {
+        guard
+            Env.everyMatrixClient.userSessionStatusPublisher.value == .logged,
+            let userId = UserSessionStore.loggedUserSession()?.userId
+        else {
+            return
+        }
+
+        let casinoWebViewController = CasinoWebViewController(userId: userId)
+        casinoWebViewController.modalPresentationStyle = .fullScreen
+
+        self.present(casinoWebViewController, animated: true, completion: nil)
+    }
 }
 
 extension ProfileViewController {

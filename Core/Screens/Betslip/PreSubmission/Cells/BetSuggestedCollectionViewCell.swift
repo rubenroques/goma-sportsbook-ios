@@ -78,10 +78,13 @@ class BetSuggestedCollectionViewCell: UICollectionViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
+
         self.infoBetLabelsView.backgroundColor = UIColor.App.backgroundSecondary
         self.informationBetView.backgroundColor = UIColor.App.backgroundSecondary
+
         self.betNowButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        
+        self.betNowButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+
         self.totalOddValueLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.totalOddLabel.backgroundColor = UIColor.App.backgroundSecondary
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary

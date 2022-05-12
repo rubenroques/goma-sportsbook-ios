@@ -193,7 +193,7 @@ class MyTicketBetLineView: NibView {
         self.oddValueLabel.textColor = UIColor.App.textPrimary
         self.dateLabel.textColor = UIColor.App.textPrimary
 
-        self.indicatorLabel.textColor = UIColor.App.buttonTextPrimary
+        self.indicatorLabel.textColor = UIColor.white
 
         self.bottomBaseView.backgroundColor = .clear
         

@@ -39,14 +39,31 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var headerDetailLiveTopLabel: UILabel!
     @IBOutlet private var headerDetailLiveBottomLabel: UILabel!
 
+    @IBOutlet private var accountValueView: UIView!
+    @IBOutlet private var accountPlusView: UIView!
+    @IBOutlet private var accountValueLabel: UILabel!
+    @IBOutlet private var accountPlusImageView: UIImageView!
+
     @IBOutlet private var marketTypeSeparator: UILabel!
 
     @IBOutlet private var matchFieldBaseView: UIView!
+    @IBOutlet private var matchFieldLoadingView: UIActivityIndicatorView!
     @IBOutlet private var matchFieldToggleView: UIView!
     @IBOutlet private var matchFieldTitleLabel: UILabel!
     @IBOutlet private var matchFieldTitleArrowImageView: UIImageView!
     @IBOutlet private var matchFieldWebView: WKWebView!
     @IBOutlet private var matchFieldWebViewHeight: NSLayoutConstraint!
+
+    @IBOutlet private var statsBaseView: UIView!
+    @IBOutlet private var statsToggleView: UIView!
+    @IBOutlet private var statsTitleLabel: UILabel!
+    @IBOutlet private var statsTitleArrowImageView: UIImageView!
+    @IBOutlet private var statsToggleSeparatorView: UIView!
+    @IBOutlet private var statsCollectionBaseView: UIView!
+    @IBOutlet private var statsCollectionView: UICollectionView!
+    @IBOutlet private var statsCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet private var statsBackSliderView: UIView!
+    @IBOutlet private var statsNotFoundLabel: UILabel!
 
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
@@ -66,6 +83,7 @@ class MatchDetailsViewController: UIViewController {
         var iconImageView = UIImageView()
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         betslipButtonView.addSubview(iconImageView)
 
@@ -106,6 +124,26 @@ class MatchDetailsViewController: UIViewController {
 
         return gameCard
     }()
+
+    private var showingStatsBackSliderView: Bool = false
+    private var shouldShowStatsView = false
+    private var isStatsViewExpanded: Bool = false {
+        didSet {
+            if isStatsViewExpanded {
+                self.statsTitleArrowImageView.image = UIImage(named: "arrow_collapse_icon")
+                self.statsCollectionViewHeight.constant = 148
+            }
+            else {
+                self.statsTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
+                self.statsCollectionViewHeight.constant = 0
+            }
+
+            UIView.animate(withDuration: 0.2, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut) {
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
 
     private var shouldShowWebView = false
     private var matchFielHeight: CGFloat = 0
@@ -154,19 +192,8 @@ class MatchDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.addChild(marketGroupsPagedViewController)
-        self.marketGroupsPagedBaseView.addSubview(marketGroupsPagedViewController.view)
-        self.marketGroupsPagedViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        marketGroupsPagedBaseView.addSubview(self.marketGroupsPagedViewController.view)
-
-        NSLayoutConstraint.activate([
-            marketGroupsPagedBaseView.leadingAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.leadingAnchor),
-            marketGroupsPagedBaseView.trailingAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.trailingAnchor),
-            marketGroupsPagedBaseView.topAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.topAnchor),
-            marketGroupsPagedBaseView.bottomAnchor.constraint(equalTo: self.marketGroupsPagedViewController.view.bottomAnchor),
-        ])
-
-        self.marketGroupsPagedViewController.didMove(toParent: self)
+        //
+        self.addChildViewController(marketGroupsPagedViewController, toView: marketGroupsPagedBaseView)
 
         //
         self.matchFieldWebViewHeight.constant = 0
@@ -181,12 +208,12 @@ class MatchDetailsViewController: UIViewController {
         self.backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
 
         self.shareButton.setTitle("", for: .normal)
-        self.shareButton.setImage(UIImage(named: "send_bet_icon"), for: .normal)
+        self.shareButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
 
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
 
-        self.headerCompetitionImageView.image = UIImage(named: "")
+        self.headerCompetitionImageView.image = nil
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .scaleAspectFill
 
@@ -232,6 +259,21 @@ class MatchDetailsViewController: UIViewController {
         self.marketGroupsPagedViewController.delegate = self
         self.marketGroupsPagedViewController.dataSource = self
 
+        //
+        // account balance
+        self.accountValueView.isHidden = true
+        self.accountValueView.layer.cornerRadius = CornerRadius.view
+        self.accountValueView.layer.masksToBounds = true
+        self.accountValueView.isUserInteractionEnabled = true
+
+        self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
+        self.accountPlusView.layer.masksToBounds = true
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        accountValueView.addGestureRecognizer(accountValueTapGesture)
+
+        // betslip
+        //
         self.betslipButtonView.addSubview(self.betslipCountLabel)
 
         self.view.addSubview(self.betslipButtonView)
@@ -248,15 +290,52 @@ class MatchDetailsViewController: UIViewController {
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         betslipButtonView.addGestureRecognizer(tapBetslipView)
 
-        self.matchFieldWebView.scrollView.alwaysBounceVertical = false
-        self.matchFieldWebView.scrollView.bounces = false
-        self.matchFieldWebView.navigationDelegate = self
-
+        // matchFieldWebView
+        //
         self.matchFieldTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
 
         self.matchFieldBaseView.isHidden = true
 
+        self.matchFieldWebView.scrollView.alwaysBounceVertical = false
+        self.matchFieldWebView.scrollView.bounces = false
+        self.matchFieldWebView.navigationDelegate = self
+        self.matchFieldLoadingView.hidesWhenStopped = true
+        self.matchFieldLoadingView.stopAnimating()
+        self.matchFieldLoadingView.layer.anchorPoint = CGPoint(x: 1.0, y: 0.5)
+        self.matchFieldLoadingView.transform = CGAffineTransform.init(scaleX: 0.6, y: 0.6)
+        self.matchFieldToggleView.isUserInteractionEnabled = false
+        self.matchFieldTitleArrowImageView.isHidden = true
+
         //
+        // stats
+        //
+        self.statsTitleArrowImageView.image = UIImage(named: "arrow_expand_icon")
+
+        self.statsBaseView.isHidden = true
+
+        self.statsCollectionView.delegate = self
+        self.statsCollectionView.dataSource = self
+        self.statsCollectionView.allowsSelection = false
+
+        self.statsCollectionView.showsVerticalScrollIndicator = false
+        self.statsCollectionView.showsHorizontalScrollIndicator = false
+        self.statsCollectionView.contentInset = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+
+        let statsFlowLayout = UICollectionViewFlowLayout()
+        statsFlowLayout.scrollDirection = .horizontal
+        self.statsCollectionView.collectionViewLayout = statsFlowLayout
+
+        self.statsCollectionView.register(MatchStatsCollectionViewCell.nib, forCellWithReuseIdentifier: MatchStatsCollectionViewCell.identifier)
+
+        self.statsBackSliderView.alpha = 0.0
+        self.statsBackSliderView.layer.cornerRadius = 6
+
+        let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
+        self.statsBackSliderView.addGestureRecognizer(backSliderTapGesture)
+
+        self.statsNotFoundLabel.isHidden = true
+
+        // match share
         //
         self.view.addSubview(self.sharedGameCardView)
 
@@ -282,7 +361,6 @@ class MatchDetailsViewController: UIViewController {
 
         //
         self.view.bringSubviewToFront(self.matchNotAvailableView)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -306,6 +384,7 @@ class MatchDetailsViewController: UIViewController {
         super.viewDidLayoutSubviews()
         self.betslipButtonView.layer.cornerRadius = self.betslipButtonView.frame.height / 2
         self.betslipCountLabel.layer.cornerRadius = self.betslipCountLabel.frame.height / 2
+
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -340,6 +419,11 @@ class MatchDetailsViewController: UIViewController {
         self.headerDetailLiveTopLabel.textColor = UIColor.App.textPrimary
         self.headerDetailLiveBottomLabel.textColor = UIColor.App.textPrimary.withAlphaComponent(0.5)
 
+        self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValueLabel.textColor = UIColor.App.textPrimary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+
         // Market List CollectionView
         self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
 
@@ -348,7 +432,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
         
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldToggleView.backgroundColor = UIColor.App.backgroundTertiary
@@ -358,10 +442,62 @@ class MatchDetailsViewController: UIViewController {
 
         self.matchNotAvailableView.backgroundColor = UIColor.App.backgroundPrimary
         self.matchNotAvailableLabel.textColor = UIColor.App.textPrimary
+        self.matchFieldLoadingView.tintColor = .gray
+
+        self.statsBaseView.backgroundColor = UIColor.App.backgroundTertiary
+        self.statsToggleView.backgroundColor = UIColor.App.backgroundTertiary
+        self.statsTitleLabel.textColor = UIColor.App.textPrimary
+        self.statsTitleArrowImageView.backgroundColor = .clear
+        self.statsCollectionBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.statsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
+        self.statsToggleSeparatorView.backgroundColor = UIColor.App.separatorLine
+        self.statsBackSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.statsNotFoundLabel.textColor = UIColor.App.textPrimary
+        
     }
 
     // MARK: - Bindings
     private func bind(toViewModel viewModel: MatchDetailsViewModel) {
+
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSession in
+                if userSession != nil { // Is Logged In
+                    self?.accountValueView.isHidden = false
+                }
+                else {
+                    self?.accountValueView.isHidden = true
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+                    let accountValue = bonusWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+
+                }
+                else {
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBonusBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+                    let accountValue = currentWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
 
         self.viewModel.isLoadingMarketGroups
             .removeDuplicates()
@@ -419,6 +555,7 @@ class MatchDetailsViewController: UIViewController {
                 case .loaded:
                     self?.setupHeaderDetails()
                     self?.setupMatchField()
+                    self?.statsCollectionView.reloadData()
                 case .failed:
                     self?.showMatchNotAvailableView()
                 }
@@ -444,6 +581,13 @@ class MatchDetailsViewController: UIViewController {
                 self?.updateHeaderDetails()
             })
             .store(in: &cancellables)
+
+        self.viewModel.matchStatsUpdatedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.reloadStatsCollectionView()
+            })
+            .store(in: &cancellables)
     }
 
     func reloadMarketGroupDetails(_ marketGroups: [MarketGroup]) {
@@ -458,7 +602,7 @@ class MatchDetailsViewController: UIViewController {
             if let groupKey = marketGroup.groupKey {
                 let viewModel = MarketGroupDetailsViewModel(match: match, marketGroupId: groupKey)
                 let marketGroupDetailsViewController = MarketGroupDetailsViewController(viewModel: viewModel)
-
+                print("MatchDetailsMarkets - marketGroupDetailsViewController: \(groupKey)")
                 self.marketGroupsViewControllers.append(marketGroupDetailsViewController)
             }
         }
@@ -470,6 +614,7 @@ class MatchDetailsViewController: UIViewController {
                                                                     completion: nil)
         }
 
+        print("MatchDetailsMarkets - \(self.marketGroupsViewControllers.count)")
     }
 
     func reloadMarketGroupDetailsContent() {
@@ -505,6 +650,19 @@ class MatchDetailsViewController: UIViewController {
         self.currentPageViewControllerIndex = index
     }
 
+    func reloadStatsCollectionView() {
+        if self.viewModel.numberOfStatsSections() == 0 {
+            self.statsNotFoundLabel.isHidden = false
+            self.statsCollectionView.isHidden = true
+        }
+        else {
+            self.statsNotFoundLabel.isHidden = true
+            self.statsCollectionView.isHidden = false
+        }
+        self.statsCollectionView.reloadData()
+    }
+
+
     func reloadSelectedIndex() {
         self.selectMarketType(atIndex: self.currentPageViewControllerIndex)
     }
@@ -516,21 +674,29 @@ class MatchDetailsViewController: UIViewController {
 
     func setupMatchField() {
 
-        // Hide match field if the sport doesn't support it
-        self.matchFieldBaseView.isHidden = true
-
         guard let match = self.viewModel.match else {
             return
         }
 
         let validSportType = match.sportType == "1" || match.sportType == "3"
         if self.viewModel.matchModePublisher.value == .live && validSportType {
-            self.shouldShowWebView = true
-        }
+            self.matchFieldBaseView.isHidden = false
+            self.statsBaseView.isHidden = true
 
-        if shouldShowWebView {
+            self.shouldShowWebView = true
+
+            self.matchFieldLoadingView.startAnimating()
+
             let request = URLRequest(url: URL(string: "https://sportsbook-cms.gomagaming.com/widget/\(match.id)/\(match.sportType)")!)
             self.matchFieldWebView.load(request)
+        }
+        else if self.viewModel.matchModePublisher.value == .preLive {
+            self.statsBaseView.isHidden = false
+            self.matchFieldBaseView.isHidden = true
+        }
+        else {
+            self.statsBaseView.isHidden = true
+            self.matchFieldBaseView.isHidden = true
         }
 
     }
@@ -543,8 +709,6 @@ class MatchDetailsViewController: UIViewController {
         }
 
         let viewModel = MatchWidgetCellViewModel(match: match)
-
-        // self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
 
         if viewModel.countryISOCode != "" {
             self.headerCompetitionImageView.image = UIImage(named: Assets.flagName(withCountryCode: viewModel.countryISOCode))
@@ -651,8 +815,22 @@ class MatchDetailsViewController: UIViewController {
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
 
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    @objc func didTapBackSliderButton() {
+        self.statsCollectionView.setContentOffset(CGPoint(x: -self.statsCollectionView.contentInset.left, y: 1), animated: true)
+    }
+
     @IBAction private func didTapFieldToogleView() {
         self.isMatchFieldExpanded.toggle()
+    }
+
+    @IBAction private func didTapStatsToogleView() {
+        self.isStatsViewExpanded.toggle()
     }
 
     @IBAction private func didTapBackAction() {
@@ -664,7 +842,41 @@ class MatchDetailsViewController: UIViewController {
         }
     }
 
-    @IBAction private func didTapShareButton() {
+    @IBAction private func didTapMoreOptionsButton() {
+
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.matchId) {
+            let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                Env.favoritesManager.removeFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
+            }
+            actionSheetController.addAction(favoriteAction)
+        }
+        else {
+            let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                Env.favoritesManager.addFavorite(eventId: self.viewModel.matchId, favoriteType: .match)
+            }
+            actionSheetController.addAction(favoriteAction)
+        }
+
+        let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+            self?.didTapShareButton()
+        }
+        actionSheetController.addAction(shareAction)
+
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+        actionSheetController.addAction(cancelAction)
+
+        if let popoverController = actionSheetController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        self.present(actionSheetController, animated: true, completion: nil)
+    }
+
+    private func didTapShareButton() {
 
         guard let matchId = self.viewModel.match?.id else {
             return
@@ -691,15 +903,17 @@ class MatchDetailsViewController: UIViewController {
 
         let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
-        let share = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
-
-        share.completionWithItemsHandler = { [weak self] _, _, _, _ in
+        let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
+        if let popoverController = shareActivityViewController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        shareActivityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
             self?.sharedGameCardView.isHidden = true
         }
-
-        present(share, animated: true, completion: nil)
+        self.present(shareActivityViewController, animated: true, completion: nil)
     }
-
 
 }
 
@@ -761,12 +975,17 @@ extension MatchDetailsViewController: WKNavigationDelegate {
     private func redrawWebView(withHeight heigth: CGFloat) {
         self.matchFielHeight = heigth
 
-        if self.shouldShowWebView {
-            self.matchFieldBaseView.isHidden = false
-            self.view.setNeedsLayout()
-            self.view.layoutSubviews()
-            self.reloadSelectedIndex()
-        }
+        self.matchFieldLoadingView.stopAnimating()
+        self.matchFieldToggleView.isUserInteractionEnabled = true
+        self.matchFieldTitleArrowImageView.isHidden = false
+
+//        if self.shouldShowWebView {
+//            self.matchFieldBaseView.isHidden = false
+//            self.view.setNeedsLayout()
+//            self.view.layoutSubviews()
+//            self.reloadSelectedIndex()
+//        }
+
     }
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -800,4 +1019,96 @@ extension MatchDetailsViewController: UIGestureRecognizerDelegate {
         return true
     }
 
+}
+
+extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return self.viewModel.numberOfStatsSections()
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.viewModel.numberOfStatsRows(forSection: section)
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard
+            let cell = collectionView.dequeueCellType(MatchStatsCollectionViewCell.self, indexPath: indexPath)
+        else {
+            fatalError()
+        }
+
+        if let jsonData = self.viewModel.jsonData(forIndexPath: indexPath) {
+            cell.setupStatsLine(withjson: jsonData)
+        }
+
+        if let match = self.viewModel.match {
+            cell.setupWithTeams(homeTeamName: match.homeParticipant.name, awayTeamName: match.awayParticipant.name)
+        }
+
+        if let marketStatsTitle = self.viewModel.marketStatsTitle(forIndexPath: indexPath) {
+            cell.setupWithMarketTitle(title: marketStatsTitle)
+        }
+
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 16
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        insetForSectionAt section: Int) -> UIEdgeInsets {
+        return UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
+    }
+
+    func collectionView(_ collectionView: UICollectionView,
+                        layout collectionViewLayout: UICollectionViewLayout,
+                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+
+        let screenWidth = UIScreen.main.bounds.size.width
+        var width = screenWidth*0.83
+
+        if width > 390 {
+            width = 390
+        }
+        return CGSize(width: width, height: collectionView.frame.size.height - 4)
+    }
+
+}
+
+
+extension MatchDetailsViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.statsCollectionView {
+            let screenWidth = UIScreen.main.bounds.size.width
+            let width = screenWidth*0.6
+
+            if scrollView.contentOffset.x > width {
+                if !self.showingStatsBackSliderView {
+                    self.showingStatsBackSliderView = true
+                    UIView.animate(withDuration: 0.2) {
+                        self.statsBackSliderView.alpha = 1.0
+                    }
+                }
+            }
+            else {
+                if self.showingStatsBackSliderView {
+                    self.showingStatsBackSliderView = false
+                    UIView.animate(withDuration: 0.2) {
+                        self.statsBackSliderView.alpha = 0.0
+                    }
+                }
+            }
+        }
+    }
 }

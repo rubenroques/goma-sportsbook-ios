@@ -233,8 +233,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 fatalError("")
             }
-            
-            cell.configure(withTransactionHistoryEntry: ticketValue, transactionType: viewModel.transactionsTypePublisher.value)
+            // cell.configure(withTransactionHistoryEntry: ticketValue, transactionType: viewModel.transactionsTypePublisher.value)
             return cell
             
         case .bettings:
@@ -421,7 +420,6 @@ extension HistoryViewController {
     private static func createImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        
         return imageView
     }
     
@@ -487,8 +485,7 @@ extension HistoryViewController {
     private static func createButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.enableButton()
-        
+
         button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
         button.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)

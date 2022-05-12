@@ -125,7 +125,7 @@ class SearchViewController: UIViewController {
         self.activityIndicatorBaseView.backgroundColor = UIColor.App.backgroundTertiary
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
 
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
     }
@@ -592,6 +592,7 @@ extension SearchViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([

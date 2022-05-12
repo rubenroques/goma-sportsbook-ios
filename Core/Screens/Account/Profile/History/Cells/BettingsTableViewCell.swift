@@ -51,26 +51,30 @@ class BettingsTableViewCell : UITableViewCell {
     // MARK: - Lifetime and Cycle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.setupSubviews()
         self.setupWithTheme()
         
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - Layout and Theme
 
     private func setupWithTheme() {
+
+        self.backgroundColor = .clear
+        self.contentView.backgroundColor = .clear
+        self.interiorView.backgroundColor = .clear
+
         self.baseView.layer.cornerRadius = 10
         
         self.lateralView.clipsToBounds = true
         self.lateralView.layer.cornerRadius = 8
-        
-        //self.lateralView.layer.masksToBounds = true
+
         self.lateralView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMinXMinYCorner]
         
         self.baseView.backgroundColor = UIColor.App.backgroundCards
@@ -91,7 +95,6 @@ class BettingsTableViewCell : UITableViewCell {
         self.possibleWinningsValueLabel.textColor = UIColor.App.textPrimary
         
         self.separatorView.backgroundColor = UIColor.App.separatorLine
- 
     }
     
     func setupDetailsLabel(bet : String){
@@ -100,55 +103,53 @@ class BettingsTableViewCell : UITableViewCell {
         self.betTypeLabel.font = AppFont.with(type: .bold, size: 14)
     }
     
-    func setupLateralView(status : String){
+    func setupLateralView(status: String){
 
         if status == "OPEN"{
             self.lateralView.backgroundColor = .clear
-        }else if status == "WON"{
+        }
+        else if status == "WON"{
             self.lateralView.backgroundColor = UIColor.App.myTicketsWon
-        }else if status == "LOST"{
+        }
+        else if status == "LOST"{
             self.lateralView.backgroundColor = UIColor.App.myTicketsLost
-        }else{
+        }
+        else{
             self.lateralView.backgroundColor = UIColor.App.myTicketsOther
         }
         
     }
     
-    
-    func setupDateLabel(date : String ){
-      
+    func setupDateLabel(date: String ){
         self.betDateLabel.text = date
         self.betDateLabel.font = AppFont.with(type: .medium, size: 10)
     }
 
-    func setupIdLabel(id : String ){
-      
+    func setupIdLabel(id: String ){
         self.betIdLabel.text = id
         self.betIdLabel.font = AppFont.with(type: .medium, size: 10)
     }
     
-    func setupOddValuesLabel(oddValue : String){
-       
+    func setupOddValuesLabel(oddValue: String){
         self.totalOddLabel.font = AppFont.with(type: .semibold, size: 12)
         self.totalOddLabel.text = localized("total_odd")
         self.totalOddValueLabel.font = AppFont.with(type: .semibold, size: 16)
         self.totalOddValueLabel.text = oddValue
     }
     
-    func setupBetAmountValuesLabel(betAmount : String){
-        
+    func setupBetAmountValuesLabel(betAmount: String){
         self.betAmountLabel.font = AppFont.with(type: .semibold, size: 12)
         self.betAmountLabel.text = localized("bet_amount")
         self.betAmountValueLabel.font = AppFont.with(type: .semibold, size: 16)
         self.betAmountValueLabel.text = betAmount
-        
     }
     
-    func setupPossibleWinningsValuesLabel(possibleWinnings : String, betStatus : String){
+    func setupPossibleWinningsValuesLabel(possibleWinnings: String, betStatus: String){
         
         if betStatus == "CASHED_OUT"{
             self.possibleWinningsLabel.text = localized("return")
-        }else{
+        }
+        else {
             self.possibleWinningsLabel.text = localized("possible_winnings")
         }
         self.possibleWinningsLabel.font = AppFont.with(type: .semibold, size: 12)
@@ -163,25 +164,25 @@ class BettingsTableViewCell : UITableViewCell {
         self.betHistoryEntry = betHistoryEntry
 
         if betHistoryEntry.type == "SINGLE" {
-   
+
             self.setupDetailsLabel(bet: localized("single")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
         }
         else if betHistoryEntry.type == "MULTIPLE" {
-           
+
             self.setupDetailsLabel(bet: localized("multiple")+" - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
         }
         else if betHistoryEntry.type == "SYSTEM" {
-           
+
             self.setupDetailsLabel(bet: localized("system")+" - \(betHistoryEntry.systemBetType?.capitalized ?? "") - \(betStatusText(forCode: betHistoryEntry.status?.uppercased() ?? "-"))")
         }
-            self.setupIdLabel(id: betHistoryEntry.betId)
-    
+        self.setupIdLabel(id: betHistoryEntry.betId)
+
         if let date = betHistoryEntry.placedDate {
             self.setupDateLabel(date: MyTicketTableViewCell.dateFormatter.string(from: date))
         }
 
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-       
+
             self.setupOddValuesLabel(oddValue: "\(Double(floor(oddValue * 100)/100))")
         }
 
@@ -191,13 +192,13 @@ class BettingsTableViewCell : UITableViewCell {
         }
 
         if let status = betHistoryEntry.status?.uppercased() {
-        
-             if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
-                let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
-                 setupPossibleWinningsValuesLabel(possibleWinnings: maxWinningsString, betStatus: status)
-             }
+
+            if let maxWinnings = betHistoryEntry.maxWinning, // Valor  - > maxWinning
+               let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
+                setupPossibleWinningsValuesLabel(possibleWinnings: maxWinningsString, betStatus: status)
+            }
             setupLateralView(status: status)
-           
+
         }
     }
 }
@@ -253,30 +254,11 @@ extension BettingsTableViewCell {
         stack.distribution = .fillEqually
         stack.alignment = .center
         stack.spacing = 12
-        
         return stack
     }
-    
-    
-    
- 
+
     private func setupSubviews() {
 
-        // Add subviews to self.view or each other
-      /*
-        self.labelsStackView.addSubview(self.totalOddLabel)
-        self.labelsStackView.addSubview(self.betAmountLabel)
-        self.labelsStackView.addSubview(self.possibleWinningsLabel)
-        
-        self.valuesStackView.addSubview(self.totalOddValueLabel)
-        self.valuesStackView.addSubview(self.betAmountValueLabel)
-        self.valuesStackView.addSubview(self.possibleWinningsValueLabel)
-       */
-       
-        
-  
-        
-       
         self.oddsStackView.addArrangedSubview(self.totalOddLabel)
         self.oddsStackView.addArrangedSubview(self.totalOddValueLabel)
         
@@ -289,8 +271,7 @@ extension BettingsTableViewCell {
         self.valuesStackView.addArrangedSubview(self.oddsStackView)
         self.valuesStackView.addArrangedSubview(self.betAmountStackView)
         self.valuesStackView.addArrangedSubview(self.possibleEarningsStackView)
-        
-        
+
         self.baseView.addSubview(self.valuesStackView)
         //self.baseView.addSubview(self.separatorView)
         self.baseView.addSubview(self.betIdLabel)
@@ -299,42 +280,17 @@ extension BettingsTableViewCell {
         self.baseView.addSubview(self.lateralView)
         
         self.baseView.addSubview(self.separatorView)
-       
-        
+
         self.interiorView.addSubview(self.baseView)
-        self.addSubview(self.interiorView)
- 
+        self.contentView.addSubview(self.interiorView)
+
         // Initialize constraints
         self.initConstraints()
     }
 
     private func initConstraints() {
-        
-       /* NSLayoutConstraint.activate([
-            
-            self.labelsStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 16),
-            self.labelsStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
-            self.labelsStackView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
-            self.labelsStackView.bottomAnchor.constraint(equalTo: self.separatorView.topAnchor, constant: -16),
-            //self.labelsStackView.widthAnchor.constraint(equalToConstant: 20),
-            
-           /* self.totalOddLabel.leadingAnchor.constraint(equalTo: self.labelsStackView.leadingAnchor, constant: 16),
-            //self.totalOddValueLabel.trailingAnchor.constraint(equalTo: self.valuesStackView.trailingAnchor, constant: -16),
-            self.totalOddLabel.centerYAnchor.constraint(equalTo: self.labelsStackView.centerYAnchor),
-            
-            self.betAmountLabel.centerXAnchor.constraint(equalTo: self.labelsStackView.centerXAnchor),
-            self.betAmountLabel.centerYAnchor.constraint(equalTo: self.labelsStackView.centerYAnchor),
-            
-            //self.possibleWinningsValueLabel.leadingAnchor.constraint(equalTo: self.valuesStackView.leadingAnchor, constant: 16),
-            self.possibleWinningsLabel.trailingAnchor.constraint(equalTo: self.labelsStackView.trailingAnchor, constant: -16),
-            self.possibleWinningsLabel.centerYAnchor.constraint(equalTo: self.labelsStackView.centerYAnchor),*/
-            
-        ])*/
-        
 
-        
         NSLayoutConstraint.activate([
-            
             self.interiorView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             self.interiorView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.interiorView.topAnchor.constraint(equalTo: self.topAnchor),
@@ -345,7 +301,7 @@ extension BettingsTableViewCell {
             self.baseView.trailingAnchor.constraint(equalTo: self.interiorView.trailingAnchor, constant: -16),
             self.baseView.topAnchor.constraint(equalTo: self.interiorView.topAnchor, constant: 16),
             self.baseView.bottomAnchor.constraint(equalTo: self.interiorView.bottomAnchor),
-           
+
             self.lateralView.widthAnchor.constraint(equalToConstant: 8),
             self.lateralView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor),
             self.lateralView.topAnchor.constraint(equalTo: self.baseView.topAnchor),
@@ -355,14 +311,14 @@ extension BettingsTableViewCell {
             self.separatorView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
             self.separatorView.heightAnchor.constraint(equalToConstant: 1),
             self.separatorView.centerYAnchor.constraint(equalTo: self.valuesStackView.centerYAnchor),
-             
+
             self.betTypeLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
             self.betTypeLabel.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 12),
             
             self.betIdLabel.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 20),
             self.betIdLabel.centerXAnchor.constraint(equalTo: self.betTypeLabel.centerXAnchor),
             self.betIdLabel.topAnchor.constraint(equalTo: self.betTypeLabel.bottomAnchor, constant: 6),
-       
+
             self.betDateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
             self.betDateLabel.centerYAnchor.constraint(equalTo: self.betTypeLabel.centerYAnchor),
             
@@ -370,14 +326,6 @@ extension BettingsTableViewCell {
             self.valuesStackView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor),
             self.valuesStackView.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -16),
             self.valuesStackView.centerXAnchor.constraint(equalTo: self.baseView.centerXAnchor),
-            
-       
-            
         ])
-
-    
     }
-
 }
-
-    

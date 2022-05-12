@@ -66,7 +66,7 @@ extension GomaGamingService: Endpoint {
         case .addFavorites:
             return "/api/favorites/\(apiVersion)"
         case .matchStats(let matchId):
-            return "/api/betting/\(apiVersion)/events/\(matchId)/stats"
+            return "/api/betting/\(apiVersion)/events/\(matchId)/stats/detail"
         case .userSettings:
             return "/api/settings/\(apiVersion)/user"
         case .removeFavorite:

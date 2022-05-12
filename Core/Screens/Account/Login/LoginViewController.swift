@@ -100,8 +100,7 @@ class LoginViewController: UIViewController {
         dismissButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         dismissButton.setTitle(localized("close"), for: .normal)
 
-
-        logoImageView.image = UIImage(named: "logo_horizontal_large")
+        logoImageView.image = UIImage(named: "logo_horizontal_center")
         logoImageView.sizeToFit()
 
         loginLabel.font = AppFont.with(type: AppFont.AppFontType.bold, size: 26)
@@ -180,6 +179,8 @@ class LoginViewController: UIViewController {
         rememberView.backgroundColor = .clear
         rememberLabel.textColor = UIColor.App.textPrimary
 
+        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+
         if self.shouldRememberUser {
             rememberToggleView.backgroundColor =  UIColor.App.buttonBackgroundPrimary
         }
@@ -233,12 +234,14 @@ class LoginViewController: UIViewController {
 
     private func enableRememberUser() {
         rememberImageView.image = UIImage(named: "active_toggle_icon")
+        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         rememberToggleView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         Env.userSessionStore.shouldRecordUserSession = true
     }
 
     private func disableRememberUser() {
         rememberImageView.image = nil
+        rememberImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         rememberToggleView.backgroundColor = UIColor.App.buttonBackgroundSecondary
         Env.userSessionStore.shouldRecordUserSession = false
     }

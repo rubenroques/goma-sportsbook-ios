@@ -331,7 +331,9 @@ extension FullRegisterDocumentsViewController: UIDocumentPickerDelegate, UINavig
         uploadView.didTapClose = {
             uploadView.removeFromSuperview()
             self.addFileDocumentPickerView.fileSelected = false
-            self.submitButton.disableButton()
+
+            self.submitButton.isEnabled = false
+            self.submitButton.backgroundColor = UIColor.App.buttonDisablePrimary
         }
 
         addFileDocumentPickerView.addSubview(uploadView)
@@ -364,7 +366,8 @@ extension FullRegisterDocumentsViewController: UIDocumentPickerDelegate, UINavig
             uploadView.setProgressBar(Float(progress))
             self.addFileDocumentPickerView.fileSelected = true
             if self.addFileDocumentPickerView.fileSelected && self.idHeaderTextFieldView.text != "" {
-                self.submitButton.enableButton()
+                self.submitButton.isEnabled = true
+                self.submitButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
             }
         }
 

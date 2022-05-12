@@ -80,7 +80,7 @@ extension NavigationCardView {
     private static func createIconImageView() -> UIImageView {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "")
+        imageView.image = nil
         imageView.contentMode = .scaleAspectFit
         return imageView
     }

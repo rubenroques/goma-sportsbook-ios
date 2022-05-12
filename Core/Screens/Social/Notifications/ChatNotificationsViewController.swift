@@ -67,15 +67,11 @@ class ChatNotificationsViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
-
         self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
-
         self.notificationsButton.addTarget(self, action: #selector(didTapNotificationButton), for: .primaryActionTriggered)
-
         self.clearAllButon.addTarget(self, action: #selector(didTapClearAllButton), for: .primaryActionTriggered)
 
         self.setupFollowersStackView()
-
         self.setupSharedTicketsStackView()
 
         self.isNotificationMuted = false
@@ -103,15 +99,10 @@ class ChatNotificationsViewController: UIViewController {
         self.view.backgroundColor = UIColor.App.backgroundPrimary
 
         self.topSafeAreaView.backgroundColor = .clear
-
         self.bottomSafeAreaView.backgroundColor = .clear
-
         self.navigationView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.backButton.backgroundColor = .clear
-
         self.titleLabel.textColor = UIColor.App.textPrimary
-
         self.notificationsButton.backgroundColor = .clear
 
         self.closeButton.backgroundColor = .clear
@@ -123,15 +114,11 @@ class ChatNotificationsViewController: UIViewController {
         self.scrollView.backgroundColor = .clear
 
         self.followersStackView.backgroundColor = UIColor.App.backgroundSecondary
-
         self.sharedTicketsStackView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.emptyStateImageView.backgroundColor = .clear
-
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
-
     }
 
     // MARK: Binding
@@ -183,30 +170,24 @@ class ChatNotificationsViewController: UIViewController {
     // MARK: Functions
 
     private func setupFollowersStackView() {
-
         let titleView = TitleView()
         titleView.setTitle(title: localized("users_followed_you"))
 
         self.followersStackView.addArrangedSubview(titleView)
 
         for userActionView in self.viewModel.followerViewsPublisher.value {
-            
             self.followersStackView.addArrangedSubview(userActionView)
         }
-
     }
 
     private func setupSharedTicketsStackView() {
 
         let titleView = TitleView()
         titleView.setTitle(title: localized("shared_tickets_to"))
-
         self.sharedTicketsStackView.addArrangedSubview(titleView)
 
         for userActionView in self.viewModel.sharedTicketViewsPublisher.value {
-
             userActionView.setActionButtonColor(color: UIColor.App.highlightSecondary)
-
             self.sharedTicketsStackView.addArrangedSubview(userActionView)
         }
 

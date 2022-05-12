@@ -265,11 +265,9 @@ extension FilterHistoryViewController: UITableViewDelegate, UITableViewDataSourc
             else {
                 fatalError("")
             }
-
-            cell.configure(withTransactionHistoryEntry: ticketValue , transactionType: viewModel.transactionsTypePublisher.value)
+            //cell.configure(withTransactionHistoryEntry: ticketValue , transactionType: viewModel.transactionsTypePublisher.value)
             return cell
-            
-            
+
         case .bettings:
             let ticket: BetHistoryEntry?
 
@@ -468,7 +466,7 @@ extension FilterHistoryViewController {
     }
     
     private static func createSegmentedControl() -> UISegmentedControl {
-        let segment = UISegmentedControl(items: ["Transactions","Betting"])
+        let segment = UISegmentedControl(items: ["Transactions", "Betting"])
         segment.translatesAutoresizingMaskIntoConstraints = false
         segment.selectedSegmentIndex = 0
         return segment
@@ -481,8 +479,7 @@ extension FilterHistoryViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
-    
- 
+
     private static func createTopSliderCollectionView() -> UICollectionView {
           let collectionLayout = UICollectionViewFlowLayout()
           collectionLayout.scrollDirection = .horizontal
@@ -513,7 +510,6 @@ extension FilterHistoryViewController {
         return view
     }
 
-
     private static func createLoadingBaseView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -523,8 +519,8 @@ extension FilterHistoryViewController {
     private static func createButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.enableButton()
-        
+        button.isEnabled = true
+        button.backgroundColor = UIColor.App.buttonBackgroundPrimary
         button.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         button.setTitleColor(UIColor.App.buttonTextDisablePrimary, for: .disabled)
         button.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
@@ -542,25 +538,20 @@ extension FilterHistoryViewController {
     }
     
     
-    private func setupEmptyState(){
+    private func setupEmptyState() {
 
         switch self.viewModel.listType {
         case .transactions:
-        
             self.emptyStateLabel.text = "There’s no transations here!"
             self.emptyStateSecondaryLabel.text = "You haven’t made a transation yet, it’s time to deposit some money and start betting on your favourites."
-      
             self.emptyStateButton.setTitle("Make a deposit", for: .normal)
             self.emptyStateButton.setTitle("Make a deposit", for: .disabled)
-            
         case .bettings:
             self.emptyStateLabel.text = "There’s no bets here!"
             self.emptyStateSecondaryLabel.text = "You haven’t made a bet yet, it’s time to bet on your favourites."
-      
-            
+
             self.emptyStateButton.setTitle("Go to popular games", for: .normal)
             self.emptyStateButton.setTitle("Go to popular games", for: .disabled)
-           
         }
     
     }
@@ -570,8 +561,7 @@ extension FilterHistoryViewController {
         // Add subviews to self.view or each other
         self.navigationBaseView.addSubview(self.topLabel)
         self.navigationBaseView.addSubview(self.backImage)
-        
-        
+
         self.view.addSubview(self.navigationBaseView)
         
         self.optionSegmentControlBaseView.addSubview(self.optionSegmentControl)

@@ -12,6 +12,8 @@ class OutrightMarketDetailsViewModel {
     // MARK: - Public Properties
     var competition: Competition
 
+    var isLoadingPublisher = CurrentValueSubject<Bool, Never>.init(true)
+
     var refreshPublisher = PassthroughSubject<Void, Never>.init()
 
     // MARK: - Private Properties
@@ -51,6 +53,8 @@ class OutrightMarketDetailsViewModel {
     // MARK: - Internal functions
     private func fetchCompetitionMarkets(competitionId id: String) {
 
+        self.isLoadingPublisher.send(true)
+
         let language = "en"
         let endpoint = TSRouter.tournamentOddsPublisher(operatorId: Env.appSession.operatorId,
                                                         language: language,
@@ -72,6 +76,7 @@ class OutrightMarketDetailsViewModel {
                 case .finished:
                     print("Data retrieved!")
                 }
+                self.isLoadingPublisher.send(false)
             }, receiveValue: { [weak self] state in
                 switch state {
                 case .connect(let publisherIdentifiable):
@@ -88,15 +93,16 @@ class OutrightMarketDetailsViewModel {
     }
 
     private func storeAggregator(_ aggregator: EveryMatrix.Aggregator) {
-
         self.store.storeMarketGroupDetails(fromAggregator: aggregator, onMarketGroup: Self.groupKey)
         self.marketGroupOrganizers = self.store.marketGroupOrganizers(withGroupKey: Self.groupKey)
 
         self.refreshPublisher.send()
+        self.isLoadingPublisher.send(false)
     }
 
     private func updateWithAggregator(_ aggregator: EveryMatrix.Aggregator) {
         self.store.updateMarketGroupDetails(fromAggregator: aggregator)
+        self.isLoadingPublisher.send(false)
     }
 
 }

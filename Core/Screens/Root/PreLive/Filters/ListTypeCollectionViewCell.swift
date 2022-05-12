@@ -20,6 +20,7 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
 
     override var bounds: CGRect {
         didSet {
+            self.setNeedsLayout()
             self.layoutIfNeeded()
         }
     }
@@ -46,6 +47,7 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.setupWithTheme()
         self.setSelectedType(false)
     }
 
@@ -56,6 +58,9 @@ class ListTypeCollectionViewCell: UICollectionViewCell {
         self.labelView.backgroundColor = UIColor.App.backgroundPrimary
         self.setupWithSelection(self.selectedType)
         self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.setNeedsLayout()
+        self.layoutIfNeeded()
     }
 
     func setupWithTitle(_ title: String) {

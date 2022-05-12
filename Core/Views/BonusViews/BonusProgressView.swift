@@ -57,13 +57,13 @@ class BonusProgressView: UIView {
 
         switch viewModel.progressType {
         case .bonus:
-            bonusColor = UIColor(hex: 0x46C1A7)
+            bonusColor = UIColor.App.statsAway
             self.setupColoredLabel(label: self.progressInfoLabel, text: localized("remaining_total_bonus"), color: bonusColor)
 
             self.progressBarView.progressTintColor = bonusColor
 
         case .wager:
-            bonusColor = UIColor(hex: 0xD99F00)
+            bonusColor = UIColor.App.statsHome
             self.setupColoredLabel(label: self.progressInfoLabel, text: localized("remaining_total_wager"), color: bonusColor)
 
             self.progressBarView.progressTintColor = bonusColor
@@ -99,13 +99,13 @@ class BonusProgressView: UIView {
 
         switch progressType {
         case .bonus:
-            bonusColor = UIColor(hex: 0x46C1A7)
+            bonusColor = UIColor.App.statsAway
             self.setupColoredLabel(label: self.progressInfoLabel, text: localized("remaining_total_bonus"), color: bonusColor)
 
             self.progressBarView.progressTintColor = bonusColor
 
         case .wager:
-            bonusColor = UIColor(hex: 0xD99F00)
+            bonusColor = UIColor.App.statsHome
             self.setupColoredLabel(label: self.progressInfoLabel, text: localized("remaining_total_wager"), color: bonusColor)
 
             self.progressBarView.progressTintColor = bonusColor

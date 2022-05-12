@@ -75,7 +75,6 @@ class ConversationsViewController: UIViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
-
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -107,9 +106,7 @@ class ConversationsViewController: UIViewController {
         self.headerSeparatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.emptyStateImageView.backgroundColor = .clear
-
         self.emptyStateLabel.textColor = UIColor.App.textPrimary
 
         self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary

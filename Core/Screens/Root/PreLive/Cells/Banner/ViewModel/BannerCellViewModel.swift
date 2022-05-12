@@ -21,13 +21,20 @@ class BannerCellViewModel {
 
     enum PresentationType {
         case image
-        case match
+        case match(id: String)
+        case externalMatch(contentId: String, imageURLString: String,
+                           eventPartId: String, betTypeId: String)
+        case externalLink(imageURLString: String, linkURLString: String)
+        case externalStream(imageURLString: String, streamURLString: String)
     }
 
     var id: String
     var presentationType: PresentationType
     var matchId: String?
     var imageURL: URL?
+
+    var eventPartId: String?
+    var betTypeId: String?
 
     var match: CurrentValueSubject<EveryMatrix.Match?, Never> = .init(nil)
 
@@ -49,13 +56,13 @@ class BannerCellViewModel {
 
     var cancellables = Set<AnyCancellable>()
 
-    init(id:String, matchId: String?, imageURL: String) {
+    init(id: String, matchId: String?, imageURL: String) {
         self.id = id
         self.matchId = matchId
         let imageURLString = imageURL
 
         if let matchId = self.matchId {
-            self.presentationType = .match
+            self.presentationType = .match(id: matchId)
             self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
             self.requestMatchInfo(matchId)
             self.requestMatchOdds()
@@ -67,12 +74,49 @@ class BannerCellViewModel {
 
     }
 
+    init(presentationType: PresentationType, imageURL: String? = nil) {
+
+        self.id = ""
+        self.presentationType = presentationType
+
+        let imageURLString = imageURL ?? ""
+
+        switch presentationType {
+        case .image:
+            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+
+        case .match(let id):
+            self.imageURL = URL(string: EveryMatrixInfo.staticHost + imageURLString)
+            self.requestMatchInfo(id)
+            self.requestMatchOdds()
+
+        case .externalMatch(let contentId, let imageURLString, let eventPartId, let betTypeId):
+            self.matchId = contentId
+            self.imageURL = URL(string: imageURLString)
+            self.eventPartId = eventPartId
+            self.betTypeId = betTypeId
+            self.requestMatchInfo(contentId)
+            self.requestMatchOdds()
+
+        case .externalLink(let imageURLString, _):
+            self.imageURL = URL(string: imageURLString)
+
+        case .externalStream(let imageURLString, _):
+            self.imageURL = URL(string: imageURLString)
+        }
+
+    }
+
     func requestMatchOdds() {
         print("Banner requesting odds \(self.matchId ?? "-")")
         guard let matchId = self.matchId else {return}
-        
+
+        let betTypeIdValue = self.betTypeId ?? "69"
+
         let matchPublisher = Env.everyMatrixClient.manager
-            .getModel(router: TSRouter.getMatchOdds(language: "en", matchId: matchId, bettingTypeId: "69"),
+            .getModel(router: TSRouter.getMatchOdds(language: "en",
+                                                    matchId: matchId,
+                                                    bettingTypeId: betTypeIdValue),
                       decodingType: EveryMatrix.MatchOdds.self)
             .eraseToAnyPublisher()
 
@@ -170,8 +214,9 @@ class BannerCellViewModel {
         }
         .compactMap({$0})
 
-        // Only 1X2 Ordinary Time
-        for rawMarket  in rawMarketsList where rawMarket.eventPartId == "3" {
+        let eventFilterIdValue = self.eventPartId ?? "3" // 1X2 Ordinary Time default
+
+        for rawMarket  in rawMarketsList where rawMarket.eventPartId == eventFilterIdValue {
 
                 let rawOutcomeIds = self.bettingOutcomesForMarket[rawMarket.id] ?? []
 

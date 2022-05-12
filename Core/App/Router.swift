@@ -54,7 +54,19 @@ class Router {
     }
 
     func makeKeyAndVisible() {
-        self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+
+        if TargetVariables.supportedThemes == Theme.allCases {
+            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+        }
+        else if TargetVariables.supportedThemes == [Theme.dark] {
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.dark
+        }
+        else if TargetVariables.supportedThemes == [Theme.light] {
+            self.rootWindow.overrideUserInterfaceStyle = UIUserInterfaceStyle.light
+        }
+        else {
+            self.rootWindow.overrideUserInterfaceStyle = UserDefaults.standard.theme.userInterfaceStyle
+        }
 
         let splashViewController = SplashViewController(loadingCompleted: {
             self.showPostLoadingFlow()
@@ -82,6 +94,7 @@ class Router {
         }
 
         self.rootWindow.rootViewController = bootRootViewController
+
     }
 
     func subscribeToUserActionBlockers() {

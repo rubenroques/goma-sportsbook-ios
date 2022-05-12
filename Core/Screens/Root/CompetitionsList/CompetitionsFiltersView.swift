@@ -77,6 +77,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
         didSet {
             switch self.state {
             case .opened:
+                self.headerBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
                 self.initialSelectedIds = self.selectedIds.value
                 self.closeButton.setTitle("Close", for: .normal)
@@ -88,6 +89,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                     self.clearButton.alpha = 1.0
                 }
             case .bar:
+                self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 1.0
                     self.smallTitleLabel.alpha = 0.0
@@ -95,6 +97,7 @@ class CompetitionsFiltersView: UIView, NibLoadable {
                     self.clearButton.alpha = 0.0
                 }
             case .line:
+                self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
                 UIView.animate(withDuration: 0.4) {
                     self.titleLabel.alpha = 0.0
                     self.smallTitleLabel.alpha = 1.0
@@ -177,12 +180,6 @@ class CompetitionsFiltersView: UIView, NibLoadable {
             .assign(to: \.isEnabled, on: clearButton)
             .store(in: &cancellables)
 
-//        self.selectedIds
-//            .map(\.isNotEmpty)
-//            .receive(on: DispatchQueue.main)
-//            .assign(to: \.isEnabled, on: closeButton)
-//            .store(in: &cancellables)
-
         self.selectedIds
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] currentSelection in
@@ -228,7 +225,15 @@ class CompetitionsFiltersView: UIView, NibLoadable {
     func setupWithTheme() {
         self.backgroundColor = .clear
 
-        self.headerBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        switch self.state {
+        case .opened:
+            self.headerBaseView.backgroundColor = UIColor.App.backgroundSecondary
+        case .bar:
+            self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+        case .line:
+            self.headerBaseView.backgroundColor = UIColor.App.backgroundBorder
+        }
+
         self.searchBarBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.titleLabel.textColor = UIColor.App.textPrimary

@@ -47,9 +47,7 @@ class SimpleRegisterEmailSentViewController: UIViewController {
         openEmailButton.cornerRadius = CornerRadius.button
 
 
-        openEmailButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.7), for: .highlighted)
-        openEmailButton.setTitleColor(UIColor.white.withAlphaComponent(0.4), for: .disabled)
+        openEmailButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
 
         openEmailButton.backgroundColor = .clear
         openEmailButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)

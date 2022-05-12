@@ -221,7 +221,7 @@ extension BonusAvailableTableViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFit
-        imageView.image = UIImage(named: "logo_horizontal_large")
+        imageView.image = UIImage(named: "logo_horizontal_center")
         imageView.isHidden = true
         return imageView
     }

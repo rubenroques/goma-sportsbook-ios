@@ -44,7 +44,7 @@ class MatchStatsViewModel {
                     self?.statsTypePublisher.send(json)
                 }
                 else {
-                    print("RequestMatchStats empty stats")
+                    self?.statsTypePublisher.send(nil)
                 }
             }
     }

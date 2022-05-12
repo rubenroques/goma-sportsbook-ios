@@ -45,7 +45,7 @@ class EnabledAccessViewController: UIViewController {
         enabledView.backgroundColor = UIColor.App.backgroundSecondary
         enabledLabel.textColor = UIColor.App.textPrimary
 
-        dismissButton.setTitleColor(UIColor.white, for: .normal)
+        dismissButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
         dismissButton.layer.borderColor = UIColor.App.highlightPrimary.cgColor
         dismissButton.layer.backgroundColor = UIColor.App.highlightPrimary.cgColor
     }

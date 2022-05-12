@@ -7,6 +7,7 @@
 
 import UIKit
 import Kingfisher
+import LinkPresentation
 import Nuke
 import Combine
 
@@ -64,10 +65,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     var isFavorite: Bool = false {
         didSet {
             if isFavorite {
-                self.favoritesButton.setImage(UIImage(named: "selected_favorite_icon"), for: .normal)
+                self.favoritesIconImageView.image = UIImage(named: "selected_favorite_icon")
             }
             else {
-                self.favoritesButton.setImage(UIImage(named: "unselected_favorite_icon"), for: .normal)
+                self.favoritesIconImageView.image = UIImage(named: "unselected_favorite_icon")
             }
         }
     }
@@ -137,6 +138,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayUpChangeOddValueImage.alpha = 0.0
         self.awayDownChangeOddValueImage.alpha = 0.0
 
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
+
         self.eventNameLabel.text = ""
         self.homeParticipantNameLabel.text = ""
         self.awayParticipantNameLabel.text = ""
@@ -159,7 +164,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
 
         let tapMatchView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchView))
         self.addGestureRecognizer(tapMatchView)
-        
+
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressCard))
+        self.baseView.addGestureRecognizer(longPressGestureRecognizer)
+
         self.setupWithTheme()
     }
 
@@ -190,6 +198,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         self.awayParticipantNameLabel.text = ""
         self.matchTimeLabel.text = ""
         self.resultLabel.text = ""
+
+        self.homeOddTitleLabel.text = "-"
+        self.drawOddTitleLabel.text = "-"
+        self.awayOddTitleLabel.text = "-"
 
         self.homeOddValueLabel.text = ""
         self.drawOddValueLabel.text = ""
@@ -595,12 +607,7 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     }
 
     func markAsFavorite(match: Match) {
-        var isFavorite = false
-        for matchId in Env.favoritesManager.favoriteEventsIdPublisher.value where matchId == match.id {
-            isFavorite = true
-        }
-
-        if isFavorite {
+        if Env.favoritesManager.isEventFavorite(eventId: match.id) {
             Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
             self.isFavorite = false
         }
@@ -610,15 +617,10 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    //
-    //
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
-//        if let match = self.viewModel?.match {
-//            self.didTapFavoriteMatchAction?(match)
-//        }
         if UserSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
-                //self.didTapFavoriteMatchAction?(match)
+                // self.didTapFavoriteMatchAction?(match)
                 self.markAsFavorite(match: match)
             }
         }
@@ -785,6 +787,88 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
             Env.betslipManager.addBettingTicket(bettingTicket)
             self.isRightOutcomeButtonSelected = true
         }
+    }
+
+}
+
+extension LiveMatchWidgetCollectionViewCell {
+
+    @IBAction private func didLongPressCard() {
+
+        guard
+            let parentViewController = self.viewController,
+            let match = self.viewModel?.match
+        else {
+            return
+        }
+
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        if Env.favoritesManager.isEventFavorite(eventId: match.id) {
+            let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                Env.favoritesManager.removeFavorite(eventId: match.id, favoriteType: .match)
+            }
+            actionSheetController.addAction(favoriteAction)
+        }
+        else {
+            let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                Env.favoritesManager.addFavorite(eventId: match.id, favoriteType: .match)
+            }
+            actionSheetController.addAction(favoriteAction)
+        }
+
+        let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+            self?.didTapShareButton()
+        }
+        actionSheetController.addAction(shareAction)
+
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+        actionSheetController.addAction(cancelAction)
+
+        if let popoverController = actionSheetController.popoverPresentationController {
+            popoverController.sourceView = parentViewController.view
+            popoverController.sourceRect = CGRect(x: parentViewController.view.bounds.midX, y: parentViewController.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        parentViewController.present(actionSheetController, animated: true, completion: nil)
+    }
+
+    private func didTapShareButton() {
+
+        guard
+            let parentViewController = self.viewController,
+            let match = self.viewModel?.match
+        else {
+            return
+        }
+
+        let renderer = UIGraphicsImageRenderer(size: self.bounds.size)
+        let snapshot = renderer.image { _ in
+            self.drawHierarchy(in: self.bounds, afterScreenUpdates: true)
+        }
+
+        let metadata = LPLinkMetadata()
+        let urlMobile = Env.urlMobileShares
+
+        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(match.id)") {
+
+            let imageProvider = NSItemProvider(object: snapshot)
+            metadata.imageProvider = imageProvider
+            metadata.url = matchUrl
+            metadata.originalURL = matchUrl
+            metadata.title = localized("check_this_game")
+        }
+
+        let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+
+        let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
+        if let popoverController = shareActivityViewController.popoverPresentationController {
+            popoverController.sourceView = parentViewController.view
+            popoverController.sourceRect = CGRect(x: parentViewController.view.bounds.midX, y: parentViewController.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        parentViewController.present(shareActivityViewController, animated: true, completion: nil)
     }
 
 }

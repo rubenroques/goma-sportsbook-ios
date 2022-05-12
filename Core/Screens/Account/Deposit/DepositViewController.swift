@@ -81,8 +81,11 @@ class DepositViewController: UIViewController {
         self.navigationLabel.text = localized("deposit")
         self.navigationLabel.font = AppFont.with(type: .bold, size: 17)
 
-        self.navigationButton.setTitle(localized("cancel"), for: .normal)
+
         self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+
+        self.navigationButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        self.navigationButton.setTitle(localized("cancel"), for: .normal)
 
         self.titleLabel.text = localized("how_much_deposit")
         self.titleLabel.font = AppFont.with(type: .bold, size: 20)
@@ -139,7 +142,7 @@ class DepositViewController: UIViewController {
         self.navigationLabel.textColor = UIColor.App.textPrimary
 
         self.navigationButton.backgroundColor = .clear
-        self.navigationButton.tintColor = UIColor.App.highlightPrimary
+        self.navigationButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 

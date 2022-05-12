@@ -41,13 +41,12 @@ class RefusedAccessViewController: UIViewController {
         refusedTitleLabel.textColor = UIColor.App.textPrimary
         refusedSubtitleLabel.textColor = UIColor.App.textSecondary
 
-        locationButton.setTitleColor(UIColor.white, for: .normal)
-        locationButton.layer.borderColor = UIColor.App.buttonBackgroundPrimary.cgColor
-        locationButton.layer.backgroundColor = UIColor.App.buttonBackgroundPrimary.cgColor
+        locationButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        locationButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
     }
 
     func commonInit() {
-        logoMainImageView.image = UIImage(named: "logo_horizontal_large")
+        logoMainImageView.image = UIImage(named: "logo_horizontal_center")
         logoMainImageView.sizeToFit()
 
         refusedImageView.image = UIImage(named: "location_error_icon")
@@ -62,7 +61,6 @@ class RefusedAccessViewController: UIViewController {
 
         locationButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.medium, size: 16)
         locationButton.layer.cornerRadius = 5
-        locationButton.layer.borderWidth = 1
         locationButton.setTitle(localized("enable_location"), for: .normal)
     }
 

@@ -26,6 +26,8 @@ class SuggestedBetTableViewCell: UITableViewCell {
     private lazy var topBaseView: UIView = Self.createTopBaseView()
     private lazy var ticketsStackView: UIStackView = Self.createTicketsStackView()
 
+    private lazy var loadingIndicatorView: UIActivityIndicatorView = Self.createLoadingIndicatorView()
+
     private lazy var separatorLineView: UIView = Self.createSeparatorLineView()
     private lazy var bottomBaseView: UIView = Self.createBottomBaseView()
     private lazy var infoLabelsStackView: UIStackView = Self.createInfoLabelsStackView()
@@ -51,6 +53,7 @@ class SuggestedBetTableViewCell: UITableViewCell {
         self.setupSubviews()
         self.setupWithTheme()
 
+        self.loadingIndicatorView.stopAnimating()
         self.placeBetButton.addTarget(self, action: #selector(didTapPlaceBetButton), for: .primaryActionTriggered)
     }
 
@@ -62,6 +65,7 @@ class SuggestedBetTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        self.loadingIndicatorView.stopAnimating()
         self.setupWithTheme()
     }
 
@@ -84,20 +88,29 @@ class SuggestedBetTableViewCell: UITableViewCell {
         self.totalOddLabel.textColor = UIColor.App.textPrimary
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary
 
+        self.loadingIndicatorView.tintColor = UIColor.gray
+
         StyleHelper.styleButton(button: self.placeBetButton)
     }
 
     func setupWithViewModel(viewModel: SuggestedBetViewModel) {
         self.viewModel = viewModel
 
+        self.loadingIndicatorView.startAnimating()
+
         self.viewModel?.isViewModelFinishedLoading
             .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] value in
-                if value {
+            .sink(receiveValue: { [weak self] isViewModelFinishedLoading in
+                if isViewModelFinishedLoading {
+                    self?.loadingIndicatorView.stopAnimating()
                     self?.setupStackBetView()
+                }
+                else {
+                    self?.loadingIndicatorView.startAnimating()
                 }
             })
             .store(in: &cancellables)
+
     }
 
     func setupStackBetView() {
@@ -164,6 +177,14 @@ extension SuggestedBetTableViewCell {
         stackView.distribution = .fill
         stackView.axis = .vertical
         return stackView
+    }
+
+    private static func createLoadingIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .medium)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.stopAnimating()
+        return activityIndicatorView
     }
 
     private static func createSeparatorLineView() -> UIView {
@@ -242,6 +263,8 @@ extension SuggestedBetTableViewCell {
         self.containerView.addSubview(self.topBaseView)
         self.topBaseView.addSubview(self.ticketsStackView)
 
+        self.topBaseView.addSubview(self.loadingIndicatorView)
+
         self.containerView.addSubview(self.separatorLineView)
 
         self.containerView.addSubview(self.bottomBaseView)
@@ -273,6 +296,9 @@ extension SuggestedBetTableViewCell {
             self.containerView.trailingAnchor.constraint(equalTo: self.topBaseView.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topBaseView.topAnchor),
             self.topBaseView.heightAnchor.constraint(equalToConstant: 240),
+
+            self.loadingIndicatorView.centerXAnchor.constraint(equalTo: self.topBaseView.centerXAnchor),
+            self.loadingIndicatorView.centerYAnchor.constraint(equalTo: self.topBaseView.centerYAnchor),
 
             self.separatorLineView.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor, constant: 12),
             self.separatorLineView.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -12),

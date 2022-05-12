@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import WebKit
 
 class RootViewController: UIViewController {
 
@@ -39,6 +40,8 @@ class RootViewController: UIViewController {
 
     @IBOutlet private weak var searchButton: UIButton!
     @IBOutlet private weak var logoImageView: UIImageView!
+    @IBOutlet private weak var logoImageWidthConstraint: NSLayoutConstraint!
+    @IBOutlet private weak var logoImageHeightConstraint: NSLayoutConstraint!
 
     @IBOutlet private var loginBaseView: UIView!
     @IBOutlet private var loginButton: UIButton!
@@ -47,7 +50,23 @@ class RootViewController: UIViewController {
     @IBOutlet private var accountValueView: UIView!
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
+    @IBOutlet private var accountPlusImageView: UIImageView!
 
+    //
+    //
+    private var pictureInPictureView: PictureInPictureView?
+
+    private lazy var overlayWindow: PassthroughWindow = {
+        var overlayWindow: PassthroughWindow = PassthroughWindow(frame: UIScreen.main.bounds)
+        overlayWindow.windowLevel = .alert
+        return overlayWindow
+    }()
+
+    //
+    let activeButtonAlpha = 1.0
+    let idleButtonAlpha = 0.52
+
+    //
     // Child view controllers
     lazy var homeViewController = HomeViewController()
     lazy var preLiveViewController = PreLiveEventsViewController(selectedSportType: Sport.football)
@@ -109,6 +128,36 @@ class RootViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    @objc private func windowDidResignKeyNotification(_ notification: NSNotification) {
+        if let actorWindow = notification.object as? UIWindow {
+            if actorWindow == self.view.window {
+                print("WindowNotification main window resigning")
+            }
+            else if actorWindow == self.overlayWindow {
+                print("WindowNotification overlayWindow window resigning")
+            }
+            else {
+                print("WindowNotification other window resigning")
+            }
+        }
+    }
+
+    @objc private func windowDidBecomeKeyNotification(_ notification: NSNotification) {
+        if let actorWindow = notification.object as? UIWindow {
+            if actorWindow == self.view.window {
+                print("WindowNotification main window active")
+            }
+            else if actorWindow == self.overlayWindow {
+                print("WindowNotification overlayWindow window active")
+                self.pictureInPictureView?.isHidden = false
+            }
+            else {
+                print("WindowNotification other window active")
+                self.pictureInPictureView?.isHidden = true
+            }
+        }
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -120,6 +169,43 @@ class RootViewController: UIViewController {
 
         self.commonInit()
         self.loadChildViewControllerIfNeeded(tab: self.selectedTabItem)
+
+        //
+         self.pictureInPictureView = PictureInPictureView()
+         self.overlayWindow.addSubview(self.pictureInPictureView!, anchors: [.leading(0), .trailing(0), .top(0), .bottom(0)] )
+         self.overlayWindow.isHidden = false // .makeKeyAndVisible()
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.windowDidResignKeyNotification(_:)),
+                                               name: UIWindow.didResignKeyNotification,
+                                               object: nil)
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.windowDidBecomeKeyNotification(_:)),
+                                               name: UIWindow.didBecomeKeyNotification,
+                                               object: nil)
+
+//        NotificationCenter.default.addObserver(
+//            forName: UIWindow.didResignKeyNotification,
+//            object: self.overlayWindow,
+//            queue: nil
+//        ) { notification in
+//            print("Video is now fullscreen")
+//
+//            self.pictureInPictureView?.isHidden = true
+//        }
+//
+//        NotificationCenter.default.addObserver(
+//            forName: UIWindow.didBecomeKeyNotification,
+//            object: self.overlayWindow,
+//            queue: nil
+//        ) { notification in
+//            print("Video stopped")
+//
+//            self.pictureInPictureView?.isHidden = false
+//        }
+
+        //
         self.setupWithTheme()
 
         Env.userSessionStore.userSessionPublisher
@@ -199,10 +285,8 @@ class RootViewController: UIViewController {
             .sink { [weak self] value in
                 if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
                     let accountValue = currentWallet.amount + value
-
                     self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
                 }
-
             }
             .store(in: &cancellables)
 
@@ -222,36 +306,32 @@ class RootViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
-        profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
-        profilePictureImageView.layer.borderWidth = 1
-        profilePictureImageView.layer.borderColor = UIColor.App.highlightSecondary.cgColor
+        self.profilePictureBaseView.layer.cornerRadius = profilePictureBaseView.frame.size.width/2
+        self.profilePictureImageView.layer.cornerRadius = profilePictureImageView.frame.size.width/2
+        self.profilePictureImageView.layer.borderWidth = 1
+        self.profilePictureImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
         
-        profilePictureImageView.layer.masksToBounds = true
+        self.profilePictureImageView.layer.masksToBounds = true
 
-        accountValueView.layer.cornerRadius = CornerRadius.view
-        accountValueView.layer.masksToBounds = true
-        accountValueView.isUserInteractionEnabled = true
+        self.accountValueView.layer.cornerRadius = CornerRadius.view
+        self.accountValueView.layer.masksToBounds = true
+        self.accountValueView.isUserInteractionEnabled = true
 
-        accountPlusView.layer.cornerRadius = CornerRadius.squareView
-        accountPlusView.layer.masksToBounds = true
+        self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
+        self.accountPlusView.layer.masksToBounds = true
+
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
     }
 
     func commonInit() {
 
-        switch self.selectedTabItem {
-        case .home:
-            homeButtonBaseView.alpha = 1.0
-            sportsButtonBaseView.alpha = 0.2
-            liveButtonBaseView.alpha = 0.2
-        case .preLive:
-            homeButtonBaseView.alpha = 0.2
-            sportsButtonBaseView.alpha = 1.0
-            liveButtonBaseView.alpha = 0.2
-        case .live:
-            homeButtonBaseView.alpha = 0.2
-            sportsButtonBaseView.alpha = 0.2
-            liveButtonBaseView.alpha = 1.0
+        self.redrawButtonButtons()
+
+        if let image = self.logoImageView.image {
+            let ratio = image.size.height / image.size.width
+            let newHeight = self.logoImageHeightConstraint.constant / ratio
+            self.logoImageWidthConstraint.constant = newHeight
+            self.view.layoutIfNeeded()
         }
 
         //
@@ -287,52 +367,58 @@ class RootViewController: UIViewController {
 
     func setupWithTheme() {
 
-        homeBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.preLiveBaseView.backgroundColor = UIColor.App.backgroundPrimary
+        self.liveBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        homeTitleLabel.textColor = UIColor.App.textPrimary
-        liveTitleLabel.textColor = UIColor.App.textPrimary
-        sportsTitleLabel.textColor = UIColor.App.textPrimary
+        self.homeTitleLabel.textColor = UIColor.App.highlightPrimary
+        self.liveTitleLabel.textColor = UIColor.App.highlightPrimary
+        self.sportsTitleLabel.textColor = UIColor.App.highlightPrimary
 
-        topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
-        topBarView.backgroundColor = UIColor.App.backgroundPrimary
-        contentView.backgroundColor = UIColor.App.backgroundPrimary
-        tabBarView.backgroundColor = UIColor.App.backgroundPrimary
-        bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        self.homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        self.liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
 
-        tabBarView.layer.shadowRadius = 20
-        tabBarView.layer.shadowOffset = .zero
-        tabBarView.layer.shadowColor = UIColor.black.cgColor
-        tabBarView.layer.shadowOpacity = 0.25
+        self.topSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
+        self.topBarView.backgroundColor = UIColor.App.backgroundPrimary
+        self.contentView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tabBarView.backgroundColor = UIColor.App.backgroundPrimary
+        self.bottomSafeAreaView.backgroundColor = UIColor.App.backgroundPrimary
 
-        topBarView.layer.shadowRadius = 20
-        topBarView.layer.shadowOffset = .zero
-        topBarView.layer.shadowColor = UIColor.black.cgColor
-        topBarView.layer.shadowOpacity = 0.25
+        self.tabBarView.layer.shadowRadius = 20
+        self.tabBarView.layer.shadowOffset = .zero
+        self.tabBarView.layer.shadowColor = UIColor.black.cgColor
+        self.tabBarView.layer.shadowOpacity = 0.25
 
-        homeButtonBaseView.backgroundColor = .clear
-        sportsButtonBaseView.backgroundColor = .clear
-        liveButtonBaseView.backgroundColor = .clear
+        self.topBarView.layer.shadowRadius = 20
+        self.topBarView.layer.shadowOffset = .zero
+        self.topBarView.layer.shadowColor = UIColor.black.cgColor
+        self.topBarView.layer.shadowOpacity = 0.25
 
-        profilePictureBaseView.backgroundColor = UIColor.App.highlightSecondary
+        self.homeButtonBaseView.backgroundColor = .clear
+        self.sportsButtonBaseView.backgroundColor = .clear
+        self.liveButtonBaseView.backgroundColor = .clear
 
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
-        loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
-        loginButton.layer.cornerRadius = CornerRadius.view
-        loginButton.layer.masksToBounds = true
+        self.profilePictureBaseView.backgroundColor = UIColor.App.highlightPrimary
 
-        accountValueView.backgroundColor = UIColor.App.backgroundSecondary
-        accountValueLabel.textColor = UIColor.App.textPrimary
-        accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.loginButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.4), for: .disabled)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
+        self.loginButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .highlighted)
+        self.loginButton.layer.cornerRadius = CornerRadius.view
+        self.loginButton.layer.masksToBounds = true
+
+        self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValueLabel.textColor = UIColor.App.textPrimary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+
+        self.redrawButtonButtons()
     }
 
     func setupWithState(_ state: ScreenState) {
         switch state {
-        case let .logged:
+        case .logged:
             self.loginBaseView.isHidden = true
             self.profileBaseView.isHidden = false
             self.accountValueBaseView.isHidden = false
@@ -383,6 +469,13 @@ class RootViewController: UIViewController {
         self.present(Router.navigationController(with: socialViewController), animated: true, completion: nil)
     }
 
+    func openInternalWebview(onURL url: URL) {
+        let internalBrowserViewController = InternalBrowserViewController(url: url)
+        let navigationViewController = Router.navigationController(with: internalBrowserViewController)
+        navigationViewController.modalPresentationStyle = .fullScreen
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
     func reloadChildViewControllersData() {
         if preLiveViewControllerLoaded {
             self.preLiveViewController.reloadData()
@@ -409,19 +502,16 @@ class RootViewController: UIViewController {
 
     @objc func didTapLogoImageView() {
 
-        guard
-            Env.everyMatrixClient.userSessionStatusPublisher.value == .logged,
-            let userId = UserSessionStore.loggedUserSession()?.userId
-        else {
-            return
-        }
-
-        let casinoWebViewController = CasinoWebViewController(userId: userId)
-        casinoWebViewController.modalPresentationStyle = .fullScreen
-        
-        self.present(casinoWebViewController, animated: true, completion: nil)
-
     }
+    
+}
+
+extension RootViewController {
+
+    private func openExternalVideo(fromURL url: URL) {
+        self.pictureInPictureView?.playVideo(fromURL: url)
+    }
+
 }
 
 // Navigations between tabs
@@ -465,6 +555,12 @@ extension RootViewController {
             self.homeViewController.didTapChatButtonAction = { [weak self] in
                 self?.openChatModal()
             }
+            self.homeViewController.didTapExternalVideoAction = { [weak self] url in
+                self?.openExternalVideo(fromURL: url)
+            }
+            self.homeViewController.didTapExternalLinkAction = { [weak self] url in
+                self?.openInternalWebview(onURL: url)
+            }
             homeViewControllerLoaded = true
         }
 
@@ -497,7 +593,6 @@ extension RootViewController {
 
 extension RootViewController {
 
-    // TODO: Not implemented on the flow
     @IBAction private func didTapLoginButton() {
         let loginViewController = Router.navigationController(with: LoginViewController())
         self.present(loginViewController, animated: true, completion: nil)
@@ -509,7 +604,6 @@ extension RootViewController {
 
     @objc private func didTapAccountValue() {
         let depositViewController = DepositViewController()
-        //self.navigationController?.pushViewController(depositViewController, animated: true)
         let navigationViewController = Router.navigationController(with: depositViewController)
         self.present(navigationViewController, animated: true, completion: nil)
     }
@@ -642,9 +736,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = true
 
-        homeButtonBaseView.alpha = 1.0
-        sportsButtonBaseView.alpha = 0.2
-        liveButtonBaseView.alpha = 0.2
+        self.redrawButtonButtons()
     }
 
     func selectSportsTabBarItem() {
@@ -654,9 +746,7 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = false
         self.liveBaseView.isHidden = true
 
-        homeButtonBaseView.alpha = 0.2
-        sportsButtonBaseView.alpha = 1.0
-        liveButtonBaseView.alpha = 0.2
+        self.redrawButtonButtons()
     }
 
     func selectLiveTabBarItem() {
@@ -666,9 +756,50 @@ extension RootViewController {
         self.preLiveBaseView.isHidden = true
         self.liveBaseView.isHidden = false
 
-        homeButtonBaseView.alpha = 0.2
-        sportsButtonBaseView.alpha = 0.2
-        liveButtonBaseView.alpha = 1.0
+        self.redrawButtonButtons()
+
+    }
+
+    func redrawButtonButtons() {
+
+        switch self.selectedTabItem {
+        case .home:
+            homeButtonBaseView.alpha = self.activeButtonAlpha
+            sportsButtonBaseView.alpha = self.idleButtonAlpha
+            liveButtonBaseView.alpha = self.idleButtonAlpha
+
+            homeTitleLabel.textColor = UIColor.App.highlightPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            sportsTitleLabel.textColor = UIColor.App.textPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            liveTitleLabel.textColor = UIColor.App.textPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+
+        case .preLive:
+            homeButtonBaseView.alpha = self.idleButtonAlpha
+            sportsButtonBaseView.alpha = self.activeButtonAlpha
+            liveButtonBaseView.alpha = self.idleButtonAlpha
+
+            homeTitleLabel.textColor = UIColor.App.textPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            sportsTitleLabel.textColor = UIColor.App.highlightPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+            liveTitleLabel.textColor = UIColor.App.textPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.textPrimary)
+
+        case .live:
+            homeButtonBaseView.alpha = self.idleButtonAlpha
+            sportsButtonBaseView.alpha = self.idleButtonAlpha
+            liveButtonBaseView.alpha = self.activeButtonAlpha
+
+            homeTitleLabel.textColor = UIColor.App.textPrimary
+            homeIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            sportsTitleLabel.textColor = UIColor.App.textPrimary
+            sportsIconImageView.setImageColor(color: UIColor.App.textPrimary)
+            liveTitleLabel.textColor = UIColor.App.highlightPrimary
+            liveIconImageView.setImageColor(color: UIColor.App.highlightPrimary)
+        }
+
     }
 
 }

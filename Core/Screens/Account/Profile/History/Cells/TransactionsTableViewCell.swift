@@ -19,28 +19,30 @@ class TransactionsTableViewCell: UITableViewCell {
     private lazy var transactionDateLabel: UILabel = Self.createLabel()
     private lazy var transactionIdLabel: UILabel = Self.createLabel()
     
-    var transactionHistoryEntry : EveryMatrix.TransactionHistory?
-    
+    var transactionHistoryEntry: EveryMatrix.TransactionHistory?
     
     // MARK: - Lifetime and Cycle
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-            super.init(style: style, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.setupSubviews()
         self.setupWithTheme()
         
-        }
-        
-        required init?(coder: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - Layout and Theme
 
     private func setupWithTheme() {
+        self.backgroundColor = .clear
+        self.contentView.backgroundColor = .clear
+
         self.baseView.layer.cornerRadius = 10
-        
+
         self.interiorView.backgroundColor = .clear
         
         self.baseView.backgroundColor = UIColor.App.backgroundCards
@@ -55,79 +57,42 @@ class TransactionsTableViewCell: UITableViewCell {
         self.transactionDateLabel.font = AppFont.with(type: .medium, size: 12)
         self.transactionIdLabel.font = AppFont.with(type: .medium, size: 12)
     }
-    
-    func setTransactionIcon(transactionType : HistoryViewModel.TransactionsType){
-        switch transactionType{
-            
+
+    func configure(withTransactionHistoryEntry transactionHistoryEntry: EveryMatrix.TransactionHistory,
+                   transactionType: TransactionsHistoryViewModel.TransactionsType) {
+
+        if let date = DateFormatter.init(format: "yyyy-MM-dd'T'HH:mm:ss.SSS").date(from: transactionHistoryEntry.time) {
+            self.transactionDateLabel.text = TransactionsTableViewCell.dateFormatter.string(from: date)
+        }
+        self.transactionIdLabel.text = transactionHistoryEntry.transactionID
+
+        switch transactionType {
         case .deposit:
             self.transactionIcon.image = UIImage(named: "deposit_icon")
+            self.transactionTypeLabel.text = "Deposit"
+            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)) {
+                self.transactionValueLabel.text = "+ " + amount
+            }
         case .withdraw:
             self.transactionIcon.image = UIImage(named: "withdraw_icon")
-        }
-        
-        
-    }
-
-    func setTransactionTypeLabel(transactionType : HistoryViewModel.TransactionsType){
-        switch transactionType{
-            
-        case .deposit:
-            self.transactionTypeLabel.text = "Deposit"
-        case .withdraw:
             self.transactionTypeLabel.text = "Withdraw"
-        }
-        
-    }
-
-    func setTransactionValueLabel(transactionType : HistoryViewModel.TransactionsType, transactionValue : String){
-        switch transactionType{
-            
-        case .deposit:
-            self.transactionValueLabel.text = "+"+transactionValue
-        case .withdraw:
-            self.transactionValueLabel.text = "-"+transactionValue
-        }
-    
-    }
-    
-    func setTransactionDateLabel(transactionDate : String){
-       
-        self.transactionDateLabel.text = transactionDate
-        
-    }
-    
-    func setTransactionIdLabel(transactionId : String){
-        
-        self.transactionIdLabel.text = transactionId
-       
-      
-    }
-    
-    
-    
-    func configure(withTransactionHistoryEntry transactionHistoryEntry: EveryMatrix.TransactionHistory, transactionType : HistoryViewModel.TransactionsType) {
-
-        
-        setTransactionDateLabel(transactionDate: transactionHistoryEntry.time)
-        setTransactionIcon(transactionType: transactionType)
-        setTransactionTypeLabel(transactionType: transactionType)
-        switch transactionType{
-        case .deposit:
-            if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.debit.amount)){
-                  setTransactionValueLabel(transactionType: transactionType, transactionValue: amount)
-              }
-        case .withdraw:
             if let amount = CurrencyFormater.defaultFormat.string(from: NSNumber(value: transactionHistoryEntry.credit.amount)) {
-             
-                setTransactionValueLabel(transactionType: transactionType, transactionValue: amount)
+                self.transactionValueLabel.text = "- " + amount
             }
         }
-        setTransactionIdLabel(transactionId: transactionHistoryEntry.transactionID)
+
     }
 
 }
 
-
+extension TransactionsTableViewCell {
+    static var dateFormatter: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.timeStyle = .medium
+        dateFormatter.dateStyle = .medium
+        return dateFormatter
+    }()
+}
 
 //
 // MARK: - Subviews Initialization and Setup
@@ -151,14 +116,10 @@ extension TransactionsTableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }
-    
-
 
     private func setupSubviews() {
 
         // Add subviews to self.view or each other
-      
-        
         self.baseView.addSubview(self.transactionIcon)
         self.baseView.addSubview(self.transactionIdLabel)
         self.baseView.addSubview(self.transactionDateLabel)
@@ -166,11 +127,7 @@ extension TransactionsTableViewCell {
         self.baseView.addSubview(self.transactionValueLabel)
         
         self.interiorView.addSubview(self.baseView)
-        self.addSubview(self.interiorView)
-        
-
-        //self.view.addSubview(self.loadingBaseView)
-       // self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
+        self.contentView.addSubview(self.interiorView)
 
         // Initialize constraints
         self.initConstraints()
@@ -207,13 +164,9 @@ extension TransactionsTableViewCell {
             
             self.transactionDateLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -16),
             self.transactionDateLabel.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -16),
-            
 
         ])
 
-    
     }
 
 }
-
-    

@@ -16,8 +16,8 @@ class BannerScrollTableViewCell: UITableViewCell {
     @IBOutlet private var collectionView: UICollectionView!
 
     var viewModel: BannerLineCellViewModel?
-    var tappedBannerMatchAction: ((Match) -> Void)?
-    var tappedBannerBonusAction: (() -> Void)?
+    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType) -> Void)?
+
     private var carouselCounter: Int = 0
     private weak var timer: Timer?
 
@@ -147,12 +147,8 @@ extension BannerScrollTableViewCell: UICollectionViewDelegate, UICollectionViewD
         
         cell.setupWithViewModel(cellViewModel)
 
-        cell.tappedMatchBaseViewAction = { [weak self] match in
-            self?.tappedBannerMatchAction?(match)
-        }
-
-        cell.tappedBonusBaseViewAction = { [weak self] in
-            self?.tappedBannerBonusAction?()
+        cell.didTapBannerViewAction = { [weak self] presentationType in
+            self?.didTapBannerViewAction?(presentationType)
         }
 
         return cell

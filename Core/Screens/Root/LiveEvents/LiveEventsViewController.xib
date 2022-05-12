@@ -13,7 +13,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveEventsViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="LiveEventsViewController" customModule="DAZN" customModuleProvider="target">
             <connections>
                 <outlet property="emptyBaseView" destination="jqE-LG-SYC" id="mdO-dn-XBO"/>
                 <outlet property="emptyStateButton" destination="kUU-B5-fgT" id="Oy4-1c-nMN"/>
@@ -33,6 +33,7 @@
                 <outlet property="secondTextFieldEmptyStateLabel" destination="xDr-rR-c5B" id="bqM-B8-uRN"/>
                 <outlet property="sportTypeIconImageView" destination="4K7-2i-ld7" id="13K-o1-meF"/>
                 <outlet property="sportsSelectorButtonView" destination="E3s-l3-XNu" id="iqj-nw-59L"/>
+                <outlet property="sportsSelectorExpandImageView" destination="Da0-Ux-YuR" id="8d0-nJ-Pmp"/>
                 <outlet property="tableView" destination="l7X-fl-RkH" id="zkD-vO-UsB"/>
                 <outlet property="view" destination="ElK-p1-fuA" id="uGW-AW-f7V"/>
             </connections>

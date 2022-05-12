@@ -168,7 +168,6 @@ class FavoritesManager {
         self.favoriteEventsIdPublisher.send(favoriteEventsId)
 
         self.postUserMetadata(favoriteEvents: favoriteEventsId, favoriteTypeChanged: favoriteType)
-
     }
 
     func removeFavorite(eventId: String, favoriteType: FavoriteType) {
@@ -184,7 +183,10 @@ class FavoritesManager {
         self.favoriteIdToRemove = eventId
 
         self.postUserMetadata(favoriteEvents: favoriteEventsId, favoriteTypeChanged: favoriteType)
+    }
 
+    func isEventFavorite(eventId: String) -> Bool {
+        return self.favoriteEventsIdPublisher.value.contains(eventId)
     }
 
 }

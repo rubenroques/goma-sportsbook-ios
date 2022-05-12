@@ -25,6 +25,12 @@ class MyFavoritesViewController: UIViewController {
     private lazy var emptyStateImageView: UIImageView = Self.createEmptyStateImageView()
     private lazy var emptyStateTitleLabel: UILabel = Self.createEmptyStateTitleLabel()
     private lazy var emptyStateLoginButton: UIButton = Self.createEmptyStateLoginButton()
+
+    private lazy var accountValueView: UIView = Self.createAccountValueView()
+    private lazy var accountPlusView: UIView = Self.createAccountPlusView()
+    private lazy var accountPlusImageView: UIImageView = Self.createAccountPlusImageView()
+    private lazy var accountValueLabel: UILabel = Self.createAccountValueLabel()
+
     private var cancellables = Set<AnyCancellable>()
 
     // Data Sources
@@ -90,7 +96,11 @@ class MyFavoritesViewController: UIViewController {
         self.betslipCountLabel.isHidden = true
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        self.accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.isHidden = true
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -163,19 +173,21 @@ class MyFavoritesViewController: UIViewController {
         self.backButton.tintColor = UIColor.App.textHeadlinePrimary
 
         self.topTitleLabel.textColor = UIColor.App.textPrimary
-
         self.topSliderCollectionView.backgroundColor = UIColor.App.backgroundSecondary
-
         self.tableView.backgroundColor = UIColor.App.backgroundPrimary
-
         self.loadingScreenBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.7)
-
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
 
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
+
+        self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
+        self.accountValueLabel.textColor = UIColor.App.textPrimary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+
     }
 
     // MARK: Binding
@@ -238,6 +250,48 @@ class MyFavoritesViewController: UIViewController {
 //            }
 //        }
 
+
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSession in
+                if userSession != nil { // Is Logged In
+                    self?.accountValueView.isHidden = false
+                }
+                else {
+                    self?.accountValueView.isHidden = true
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
+                    let accountValue = bonusWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+
+                }
+                else {
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+
+        Env.userSessionStore.userBonusBalanceWallet
+            .compactMap({$0})
+            .map(\.amount)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] value in
+                if let currentWallet = Env.userSessionStore.userBalanceWallet.value {
+                    let accountValue = currentWallet.amount + value
+                    self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
+                }
+            }
+            .store(in: &cancellables)
+
+        
         viewModel.isLoadingPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] isLoading in
@@ -307,7 +361,13 @@ class MyFavoritesViewController: UIViewController {
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
-    
+
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)
@@ -536,7 +596,7 @@ extension MyFavoritesViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = localized("my_favorites")
         label.font = AppFont.with(type: .bold, size: 17)
-        label.textAlignment = .center
+        label.textAlignment = .left
         return label
     }
 
@@ -586,6 +646,7 @@ extension MyFavoritesViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([
@@ -646,9 +707,47 @@ extension MyFavoritesViewController {
         return button
     }
 
+    private static func createAccountValueView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = CornerRadius.view
+        view.layer.masksToBounds = true
+        view.isUserInteractionEnabled = true
+        return view
+    }
+
+    private static func createAccountPlusView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.layer.cornerRadius = CornerRadius.squareView
+        view.layer.masksToBounds = true
+        return view
+    }
+
+    private static func createAccountPlusImageView() -> UIImageView {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "plus_small_icon")
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.contentMode = .scaleAspectFit
+        return imageView
+    }
+
+    private static func createAccountValueLabel() -> UILabel {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = AppFont.with(type: .semibold, size: 12)
+        label.text = "Loading"
+        return label
+    }
+
     private func setupSubviews() {
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.topView)
+
+        self.accountValueView.addSubview(self.accountPlusView)
+        self.accountPlusView.addSubview(self.accountPlusImageView)
+        self.accountValueView.addSubview(self.accountValueLabel)
+        self.topView.addSubview(self.accountValueView)
 
         self.topView.addSubview(self.backButton)
         self.topView.addSubview(self.topTitleLabel)
@@ -710,15 +809,31 @@ extension MyFavoritesViewController {
             self.topView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.topView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 0),
+            self.backButton.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor),
             self.backButton.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
             self.backButton.heightAnchor.constraint(equalToConstant: 44),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
 
-            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.topView.leadingAnchor, constant: 30),
-            self.topTitleLabel.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -30),
+            self.topTitleLabel.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
             self.topTitleLabel.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
 
+            self.accountValueView.centerYAnchor.constraint(equalTo: self.topView.centerYAnchor),
+            self.accountValueView.heightAnchor.constraint(equalToConstant: 24),
+            self.accountValueView.trailingAnchor.constraint(equalTo: self.topView.trailingAnchor, constant: -12),
+
+            self.accountPlusView.widthAnchor.constraint(equalTo: self.accountPlusView.heightAnchor),
+            self.accountPlusView.leadingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor, constant: 4),
+            self.accountPlusView.topAnchor.constraint(equalTo: self.accountValueView.topAnchor, constant: 4),
+            self.accountPlusView.bottomAnchor.constraint(equalTo: self.accountValueView.bottomAnchor, constant: -4),
+
+            self.accountPlusImageView.widthAnchor.constraint(equalToConstant: 12),
+            self.accountPlusImageView.heightAnchor.constraint(equalToConstant: 12),
+            self.accountPlusImageView.centerXAnchor.constraint(equalTo: self.accountPlusView.centerXAnchor),
+            self.accountPlusImageView.centerYAnchor.constraint(equalTo: self.accountPlusView.centerYAnchor),
+
+            self.accountValueLabel.centerYAnchor.constraint(equalTo: self.accountValueView.centerYAnchor),
+            self.accountValueLabel.leadingAnchor.constraint(equalTo: self.accountPlusView.trailingAnchor, constant: 4),
+            self.accountValueLabel.trailingAnchor.constraint(equalTo: self.accountValueView.trailingAnchor, constant: -4),
         ])
 
         NSLayoutConstraint.activate([

@@ -74,6 +74,10 @@ extension UIColor {
         static let myTicketsOther = UIColor(named: "myTicketsOther")!
 
         static let backgroundDarker = UIColor(named: "backgroundDarker")!
+
+        static let statsHome = UIColor(named: "statsHome")!
+        static let statsAway = UIColor(named: "statsAway")!
+
     }
 
 }

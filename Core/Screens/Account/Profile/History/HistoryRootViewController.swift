@@ -8,7 +8,7 @@
 import UIKit
 import Combine
 
-class HistoryRootViewController : UIViewController {
+class HistoryRootViewController: UIViewController {
 
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
     private lazy var navigationBaseView: UIView = Self.createNavigationView()
@@ -20,14 +20,14 @@ class HistoryRootViewController : UIViewController {
     private var viewControllerTabDataSource: TitleTabularDataSource
     private var viewControllers: [UIViewController] = []
 
-    private var transactionsHistoryViewController: HistoryViewController
-    private var bettingHistoryViewController: HistoryViewController
+    private var transactionsHistoryViewController: TransactionsHistoryRootViewController
+    private var bettingHistoryViewController: BettingHistoryRootViewController
 
     // MARK: - Lifetime and Cycle
     init() {
 
-        self.transactionsHistoryViewController = HistoryViewController(viewModel: HistoryViewModel(listType: .transactions))
-        self.bettingHistoryViewController = HistoryViewController(viewModel: HistoryViewModel(listType: .bettings))
+        self.transactionsHistoryViewController = TransactionsHistoryRootViewController(viewModel: TransactionsHistoryRootViewModel())
+        self.bettingHistoryViewController = BettingHistoryRootViewController(viewModel: BettingHistoryRootViewModel())
 
         self.viewControllers = [self.transactionsHistoryViewController, self.bettingHistoryViewController]
         self.viewControllerTabDataSource = TitleTabularDataSource(with: viewControllers)

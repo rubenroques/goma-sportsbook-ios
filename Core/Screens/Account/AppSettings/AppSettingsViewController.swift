@@ -86,7 +86,11 @@ class AppSettingsViewController: UIViewController {
         oddsView.addGestureRecognizer(oddsTap)
 
         self.topStackView.addArrangedSubview(notificationView)
-        self.topStackView.addArrangedSubview(appearanceView)
+
+        if TargetVariables.supportedThemes.count > 1 {
+            self.topStackView.addArrangedSubview(appearanceView)
+        }
+
         self.topStackView.addArrangedSubview(oddsView)
 
     }

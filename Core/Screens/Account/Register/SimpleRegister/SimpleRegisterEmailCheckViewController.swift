@@ -69,7 +69,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
         skipButton.setTitle(localized("skip"), for: .normal)
         skipButton.titleLabel?.font = AppFont.with(type: .semibold, size: 17)
 
-        logoImageView.image = UIImage(named: "logo_horizontal_large")
+        logoImageView.image = UIImage(named: "logo_horizontal_center")
         logoImageView.sizeToFit()
 
         registerTitleLabel.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 26)
@@ -129,9 +129,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
         skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        skipButton.layer.borderColor = .none
-        skipButton.layer.backgroundColor = UIColor.App.textPrimary.withAlphaComponent(0).cgColor
+        skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         registerTitleLabel.textColor = UIColor.App.textHeadlinePrimary
 

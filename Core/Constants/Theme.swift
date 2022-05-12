@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-enum Theme: Int {
+enum Theme: Int, CaseIterable {
     case device
     case light
     case dark

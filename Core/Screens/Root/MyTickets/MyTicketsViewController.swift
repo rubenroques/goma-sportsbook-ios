@@ -216,14 +216,24 @@ class MyTicketsViewController: UIViewController {
           let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
 
           if let betStatus = self.viewModel.clickedBetStatus, betStatus == "OPEN" {
-              let share = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot],
+              let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, self.viewModel.clickedCellSnapshot],
                                                    applicationActivities: nil)
-              present(share, animated: true, completion: nil)
+              if let popoverController = shareActivityViewController.popoverPresentationController {
+                  popoverController.sourceView = self.view
+                  popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                  popoverController.permittedArrowDirections = []
+              }
+              self.present(shareActivityViewController, animated: true, completion: nil)
           }
           else {
-              let share = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot],
+              let shareActivityViewController = UIActivityViewController(activityItems: [self.viewModel.clickedCellSnapshot],
                                                    applicationActivities: nil)
-              present(share, animated: true, completion: nil)
+              if let popoverController = shareActivityViewController.popoverPresentationController {
+                  popoverController.sourceView = self.view
+                  popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                  popoverController.permittedArrowDirections = []
+              }
+              self.present(shareActivityViewController, animated: true, completion: nil)
           }
 
           self.isLoading = false

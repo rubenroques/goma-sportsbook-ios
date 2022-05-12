@@ -15,7 +15,7 @@ class PreSubmissionBetslipViewController: UIViewController {
     @IBOutlet private weak var bottomSafeArea: UIView!
 
     @IBOutlet private weak var betTypeSegmentControlBaseView: UIView!
-    @IBOutlet private weak var betTypeSegmentControl: UISegmentedControl!
+    private var betTypeSegmentControlView: SegmentControlView?
 
     @IBOutlet private weak var clearBaseView: UIView!
     @IBOutlet private weak var clearButton: UIButton!
@@ -240,6 +240,16 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.view.bringSubviewToFront(emptyBetsBaseView)
         self.view.bringSubviewToFront(loadingBaseView)
 
+        self.betTypeSegmentControlView = SegmentControlView(options: ["Single", "Multiple", "System"])
+        self.betTypeSegmentControlView?.translatesAutoresizingMaskIntoConstraints = false
+        self.betTypeSegmentControlView?.didSelectItemAtIndexAction = self.didChangeSelectedSegmentItem
+
+        self.betTypeSegmentControlBaseView.addSubview(self.betTypeSegmentControlView!)
+        NSLayoutConstraint.activate([
+            self.betTypeSegmentControlView!.centerXAnchor.constraint(equalTo: self.betTypeSegmentControlBaseView.centerXAnchor),
+            self.betTypeSegmentControlView!.centerYAnchor.constraint(equalTo: self.betTypeSegmentControlBaseView.centerYAnchor),
+        ])
+
         self.addChildViewController(self.suggestedBetsListViewController, toView: self.emptyBetsBaseView)
 
         self.emptyBetsBaseView.isHidden = true
@@ -303,11 +313,7 @@ class PreSubmissionBetslipViewController: UIViewController {
         let amountBaseViewTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAmountBaseView))
         self.amountBaseView.addGestureRecognizer(amountBaseViewTapGesture)
         self.amountTextfield.isUserInteractionEnabled = false
-        
-//        if Env.betslipManager.bettingTicketsPublisher.value.count > 1 {
-//            self.betTypeSegmentControl.selectedSegmentIndex = 1
-//            self.didChangeSegmentValue(self.betTypeSegmentControl)
-//        }
+
 
         //
         //
@@ -357,68 +363,33 @@ class PreSubmissionBetslipViewController: UIViewController {
             .removeDuplicates()
             .sink { [weak self] ticketsCount in
 
-                let oldSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex ?? 0
+                let oldSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex
 
                 switch ticketsCount {
                 case 0...1:
-                    self?.betTypeSegmentControl.selectedSegmentIndex = 0
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
-                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 1)
-                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 0, animated: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: false)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
                 case 2...3:
-                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
-                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
                 case 4...8:
-                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: true)
                 default:
-                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 0)
-                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
-                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
+                    self?.betTypeSegmentControlView?.setSelectedItem(atIndex: 1, animated: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 0, isEnabled: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 1, isEnabled: true)
+                    self?.betTypeSegmentControlView?.setEnabledItem(atIndex: 2, isEnabled: false)
                 }
 
-//                if ticketsCount < 3 {
-//                    if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
-//                        self?.betTypeSegmentControl.selectedSegmentIndex = 1
-//                    }
-//
-//                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
-//                }
-//                else {
-//                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 2)
-//                }
-//
-//                if ticketsCount == 1 {
-//                    if self?.betTypeSegmentControl.selectedSegmentIndex == 1 {
-//                        self?.betTypeSegmentControl.selectedSegmentIndex = 0
-//                    }
-//                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 1)
-//                }
-//                else {
-//                    self?.betTypeSegmentControl.setEnabled(true, forSegmentAt: 1)
-//                }
-//
-//                if ticketsCount > 1 && self?.isSuggestedMultiple == true {
-//                    self?.betTypeSegmentControl.selectedSegmentIndex = 1
-//                }
-//
-//                if ticketsCount >= 9 {
-//                    if self?.betTypeSegmentControl.selectedSegmentIndex == 2 {
-//                        self?.betTypeSegmentControl.selectedSegmentIndex = 1
-//                    }
-//
-//                    self?.betTypeSegmentControl.setEnabled(false, forSegmentAt: 2)
-//                }
-
-                if let segmentControl = self?.betTypeSegmentControl,
-                   let newSegmentIndex = self?.betTypeSegmentControl.selectedSegmentIndex,
-                   newSegmentIndex != oldSegmentIndex {
-                    self?.didChangeSegmentValue(segmentControl)
+                if let newSegmentIndex = self?.betTypeSegmentControlView?.selectedItemIndex, newSegmentIndex != oldSegmentIndex {
+                    self?.didChangeSelectedSegmentItem(toIndex: newSegmentIndex)
                 }
             }
             .store(in: &cancellables)
@@ -934,7 +905,16 @@ class PreSubmissionBetslipViewController: UIViewController {
     func setupWithTheme() {
 
         self.view.backgroundColor = UIColor.App.backgroundPrimary
-        
+
+        //
+        self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.backgroundSecondary
+
+        self.betTypeSegmentControlView?.backgroundContainerColor = UIColor.App.backgroundPrimary
+        self.betTypeSegmentControlView?.textColor = UIColor.App.buttonTextPrimary
+        self.betTypeSegmentControlView?.textIdleColor = UIColor.App.textPrimary
+        self.betTypeSegmentControlView?.sliderColor = UIColor.App.highlightPrimary
+
+        //
         self.secondaryPlaceBetButtonsBaseView.backgroundColor = UIColor.App.backgroundPrimary
         
         self.systemBetTypePickerView.backgroundColor = UIColor.App.backgroundPrimary
@@ -947,26 +927,9 @@ class PreSubmissionBetslipViewController: UIViewController {
         self.systemBetTypeSelectorContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.settingsPickerBaseView.backgroundColor = UIColor.black.withAlphaComponent(0.8)
-        
-        self.betTypeSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.white
-        ], for: .selected)
-        self.betTypeSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary
-        ], for: .normal)
-        self.betTypeSegmentControl.setTitleTextAttributes([
-            NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),
-            NSAttributedString.Key.foregroundColor: UIColor.App.textPrimary.withAlphaComponent(0.5)
-        ], for: .disabled)
-
-        self.betTypeSegmentControl.selectedSegmentTintColor = UIColor.App.highlightPrimary
 
         self.topSafeArea.backgroundColor = UIColor.App.backgroundPrimary
         self.bottomSafeArea.backgroundColor = UIColor.App.backgroundPrimary
-
-        self.betTypeSegmentControlBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.amountTextfield.font = AppFont.with(type: .semibold, size: 14)
         self.amountTextfield.textColor = UIColor.App.inputTextTitle
@@ -1079,8 +1042,6 @@ class PreSubmissionBetslipViewController: UIViewController {
 
         self.selectSystemBetTypeButton.backgroundColor = UIColor.App.highlightPrimary
         
-        self.betTypeSegmentControl.backgroundColor = UIColor.App.backgroundTertiary
-
         self.settingsPickerContainerView.backgroundColor = UIColor.App.backgroundPrimary
 
         StyleHelper.styleButton(button: self.selectSystemBetTypeButton)
@@ -1124,6 +1085,24 @@ class PreSubmissionBetslipViewController: UIViewController {
         case 0:
             self.listTypePublisher.value = .simple
 
+        case 1:
+            self.listTypePublisher.value = .multiple
+        case 2:
+            self.listTypePublisher.value = .system
+        default:
+            ()
+        }
+
+        self.tableView.reloadData()
+        self.tableView.layoutIfNeeded()
+        self.tableView.setContentOffset(.zero, animated: true)
+    }
+
+    private func didChangeSelectedSegmentItem(toIndex index: Int) {
+
+        switch index {
+        case 0:
+            self.listTypePublisher.value = .simple
         case 1:
             self.listTypePublisher.value = .multiple
         case 2:
@@ -1452,7 +1431,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
             }
         }
 
-        let calculatedAmount = displayBetValue // Double(displayBetValue/100) + Double(displayBetValue%100)/100
+        let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
         secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
     }
@@ -1464,7 +1443,7 @@ extension PreSubmissionBetslipViewController: UITextFieldDelegate {
         if newValue == "" {
             displayBetValue /= 10
         }
-        let calculatedAmount = displayBetValue // Double(displayBetValue/100) + Double(displayBetValue%100)/100
+        let calculatedAmount = Double(displayBetValue/100) + Double(displayBetValue%100)/100
         amountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))
         
         secondaryAmountTextfield.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: calculatedAmount))

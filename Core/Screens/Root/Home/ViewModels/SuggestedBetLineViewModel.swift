@@ -6,14 +6,11 @@
 //
 
 import Foundation
-import Combine
 
 class SuggestedBetLineViewModel: NSObject {
 
     var suggestedBetCardSummaries: [SuggestedBetCardSummary] = []
     var suggestedBetViewModelCache: [Int: SuggestedBetViewModel] = [:]
-
-    private var cancellables = Set<AnyCancellable>()
 
     init(suggestedBetCardSummaries: [SuggestedBetCardSummary]) {
         self.suggestedBetCardSummaries = suggestedBetCardSummaries

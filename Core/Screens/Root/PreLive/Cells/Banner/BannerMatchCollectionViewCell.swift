@@ -66,8 +66,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
     }
 
     var completeMatch: Match?
-    var tappedMatchBaseViewAction: ((Match) -> Void)?
-    var tappedBonusBaseViewAction: (() -> Void)?
+
+    var didTapBannerViewAction: ((BannerCellViewModel.PresentationType) -> Void)?
 
     private var leftOutcome: Outcome?
     private var middleOutcome: Outcome?
@@ -106,6 +106,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
         self.baseView.clipsToBounds = true
         self.baseView.alpha = 1.0
+        self.baseView.isUserInteractionEnabled = true
 
         self.participantsBaseView.backgroundColor = .clear
         self.oddsStackView.backgroundColor = .clear
@@ -127,11 +128,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         let tapRightOddButton = UITapGestureRecognizer(target: self, action: #selector(didTapRightOddButton))
         self.awayBaseView.addGestureRecognizer(tapRightOddButton)
 
-        let tapMatchBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapMatchBaseView))
-        self.matchBaseView.addGestureRecognizer(tapMatchBaseView)
-
-        let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerBaseView))
-        self.imageBaseView.addGestureRecognizer(tapBannerBaseView)
+        let tapBannerBaseView = UITapGestureRecognizer(target: self, action: #selector(didTapBannerView))
+        self.baseView.addGestureRecognizer(tapBannerBaseView)
 
         self.setupWithTheme()
     }
@@ -209,12 +207,41 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         self.awayOddTitleLabel.textColor = .white
         self.awayOddValueLabel.textColor = .white
 
-        self.homeBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.drawBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.awayBaseView.backgroundColor =  UIColor(hex: 0x696E83)
-
         self.matchOffuscationView.backgroundColor = UIColor(hex: 0x242830)
         self.matchOffuscationView.alpha = 0.66
+
+        if isLeftOutcomeButtonSelected {
+            self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isMiddleOutcomeButtonSelected {
+            self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.drawOddValueLabel.textColor = UIColor.App.textPrimary
+        }
+
+        if isRightOutcomeButtonSelected {
+            self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
+            self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        }
+        else {
+            self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+            self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
+            self.awayOddValueLabel.textColor = UIColor.App.textPrimary
+        }
 
         self.setupGradient()
     }
@@ -264,6 +291,38 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             if let url = viewModel.imageURL {
                 self.imageView.kf.setImage(with: url)
             }
+            
+        case .externalStream:
+            self.imageView.isHidden = false
+            if let url = viewModel.imageURL {
+                self.imageView.kf.setImage(with: url)
+            }
+
+        case .externalLink:
+            self.imageView.isHidden = false
+            if let url = viewModel.imageURL {
+                self.imageView.kf.setImage(with: url)
+            }
+
+        case .externalMatch:
+            self.imageView.isHidden = false
+            if let url = viewModel.imageURL {
+                self.imageView.kf.setImage(with: url)
+            }
+            viewModel.match
+                .receive(on: DispatchQueue.main)
+                .compactMap({$0}).sink { [weak self] match in
+                    self?.matchViewModel = MatchWidgetCellViewModel(match: match)
+                }
+                .store(in: &cancellables)
+
+            viewModel.completeMatch
+                .receive(on: DispatchQueue.main)
+                .compactMap({$0}).sink { [weak self] completeMatch in
+                    self?.completeMatch = completeMatch
+                    self?.setupWithMatch(completeMatch)
+                }
+                .store(in: &cancellables)
         }
 
     }
@@ -293,8 +352,16 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         }
 
         if let market = match.markets.first {
+
+            if market.outcomes.count == 2 {
+                self.awayBaseView.isHidden = true
+            }
+            else {
+                self.awayBaseView.isHidden = false
+            }
+
             if let outcome = market.outcomes[safe: 0] {
-                self.homeOddTitleLabel.text = outcome.typeName
+                self.homeOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
                 self.homeOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 // self.currentHomeOddValue = outcome.bettingOffer.value
                 self.leftOutcome = outcome
@@ -328,7 +395,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
             }
             if let outcome = market.outcomes[safe: 1] {
-                self.drawOddTitleLabel.text = outcome.typeName
+                self.drawOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
                 self.drawOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 // self.currentDrawOddValue = outcome.bettingOffer.value
                 self.middleOutcome = outcome
@@ -361,7 +428,7 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                     })
             }
             if let outcome = market.outcomes[safe: 2] {
-                self.awayOddTitleLabel.text = outcome.typeName
+                self.awayOddTitleLabel.text = outcome.translatedName.isNotEmpty ? outcome.translatedName : outcome.typeName
                 self.awayOddValueLabel.text = "\(Double(floor(outcome.bettingOffer.value * 100)/100))"
                 // self.currentAwayOddValue = outcome.bettingOffer.value
                 self.rightOutcome = outcome
@@ -393,8 +460,8 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
                         //weakSelf.awayOddValueLabel.text = OddFormatter.formatOdd(withValue: newOddValue)
                         weakSelf.awayOddValueLabel.text = OddConverter.stringForValue(newOddValue, format: UserDefaults.standard.userOddsFormat)
                     })
-
             }
+            
         }
         else {
             Logger.log("No markets found")
@@ -405,17 +472,18 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
             self.awayOddValueLabel.text = "-"
         }
 
+
     }
 
     func selectLeftOddButton() {
         self.homeBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.homeOddValueLabel.textColor = .white
-        self.homeOddTitleLabel.textColor = .white
+        self.homeOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectLeftOddButton() {
-        self.homeBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.homeOddValueLabel.textColor = .white
-        self.homeOddTitleLabel.textColor = .white
+        self.homeBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.homeOddValueLabel.textColor = UIColor.App.textPrimary
+        self.homeOddTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapLeftOddButton() {
@@ -442,13 +510,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     func selectMiddleOddButton() {
         self.drawBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.drawOddValueLabel.textColor = .white
-        self.drawOddTitleLabel.textColor = .white
+        self.drawOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.drawOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectMiddleOddButton() {
-        self.drawBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.drawOddTitleLabel.textColor = .white
-        self.drawOddValueLabel.textColor = .white
+        self.drawBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.drawOddTitleLabel.textColor = UIColor.App.textPrimary
+        self.drawOddValueLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapMiddleOddButton() {
@@ -474,13 +542,13 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
 
     func selectRightOddButton() {
         self.awayBaseView.backgroundColor = UIColor.App.buttonBackgroundPrimary
-        self.awayOddValueLabel.textColor = .white
-        self.awayOddTitleLabel.textColor = .white
+        self.awayOddValueLabel.textColor = UIColor.App.buttonTextPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App.buttonTextPrimary
     }
     func deselectRightOddButton() {
-        self.awayBaseView.backgroundColor = UIColor(hex: 0x696E83)
-        self.awayOddValueLabel.textColor = .white
-        self.awayOddTitleLabel.textColor = .white
+        self.awayBaseView.backgroundColor = UIColor.App.backgroundOdds
+        self.awayOddValueLabel.textColor = UIColor.App.textPrimary
+        self.awayOddTitleLabel.textColor = UIColor.App.textPrimary
     }
 
     @objc func didTapRightOddButton() {
@@ -504,15 +572,10 @@ class BannerMatchCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @objc func didTapMatchBaseView() {
-
-        guard let completeMatch = self.completeMatch else { return }
-
-        self.tappedMatchBaseViewAction?(completeMatch)
-
+    @objc func didTapBannerView() {
+        if let presentationType = self.viewModel?.presentationType {
+            self.didTapBannerViewAction?(presentationType)
+        }
     }
 
-    @objc func didTapBannerBaseView() {
-        self.tappedBonusBaseViewAction?()
-    }
 }
