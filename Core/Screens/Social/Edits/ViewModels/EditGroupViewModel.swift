@@ -22,7 +22,8 @@ class EditGroupViewModel {
     var needReloadData: PassthroughSubject<Void, Never> = .init()
     var shouldCloseChat: CurrentValueSubject<Bool, Never> = .init(false)
     var showErrorAlert: PassthroughSubject<Void, Never> = .init()
-    var showEditGroupNameAlert: PassthroughSubject<Void, Never> = .init()
+    var editGroupFinished: PassthroughSubject<Void, Never> = .init()
+    var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isGroupEdited: Bool = false
 
     init(conversationData: ConversationData) {
@@ -54,6 +55,8 @@ class EditGroupViewModel {
     }
 
     func editGroupInfo(groupName: String) {
+        // self.isLoadingPublisher.send(true)
+
         let chatroomId = self.conversationData.id
         let groupName = groupName
 
@@ -66,11 +69,12 @@ class EditGroupViewModel {
                 case .finished:
                     print("EDIT GROUP FINISHED")
                 }
+                // self?.isLoadingPublisher.send(false)
 
             }, receiveValue: { [weak self] response in
                 print("EDIT GROUP GOMA: \(response)")
                 self?.isGroupEdited = true
-                self?.showEditGroupNameAlert.send()
+                self?.editGroupFinished.send()
             })
             .store(in: &cancellables)
     }
@@ -122,5 +126,18 @@ class EditGroupViewModel {
         }
 
         return initials
+    }
+
+    func getChatroomId() -> Int {
+        return self.conversationData.id
+    }
+
+    func addSelectedUsers(selectedUsers: [UserContact]) {
+
+        for user in selectedUsers {
+            self.users.append(user)
+        }
+
+        self.needReloadData.send()
     }
 }

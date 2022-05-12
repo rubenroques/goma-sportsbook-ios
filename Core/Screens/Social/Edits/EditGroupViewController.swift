@@ -26,6 +26,8 @@ class EditGroupViewController: UIViewController {
     private lazy var newGroupLineSeparatorView: UIView = Self.createNewGroupLineSeparatorView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var leaveButton: UIButton = Self.createLeaveButton()
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var activityIndicatorView: UIActivityIndicatorView = Self.createActivityIndicatorView()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Public Properties
@@ -39,6 +41,12 @@ class EditGroupViewController: UIViewController {
             else {
                 self.notificationsButton.setImage(UIImage(named: "notifications_status_icon"), for: UIControl.State.normal)
             }
+        }
+    }
+
+    var isLoading: Bool = false {
+        didSet {
+            self.loadingBaseView.isHidden = !isLoading
         }
     }
 
@@ -82,6 +90,8 @@ class EditGroupViewController: UIViewController {
         self.leaveButton.addTarget(self, action: #selector(didTapLeaveButton), for: .primaryActionTriggered)
 
         self.isNotificationMuted = false
+
+        self.isLoading = false
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
@@ -155,6 +165,8 @@ class EditGroupViewController: UIViewController {
         self.leaveButton.tintColor = UIColor.App.inputError
         self.leaveButton.setTitleColor(UIColor.App.inputError, for: .normal)
 
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
     }
 
     // MARK: Binding
@@ -196,17 +208,36 @@ class EditGroupViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.showEditGroupNameAlert
+        viewModel.editGroupFinished
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.showEditGroupNameAlert()
+                self?.shouldReloadData?()
+                self?.navigationController?.popViewController(animated: true)
             })
             .store(in: &cancellables)
+
+//        viewModel.isLoadingPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] isLoading in
+//                self?.isLoading = isLoading
+//            })
+//            .store(in: &cancellables)
     }
 
     // MARK: Functions
     private func showAddFriend() {
         print("ADD FRIENDS!")
+        let chatroomId = self.viewModel.getChatroomId()
+
+        let addFriendsviewModel = EditGroupAddFriendViewModel(groupUsers: self.viewModel.users, chatroomId: chatroomId)
+
+        let addFriendsViewController = EditGroupAddUserViewController(viewModel: addFriendsviewModel)
+
+        addFriendsViewController.addSelectedUsersToGroupList = { [weak self] selectedUsers in
+            self?.viewModel.addSelectedUsers(selectedUsers: selectedUsers)
+        }
+
+        self.present(addFriendsViewController, animated: true, completion: nil)
     }
 
     private func removeUser(userId: String, userIndex: Int) {
@@ -246,16 +277,6 @@ class EditGroupViewController: UIViewController {
         errorAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
 
         self.present(errorAlert, animated: true, completion: nil)
-    }
-
-    private func showEditGroupNameAlert() {
-        let groupNameAlert = UIAlertController(title: localized("group_name_changed"),
-                                            message: localized("group_name_changed_message"),
-                                            preferredStyle: UIAlertController.Style.alert)
-
-        groupNameAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
-
-        self.present(groupNameAlert, animated: true, completion: nil)
     }
 
     // MARK: Actions
@@ -606,6 +627,20 @@ extension EditGroupViewController {
         return button
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.startAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -634,6 +669,10 @@ extension EditGroupViewController {
         self.view.addSubview(self.tableView)
 
         self.view.addSubview(self.leaveButton)
+
+        self.view.addSubview(self.loadingBaseView)
+
+        self.loadingBaseView.addSubview(self.activityIndicatorView)
 
         self.view.addSubview(self.bottomSafeAreaView)
 
@@ -733,6 +772,17 @@ extension EditGroupViewController {
             self.leaveButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 25),
             self.leaveButton.heightAnchor.constraint(equalToConstant: 30),
             self.leaveButton.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor, constant: -10)
+        ])
+
+        // Loading Screen
+        NSLayoutConstraint.activate([
+            self.loadingBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.loadingBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+
+            self.activityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+            self.activityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor)
         ])
     }
 }

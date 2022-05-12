@@ -202,4 +202,10 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func addUserToGroup(deviceId: String, chatroomId: Int, userIds: [String]) -> AnyPublisher<NetworkResponse<[JSON]>, NetworkError> {
+        let endpoint = GomaGamingService.addUserToGroup(chatroomId: chatroomId, userIds: userIds)
+        let requestPublisher: AnyPublisher<NetworkResponse<[JSON]>, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
 }
