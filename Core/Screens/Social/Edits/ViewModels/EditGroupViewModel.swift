@@ -21,6 +21,8 @@ class EditGroupViewModel {
     var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
     var needReloadData: PassthroughSubject<Void, Never> = .init()
     var shouldCloseChat: CurrentValueSubject<Bool, Never> = .init(false)
+    var showErrorAlert: PassthroughSubject<Void, Never> = .init()
+    var showEditGroupNameAlert: PassthroughSubject<Void, Never> = .init()
     var isGroupEdited: Bool = false
 
     init(conversationData: ConversationData) {
@@ -40,7 +42,7 @@ class EditGroupViewModel {
                 self.users.append(userContact)
             }
         }
-
+        
         self.needReloadData.send()
     }
 
@@ -55,10 +57,6 @@ class EditGroupViewModel {
         let chatroomId = self.conversationData.id
         let groupName = groupName
 
-        print("GROUP INFO:")
-        print("CHATROOM ID: \(chatroomId)")
-        print("NAME: \(groupName)")
-
         Env.gomaNetworkClient.editGroup(deviceId: Env.deviceId, chatroomId: chatroomId, groupName: groupName)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -72,8 +70,34 @@ class EditGroupViewModel {
             }, receiveValue: { [weak self] response in
                 print("EDIT GROUP GOMA: \(response)")
                 self?.isGroupEdited = true
+                self?.showEditGroupNameAlert.send()
             })
             .store(in: &cancellables)
+    }
+
+    func removeUser(userId: String, userIndex: Int) {
+        let chatroomId = self.conversationData.id
+
+        Env.gomaNetworkClient.removeUser(deviceId: Env.deviceId, chatroomId: chatroomId, userId: userId)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("REMOVE USER ERROR: \(error)")
+                    self?.showErrorAlert.send()
+                case .finished:
+                    print("REMOVE USER FINISHED")
+                }
+
+            }, receiveValue: { [weak self] response in
+                print("REMOVE USER GROUP GOMA: \(response)")
+                self?.isGroupEdited = true
+                self?.users.remove(at: userIndex)
+                self?.cachedUserCellViewModels[userId] = nil
+                self?.needReloadData.send()
+            })
+            .store(in: &cancellables)
+
     }
 
     func deleteGroup() {

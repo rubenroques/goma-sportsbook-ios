@@ -16,17 +16,17 @@ class SocialViewModel {
     }
 
     var startScreen: StartScreen
-    var socialClient: GomaGamingSocialServiceClient
+    //var socialClient: GomaGamingSocialServiceClient
 
     init(startScreen: StartScreen = .conversations) {
         self.startScreen = startScreen
 
-        self.socialClient = GomaGamingSocialServiceClient()
+        //self.socialClient = GomaGamingSocialServiceClient()
     }
 
     deinit {
         print("DEINIT SOCIAL VM")
-        self.socialClient.disconnectSocket()
+        //self.socialClient.disconnectSocket()
     }
 
 }
@@ -110,7 +110,7 @@ class SocialViewController: UIViewController {
             self?.friendsListViewController.needsRefetchData()
         }
 
-        
+        // self.viewModel.socialClient.connectSocket()
     }
 
     // MARK: - Layout and Theme

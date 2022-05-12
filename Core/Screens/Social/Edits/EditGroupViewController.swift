@@ -88,6 +88,17 @@ class EditGroupViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        self.newGroupTextField.textPublisher
+            .map { text in
+                let groupName = self.viewModel.groupNamePublisher.value
+                if text != groupName {
+                    return true
+                }
+                return false
+            }
+            .assign(to: \.isEnabled, on: self.editButton)
+            .store(in: &cancellables)
+
     }
 
     // MARK: - Layout and Theme
@@ -124,6 +135,7 @@ class EditGroupViewController: UIViewController {
         self.editButton.backgroundColor = .clear
         self.editButton.tintColor = UIColor.App.highlightPrimary
         self.editButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.editButton.setTitleColor(UIColor.App.textDisablePrimary, for: .disabled)
 
         self.newGroupIconBaseView.backgroundColor = UIColor.App.backgroundOdds
 
@@ -176,11 +188,74 @@ class EditGroupViewController: UIViewController {
                 self?.tableView.reloadData()
             })
             .store(in: &cancellables)
+
+        viewModel.showErrorAlert
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.showErrorAlert()
+            })
+            .store(in: &cancellables)
+
+        viewModel.showEditGroupNameAlert
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.showEditGroupNameAlert()
+            })
+            .store(in: &cancellables)
     }
 
     // MARK: Functions
     private func showAddFriend() {
         print("ADD FRIENDS!")
+    }
+
+    private func removeUser(userId: String, userIndex: Int) {
+
+        if self.viewModel.users.count > 3 {
+            let removeAlert = UIAlertController(title: localized("remove_user"),
+                                                message: localized("remove_user_message"),
+                                                preferredStyle: UIAlertController.Style.alert)
+
+            removeAlert.addAction(UIAlertAction(title: localized("ok"), style: .default, handler: { [weak self] _ in
+
+                self?.viewModel.removeUser(userId: userId, userIndex: userIndex)
+
+            }))
+
+            removeAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
+
+            self.present(removeAlert, animated: true, completion: nil)
+        }
+        else {
+            let notAllowedAlert = UIAlertController(title: localized("not_allowed"),
+                                                message: localized("minimum_users_message"),
+                                                preferredStyle: UIAlertController.Style.alert)
+
+            notAllowedAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+
+            self.present(notAllowedAlert, animated: true, completion: nil)
+        }
+
+    }
+
+    private func showErrorAlert() {
+        let errorAlert = UIAlertController(title: localized("server_error_title"),
+                                            message: localized("server_error_message"),
+                                            preferredStyle: UIAlertController.Style.alert)
+
+        errorAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+
+        self.present(errorAlert, animated: true, completion: nil)
+    }
+
+    private func showEditGroupNameAlert() {
+        let groupNameAlert = UIAlertController(title: localized("group_name_changed"),
+                                            message: localized("group_name_changed_message"),
+                                            preferredStyle: UIAlertController.Style.alert)
+
+        groupNameAlert.addAction(UIAlertAction(title: localized("ok"), style: .default))
+
+        self.present(groupNameAlert, animated: true, completion: nil)
     }
 
     // MARK: Actions
@@ -333,9 +408,7 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
                 }
 
                 cell.didTapDeleteAction = { [weak self] in
-                    self?.viewModel.users.remove(at: indexPath.row)
-                    self?.viewModel.cachedUserCellViewModels[userContact.id] = nil
-                    self?.tableView.reloadData()
+                    self?.removeUser(userId: userContact.id, userIndex: indexPath.row)
                 }
             }
 

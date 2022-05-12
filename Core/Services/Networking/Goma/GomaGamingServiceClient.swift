@@ -190,4 +190,10 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func removeUser(deviceId: String, chatroomId: Int, userId: String) -> AnyPublisher<JSON, NetworkError> {
+        let endpoint = GomaGamingService.removeUser(chatroomId: chatroomId, userId: userId)
+        let requestPublisher: AnyPublisher<JSON, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
 }

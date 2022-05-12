@@ -864,8 +864,6 @@
 		A97D2481281AD3AC003EEDEC /* PreviewChatCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D247F281AD3AC003EEDEC /* PreviewChatCellViewModel.swift */; };
 		A97D2488281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */; };
 		A97D2489281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */; };
-		A97D248E281C40DD003EEDEC /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A97D248D281C40DD003EEDEC /* SocketIO */; };
-		A97D2490281C41F8003EEDEC /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A97D248F281C41F8003EEDEC /* SocketIO */; };
 		A9875795276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875796276CA50F0099990D /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9875793276CA50F0099990D /* DepositViewController.swift */; };
 		A9875797276CA50F0099990D /* DepositViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = A9875794276CA50F0099990D /* DepositViewController.xib */; };
@@ -1866,7 +1864,6 @@
 				45D871C62710769600F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */,
 				A9B841A126E26BEE00269B05 /* Starscream in Frameworks */,
-				A97D248E281C40DD003EEDEC /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1898,7 +1895,6 @@
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */,
 				45EF5426270C5F8100D1E13E /* FirebaseAuth in Frameworks */,
-				A97D2490281C41F8003EEDEC /* SocketIO in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4187,7 +4183,6 @@
 				F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */,
 				45F8B153274BC3B60087652B /* FirebaseMessaging */,
 				457EDAC22791D39B00DDCD83 /* SwiftyBeaver */,
-				A97D248D281C40DD003EEDEC /* SocketIO */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -4244,7 +4239,6 @@
 				F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */,
 				A96B70B82739891200FEF07D /* FirebaseMessaging */,
 				457EDAC42791D3AC00DDCD83 /* SwiftyBeaver */,
-				A97D248F281C41F8003EEDEC /* SocketIO */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -4291,7 +4285,6 @@
 				F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */,
 				F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */,
 				457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
-				A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -5976,14 +5969,6 @@
 				minimumVersion = 1.0.0;
 			};
 		};
-		A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 15.0.0;
-			};
-		};
 		A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding.git";
@@ -5996,8 +5981,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/daltoniam/Starscream.git";
 			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 3.1.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
 			};
 		};
 		F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */ = {
@@ -6148,16 +6133,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
-		};
-		A97D248D281C40DD003EEDEC /* SocketIO */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */;
-			productName = SocketIO;
-		};
-		A97D248F281C41F8003EEDEC /* SocketIO */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A97D248C281C40DD003EEDEC /* XCRemoteSwiftPackageReference "socket" */;
-			productName = SocketIO;
 		};
 		A9B8419026E2359800269B05 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;

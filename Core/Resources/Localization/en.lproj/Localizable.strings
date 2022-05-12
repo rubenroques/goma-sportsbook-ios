@@ -476,3 +476,12 @@ Terms of use, Privacy Policy and EULA";
 "edit_group" = "Edit Group";
 "leave_group" = "Leave Group";
 "add_more_friends" = "Add more friends";
+
+"remove_user" = "Remove User";
+"remove_user_message" = "Are you sure you want to remove the selected user?";
+
+"not_allowed" = "Not Allowed";
+"minimum_users_message" = "You can't remove users if the group chat has only 3 users.";
+
+"group_name_changed" = "Group Name Changed";
+"group_name_changed_message" = "Group name was changed with success!";
