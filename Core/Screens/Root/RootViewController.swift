@@ -267,7 +267,10 @@ class RootViewController: UIViewController {
 
         if let image = self.logoImageView.image {
             let ratio = image.size.height / image.size.width
-            let newHeight = self.logoImageHeightConstraint.constant / ratio
+            print(image.size.height)
+            print( self.logoImageHeightConstraint.constant)
+            let newHeight = self.logoImageHeightConstraint.constant 
+            print(newHeight)
             self.logoImageWidthConstraint.constant = newHeight
             self.view.layoutIfNeeded()
         }
