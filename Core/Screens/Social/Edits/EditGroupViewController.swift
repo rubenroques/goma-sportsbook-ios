@@ -52,6 +52,7 @@ class EditGroupViewController: UIViewController {
 
     var shouldCloseChat: (() -> Void)?
     var shouldReloadData: (() -> Void)?
+    var shouldUpdateGroupInfo: ((GroupInfo) -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: EditGroupViewModel) {
@@ -211,7 +212,12 @@ class EditGroupViewController: UIViewController {
         viewModel.editGroupFinished
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
+                if let groupInfo = self?.viewModel.getGroupInfo() {
+                    self?.shouldUpdateGroupInfo?(groupInfo)
+                }
+
                 self?.shouldReloadData?()
+
                 self?.navigationController?.popViewController(animated: true)
             })
             .store(in: &cancellables)
@@ -283,9 +289,13 @@ class EditGroupViewController: UIViewController {
     @objc func didTapBackButton() {
 
         if self.viewModel.isGroupEdited {
+            let groupInfo = self.viewModel.getGroupInfo()
+
+            self.shouldUpdateGroupInfo?(groupInfo)
+
             self.shouldReloadData?()
         }
-
+        
         self.navigationController?.popViewController(animated: true)
     }
 

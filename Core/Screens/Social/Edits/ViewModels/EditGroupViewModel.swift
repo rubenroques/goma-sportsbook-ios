@@ -73,6 +73,7 @@ class EditGroupViewModel {
 
             }, receiveValue: { [weak self] response in
                 print("EDIT GROUP GOMA: \(response)")
+                self?.groupNamePublisher.value = groupName
                 self?.isGroupEdited = true
                 self?.editGroupFinished.send()
             })
@@ -138,6 +139,21 @@ class EditGroupViewModel {
             self.users.append(user)
         }
 
+        self.isGroupEdited = true
         self.needReloadData.send()
     }
+
+    func getGroupInfo() -> GroupInfo {
+        let groupName = self.groupNamePublisher.value
+        let groupUsers = self.users
+
+        let groupInfo = GroupInfo(name: groupName, users: groupUsers)
+
+        return groupInfo
+    }
+}
+
+struct GroupInfo {
+    var name: String
+    var users: [UserContact]
 }

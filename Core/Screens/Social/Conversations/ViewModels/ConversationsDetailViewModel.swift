@@ -101,6 +101,38 @@ class ConversationDetailViewModel: NSObject {
         return initials
     }
 
+    func updateConversationInfo(groupInfo: GroupInfo) {
+        print("GROUP INFO: \(groupInfo)")
+
+        var newConversationData = self.conversationData
+        var newConversationGroupUsers: [GomaFriend] = []
+        newConversationData.name = groupInfo.name
+
+        for newUser in groupInfo.users {
+            if let conversationUsers = newConversationData.groupUsers {
+
+                if let oldUser = conversationUsers.first(where: { "\($0.id)" == newUser.id}) {
+                    newConversationGroupUsers.append(oldUser)
+                }
+                else {
+                    if let userId = Int(newUser.id) {
+                        let newGomaFriend = GomaFriend(id: userId, name: newUser.username, username: newUser.username)
+                        newConversationGroupUsers.append(newGomaFriend)
+                    }
+
+                }
+            }
+        }
+
+        newConversationData.groupUsers = newConversationGroupUsers
+
+        print("NEW CONVERSATION DATA: \(newConversationData)")
+
+        self.conversationData = newConversationData
+
+        self.setupConversationInfo()
+    }
+
     private func getConversationMessages() {
         // TESTING CHAT MESSAGES
         let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")

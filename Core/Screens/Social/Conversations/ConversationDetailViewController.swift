@@ -254,6 +254,10 @@ class ConversationDetailViewController: UIViewController {
                 self?.shouldReloadData?()
             }
 
+            editContactViewController.shouldUpdateGroupInfo = { [weak self] groupInfo in
+                self?.viewModel.updateConversationInfo(groupInfo: groupInfo)
+            }
+
             self.navigationController?.pushViewController(editContactViewController, animated: true)
         }
         else {
