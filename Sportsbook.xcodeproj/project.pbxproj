@@ -1936,6 +1936,8 @@
 		45DDBABB26F2406100A73E45 /* UserSessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45DDBAB926F2406100A73E45 /* UserSessionStore.swift */; };
 		45E5190C270C8B570052794F /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E5190B270C8B570052794F /* Color+Extensions.swift */; };
 		45E5190D270C8B570052794F /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45E5190B270C8B570052794F /* Color+Extensions.swift */; };
+		45EF50E7282E6AA4008180CA /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF50E6282E6AA4008180CA /* SocketIO */; };
+		45EF50EA282E6AD7008180CA /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF50E9282E6AD7008180CA /* Starscream */; };
 		45EF540A2709E81C00D1E13E /* PopUpStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF54092709E81C00D1E13E /* PopUpStore.swift */; };
 		45EF540B2709E81C00D1E13E /* PopUpStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF54092709E81C00D1E13E /* PopUpStore.swift */; };
 		45EF5424270C5F8100D1E13E /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 45EF5423270C5F8100D1E13E /* FirebaseAnalytics */; };
@@ -2300,8 +2302,6 @@
 		A9B8419326E235AD00269B05 /* DictionaryCoding in Frameworks */ = {isa = PBXBuildFile; productRef = A9B8419226E235AD00269B05 /* DictionaryCoding */; };
 		A9B8419826E25BE100269B05 /* TransportSessionIDModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */; };
 		A9B8419926E25BE100269B05 /* TransportSessionIDModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B8419726E25BE100269B05 /* TransportSessionIDModel.swift */; };
-		A9B841A126E26BEE00269B05 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = A9B841A026E26BEE00269B05 /* Starscream */; };
-		A9B841A326E26C0B00269B05 /* Starscream in Frameworks */ = {isa = PBXBuildFile; productRef = A9B841A226E26C0B00269B05 /* Starscream */; };
 		A9B841A626E6557000269B05 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A526E6557000269B05 /* Location.swift */; };
 		A9B841A726E6557000269B05 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A526E6557000269B05 /* Location.swift */; };
 		A9B841AA26E6597300269B05 /* Tournament.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9B841A926E6597300269B05 /* Tournament.swift */; };
@@ -3138,6 +3138,7 @@
 				A9B8419326E235AD00269B05 /* DictionaryCoding in Frameworks */,
 				4515637826BED19B00690896 /* Reachability in Frameworks */,
 				451B386226FF172C008D49C5 /* Kingfisher in Frameworks */,
+				45EF50E7282E6AA4008180CA /* SocketIO in Frameworks */,
 				454E0AD82735C76600794E0C /* CombineExt in Frameworks */,
 				4515637B26BED57400690896 /* Nuke in Frameworks */,
 				452047AF2703597500B277B5 /* FirebaseAuth in Frameworks */,
@@ -3148,7 +3149,7 @@
 				452047AD2703597500B277B5 /* FirebaseAnalytics in Frameworks */,
 				45D871C62710769600F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B75E2742BF9C00855C58 /* SweeterSwift in Frameworks */,
-				A9B841A126E26BEE00269B05 /* Starscream in Frameworks */,
+				45EF50EA282E6AD7008180CA /* Starscream in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3175,7 +3176,6 @@
 				45166D2E26F3D8AC00E69D65 /* CombineCocoa in Frameworks */,
 				45EF5428270C5F8100D1E13E /* FirebaseCrashlytics in Frameworks */,
 				457EDAC52791D3AC00DDCD83 /* SwiftyBeaver in Frameworks */,
-				A9B841A326E26C0B00269B05 /* Starscream in Frameworks */,
 				A96B70B92739891200FEF07D /* FirebaseMessaging in Frameworks */,
 				45D871CA271076B800F5B87B /* OrderedCollections in Frameworks */,
 				F4E3B7632742BFE300855C58 /* SweeterSwift in Frameworks */,
@@ -5634,7 +5634,6 @@
 				4515637726BED19B00690896 /* Reachability */,
 				4515637A26BED57400690896 /* Nuke */,
 				A9B8419226E235AD00269B05 /* DictionaryCoding */,
-				A9B841A026E26BEE00269B05 /* Starscream */,
 				45166D2B26F3D89B00E69D65 /* CombineCocoa */,
 				451B386126FF172C008D49C5 /* Kingfisher */,
 				452047AC2703597500B277B5 /* FirebaseAnalytics */,
@@ -5648,6 +5647,8 @@
 				F4E3B7602742BFB100855C58 /* AvailableHapticFeedback */,
 				45F8B153274BC3B60087652B /* FirebaseMessaging */,
 				457EDAC22791D39B00DDCD83 /* SwiftyBeaver */,
+				45EF50E6282E6AA4008180CA /* SocketIO */,
+				45EF50E9282E6AD7008180CA /* Starscream */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C5026BD902C00EC572D /* ShowcaseProd.app */;
@@ -5690,7 +5691,6 @@
 				4515637C26BED58900690896 /* Reachability */,
 				4515637E26BED58900690896 /* Nuke */,
 				A9B8419026E2359800269B05 /* DictionaryCoding */,
-				A9B841A226E26C0B00269B05 /* Starscream */,
 				45166D2D26F3D8AC00E69D65 /* CombineCocoa */,
 				451B386326FF173D008D49C5 /* Kingfisher */,
 				45EF5423270C5F8100D1E13E /* FirebaseAnalytics */,
@@ -5817,7 +5817,6 @@
 				4515637626BED19A00690896 /* XCRemoteSwiftPackageReference "Reachability" */,
 				4515637926BED57400690896 /* XCRemoteSwiftPackageReference "Nuke" */,
 				A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */,
-				A9B8419F26E26BEE00269B05 /* XCRemoteSwiftPackageReference "Starscream" */,
 				45166D2A26F3D89B00E69D65 /* XCRemoteSwiftPackageReference "CombineCocoa" */,
 				451B386026FF172C008D49C5 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
@@ -5826,6 +5825,8 @@
 				F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */,
 				F4E3B75F2742BFB100855C58 /* XCRemoteSwiftPackageReference "AvailableHapticFeedback" */,
 				457EDAC12791D39B00DDCD83 /* XCRemoteSwiftPackageReference "SwiftyBeaver" */,
+				45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */,
+				45EF50E8282E6AD7008180CA /* XCRemoteSwiftPackageReference "Starscream" */,
 			);
 			productRefGroup = 455A0C5126BD902C00EC572D /* Products */;
 			projectDirPath = "";
@@ -9127,20 +9128,28 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/socketio/socket.io-client-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 16.0.0;
+			};
+		};
+		45EF50E8282E6AD7008180CA /* XCRemoteSwiftPackageReference "Starscream" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/daltoniam/Starscream.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elegantchaos/DictionaryCoding.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.9;
-			};
-		};
-		A9B8419F26E26BEE00269B05 /* XCRemoteSwiftPackageReference "Starscream" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/daltoniam/Starscream.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
 			};
 		};
 		F4E3B75C2742BF9C00855C58 /* XCRemoteSwiftPackageReference "SweeterSwift" */ = {
@@ -9441,6 +9450,16 @@
 			package = 45D871C02710769600F5B87B /* XCRemoteSwiftPackageReference "swift-collections" */;
 			productName = OrderedCollections;
 		};
+		45EF50E6282E6AA4008180CA /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
+		};
+		45EF50E9282E6AD7008180CA /* Starscream */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45EF50E8282E6AD7008180CA /* XCRemoteSwiftPackageReference "Starscream" */;
+			productName = Starscream;
+		};
 		45EF5423270C5F8100D1E13E /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
@@ -9480,16 +9499,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A9B8418F26E2359800269B05 /* XCRemoteSwiftPackageReference "DictionaryCoding" */;
 			productName = DictionaryCoding;
-		};
-		A9B841A026E26BEE00269B05 /* Starscream */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9B8419F26E26BEE00269B05 /* XCRemoteSwiftPackageReference "Starscream" */;
-			productName = Starscream;
-		};
-		A9B841A226E26C0B00269B05 /* Starscream */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = A9B8419F26E26BEE00269B05 /* XCRemoteSwiftPackageReference "Starscream" */;
-			productName = Starscream;
 		};
 		F4E3B75D2742BF9C00855C58 /* SweeterSwift */ = {
 			isa = XCSwiftPackageProductDependency;
