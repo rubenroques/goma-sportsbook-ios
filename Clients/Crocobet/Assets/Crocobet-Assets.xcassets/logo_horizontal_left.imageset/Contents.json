@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "goma dark mode-1.png",
+      "filename" : "header light.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "goma dark mode.png",
+      "filename" : "header dark.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "goma dark mode@2x-1.png",
+      "filename" : "header light@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "goma dark mode@2x.png",
+      "filename" : "header dark@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "goma dark mode@3x-1.png",
+      "filename" : "header light@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "goma dark mode@3x.png",
+      "filename" : "header dark@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
