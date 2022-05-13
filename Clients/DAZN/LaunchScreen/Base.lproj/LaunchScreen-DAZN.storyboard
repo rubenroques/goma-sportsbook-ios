@@ -18,10 +18,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo_horizontal_center" translatesAutoresizingMaskIntoConstraints="NO" id="8gj-oC-TVC">
-                                <rect key="frame" x="116.33333333333333" y="367.66666666666669" width="181.33333333333337" height="121"/>
+                                <rect key="frame" x="135.66666666666666" y="356.66666666666669" width="142.99999999999997" height="143"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="1000" id="Pki-7r-qsz"/>
-                                    <constraint firstAttribute="width" secondItem="8gj-oC-TVC" secondAttribute="height" multiplier="15:10" id="Q4A-tx-fqE"/>
+                                    <constraint firstAttribute="width" secondItem="8gj-oC-TVC" secondAttribute="height" multiplier="15:15" id="Q4A-tx-fqE"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -41,9 +41,9 @@
         </scene>
     </scenes>
     <resources>
-        <image name="logo_horizontal_center" width="121" height="121"/>
+        <image name="logo_horizontal_center" width="143" height="69"/>
         <namedColor name="backgroundPrimary">
-            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.043137254901960784" green="0.043137254901960784" blue="0.043137254901960784" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>
 </document>
