@@ -266,12 +266,7 @@ class RootViewController: UIViewController {
         self.redrawButtonButtons()
 
         if let image = self.logoImageView.image {
-            let ratio = image.size.height / image.size.width
-            print(image.size.height)
-            print( self.logoImageHeightConstraint.constant)
-            let newHeight = self.logoImageHeightConstraint.constant 
-            print(newHeight)
-            self.logoImageWidthConstraint.constant = newHeight
+            self.logoImageWidthConstraint.constant = self.logoImageHeightConstraint.constant / 0.25
             self.view.layoutIfNeeded()
         }
 
