@@ -16,17 +16,18 @@ class SocialViewModel {
     }
 
     var startScreen: StartScreen
-    //var socialClient: GomaGamingSocialServiceClient
+    var socialClient: GomaGamingSocialServiceClient
 
     init(startScreen: StartScreen = .conversations) {
         self.startScreen = startScreen
 
-        //self.socialClient = GomaGamingSocialServiceClient()
+        self.socialClient = GomaGamingSocialServiceClient()
+
+        self.socialClient.connectSocket()
     }
 
     deinit {
-        print("DEINIT SOCIAL VM")
-        //self.socialClient.disconnectSocket()
+        self.socialClient.disconnectSocket()
     }
 
 }
