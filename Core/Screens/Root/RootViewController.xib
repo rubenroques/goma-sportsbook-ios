@@ -35,6 +35,7 @@
                 <outlet property="liveTitleLabel" destination="0RE-N3-etL" id="WPx-mN-ddE"/>
                 <outlet property="loginBaseView" destination="96Y-v9-tV8" id="LDO-3e-LIF"/>
                 <outlet property="loginButton" destination="paS-oq-fLH" id="Nxt-Si-Q1c"/>
+                <outlet property="loginStackView" destination="goS-zH-sV2" id="bMS-cv-AGJ"/>
                 <outlet property="logoImageHeightConstraint" destination="528-TU-f8B" id="MAl-pf-VXJ"/>
                 <outlet property="logoImageView" destination="RMW-wP-BFm" id="dLz-AD-UpZ"/>
                 <outlet property="logoImageWidthConstraint" destination="TKe-uJ-MtR" id="nvR-Eb-KSx"/>

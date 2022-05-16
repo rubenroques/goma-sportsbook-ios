@@ -44,6 +44,7 @@ class RootViewController: UIViewController {
     @IBOutlet private weak var logoImageHeightConstraint: NSLayoutConstraint!
 
     @IBOutlet private var loginBaseView: UIView!
+    @IBOutlet private var loginStackView: UIStackView!
     @IBOutlet private var loginButton: UIButton!
 
     @IBOutlet private var accountValueBaseView: UIView!
@@ -264,9 +265,27 @@ class RootViewController: UIViewController {
     func commonInit() {
 
         self.redrawButtonButtons()
-
         if let image = self.logoImageView.image {
-            self.logoImageWidthConstraint.constant = self.logoImageHeightConstraint.constant / 0.25
+
+            let maxAllowedWidth = self.topBarView.frame.width - (self.profileBaseView.frame.width + self.loginStackView.frame.width + self.searchButton.frame.width)
+
+            let defaultWidth = self.logoImageWidthConstraint.constant
+            let defaultHeight = self.logoImageHeightConstraint.constant
+
+            let ratio = image.size.height / image.size.width
+
+            let newWidth = defaultHeight / ratio
+
+            if newWidth > maxAllowedWidth {
+                 let limitedHeight = maxAllowedWidth * ratio
+                 self.logoImageWidthConstraint.constant = maxAllowedWidth
+                 self.logoImageHeightConstraint.constant = limitedHeight
+            }
+            else {
+                 self.logoImageWidthConstraint.constant = newWidth
+                 self.logoImageHeightConstraint.constant = defaultHeight
+            }
+
             self.view.layoutIfNeeded()
         }
 
