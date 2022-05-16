@@ -286,8 +286,6 @@ extension NewMessageViewController: UITableViewDataSource, UITableViewDelegate {
         }
 
         cell.shouldShowChatroomAction = { [weak self] conversationData in
-            print("CHATROOM ID: \(conversationData.id)")
-
             self?.showConversationDetail(conversationData: conversationData)
         }
 

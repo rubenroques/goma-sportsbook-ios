@@ -62,6 +62,7 @@ class FriendsListViewController: UIViewController {
         self.view.addGestureRecognizer(backgroundTapGesture)
 
         self.bind(toViewModel: self.viewModel)
+
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -88,7 +89,7 @@ class FriendsListViewController: UIViewController {
 
         self.setupSearchBarStyle()
 
-        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
+        self.tableView.backgroundColor = UIColor.App.alertError
     }
 
     // MARK: Binding
@@ -131,7 +132,7 @@ class FriendsListViewController: UIViewController {
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.backgroundImage = UIColor.App.highlightPrimary.image()
         self.searchBar.placeholder = localized("search")
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
@@ -264,7 +265,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 
         if !self.viewModel.friendsPublisher.value.isEmpty {
-            return 30
+            return UITableView.automaticDimension
         }
         else {
             return 0
@@ -299,6 +300,7 @@ extension FriendsListViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = false
+        tableView.contentInsetAdjustmentBehavior = .never
         return tableView
     }
 

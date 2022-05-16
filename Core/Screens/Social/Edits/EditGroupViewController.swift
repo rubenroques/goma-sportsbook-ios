@@ -232,7 +232,6 @@ class EditGroupViewController: UIViewController {
 
     // MARK: Functions
     private func showAddFriend() {
-        print("ADD FRIENDS!")
         let chatroomId = self.viewModel.getChatroomId()
 
         let addFriendsviewModel = EditGroupAddFriendViewModel(groupUsers: self.viewModel.users, chatroomId: chatroomId)
@@ -362,7 +361,6 @@ class EditGroupViewController: UIViewController {
     }
 
     @objc func didTapEditButton() {
-        print("EDIT!")
         let groupName = self.newGroupTextField.text ?? ""
         self.viewModel.editGroupInfo(groupName: groupName)
     }
@@ -452,18 +450,6 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-
-//        guard
-//            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
-//        else {
-//            fatalError()
-//        }
-//
-//        let resultsLabel = localized("select_friends_add")
-//
-//        headerView.configureHeader(title: resultsLabel)
-//
-//        return headerView
 
         return UIView()
     }

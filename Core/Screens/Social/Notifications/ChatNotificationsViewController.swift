@@ -175,7 +175,12 @@ class ChatNotificationsViewController: UIViewController {
 
         self.followersStackView.addArrangedSubview(titleView)
 
-        for userActionView in self.viewModel.followerViewsPublisher.value {
+        for (index, userActionView) in self.viewModel.followerViewsPublisher.value.enumerated() {
+
+            if index == self.viewModel.followerViewsPublisher.value.count - 1 {
+                userActionView.hasLineSeparator = false
+            }
+
             self.followersStackView.addArrangedSubview(userActionView)
         }
     }
@@ -186,8 +191,14 @@ class ChatNotificationsViewController: UIViewController {
         titleView.setTitle(title: localized("shared_tickets_to"))
         self.sharedTicketsStackView.addArrangedSubview(titleView)
 
-        for userActionView in self.viewModel.sharedTicketViewsPublisher.value {
+        for (index, userActionView) in self.viewModel.sharedTicketViewsPublisher.value.enumerated() {
+
+            if index == self.viewModel.followerViewsPublisher.value.count - 1 {
+                userActionView.hasLineSeparator = false
+            }
+
             userActionView.setActionButtonColor(color: UIColor.App.highlightSecondary)
+
             self.sharedTicketsStackView.addArrangedSubview(userActionView)
         }
 
@@ -452,7 +463,7 @@ extension ChatNotificationsViewController {
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
 
-            self.notificationsButton.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 8),
+            self.notificationsButton.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 0),
             self.notificationsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.notificationsButton.widthAnchor.constraint(equalToConstant: 40),
             self.notificationsButton.heightAnchor.constraint(equalTo: self.notificationsButton.widthAnchor),
@@ -467,20 +478,20 @@ extension ChatNotificationsViewController {
 
         NSLayoutConstraint.activate([
             self.clearAllButon.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
-            self.clearAllButon.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 10),
+            self.clearAllButon.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 0),
             self.clearAllButon.heightAnchor.constraint(equalToConstant: 40)
         ])
 
         NSLayoutConstraint.activate([
             self.scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.scrollView.topAnchor.constraint(equalTo: self.clearAllButon.bottomAnchor, constant: 8),
+            self.scrollView.topAnchor.constraint(equalTo: self.clearAllButon.bottomAnchor, constant: 0),
             self.scrollView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor),
             self.scrollView.contentLayoutGuide.widthAnchor.constraint(equalTo: self.view.widthAnchor),
 
             self.followersStackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16),
             self.followersStackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16),
-            self.followersStackView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 20),
+            self.followersStackView.topAnchor.constraint(equalTo: self.scrollView.contentLayoutGuide.topAnchor, constant: 0),
 
             self.sharedTicketsStackView.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 16),
             self.sharedTicketsStackView.trailingAnchor.constraint(equalTo: self.scrollView.trailingAnchor, constant: -16),

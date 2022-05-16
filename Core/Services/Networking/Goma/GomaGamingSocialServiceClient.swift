@@ -18,7 +18,10 @@ class GomaGamingSocialServiceClient {
     private let authToken = "9g7rp9760c33c6g1f19mn5ut3asd67"
 
     init() {
+        
+    }
 
+    func setupGomaSocket() {
         guard let jwtToken = Env.gomaNetworkClient.getCurrentToken() else { return }
 
         let configs = SocketIOClientConfiguration.init(arrayLiteral: .log(true),
@@ -31,7 +34,7 @@ class GomaGamingSocialServiceClient {
 
         let websocketURL = self.websocketURL
         self.manager = SocketManager(socketURL: URL(string: websocketURL)!, config: configs)
-        self.manager?.reconnects = false
+        self.manager?.reconnects = true
         self.manager?.reconnectWait = 10
         self.manager?.reconnectWaitMax = 40
 
@@ -58,7 +61,6 @@ class GomaGamingSocialServiceClient {
         self.socket?.on(clientEvent: .statusChange) { data, _ in
             print("Socket: statusChange \(data)")
         }
-
     }
 
     func connectSocket() {

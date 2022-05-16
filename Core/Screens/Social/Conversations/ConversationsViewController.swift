@@ -116,31 +116,7 @@ class ConversationsViewController: UIViewController {
             self.newMessageButton.tintColor = UIColor.App.highlightSecondary
         }
 
-        self.searchBar.searchBarStyle = UISearchBar.Style.prominent
-        self.searchBar.sizeToFit()
-        self.searchBar.isTranslucent = false
-        self.searchBar.backgroundImage = UIImage()
-        self.searchBar.tintColor = .white
-        self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
-        self.searchBar.placeholder = localized("search")
-
-        self.searchBar.delegate = self
-
-        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
-            textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
-            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
-                                                                 attributes: [NSAttributedString.Key.foregroundColor:
-                                                                                UIColor.App.inputTextTitle,
-                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
-
-            if let glassIconView = textfield.leftView as? UIImageView {
-                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
-                glassIconView.tintColor = UIColor.App.inputTextTitle
-            }
-        }
+        self.setupSearchBar()
 
     }
 
@@ -164,6 +140,34 @@ class ConversationsViewController: UIViewController {
 
     func needsRefetchData() {
         self.viewModel.refetchConversations()
+    }
+
+    private func setupSearchBar() {
+        self.searchBar.searchBarStyle = UISearchBar.Style.prominent
+        self.searchBar.sizeToFit()
+        self.searchBar.isTranslucent = false
+        self.searchBar.backgroundImage = UIImage()
+        self.searchBar.tintColor = .white
+        self.searchBar.barTintColor = .white
+        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
+        self.searchBar.placeholder = localized("search")
+
+        self.searchBar.delegate = self
+
+        if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
+            textfield.backgroundColor = UIColor.App.backgroundSecondary
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
+            textfield.attributedPlaceholder = NSAttributedString(string: localized("search_field"),
+                                                                 attributes: [NSAttributedString.Key.foregroundColor:
+                                                                                UIColor.App.inputTextTitle,
+                                                                              NSAttributedString.Key.font: AppFont.with(type: .semibold, size: 14)])
+
+            if let glassIconView = textfield.leftView as? UIImageView {
+                glassIconView.image = glassIconView.image?.withRenderingMode(.alwaysTemplate)
+                glassIconView.tintColor = UIColor.App.inputTextTitle
+            }
+        }
     }
 
     // MARK: - Bindings
@@ -237,14 +241,14 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             fatalError()
         }
 
-        // TEST STATES
-        if indexPath.row <= 2 {
-            cell.isSeen = false
-            cell.isOnline = true
-        }
         if let cellData = self.viewModel.conversationsPublisher.value[safe: indexPath.row] {
             let cellViewModel = PreviewChatCellViewModel(cellData: cellData)
             cell.configure(withViewModel: cellViewModel)
+        }
+
+        // TEST STATES
+        if indexPath.row <= 2 {
+            cell.isOnline = true
         }
 
         cell.didTapConversationAction = { [weak self] conversationData in
@@ -263,7 +267,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 66
+        return 70
     }
 }
 
@@ -425,15 +429,17 @@ extension ConversationsViewController {
             self.headerSeparatorLineView.heightAnchor.constraint(equalToConstant: 1),
 
             self.newGroupButton.leadingAnchor.constraint(equalTo: self.tableViewHeader.leadingAnchor, constant: 23),
-            self.newGroupButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -9),
+            self.newGroupButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
+            self.newGroupButton.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 10),
 
             self.newMessageButton.trailingAnchor.constraint(equalTo: self.tableViewHeader.trailingAnchor, constant: -23),
-            self.newMessageButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -9),
+            self.newMessageButton.bottomAnchor.constraint(equalTo: self.tableViewHeader.bottomAnchor, constant: -12),
+            self.newMessageButton.centerYAnchor.constraint(equalTo: self.newGroupButton.centerYAnchor)
         ])
 
         // Table view
         NSLayoutConstraint.activate([
-            self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 8),
             self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

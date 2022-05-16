@@ -16,18 +16,15 @@ class SocialViewModel {
     }
 
     var startScreen: StartScreen
-    var socialClient: GomaGamingSocialServiceClient
 
     init(startScreen: StartScreen = .conversations) {
         self.startScreen = startScreen
 
-        self.socialClient = GomaGamingSocialServiceClient()
-
-        self.socialClient.connectSocket()
+        Env.gomaSocialClient.connectSocket()
     }
 
     deinit {
-        self.socialClient.disconnectSocket()
+        Env.gomaSocialClient.disconnectSocket()
     }
 
 }
@@ -139,6 +136,7 @@ class SocialViewController: UIViewController {
 
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
+
         self.tabViewController.textColor = UIColor.App.textPrimary
         self.tabViewController.separatorBarColor = UIColor.App.separatorLine
 
@@ -263,7 +261,7 @@ extension SocialViewController {
     private static func createSettingsButton() -> UIButton {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(named: "app_settings_profile_icon"), for: .normal)
+        button.setImage(UIImage(named: "chat_settings_icon"), for: .normal)
         button.contentMode = .scaleAspectFit
         return button
     }
@@ -312,7 +310,7 @@ extension SocialViewController {
             self.notificationsButton.widthAnchor.constraint(equalToConstant: 40),
             self.notificationsButton.heightAnchor.constraint(equalTo: self.notificationsButton.widthAnchor),
 
-            self.friendsButton.leadingAnchor.constraint(equalTo: self.notificationsButton.trailingAnchor, constant: 8),
+            self.friendsButton.leadingAnchor.constraint(equalTo: self.notificationsButton.trailingAnchor, constant: 0),
             self.friendsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.friendsButton.widthAnchor.constraint(equalToConstant: 40),
             self.friendsButton.heightAnchor.constraint(equalTo: self.friendsButton.widthAnchor),
@@ -321,14 +319,14 @@ extension SocialViewController {
             self.settingsButton.widthAnchor.constraint(equalToConstant: 40),
             self.settingsButton.heightAnchor.constraint(equalTo: self.settingsButton.widthAnchor),
 
-            self.closeButton.leadingAnchor.constraint(equalTo: self.settingsButton.trailingAnchor, constant: 8),
+            self.closeButton.leadingAnchor.constraint(equalTo: self.settingsButton.trailingAnchor, constant: 0),
             self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -8),
             self.closeButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.closeButton.heightAnchor.constraint(equalToConstant: 40),
         ])
 
         NSLayoutConstraint.activate([
-            self.containerBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor),
+            self.containerBaseView.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 10),
             self.containerBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             self.containerBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.containerBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),

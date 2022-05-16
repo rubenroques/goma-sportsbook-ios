@@ -38,6 +38,8 @@ class ResultsHeaderFooterView: UITableViewHeaderFooterView {
 
     func setupWithTheme() {
         self.titleLabel.textColor = UIColor.App.textPrimary
+
+        self.contentView.backgroundColor = .yellow
     }
 
     // MARK: Functions

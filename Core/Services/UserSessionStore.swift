@@ -408,10 +408,10 @@ extension UserSessionStore {
                 
             }, receiveValue: { value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
+                Env.gomaSocialClient.setupGomaSocket()
             })
             .store(in: &cancellables)
 
     }
-
 
 }

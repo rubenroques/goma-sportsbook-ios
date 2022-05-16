@@ -13,6 +13,7 @@ class ConversationDetailViewModel: NSObject {
     // MARK: Private Properties
     private var conversationData: ConversationData
     private var cancellables = Set<AnyCancellable>()
+    private var socket = Env.gomaSocialClient.socket
 
     // MARK: Public Properties
     var messages: [MessageData] = []
@@ -30,10 +31,43 @@ class ConversationDetailViewModel: NSObject {
 
         super.init()
 
-        print("CHATROOM ID: \(self.conversationData.id)")
-
         self.setupConversationInfo()
-        self.getConversationMessages()
+        // self.getConversationMessages()
+
+        self.startSocketListening()
+    }
+
+    func startSocketListening() {
+
+        let chatroomId = self.conversationData.id
+
+        self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+
+        self.socket?.on("social.chatrooms.join") { data, ack in
+            print("CHAT DATA: \(data)")
+
+            guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else {return}
+
+            let chatMessages = data[0] as? [String: Any]
+
+            print("DATA MESSAGES: \(chatMessages)")
+            let decoder = JSONDecoder()
+
+            do {
+                let messages = try? decoder.decode(JSON.self, from: json)
+                print("JSON MESSAGES: \(messages)")
+            } catch {
+                print(error.localizedDescription)
+            }
+
+        }
+
+        self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
+                                                       "page": 1])
+
+        self.socket?.on("social.chatrooms.messages") { data, ack in
+            print("CHAT MESSAGES: \(data)")
+        }
 
     }
 
@@ -102,7 +136,6 @@ class ConversationDetailViewModel: NSObject {
     }
 
     func updateConversationInfo(groupInfo: GroupInfo) {
-        print("GROUP INFO: \(groupInfo)")
 
         var newConversationData = self.conversationData
         var newConversationGroupUsers: [GomaFriend] = []
@@ -125,8 +158,6 @@ class ConversationDetailViewModel: NSObject {
         }
 
         newConversationData.groupUsers = newConversationGroupUsers
-
-        print("NEW CONVERSATION DATA: \(newConversationData)")
 
         self.conversationData = newConversationData
 
@@ -195,6 +226,11 @@ class ConversationDetailViewModel: NSObject {
 
     func addMessage(message: MessageData) {
         self.messages.append(message)
+
+        self.socket?.emit("social.chatrooms.message", ["id": self.conversationData.id,
+                                                       "message": message.messageText,
+                                                 "repliedMessage": nil,
+                                                 "attatchment": nil])
 
         self.sortAllMessages()
     }
@@ -285,4 +321,30 @@ enum MessageType {
 struct DateMessages {
     var date: String
     var messages: [MessageData]
+}
+
+struct ChatMessagesResponse: Decodable {
+    var messages: [String]
+
+    enum CodingKeys: String, CodingKey {
+        case messages = "messages"
+    }
+}
+
+struct ChatMessage: Decodable {
+    var fromUser: String?
+    var message: String?
+    var repliedMessage: String?
+    var attachment: String?
+    var toChatroom: Int?
+    var date: Int?
+
+    enum CodingKeys: String, CodingKey {
+        case fromUser = "fromUser"
+        case message = "message"
+        case repliedMessage = "repliedMessage"
+        case attachment = "attachment"
+        case toChatroom = "toChatroom"
+        case date = "date"
+    }
 }

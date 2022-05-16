@@ -2232,6 +2232,7 @@
 		A99FD505282D489B00275509 /* EditGroupAddUserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD503282D489B00275509 /* EditGroupAddUserViewController.swift */; };
 		A99FD507282D4E4600275509 /* EditGroupAddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD506282D4E4600275509 /* EditGroupAddFriendViewModel.swift */; };
 		A99FD508282D4E4600275509 /* EditGroupAddFriendViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A99FD506282D4E4600275509 /* EditGroupAddFriendViewModel.swift */; };
+		A99FD50A282EA0BB00275509 /* SocketIO in Frameworks */ = {isa = PBXBuildFile; productRef = A99FD509282EA0BB00275509 /* SocketIO */; };
 		A9A2E7E327F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */; };
 		A9A2E7E427F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */; };
 		A9A2E7E627F5ED1F00D35A9D /* DepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */; };
@@ -3170,6 +3171,7 @@
 				A9B8419126E2359800269B05 /* DictionaryCoding in Frameworks */,
 				4515637D26BED58900690896 /* Reachability in Frameworks */,
 				454E0ADA2735C79600794E0C /* CombineExt in Frameworks */,
+				A99FD50A282EA0BB00275509 /* SocketIO in Frameworks */,
 				451B386426FF173D008D49C5 /* Kingfisher in Frameworks */,
 				4515637F26BED58900690896 /* Nuke in Frameworks */,
 				45D871C8271076B800F5B87B /* Collections in Frameworks */,
@@ -5704,6 +5706,7 @@
 				F4E3B7642742BFEB00855C58 /* AvailableHapticFeedback */,
 				A96B70B82739891200FEF07D /* FirebaseMessaging */,
 				457EDAC42791D3AC00DDCD83 /* SwiftyBeaver */,
+				A99FD509282EA0BB00275509 /* SocketIO */,
 			);
 			productName = Sportsbook;
 			productReference = 455A0C9026BD904300EC572D /* ShowcaseBeta.app */;
@@ -9489,6 +9492,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 452047AB2703597500B277B5 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
+		};
+		A99FD509282EA0BB00275509 /* SocketIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 45EF50E5282E6AA4008180CA /* XCRemoteSwiftPackageReference "socket" */;
+			productName = SocketIO;
 		};
 		A9B8419026E2359800269B05 /* DictionaryCoding */ = {
 			isa = XCSwiftPackageProductDependency;
