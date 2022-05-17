@@ -878,41 +878,49 @@ class MatchDetailsViewController: UIViewController {
 
     private func didTapShareButton() {
 
-        guard let matchId = self.viewModel.match?.id else {
-            return
+        if UserSessionStore.isUserLogged() {
+          
+            guard let matchId = self.viewModel.match?.id else {
+                return
+            }
+
+            self.sharedGameCardView.isHidden = false
+
+            let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
+            let snapshot = renderer.image { _ in
+                self.sharedGameCardView.drawHierarchy(in: self.sharedGameCardView.bounds, afterScreenUpdates: true)
+            }
+
+            let metadata = LPLinkMetadata()
+            let urlMobile = Env.urlMobileShares
+
+            if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+
+                let imageProvider = NSItemProvider(object: snapshot)
+                metadata.imageProvider = imageProvider
+                metadata.url = matchUrl
+                metadata.originalURL = matchUrl
+                metadata.title = localized("check_this_game")
+            }
+
+            let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+
+            let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
+            if let popoverController = shareActivityViewController.popoverPresentationController {
+                popoverController.sourceView = self.view
+                popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+                popoverController.permittedArrowDirections = []
+            }
+            shareActivityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
+                self?.sharedGameCardView.isHidden = true
+            }
+            self.present(shareActivityViewController, animated: true, completion: nil)
+            
         }
-
-        self.sharedGameCardView.isHidden = false
-
-        let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
-        let snapshot = renderer.image { _ in
-            self.sharedGameCardView.drawHierarchy(in: self.sharedGameCardView.bounds, afterScreenUpdates: true)
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+      
         }
-
-        let metadata = LPLinkMetadata()
-        let urlMobile = Env.urlMobileShares
-
-        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
-
-            let imageProvider = NSItemProvider(object: snapshot)
-            metadata.imageProvider = imageProvider
-            metadata.url = matchUrl
-            metadata.originalURL = matchUrl
-            metadata.title = localized("check_this_game")
-        }
-
-        let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
-
-        let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
-        if let popoverController = shareActivityViewController.popoverPresentationController {
-            popoverController.sourceView = self.view
-            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
-            popoverController.permittedArrowDirections = []
-        }
-        shareActivityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
-            self?.sharedGameCardView.isHidden = true
-        }
-        self.present(shareActivityViewController, animated: true, completion: nil)
     }
 
 }
