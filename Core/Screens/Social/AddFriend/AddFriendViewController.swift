@@ -48,6 +48,7 @@ class AddFriendViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -75,6 +76,11 @@ class AddFriendViewController: UIViewController {
         self.bind(toViewModel: self.viewModel)
 
         self.setupPublishers()
+
+        // TableView top padding fix
+        if #available(iOS 15.0, *) {
+          tableView.sectionHeaderTopPadding = 0
+        }
     }
     
     // MARK: - Layout and Theme
@@ -596,7 +602,7 @@ extension AddFriendViewController {
             self.backButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
@@ -606,14 +612,6 @@ extension AddFriendViewController {
             self.closeButton.heightAnchor.constraint(equalToConstant: 40)
 
         ])
-
-        // Searchbar
-//        NSLayoutConstraint.activate([
-//            self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
-//            self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
-//            self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
-//            self.searchBar.heightAnchor.constraint(equalToConstant: 60)
-//        ])
 
         // Search friend code views
         NSLayoutConstraint.activate([
@@ -629,7 +627,7 @@ extension AddFriendViewController {
         // Contact list button
         NSLayoutConstraint.activate([
             self.addContactFriendButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
-            self.addContactFriendButton.topAnchor.constraint(equalTo: self.searchFriendTextFieldView.bottomAnchor, constant: 16)
+            self.addContactFriendButton.topAnchor.constraint(equalTo: self.searchFriendTextFieldView.bottomAnchor, constant: 30)
         ])
 
         // Tableview
@@ -637,11 +635,11 @@ extension AddFriendViewController {
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.addContactFriendButton.bottomAnchor, constant: 16),
+            self.tableView.topAnchor.constraint(equalTo: self.tableSeparatorLineView.bottomAnchor, constant: 25),
 
             self.tableSeparatorLineView.leadingAnchor.constraint(equalTo: self.tableView.leadingAnchor, constant: 25),
             self.tableSeparatorLineView.trailingAnchor.constraint(equalTo: self.tableView.trailingAnchor, constant: -25),
-            self.tableSeparatorLineView.bottomAnchor.constraint(equalTo: self.tableView.topAnchor),
+            self.tableSeparatorLineView.topAnchor.constraint(equalTo: self.addContactFriendButton.bottomAnchor, constant: 10),
             self.tableSeparatorLineView.heightAnchor.constraint(equalToConstant: 1)
 
         ])

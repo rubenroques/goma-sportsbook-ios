@@ -63,6 +63,10 @@ class FriendsListViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        // TableView top padding fix
+        if #available(iOS 15.0, *) {
+          tableView.sectionHeaderTopPadding = 0
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -89,7 +93,7 @@ class FriendsListViewController: UIViewController {
 
         self.setupSearchBarStyle()
 
-        self.tableView.backgroundColor = UIColor.App.alertError
+        self.tableView.backgroundColor = UIColor.App.backgroundPrimary
     }
 
     // MARK: Binding
@@ -132,13 +136,13 @@ class FriendsListViewController: UIViewController {
         self.searchBar.backgroundImage = UIImage()
         self.searchBar.tintColor = .white
         self.searchBar.barTintColor = .white
-        self.searchBar.backgroundImage = UIColor.App.highlightPrimary.image()
+        self.searchBar.backgroundImage = UIColor.App.backgroundPrimary.image()
         self.searchBar.placeholder = localized("search")
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_friend"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
@@ -268,7 +272,7 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
             return UITableView.automaticDimension
         }
         else {
-            return 0
+            return 0.01
         }
 
     }
@@ -279,8 +283,83 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
             return 30
         }
         else {
-            return 0
+            return 0.01
         }
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        let muteAction = UIContextualAction(style: .normal,
+                                        title: "Mute") { [weak self] action, view, completionHandler in
+            self?.handleMuteAction()
+            completionHandler(true)
+        }
+
+        if let friend = self.viewModel.friendsPublisher.value[safe: indexPath.row] {
+
+            if let cellViewModel = self.viewModel.cachedFriendCellViewModels[friend.id] {
+                if cellViewModel.notificationsEnabled {
+                    muteAction.title = "Mute"
+                }
+                else {
+                    muteAction.title = "Unmute"
+                }
+
+            }
+        }
+        muteAction.backgroundColor = UIColor.App.backgroundTertiary
+
+        let deleteAction = UIContextualAction(style: .normal,
+                                        title: "Delete") { [weak self] action, view, completionHandler in
+            self?.handleDeleteAction()
+            completionHandler(true)
+        }
+
+        deleteAction.backgroundColor = UIColor.App.backgroundSecondary
+
+        let profileAction = UIContextualAction(style: .normal,
+                                        title: "Profile") { [weak self] action, view, completionHandler in
+            if let friendData = self?.viewModel.friendsPublisher.value[safe: indexPath.row] {
+                self?.handleProfileAction(friendData: friendData)
+                completionHandler(true)
+            }
+
+        }
+
+        profileAction.backgroundColor = UIColor.App.backgroundTertiary
+
+        let swipeActionCofiguration = UISwipeActionsConfiguration(actions: [profileAction, deleteAction, muteAction])
+
+        swipeActionCofiguration.performsFirstActionWithFullSwipe = false
+
+        return swipeActionCofiguration
+
+    }
+
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .none
+    }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    private func handleMuteAction() {
+        print("Muted!")
+    }
+
+    private func handleDeleteAction() {
+        print("Deleted")
+    }
+
+    private func handleProfileAction(friendData: GomaFriend) {
+        print("Profile")
+
+        let friendProfileViewModel = FriendProfileViewModel(friendData: friendData)
+
+        let friendProfileViewController = FriendProfileViewController(viewModel: friendProfileViewModel)
+
+        self.navigationController?.pushViewController(friendProfileViewController, animated: true)
     }
 
 }

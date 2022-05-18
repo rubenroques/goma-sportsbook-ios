@@ -12,6 +12,8 @@ class FriendStatusTableViewCell: UITableViewCell {
 
     // MARK: Private Properties
     private lazy var baseView: UIView = Self.createBaseView()
+    private lazy var iconBaseView: UIView = Self.createIconBaseView()
+    private lazy var iconInnerView: UIView = Self.createIconInnerView()
     private lazy var photoImageView: UIImageView = Self.createPhotoImageView()
     private lazy var nameLabel: UILabel = Self.createNameLabel()
     private lazy var statusView: UIView = Self.createStatusView()
@@ -29,6 +31,19 @@ class FriendStatusTableViewCell: UITableViewCell {
             }
             else {
                 self.notificationEnabledButton.setImage(UIImage(named: "notifications_status_on_icon"), for: UIControl.State.normal)
+            }
+        }
+    }
+
+    var isOnline: Bool = false {
+        didSet {
+            if isOnline {
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+            }
+            else {
+                self.iconBaseView.layer.borderWidth = 2
+                self.iconBaseView.layer.borderColor = UIColor.App.backgroundOdds.cgColor
             }
         }
     }
@@ -57,7 +72,12 @@ class FriendStatusTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
 
+        self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.size.width / 2
+
+        self.iconInnerView.layer.cornerRadius = self.iconInnerView.frame.size.width / 2
+
         self.photoImageView.layer.cornerRadius = self.photoImageView.frame.size.width / 2
+
         self.statusView.layer.cornerRadius = self.statusView.frame.size.width / 2
     }
 
@@ -65,7 +85,10 @@ class FriendStatusTableViewCell: UITableViewCell {
         self.backgroundView?.backgroundColor = UIColor.App.backgroundPrimary
         self.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.photoImageView.layer.borderColor = UIColor.App.highlightPrimary.cgColor
+        self.iconBaseView.backgroundColor = UIColor.App.backgroundPrimary
+
+        self.iconInnerView.backgroundColor = UIColor.App.backgroundPrimary
+
         self.photoImageView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.nameLabel.textColor = UIColor.App.textPrimary
@@ -87,6 +110,9 @@ class FriendStatusTableViewCell: UITableViewCell {
 
         self.notificationsEnabled = viewModel.notificationsEnabled
 
+        self.isOnline = true
+
+        self.notificationEnabledButton.isHidden = true
     }
 
     // MARK: Actions
@@ -137,15 +163,23 @@ extension FriendStatusTableViewCell {
         return baseView
     }
 
+    private static func createIconBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createIconInnerView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
     private static func createPhotoImageView() -> UIImageView {
         let photoImageView = UIImageView()
         photoImageView.translatesAutoresizingMaskIntoConstraints = false
         photoImageView.image = UIImage(named: "my_account_profile_icon")
         photoImageView.contentMode = .scaleAspectFit
-        photoImageView.clipsToBounds = true
-        photoImageView.layer.masksToBounds = true
-        photoImageView.layer.borderWidth = 2.5
-        photoImageView.layer.borderColor = UIColor.brown.cgColor
         return photoImageView
     }
 
@@ -189,7 +223,12 @@ extension FriendStatusTableViewCell {
 
         self.contentView.addSubview(self.baseView)
 
-        self.baseView.addSubview(self.photoImageView)
+        self.baseView.addSubview(self.iconBaseView)
+
+        self.iconBaseView.addSubview(self.iconInnerView)
+
+        self.iconInnerView.addSubview(self.photoImageView)
+
         self.baseView.addSubview(self.nameLabel)
         self.baseView.addSubview(self.statusView)
         self.baseView.addSubview(self.notificationEnabledButton)
@@ -214,11 +253,20 @@ extension FriendStatusTableViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor),
 
-            self.photoImageView.heightAnchor.constraint(equalTo: self.photoImageView.widthAnchor),
-            self.photoImageView.heightAnchor.constraint(equalToConstant: 40),
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 24),
+            self.iconBaseView.widthAnchor.constraint(equalToConstant: 40),
+            self.iconBaseView.heightAnchor.constraint(equalTo: self.iconBaseView.widthAnchor),
+            self.iconBaseView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
 
-            self.photoImageView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 24),
-            self.photoImageView.centerYAnchor.constraint(equalTo: self.baseView.centerYAnchor),
+            self.iconInnerView.widthAnchor.constraint(equalToConstant: 37),
+            self.iconInnerView.heightAnchor.constraint(equalTo: self.iconInnerView.widthAnchor),
+            self.iconInnerView.centerXAnchor.constraint(equalTo: self.iconBaseView.centerXAnchor),
+            self.iconInnerView.centerYAnchor.constraint(equalTo: self.iconBaseView.centerYAnchor),
+
+            self.photoImageView.widthAnchor.constraint(equalToConstant: 25),
+            self.photoImageView.heightAnchor.constraint(equalTo: self.photoImageView.widthAnchor),
+            self.photoImageView.centerXAnchor.constraint(equalTo: self.iconInnerView.centerXAnchor),
+            self.photoImageView.centerYAnchor.constraint(equalTo: self.iconInnerView.centerYAnchor),
 
             self.nameLabel.leadingAnchor.constraint(equalTo: self.photoImageView.trailingAnchor, constant: 12),
             self.nameLabel.centerYAnchor.constraint(equalTo: self.photoImageView.centerYAnchor),

@@ -485,3 +485,7 @@ Terms of use, Privacy Policy and EULA";
 
 "group_name_changed" = "Group Name Changed";
 "group_name_changed_message" = "Group name was changed with success!";
+
+"mute" = "Mute";
+"unmute" = "Unmute";
+"unfriend" = "Unfriend";

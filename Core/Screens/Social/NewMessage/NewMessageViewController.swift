@@ -77,6 +77,10 @@ class NewMessageViewController: UIViewController {
 
         self.bind(toViewModel: self.viewModel)
 
+        // TableView top padding fix
+        if #available(iOS 15.0, *) {
+          tableView.sectionHeaderTopPadding = 0
+        }
     }
 
     // MARK: - Layout and Theme
@@ -160,8 +164,8 @@ class NewMessageViewController: UIViewController {
 
         if let textfield = searchBar.value(forKey: "searchField") as? UITextField {
             textfield.backgroundColor = UIColor.App.backgroundSecondary
-            textfield.textColor = .white
-            textfield.tintColor = .white
+            textfield.textColor = UIColor.App.textPrimary
+            textfield.tintColor = UIColor.App.textPrimary
             textfield.attributedPlaceholder = NSAttributedString(string: localized("search_friend"),
                                                                  attributes: [NSAttributedString.Key.foregroundColor:
                                                                                 UIColor.App.inputTextTitle,
@@ -500,7 +504,7 @@ extension NewMessageViewController {
             self.backButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
 
             self.titleLabel.centerXAnchor.constraint(equalTo: self.navigationView.centerXAnchor),
             self.titleLabel.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
@@ -515,7 +519,7 @@ extension NewMessageViewController {
         NSLayoutConstraint.activate([
             self.searchBar.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
             self.searchBar.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
-            self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 8),
+            self.searchBar.topAnchor.constraint(equalTo: self.navigationView.bottomAnchor, constant: 0),
             self.searchBar.heightAnchor.constraint(equalToConstant: 60)
         ])
 
@@ -524,7 +528,7 @@ extension NewMessageViewController {
 
             self.tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             self.tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 16),
+            self.tableView.topAnchor.constraint(equalTo: self.searchBar.bottomAnchor, constant: 15),
             self.tableView.bottomAnchor.constraint(equalTo: self.bottomSafeAreaView.topAnchor)
         ])
 

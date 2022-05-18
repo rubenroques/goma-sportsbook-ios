@@ -72,4 +72,40 @@ class GomaGamingSocialServiceClient {
         self.socket?.disconnect()
     }
 
+    func getChatMessages(data: [Any], completion: @escaping ([ChatMessagesResponse]?) -> Void)  {
+        guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else { return }
+
+        let decoder = JSONDecoder()
+
+        do {
+            let messages = try? decoder.decode([ChatMessagesResponse].self, from: json)
+
+            completion(messages)
+
+        } catch {
+            print(error.localizedDescription)
+
+            completion(nil)
+
+        }
+    }
+
+    func getChatMessagesTest(data: [Any], completion: @escaping ([JSON]?) -> Void)  {
+        guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else { return }
+
+        let decoder = JSONDecoder()
+
+        do {
+            let messages = try? decoder.decode([JSON].self, from: json)
+
+            completion(messages)
+
+        } catch {
+            print(error.localizedDescription)
+
+            completion(nil)
+
+        }
+    }
+
 }

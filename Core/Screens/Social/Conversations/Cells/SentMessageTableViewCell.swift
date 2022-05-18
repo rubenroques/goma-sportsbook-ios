@@ -80,16 +80,17 @@ class SentMessageTableViewCell: UITableViewCell {
     // MARK: Functions
 
     func setupMessage(messageData: MessageData) {
-        self.messageLabel.text = messageData.messageText
+        self.messageLabel.text = messageData.text
 
-        self.messageDateLabel.text = messageData.messageDate
+        self.messageDateLabel.text = messageData.date
 
-        if messageData.messageType == .sentNotSeen {
+        if messageData.type == .sentNotSeen {
             self.isMessageSeen = false
         }
-        else if messageData.messageType == .sentSeen {
+        else if messageData.type == .sentSeen {
             self.isMessageSeen = true
         }
+
     }
 
     private func setBubbleTailTriangle() {

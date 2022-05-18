@@ -177,6 +177,13 @@ class ConversationDetailViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.dataNeedsReload
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.tableView.reloadData()
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -213,12 +220,13 @@ class ConversationDetailViewController: UIViewController {
         // TEST SEND MESSAGE
         let dateNow = Date()
         let dateNowString = self.viewModel.getDefaultDateFormatted(date: dateNow)
+        let dateNowTimestamp = Int(Date().timeIntervalSince1970)
 
         let message = self.messageInputView.getTextViewValue()
 
         if message != "" {
 
-            let messageData = MessageData(messageType: .sentNotSeen, messageText: message, messageDate: dateNowString)
+            let messageData = MessageData(type: .sentNotSeen, text: message, date: dateNowString, timestamp: dateNowTimestamp)
 
             self.viewModel.addMessage(message: messageData)
             self.messageInputView.clearTextView()
@@ -320,7 +328,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let messageData = self.viewModel.dateMessages[safe: indexPath.section]?.messages[indexPath.row] {
-            if messageData.messageType == .sentNotSeen || messageData.messageType == .sentSeen {
+            if messageData.type == .sentNotSeen || messageData.type == .sentSeen {
                 guard
                     let cell = tableView.dequeueCellType(SentMessageTableViewCell.self)
                 else {
@@ -338,7 +346,13 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
                     fatalError()
                 }
 
-                cell.setupMessage(messageData: messageData)
+                if let userId = messageData.userId {
+
+                    let username = self.viewModel.getUsername(userId: userId)
+
+                    cell.setupMessage(messageData: messageData, username: username)
+
+                }
 
                 return cell
             }

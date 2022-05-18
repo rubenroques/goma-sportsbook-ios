@@ -461,7 +461,7 @@ extension ChatNotificationsViewController {
             self.backButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 10),
+            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
 
             self.notificationsButton.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 0),
             self.notificationsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),

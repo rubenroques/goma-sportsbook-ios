@@ -25,6 +25,7 @@ class ConversationDetailViewModel: NSObject {
     var titlePublisher: CurrentValueSubject<String, Never> = .init("")
     var usersPublisher: CurrentValueSubject<String, Never> = .init("")
     var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
+    var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
 
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
@@ -44,21 +45,19 @@ class ConversationDetailViewModel: NSObject {
         self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
 
         self.socket?.on("social.chatrooms.join") { data, ack in
-            print("CHAT DATA: \(data)")
 
-            guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else {return}
+            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
+                print("CHAT MESSAGES: \(chatMessages)")
+                //self?.getConversationMessages()
+                if let chatMessages = chatMessages?[safe: 0]?.messages {
+                    self?.processChatMessages(chatMessages: chatMessages)
+                }
+            })
 
-            let chatMessages = data[0] as? [String: Any]
+            Env.gomaSocialClient.getChatMessagesTest(data: data, completion: { [weak self] chatMessages in
+                print("CHAT TEST MESSAGES: \(chatMessages)")
 
-            print("DATA MESSAGES: \(chatMessages)")
-            let decoder = JSONDecoder()
-
-            do {
-                let messages = try? decoder.decode(JSON.self, from: json)
-                print("JSON MESSAGES: \(messages)")
-            } catch {
-                print(error.localizedDescription)
-            }
+            })
 
         }
 
@@ -66,7 +65,23 @@ class ConversationDetailViewModel: NSObject {
                                                        "page": 1])
 
         self.socket?.on("social.chatrooms.messages") { data, ack in
-            print("CHAT MESSAGES: \(data)")
+            print("CHAT GOMA MESSAGES: \(data)")
+        }
+
+        self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
+            print("CHAT GOMA MESSAGES LISTENER: \(data)")
+            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
+                print("CHAT MESSAGES: \(chatMessages)")
+                //self?.getConversationMessages()
+                if let chatMessages = chatMessages?[safe: 0]?.messages {
+                    self?.processChatMessages(chatMessages: chatMessages)
+                }
+            })
+
+            Env.gomaSocialClient.getChatMessagesTest(data: data, completion: { [weak self] chatMessages in
+                print("CHAT TEST UPDATES MESSAGES: \(chatMessages)")
+
+            })
         }
 
     }
@@ -86,16 +101,6 @@ class ConversationDetailViewModel: NSObject {
                 let onlineUsers = 0
                 var userDetailsString = ""
 
-//                for (index, user) in groupUsers.enumerated() {
-//                    if user.username != loggedUsername && loggedUsername != "" {
-//                        if index == groupUsers.endIndex - 1 {
-//                            usersString += "\(user.username)"
-//                        }
-//                        else {
-//                            usersString += "\(user.username), "
-//                        }
-//                    }
-//                }
                 let chatGroupDetailString = localized("chat_group_users_details")
 
                 userDetailsString = chatGroupDetailString.replacingFirstOccurrence(of: "%s", with: "\(onlineUsers)")
@@ -164,27 +169,63 @@ class ConversationDetailViewModel: NSObject {
         self.setupConversationInfo()
     }
 
-    private func getConversationMessages() {
-        // TESTING CHAT MESSAGES
-        let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")
-        let message2 = MessageData(messageType: .sentSeen, messageText: "Oh what is it? And how are you?", messageDate: "06/04/2022 16:00")
-        let message3 = MessageData(messageType: .receivedOnline, messageText: "All fine here! What about: Lorem ipsum dolor sit amet," +
-                                   "consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 01:50")
-        let message4 = MessageData(messageType: .sentSeen, messageText: "I'm up for it! 👀", messageDate: "07/04/2022 02:32")
-        let message5 = MessageData(messageType: .receivedOnline, messageText: "Alright! Then I'll send you the details: " +
-                                   "Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 17:35")
-        let message6 = MessageData(messageType: .sentNotSeen, messageText: "This seems like a nice deal. looking forward to it! 🤪", messageDate: "08/04/2022 10:01")
+    private func processChatMessages(chatMessages: [ChatMessage]) {
+        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else {return}
 
-        messages.append(message1)
-        messages.append(message2)
-        messages.append(message3)
-        messages.append(message4)
-        messages.append(message5)
-        messages.append(message6)
+        for message in chatMessages {
+            let formattedDate = self.getFormattedDate(date: message.date)
+            if "\(loggedUserId)" == message.fromUser {
+                let messageData = MessageData(type: .sentNotSeen, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                self.messages.append(messageData)
+            }
+            else {
+                let messageData = MessageData(type: .receivedOnline, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                self.messages.append(messageData)
+            }
+        }
+
+        let sortedTimestampMessages = self.messages.sorted {
+            $0.timestamp < $1.timestamp
+        }
+
+        self.messages = sortedTimestampMessages
 
         self.sortAllMessages()
 
         self.isChatOnline = true
+
+        self.dataNeedsReload.send()
+    }
+
+    private func getFormattedDate(date: Int) -> String {
+        let date = Date(timeIntervalSince1970: TimeInterval(date))
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy HH:mm"
+        let dateString = dateFormatter.string(from: date)
+        return dateString
+    }
+
+    private func getConversationMessages() {
+        // TESTING CHAT MESSAGES
+//        let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")
+//        let message2 = MessageData(messageType: .sentSeen, messageText: "Oh what is it? And how are you?", messageDate: "06/04/2022 16:00")
+//        let message3 = MessageData(messageType: .receivedOnline, messageText: "All fine here! What about: Lorem ipsum dolor sit amet," +
+//                                   "consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 01:50")
+//        let message4 = MessageData(messageType: .sentSeen, messageText: "I'm up for it! 👀", messageDate: "07/04/2022 02:32")
+//        let message5 = MessageData(messageType: .receivedOnline, messageText: "Alright! Then I'll send you the details: " +
+//                                   "Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 17:35")
+//        let message6 = MessageData(messageType: .sentNotSeen, messageText: "This seems like a nice deal. looking forward to it! 🤪", messageDate: "08/04/2022 10:01")
+//
+//        messages.append(message1)
+//        messages.append(message2)
+//        messages.append(message3)
+//        messages.append(message4)
+//        messages.append(message5)
+//        messages.append(message6)
+//
+//        self.sortAllMessages()
+//
+//        self.isChatOnline = true
 
         // Get chat messages for chatroom id
 
@@ -196,7 +237,7 @@ class ConversationDetailViewModel: NSObject {
         dateMessages = []
 
         for message in messages {
-            let messageDate = getDateFormatted(dateString: message.messageDate)
+            let messageDate = getDateFormatted(dateString: message.date)
 
             if sectionMessages[messageDate] != nil {
                 sectionMessages[messageDate]?.append(message)
@@ -207,7 +248,9 @@ class ConversationDetailViewModel: NSObject {
         }
 
         for (key, messages) in sectionMessages {
-                let dateMessage = DateMessages(date: key, messages: messages)
+            
+            let dateMessage = DateMessages(date: key, messages: messages)
+
             self.dateMessages.append(dateMessage)
         }
 
@@ -222,13 +265,14 @@ class ConversationDetailViewModel: NSObject {
             }
 
         }
+
     }
 
     func addMessage(message: MessageData) {
         self.messages.append(message)
 
-        self.socket?.emit("social.chatrooms.message", ["id": self.conversationData.id,
-                                                       "message": message.messageText,
+        self.socket?.emit("social.chatrooms.message", ["id": "\(self.conversationData.id)",
+                                                       "message": message.text,
                                                  "repliedMessage": nil,
                                                  "attatchment": nil])
 
@@ -261,7 +305,7 @@ class ConversationDetailViewModel: NSObject {
 
     func getDateFromString(dateString: String) -> Date? {
         let dateFormatterGet = DateFormatter()
-        dateFormatterGet.dateFormat = "dd-MM-yyyy"
+        dateFormatterGet.dateFormat = "dd-MM-yyyy HH:mm"
 
         if let formattedDate = dateFormatterGet.date(from: dateString) {
 
@@ -269,6 +313,17 @@ class ConversationDetailViewModel: NSObject {
         }
 
         return nil
+    }
+
+    func getUsername(userId: String) -> String {
+
+        if let users = self.conversationData.groupUsers {
+            if let user = users.first(where: { "\($0.id)" == userId}) {
+                return user.username
+            }
+        }
+
+        return ""
     }
 }
 
@@ -306,9 +361,11 @@ extension ConversationDetailViewModel {
 
 struct MessageData {
 
-    var messageType: MessageType
-    var messageText: String
-    var messageDate: String
+    var type: MessageType
+    var text: String
+    var date: String
+    var timestamp: Int
+    var userId: String?
 }
 
 enum MessageType {
@@ -324,7 +381,7 @@ struct DateMessages {
 }
 
 struct ChatMessagesResponse: Decodable {
-    var messages: [String]
+    var messages: [ChatMessage]
 
     enum CodingKeys: String, CodingKey {
         case messages = "messages"
@@ -332,12 +389,12 @@ struct ChatMessagesResponse: Decodable {
 }
 
 struct ChatMessage: Decodable {
-    var fromUser: String?
-    var message: String?
+    var fromUser: String
+    var message: String
     var repliedMessage: String?
     var attachment: String?
-    var toChatroom: Int?
-    var date: Int?
+    var toChatroom: Int
+    var date: Int
 
     enum CodingKeys: String, CodingKey {
         case fromUser = "fromUser"

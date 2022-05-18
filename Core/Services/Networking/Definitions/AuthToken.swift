@@ -12,6 +12,7 @@ struct AuthToken: Decodable {
     let userId: Int
     let hash: String
     let expiresDate: TimeInterval
+    let code: String
 
     var isValid: Bool {
         return Date().timeIntervalSince1970 < self.expiresDate
@@ -21,5 +22,6 @@ struct AuthToken: Decodable {
         case userId = "user_id"
         case hash = "access_token"
         case expiresDate = "expires_in"
+        case code = "code"
     }
 }
