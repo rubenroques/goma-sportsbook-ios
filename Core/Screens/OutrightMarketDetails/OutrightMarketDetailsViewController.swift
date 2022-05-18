@@ -8,6 +8,8 @@
 import UIKit
 import Combine
 import OrderedCollections
+import LinkPresentation
+import WebKit
 
 class OutrightMarketDetailsViewController: UIViewController {
 
@@ -26,6 +28,7 @@ class OutrightMarketDetailsViewController: UIViewController {
     private lazy var betslipButtonView: UIView = Self.createBetslipButtonView()
     private lazy var betslipCountLabel: UILabel = Self.createBetslipCountLabel()
     private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var moreOptionsButton: UIButton = Self.createMoreOptionsButton()
     private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
 
     private lazy var accountValueView: UIView = Self.createAccountValueView()
@@ -41,7 +44,6 @@ class OutrightMarketDetailsViewController: UIViewController {
     // MARK: - Lifetime and Cycle
     init(viewModel: OutrightMarketDetailsViewModel) {
         self.viewModel = viewModel
-        
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -49,6 +51,14 @@ class OutrightMarketDetailsViewController: UIViewController {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    private lazy var sharedGameCardView: SharedGameCardView = {
+        let gameCard = SharedGameCardView()
+        gameCard.translatesAutoresizingMaskIntoConstraints = false
+        gameCard.isHidden = true
+
+        return gameCard
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,6 +77,7 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.tableView.register(OverUnderMarketDetailTableViewCell.nib, forCellReuseIdentifier: OverUnderMarketDetailTableViewCell.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+        self.moreOptionsButton.addTarget(self, action: #selector(didTapMoreOptionsButton), for: .allEvents)
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
         self.betslipButtonView.addGestureRecognizer(tapBetslipView)
@@ -99,7 +110,7 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.tableView.backgroundColor = .clear
-
+        
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
         self.betslipCountLabel.textColor = UIColor.white
@@ -221,6 +232,78 @@ class OutrightMarketDetailsViewController: UIViewController {
         self.navigationController?.popViewController(animated: true)
     }
 
+    @objc func didTapMoreOptionsButton() {
+      
+        let actionSheetController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+
+        if Env.favoritesManager.isEventFavorite(eventId: self.viewModel.competition.id) {
+            let favoriteAction: UIAlertAction = UIAlertAction(title: "Remove from favorites", style: .default) { _ -> Void in
+                Env.favoritesManager.removeFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
+                
+            }
+            actionSheetController.addAction(favoriteAction)
+        }
+        else {
+            let favoriteAction: UIAlertAction = UIAlertAction(title: "Add to favorites", style: .default) { _ -> Void in
+                Env.favoritesManager.addFavorite(eventId: self.viewModel.competition.id, favoriteType: .match)
+                
+            }
+            actionSheetController.addAction(favoriteAction)
+        }
+
+        let shareAction: UIAlertAction = UIAlertAction(title: "Share event", style: .default) { [weak self] _ -> Void in
+            self?.didTapShareButton()
+        }
+        actionSheetController.addAction(shareAction)
+
+        let cancelAction: UIAlertAction = UIAlertAction(title: "Cancel", style: .cancel) { _ -> Void in }
+        actionSheetController.addAction(cancelAction)
+
+        if let popoverController = actionSheetController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+
+        self.present(actionSheetController, animated: true, completion: nil)
+    }
+
+    @objc  func didTapShareButton() {
+
+        let matchId = self.viewModel.competition.id
+        self.sharedGameCardView.isHidden = false
+
+        let renderer = UIGraphicsImageRenderer(size: self.sharedGameCardView.bounds.size)
+        let snapshot = renderer.image { _ in
+            self.sharedGameCardView.drawHierarchy(in: self.sharedGameCardView.bounds, afterScreenUpdates: true)
+        }
+
+        let metadata = LPLinkMetadata()
+        let urlMobile = Env.urlMobileShares
+
+        if let matchUrl = URL(string: "\(urlMobile)/gamedetail/\(matchId)") {
+
+            let imageProvider = NSItemProvider(object: snapshot)
+            metadata.imageProvider = imageProvider
+            metadata.url = matchUrl
+            metadata.originalURL = matchUrl
+            metadata.title = localized("check_this_game")
+        }
+
+        let metadataItemSource = LinkPresentationItemSource(metaData: metadata)
+
+        let shareActivityViewController = UIActivityViewController(activityItems: [metadataItemSource, snapshot], applicationActivities: nil)
+        if let popoverController = shareActivityViewController.popoverPresentationController {
+            popoverController.sourceView = self.view
+            popoverController.sourceRect = CGRect(x: self.view.bounds.midX, y: self.view.bounds.midY, width: 0, height: 0)
+            popoverController.permittedArrowDirections = []
+        }
+        shareActivityViewController.completionWithItemsHandler = { [weak self] _, _, _, _ in
+            self?.sharedGameCardView.isHidden = true
+        }
+        self.present(shareActivityViewController, animated: true, completion: nil)
+    }
+    
     @objc func didTapBetslipView() {
         self.openBetslipModal()
     }
@@ -238,7 +321,7 @@ class OutrightMarketDetailsViewController: UIViewController {
         let navigationViewController = Router.navigationController(with: depositViewController)
         self.present(navigationViewController, animated: true, completion: nil)
     }
-
+    
 }
 
 // MARK: - TableView Protocols
@@ -372,6 +455,15 @@ extension OutrightMarketDetailsViewController {
         backButton.translatesAutoresizingMaskIntoConstraints = false
         return backButton
     }
+    
+    private static func createMoreOptionsButton() -> UIButton {
+        let moreOptionsButton = UIButton.init(type: .custom)
+        moreOptionsButton.setImage(UIImage(named: "more_options_icon"), for: .normal)
+        moreOptionsButton.setTitle(nil, for: .normal)
+        moreOptionsButton.translatesAutoresizingMaskIntoConstraints = false
+        return moreOptionsButton
+    
+    }
 
     private static func createHeaderView() -> UIView {
         let view = UIView()
@@ -461,7 +553,7 @@ extension OutrightMarketDetailsViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
-
+    
     private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
         let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
         activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
@@ -507,13 +599,16 @@ extension OutrightMarketDetailsViewController {
 
         self.view.addSubview(self.topSafeAreaView)
         self.view.addSubview(self.navigationView)
+
         self.navigationView.addSubview(self.backButton)
         self.navigationView.addSubview(self.titleLabel)
-
+        self.navigationView.addSubview(self.moreOptionsButton)
+        
         self.accountValueView.addSubview(self.accountPlusView)
         self.accountPlusView.addSubview(self.accountPlusImageView)
         self.accountValueView.addSubview(self.accountValueLabel)
         self.navigationView.addSubview(self.accountValueView)
+        self.navigationView.addSubview(self.moreOptionsButton)
 
         self.view.addSubview(self.headerView)
         self.headerView.addSubview(self.outrightsLabel)
@@ -524,8 +619,9 @@ extension OutrightMarketDetailsViewController {
 
         self.betslipButtonView.addSubview(self.betslipCountLabel)
         self.view.addSubview(self.betslipButtonView)
-
+        
         self.view.addSubview(self.loadingBaseView)
+        self.view.addSubview(self.sharedGameCardView)
         self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
@@ -557,10 +653,15 @@ extension OutrightMarketDetailsViewController {
             self.backButton.widthAnchor.constraint(equalToConstant: 40),
             self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 8),
+            
+            self.moreOptionsButton.heightAnchor.constraint(equalToConstant: 40),
+            self.moreOptionsButton.widthAnchor.constraint(equalToConstant: 40),
+            self.moreOptionsButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.moreOptionsButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -8),
 
             self.accountValueView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
             self.accountValueView.heightAnchor.constraint(equalToConstant: 24),
-            self.accountValueView.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -12),
+            self.accountValueView.trailingAnchor.constraint(equalTo: self.moreOptionsButton.leadingAnchor, constant: -8),
 
             self.accountPlusView.widthAnchor.constraint(equalTo: self.accountPlusView.heightAnchor),
             self.accountPlusView.leadingAnchor.constraint(equalTo: self.accountValueView.leadingAnchor, constant: 4),
@@ -625,6 +726,13 @@ extension OutrightMarketDetailsViewController {
             self.loadingBaseView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             self.loadingBaseView.topAnchor.constraint(equalTo: self.headerView.bottomAnchor),
             self.loadingBaseView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            self.sharedGameCardView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
+            self.sharedGameCardView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
+            self.sharedGameCardView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            self.sharedGameCardView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
 }
