@@ -41,6 +41,7 @@ class OutrightMarketDetailsViewController: UIViewController {
     // MARK: - Lifetime and Cycle
     init(viewModel: OutrightMarketDetailsViewModel) {
         self.viewModel = viewModel
+        
         super.init(nibName: nil, bundle: nil)
     }
 
