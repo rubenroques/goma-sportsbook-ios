@@ -297,9 +297,7 @@ class SimpleRegisterDetailsViewController: UIViewController {
         guard validFields else {
             return
         }
-        print("mobile prefix :")
-        print(mobilePrefixTextual)
-        
+
         let form = EveryMatrix.SimpleRegisterForm(email: email,
                                                   username: username,
                                                   password: password,
