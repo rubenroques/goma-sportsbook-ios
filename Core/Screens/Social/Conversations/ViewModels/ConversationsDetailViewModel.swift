@@ -26,6 +26,7 @@ class ConversationDetailViewModel: NSObject {
     var usersPublisher: CurrentValueSubject<String, Never> = .init("")
     var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
+    var shouldScrollToLastMessage: PassthroughSubject<Void, Never> = .init()
 
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
@@ -47,17 +48,17 @@ class ConversationDetailViewModel: NSObject {
         self.socket?.on("social.chatrooms.join") { data, ack in
 
             Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-                print("CHAT MESSAGES: \(chatMessages)")
+                print("FIRST CHAT MESSAGE: \(chatMessages)")
                 //self?.getConversationMessages()
-                if let chatMessages = chatMessages?[safe: 0]?.messages {
-                    self?.processChatMessages(chatMessages: chatMessages)
-                }
+//                if let chatMessages = chatMessages?[safe: 0]?.messages {
+//                    self?.processChatMessages(chatMessages: chatMessages)
+//                }
             })
 
-            Env.gomaSocialClient.getChatMessagesTest(data: data, completion: { [weak self] chatMessages in
-                print("CHAT TEST MESSAGES: \(chatMessages)")
-
-            })
+//            Env.gomaSocialClient.getChatMessagesTest(data: data, completion: { [weak self] chatMessages in
+//                print("CHAT TEST MESSAGES: \(chatMessages)")
+//
+//            })
 
         }
 
@@ -65,7 +66,15 @@ class ConversationDetailViewModel: NSObject {
                                                        "page": 1])
 
         self.socket?.on("social.chatrooms.messages") { data, ack in
-            print("CHAT GOMA MESSAGES: \(data)")
+
+            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
+                print("CHAT MESSAGES: \(chatMessages)")
+                //self?.getConversationMessages()
+                if let chatMessages = chatMessages?[safe: 0]?.messages {
+                    self?.processChatMessages(chatMessages: chatMessages)
+                    self?.shouldScrollToLastMessage.send()
+                }
+            })
         }
 
         self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
@@ -78,10 +87,10 @@ class ConversationDetailViewModel: NSObject {
                 }
             })
 
-            Env.gomaSocialClient.getChatMessagesTest(data: data, completion: { [weak self] chatMessages in
-                print("CHAT TEST UPDATES MESSAGES: \(chatMessages)")
-
-            })
+//            Env.gomaSocialClient.getChatMessagesTest(data: data, completion: { [weak self] chatMessages in
+//                print("CHAT TEST UPDATES MESSAGES: \(chatMessages)")
+//
+//            })
         }
 
     }
@@ -269,7 +278,7 @@ class ConversationDetailViewModel: NSObject {
     }
 
     func addMessage(message: MessageData) {
-        self.messages.append(message)
+        //self.messages.append(message)
 
         self.socket?.emit("social.chatrooms.message", ["id": "\(self.conversationData.id)",
                                                        "message": message.text,

@@ -241,6 +241,11 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
                 self?.viewModel.removeFriend(friendId: friendId)
             }
 
+            cell.showProfileAction = { [weak self] in
+                self?.handleProfileAction(friendData: friend)
+
+            }
+
         }
 
         return cell
@@ -307,12 +312,16 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
 
             }
         }
+
         muteAction.backgroundColor = UIColor.App.backgroundTertiary
 
         let deleteAction = UIContextualAction(style: .normal,
                                         title: "Delete") { [weak self] action, view, completionHandler in
-            self?.handleDeleteAction()
-            completionHandler(true)
+            if let friendData = self?.viewModel.friendsPublisher.value[safe: indexPath.row] {
+                self?.handleDeleteAction(friendId: friendData.id)
+                completionHandler(true)
+            }
+
         }
 
         deleteAction.backgroundColor = UIColor.App.backgroundSecondary
@@ -348,12 +357,12 @@ extension FriendsListViewController: UITableViewDelegate, UITableViewDataSource 
         print("Muted!")
     }
 
-    private func handleDeleteAction() {
+    private func handleDeleteAction(friendId: Int) {
         print("Deleted")
+        self.viewModel.removeFriend(friendId: friendId)
     }
 
     private func handleProfileAction(friendData: GomaFriend) {
-        print("Profile")
 
         let friendProfileViewModel = FriendProfileViewModel(friendData: friendData)
 

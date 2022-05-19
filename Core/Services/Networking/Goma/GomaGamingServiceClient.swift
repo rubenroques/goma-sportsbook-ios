@@ -208,4 +208,10 @@ class GomaGamingServiceClient {
         return requestPublisher
     }
 
+    func searchUserCode(deviceId: String, code: String) -> AnyPublisher<SearchUser, NetworkError> {
+        let endpoint = GomaGamingService.searchUserCode(code: code)
+        let requestPublisher: AnyPublisher<SearchUser, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
+        return requestPublisher
+    }
+
 }

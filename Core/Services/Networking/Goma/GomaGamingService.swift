@@ -35,6 +35,7 @@ enum GomaGamingService {
     case lookupPhone(phones: [String])
     case removeUser(chatroomId: Int, userId: String)
     case addUserToGroup(chatroomId: Int, userIds: [String])
+    case searchUserCode(code: String)
 }
 
 extension GomaGamingService: Endpoint {
@@ -97,6 +98,8 @@ extension GomaGamingService: Endpoint {
             return "/api/social/\(apiVersion)/groups/\(chatroomId)/users"
         case .addUserToGroup(let chatroomId, _):
             return "/api/social/\(apiVersion)/groups/\(chatroomId)/users"
+        case .searchUserCode(let code):
+            return "/api/users/\(apiVersion)/code/\(code)"
         }
     }
 
@@ -113,7 +116,7 @@ extension GomaGamingService: Endpoint {
         case .removeFavorite(let favorite):
             return [URLQueryItem(name: "favorite_ids[]", value: favorite)]
         // Social
-        case .addFriend, .deleteFriend, .listFriends, .inviteFriend ,.chatrooms, .addGroup, .deleteGroup:
+        case .addFriend, .deleteFriend, .listFriends, .inviteFriend ,.chatrooms, .addGroup, .deleteGroup, .searchUserCode:
             return nil
         case .editGroup(_, let groupName):
             var queryItemsURL: [URLQueryItem] = []
@@ -182,7 +185,7 @@ extension GomaGamingService: Endpoint {
         // Social
         case .addFriend, .inviteFriend, .addGroup, .addUserToGroup:
             return .post
-        case .listFriends, .chatrooms, .lookupPhone:
+        case .listFriends, .chatrooms, .lookupPhone, .searchUserCode:
             return .get
         case .deleteGroup, .deleteFriend, .removeUser:
             return .delete

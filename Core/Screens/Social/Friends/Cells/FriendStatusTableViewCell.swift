@@ -49,6 +49,7 @@ class FriendStatusTableViewCell: UITableViewCell {
     }
 
     var removeFriendAction: ((Int) -> Void)?
+    var showProfileAction: (() -> Void)?
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -153,6 +154,10 @@ class FriendStatusTableViewCell: UITableViewCell {
         parentViewController.present(actionSheetController, animated: true, completion: nil)
     }
 
+    @objc func didTapBaseView() {
+        self.showProfileAction?()
+    }
+
 }
 
 extension FriendStatusTableViewCell {
@@ -242,6 +247,9 @@ extension FriendStatusTableViewCell {
 
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(didLongPressFriendView))
         self.baseView.addGestureRecognizer(longPressGestureRecognizer)
+
+        let baseViewGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didTapBaseView))
+        self.baseView.addGestureRecognizer(baseViewGestureRecognizer)
     }
 
     private func initConstraints() {

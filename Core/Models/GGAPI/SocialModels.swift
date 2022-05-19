@@ -58,3 +58,15 @@ struct GomaContact: Decodable {
         case phoneNumber = "phone_number"
     }
 }
+
+struct SearchUser: Decodable {
+    let id: Int
+    let name: String?
+    let username: String?
+
+    enum CodignKeys: String, CodingKey {
+        case id = "id"
+        case name = "name"
+        case username = "username"
+    }
+}

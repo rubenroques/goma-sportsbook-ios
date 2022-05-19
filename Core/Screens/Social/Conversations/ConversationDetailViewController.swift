@@ -184,6 +184,13 @@ class ConversationDetailViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.shouldScrollToLastMessage
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] in
+                self?.scrollToBottomTableView()
+            })
+            .store(in: &cancellables)
+
     }
 
     // MARK: Functions
@@ -203,11 +210,13 @@ class ConversationDetailViewController: UIViewController {
 
     func scrollToBottomTableView() {
         DispatchQueue.main.async {
-            let section = self.viewModel.dateMessages.count - 1
-            let row = self.viewModel.dateMessages[section].messages.count - 1
+            if self.viewModel.dateMessages.isNotEmpty {
+                let section = self.viewModel.dateMessages.count - 1
+                let row = self.viewModel.dateMessages[section].messages.count - 1
 
-            let indexPath = IndexPath(row: row, section: section)
-            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                let indexPath = IndexPath(row: row, section: section)
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
         }
     }
 
@@ -230,8 +239,8 @@ class ConversationDetailViewController: UIViewController {
 
             self.viewModel.addMessage(message: messageData)
             self.messageInputView.clearTextView()
-            self.tableView.reloadData()
-            self.scrollToBottomTableView()
+            //self.tableView.reloadData()
+            //self.scrollToBottomTableView()
         }
         else {
             print("NO TEXT!")

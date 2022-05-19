@@ -32,32 +32,58 @@ class AddFriendViewModel {
     func getUserInfo(friendCode: String) {
         // TEST
         
-        if friendCode == "GOMA123" {
-            let user = UserContact(id: "123", username: "@GOMA_User", phones: ["+351 999 888 777"])
+//        if friendCode == "GOMA123" {
+//            let user = UserContact(id: "123", username: "@GOMA_User", phones: ["+351 999 888 777"])
+//
+//            if !self.userInfoAlreadyRetrieved(user: user) {
+//                self.usersPublisher.value.append(user)
+//            }
+//        }
+//        else if friendCode == "SLB37" {
+//            let user = UserContact(id: "42", username: "Pedro", phones: ["966 302 428"])
+//
+//            if !self.userInfoAlreadyRetrieved(user: user) {
+//                self.usersPublisher.value.append(user)
+//            }
+//        }
+//        else if friendCode == "FCPCHAMP" {
+//            let user = UserContact(id: "138", username: "A.Lascas", phones: ["968 765 890"])
+//
+//            if !self.userInfoAlreadyRetrieved(user: user) {
+//                self.usersPublisher.value.append(user)
+//            }
+//        }
+//        else {
+//            self.friendCodeInvalidPublisher.send()
+//        }
 
-            if !self.userInfoAlreadyRetrieved(user: user) {
-                self.usersPublisher.value.append(user)
-            }
-        }
-        else if friendCode == "SLB37" {
-            let user = UserContact(id: "42", username: "Pedro", phones: ["966 302 428"])
+        Env.gomaNetworkClient.searchUserCode(deviceId: Env.deviceId, code: friendCode)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure(let error):
+                    print("SEARCH FRIEND ERROR: \(error)")
+                    self?.friendCodeInvalidPublisher.send()
+                case .finished:
+                    print("SEARCH FRIEND FINISHED")
+                }
 
-            if !self.userInfoAlreadyRetrieved(user: user) {
-                self.usersPublisher.value.append(user)
-            }
-        }
-        else if friendCode == "FCPCHAMP" {
-            let user = UserContact(id: "138", username: "A.Lascas", phones: ["968 765 890"])
+                self?.dataNeedsReload.send()
 
-            if !self.userInfoAlreadyRetrieved(user: user) {
-                self.usersPublisher.value.append(user)
-            }
-        }
-        else {
-            self.friendCodeInvalidPublisher.send()
-        }
+            }, receiveValue: { [weak self] searchUser in
+                print("SEARCH FRIEND GOMA: \(searchUser)")
 
-        self.dataNeedsReload.send()
+                guard let self = self else {return}
+
+                let user = UserContact(id: "\(searchUser.id)", username: searchUser.username ?? "User", phones: [])
+
+                if !self.userInfoAlreadyRetrieved(user: user) {
+                    self.usersPublisher.value.append(user)
+                }
+            })
+            .store(in: &cancellables)
+
+        //self.dataNeedsReload.send()
     }
 
     func userInfoAlreadyRetrieved(user: UserContact) -> Bool {
