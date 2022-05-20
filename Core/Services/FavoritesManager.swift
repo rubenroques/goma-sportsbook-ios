@@ -66,8 +66,7 @@ class FavoritesManager {
         Env.gomaNetworkClient.addFavorites(deviceId: Env.deviceId, favorites: gomaFavorites)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
-            }, receiveValue: { response in
-                print("ADD FAV GOMA: \(response)")
+            }, receiveValue: { _ in
             })
             .store(in: &cancellables)
     }
@@ -77,8 +76,7 @@ class FavoritesManager {
         Env.gomaNetworkClient.removeFavorite(deviceId: Env.deviceId, favorite: eventId)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { _ in
-            }, receiveValue: { response in
-                print("DELETE FAV GOMA: \(response)")
+            }, receiveValue: { _ in
             })
             .store(in: &cancellables)
     }
