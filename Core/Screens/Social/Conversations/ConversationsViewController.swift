@@ -210,6 +210,10 @@ extension ConversationsViewController {
         let newGroupViewModel = NewGroupViewModel()
         let newGroupViewController = NewGroupViewController(viewModel: newGroupViewModel)
 
+        newGroupViewController.chatListNeedReload = { [weak self] in
+            self?.needsRefetchData()
+        }
+
         self.navigationController?.pushViewController(newGroupViewController, animated: true)
     }
 

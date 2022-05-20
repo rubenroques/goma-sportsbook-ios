@@ -222,6 +222,9 @@ class ConversationDetailViewController: UIViewController {
 
     // MARK: Actions
     @objc func didTapBackButton() {
+        
+        self.shouldReloadData?()
+
         self.navigationController?.popToRootViewController(animated: true)
     }
 

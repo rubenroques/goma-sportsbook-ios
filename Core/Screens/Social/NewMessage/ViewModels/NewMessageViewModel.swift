@@ -125,19 +125,21 @@ class NewMesssageViewModel {
 
     func getConversationData(userId: String) -> ConversationData {
         var chatroomId = 0
-        var chatroomUser = ""
+        var chatroomUsername = ""
+        var chatroomUsers: [GomaFriend] = []
 
         for chatroomData in self.individualChatrooms {
             for user in chatroomData.users {
                 let userIdString = "\(user.id)"
                 if userIdString == userId {
                     chatroomId = chatroomData.chatroom.id
-                    chatroomUser = user.username
+                    chatroomUsername = user.username
+                    chatroomUsers = chatroomData.users
                 }
             }
         }
 
-        let conversationData = ConversationData(id: chatroomId, conversationType: .user, name: chatroomUser, lastMessage: "", date: "Now", isLastMessageSeen: false)
+        let conversationData = ConversationData(id: chatroomId, conversationType: .user, name: chatroomUsername, lastMessage: "", date: "Now", isLastMessageSeen: false, groupUsers: chatroomUsers)
 
         return conversationData
     }

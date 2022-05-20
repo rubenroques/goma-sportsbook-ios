@@ -118,7 +118,7 @@ class SocialViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        self.showWorkInProgressAlert()
+        // self.showWorkInProgressAlert()
     }
 
     // MARK: - Layout and Theme

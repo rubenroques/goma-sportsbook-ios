@@ -45,6 +45,8 @@ class NewGroupViewController: UIViewController {
         }
     }
 
+    var chatListNeedReload: (() -> Void)?
+
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupViewModel) {
         self.viewModel = viewModel
@@ -227,6 +229,10 @@ class NewGroupViewController: UIViewController {
         let newGroupManagementViewModel = NewGroupManagementViewModel(users: selectedUsers)
 
         let newGroupManagementViewController = NewGroupManagementViewController(viewModel: newGroupManagementViewModel)
+
+        newGroupManagementViewController.chatListNeedReload = { [weak self] in
+            self?.chatListNeedReload?()
+        }
 
         self.navigationController?.pushViewController(newGroupManagementViewController, animated: true)
     }

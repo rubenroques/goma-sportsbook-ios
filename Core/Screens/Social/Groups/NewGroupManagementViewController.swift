@@ -32,6 +32,7 @@ class NewGroupManagementViewController: UIViewController {
 
     // MARK: Public Properties
     var viewModel: NewGroupManagementViewModel
+    var chatListNeedReload: (() -> Void)?
 
     // MARK: - Lifetime and Cycle
     init(viewModel: NewGroupManagementViewModel) {
@@ -192,6 +193,7 @@ class NewGroupManagementViewController: UIViewController {
                 print("ADD GROUP GOMA: \(response)")
 
                 if let chatroomId = response.data?.id {
+                    self?.chatListNeedReload?()
                     self?.showConversationDetail(chatroomId: chatroomId, groupName: groupName)
                 }
             })
