@@ -148,19 +148,10 @@ class MyTicketTableViewCell: UITableViewCell {
         self.cashoutBaseView.backgroundColor = .clear
 
         self.cashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
-
-       /* self.titleLabel.textColor = UIColor.App.textPrimary
-        self.subtitleLabel.textColor = UIColor.App.textSecondary
-        self.totalOddTitleLabel.textColor = UIColor.App.textPrimary
-        self.totalOddSubtitleLabel.textColor = UIColor.App.textPrimary
-        self.betAmountTitleLabel.textColor = UIColor.App.textPrimary
-        self.betAmountSubtitleLabel.textColor = UIColor.App.textPrimary
-        self.winningsTitleLabel.textColor = UIColor.App.textPrimary
-        self.winningsSubtitleLabel.textColor = UIColor.App.textPrimary*/
         
-        self.cashoutButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
-        self.cashoutButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.7), for: .highlighted)
-        self.cashoutButton.setTitleColor(UIColor.App.buttonTextPrimary.withAlphaComponent(0.39), for: .disabled)
+        self.cashoutButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+        self.cashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.7), for: .highlighted)
+        self.cashoutButton.setTitleColor(UIColor.App.textPrimary.withAlphaComponent(0.39), for: .disabled)
 
         self.cashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary, for: .normal)
         self.cashoutButton.setBackgroundColor(UIColor.App.buttonBackgroundSecondary.withAlphaComponent(0.7), for: .highlighted)

@@ -383,15 +383,15 @@ extension UserSessionStore {
         Env.everyMatrixClient.manager
             .getModel(router: .login(username: user.username, password: userPassword), decodingType: LoginAccount.self)
             .receive(on: DispatchQueue.main)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .finished:
                     Env.favoritesManager.getUserFavorites()
-                    self.loginGomaAPI(username: user.username, password: user.userId)
+                    self?.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
                     print("error \(error)")
                 }
-                self.isLoadingUserSessionPublisher.send(false)
+                self?.isLoadingUserSessionPublisher.send(false)
             } receiveValue: { account in
                 Env.userSessionStore.isUserProfileIncomplete.send(account.isProfileIncomplete)
                 Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
@@ -412,5 +412,6 @@ extension UserSessionStore {
             .store(in: &cancellables)
 
     }
+
 
 }

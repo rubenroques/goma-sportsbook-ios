@@ -105,8 +105,9 @@ class SubmitedBetslipViewController: UIViewController {
         
         self.dontHaveAnyTicketsLabel.textColor = UIColor.App.textPrimary
         self.makeSomeBetsLabel.textColor = UIColor.App.textPrimary
-        self.popularGamesButton.titleLabel?.textColor = UIColor.App.textPrimary
-        self.popularGamesButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+
+        self.popularGamesButton.setTitleColor(UIColor.App.buttonTextPrimary, for: .normal)
+        self.popularGamesButton.setBackgroundColor(UIColor.App.buttonBackgroundPrimary, for: .normal)
         
         self.betTypeSegmentControl.setTitleTextAttributes([
             NSAttributedString.Key.font: AppFont.with(type: .bold, size: 13),

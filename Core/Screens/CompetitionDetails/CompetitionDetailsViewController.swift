@@ -67,10 +67,11 @@ class CompetitionDetailsViewController: UIViewController {
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
 
         let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
-        accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.isHidden = true
 
         self.showLoading()
 
@@ -103,7 +104,9 @@ class CompetitionDetailsViewController: UIViewController {
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
-        self.accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        
     }
 
     override func viewDidLayoutSubviews() {
@@ -494,6 +497,7 @@ extension CompetitionDetailsViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([

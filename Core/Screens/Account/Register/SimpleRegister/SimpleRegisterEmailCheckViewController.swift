@@ -129,9 +129,7 @@ class SimpleRegisterEmailCheckViewController: UIViewController {
 
         skipView.backgroundColor = UIColor.App.backgroundPrimary
 
-        skipButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
-        skipButton.layer.borderColor = .none
-        skipButton.layer.backgroundColor = UIColor.App.textPrimary.withAlphaComponent(0).cgColor
+        skipButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         registerTitleLabel.textColor = UIColor.App.textHeadlinePrimary
 

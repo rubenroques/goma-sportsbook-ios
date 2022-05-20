@@ -118,7 +118,6 @@ class MatchDetailsViewModel: NSObject {
             .receive(on: DispatchQueue.main)
             .sink { [weak self] statsJSON in
                 self?.statsJSON = statsJSON
-
                 self?.matchStatsUpdatedPublisher.send()
             }
             .store(in: &cancellables)

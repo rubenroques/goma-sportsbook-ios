@@ -23,6 +23,7 @@ class BetslipViewController: UIViewController {
     @IBOutlet private weak var accountValueBaseView: UIView!
     @IBOutlet private weak var accountValuePlusView: UIView!
     @IBOutlet private weak var accountValueLabel: UILabel!
+    @IBOutlet private weak var accountPlusImageView: UIImageView!
 
     @IBOutlet private weak var closeButton: UIButton!
     @IBOutlet private weak var tabsBaseView: UIView!
@@ -92,8 +93,8 @@ class BetslipViewController: UIViewController {
 
         self.isModalInPresentation = false
 
-        self.accountInfoBaseView.isHidden = true
-        
+
+
         self.addChild(tabViewController)
         self.tabsBaseView.addSubview(tabViewController.view)
         self.tabViewController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -109,20 +110,45 @@ class BetslipViewController: UIViewController {
         self.tabViewController.textFont = AppFont.with(type: .bold, size: 16)
         self.tabViewController.setBarDistribution(.parent)
 
+        //
+        //
         self.closeButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
         self.closeButton.setTitle(localized("close"), for: .normal)
 
+        //
+        //
+        self.accountInfoBaseView.isHidden = true
+        self.accountValueLabel.text = localized("loading")
+
         self.accountInfoBaseView.clipsToBounds = true
         self.accountValuePlusView.clipsToBounds = true
+        self.accountInfoBaseView.layer.cornerRadius = CornerRadius.view
+        self.accountInfoBaseView.layer.masksToBounds = true
+        self.accountInfoBaseView.isUserInteractionEnabled = true
+
+        self.accountValuePlusView.layer.cornerRadius = CornerRadius.squareView
+        self.accountValuePlusView.layer.masksToBounds = true
 
         let tapAccountValue = UITapGestureRecognizer(target: self, action: #selector(self.didTapAccountValue(_:)))
         self.accountInfoBaseView.addGestureRecognizer(tapAccountValue)
 
-        self.accountValueLabel.text = localized("loading")
-
+        //
+        //
         preSubmissionBetslipViewController.betPlacedAction = { [weak self] betPlacedDetails in
             self?.showBetPlacedScreen(withBetPlacedDetails: betPlacedDetails)
         }
+
+        Env.userSessionStore.userSessionPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] userSession in
+                if userSession != nil {
+                    self?.accountInfoBaseView.isHidden = false
+                }
+                else {
+                    self?.accountInfoBaseView.isHidden = true
+                }
+            }
+            .store(in: &cancellables)
 
         Env.userSessionStore.userBalanceWallet
             .compactMap({$0})
@@ -132,12 +158,10 @@ class BetslipViewController: UIViewController {
                 if let bonusWallet = Env.userSessionStore.userBonusBalanceWallet.value {
                     let accountValue = bonusWallet.amount + value
                     self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-                    self?.accountInfoBaseView.isHidden = false
 
                 }
                 else {
                     self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: value)) ?? "-.--€"
-                    self?.accountInfoBaseView.isHidden = false
                 }
             }
             .store(in: &cancellables)
@@ -151,7 +175,6 @@ class BetslipViewController: UIViewController {
                     let accountValue = currentWallet.amount + value
 
                     self?.accountValueLabel.text = CurrencyFormater.defaultFormat.string(from: NSNumber(value: accountValue)) ?? "-.--€"
-                    self?.accountInfoBaseView.isHidden = false
                 }
 
             }
@@ -172,8 +195,6 @@ class BetslipViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
 
-        self.accountInfoBaseView.layer.cornerRadius = 5
-        self.accountValuePlusView.layer.cornerRadius = 5
     }
 
     func setupWithTheme() {
@@ -182,17 +203,19 @@ class BetslipViewController: UIViewController {
         self.navigationBarView.backgroundColor = UIColor.App.backgroundPrimary
         self.tabsBaseView.backgroundColor = UIColor.App.backgroundPrimary
 
-        self.accountInfoBaseView.backgroundColor = UIColor.App.backgroundPrimary
-        self.accountValueBaseView.backgroundColor = UIColor.App.inputBackground
+        self.accountInfoBaseView.backgroundColor = UIColor.App.inputBackground
+        self.accountValueBaseView.backgroundColor = .clear
         self.accountValuePlusView.backgroundColor = UIColor.App.highlightSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
-
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+        
         self.tabViewController.sliderBarColor = UIColor.App.highlightSecondary
         self.tabViewController.barColor = UIColor.App.backgroundPrimary
         self.tabViewController.textColor = UIColor.App.textPrimary
         self.tabViewController.separatorBarColor = UIColor.App.separatorLine
 
-        self.closeButton.titleLabel?.textColor = UIColor.App.textPrimary
+        self.closeButton.setTitleColor(UIColor.App.textPrimary, for: .normal)
+
         self.betsLabel.textColor = UIColor.App.textPrimary
         self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }

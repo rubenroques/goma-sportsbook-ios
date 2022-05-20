@@ -42,6 +42,7 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var accountValueView: UIView!
     @IBOutlet private var accountPlusView: UIView!
     @IBOutlet private var accountValueLabel: UILabel!
+    @IBOutlet private var accountPlusImageView: UIImageView!
 
     @IBOutlet private var marketTypeSeparator: UILabel!
 
@@ -61,6 +62,8 @@ class MatchDetailsViewController: UIViewController {
     @IBOutlet private var statsCollectionBaseView: UIView!
     @IBOutlet private var statsCollectionView: UICollectionView!
     @IBOutlet private var statsCollectionViewHeight: NSLayoutConstraint!
+    @IBOutlet private var statsBackSliderView: UIView!
+    @IBOutlet private var statsNotFoundLabel: UILabel!
 
     @IBOutlet private var marketTypesCollectionView: UICollectionView!
     @IBOutlet private var tableView: UITableView!
@@ -80,6 +83,7 @@ class MatchDetailsViewController: UIViewController {
         var iconImageView = UIImageView()
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         betslipButtonView.addSubview(iconImageView)
 
@@ -121,6 +125,7 @@ class MatchDetailsViewController: UIViewController {
         return gameCard
     }()
 
+    private var showingStatsBackSliderView: Bool = false
     private var shouldShowStatsView = false
     private var isStatsViewExpanded: Bool = false {
         didSet {
@@ -208,7 +213,7 @@ class MatchDetailsViewController: UIViewController {
         self.headerCompetitionLabel.text = ""
         self.headerCompetitionLabel.font = AppFont.with(type: .semibold, size: 11)
 
-        self.headerCompetitionImageView.image = UIImage(named: "")
+        self.headerCompetitionImageView.image = nil
         self.headerCompetitionImageView.layer.cornerRadius = self.headerCompetitionImageView.frame.width/2
         self.headerCompetitionImageView.contentMode = .scaleAspectFill
 
@@ -256,12 +261,16 @@ class MatchDetailsViewController: UIViewController {
 
         //
         // account balance
+        self.accountValueView.isHidden = true
         self.accountValueView.layer.cornerRadius = CornerRadius.view
         self.accountValueView.layer.masksToBounds = true
         self.accountValueView.isUserInteractionEnabled = true
 
         self.accountPlusView.layer.cornerRadius = CornerRadius.squareView
         self.accountPlusView.layer.masksToBounds = true
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        accountValueView.addGestureRecognizer(accountValueTapGesture)
 
         // betslip
         //
@@ -317,6 +326,14 @@ class MatchDetailsViewController: UIViewController {
         self.statsCollectionView.collectionViewLayout = statsFlowLayout
 
         self.statsCollectionView.register(MatchStatsCollectionViewCell.nib, forCellWithReuseIdentifier: MatchStatsCollectionViewCell.identifier)
+
+        self.statsBackSliderView.alpha = 0.0
+        self.statsBackSliderView.layer.cornerRadius = 6
+
+        let backSliderTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackSliderButton))
+        self.statsBackSliderView.addGestureRecognizer(backSliderTapGesture)
+
+        self.statsNotFoundLabel.isHidden = true
 
         // match share
         //
@@ -404,7 +421,8 @@ class MatchDetailsViewController: UIViewController {
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
-        self.accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
 
         // Market List CollectionView
         self.marketTypesCollectionView.backgroundColor = UIColor.App.backgroundSecondary
@@ -414,7 +432,7 @@ class MatchDetailsViewController: UIViewController {
 
         self.betslipCountLabel.backgroundColor = UIColor.App.bubblesPrimary
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
         
         self.matchFieldBaseView.backgroundColor = UIColor.App.backgroundTertiary
         self.matchFieldToggleView.backgroundColor = UIColor.App.backgroundTertiary
@@ -433,7 +451,9 @@ class MatchDetailsViewController: UIViewController {
         self.statsCollectionBaseView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsCollectionView.backgroundColor = UIColor.App.backgroundPrimary
         self.statsToggleSeparatorView.backgroundColor = UIColor.App.separatorLine
-
+        self.statsBackSliderView.backgroundColor = UIColor.App.buttonBackgroundSecondary
+        self.statsNotFoundLabel.textColor = UIColor.App.textPrimary
+        
     }
 
     // MARK: - Bindings
@@ -565,7 +585,7 @@ class MatchDetailsViewController: UIViewController {
         self.viewModel.matchStatsUpdatedPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] in
-                self?.statsCollectionView.reloadData()
+                self?.reloadStatsCollectionView()
             })
             .store(in: &cancellables)
     }
@@ -629,6 +649,19 @@ class MatchDetailsViewController: UIViewController {
 
         self.currentPageViewControllerIndex = index
     }
+
+    func reloadStatsCollectionView() {
+        if self.viewModel.numberOfStatsSections() == 0 {
+            self.statsNotFoundLabel.isHidden = false
+            self.statsCollectionView.isHidden = true
+        }
+        else {
+            self.statsNotFoundLabel.isHidden = true
+            self.statsCollectionView.isHidden = false
+        }
+        self.statsCollectionView.reloadData()
+    }
+
 
     func reloadSelectedIndex() {
         self.selectMarketType(atIndex: self.currentPageViewControllerIndex)
@@ -780,6 +813,16 @@ class MatchDetailsViewController: UIViewController {
             self?.reloadMarketGroupDetailsContent()
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
+    @objc func didTapBackSliderButton() {
+        self.statsCollectionView.setContentOffset(CGPoint(x: -self.statsCollectionView.contentInset.left, y: 1), animated: true)
     }
 
     @IBAction private func didTapFieldToogleView() {
@@ -1041,4 +1084,31 @@ extension MatchDetailsViewController: UICollectionViewDelegate, UICollectionView
         return CGSize(width: width, height: collectionView.frame.size.height - 4)
     }
 
+}
+
+
+extension MatchDetailsViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView == self.statsCollectionView {
+            let screenWidth = UIScreen.main.bounds.size.width
+            let width = screenWidth*0.6
+
+            if scrollView.contentOffset.x > width {
+                if !self.showingStatsBackSliderView {
+                    self.showingStatsBackSliderView = true
+                    UIView.animate(withDuration: 0.2) {
+                        self.statsBackSliderView.alpha = 1.0
+                    }
+                }
+            }
+            else {
+                if self.showingStatsBackSliderView {
+                    self.showingStatsBackSliderView = false
+                    UIView.animate(withDuration: 0.2) {
+                        self.statsBackSliderView.alpha = 0.0
+                    }
+                }
+            }
+        }
+    }
 }

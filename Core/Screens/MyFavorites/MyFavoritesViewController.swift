@@ -96,7 +96,11 @@ class MyFavoritesViewController: UIViewController {
         self.betslipCountLabel.isHidden = true
 
         let tapBetslipView = UITapGestureRecognizer(target: self, action: #selector(didTapBetslipView))
-        betslipButtonView.addGestureRecognizer(tapBetslipView)
+        self.betslipButtonView.addGestureRecognizer(tapBetslipView)
+
+        let accountValueTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapAccountValue))
+        self.accountValueView.addGestureRecognizer(accountValueTapGesture)
+        self.accountValueView.isHidden = true
 
         self.emptyStateLoginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
 
@@ -175,13 +179,15 @@ class MyFavoritesViewController: UIViewController {
         self.emptyStateView.backgroundColor = UIColor.App.backgroundPrimary
 
         self.betslipCountLabel.backgroundColor = UIColor.App.alertError
-        self.betslipCountLabel.textColor = UIColor.App.buttonTextPrimary
+        self.betslipCountLabel.textColor = UIColor.white
 
         self.betslipButtonView.backgroundColor = UIColor.App.highlightPrimary
 
         self.accountValueView.backgroundColor = UIColor.App.backgroundSecondary
         self.accountValueLabel.textColor = UIColor.App.textPrimary
-        self.accountPlusView.backgroundColor = UIColor.App.separatorLineHighlightSecondary
+        self.accountPlusView.backgroundColor = UIColor.App.highlightSecondary
+        self.accountPlusImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
+
     }
 
     // MARK: Binding
@@ -355,7 +361,13 @@ class MyFavoritesViewController: UIViewController {
         }
         self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
     }
-    
+
+    @objc private func didTapAccountValue() {
+        let depositViewController = DepositViewController()
+        let navigationViewController = Router.navigationController(with: depositViewController)
+        self.present(navigationViewController, animated: true, completion: nil)
+    }
+
     func presentLoginViewController() {
       let loginViewController = Router.navigationController(with: LoginViewController())
       self.present(loginViewController, animated: true, completion: nil)
@@ -634,6 +646,7 @@ extension MyFavoritesViewController {
         iconImageView.translatesAutoresizingMaskIntoConstraints = false
         iconImageView.contentMode = .scaleAspectFit
         iconImageView.image = UIImage(named: "betslip_button_icon")
+        iconImageView.setImageColor(color: UIColor.App.buttonTextPrimary)
         betslipButtonView.addSubview(iconImageView)
 
         NSLayoutConstraint.activate([

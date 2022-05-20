@@ -38,6 +38,10 @@ struct TargetVariables: SportsbookTarget {
         #endif
     }
 
+    static var homeTemplateKey: String? {
+        return nil
+    }
+
     static var everyMatrixHost: String {
         return ""
     }
@@ -49,4 +53,8 @@ struct TargetVariables: SportsbookTarget {
     }
     static var featureFlags: TargetFeatureFlags.Type { TargetFeatureFlags.self }
 
+    static var supportedThemes: [Theme] {
+        return Theme.allCases
+    }
+    
 }

@@ -180,7 +180,7 @@ class MyTicketBetLineView: NibView {
         self.baseView.backgroundColor = UIColor.App.backgroundTertiary
         self.indicatorBaseView.backgroundColor = UIColor.clear
 
-        self.separatorView.backgroundColor = UIColor.App.separatorLineSecondary
+        self.separatorView.backgroundColor = UIColor.App.separatorLine
 
         self.tournamentNameLabel.textColor = UIColor.App.textPrimary
         self.homeTeamNameLabel.textColor = UIColor.App.textPrimary
@@ -193,7 +193,7 @@ class MyTicketBetLineView: NibView {
         self.oddValueLabel.textColor = UIColor.App.textPrimary
         self.dateLabel.textColor = UIColor.App.textPrimary
 
-        self.indicatorLabel.textColor = UIColor.App.buttonTextPrimary
+        self.indicatorLabel.textColor = UIColor.white
 
         self.bottomBaseView.backgroundColor = .clear
         

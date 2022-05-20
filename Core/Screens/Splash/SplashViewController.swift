@@ -11,7 +11,7 @@ import FirebaseMessaging
 
 class SplashViewController: UIViewController {
 
-    private var isLoadingUserSessionSubscription: AnyCancellable?
+    private var isLoadingDataSubscription: AnyCancellable?
     private var loadingCompleted: () -> Void
 
     init(loadingCompleted: @escaping () -> Void) {
@@ -30,18 +30,18 @@ class SplashViewController: UIViewController {
 
         Logger.log("Starting connections")
 
-        self.isLoadingUserSessionSubscription = Env.userSessionStore.isLoadingUserSessionPublisher
-            .sink { isLoadingUserSession in
-                if !isLoadingUserSession {
-                    self.splashLoadingCompleted()
+        self.isLoadingDataSubscription = Publishers.CombineLatest(Env.appSession.isLoadingAppSettingsPublisher,
+                                                                  Env.userSessionStore.isLoadingUserSessionPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoadingAppSettings, isLoadingUserSession in
+                if !isLoadingAppSettings && !isLoadingUserSession {
+                    self?.splashLoadingCompleted()
                 }
             }
     }
 
-    
-
     func splashLoadingCompleted() {
-        self.isLoadingUserSessionSubscription = nil
+        self.isLoadingDataSubscription = nil
         self.loadingCompleted()
     }
 

@@ -54,8 +54,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupWithTheme()
-        commonInit()
+        self.setupWithTheme()
+        self.commonInit()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow),
                                                name: UIResponder.keyboardWillShowNotification,
@@ -108,6 +108,8 @@ class SimpleRegisterDetailsViewController: UIViewController {
         let maxDate = setCalendarMaxDate(legalAge: 18)
         dateHeaderTextView.datePicker.maximumDate = maxDate
 
+        self.quitButton.titleLabel?.font = AppFont.with(type: AppFont.AppFontType.semibold, size: 17)
+        self.quitButton.setTitle(localized("quit"), for: .normal)
     }
 
     func setupWithTheme() {
@@ -173,7 +175,6 @@ class SimpleRegisterDetailsViewController: UIViewController {
         signUpButton.layer.cornerRadius = CornerRadius.button
         signUpButton.layer.masksToBounds = true
 
-        quitButton.backgroundColor = .clear
         quitButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
     }
 
@@ -249,11 +250,18 @@ class SimpleRegisterDetailsViewController: UIViewController {
     }
 
     @IBAction private func didTapQuitButton() {
-        let submitCashoutAlert = UIAlertController(title: localized("quit_register"), message: localized("quit_register_message"), preferredStyle: UIAlertController.Style.alert)
-        submitCashoutAlert.addAction(UIAlertAction(title: localized("quit"), style: .default, handler: { _ in
-            self.dismiss(animated: true, completion: nil)
+        let submitCashoutAlert = UIAlertController(title: localized("quit_register"),
+                                                   message: localized("quit_register_message"),
+                                                   preferredStyle: UIAlertController.Style.alert)
+        submitCashoutAlert.addAction(UIAlertAction(title: localized("quit"), style: .default, handler: { [weak self] _ in
+            guard let self = self else { return }
+            if self.isModal {
+                self.dismiss(animated: true, completion: nil)
+            }
+            else {
+                self.navigationController?.popToRootViewController(animated: true)
+            }
         }))
-
         submitCashoutAlert.addAction(UIAlertAction(title: localized("cancel"), style: .cancel))
 
         self.present(submitCashoutAlert, animated: true, completion: nil)

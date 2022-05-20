@@ -57,7 +57,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         nameLabel.font = AppFont.with(type: .bold, size: 12)
         nameLabel.textColor = UIColor.App.textPrimary
         
-        eventCountView.backgroundColor = UIColor.App.alertError
+        eventCountView.backgroundColor = UIColor.App.highlightSecondary
         
         eventCountLabel.textColor = UIColor.App.buttonTextPrimary
     }
@@ -78,7 +78,7 @@ class SportSelectionCollectionViewCell: UICollectionViewCell {
         eventCountView.isHidden = true
         eventCountView.layer.cornerRadius = eventCountView.frame.size.width/2
         
-        eventCountLabel.font = AppFont.with(type: .semibold, size: 9)
+        eventCountLabel.font = AppFont.with(type: .semibold, size: 10)
         
     }
 

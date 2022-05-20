@@ -43,12 +43,6 @@ class Environment {
                                                                BetslipSelection(key: "ACCEPT_HIGHER",
                                                                                 description: localized("accept_higher"))]
 
-    func getUserSettings() -> [GomaClientSettings]? {
-        let settingsData = UserDefaults.standard.data(forKey: "user_settings")
-        let settingsArray = try? JSONDecoder().decode([GomaClientSettings].self, from: settingsData!)
-        return settingsArray
-    }
-
 }
 
 extension Environment {
