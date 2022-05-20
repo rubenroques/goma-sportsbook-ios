@@ -61,6 +61,8 @@ class GomaGamingSocialServiceClient {
         self.socket?.on(clientEvent: .statusChange) { data, _ in
             print("Socket: statusChange \(data)")
         }
+
+        self.connectSocket()
     }
 
     func connectSocket() {

@@ -25,6 +25,7 @@ class EditGroupViewModel {
     var editGroupFinished: PassthroughSubject<Void, Never> = .init()
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
     var isGroupEdited: Bool = false
+    var adminUserId: Int?
 
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
@@ -38,7 +39,17 @@ class EditGroupViewModel {
 
         if let groupUsers = self.conversationData.groupUsers {
 
-            for user in groupUsers {
+            // Sort for admin first
+            let sortedGroupUsers = groupUsers.sorted {
+                if let userAdminFirst = $0.isAdmin, let userAdminSecond = $1.isAdmin {
+                    if userAdminFirst > userAdminSecond {
+                        return true
+                    }
+                }
+                return false
+            }
+
+            for user in sortedGroupUsers {
                 let userContact = UserContact(id: "\(user.id)", username: user.username, phones: [])
                 self.users.append(userContact)
             }
@@ -150,6 +161,15 @@ class EditGroupViewModel {
         let groupInfo = GroupInfo(name: groupName, users: groupUsers)
 
         return groupInfo
+    }
+
+    func getAdminUserId() -> Int {
+
+        if let groupUsers = self.conversationData.groupUsers, let userAdmin = groupUsers.first(where: { $0.isAdmin == 1 }) {
+            return userAdmin.id
+        }
+
+        return 0
     }
 }
 

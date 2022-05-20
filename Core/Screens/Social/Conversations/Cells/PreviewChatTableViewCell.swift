@@ -36,7 +36,14 @@ class PreviewChatTableViewCell: UITableViewCell {
             else {
                 self.dateLabel.textColor = UIColor.App.highlightPrimary
             }
-            self.feedbackImageView.isHidden = !isSeen
+
+            if self.messageLabel.text != "" {
+                self.feedbackImageView.isHidden = !isSeen
+            }
+            else {
+                self.feedbackImageView.isHidden = true
+            }
+
             self.numberMessagesLabel.isHidden = isSeen
         }
     }

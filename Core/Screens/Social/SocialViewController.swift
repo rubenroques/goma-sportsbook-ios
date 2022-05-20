@@ -20,12 +20,12 @@ class SocialViewModel {
     init(startScreen: StartScreen = .conversations) {
         self.startScreen = startScreen
 
-        Env.gomaSocialClient.connectSocket()
+        // Env.gomaSocialClient.connectSocket()
     }
 
-    deinit {
-        Env.gomaSocialClient.disconnectSocket()
-    }
+//    deinit {
+//        Env.gomaSocialClient.disconnectSocket()
+//    }
 
 }
 

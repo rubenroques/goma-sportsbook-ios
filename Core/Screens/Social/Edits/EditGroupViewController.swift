@@ -409,12 +409,15 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
 
             if let userContact = self.viewModel.users[safe: indexPath.row] {
 
+                let adminUserId = self.viewModel.getAdminUserId()
+
                 if let cellViewModel = self.viewModel.cachedUserCellViewModels[userContact.id] {
                     // TEST
                     if indexPath.row % 2 == 0 {
                         cellViewModel.isOnline = true
                     }
-                    if indexPath.row == 0 {
+
+                    if userContact.id == "\(adminUserId)" {
                         cellViewModel.isAdmin = true
                     }
 
@@ -428,7 +431,8 @@ extension EditGroupViewController: UITableViewDataSource, UITableViewDelegate {
                     if indexPath.row % 2 == 0 {
                         cellViewModel.isOnline = true
                     }
-                    if indexPath.row == 0 {
+                    
+                    if userContact.id == "\(adminUserId)" {
                         cellViewModel.isAdmin = true
                     }
 

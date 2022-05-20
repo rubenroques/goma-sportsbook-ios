@@ -7,12 +7,16 @@
 
 import Foundation
 import Combine
+import SocketIO
 
 class ConversationsViewModel {
 
     // MARK: Private Properties
     private var cancellables = Set<AnyCancellable>()
     private var initialConversations: [ConversationData] = []
+    private var socket = Env.gomaSocialClient.socket
+    private var conversationListeners: [Int: UUID] = [:]
+    private var conversationLastMessageList: [Int: ChatMessage] = [:]
     // MARK: Public Properties
     var conversationsPublisher: CurrentValueSubject<[ConversationData], Never> = .init([])
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
@@ -91,8 +95,68 @@ class ConversationsViewModel {
 
         self.initialConversations = self.conversationsPublisher.value
 
+        self.setupSocketListeners()
+
         self.isLoadingPublisher.send(false)
         self.dataNeedsReload.send()
+    }
+
+    private func setupSocketListeners() {
+
+        for conversation in self.conversationsPublisher.value {
+            let chatroomId = conversation.id
+
+            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+
+            self.socket?.on("social.chatrooms.join") { data, ack in
+
+                Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessageResponse in
+                    print("FIRST CHAT MESSAGE: \(chatMessageResponse)")
+
+                    if let lastMessageResponse = chatMessageResponse {
+                        if lastMessageResponse.isNotEmpty {
+                            let lastMessages = lastMessageResponse[safe: 0]?.messages
+
+                            if let lastMessage = lastMessages?[safe: 0] {
+
+                                self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
+
+                                self?.updateConversationDetail(chatroomId: lastMessage.toChatroom)
+                            }
+
+                        }
+                    }
+
+                })
+            }
+
+            //self.conversationListeners[chatroomId] = conversationListener
+        }
+    }
+
+    private func updateConversationDetail(chatroomId: Int) {
+
+        for (index, conversation) in self.conversationsPublisher.value.enumerated() {
+            if conversation.id == chatroomId {
+                if let lastMessage = self.conversationLastMessageList[chatroomId] {
+
+                    let newConversationData = ConversationData(id: conversation.id,
+                                                               conversationType: conversation.conversationType,
+                                                               name: conversation.name,
+                                                               lastMessage: lastMessage.message,
+                                                               date: self.getFormattedDate(timestamp: lastMessage.date),
+                                                               lastMessageUser: lastMessage.fromUser,
+                                                               isLastMessageSeen: conversation.isLastMessageSeen, groupUsers: conversation.groupUsers)
+
+                    self.initialConversations[index] = newConversationData
+
+                    self.conversationsPublisher.value[index] = newConversationData
+
+                    self.dataNeedsReload.send()
+                }
+            }
+
+        }
     }
 
     private func setupIndividualChatroomData(chatroomData: ChatroomData) {
@@ -119,10 +183,10 @@ class ConversationsViewModel {
         let conversationData = ConversationData(id: chatroomData.chatroom.id,
                                                 conversationType: .user,
                                                 name: chatroomName,
-                                                lastMessage: "I won the bet! Whoo!",
-                                                date: "10:15",
+                                                lastMessage: "",
+                                                date: "",
                                                 lastMessageUser: loggedUsername,
-                                                isLastMessageSeen: false, groupUsers: chatroomUsers)
+                                                isLastMessageSeen: true, groupUsers: chatroomUsers)
 
         self.conversationsPublisher.value.append(conversationData)
     }
@@ -145,8 +209,8 @@ class ConversationsViewModel {
         let conversationData = ConversationData(id: chatroomData.chatroom.id,
                                                 conversationType: .group,
                                                 name: chatroomName,
-                                                lastMessage: "I won the bet! Whoo!",
-                                                date: "10:15",
+                                                lastMessage: "",
+                                                date: "",
                                                 lastMessageUser: loggedUsername,
                                                 isLastMessageSeen: true, groupUsers: chatroomUsers)
         self.conversationsPublisher.value.append(conversationData)
@@ -193,6 +257,24 @@ class ConversationsViewModel {
         self.conversationsPublisher.value = []
 
         self.getConversations()
+    }
+
+    func getFormattedDate(timestamp: Int) -> String {
+
+        let date = Date(timeIntervalSince1970: TimeInterval(timestamp))
+
+        if Calendar.current.isDateInToday(date) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "HH:mm"
+            let dateString = dateFormatter.string(from: date)
+            return dateString
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd-MM-yyyy"
+        let dateString = dateFormatter.string(from: date)
+        return dateString
+
     }
 }
 

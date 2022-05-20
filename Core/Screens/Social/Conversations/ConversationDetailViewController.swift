@@ -255,9 +255,10 @@ class ConversationDetailViewController: UIViewController {
 
     @objc func didTapContactInfo() {
         if self.isChatGroup {
-            print("CHAT GROUP")
 
             let conversationData = self.viewModel.getConversationData()
+            
+            print("GROUP USERS: \(conversationData)")
 
             let editGroupViewModel = EditGroupViewModel(conversationData: conversationData)
 
@@ -278,7 +279,6 @@ class ConversationDetailViewController: UIViewController {
             self.navigationController?.pushViewController(editContactViewController, animated: true)
         }
         else {
-            print("CONTACT INDIVIDUAL")
 
             let conversationData = self.viewModel.getConversationData()
 

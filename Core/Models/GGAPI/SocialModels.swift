@@ -11,11 +11,13 @@ struct GomaFriend: Decodable {
     let id: Int
     let name: String?
     let username: String
+    let isAdmin: Int?
 
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case name = "name"
         case username = "username"
+        case isAdmin = "is_admin"
     }
 }
 

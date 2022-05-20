@@ -43,32 +43,13 @@ class ConversationDetailViewModel: NSObject {
 
         let chatroomId = self.conversationData.id
 
-        self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
-
-        self.socket?.on("social.chatrooms.join") { data, ack in
-
-            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-                print("FIRST CHAT MESSAGE: \(chatMessages)")
-                //self?.getConversationMessages()
-//                if let chatMessages = chatMessages?[safe: 0]?.messages {
-//                    self?.processChatMessages(chatMessages: chatMessages)
-//                }
-            })
-
-//            Env.gomaSocialClient.getChatMessagesTest(data: data, completion: { [weak self] chatMessages in
-//                print("CHAT TEST MESSAGES: \(chatMessages)")
-//
-//            })
-
-        }
-
         self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
                                                        "page": 1])
 
         self.socket?.on("social.chatrooms.messages") { data, ack in
 
             Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-                print("CHAT MESSAGES: \(chatMessages)")
+                // print("CHAT MESSAGES: \(chatMessages)")
                 //self?.getConversationMessages()
                 if let chatMessages = chatMessages?[safe: 0]?.messages {
                     self?.processChatMessages(chatMessages: chatMessages)
@@ -78,12 +59,14 @@ class ConversationDetailViewModel: NSObject {
         }
 
         self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
-            print("CHAT GOMA MESSAGES LISTENER: \(data)")
+            // print("CHAT GOMA MESSAGES LISTENER: \(data)")
             Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-                print("CHAT MESSAGES: \(chatMessages)")
+                // print("CHAT MESSAGES: \(chatMessages)")
                 //self?.getConversationMessages()
                 if let chatMessages = chatMessages?[safe: 0]?.messages {
                     self?.processChatMessages(chatMessages: chatMessages)
+                    self?.shouldScrollToLastMessage.send()
+
                 }
             })
 
@@ -163,7 +146,7 @@ class ConversationDetailViewModel: NSObject {
                 }
                 else {
                     if let userId = Int(newUser.id) {
-                        let newGomaFriend = GomaFriend(id: userId, name: newUser.username, username: newUser.username)
+                        let newGomaFriend = GomaFriend(id: userId, name: newUser.username, username: newUser.username, isAdmin: 0)
                         newConversationGroupUsers.append(newGomaFriend)
                     }
 

@@ -101,6 +101,7 @@ class EditGroupAddUserViewController: UIViewController {
         self.titleLabel.textColor = UIColor.App.textPrimary
 
         self.closeButton.backgroundColor = .clear
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
 
         self.setupSearchBarStyle()
 

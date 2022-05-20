@@ -28,7 +28,7 @@ class NewGroupManagementViewModel {
     private func processUserContacts() {
         for user in self.users {
             if let userId = Int(user.id) {
-                let gomaFriend = GomaFriend(id: userId, name: user.username, username: user.username)
+                let gomaFriend = GomaFriend(id: userId, name: user.username, username: user.username, isAdmin: 0)
                 self.gomaFriends.append(gomaFriend)
             }
         }
