@@ -19,7 +19,6 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     @IBOutlet private weak var collapseBaseView: UIView!
     @IBOutlet weak var collapseImageView: UIImageView! // swiftlint:disable:this private_outlet
 
-    
     var sectionIndex: Int?
     var competition: Competition? {
         didSet {
@@ -143,10 +142,8 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
 
     @objc func didTapFavoriteImageView() {
         
-        
         if UserSessionStore.isUserLogged() {
             if let competition = competition {
-                //self.didTapFavoriteCompetitionAction?(competition)
                 self.markAsFavorite(competition: competition)
             }
         }
