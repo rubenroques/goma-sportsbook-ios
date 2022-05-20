@@ -94,7 +94,7 @@ class NewMesssageViewModel {
                     self?.isLoadingPublisher.send(false)
                     self?.dataNeedsReload.send()
                 case .finished:
-                    print("CHATROOMS FINISHED")
+                    ()
                 }
 
             }, receiveValue: { [weak self] response in

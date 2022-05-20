@@ -64,11 +64,10 @@ class ConversationsViewModel {
                     self?.dataNeedsReload.send()
 
                 case .finished:
-                    print("CHATROOMS FINISHED")
+                    ()
                 }
 
             }, receiveValue: { [weak self] response in
-                // print("CHATROOMS GOMA: \(response)")
                 if let chatrooms = response.data {
                     self?.storeChatrooms(chatroomsData: chatrooms)
                 }
@@ -111,7 +110,6 @@ class ConversationsViewModel {
             self.socket?.on("social.chatrooms.join") { data, ack in
 
                 Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessageResponse in
-                    print("FIRST CHAT MESSAGE: \(chatMessageResponse)")
 
                     if let lastMessageResponse = chatMessageResponse {
                         if lastMessageResponse.isNotEmpty {
@@ -130,7 +128,6 @@ class ConversationsViewModel {
                 })
             }
 
-            //self.conversationListeners[chatroomId] = conversationListener
         }
     }
 
