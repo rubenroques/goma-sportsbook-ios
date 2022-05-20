@@ -321,15 +321,14 @@ class LiveEventsViewController: UIViewController {
     }
 
     private func setupWithTheme() {
-    
+
+        self.leftGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
         self.rightGradientBaseView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.sportsSelectorButtonView.backgroundColor = UIColor.App.buttonBackgroundPrimary
         self.sportsSelectorButtonView.layer.maskedCorners = [.layerMaxXMinYCorner, .layerMaxXMaxYCorner]
 
         self.filtersButtonView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMinXMaxYCorner]
-
-
 
         //
         //

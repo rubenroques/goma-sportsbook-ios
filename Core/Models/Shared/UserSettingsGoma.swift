@@ -59,6 +59,8 @@ struct BusinessInstanceSettingsResponse: Decodable {
         case settings = "settings"
         case clients = "clients"
         case dazn = "dazn"
+        case everymatrix = "everymatrix"
+        case crocobet = "crocobet"
     }
 
     init(from decoder: Decoder) throws {
