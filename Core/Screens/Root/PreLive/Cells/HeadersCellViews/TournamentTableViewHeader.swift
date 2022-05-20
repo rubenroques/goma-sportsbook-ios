@@ -116,17 +116,13 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     func markAsFavorite(competition: Competition) {
-        var isFavorite = false
-        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
-            isFavorite = true
-        }
 
-        if isFavorite {
-            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .match)
+        if Env.favoritesManager.isEventFavorite(eventId: competition.id) {
+            Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
             self.isFavorite = false
         }
         else {
-            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .match)
+            Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
             self.isFavorite = true
         }
     }
@@ -139,9 +135,14 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     @objc func didTapFavoriteImageView() {
-        if let competition = competition {
-            //self.didTapFavoriteCompetitionAction?(competition)
-            self.markAsFavorite(competition: competition)
+        if UserSessionStore.isUserLogged() {
+            if let competition = self.competition {
+                self.markAsFavorite(competition: competition)
+            }
+        }
+        else {
+            let loginViewController = Router.navigationController(with: LoginViewController())
+            self.viewController?.present(loginViewController, animated: true, completion: nil)
         }
     }
 
