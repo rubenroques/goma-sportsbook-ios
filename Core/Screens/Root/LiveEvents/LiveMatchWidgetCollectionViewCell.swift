@@ -620,7 +620,6 @@ class LiveMatchWidgetCollectionViewCell: UICollectionViewCell {
     @IBAction private func didTapFavoritesButton(_ sender: Any) {
         if UserSessionStore.isUserLogged() {
             if let match = self.viewModel?.match {
-                // self.didTapFavoriteMatchAction?(match)
                 self.markAsFavorite(match: match)
             }
         }
