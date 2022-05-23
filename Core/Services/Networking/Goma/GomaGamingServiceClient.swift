@@ -82,6 +82,7 @@ class GomaGamingServiceClient {
     func requestUserRegister(deviceId: String, userRegisterForm: UserRegisterForm) -> AnyPublisher<MessageNetworkResponse, NetworkError> {
         let endpoint = GomaGamingService.simpleRegister(username: userRegisterForm.username,
                                                         email: userRegisterForm.email,
+                                                        phoneCountryCode: userRegisterForm.mobilePrefix,
                                                         phone: userRegisterForm.mobile,
                                                         birthDate: userRegisterForm.birthDate,
                                                         userProviderId: userRegisterForm.userProviderId, deviceToken: userRegisterForm.deviceToken)
