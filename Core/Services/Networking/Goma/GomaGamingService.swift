@@ -152,7 +152,7 @@ extension GomaGamingService: Endpoint {
                        {"type": "small_register",
                         "email": "\(email)",
                         "username": "\(username)",
-                        "phone_country_code:" "\(phoneCountryCode)",
+                        "phone_country_code": "\(phoneCountryCode)",
                         "phone_number": "\(phone)",
                         "birthdate": "\(birthDate)",
                         "user_provider_id": "\(userProviderId)",
