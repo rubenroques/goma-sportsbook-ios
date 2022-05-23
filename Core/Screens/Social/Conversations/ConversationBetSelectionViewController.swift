@@ -1,15 +1,14 @@
 //
-//  ConversationDetailViewController.swift
+//  ConversationBetSelectionViewController.swift
 //  Sportsbook
 //
-//  Created by André Lascas on 06/04/2022.
+//  Created by André Lascas on 23/05/2022.
 //
 
 import UIKit
 import Combine
-import Nuke
 
-class ConversationDetailViewController: UIViewController {
+class ConversationBetSelectionViewController: UIViewController {
 
     // MARK: Private Properties
     private lazy var topSafeAreaView: UIView = Self.createTopSafeAreaView()
@@ -22,19 +21,18 @@ class ConversationDetailViewController: UIViewController {
     private lazy var iconStateView: UIView = Self.createIconStateView()
     private lazy var titleLabel: UILabel = Self.createTitleLabel()
     private lazy var subtitleLabel: UILabel = Self.createSubtitleLabel()
-    private lazy var backButton: UIButton = Self.createBackButton()
+    private lazy var closeButton: UIButton = Self.createCloseButton()
     private lazy var navigationLineSeparatorView: UIView = Self.createNavigationLineSeparatorView()
     private lazy var tableView: UITableView = Self.createTableView()
     private lazy var messageInputBaseView: UIView = Self.createMessageInputBaseView()
     private lazy var messageInputLineSeparatorView: UIView = Self.createMessageInputLineSeparatorView()
     private lazy var messageInputView: ChatMessageView = Self.createMessageInputView()
     private lazy var sendButton: UIButton = Self.createSendButton()
-
     // Constraints
     private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
     private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
 
-    private var viewModel: ConversationDetailViewModel
+    private var viewModel: ConversationBetSelectionViewModel
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -45,12 +43,8 @@ class ConversationDetailViewController: UIViewController {
         }
     }
 
-    // MARK: Public Properties
-    var shouldCloseChat: (() -> Void)?
-    var shouldReloadData: (() -> Void)?
-
     // MARK: - Lifetime and Cycle
-    init(viewModel: ConversationDetailViewModel) {
+    init(viewModel: ConversationBetSelectionViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
@@ -68,22 +62,18 @@ class ConversationDetailViewController: UIViewController {
 
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        
-        self.tableView.register(ReceivedMessageTableViewCell.self,
-                                forCellReuseIdentifier: ReceivedMessageTableViewCell.identifier)
-        self.tableView.register(SentMessageTableViewCell.self,
-                                forCellReuseIdentifier: SentMessageTableViewCell.identifier)
-        tableView.register(DateHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
 
-        self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
+        self.tableView.register(BetSelectionTableViewCell.self,
+                                forCellReuseIdentifier: BetSelectionTableViewCell.identifier)
+
+        tableView.register(ResultsHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: ResultsHeaderFooterView.identifier)
+
+        self.closeButton.addTarget(self, action: #selector(didTapCloseButton), for: .primaryActionTriggered)
 
         self.sendButton.addTarget(self, action: #selector(didTapSendButton), for: .primaryActionTriggered)
 
         let backgroundTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapBackground))
         self.view.addGestureRecognizer(backgroundTapGesture)
-
-        let contactTapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapContactInfo))
-        self.navigationView.addGestureRecognizer(contactTapGesture)
 
         if self.viewModel.isChatOnline {
             self.iconStateView.isHidden = false
@@ -106,7 +96,7 @@ class ConversationDetailViewController: UIViewController {
 
     // MARK: - Layout and Theme
     override func viewDidLayoutSubviews() {
-        
+
         super.viewDidLayoutSubviews()
 
         self.iconBaseView.layer.cornerRadius = self.iconBaseView.frame.height / 2
@@ -117,7 +107,7 @@ class ConversationDetailViewController: UIViewController {
 
         self.iconUserImageView.layer.cornerRadius = self.iconUserImageView.frame.height / 2
 
-        self.sendButton.layer.cornerRadius = self.sendButton.frame.height / 2
+        self.sendButton.layer.cornerRadius = CornerRadius.button
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
@@ -145,6 +135,9 @@ class ConversationDetailViewController: UIViewController {
 
         self.titleLabel.textColor = UIColor.App.textPrimary
 
+        self.closeButton.setTitleColor(UIColor.App.highlightPrimary, for: .normal)
+        self.closeButton.backgroundColor = .clear
+
         self.navigationLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.tableView.backgroundColor = .clear
@@ -157,7 +150,7 @@ class ConversationDetailViewController: UIViewController {
     }
 
     // MARK: Binding
-    private func bind(toViewModel viewModel: ConversationDetailViewModel) {
+    private func bind(toViewModel viewModel: ConversationBetSelectionViewModel) {
 
         viewModel.titlePublisher
             .sink(receiveValue: { [weak self] title in
@@ -184,13 +177,6 @@ class ConversationDetailViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-        viewModel.shouldScrollToLastMessage
-            .receive(on: DispatchQueue.main)
-            .sink(receiveValue: { [weak self] in
-                self?.scrollToBottomTableView()
-            })
-            .store(in: &cancellables)
-
     }
 
     // MARK: Functions
@@ -208,36 +194,12 @@ class ConversationDetailViewController: UIViewController {
 
     }
 
-    func scrollToBottomTableView() {
-        DispatchQueue.main.async {
-            if self.viewModel.dateMessages.isNotEmpty {
-                let section = self.viewModel.dateMessages.count - 1
-                let row = self.viewModel.dateMessages[section].messages.count - 1
-
-                let indexPath = IndexPath(row: row, section: section)
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-            }
-        }
-    }
-
-    private func showBetSelectionScreen() {
-        print("Show Bet Selection!")
-
-        let conversationData = self.viewModel.getConversationData()
-
-        let betSelectionViewModel = ConversationBetSelectionViewModel(conversationData: conversationData)
-
-        let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
-
-        self.present(betSelectionViewController, animated: true, completion: nil)
-    }
-
     // MARK: Actions
-    @objc func didTapBackButton() {
-        
-        self.shouldReloadData?()
+    @objc func didTapCloseButton() {
 
-        self.navigationController?.popToRootViewController(animated: true)
+        // self.shouldReloadData?()
+
+        self.dismiss(animated: true, completion: nil)
     }
 
     @objc func didTapSendButton() {
@@ -264,51 +226,9 @@ class ConversationDetailViewController: UIViewController {
         self.messageInputView.resignFirstResponder()
     }
 
-    @objc func didTapContactInfo() {
-        if self.isChatGroup {
-
-            let conversationData = self.viewModel.getConversationData()
-            
-            // print("GROUP USERS: \(conversationData)")
-
-            let editGroupViewModel = EditGroupViewModel(conversationData: conversationData)
-
-            let editContactViewController = EditGroupViewController(viewModel: editGroupViewModel)
-
-            editContactViewController.shouldCloseChat = { [weak self] in
-                self?.shouldCloseChat?()
-            }
-
-            editContactViewController.shouldReloadData = { [weak self] in
-                self?.shouldReloadData?()
-            }
-
-            editContactViewController.shouldUpdateGroupInfo = { [weak self] groupInfo in
-                self?.viewModel.updateConversationInfo(groupInfo: groupInfo)
-            }
-
-            self.navigationController?.pushViewController(editContactViewController, animated: true)
-        }
-        else {
-
-            let conversationData = self.viewModel.getConversationData()
-
-            let editContactViewModel = EditContactViewModel(conversationData: conversationData)
-
-            let editContactViewController = EditContactViewController(viewModel: editContactViewModel)
-
-            editContactViewController.shouldCloseChat = { [weak self] in
-                self?.shouldCloseChat?()
-            }
-
-            self.navigationController?.pushViewController(editContactViewController, animated: true)
-        }
-    }
-
     @objc func keyboardWillShow(notification: NSNotification) {
         self.messageInputKeyboardConstraint.isActive = false
         self.messageInputBottomConstraint.isActive = true
-        self.scrollToBottomTableView()
 
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             let keyboardHeight = keyboardSize.height - self.bottomSafeAreaView.frame.height
@@ -330,13 +250,12 @@ class ConversationDetailViewController: UIViewController {
         self.messageInputKeyboardConstraint.isActive = false
         self.messageInputBottomConstraint.isActive = true
     }
-
 }
 
 //
 // MARK: - TableView Protocols
 //
-extension ConversationDetailViewController: UITableViewDelegate, UITableViewDataSource {
+extension ConversationBetSelectionViewController: UITableViewDelegate, UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.viewModel.numberOfSections()
@@ -347,48 +266,60 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let messageData = self.viewModel.dateMessages[safe: indexPath.section]?.messages[indexPath.row] {
-            if messageData.type == .sentNotSeen || messageData.type == .sentSeen {
-                guard
-                    let cell = tableView.dequeueCellType(SentMessageTableViewCell.self)
-                else {
-                    fatalError()
-                }
 
-                cell.setupMessage(messageData: messageData)
+        guard
+            let cell = tableView.dequeueCellType(BetSelectionTableViewCell.self)
+        else {
+            fatalError()
+        }
 
-                return cell
-            }
-            else {
-                guard
-                    let cell = tableView.dequeueCellType(ReceivedMessageTableViewCell.self)
-                else {
-                    fatalError()
-                }
+//        if let ticket = self.viewModel.tickets[safe: indexPath.row] {
+//
+//            if let cellViewModel = self.viewModel.cachedCellViewModels[ticket.id] {
+//                cell.configure(withViewModel: cellViewModel)
+//
+//                //            cell.didTapCheckboxAction = { [weak self] in
+//                //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+//                //            }
+//            }
+//            else {
+//                let cellViewModel = BetSelectionCellViewModel()
+//                self.viewModel.cachedCellViewModels[ticket.id] = cellViewModel
+//                cell.configure(withViewModel: cellViewModel)
+//
+//                //            cell.didTapCheckboxAction = { [weak self] in
+//                //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+//                //            }
+//            }
+//        }
 
-                if let userId = messageData.userId {
+        if let cellViewModel = self.viewModel.cachedCellViewModels["\(indexPath.row)"] {
+            cell.configure(withViewModel: cellViewModel)
 
-                    let username = self.viewModel.getUsername(userId: userId)
-
-                    cell.setupMessage(messageData: messageData, username: username)
-
-                }
-
-                return cell
-            }
+            //            cell.didTapCheckboxAction = { [weak self] in
+            //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+            //            }
         }
         else {
-            return UITableViewCell()
+            let cellViewModel = BetSelectionCellViewModel()
+            self.viewModel.cachedCellViewModels["\(indexPath.row)"] = cellViewModel
+            cell.configure(withViewModel: cellViewModel)
+
+            //            cell.didTapCheckboxAction = { [weak self] in
+            //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
+            //            }
         }
+
+        return cell
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard
-            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: DateHeaderFooterView.identifier) as? DateHeaderFooterView
+            let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: ResultsHeaderFooterView.identifier) as? ResultsHeaderFooterView
         else {
             fatalError()
         }
-        
+
         let headerDate = self.viewModel.sectionTitle(forSectionIndex: section)
         headerView.configureHeader(title: headerDate)
 
@@ -400,7 +331,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 60
+        return 125
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -423,7 +354,7 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
 //
 // MARK: - Subviews Initialization and Setup
 //
-extension ConversationDetailViewController {
+extension ConversationBetSelectionViewController {
     private static func createTopSafeAreaView() -> UIView {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -498,11 +429,12 @@ extension ConversationDetailViewController {
         return label
     }
 
-    private static func createBackButton() -> UIButton {
-        let backButton = UIButton.init(type: .custom)
-        backButton.setImage(UIImage(named: "arrow_back_icon"), for: .normal)
-        backButton.setTitle(nil, for: .normal)
+    private static func createCloseButton() -> UIButton {
+        let backButton = UIButton()
         backButton.translatesAutoresizingMaskIntoConstraints = false
+        backButton.setTitle(localized("close"), for: .normal)
+        backButton.setContentHuggingPriority(.required, for: .horizontal)
+        backButton.titleLabel?.font = AppFont.with(type: .bold, size: 14)
         return backButton
     }
 
@@ -535,6 +467,7 @@ extension ConversationDetailViewController {
     private static func createMessageInputView() -> ChatMessageView {
         let view = ChatMessageView()
         view.translatesAutoresizingMaskIntoConstraints = false
+        view.hasTicketButton = false
         return view
     }
 
@@ -563,8 +496,6 @@ extension ConversationDetailViewController {
 
         self.view.addSubview(self.navigationView)
 
-        self.navigationView.addSubview(self.backButton)
-
         self.navigationView.addSubview(self.iconBaseView)
 
         self.iconBaseView.addSubview(self.iconView)
@@ -575,6 +506,7 @@ extension ConversationDetailViewController {
 
         self.navigationView.addSubview(self.titleLabel)
         self.navigationView.addSubview(self.subtitleLabel)
+        self.navigationView.addSubview(self.closeButton)
         self.navigationView.addSubview(self.navigationLineSeparatorView)
 
         self.view.addSubview(self.tableView)
@@ -592,9 +524,6 @@ extension ConversationDetailViewController {
         self.view.setNeedsLayout()
         self.view.layoutIfNeeded()
 
-        self.messageInputView.shouldShowBetSelection = { [weak self] in
-            self?.showBetSelectionScreen()
-        }
     }
 
     private func initConstraints() {
@@ -619,7 +548,7 @@ extension ConversationDetailViewController {
             self.navigationView.topAnchor.constraint(equalTo: self.topSafeAreaView.bottomAnchor),
             self.navigationView.heightAnchor.constraint(equalToConstant: 44),
 
-            self.iconBaseView.leadingAnchor.constraint(equalTo: self.backButton.trailingAnchor, constant: 32),
+            self.iconBaseView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             self.iconBaseView.heightAnchor.constraint(equalToConstant: 32),
             self.iconBaseView.widthAnchor.constraint(equalTo: self.iconBaseView.heightAnchor),
             self.iconBaseView.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
@@ -643,17 +572,16 @@ extension ConversationDetailViewController {
             self.iconStateView.heightAnchor.constraint(equalTo: self.iconStateView.widthAnchor),
 
             self.titleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 16),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: 10),
+            self.titleLabel.trailingAnchor.constraint(equalTo: self.closeButton.leadingAnchor, constant: -10),
             self.titleLabel.topAnchor.constraint(equalTo: self.iconBaseView.topAnchor),
 
             self.subtitleLabel.leadingAnchor.constraint(equalTo: self.iconBaseView.trailingAnchor, constant: 16),
-            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: 10),
+            self.subtitleLabel.trailingAnchor.constraint(equalTo: self.closeButton.leadingAnchor, constant: -10),
             self.subtitleLabel.bottomAnchor.constraint(equalTo: self.iconBaseView.bottomAnchor),
 
-            self.backButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
-            self.backButton.widthAnchor.constraint(equalToConstant: 40),
-            self.backButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
-            self.backButton.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor, constant: 0),
+            self.closeButton.heightAnchor.constraint(equalTo: self.navigationView.heightAnchor),
+            self.closeButton.centerYAnchor.constraint(equalTo: self.navigationView.centerYAnchor),
+            self.closeButton.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor, constant: -10),
 
             self.navigationLineSeparatorView.leadingAnchor.constraint(equalTo: self.navigationView.leadingAnchor),
             self.navigationLineSeparatorView.trailingAnchor.constraint(equalTo: self.navigationView.trailingAnchor),

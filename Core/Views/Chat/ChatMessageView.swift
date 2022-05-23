@@ -28,6 +28,14 @@ class ChatMessageView: UIView {
         }
     }
 
+    var hasTicketButton: Bool = true {
+        didSet {
+            self.ticketButton.isHidden = !hasTicketButton
+        }
+    }
+
+    var shouldShowBetSelection: (() -> Void)?
+
     // MARK: Lifetime and Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -51,6 +59,8 @@ class ChatMessageView: UIView {
         self.ticketButton.addTarget(self, action: #selector(didTapTicketButton), for: .touchUpInside)
 
         self.showPlaceholder = true
+
+        self.hasTicketButton = true
 
     }
 
@@ -87,7 +97,7 @@ class ChatMessageView: UIView {
 
     // MARK: Actions
     @objc private func didTapTicketButton() {
-        print("TAPPED TICKET")
+        self.shouldShowBetSelection?()
     }
 
 }
@@ -95,14 +105,12 @@ class ChatMessageView: UIView {
 extension ChatMessageView: UITextViewDelegate {
 
     func textViewDidBeginEditing(_ textView: UITextView) {
-        print("BEGIN EDIT")
         if self.showPlaceholder == true {
             self.showPlaceholder = false
         }
 
     }
     func textViewDidEndEditing(_ textView: UITextView) {
-        print("END EDITING")
         if self.inputTextView.text.isEmpty {
             self.showPlaceholder = true
         }
@@ -111,7 +119,9 @@ extension ChatMessageView: UITextViewDelegate {
 
     func textViewDidChangeSelection(_ textView: UITextView) {
 
-        self.textPublisher.send(textView.text)
+        if !self.showPlaceholder {
+            self.textPublisher.send(textView.text)
+        }
 
     }
 }

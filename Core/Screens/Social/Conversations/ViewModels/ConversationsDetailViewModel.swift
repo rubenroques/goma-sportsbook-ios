@@ -28,6 +28,7 @@ class ConversationDetailViewModel: NSObject {
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
     var shouldScrollToLastMessage: PassthroughSubject<Void, Never> = .init()
 
+    // MARK: Lifetime and Cycle
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
 
@@ -39,6 +40,7 @@ class ConversationDetailViewModel: NSObject {
         self.startSocketListening()
     }
 
+    // MARK: Functions
     func startSocketListening() {
 
         let chatroomId = self.conversationData.id
