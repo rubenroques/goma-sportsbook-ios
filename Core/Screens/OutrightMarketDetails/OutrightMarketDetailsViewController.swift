@@ -9,7 +9,6 @@ import UIKit
 import Combine
 import OrderedCollections
 import LinkPresentation
-import WebKit
 
 class OutrightMarketDetailsViewController: UIViewController {
 
