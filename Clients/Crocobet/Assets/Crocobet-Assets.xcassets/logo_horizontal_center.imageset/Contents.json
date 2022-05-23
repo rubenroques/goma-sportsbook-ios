@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "icon goma-1.png",
+      "filename" : "splash light.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,12 +12,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon goma.png",
+      "filename" : "splash dark.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "icon goma@2x-1.png",
+      "filename" : "splash light@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
@@ -28,12 +28,12 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon goma@2x.png",
+      "filename" : "splash dark@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "icon goma@3x-1.png",
+      "filename" : "splash light@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     },
@@ -44,7 +44,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "icon goma@3x.png",
+      "filename" : "splash dark@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
