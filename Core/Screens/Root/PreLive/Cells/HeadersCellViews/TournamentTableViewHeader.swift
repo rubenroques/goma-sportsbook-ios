@@ -19,7 +19,6 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     @IBOutlet private weak var collapseBaseView: UIView!
     @IBOutlet weak var collapseImageView: UIImageView! // swiftlint:disable:this private_outlet
 
-    
     var sectionIndex: Int?
     var competition: Competition? {
         didSet {
@@ -116,6 +115,12 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     func markAsFavorite(competition: Competition) {
+        
+        
+        var isFavorite = false
+        for competitionId in Env.favoritesManager.favoriteEventsIdPublisher.value where competitionId == competition.id {
+            isFavorite = true
+        }
 
         if Env.favoritesManager.isEventFavorite(eventId: competition.id) {
             Env.favoritesManager.removeFavorite(eventId: competition.id, favoriteType: .competition)
@@ -125,6 +130,7 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
             Env.favoritesManager.addFavorite(eventId: competition.id, favoriteType: .competition)
             self.isFavorite = true
         }
+    
     }
 
     @objc func didToggleCell() {
@@ -135,8 +141,9 @@ class TournamentTableViewHeader: UITableViewHeaderFooterView {
     }
 
     @objc func didTapFavoriteImageView() {
+        
         if UserSessionStore.isUserLogged() {
-            if let competition = self.competition {
+            if let competition = competition {
                 self.markAsFavorite(competition: competition)
             }
         }
