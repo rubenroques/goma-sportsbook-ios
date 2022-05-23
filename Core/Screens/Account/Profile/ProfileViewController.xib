@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,7 +21,7 @@
         </array>
     </customFonts>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileViewController" customModule="ShowcaseBeta" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileViewController" customModule="Crocobet" customModuleProvider="target">
             <connections>
                 <outlet property="activationAlertScrollableView" destination="fTo-pj-31Q" id="kts-eO-Qfe"/>
                 <outlet property="activationStackView" destination="1bn-gy-5Xw" id="fO1-c2-hEE"/>
@@ -44,6 +45,7 @@
                 <outlet property="scrollView" destination="Xvy-bu-gRF" id="XUT-aI-xje"/>
                 <outlet property="shadowView" destination="VDW-H2-PFU" id="z3V-DQ-qKE"/>
                 <outlet property="stackView" destination="6QV-ge-SXI" id="i6L-MC-BTC"/>
+                <outlet property="topBarView" destination="upr-br-gCP" id="kBu-NP-iT4"/>
                 <outlet property="totalBalanceLabel" destination="F24-gl-VWS" id="NVQ-MP-O0b"/>
                 <outlet property="totalBalanceTitleLabel" destination="ZNA-lM-Y9t" id="x9d-if-LRb"/>
                 <outlet property="totalBalanceView" destination="4us-C6-c7y" id="HGL-HF-0K7"/>
@@ -55,7 +57,7 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="1371"/>
+            <rect key="frame" x="0.0" y="0.0" width="414" height="1438"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fnZ-QT-A08">
@@ -98,7 +100,7 @@
                             </connections>
                         </button>
                     </subviews>
-                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="backgroundColor" name="backgroundPrimary"/>
                     <constraints>
                         <constraint firstItem="Y8Q-jn-Zp8" firstAttribute="centerX" secondItem="upr-br-gCP" secondAttribute="centerX" id="77J-tn-z3X"/>
                         <constraint firstItem="Jbl-ih-uBZ" firstAttribute="centerY" secondItem="rcX-bW-GVx" secondAttribute="centerY" id="F1b-SP-hKa"/>
@@ -299,7 +301,7 @@ Sportsbook® All Rights Reserved</string>
                                         <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1bn-gy-5Xw">
                                             <rect key="frame" x="20" y="216" width="374" height="130"/>
                                             <subviews>
-                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTo-pj-31Q" customClass="ActivationAlertScrollableView" customModule="ShowcaseBeta" customModuleProvider="target">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fTo-pj-31Q" customClass="ActivationAlertScrollableView" customModule="Crocobet" customModuleProvider="target">
                                                     <rect key="frame" x="0.0" y="0.0" width="374" height="130"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="130" id="AR1-5w-JbD"/>
@@ -371,12 +373,15 @@ Sportsbook® All Rights Reserved</string>
                 <constraint firstAttribute="bottom" secondItem="Xvy-bu-gRF" secondAttribute="bottom" id="zrn-Os-lvW"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="95.652173913043484" y="23.772321428571427"/>
+            <point key="canvasLocation" x="95.652173913043484" y="46.205357142857139"/>
         </view>
     </objects>
     <resources>
         <image name="empty_user_image" width="100" height="100"/>
         <image name="logout_account_icon" width="20" height="20"/>
+        <namedColor name="backgroundPrimary">
+            <color red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </namedColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
