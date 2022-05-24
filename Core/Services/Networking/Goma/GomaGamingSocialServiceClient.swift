@@ -13,9 +13,12 @@ class GomaGamingSocialServiceClient {
 
     var manager: SocketManager?
     var socket: SocketIOClient?
+    var storage: GomaGamingSocialClientStorage?
 
     let websocketURL = "https://sportsbook-api.gomagaming.com/"
     private let authToken = "9g7rp9760c33c6g1f19mn5ut3asd67"
+
+    private var cancellables = Set<AnyCancellable>()
 
     init() {
         
@@ -40,8 +43,9 @@ class GomaGamingSocialServiceClient {
 
         self.socket = manager?.defaultSocket
 
-        self.socket?.on(clientEvent: .connect) { data, ack in
+        self.socket?.on(clientEvent: .connect) { [weak self] data, ack in
             print("Socket connected to Goma Social Server!")
+            self?.setupPublishers()
         }
 
         self.socket?.on(clientEvent: .error) { data, ack in
@@ -68,10 +72,131 @@ class GomaGamingSocialServiceClient {
     func connectSocket() {
 
         self.socket?.connect()
+
+        self.storage = GomaGamingSocialClientStorage()
+
     }
 
     func disconnectSocket() {
         self.socket?.disconnect()
+    }
+
+    private func setupPublishers() {
+
+        self.storage?.chatroomIdsPublisher
+            .sink(receiveValue: { [weak self] chatroomIds in
+                if chatroomIds.isNotEmpty {
+                    self?.startLastMessagesListener(chatroomIds: chatroomIds)
+                    self?.startChatMessagesListener(chatroomIds: chatroomIds)
+                }
+            })
+            .store(in: &cancellables)
+
+        self.storage?.chatroomMessageUpdaterPublisher
+            .sink(receiveValue: { [weak self] updatedMessages in
+                let chatroomIds = Array(updatedMessages.keys)
+                self?.startLastMessagesListener(chatroomIds: chatroomIds)
+            })
+            .store(in: &cancellables)
+    }
+
+    private func startLastMessagesListener(chatroomIds: [Int]) {
+
+        for chatroomId in chatroomIds {
+
+            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+
+        }
+
+        self.socket?.on("social.chatrooms.join") { data, ack in
+
+            self.getChatMessages(data: data, completion: { [weak self] chatMessageResponse in
+
+                if let lastMessageResponse = chatMessageResponse {
+                    if lastMessageResponse.isNotEmpty {
+
+                        if let lastMessages = lastMessageResponse[safe: 0]?.messages, lastMessages.isNotEmpty {
+
+                            if let chatroomId = lastMessages[safe: 0]?.toChatroom {
+
+                                self?.storage?.chatroomLastMessagePublisher.value[chatroomId] = lastMessages
+
+                            }
+                        }
+
+                    }
+                }
+
+            })
+        }
+
+    }
+
+    private func startChatMessagesListener(chatroomIds: [Int]) {
+
+        for chatroomId in chatroomIds {
+
+            self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
+                                                            "page": 1])
+
+            self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
+
+                self.getChatMessages(data: data, completion: { [weak self] chatMessages in
+
+                    if let chatMessages = chatMessages?[safe: 0]?.messages {
+
+                        for chatMessage in chatMessages {
+                            let chatroomId = chatMessage.toChatroom
+
+//                            if let storedMessages = self?.storage?.chatroomMessagesPublisher.value[chatroomId] {
+//                                self?.storage?.chatroomMessagesPublisher.value[chatroomId]?.append(chatMessage)
+//                            }
+//                            else {
+//                                self?.storage?.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
+//                            }
+
+                            self?.storage?.chatroomMessageUpdaterPublisher.value[chatroomId] = chatMessage
+                        }
+
+                    }
+                })
+
+            }
+        }
+
+        self.socket?.on("social.chatrooms.messages") { data, ack in
+
+            self.getChatMessages(data: data, completion: { [weak self] chatMessages in
+
+                if let chatMessages = chatMessages?[safe: 0]?.messages {
+
+                    for chatMessage in chatMessages {
+                        let chatroomId = chatMessage.toChatroom
+
+                        if let storedMessages = self?.storage?.chatroomMessagesPublisher.value[chatroomId] {
+                            self?.storage?.chatroomMessagesPublisher.value[chatroomId]?.append(chatMessage)
+                        }
+                        else {
+                            self?.storage?.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
+                        }
+                    }
+                }
+            })
+        }
+
+    }
+
+    func sendMessage(message: MessageData, chatroomId: Int) {
+
+        self.socket?.emit("social.chatrooms.message", ["id": "\(chatroomId)",
+                                                       "message": message.text,
+                                                 "repliedMessage": nil,
+                                                 "attatchment": nil])
+
+    }
+
+    private func updateLastMessagePublisher() {
+
     }
 
     func getChatMessages(data: [Any], completion: @escaping ([ChatMessagesResponse]?) -> Void)  {

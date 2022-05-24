@@ -3492,6 +3492,12 @@
 		A9A207E4283BDFCB00499DBC /* ChatTicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketView.swift */; };
 		A9A207E5283BDFCB00499DBC /* ChatTicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketView.swift */; };
 		A9A207E6283BDFCB00499DBC /* ChatTicketView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E0283BDFCB00499DBC /* ChatTicketView.swift */; };
+		A9A207E8283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */; };
+		A9A207E9283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */; };
+		A9A207EA283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */; };
+		A9A207EB283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */; };
+		A9A207EC283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */; };
+		A9A207ED283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */; };
 		A9A2E7E327F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */; };
 		A9A2E7E427F5BC5C00D35A9D /* WithdrawViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */; };
 		A9A2E7E627F5ED1F00D35A9D /* DepositViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */; };
@@ -4294,6 +4300,7 @@
 		A99FD5102835479200275509 /* FriendProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendProfileViewModel.swift; sourceTree = "<group>"; };
 		A9A207D9283BCB8D00499DBC /* ConversationBetSelectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationBetSelectionViewModel.swift; sourceTree = "<group>"; };
 		A9A207E0283BDFCB00499DBC /* ChatTicketView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTicketView.swift; sourceTree = "<group>"; };
+		A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GomaGamingSocialClientStorage.swift; sourceTree = "<group>"; };
 		A9A2E7E227F5BC5C00D35A9D /* WithdrawViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WithdrawViewModel.swift; sourceTree = "<group>"; };
 		A9A2E7E527F5ED1F00D35A9D /* DepositViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewModel.swift; sourceTree = "<group>"; };
 		A9A2E7E827F6000400D35A9D /* SimpleRegisterEmailCheckViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleRegisterEmailCheckViewModel.swift; sourceTree = "<group>"; };
@@ -6046,6 +6053,7 @@
 				45A2898226C3EA6C00BCD5DA /* GomaGamingService.swift */,
 				454A7A5E26D873B500E6E74E /* GomaGamingServiceClient.swift */,
 				A97D2487281BEED1003EEDEC /* GomaGamingSocialServiceClient.swift */,
+				A9A207E7283CEABA00499DBC /* GomaGamingSocialClientStorage.swift */,
 			);
 			path = Goma;
 			sourceTree = "<group>";
@@ -8717,6 +8725,7 @@
 				A99F7A1D27DA1182008BAF41 /* BonusSwitchView.swift in Sources */,
 				A9A2E7F827FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */,
 				A96B619127A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
+				A9A207E8283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */,
 				A90BC91A27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841BF26EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CD27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
@@ -9220,6 +9229,7 @@
 				A99F7A1E27DA1182008BAF41 /* BonusSwitchView.swift in Sources */,
 				A9A2E7F927FDF5DE00D35A9D /* ReceivedMessageTableViewCell.swift in Sources */,
 				A96B619227A0496C005DC376 /* RecentSearchHeaderView.swift in Sources */,
+				A9A207E9283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */,
 				A90BC91B27CCE0B300667616 /* SharedGameCardView.swift in Sources */,
 				A9B841C026EA5A1000269B05 /* Event.swift in Sources */,
 				45AA91CE27C16AF800F8BFDD /* SportMatchSingleLineTableViewCell.swift in Sources */,
@@ -9356,6 +9366,7 @@
 				457CBA52282D27D000ED0F00 /* PreSubmissionBetslipViewModel.swift in Sources */,
 				457CBA53282D27D000ED0F00 /* SportsAggregator.swift in Sources */,
 				457CBA54282D27D000ED0F00 /* HistoryViewController.swift in Sources */,
+				A9A207EC283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */,
 				A98295A9283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
 				457CBA55282D27D000ED0F00 /* TournamentTableViewHeader.swift in Sources */,
 				457CBA56282D27D000ED0F00 /* BetslipManager.swift in Sources */,
@@ -9837,6 +9848,7 @@
 				457CBCF8282D2CD100ED0F00 /* UIImage+Extensions.swift in Sources */,
 				457CBCF9282D2CD100ED0F00 /* PreSubmissionBetslipViewModel.swift in Sources */,
 				457CBCFA282D2CD100ED0F00 /* SportsAggregator.swift in Sources */,
+				A9A207ED283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */,
 				A98295AA283BA1420014066A /* BetSelectionCellViewModel.swift in Sources */,
 				457CBCFB282D2CD100ED0F00 /* HistoryViewController.swift in Sources */,
 				457CBCFC282D2CD100ED0F00 /* TournamentTableViewHeader.swift in Sources */,
@@ -10263,6 +10275,7 @@
 				4589C7A7282024E400243547 /* NSAttributedString+Extensions.swift in Sources */,
 				4589C7A8282024E400243547 /* BettingHistoryRootViewController.swift in Sources */,
 				4589C7A9282024E400243547 /* DepositViewModel.swift in Sources */,
+				A9A207EA283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */,
 				4589C7AA282024E400243547 /* UserSession.swift in Sources */,
 				4589C7AB282024E400243547 /* LoadableContent.swift in Sources */,
 				4589C7AC282024E400243547 /* CollapsibleView.swift in Sources */,
@@ -10746,6 +10759,7 @@
 				45A6BBF228246A7500D9B416 /* ConversationsDetailViewModel.swift in Sources */,
 				45A6BBF328246A7500D9B416 /* DocumentPickerView.swift in Sources */,
 				45A6BBF428246A7500D9B416 /* NSAttributedString+Extensions.swift in Sources */,
+				A9A207EB283CEABA00499DBC /* GomaGamingSocialClientStorage.swift in Sources */,
 				45A6BBF528246A7500D9B416 /* BettingHistoryRootViewController.swift in Sources */,
 				45A6BBF628246A7500D9B416 /* DepositViewModel.swift in Sources */,
 				45A6BBF728246A7500D9B416 /* UserSession.swift in Sources */,

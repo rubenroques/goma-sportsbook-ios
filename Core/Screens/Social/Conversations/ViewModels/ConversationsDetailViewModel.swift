@@ -45,32 +45,59 @@ class ConversationDetailViewModel: NSObject {
 
         let chatroomId = self.conversationData.id
 
-        self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
-                                                       "page": 1])
+//        Env.gomaSocialClient.storage?.chatroomMessagesPublisher
+//            .receive(on: DispatchQueue.main)
+//            .sink(receiveValue: { [weak self] chatMessages in
+//
+//                if let conversationMessages = chatMessages[chatroomId] {
+//                    self?.processChatMessages(chatMessages: conversationMessages)
+//                    self?.shouldScrollToLastMessage.send()
+//                }
+//            })
+//            .store(in: &cancellables)
 
-        self.socket?.on("social.chatrooms.messages") { data, ack in
+        if let conversationMessages = Env.gomaSocialClient.storage?.chatroomMessagesPublisher.value[chatroomId] {
+            self.processChatMessages(chatMessages: conversationMessages)
+            self.shouldScrollToLastMessage.send()
+        }
 
-            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-                
-                if let chatMessages = chatMessages?[safe: 0]?.messages {
-                    self?.processChatMessages(chatMessages: chatMessages)
+        Env.gomaSocialClient.storage?.chatroomMessageUpdaterPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] chatMessages in
+
+                if let updatedMessage = chatMessages[chatroomId] {
+                    self?.updateChatMessages(newMessage: updatedMessage)
                     self?.shouldScrollToLastMessage.send()
                 }
             })
-        }
+            .store(in: &cancellables)
 
-        self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
-
-            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-
-                if let chatMessages = chatMessages?[safe: 0]?.messages {
-                    self?.processChatMessages(chatMessages: chatMessages)
-                    self?.shouldScrollToLastMessage.send()
-
-                }
-            })
-
-        }
+//        self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
+//                                                       "page": 1])
+//
+//        self.socket?.on("social.chatrooms.messages") { data, ack in
+//
+//            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
+//
+//                if let chatMessages = chatMessages?[safe: 0]?.messages {
+//                    self?.processChatMessages(chatMessages: chatMessages)
+//                    self?.shouldScrollToLastMessage.send()
+//                }
+//            })
+//        }
+//
+//        self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
+//
+//            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
+//
+//                if let chatMessages = chatMessages?[safe: 0]?.messages {
+//                    self?.processChatMessages(chatMessages: chatMessages)
+//                    self?.shouldScrollToLastMessage.send()
+//
+//                }
+//            })
+//
+//        }
 
     }
 
@@ -185,6 +212,35 @@ class ConversationDetailViewModel: NSObject {
         self.dataNeedsReload.send()
     }
 
+    private func updateChatMessages(newMessage: ChatMessage?) {
+
+        guard let loggedUserId = Env.gomaNetworkClient.getCurrentToken()?.userId else {return}
+
+        if let message = newMessage {
+
+            let formattedDate = self.getFormattedDate(date: message.date)
+            if "\(loggedUserId)" == message.fromUser {
+                let messageData = MessageData(type: .sentNotSeen, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                self.messages.append(messageData)
+            }
+            else {
+                let messageData = MessageData(type: .receivedOnline, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                self.messages.append(messageData)
+            }
+
+
+            let sortedTimestampMessages = self.messages.sorted {
+                $0.timestamp < $1.timestamp
+            }
+
+            self.messages = sortedTimestampMessages
+
+            self.sortAllMessages()
+
+            self.dataNeedsReload.send()
+        }
+    }
+
     private func getFormattedDate(date: Int) -> String {
         let date = Date(timeIntervalSince1970: TimeInterval(date))
         let dateFormatter = DateFormatter()
@@ -258,10 +314,9 @@ class ConversationDetailViewModel: NSObject {
 
     func addMessage(message: MessageData) {
 
-        self.socket?.emit("social.chatrooms.message", ["id": "\(self.conversationData.id)",
-                                                       "message": message.text,
-                                                 "repliedMessage": nil,
-                                                 "attatchment": nil])
+        let chatroomId = self.conversationData.id
+
+        Env.gomaSocialClient.sendMessage(message: message, chatroomId: chatroomId)
 
         self.sortAllMessages()
     }

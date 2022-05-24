@@ -23,31 +23,13 @@ class ConversationsViewModel {
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init() {
-        // DUMMY DATA
-//        for i in 1...15 {
-//            if i <= 2 {
-//                let friend1 = GomaFriend(id: 1, name: "User1", username: "@user1")
-//                let friend2 = GomaFriend(id: 2, name: "User2", username: "@user2")
-//                let conversationData = ConversationData(id: i, conversationType: .group,
-//                                                        name: "GOMA Champs",
-//                                                        lastMessage: "I won the bet! Whoo!",
-//                                                        date: "10:15",
-//                                                        lastMessageUser: "André",
-//                                                        isLastMessageSeen: false,
-//                groupUsers: [friend1, friend2])
-//                self.conversationsPublisher.value.append(conversationData)
-//            }
-//            else {
-//                let conversationData = ConversationData(id: i, conversationType: .user,
-//                                                        name: "John Doe",
-//                                                        lastMessage: "I won the bet! Whoo!",
-//                                                        date: "Today",
-//                                                        lastMessageUser: nil,
-//                                                        isLastMessageSeen: true)
-//                self.conversationsPublisher.value.append(conversationData)
-//            }
-//        }
+        // TEST STORAGE
+        let lastMessages = Env.gomaSocialClient.storage?.chatroomLastMessagePublisher.value
 
+        let allMessages = Env.gomaSocialClient.storage?.chatroomMessagesPublisher.value
+
+        print("LAST MESSAGES STORAGE: \(lastMessages)")
+        print("ALL MESSAGES STORAGE: \(allMessages)")
         self.getConversations()
     }
 
@@ -105,17 +87,14 @@ class ConversationsViewModel {
         for conversation in self.conversationsPublisher.value {
             let chatroomId = conversation.id
 
-            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+            Env.gomaSocialClient.storage?.chatroomLastMessagePublisher
+                .receive(on: DispatchQueue.main)
+                .sink(receiveValue: { [weak self] lastMessages in
 
-            self.socket?.on("social.chatrooms.join") { data, ack in
-
-                Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessageResponse in
-
-                    if let lastMessageResponse = chatMessageResponse {
+                    if let lastMessageResponse = lastMessages[chatroomId] {
                         if lastMessageResponse.isNotEmpty {
-                            let lastMessages = lastMessageResponse[safe: 0]?.messages
 
-                            if let lastMessage = lastMessages?[safe: 0] {
+                            if let lastMessage = lastMessageResponse[safe: 0] {
 
                                 self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
 
@@ -124,9 +103,30 @@ class ConversationsViewModel {
 
                         }
                     }
-
                 })
-            }
+                .store(in: &cancellables)
+//            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
+//
+//            self.socket?.on("social.chatrooms.join") { data, ack in
+//
+//                Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessageResponse in
+//
+//                    if let lastMessageResponse = chatMessageResponse {
+//                        if lastMessageResponse.isNotEmpty {
+//                            let lastMessages = lastMessageResponse[safe: 0]?.messages
+//
+//                            if let lastMessage = lastMessages?[safe: 0] {
+//
+//                                self?.conversationLastMessageList[lastMessage.toChatroom] = lastMessage
+//
+//                                self?.updateConversationDetail(chatroomId: lastMessage.toChatroom)
+//                            }
+//
+//                        }
+//                    }
+//
+//                })
+//            }
 
         }
     }
