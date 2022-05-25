@@ -251,6 +251,7 @@ class AddFriendViewController: UIViewController {
             self.navigationController?.pushViewController(addContactViewController, animated: true)
 
         case .notDetermined:
+            print("Not determined")
             contactStore.requestAccess(for: .contacts) { succeeded, error in
                 guard succeeded && error == nil else {
                     return
@@ -266,8 +267,14 @@ class AddFriendViewController: UIViewController {
 
                 }
             }
-            print("Not determined")
-        default:
+
+        case .denied:
+            print("Not handled")
+
+        case .restricted:
+            print("Not handled")
+
+        @unknown default:
             print("Not handled")
         }
 

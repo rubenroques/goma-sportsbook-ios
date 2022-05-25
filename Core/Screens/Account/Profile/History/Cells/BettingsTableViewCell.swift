@@ -182,8 +182,9 @@ class BettingsTableViewCell : UITableViewCell {
         }
 
         if let oddValue = betHistoryEntry.totalPriceValue, betHistoryEntry.type != "SYSTEM" {
-
-            self.setupOddValuesLabel(oddValue: "\(Double(floor(oddValue * 100)/100))")
+            // self.oddValueLabel.text = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            let oddString = OddConverter.stringForValue(oddValue, format: UserDefaults.standard.userOddsFormat)
+            self.setupOddValuesLabel(oddValue: oddString)
         }
 
         if let betAmount = betHistoryEntry.totalBetAmount,
@@ -197,12 +198,11 @@ class BettingsTableViewCell : UITableViewCell {
                let maxWinningsString = CurrencyFormater.defaultFormat.string(from: NSNumber(value: maxWinnings)) {
                 setupPossibleWinningsValuesLabel(possibleWinnings: maxWinningsString, betStatus: status)
             }
-            setupLateralView(status: status)
+            self.setupLateralView(status: status)
 
         }
     }
 }
-
 
 
 //

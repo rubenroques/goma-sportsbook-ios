@@ -402,7 +402,6 @@ extension ConversationDetailViewModel {
 }
 
 struct MessageData {
-
     var type: MessageType
     var text: String
     var date: String

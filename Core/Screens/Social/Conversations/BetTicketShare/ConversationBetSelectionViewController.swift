@@ -28,6 +28,7 @@ class ConversationBetSelectionViewController: UIViewController {
     private lazy var messageInputLineSeparatorView: UIView = Self.createMessageInputLineSeparatorView()
     private lazy var messageInputView: ChatMessageView = Self.createMessageInputView()
     private lazy var sendButton: UIButton = Self.createSendButton()
+
     // Constraints
     private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
     private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
@@ -211,9 +212,7 @@ class ConversationBetSelectionViewController: UIViewController {
         let message = self.messageInputView.getTextViewValue()
 
         if message != "" {
-
             let messageData = MessageData(type: .sentNotSeen, text: message, date: dateNowString, timestamp: dateNowTimestamp)
-
             self.viewModel.addMessage(message: messageData)
             self.messageInputView.clearTextView()
         }
@@ -268,47 +267,13 @@ extension ConversationBetSelectionViewController: UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         guard
-            let cell = tableView.dequeueCellType(BetSelectionTableViewCell.self)
+            let cell = tableView.dequeueCellType(BetSelectionTableViewCell.self),
+            let cellViewModel = self.viewModel.viewModel(forIndex: indexPath.row)
         else {
             fatalError()
         }
 
-//        if let ticket = self.viewModel.tickets[safe: indexPath.row] {
-//
-//            if let cellViewModel = self.viewModel.cachedCellViewModels[ticket.id] {
-//                cell.configure(withViewModel: cellViewModel)
-//
-//                //            cell.didTapCheckboxAction = { [weak self] in
-//                //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-//                //            }
-//            }
-//            else {
-//                let cellViewModel = BetSelectionCellViewModel()
-//                self.viewModel.cachedCellViewModels[ticket.id] = cellViewModel
-//                cell.configure(withViewModel: cellViewModel)
-//
-//                //            cell.didTapCheckboxAction = { [weak self] in
-//                //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-//                //            }
-//            }
-//        }
-
-        if let cellViewModel = self.viewModel.cachedCellViewModels["\(indexPath.row)"] {
-            cell.configure(withViewModel: cellViewModel)
-
-            //            cell.didTapCheckboxAction = { [weak self] in
-            //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-            //            }
-        }
-        else {
-            let cellViewModel = BetSelectionCellViewModel()
-            self.viewModel.cachedCellViewModels["\(indexPath.row)"] = cellViewModel
-            cell.configure(withViewModel: cellViewModel)
-
-            //            cell.didTapCheckboxAction = { [weak self] in
-            //                self?.viewModel.checkSelectedUserContact(cellViewModel: cellViewModel)
-            //            }
-        }
+        cell.configure(withViewModel: cellViewModel)
 
         return cell
     }

@@ -70,11 +70,8 @@ class GomaGamingSocialServiceClient {
     }
 
     func connectSocket() {
-
         self.socket?.connect()
-
         self.storage = GomaGamingSocialClientStorage()
-
     }
 
     func disconnectSocket() {
@@ -103,9 +100,7 @@ class GomaGamingSocialServiceClient {
     private func startLastMessagesListener(chatroomIds: [Int]) {
 
         for chatroomId in chatroomIds {
-
             self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
-
         }
 
         self.socket?.on("social.chatrooms.join") { data, ack in
@@ -114,16 +109,11 @@ class GomaGamingSocialServiceClient {
 
                 if let lastMessageResponse = chatMessageResponse {
                     if lastMessageResponse.isNotEmpty {
-
                         if let lastMessages = lastMessageResponse[safe: 0]?.messages, lastMessages.isNotEmpty {
-
                             if let chatroomId = lastMessages[safe: 0]?.toChatroom {
-
                                 self?.storage?.chatroomLastMessagePublisher.value[chatroomId] = lastMessages
-
                             }
                         }
-
                     }
                 }
 
@@ -138,26 +128,19 @@ class GomaGamingSocialServiceClient {
 
             self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
                                                             "page": 1])
-
             self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
-
                 self.getChatMessages(data: data, completion: { [weak self] chatMessages in
-
                     if let chatMessages = chatMessages?[safe: 0]?.messages {
-
                         for chatMessage in chatMessages {
                             let chatroomId = chatMessage.toChatroom
-
 //                            if let storedMessages = self?.storage?.chatroomMessagesPublisher.value[chatroomId] {
 //                                self?.storage?.chatroomMessagesPublisher.value[chatroomId]?.append(chatMessage)
 //                            }
 //                            else {
 //                                self?.storage?.chatroomMessagesPublisher.value[chatroomId] = [chatMessage]
 //                            }
-
                             self?.storage?.chatroomMessageUpdaterPublisher.value[chatroomId] = chatMessage
                         }
-
                     }
                 })
 
@@ -199,39 +182,34 @@ class GomaGamingSocialServiceClient {
 
     }
 
-    func getChatMessages(data: [Any], completion: @escaping ([ChatMessagesResponse]?) -> Void)  {
-        guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else { return }
+    func getChatMessages(data: [Any], completion: @escaping ([ChatMessagesResponse]?) -> Void) {
 
+        guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else { return }
         let decoder = JSONDecoder()
 
         do {
             let messages = try? decoder.decode([ChatMessagesResponse].self, from: json)
-
             completion(messages)
-
-        } catch {
-            print(error.localizedDescription)
-
-            completion(nil)
-
         }
+        catch {
+            print(error.localizedDescription)
+            completion(nil)
+        }
+
     }
 
-    func getChatMessagesTest(data: [Any], completion: @escaping ([JSON]?) -> Void)  {
+    func getChatMessagesTest(data: [Any], completion: @escaping ([JSON]?) -> Void) {
         guard let json = try? JSONSerialization.data(withJSONObject: data, options: []) else { return }
 
         let decoder = JSONDecoder()
 
         do {
             let messages = try? decoder.decode([JSON].self, from: json)
-
             completion(messages)
-
-        } catch {
+        }
+        catch {
             print(error.localizedDescription)
-
             completion(nil)
-
         }
     }
 

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class BetSelectionTableViewCell: UITableViewCell {
 
@@ -18,9 +19,11 @@ class BetSelectionTableViewCell: UITableViewCell {
     private lazy var totalOddTitleLabel: UILabel = Self.createTotalOddTitleLabel()
     private lazy var totalOddValueLabel: UILabel = Self.createTotalOddValueLabel()
 
+    private var cancellables = Set<AnyCancellable>()
+
     // MARK: Public Properties
     var viewModel: BetSelectionCellViewModel?
-    var didTapCheckboxAction: (() -> Void)?
+    var didTapCheckboxAction: ((BetSelectionCellViewModel) -> Void)?
 
     // MARK: Public Properties
     var isCheckboxSelected: Bool = false {
@@ -43,7 +46,6 @@ class BetSelectionTableViewCell: UITableViewCell {
 
         self.setNeedsLayout()
         self.layoutIfNeeded()
-
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -56,14 +58,12 @@ class BetSelectionTableViewCell: UITableViewCell {
         self.isCheckboxSelected = false
 
         self.ticketsStackView.removeAllArrangedSubviews()
-
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
 
         self.baseView.layer.cornerRadius = CornerRadius.view
-
     }
 
     // MARK: Layout and Theme
@@ -72,49 +72,56 @@ class BetSelectionTableViewCell: UITableViewCell {
         self.backgroundColor = UIColor.App.backgroundPrimary
 
         self.baseView.backgroundColor = UIColor.App.backgroundSecondary
-
         self.checkboxBaseView.backgroundColor = .clear
-
         self.checkboxImageView.backgroundColor = .clear
-
         self.ticketsStackView.backgroundColor = .clear
-
         self.separatorLineView.backgroundColor = UIColor.App.separatorLine
 
         self.totalOddTitleLabel.textColor = UIColor.App.textSecondary
-
         self.totalOddValueLabel.textColor = UIColor.App.textPrimary
-
     }
 
     // MARK: Functions
     func configure(withViewModel viewModel: BetSelectionCellViewModel) {
-
         self.viewModel = viewModel
 
-        self.isCheckboxSelected = viewModel.isCheckboxSelected
+        viewModel.isCheckboxSelectedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] selected in
+                self?.isCheckboxSelected = selected
+            }
+            .store(in: &cancellables)
 
         self.setupTicketStackView()
 
+        self.totalOddValueLabel.text = viewModel.oddValueString
     }
 
     func setupTicketStackView() {
+        self.ticketsStackView.removeAllArrangedSubviews()
 
-        let ticketView = ChatTicketView()
-        let ticketView2 = ChatTicketView()
-
-        self.ticketsStackView.addArrangedSubview(ticketView)
-        self.ticketsStackView.addArrangedSubview(ticketView2)
-
+        if let viewModel = viewModel {
+            for selection in viewModel.betSelections() {
+                let ticketView = ChatTicketView(betHistoryEntrySelection: selection)
+                self.ticketsStackView.addArrangedSubview(ticketView)
+            }
+        }
     }
 
     // MARK: Actions
     @objc func didTapCheckbox(_ sender: UITapGestureRecognizer) {
 
         if let viewModel = self.viewModel {
-            viewModel.isCheckboxSelected = !self.isCheckboxSelected
-            self.isCheckboxSelected = viewModel.isCheckboxSelected
-            self.didTapCheckboxAction?()
+
+            self.isCheckboxSelected.toggle()
+
+            if self.isCheckboxSelected {
+                viewModel.selectTicket()
+            }
+            else {
+                viewModel.unselectTicket()
+            }
+            
         }
 
     }
@@ -162,19 +169,17 @@ extension BetSelectionTableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "Total Odd: "
-        label.font = AppFont.with(type: .bold, size: 10)
+        label.font = AppFont.with(type: .bold, size: 12)
         label.numberOfLines = 1
-        label.setContentHuggingPriority(.required, for: .horizontal)
         return label
     }
 
     private static func createTotalOddValueLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "1.0"
+        label.text = "--"
         label.font = AppFont.with(type: .bold, size: 14)
         label.numberOfLines = 1
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         return label
     }
 
@@ -187,11 +192,8 @@ extension BetSelectionTableViewCell {
         self.checkboxBaseView.addSubview(self.checkboxImageView)
 
         self.baseView.addSubview(self.ticketsStackView)
-
         self.baseView.addSubview(self.separatorLineView)
-
         self.baseView.addSubview(self.totalOddTitleLabel)
-
         self.baseView.addSubview(self.totalOddValueLabel)
 
         self.initConstraints()
@@ -209,7 +211,6 @@ extension BetSelectionTableViewCell {
             self.baseView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 7),
             self.baseView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -7 ),
 
-//            self.checkboxBaseView.leadingAnchor.constraint(equalTo: self.userInfoStackView.trailingAnchor, constant: 20),
             self.checkboxBaseView.trailingAnchor.constraint(equalTo: self.baseView.trailingAnchor, constant: -5),
             self.checkboxBaseView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 5),
             self.checkboxBaseView.widthAnchor.constraint(equalToConstant: 40),
@@ -219,15 +220,14 @@ extension BetSelectionTableViewCell {
             self.checkboxImageView.heightAnchor.constraint(equalTo: self.checkboxImageView.widthAnchor),
             self.checkboxImageView.centerXAnchor.constraint(equalTo: self.checkboxBaseView.centerXAnchor),
             self.checkboxImageView.centerYAnchor.constraint(equalTo: self.checkboxBaseView.centerYAnchor),
-
         ])
 
         // Stackview
         NSLayoutConstraint.activate([
             self.ticketsStackView.leadingAnchor.constraint(equalTo: self.baseView.leadingAnchor, constant: 15),
+            self.ticketsStackView.trailingAnchor.constraint(equalTo: self.checkboxBaseView.leadingAnchor),
             self.ticketsStackView.topAnchor.constraint(equalTo: self.baseView.topAnchor, constant: 15),
             self.ticketsStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 30)
-
         ])
 
         // Bottom part
@@ -237,9 +237,10 @@ extension BetSelectionTableViewCell {
             self.separatorLineView.heightAnchor.constraint(equalToConstant: 1),
             self.separatorLineView.topAnchor.constraint(equalTo: self.ticketsStackView.bottomAnchor, constant: 10),
 
+            self.totalOddTitleLabel.heightAnchor.constraint(equalToConstant: 40),
             self.totalOddTitleLabel.leadingAnchor.constraint(equalTo: self.separatorLineView.leadingAnchor),
-            self.totalOddTitleLabel.topAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor, constant: 10),
-            self.totalOddTitleLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor, constant: -15),
+            self.totalOddTitleLabel.topAnchor.constraint(equalTo: self.separatorLineView.bottomAnchor),
+            self.totalOddTitleLabel.bottomAnchor.constraint(equalTo: self.baseView.bottomAnchor),
 
             self.totalOddValueLabel.leadingAnchor.constraint(equalTo: self.totalOddTitleLabel.trailingAnchor, constant: 5),
             self.totalOddValueLabel.trailingAnchor.constraint(equalTo: self.checkboxBaseView.trailingAnchor, constant: -10),

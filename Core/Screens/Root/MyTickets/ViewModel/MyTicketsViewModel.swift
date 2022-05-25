@@ -223,7 +223,6 @@ class MyTicketsViewModel: NSObject {
                 }
             })
             .store(in: &cancellables)
-
     }
 
     func loadWonTickets(page: Int) {

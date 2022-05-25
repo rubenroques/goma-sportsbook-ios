@@ -19,34 +19,65 @@ class ChatTicketView: UIView {
     private lazy var matchLabel: UILabel = Self.createMatchLabel()
     private lazy var marketLabel: UILabel = Self.createMarketLabel()
 
-    // MARK: Lifetime and Cycle
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    private var betHistoryEntrySelection: BetHistoryEntrySelection
 
-        self.setupSubviews()
+    // MARK: Lifetime and Cycle
+    init(betHistoryEntrySelection: BetHistoryEntrySelection) {
+        self.betHistoryEntrySelection = betHistoryEntrySelection
+
+        super.init(frame: .zero)
+
         self.commonInit()
-        self.setupWithTheme()
     }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    @available(iOS, unavailable)
+    override init(frame: CGRect) {
+        fatalError()
+    }
 
-        self.setupSubviews()
-        self.commonInit()
-        self.setupWithTheme()
+    @available(iOS, unavailable)
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
     }
 
     func commonInit() {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.setupSubviews()
+        self.setupWithTheme()
+
+        if (self.betHistoryEntrySelection.tournamentName ?? "").isEmpty {
+            self.competitionLabel.text = self.betHistoryEntrySelection.eventName ?? ""
+        }
+        else {
+            self.competitionLabel.text = self.betHistoryEntrySelection.tournamentName ?? ""
+        }
+
+        if let sportId = self.betHistoryEntrySelection.sportId {
+            self.sportIconImageView.image = UIImage(named: "sport_type_icon_\(sportId)")
+            self.sportIconImageView.setImageColor(color: UIColor.App.textPrimary)
+        }
+
+        if let venueId = self.betHistoryEntrySelection.venueId,
+            let image = UIImage(named: Assets.flagName(withCountryCode: venueId)) {
+            self.countryIconImageView.image = image
+        }
+        else {
+            self.countryIconImageView.isHidden = true
+        }
+
+        let participants = [self.betHistoryEntrySelection.homeParticipantName,
+                            self.betHistoryEntrySelection.awayParticipantName].compactMap({$0}).joined(separator: " - ")
+
+        let marketText = [self.betHistoryEntrySelection.marketName,
+                          self.betHistoryEntrySelection.betName].compactMap({$0}).joined(separator: " - ")
+
+        self.marketLabel.text = marketText
+        self.matchLabel.text = participants
+
     }
 
     override func layoutSubviews() {
         super.layoutSubviews()
-
-        self.sportIconBaseView.layer.cornerRadius = self.sportIconBaseView.frame.height / 2
-
-        self.sportIconImageView.layer.cornerRadius = self.sportIconImageView.frame.height / 2
-
-        self.countryIconBaseView.layer.cornerRadius = self.countryIconBaseView.frame.height / 2
 
         self.countryIconImageView.layer.cornerRadius = self.countryIconImageView.frame.height / 2
     }
@@ -57,9 +88,10 @@ class ChatTicketView: UIView {
         self.containerView.backgroundColor = UIColor.App.backgroundSecondary
 
         self.sportIconImageView.backgroundColor = .clear
-
         self.countryIconImageView.backgroundColor = .clear
 
+        self.sportIconImageView.setImageColor(color: UIColor.App.textPrimary)
+        
         self.competitionLabel.textColor = UIColor.App.textSecondary
 
         self.matchLabel.textColor = UIColor.App.textPrimary
@@ -105,13 +137,14 @@ extension ChatTicketView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.image = UIImage(named: "country_flag_240")
         imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
         return imageView
     }
 
     private static func createCompetitionLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .semibold, size: 8)
+        label.font = AppFont.with(type: .semibold, size: 9)
         label.text = "Competition"
         return label
     }
@@ -119,7 +152,7 @@ extension ChatTicketView {
     private static func createMatchLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .bold, size: 10)
+        label.font = AppFont.with(type: .bold, size: 11)
         label.text = "Team1 vs Team2"
         return label
     }
@@ -127,7 +160,7 @@ extension ChatTicketView {
     private static func createMarketLabel() -> UILabel {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = AppFont.with(type: .semibold, size: 10)
+        label.font = AppFont.with(type: .semibold, size: 11)
         label.text = "Market - Outcome"
         return label
     }
@@ -159,7 +192,6 @@ extension ChatTicketView {
             self.containerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             self.containerView.topAnchor.constraint(equalTo: self.topAnchor),
             self.containerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-            self.containerView.heightAnchor.constraint(equalToConstant: 50),
 
             self.sportIconBaseView.widthAnchor.constraint(equalToConstant: 14),
             self.sportIconBaseView.heightAnchor.constraint(equalTo: self.sportIconBaseView.widthAnchor),
@@ -181,18 +213,21 @@ extension ChatTicketView {
             self.countryIconImageView.topAnchor.constraint(equalTo: self.countryIconBaseView.topAnchor),
             self.countryIconImageView.bottomAnchor.constraint(equalTo: self.countryIconBaseView.bottomAnchor),
 
+            self.competitionLabel.heightAnchor.constraint(equalToConstant: 14),
             self.competitionLabel.leadingAnchor.constraint(equalTo: self.countryIconImageView.trailingAnchor, constant: 6),
             self.competitionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
             self.competitionLabel.centerYAnchor.constraint(equalTo: self.countryIconImageView.centerYAnchor),
 
+            self.matchLabel.heightAnchor.constraint(equalToConstant: 20),
             self.matchLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.matchLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
             self.matchLabel.topAnchor.constraint(equalTo: self.sportIconImageView.bottomAnchor, constant: 8),
 
+            self.marketLabel.heightAnchor.constraint(equalToConstant: 20),
             self.marketLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.marketLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
-            self.marketLabel.topAnchor.constraint(equalTo: self.matchLabel.bottomAnchor, constant: 8),
-            self.marketLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor)
+            self.marketLabel.topAnchor.constraint(equalTo: self.matchLabel.bottomAnchor),
+            self.marketLabel.bottomAnchor.constraint(equalTo: self.containerView.bottomAnchor, constant: -2),
         ])
 
     }

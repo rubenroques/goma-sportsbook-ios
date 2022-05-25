@@ -49,6 +49,7 @@ class EditGroupAddFriendViewModel {
                 }
             })
             .store(in: &cancellables)
+
     }
 
     private func processFriendsData(friends: [GomaFriend]) {
