@@ -1,5 +1,5 @@
 //
-//  ChatTicketView.swift
+//  ChatTicketSelectionView.swift
 //  Sportsbook
 //
 //  Created by André Lascas on 23/05/2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ChatTicketView: UIView {
+class ChatTicketSelectionView: UIView {
 
     // MARK: Private Properties
     private lazy var containerView: UIView = Self.createContainerView()
@@ -103,7 +103,7 @@ class ChatTicketView: UIView {
 //
 // MARK: Subviews initialization and setup
 //
-extension ChatTicketView {
+extension ChatTicketSelectionView {
 
     private static func createContainerView() -> UIView {
         let view = UIView()
@@ -146,6 +146,7 @@ extension ChatTicketView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 9)
         label.text = "Competition"
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }
 
@@ -154,6 +155,7 @@ extension ChatTicketView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .bold, size: 11)
         label.text = "Team1 vs Team2"
+        label.numberOfLines = 2
         return label
     }
 
@@ -162,6 +164,7 @@ extension ChatTicketView {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.with(type: .semibold, size: 11)
         label.text = "Market - Outcome"
+        label.numberOfLines = 3
         return label
     }
 
@@ -214,14 +217,14 @@ extension ChatTicketView {
             self.countryIconImageView.bottomAnchor.constraint(equalTo: self.countryIconBaseView.bottomAnchor),
 
             self.competitionLabel.heightAnchor.constraint(equalToConstant: 14),
-            self.competitionLabel.leadingAnchor.constraint(equalTo: self.countryIconImageView.trailingAnchor, constant: 6),
+            self.competitionLabel.leadingAnchor.constraint(equalTo: self.countryIconBaseView.trailingAnchor, constant: 6),
             self.competitionLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
-            self.competitionLabel.centerYAnchor.constraint(equalTo: self.countryIconImageView.centerYAnchor),
+            self.competitionLabel.centerYAnchor.constraint(equalTo: self.countryIconBaseView.centerYAnchor),
 
             self.matchLabel.heightAnchor.constraint(equalToConstant: 20),
             self.matchLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),
             self.matchLabel.trailingAnchor.constraint(equalTo: self.containerView.trailingAnchor, constant: -5),
-            self.matchLabel.topAnchor.constraint(equalTo: self.sportIconImageView.bottomAnchor, constant: 8),
+            self.matchLabel.topAnchor.constraint(equalTo: self.sportIconBaseView.bottomAnchor, constant: 8),
 
             self.marketLabel.heightAnchor.constraint(equalToConstant: 20),
             self.marketLabel.leadingAnchor.constraint(equalTo: self.containerView.leadingAnchor),

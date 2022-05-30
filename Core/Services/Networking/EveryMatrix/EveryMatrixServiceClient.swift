@@ -57,7 +57,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .userSessionConnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - User Session Connected")
+                Logger.log("EMSessionLoginFLow publishers - User Session Connected")
                 self?.userSessionStatusPublisher.send(.logged)
             }
             .store(in: &cancellable)
@@ -65,7 +65,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .userSessionForcedLogoutDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - User Session Forced Logout Disconnected")
+                Logger.log("EMSessionLoginFLow publishers - User Session Forced Logout Disconnected")
                 self?.userSessionStatusPublisher.send(.anonymous)
             }
             .store(in: &cancellable)
@@ -73,7 +73,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .userSessionDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - User Session Disconnected")
+                Logger.log("EMSessionLoginFLow publishers - User Session Disconnected")
                 self?.userSessionStatusPublisher.send(.anonymous)
             }
             .store(in: &cancellable)
@@ -83,7 +83,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .socketConnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - Socket Session Connected")
+                Logger.log("EMSessionLoginFLow publishers - Socket Session Connected")
                 self?.serviceStatusPublisher.send(.connected)
             }
             .store(in: &cancellable)
@@ -91,7 +91,7 @@ class EveryMatrixServiceClient: ObservableObject {
         NotificationCenter.default.publisher(for: .socketDisconnected)
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
-                Logger.log("EMSessionLoginFLow - Socket Session Disconnected")
+                Logger.log("EMSessionLoginFLow publishers - Socket Session Disconnected")
                 self?.serviceStatusPublisher.send(.disconnected)
                 self?.reconnectSocket()
             }

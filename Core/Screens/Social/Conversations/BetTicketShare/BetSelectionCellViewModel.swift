@@ -12,7 +12,7 @@ class BetSelectionCellViewModel {
 
     var isCheckboxSelectedPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
-    private var ticket: BetHistoryEntry
+    var ticket: BetHistoryEntry
 
     init(ticket: BetHistoryEntry) {
         self.ticket = ticket
@@ -30,8 +30,14 @@ class BetSelectionCellViewModel {
         return ticket.selections ?? []
     }
 
+    var id: String {
+        self.ticket.betId
+    }
+    
     var oddValueString: String {
         return OddConverter.stringForValue(self.ticket.totalPriceValue ?? 0.0, format: UserDefaults.standard.userOddsFormat)
     }
+
+
 
 }

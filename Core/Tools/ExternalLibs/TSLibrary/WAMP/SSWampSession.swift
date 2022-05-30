@@ -312,6 +312,7 @@ open class SSWampSession: SSWampTransportDelegate {
 
         case let message as ResultSSWampMessage:
             let requestId = message.requestId
+            // TODO: Thread 13: EXC_BAD_ACCESS (code=1, address=0x18)
             if let (callback, _) = self.callRequests[requestId] {
                 callback(message.details, message.results, message.kwResults, message.arrResults)
                 self.callRequests[requestId] = nil

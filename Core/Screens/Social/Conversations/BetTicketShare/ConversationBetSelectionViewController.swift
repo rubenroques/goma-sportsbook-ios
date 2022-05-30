@@ -29,6 +29,9 @@ class ConversationBetSelectionViewController: UIViewController {
     private lazy var messageInputView: ChatMessageView = Self.createMessageInputView()
     private lazy var sendButton: UIButton = Self.createSendButton()
 
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+
     // Constraints
     private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
     private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
@@ -86,8 +89,6 @@ class ConversationBetSelectionViewController: UIViewController {
         self.isChatGroup = self.viewModel.isChatGroup
 
         self.bind(toViewModel: self.viewModel)
-
-        self.setupPublishers()
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
 
@@ -148,6 +149,8 @@ class ConversationBetSelectionViewController: UIViewController {
         self.messageInputLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.sendButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.8)
     }
 
     // MARK: Binding
@@ -178,45 +181,49 @@ class ConversationBetSelectionViewController: UIViewController {
             })
             .store(in: &cancellables)
 
-    }
-
-    // MARK: Functions
-    private func setupPublishers() {
-
-        self.messageInputView.textPublisher
-            .map { text in
-                if text != "" {
-                    return true
-                }
-                return false
-            }
-            .assign(to: \.isEnabled, on: self.sendButton)
+         viewModel.hasTicketSelectedPublisher
+            .receive(on: DispatchQueue.main)
+            .sink(receiveValue: { [weak self] hasTicketSelected in
+                self?.sendButton.isEnabled = hasTicketSelected
+            })
             .store(in: &cancellables)
 
+
+        viewModel.isLoadingSharedBetPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoading()
+                }
+                else {
+                    self?.hideLoading()
+                }
+            }.store(in: &cancellables)
+
+        viewModel.messageSentAction = { [weak self] in
+            self?.dismiss(animated: true, completion: nil)
+        }
+
+    }
+
+    private func showLoading() {
+        self.loadingBaseView.isHidden = false
+        self.loadingActivityIndicatorView.startAnimating()
+    }
+
+    private func hideLoading() {
+        self.loadingBaseView.isHidden = true
+        self.loadingActivityIndicatorView.stopAnimating()
     }
 
     // MARK: Actions
     @objc func didTapCloseButton() {
-
-        // self.shouldReloadData?()
-
         self.dismiss(animated: true, completion: nil)
     }
 
     @objc func didTapSendButton() {
-
-        let dateNow = Date()
-        let dateNowString = self.viewModel.getDefaultDateFormatted(date: dateNow)
-        let dateNowTimestamp = Int(Date().timeIntervalSince1970)
-
         let message = self.messageInputView.getTextViewValue()
-
-        if message != "" {
-            let messageData = MessageData(type: .sentNotSeen, text: message, date: dateNowString, timestamp: dateNowTimestamp)
-            self.viewModel.addMessage(message: messageData)
-            self.messageInputView.clearTextView()
-        }
-
+        self.viewModel.sendMessage(message: message)
     }
 
     @objc func didTapBackground() {
@@ -274,6 +281,12 @@ extension ConversationBetSelectionViewController: UITableViewDelegate, UITableVi
         }
 
         cell.configure(withViewModel: cellViewModel)
+        cell.didTapCheckboxAction = { [weak self] viewModel in
+            self?.viewModel.checkSelectedTicket(withId: viewModel.id)
+        }
+        cell.didTapUncheckboxAction = { [weak self] viewModel in
+            self?.viewModel.uncheckSelectedTicket(withId: viewModel.id)
+        }
 
         return cell
     }
@@ -455,6 +468,20 @@ extension ConversationBetSelectionViewController {
         return constraint
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.stopAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -483,6 +510,9 @@ extension ConversationBetSelectionViewController {
         self.messageInputBaseView.addSubview(self.sendButton)
 
         self.view.addSubview(self.bottomSafeAreaView)
+
+        self.view.addSubview(self.loadingBaseView)
+        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
 
@@ -582,6 +612,18 @@ extension ConversationBetSelectionViewController {
             self.sendButton.centerYAnchor.constraint(equalTo: self.messageInputBaseView.centerYAnchor),
             self.sendButton.widthAnchor.constraint(equalToConstant: 46),
             self.sendButton.heightAnchor.constraint(equalTo: self.sendButton.widthAnchor)
+        ])
+
+        NSLayoutConstraint.activate([
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
+            self.view.topAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
+            self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
         ])
 
         self.messageInputBottomConstraint =

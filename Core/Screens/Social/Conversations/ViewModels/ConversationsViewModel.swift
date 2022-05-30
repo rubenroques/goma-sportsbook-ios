@@ -23,13 +23,7 @@ class ConversationsViewModel {
     var isLoadingPublisher: CurrentValueSubject<Bool, Never> = .init(false)
 
     init() {
-        // TEST STORAGE
-        let lastMessages = Env.gomaSocialClient.storage?.chatroomLastMessagePublisher.value
 
-        let allMessages = Env.gomaSocialClient.storage?.chatroomMessagesPublisher.value
-
-        print("LAST MESSAGES STORAGE: \(lastMessages)")
-        print("ALL MESSAGES STORAGE: \(allMessages)")
         self.getConversations()
     }
 
@@ -105,6 +99,7 @@ class ConversationsViewModel {
                     }
                 })
                 .store(in: &cancellables)
+
 //            self.socket?.emit("social.chatrooms.join", ["id": chatroomId])
 //
 //            self.socket?.on("social.chatrooms.join") { data, ack in

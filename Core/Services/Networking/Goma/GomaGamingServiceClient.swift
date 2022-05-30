@@ -84,7 +84,8 @@ class GomaGamingServiceClient {
                                                         email: userRegisterForm.email,
                                                         phone: userRegisterForm.mobile,
                                                         birthDate: userRegisterForm.birthDate,
-                                                        userProviderId: userRegisterForm.userProviderId, deviceToken: userRegisterForm.deviceToken)
+                                                        userProviderId: userRegisterForm.userProviderId,
+                                                        deviceToken: userRegisterForm.deviceToken)
 
         let requestPublisher: AnyPublisher<MessageNetworkResponse, NetworkError> = networkClient.requestEndpoint(deviceId: deviceId, endpoint: endpoint)
         return requestPublisher

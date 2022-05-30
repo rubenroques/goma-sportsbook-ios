@@ -20,8 +20,14 @@ class ConversationBetSelectionViewModel {
     var groupInitialsPublisher: CurrentValueSubject<String, Never> = .init("")
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
 
+    var hasTicketSelectedPublisher: CurrentValueSubject<Bool, Never> = .init(true)
+
     var isLoadingOpened: CurrentValueSubject<Bool, Never> = .init(true)
     var openedTicketsPublisher: CurrentValueSubject<[BetHistoryEntry], Never> = .init([])
+
+    var isLoadingSharedBetPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+
+    var messageSentAction: (() -> Void)?
 
     // MARK: Private Properties
     private var conversationData: ConversationData
@@ -137,14 +143,73 @@ class ConversationBetSelectionViewModel {
         return initials
     }
 
-    func addMessage(message: MessageData) {
+    func sendMessage(message: String) {
 
-        self.socket?.emit("social.chatrooms.message", ["id": "\(self.conversationData.id)",
-                                                       "message": message.text,
-                                                 "repliedMessage": nil,
-                                                 "attatchment": nil])
+        var selectedBetSelectionCellViewModel: BetSelectionCellViewModel? = nil
 
-        // self.sortAllMessages()
+        for cellViewModel in self.cachedCellViewModels.values {
+            if cellViewModel.isCheckboxSelectedPublisher.value {
+                selectedBetSelectionCellViewModel = cellViewModel
+
+            }
+        }
+
+        guard
+            let viewModelValue = selectedBetSelectionCellViewModel
+        else {
+            return
+        }
+
+        self.isLoadingSharedBetPublisher.send(true)
+
+        let betTokenRoute = TSRouter.getSharedBetTokens(betId: viewModelValue.id)
+
+        Env.everyMatrixClient.manager.getModel(router: betTokenRoute, decodingType: SharedBetToken.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    self?.isLoadingSharedBetPublisher.send(false)
+                case .finished:
+                    ()
+                }
+            },
+            receiveValue: { [weak self] betToken in
+                guard let self = self else { return }
+
+                let attachment = self.generateAttachmentString(viewModel: viewModelValue,
+                                                               withToken: betToken.sharedBetTokens.betTokenWithAllInfo)
+
+                self.socket?.emit("social.chatrooms.message", ["id": "\(self.conversationData.id)",
+                                                               "message": message,
+                                                         "repliedMessage": nil,
+                                                         "attachment": attachment ])
+                self.isLoadingSharedBetPublisher.send(false)
+                self.messageSentAction?()
+            })
+            .store(in: &cancellables)
+
+    }
+
+    func generateAttachmentString(viewModel: BetSelectionCellViewModel, withToken betShareToken: String) -> [String: AnyObject]? {
+
+        guard let token = Env.gomaNetworkClient.getCurrentToken() else {
+            return nil
+        }
+
+        let attachment = SharedBetTicketAttachment(id: viewModel.id,
+                                                   type: "bet",
+                                                   fromUser: "\(token.userId)",
+                                                   content: SharedBetTicket(betHistoryEntry: viewModel.ticket,
+                                                                            betShareToken: betShareToken))
+
+        if let jsonData = try? JSONEncoder().encode(attachment) {
+            let dictionary = try? JSONSerialization.jsonObject(with: jsonData, options: .mutableContainers) as? [String: AnyObject]
+            return dictionary
+        }
+        else {
+            return nil
+        }
     }
 
     func getDefaultDateFormatted(date: Date) -> String {
@@ -154,16 +219,44 @@ class ConversationBetSelectionViewModel {
     }
 
     func checkSelectedTicket(withId id: String) {
+        for cellViewModel in self.cachedCellViewModels.values {
+            if cellViewModel.id != id {
+                cellViewModel.unselectTicket()
+            }
+        }
+
         if let cellViewModel = self.cachedCellViewModels[id] {
             cellViewModel.selectTicket()
         }
+
+        self.updateAnySelected()
     }
 
     func uncheckSelectedTicket(withId id: String) {
         if let cellViewModel = self.cachedCellViewModels[id] {
             cellViewModel.unselectTicket()
         }
+
+        self.updateAnySelected()
     }
+
+    func updateAnySelected() {
+        let anySelected = self.cachedCellViewModels.map { (_, value: BetSelectionCellViewModel) -> Bool in
+            return value.isCheckboxSelectedPublisher.value
+        }
+        .contains(true)
+        self.hasTicketSelectedPublisher.send(anySelected)
+    }
+
+    func createAttachement() -> [String: AnyObject]? {
+
+
+        return nil
+    }
+
+}
+
+extension ConversationBetSelectionViewModel {
 
 }
 

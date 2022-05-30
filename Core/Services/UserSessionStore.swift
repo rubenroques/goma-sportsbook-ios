@@ -363,6 +363,7 @@ extension UserSessionStore {
 }
 
 extension UserSessionStore {
+
     func startUserSessionIfNeeded() {
 
         self.isLoadingUserSessionPublisher.send(true)
@@ -389,6 +390,10 @@ extension UserSessionStore {
                     Env.favoritesManager.getUserMetadata()
                     self?.loginGomaAPI(username: user.username, password: user.userId)
                 case .failure(let error):
+                    if error.localizedDescription.lowercased().contains("you are already logged in") {
+                        Env.favoritesManager.getUserMetadata()
+                        self?.loginGomaAPI(username: user.username, password: user.userId)
+                    }
                     print("error \(error)")
                 }
                 self?.isLoadingUserSessionPublisher.send(false)
@@ -397,6 +402,7 @@ extension UserSessionStore {
                 Env.userSessionStore.isUserEmailVerified.send(account.isEmailVerified)
             }
             .store(in: &cancellables)
+
     }
 
     func loginGomaAPI(username: String, password: String) {
@@ -408,7 +414,7 @@ extension UserSessionStore {
                 
             }, receiveValue: { value in
                 Env.gomaNetworkClient.refreshAuthToken(token: value)
-                Env.gomaSocialClient.setupGomaSocket()
+                Env.gomaSocialClient.connectSocket()
             })
             .store(in: &cancellables)
 

@@ -17,13 +17,10 @@ class SelectFriendCellViewModel {
 
     init(userContact: UserContact, conversationData: ConversationData) {
         self.userContact = userContact
-
         self.username = userContact.username
-
         self.phones = userContact.phones
-
         self.conversationData = conversationData
-
         self.isOnline = false
     }
+
 }

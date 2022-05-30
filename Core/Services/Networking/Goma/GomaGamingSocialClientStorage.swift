@@ -10,16 +10,14 @@ import Combine
 
 class GomaGamingSocialClientStorage {
 
-    // MARK: Private Properties
-    private var cancellables = Set<AnyCancellable>()
     // MARK: Public Properties
     var chatroomIdsPublisher: CurrentValueSubject<[Int], Never> = .init([])
-
     var chatroomLastMessagePublisher: CurrentValueSubject<[Int: [ChatMessage]], Never> = .init([:])
-
     var chatroomMessagesPublisher: CurrentValueSubject<[Int: [ChatMessage]], Never> = .init([:])
-
     var chatroomMessageUpdaterPublisher: CurrentValueSubject<[Int: ChatMessage?], Never> = .init([:])
+
+    // MARK: Private Properties
+    private var cancellables = Set<AnyCancellable>()
 
     init() {
         self.getChatrooms()
@@ -35,29 +33,26 @@ class GomaGamingSocialClientStorage {
                 case .finished:
                     ()
                 }
-
             }, receiveValue: { [weak self] response in
                 if let chatrooms = response.data {
                     self?.storeChatrooms(chatroomsData: chatrooms)
                 }
-
             })
             .store(in: &cancellables)
     }
 
     private func storeChatrooms(chatroomsData: [ChatroomData]) {
 
-        for chatroomData in chatroomsData {
-            let chatroomId = chatroomData.chatroom.id
+        self.chatroomIdsPublisher.send( chatroomsData.map({ $0.chatroom.id }) )
 
-            self.chatroomIdsPublisher.value.append(chatroomId)
+//        for chatroomData in chatroomsData {
+//            let chatroomId = chatroomData.chatroom.id
+//            self.chatroomIdsPublisher.value.append(chatroomId)
+//            self.chatroomLastMessagePublisher.value[chatroomId] = []
+//            self.chatroomMessagesPublisher.value[chatroomId] = []
+//            self.chatroomMessageUpdaterPublisher.value[chatroomId] = nil
+//        }
 
-            self.chatroomLastMessagePublisher.value[chatroomId] = []
-
-            self.chatroomMessagesPublisher.value[chatroomId] = []
-
-            self.chatroomMessageUpdaterPublisher.value[chatroomId] = nil
-        }
     }
 
 }

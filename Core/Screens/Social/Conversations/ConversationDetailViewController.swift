@@ -30,6 +30,9 @@ class ConversationDetailViewController: UIViewController {
     private lazy var messageInputView: ChatMessageView = Self.createMessageInputView()
     private lazy var sendButton: UIButton = Self.createSendButton()
 
+    private lazy var loadingBaseView: UIView = Self.createLoadingBaseView()
+    private lazy var loadingActivityIndicatorView: UIActivityIndicatorView = Self.createLoadingActivityIndicatorView()
+
     // Constraints
     private lazy var messageInputBottomConstraint: NSLayoutConstraint = Self.createMessageInputBottomConstraint()
     private lazy var messageInputKeyboardConstraint: NSLayoutConstraint = Self.createMessageInputKeyboardConstraint()
@@ -71,8 +74,15 @@ class ConversationDetailViewController: UIViewController {
         
         self.tableView.register(ReceivedMessageTableViewCell.self,
                                 forCellReuseIdentifier: ReceivedMessageTableViewCell.identifier)
+        self.tableView.register(ReceivedTicketMessageTableViewCell.self,
+                                forCellReuseIdentifier: ReceivedTicketMessageTableViewCell.identifier)
+
         self.tableView.register(SentMessageTableViewCell.self,
                                 forCellReuseIdentifier: SentMessageTableViewCell.identifier)
+        self.tableView.register(SentTicketMessageTableViewCell.self,
+                                forCellReuseIdentifier: SentTicketMessageTableViewCell.identifier)
+
+        
         tableView.register(DateHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: DateHeaderFooterView.identifier)
 
         self.backButton.addTarget(self, action: #selector(didTapBackButton), for: .primaryActionTriggered)
@@ -102,6 +112,12 @@ class ConversationDetailViewController: UIViewController {
 
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
 
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        self.scrollToBottomTableView(animated: false)
     }
 
     // MARK: - Layout and Theme
@@ -154,6 +170,8 @@ class ConversationDetailViewController: UIViewController {
         self.messageInputLineSeparatorView.backgroundColor = UIColor.App.separatorLine
 
         self.sendButton.backgroundColor = UIColor.App.buttonBackgroundPrimary
+
+        self.loadingBaseView.backgroundColor = UIColor.App.backgroundPrimary.withAlphaComponent(0.8)
     }
 
     // MARK: Binding
@@ -191,6 +209,23 @@ class ConversationDetailViewController: UIViewController {
             })
             .store(in: &cancellables)
 
+        viewModel.isLoadingSharedBetPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                if isLoading {
+                    self?.showLoading()
+                }
+                else {
+                    self?.hideLoading()
+                }
+            }.store(in: &cancellables)
+
+        viewModel.ticketAddedToBetslipAction = { [weak self] addedWithSuccess in
+            if addedWithSuccess {
+                self?.showBetslipViewController()
+            }
+        }
+        
     }
 
     // MARK: Functions
@@ -208,14 +243,14 @@ class ConversationDetailViewController: UIViewController {
 
     }
 
-    func scrollToBottomTableView() {
+    func scrollToBottomTableView(animated: Bool = true) {
         DispatchQueue.main.async {
             if self.viewModel.dateMessages.isNotEmpty {
                 let section = self.viewModel.dateMessages.count - 1
                 let row = self.viewModel.dateMessages[section].messages.count - 1
 
                 let indexPath = IndexPath(row: row, section: section)
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: animated)
             }
         }
     }
@@ -230,6 +265,12 @@ class ConversationDetailViewController: UIViewController {
         let betSelectionViewController = ConversationBetSelectionViewController(viewModel: betSelectionViewModel)
 
         self.present(betSelectionViewController, animated: true, completion: nil)
+    }
+
+    private func addTicketToBetslip(ticket: BetHistoryEntry) {
+        if let betShareToken = ticket.betShareToken {
+            self.viewModel.addBetTicketToBetslip(withBetToken: betShareToken)
+        }
     }
 
     // MARK: Actions
@@ -305,6 +346,21 @@ class ConversationDetailViewController: UIViewController {
         }
     }
 
+    private func showLoading() {
+        self.loadingBaseView.isHidden = false
+        self.loadingActivityIndicatorView.startAnimating()
+    }
+
+    private func hideLoading() {
+        self.loadingBaseView.isHidden = true
+        self.loadingActivityIndicatorView.stopAnimating()
+    }
+
+    private func showBetslipViewController() {
+        let betslipViewController = BetslipViewController()
+        self.present(Router.navigationController(with: betslipViewController), animated: true, completion: nil)
+    }
+
     @objc func keyboardWillShow(notification: NSNotification) {
         self.messageInputKeyboardConstraint.isActive = false
         self.messageInputBottomConstraint.isActive = true
@@ -349,37 +405,60 @@ extension ConversationDetailViewController: UITableViewDelegate, UITableViewData
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if let messageData = self.viewModel.dateMessages[safe: indexPath.section]?.messages[indexPath.row] {
             if messageData.type == .sentNotSeen || messageData.type == .sentSeen {
-                guard
-                    let cell = tableView.dequeueCellType(SentMessageTableViewCell.self)
-                else {
-                    fatalError()
+                if messageData.attachment != nil {
+                    guard
+                        let cell = tableView.dequeueCellType(SentTicketMessageTableViewCell.self)
+                    else {
+                        fatalError()
+                    }
+                    cell.setupMessage(messageData: messageData)
+                    cell.didTapBetNowAction = { [weak self] viewModel in
+                        self?.addTicketToBetslip(ticket: viewModel.ticket)
+                    }
+                    return cell
                 }
-
-                cell.setupMessage(messageData: messageData)
-
-                return cell
+                else {
+                    guard
+                        let cell = tableView.dequeueCellType(SentMessageTableViewCell.self)
+                    else {
+                        fatalError()
+                    }
+                    cell.setupMessage(messageData: messageData)
+                    return cell
+                }
             }
             else {
-                guard
-                    let cell = tableView.dequeueCellType(ReceivedMessageTableViewCell.self)
+
+                if messageData.attachment != nil {
+                    guard
+                        let cell = tableView.dequeueCellType(ReceivedTicketMessageTableViewCell.self)
+                    else {
+                        fatalError()
+                    }
+                    if let userId = messageData.userId {
+                        let username = self.viewModel.getUsername(userId: userId)
+                        cell.setupMessage(messageData: messageData, username: username)
+                        cell.didTapBetNowAction = { [weak self] viewModel in
+                            self?.addTicketToBetslip(ticket: viewModel.ticket)
+                        }
+                    }
+                    return cell
+                }
                 else {
-                    fatalError()
+                    guard
+                        let cell = tableView.dequeueCellType(ReceivedMessageTableViewCell.self)
+                    else {
+                        fatalError()
+                    }
+                    if let userId = messageData.userId {
+                        let username = self.viewModel.getUsername(userId: userId)
+                        cell.setupMessage(messageData: messageData, username: username)
+                    }
+                    return cell
                 }
-
-                if let userId = messageData.userId {
-
-                    let username = self.viewModel.getUsername(userId: userId)
-
-                    cell.setupMessage(messageData: messageData, username: username)
-
-                }
-
-                return cell
             }
         }
-        else {
-            return UITableViewCell()
-        }
+        return UITableViewCell()
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -557,6 +636,20 @@ extension ConversationDetailViewController {
         return constraint
     }
 
+    private static func createLoadingBaseView() -> UIView {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }
+
+    private static func createLoadingActivityIndicatorView() -> UIActivityIndicatorView {
+        let activityIndicatorView = UIActivityIndicatorView.init(style: .large)
+        activityIndicatorView.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicatorView.hidesWhenStopped = true
+        activityIndicatorView.stopAnimating()
+        return activityIndicatorView
+    }
+
     private func setupSubviews() {
 
         self.view.addSubview(self.topSafeAreaView)
@@ -586,6 +679,9 @@ extension ConversationDetailViewController {
         self.messageInputBaseView.addSubview(self.sendButton)
 
         self.view.addSubview(self.bottomSafeAreaView)
+
+        self.view.addSubview(self.loadingBaseView)
+        self.loadingBaseView.addSubview(self.loadingActivityIndicatorView)
 
         self.initConstraints()
 
@@ -690,6 +786,19 @@ extension ConversationDetailViewController {
             self.sendButton.widthAnchor.constraint(equalToConstant: 46),
             self.sendButton.heightAnchor.constraint(equalTo: self.sendButton.widthAnchor)
         ])
+
+        NSLayoutConstraint.activate([
+            self.loadingActivityIndicatorView.centerYAnchor.constraint(equalTo: self.loadingBaseView.centerYAnchor),
+            self.loadingActivityIndicatorView.centerXAnchor.constraint(equalTo: self.loadingBaseView.centerXAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            self.view.leadingAnchor.constraint(equalTo: self.loadingBaseView.leadingAnchor),
+            self.view.trailingAnchor.constraint(equalTo: self.loadingBaseView.trailingAnchor),
+            self.view.topAnchor.constraint(equalTo: self.loadingBaseView.topAnchor),
+            self.view.bottomAnchor.constraint(equalTo: self.loadingBaseView.bottomAnchor)
+        ])
+
 
         self.messageInputBottomConstraint =
         NSLayoutConstraint(item: self.messageInputBaseView,

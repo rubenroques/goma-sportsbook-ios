@@ -28,6 +28,10 @@ class ConversationDetailViewModel: NSObject {
     var dataNeedsReload: PassthroughSubject<Void, Never> = .init()
     var shouldScrollToLastMessage: PassthroughSubject<Void, Never> = .init()
 
+    var isLoadingSharedBetPublisher: CurrentValueSubject<Bool, Never> = .init(false)
+    
+    var ticketAddedToBetslipAction: ((Bool) -> Void)?
+
     // MARK: Lifetime and Cycle
     init(conversationData: ConversationData) {
         self.conversationData = conversationData
@@ -35,7 +39,6 @@ class ConversationDetailViewModel: NSObject {
         super.init()
 
         self.setupConversationInfo()
-        // self.getConversationMessages()
 
         self.startSocketListening()
     }
@@ -45,17 +48,6 @@ class ConversationDetailViewModel: NSObject {
 
         let chatroomId = self.conversationData.id
 
-//        Env.gomaSocialClient.storage?.chatroomMessagesPublisher
-//            .receive(on: DispatchQueue.main)
-//            .sink(receiveValue: { [weak self] chatMessages in
-//
-//                if let conversationMessages = chatMessages[chatroomId] {
-//                    self?.processChatMessages(chatMessages: conversationMessages)
-//                    self?.shouldScrollToLastMessage.send()
-//                }
-//            })
-//            .store(in: &cancellables)
-
         if let conversationMessages = Env.gomaSocialClient.storage?.chatroomMessagesPublisher.value[chatroomId] {
             self.processChatMessages(chatMessages: conversationMessages)
             self.shouldScrollToLastMessage.send()
@@ -64,40 +56,12 @@ class ConversationDetailViewModel: NSObject {
         Env.gomaSocialClient.storage?.chatroomMessageUpdaterPublisher
             .receive(on: DispatchQueue.main)
             .sink(receiveValue: { [weak self] chatMessages in
-
                 if let updatedMessage = chatMessages[chatroomId] {
                     self?.updateChatMessages(newMessage: updatedMessage)
                     self?.shouldScrollToLastMessage.send()
                 }
             })
             .store(in: &cancellables)
-
-//        self.socket?.emit("social.chatrooms.messages", ["id": chatroomId,
-//                                                       "page": 1])
-//
-//        self.socket?.on("social.chatrooms.messages") { data, ack in
-//
-//            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-//
-//                if let chatMessages = chatMessages?[safe: 0]?.messages {
-//                    self?.processChatMessages(chatMessages: chatMessages)
-//                    self?.shouldScrollToLastMessage.send()
-//                }
-//            })
-//        }
-//
-//        self.socket?.on("social.chatroom.\(chatroomId)") { data, ack in
-//
-//            Env.gomaSocialClient.getChatMessages(data: data, completion: { [weak self] chatMessages in
-//
-//                if let chatMessages = chatMessages?[safe: 0]?.messages {
-//                    self?.processChatMessages(chatMessages: chatMessages)
-//                    self?.shouldScrollToLastMessage.send()
-//
-//                }
-//            })
-//
-//        }
 
     }
 
@@ -190,11 +154,21 @@ class ConversationDetailViewModel: NSObject {
         for message in chatMessages {
             let formattedDate = self.getFormattedDate(date: message.date)
             if "\(loggedUserId)" == message.fromUser {
-                let messageData = MessageData(type: .sentNotSeen, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                let messageData = MessageData(type: .sentNotSeen,
+                                              text: message.message,
+                                              date: formattedDate,
+                                              timestamp: message.date,
+                                              userId: message.fromUser,
+                                              attachment: message.attachment)
                 self.messages.append(messageData)
             }
             else {
-                let messageData = MessageData(type: .receivedOnline, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                let messageData = MessageData(type: .receivedOnline,
+                                              text: message.message,
+                                              date: formattedDate,
+                                              timestamp: message.date,
+                                              userId: message.fromUser,
+                                              attachment: message.attachment)
                 self.messages.append(messageData)
             }
         }
@@ -220,11 +194,21 @@ class ConversationDetailViewModel: NSObject {
 
             let formattedDate = self.getFormattedDate(date: message.date)
             if "\(loggedUserId)" == message.fromUser {
-                let messageData = MessageData(type: .sentNotSeen, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                let messageData = MessageData(type: .sentNotSeen,
+                                              text: message.message,
+                                              date: formattedDate,
+                                              timestamp: message.date,
+                                              userId: message.fromUser,
+                                              attachment: message.attachment)
                 self.messages.append(messageData)
             }
             else {
-                let messageData = MessageData(type: .receivedOnline, text: message.message, date: formattedDate, timestamp: message.date, userId: message.fromUser)
+                let messageData = MessageData(type: .receivedOnline,
+                                              text: message.message,
+                                              date: formattedDate,
+                                              timestamp: message.date,
+                                              userId: message.fromUser,
+                                              attachment: message.attachment)
                 self.messages.append(messageData)
             }
 
@@ -249,32 +233,6 @@ class ConversationDetailViewModel: NSObject {
         return dateString
     }
 
-    private func getConversationMessages() {
-        // TESTING CHAT MESSAGES
-//        let message1 = MessageData(messageType: .receivedOffline, messageText: "Yo, I have a proposal for you! 😎", messageDate: "06/04/2022 15:45")
-//        let message2 = MessageData(messageType: .sentSeen, messageText: "Oh what is it? And how are you?", messageDate: "06/04/2022 16:00")
-//        let message3 = MessageData(messageType: .receivedOnline, messageText: "All fine here! What about: Lorem ipsum dolor sit amet," +
-//                                   "consectetur adipiscing elit. Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 01:50")
-//        let message4 = MessageData(messageType: .sentSeen, messageText: "I'm up for it! 👀", messageDate: "07/04/2022 02:32")
-//        let message5 = MessageData(messageType: .receivedOnline, messageText: "Alright! Then I'll send you the details: " +
-//                                   "Curabitur porttitor mi eget pharetra eleifend. Nam vel finibus nibh, nec ullamcorper elit.", messageDate: "07/04/2022 17:35")
-//        let message6 = MessageData(messageType: .sentNotSeen, messageText: "This seems like a nice deal. looking forward to it! 🤪", messageDate: "08/04/2022 10:01")
-//
-//        messages.append(message1)
-//        messages.append(message2)
-//        messages.append(message3)
-//        messages.append(message4)
-//        messages.append(message5)
-//        messages.append(message6)
-//
-//        self.sortAllMessages()
-//
-//        self.isChatOnline = true
-
-        // Get chat messages for chatroom id
-
-    }
-
     func sortAllMessages() {
 
         sectionMessages = [:]
@@ -292,9 +250,7 @@ class ConversationDetailViewModel: NSObject {
         }
 
         for (key, messages) in sectionMessages {
-            
             let dateMessage = DateMessages(date: key, messages: messages)
-
             self.dateMessages.append(dateMessage)
         }
 
@@ -370,6 +326,118 @@ class ConversationDetailViewModel: NSObject {
 }
 
 extension ConversationDetailViewModel {
+    func addBetTicketToBetslip(withBetToken betToken: String) {
+        //    case getSharedBetTokens(betId: String)
+        //    case getSharedBetData(betToken: String)
+
+        self.isLoadingSharedBetPublisher.send(true)
+
+        let betDataRoute = TSRouter.getSharedBetData(betToken: betToken)
+        Env.everyMatrixClient.manager.getModel(router: betDataRoute, decodingType: SharedBetDataResponse.self)
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .failure:
+                    self?.isLoadingSharedBetPublisher.send(false)
+                case .finished:
+                    ()
+                }
+            },
+            receiveValue: { [weak self] betDataResponse in
+                self?.addBetDataTickets(betData: betDataResponse.sharedBetData)
+            })
+            .store(in: &cancellables)
+    }
+
+    private func addBetDataTickets(betData: SharedBetData) {
+
+        let requests = betData.selections.map(getBetMarketOddsRPC)
+
+        var bettingTickets: [BettingTicket?] = []
+
+        Publishers.MergeMany(requests)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                let validTickets = bettingTickets.compactMap({ $0 })
+
+                for ticket in validTickets {
+                    Env.betslipManager.addBettingTicket(ticket)
+                }
+
+                self?.ticketAddedToBetslipAction?(validTickets.isNotEmpty)
+                self?.isLoadingSharedBetPublisher.send(false)
+            } receiveValue: { ticket in
+                bettingTickets.append(ticket)
+            }
+            .store(in: &cancellables)
+
+    }
+
+    private func getBetMarketOddsRPC(betSelection: SharedBet) -> AnyPublisher<BettingTicket?, EveryMatrix.APIError> {
+
+        let endpoint = TSRouter.matchMarketOdds(operatorId: Env.appSession.operatorId,
+                                                language: "en",
+                                                matchId: "\(betSelection.eventId)",
+                                                bettingType: "\(betSelection.bettingTypeId)",
+                                                eventPartId: "\(betSelection.bettingTypeEventPartId)")
+
+        return Env.everyMatrixClient.manager
+            .registerOnEndpointAsRPC(endpoint, decodingType: EveryMatrix.Aggregator.self)
+            .map { [weak self] aggregator in
+                return self?.processAggregator(aggregator: aggregator, betSelection: betSelection)
+            }
+            .eraseToAnyPublisher()
+
+    }
+
+    private func processAggregator(aggregator: EveryMatrix.Aggregator, betSelection: SharedBet) -> BettingTicket? {
+
+        var markets: [EveryMatrix.Market] = []
+        var betOutcomes: [EveryMatrix.BetOutcome] = []
+        var marketOutcomeRelations: [EveryMatrix.MarketOutcomeRelation] = []
+        var bettingOffers: [EveryMatrix.BettingOffer] = []
+        var betSelectionBettingOfferId: String?
+
+        for content in aggregator.content ?? [] {
+            switch content {
+            case .market(let marketContent):
+                markets.append(marketContent)
+            case .betOutcome(let betOutcomeContent):
+                betOutcomes.append(betOutcomeContent)
+            case .bettingOffer(let bettingOfferContent):
+                bettingOffers.append(bettingOfferContent)
+                if bettingOfferContent.outcomeId == betSelection.outcomeId {
+                    betSelectionBettingOfferId = bettingOfferContent.id
+                }
+            case .marketOutcomeRelation(let marketOutcomeRelationContent):
+                marketOutcomeRelations.append(marketOutcomeRelationContent)
+            default:
+                ()
+            }
+        }
+
+        if let bettingOfferId = betSelectionBettingOfferId {
+                let marketDescription = "\(betSelection.marketName), \(betSelection.bettingTypeEventPartName)"
+                let bettingTicket = BettingTicket(id: bettingOfferId,
+                                                  outcomeId: betSelection.outcomeId,
+                                                  marketId: markets.first?.id ?? "1",
+                                                  matchId: betSelection.eventId,
+                                                  value: 0.0,
+                                                  isAvailable: markets.first?.isAvailable ?? true,
+                                                  statusId: "1",
+                                                  matchDescription: betSelection.eventName,
+                                                  marketDescription: marketDescription,
+                                                  outcomeDescription: betSelection.betName)
+            return bettingTicket
+        }
+
+        return nil
+    }
+
+
+}
+
+extension ConversationDetailViewModel {
 
     func numberOfSections() -> Int {
         if self.dateMessages.isEmpty {
@@ -407,6 +475,7 @@ struct MessageData {
     var date: String
     var timestamp: Int
     var userId: String?
+    var attachment: SharedBetTicketAttachment?
 }
 
 enum MessageType {
@@ -433,7 +502,7 @@ struct ChatMessage: Decodable {
     var fromUser: String
     var message: String
     var repliedMessage: String?
-    var attachment: String?
+    var attachment: SharedBetTicketAttachment?
     var toChatroom: Int
     var date: Int
 
@@ -444,5 +513,18 @@ struct ChatMessage: Decodable {
         case attachment = "attachment"
         case toChatroom = "toChatroom"
         case date = "date"
+    }
+
+    init(from decoder: Decoder) throws {
+
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        self.fromUser = try container.decode(String.self, forKey: .fromUser)
+        self.message = try container.decode(String.self, forKey: .message)
+        self.toChatroom = try container.decode(Int.self, forKey: .toChatroom)
+        self.date = try container.decode(Int.self, forKey: .date)
+
+        self.attachment = try? container.decode(SharedBetTicketAttachment.self, forKey: .attachment)
+        self.repliedMessage = try? container.decode(String.self, forKey: .repliedMessage)
     }
 }
